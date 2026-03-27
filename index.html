@@ -311,7 +311,14 @@ footer{
 .loading-text{font-size:.68rem;letter-spacing:.2em;color:var(--gold);}
 
 /* ── テーマ切り替え ── */
-:root,[data-theme="dark"]{
+:root{
+  --bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);
+  --gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);
+  --mist:rgba(220,232,255,.55);--kichi:#e8748a;--kyo:rgba(180,190,210,.6);
+  --note-bg:rgba(196,160,67,.04);--note-border:rgba(196,160,67,.15);
+  --section-body-color:rgba(220,232,255,.65);
+}
+[data-theme="dark"]{
   --bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);
   --gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);
   --mist:rgba(220,232,255,.55);--kichi:#e8748a;--kyo:rgba(180,190,210,.6);
@@ -662,6 +669,20 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .kichi-rank{color:#5a3e08!important;}
 [data-theme="light"] .kichi-star{color:#2a1e08!important;}
 [data-theme="light"] #claude-star-text{color:#2a1e08!important;}
+
+
+/* ライトモード：カード背景を白に */
+[data-theme="light"] .input-card{background:#ffffff!important;border-color:rgba(120,90,20,.2)!important;}
+[data-theme="light"] .mystar-card{background:#ffffff!important;border-color:rgba(120,90,20,.2)!important;}
+[data-theme="light"] .ban-section{background:#ffffff!important;border-radius:12px;}
+[data-theme="light"] .kichi-section{background:#ffffff!important;}
+[data-theme="light"] .nouin-row{background:#ffffff!important;border-color:rgba(120,90,20,.15)!important;}
+[data-theme="light"] .deepen-section{background:#ffffff!important;border-color:rgba(120,90,20,.2)!important;}
+[data-theme="light"] .bat-wrap{background:#ffffff!important;border-color:rgba(120,90,20,.15)!important;}
+[data-theme="light"] .ai-section{background:#ffffff!important;border-color:rgba(120,90,20,.15)!important;}
+[data-theme="light"] .cell{background:#f5f0e8!important;}
+[data-theme="light"] .cell-normal{background:#f0ebe0!important;border-color:rgba(120,90,20,.15)!important;}
+[data-theme="light"] .cell-kyo{background:#f0ebe0!important;border-color:rgba(120,90,20,.12)!important;}
 
 </style>
 </head>
