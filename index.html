@@ -719,6 +719,24 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .cell-name{color:rgba(40,30,10,.5)!important;}
 [data-theme="light"] .compass-grid{background:#f8f5ef!important;}
 
+
+/* ── 方位ラベルCSS制御（ダーク・ライト両対応） ── */
+.dir-label-text{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dir-label-text.normal{color:rgba(200,215,240,.65);}
+.dir-label-text.kyo{color:rgba(200,215,240,.55);}
+.dir-label-text.kichi{color:var(--goldlt);font-weight:800;}
+[data-theme="light"] .dir-label-text.normal{color:rgba(30,20,5,.7)!important;}
+[data-theme="light"] .dir-label-text.kyo{color:rgba(30,20,5,.55)!important;}
+[data-theme="light"] .dir-label-text.kichi{color:#4a2e00!important;}
+
+.dir-badge{font-size:.44rem;margin-top:2px;padding:1px 4px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;}
+.dir-badge.kichi{background:rgba(196,160,67,.15);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);}
+.dir-badge.dai{background:rgba(196,160,67,.22);border:1px solid rgba(196,160,67,.55);color:#ffe066;}
+.dir-badge.kyo{background:rgba(200,215,240,.06);border:1px solid rgba(200,215,240,.18);color:rgba(200,215,240,.55);}
+[data-theme="light"] .dir-badge.kichi{background:rgba(140,100,10,.1)!important;border-color:rgba(140,100,10,.35)!important;color:#4a2e00!important;}
+[data-theme="light"] .dir-badge.dai{background:rgba(140,100,10,.15)!important;border-color:rgba(140,100,10,.45)!important;color:#3a2000!important;}
+[data-theme="light"] .dir-badge.kyo{background:rgba(30,20,5,.05)!important;border-color:rgba(30,20,5,.2)!important;color:rgba(30,20,5,.5)!important;}
+
 </style>
 </head>
 <body>
@@ -2167,42 +2185,29 @@ function renderBan(type){
     div.style.cssText='text-align:center;overflow:hidden;line-height:1.3;padding:2px 1px;';
     if(dir&&dir!==''){
       const dd=dirData[dir];
-      const isLight=document.documentElement.getAttribute('data-theme')==='light';
-      let color= isLight ? 'rgba(40,30,10,.65)' : 'rgba(200,215,240,.55)';
       let subText='';
+      let labelClass='dir-label-text normal';
       if(dd.isKyo){
-        color= isLight ? 'rgba(40,30,10,.5)' : 'rgba(200,215,240,.5)';
+        labelClass='dir-label-text kyo';
         const kn=kyouItems.find(k=>k.dir===dir);
         if(kn)subText=kn.name.split('/')[0];
       }
-      else if(dd.rank>=4){
-        color= isLight ? '#4a2e00' : '#ffe066';
-        subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';
-      }
-      else if(dd.rank>=3){color= isLight ? '#5a3a00' : 'var(--goldlt)';subText='吉方';}
-      else if(dd.rank>=2){color= isLight ? '#5a3a00' : 'var(--goldlt)';subText='吉方';}
+      else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
+      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
+      else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
 
       // 方位名
       const dirEl=document.createElement('div');
-      dirEl.style.cssText=`font-size:.78rem;font-weight:700;color:${color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+      dirEl.className=labelClass;
+      dirEl.style.cssText='font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
       dirEl.textContent=JP[dir];
       div.appendChild(dirEl);
 
-      // 吉凶ラベル（枠付き小バッジ）
+      // 吉凶バッジ
       if(subText){
         const badge=document.createElement('div');
-        let bgColor,bdColor;
-        if(dd.isKyo){
-          bgColor= isLight ? 'rgba(40,30,10,.06)' : 'rgba(255,255,255,.04)';
-          bdColor= isLight ? 'rgba(40,30,10,.2)' : 'rgba(255,255,255,.1)';
-        }else if(dd.rank>=4){
-          bgColor= isLight ? 'rgba(140,100,10,.15)' : 'rgba(196,160,67,.2)';
-          bdColor= isLight ? 'rgba(140,100,10,.4)' : 'rgba(196,160,67,.5)';
-        }else{
-          bgColor= isLight ? 'rgba(140,100,10,.1)' : 'rgba(196,160,67,.12)';
-          bdColor= isLight ? 'rgba(140,100,10,.3)' : 'rgba(196,160,67,.3)';
-        }
-        badge.style.cssText=`font-size:.44rem;margin-top:2px;padding:1px 3px;border-radius:3px;background:${bgColor};border:1px solid ${bdColor};color:${color};display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;`;
+        badge.className='dir-badge '+(dd.isKyo?'kyo':dd.rank>=4?'dai':'kichi');
+        badge.style.cssText='font-size:.44rem;margin-top:2px;padding:1px 3px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;';
         badge.textContent=subText;
         div.appendChild(badge);
       }
