@@ -1827,12 +1827,14 @@ function getKyouDirs(boardCenter,honmei,breakDir){
 // ══ アプリ状態 ══
 let gState={};
 
-// 今日の日付をデフォルト設定
+// 今日の日付をデフォルト設定（タイムゾーン補正）
 (function(){
-  const today=new Date();
-  const yyyy=today.getFullYear();
-  const mm=String(today.getMonth()+1).padStart(2,'0');
-  const dd=String(today.getDate()).padStart(2,'0');
+  // UTC+9（日本時間）で正しい日付を取得
+  const now=new Date();
+  const jst=new Date(now.getTime()+9*60*60*1000);
+  const yyyy=jst.getUTCFullYear();
+  const mm=String(jst.getUTCMonth()+1).padStart(2,'0');
+  const dd=String(jst.getUTCDate()).padStart(2,'0');
   document.getElementById('inputDate').value=`${yyyy}-${mm}-${dd}`;
   // 保存済み生年月日を読み込む
   try{
