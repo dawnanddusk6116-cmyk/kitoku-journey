@@ -704,6 +704,15 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .kichi-rank{color:#5a3a00!important;}
 [data-theme="light"] .kbadge{color:#5a3a00!important;border-color:rgba(140,100,10,.4)!important;background:rgba(160,120,20,.12)!important;}
 
+
+/* ライトモード：全体文字色を強制的に濃く */
+[data-theme="light"] .dir-label{color:#3a2a08!important;font-weight:600!important;}
+[data-theme="light"] .dir-label.normal{color:rgba(40,30,10,.65)!important;font-weight:600!important;}
+[data-theme="light"] .dir-label.kyo{color:rgba(40,30,10,.55)!important;font-weight:600!important;}
+[data-theme="light"] .dir-label.kichi,[data-theme="light"] .dir-label.daikichi{color:#4a2e00!important;font-weight:700!important;}
+[data-theme="light"] #claude-star-text{background:rgba(120,90,20,.08)!important;color:#1c1208!important;border-color:rgba(120,90,20,.2)!important;}
+[data-theme="light"] .mist,[data-theme="light"] .snow{color:#1c1208!important;}
+
 </style>
 </head>
 <body>
@@ -3117,8 +3126,9 @@ function slideMove(dir){goSlide(_slideIdx+dir);}
 function buildStarText(){
   if(!gState.honmei)return null;
   const H=gState.H,T=gState.T,K=gState.K,Dk=gState.Dk;
-  const nayin=gState.nayin,mNayin=gState.mNayin;
-  return `私は${H?H.j:''}・月命${T?T.j:''}・傾斜${K?K.j:''}・同会${Dk?Dk.j:''}・納音${nayin?nayin.n:''}（年）${mNayin?mNayin.n:''}（月）です。`;
+  const nayin=gState.nayin,mNayin=gState.mNayin,dNayin=gState.dNayin;
+  const dayPart=dNayin?`${dNayin.n}（日）`:'';
+  return `私は${H?H.j:''}・月命${T?T.j:''}・傾斜${K?K.j:''}・同会${Dk?Dk.j:''}・納音${nayin?nayin.n:''}（年）${mNayin?mNayin.n:''}（月）${dayPart}です。`;
 }
 function updateClaudeStarText(){
   const txt=buildStarText();
