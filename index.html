@@ -768,6 +768,22 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   box-shadow:0 0 8px rgba(140,100,10,.15)!important;
 }
 
+
+/* ── KITOKUフッター ── */
+.kitoku-footer{
+  margin:24px 16px 0;
+  padding:16px 18px;
+  background:rgba(196,160,67,.06);
+  border:1px solid rgba(196,160,67,.2);
+  border-radius:12px;
+  cursor:pointer;
+}
+.footer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;
+}
+[data-theme="light"] .kitoku-footer{background:rgba(120,90,20,.06);border-color:rgba(120,90,20,.2);}
+
 </style>
 </head>
 <body>
@@ -944,37 +960,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         </div>
       </div>
 
-      <!-- フィードバック -->
-      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--rim);">
-        <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:8px;font-weight:600;">✦ KITOKUを一緒に育てる</div>
-        <div style="font-size:.75rem;color:var(--mist);line-height:1.9;margin-bottom:12px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-          <div onclick="openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
-            <div style="font-size:1.1rem;">📐</div>
-            <div>
-              <div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div>
-              <div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div>
-            </div>
-            <div style="margin-left:auto;color:var(--gold);font-size:.8rem;">›</div>
-          </div>
-          <div onclick="openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
-            <div style="font-size:1.1rem;">🔧</div>
-            <div>
-              <div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div>
-              <div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div>
-            </div>
-            <div style="margin-left:auto;color:var(--gold);font-size:.8rem;">›</div>
-          </div>
-          <div onclick="openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
-            <div style="font-size:1.1rem;">💡</div>
-            <div>
-              <div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div>
-              <div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div>
-            </div>
-            <div style="margin-left:auto;color:var(--gold);font-size:.8rem;">›</div>
-          </div>
-        </div>
-        <div style="font-size:.58rem;color:rgba(220,232,255,.2);text-align:center;line-height:1.8;">将軍の千本ノックを世界規模で🙏<br>あなたの声がKITOKUの品質をつくります</div>
+      <!-- フィードバック（フッターに移動済み） -->
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--rim);text-align:center;">
+        <div style="font-size:.72rem;color:var(--mist);">フィードバックはページ下部から送れます🙏</div>
       </div>
 
     </div>
@@ -1200,7 +1188,55 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
   </div>
 
-  <footer style="padding-top:24px;">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
+<div class="kitoku-footer" onclick="toggleFooterFeedback()">
+    <div class="footer-header">
+      <span style="color:var(--gold);letter-spacing:.1em;">✦ KITOKUを一緒に育てる</span>
+      <span id="footer-arrow" style="color:var(--gold);font-size:.8rem;transition:transform .3s;">▾</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:4px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
+    <div id="footer-btns" style="display:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+      <div onclick="event.stopPropagation();openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">📐</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">🔧</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">💡</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+    </div>
+  </div>
+<div class="kitoku-footer" onclick="toggleFooterFeedback()">
+    <div class="footer-header">
+      <span style="color:var(--gold);letter-spacing:.1em;">✦ KITOKUを一緒に育てる</span>
+      <span id="footer-arrow" style="color:var(--gold);font-size:.8rem;transition:transform .3s;">▾</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:4px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
+    <div id="footer-btns" style="display:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+      <div onclick="event.stopPropagation();openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">📐</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">🔧</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">💡</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+    </div>
+  </div>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
 </div>
 
 <!-- ══ 結果画面 ══ -->
@@ -1469,6 +1505,30 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <button class="deepen-btn" onclick="switchMainTab('vessel')">✦ 命の器タブへ</button>
   </div>
 
+<div class="kitoku-footer" onclick="toggleFooterFeedback()">
+    <div class="footer-header">
+      <span style="color:var(--gold);letter-spacing:.1em;">✦ KITOKUを一緒に育てる</span>
+      <span id="footer-arrow" style="color:var(--gold);font-size:.8rem;transition:transform .3s;">▾</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:4px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
+    <div id="footer-btns" style="display:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+      <div onclick="event.stopPropagation();openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">📐</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">🔧</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">💡</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+    </div>
+  </div>
   <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
   </div><!-- /tab-compass-content -->
 
@@ -1551,7 +1611,31 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
 
-    <footer style="margin-top:16px;">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
+<div class="kitoku-footer" onclick="toggleFooterFeedback()">
+    <div class="footer-header">
+      <span style="color:var(--gold);letter-spacing:.1em;">✦ KITOKUを一緒に育てる</span>
+      <span id="footer-arrow" style="color:var(--gold);font-size:.8rem;transition:transform .3s;">▾</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:4px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
+    <div id="footer-btns" style="display:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+      <div onclick="event.stopPropagation();openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">📐</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">🔧</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+      <div onclick="event.stopPropagation();openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+        <span style="font-size:1.1rem;">💡</span>
+        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
+        <span style="margin-left:auto;color:var(--gold);">›</span>
+      </div>
+    </div>
+  </div>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
   </div><!-- /tab-vessel-content -->
 
 </div><!-- /screenResult -->
@@ -3005,6 +3089,18 @@ function runBattery(){
       <div style="border-top:1px solid rgba(255,255,255,.06);margin-top:10px;padding-top:10px;font-size:.78rem;color:var(--mist);line-height:2;">${msg}</div>
     </div>`;
   document.getElementById('battery-result').style.display='block';
+}
+
+
+let _footerOpen=false;
+function toggleFooterFeedback(){
+  _footerOpen=!_footerOpen;
+  document.querySelectorAll('#footer-btns').forEach(el=>{
+    el.style.display=_footerOpen?'flex':'none';
+  });
+  document.querySelectorAll('#footer-arrow').forEach(el=>{
+    el.style.transform=_footerOpen?'rotate(180deg)':'rotate(0deg)';
+  });
 }
 
 // ── フィードバック機能 ──
