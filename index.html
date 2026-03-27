@@ -443,9 +443,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   background:rgba(232,100,130,.28);border-color:rgba(232,100,130,.6);
   box-shadow:0 0 10px rgba(232,100,130,.3);
 }
-.cell-kichi{
-  background:rgba(232,100,130,.18);border-color:rgba(232,100,130,.4);
-}
 @keyframes glowPulse{
   0%,100%{box-shadow:0 0 14px rgba(220,160,20,.35),inset 0 0 10px rgba(220,160,20,.1);}
   50%{box-shadow:0 0 24px rgba(220,160,20,.6),inset 0 0 16px rgba(220,160,20,.2);}
@@ -2171,10 +2168,10 @@ function renderBan(type){
     if(dir&&dir!==''){
       const dd=dirData[dir];
       const isLight=document.documentElement.getAttribute('data-theme')==='light';
-      let color= isLight ? 'rgba(40,30,10,.6)' : 'rgba(200,215,240,.3)';
+      let color= isLight ? 'rgba(40,30,10,.65)' : 'rgba(200,215,240,.55)';
       let subText='';
       if(dd.isKyo){
-        color= isLight ? 'rgba(40,30,10,.5)' : 'rgba(200,215,240,.45)';
+        color= isLight ? 'rgba(40,30,10,.5)' : 'rgba(200,215,240,.5)';
         const kn=kyouItems.find(k=>k.dir===dir);
         if(kn)subText=kn.name.split('/')[0];
       }
