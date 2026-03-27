@@ -737,6 +737,37 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .dir-badge.dai{background:rgba(140,100,10,.15)!important;border-color:rgba(140,100,10,.45)!important;color:#3a2000!important;}
 [data-theme="light"] .dir-badge.kyo{background:rgba(30,20,5,.05)!important;border-color:rgba(30,20,5,.2)!important;color:rgba(30,20,5,.5)!important;}
 
+
+/* ライトモード：吉方ラベル強調 */
+[data-theme="light"] .dir-label-text.kichi{
+  color:#3a2000!important;
+  font-weight:900!important;
+  font-size:.88rem!important;
+}
+[data-theme="light"] .dir-badge.kichi,
+[data-theme="light"] .dir-badge.dai{
+  background:rgba(140,100,10,.2)!important;
+  border-color:rgba(140,100,10,.55)!important;
+  color:#3a2000!important;
+  font-weight:700!important;
+  font-size:.5rem!important;
+  padding:2px 6px!important;
+}
+/* ライトモード：吉方マスの数字も強調 */
+[data-theme="light"] .cell-kichi .cell-num,
+[data-theme="light"] .cell-daikichi .cell-num,
+[data-theme="light"] .cell-saikokichi .cell-num{
+  color:#3a2000!important;
+  font-weight:700!important;
+}
+[data-theme="light"] .cell-kichi,
+[data-theme="light"] .cell-daikichi,
+[data-theme="light"] .cell-saikokichi{
+  background:rgba(160,120,20,.25)!important;
+  border-color:rgba(140,100,10,.7)!important;
+  box-shadow:0 0 8px rgba(140,100,10,.15)!important;
+}
+
 </style>
 </head>
 <body>
