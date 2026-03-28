@@ -784,6 +784,44 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 }
 [data-theme="light"] .kitoku-footer{background:rgba(120,90,20,.06);border-color:rgba(120,90,20,.2);}
 
+
+/* ライトモード：吉方の最大強調 */
+[data-theme="light"] .dir-label-text.kichi{
+  color:#2a1800!important;
+  font-weight:900!important;
+  font-size:.9rem!important;
+  text-shadow:0 0 8px rgba(180,130,0,.25)!important;
+}
+[data-theme="light"] .dir-badge.kichi,
+[data-theme="light"] .dir-badge.dai{
+  background:rgba(160,110,0,.25)!important;
+  border-color:rgba(140,90,0,.6)!important;
+  color:#2a1800!important;
+  font-weight:800!important;
+  font-size:.52rem!important;
+  padding:2px 7px!important;
+  letter-spacing:.05em!important;
+}
+[data-theme="light"] .cell-kichi,
+[data-theme="light"] .cell-daikichi,
+[data-theme="light"] .cell-saikokichi{
+  background:rgba(170,125,10,.22)!important;
+  border-color:rgba(140,90,0,.65)!important;
+  box-shadow:inset 0 0 8px rgba(180,130,0,.12),0 0 6px rgba(180,130,0,.15)!important;
+}
+[data-theme="light"] .cell-kichi .cell-num,
+[data-theme="light"] .cell-daikichi .cell-num,
+[data-theme="light"] .cell-saikokichi .cell-num{
+  color:#2a1800!important;
+  font-weight:800!important;
+}
+[data-theme="light"] .cell-kichi .cell-name,
+[data-theme="light"] .cell-daikichi .cell-name,
+[data-theme="light"] .cell-saikokichi .cell-name{
+  color:rgba(42,24,0,.75)!important;
+  font-weight:600!important;
+}
+
 </style>
 </head>
 <body>
@@ -2590,12 +2628,13 @@ function openMystarPopup(key){
           <div style="margin-top:8px;font-size:.78rem;color:var(--gold);">🎯 ${nt?nt.kw:''}</div>
         </div>
         <div class="gogyou-box" style="margin-top:10px;border-color:rgba(220,232,255,.12);">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            ${mImgUrl?`<img src="${mImgUrl}" alt="${mNayin.n}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;" onerror="this.style.display='none'">`:''}
-            <div>
-              <div style="font-size:.7rem;color:var(--mist);letter-spacing:.1em;">月納音</div>
-              <div class="gogyou-title" style="color:${mec};margin-bottom:0;">${mNayin.n||''}（${mnt?mnt.r:''}）</div>
-            </div>
+          <div style="font-size:.7rem;color:var(--mist);letter-spacing:.1em;margin-bottom:10px;">月納音</div>
+          ${(mImgUrl&&mImgUrl!==imgUrl)?`
+          <div style="margin-bottom:14px;border-radius:10px;overflow:hidden;border:1px solid rgba(220,232,255,.15);">
+            <img src="${mImgUrl}" alt="${mNayin.n}" style="width:100%;height:auto;display:block;" onerror="this.parentElement.style.display='none'">
+          </div>`:''}
+          <div style="margin-bottom:8px;">
+            <div class="gogyou-title" style="color:${mec};">${mNayin.n||''}（${mnt?mnt.r:''}）</div>
           </div>
           <div class="gogyou-text">${mnt?mnt.body:''}</div>
           <div style="margin-top:8px;font-size:.78rem;color:var(--mist);">🎯 ${mnt?mnt.kw:''}</div>
