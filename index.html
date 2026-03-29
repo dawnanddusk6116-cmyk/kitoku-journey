@@ -1650,8 +1650,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </div>
         </div>
       </div>
+      <div id="copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。お好きなAIに貼り付けてください</div>
     </div>
-    <div id="copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。お好きなAIに貼り付けてください</div>
   </div>
 
   <!-- 命の器への誘導 -->
@@ -2615,6 +2615,7 @@ function toggleKyo(){
 
 // ── 方位ポップアップ ──
 function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
+  haptic('light');
   // stateから再計算
   const {honmei,tsukimei,ty,tm,td,currentBan,H}=gState;
   const usedCenter=center||(currentBan==='day'?gState.dayCenter:currentBan==='month'?gState.monthCenter:gState.yearCent);
@@ -2794,6 +2795,7 @@ function openDayNayinPopup(){
 }
 
 function openMystarPopup(key){
+  haptic('light');
   const MAP={
     honmei:{title:'本命星',sub:'魂の設計図',body:'生まれた年から算出される根本エネルギーの星です。一生変わらない魂レベルの性質・才能・課題を示します。人生の大きな流れを読む基準になります。',id:'ms-honmei',useKyusei:true},
     tsukimei:{title:'月命星',sub:'内なる深層',body:'生まれた月から算出される星です。本命星が「表の顔」なら、月命星は「内なる本音」。体のエネルギーや、プライベートでの素の姿を示します。',id:'ms-tsuki',useKyusei:true},
@@ -3487,6 +3489,7 @@ function copyClaudeStar(){
   copyToClipboard(txt);
 }
 function copyTemplate(type){
+  haptic('light');
   const starText=buildStarText();
   if(!starText||starText.includes('undefined')){alert('先に羅針盤を開いてください');return;}
   let prompt='';
@@ -3554,7 +3557,17 @@ function fallbackCopy(text){
   try{document.execCommand('copy');showCopyToast();}catch(e){alert('コピーできませんでした');}
   document.body.removeChild(ta);
 }
+// ── 触覚フィードバック ──
+function haptic(type='light'){
+  if(navigator.vibrate){
+    if(type==='light')navigator.vibrate(8);
+    else if(type==='medium')navigator.vibrate(15);
+    else if(type==='copy')navigator.vibrate([8,30,8]);
+  }
+}
+
 function showCopyToast(){
+  haptic('copy');
   const t=document.getElementById('copy-toast');
   if(!t)return;
   t.style.display='block';
