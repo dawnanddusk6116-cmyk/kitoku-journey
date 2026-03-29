@@ -2423,11 +2423,8 @@ function renderBan(type){
   });
   wrap.appendChild(gridDiv);
 
-  // 方位ラベル（外側）— 正方形枠に収める
-  const labelsDiv=document.createElement('div');
-  labelsDiv.style.cssText='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;margin-top:6px;max-width:280px;margin-left:auto;margin-right:auto;';
-  const labelOrder=(gState.orient==='north')?['NW','N','NE','W','','E','SW','S','SE']:['SE','S','SW','E','','W','NE','N','NW'];
-  labelOrder.forEach(dir=>{
+  // 方位ラベル生成関数
+  function makeDirCell(dir){
     const div=document.createElement('div');
     div.style.cssText='text-align:center;overflow:hidden;line-height:1.3;padding:2px 1px;';
     if(dir&&dir!==''){
@@ -2442,15 +2439,11 @@ function renderBan(type){
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
       else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
-
-      // 方位名
       const dirEl=document.createElement('div');
       dirEl.className=labelClass;
       dirEl.style.cssText='font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
       dirEl.textContent=JP[dir];
       div.appendChild(dirEl);
-
-      // 吉凶バッジ
       if(subText){
         const badge=document.createElement('div');
         badge.className='dir-badge '+(dd.isKyo?'kyo':dd.rank>=4?'dai':'kichi');
@@ -2459,9 +2452,75 @@ function renderBan(type){
         div.appendChild(badge);
       }
     }
-    labelsDiv.appendChild(div);
-  });
-  wrap.appendChild(labelsDiv);
+    return div;
+  }
+
+  // 東西の縦ラベル生成
+  function makeSideLabel(dir){
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2px;flex-shrink:0;width:24px;';
+    const dd=dirData[dir];
+    let labelClass='dir-label-text normal';
+    let subText='';
+    if(dd.isKyo){
+      labelClass='dir-label-text kyo';
+      const kn=kyouItems.find(k=>k.dir===dir);
+      if(kn)subText=kn.name.split('/')[0];
+    }
+    else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
+    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
+    else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
+    const dirEl=document.createElement('div');
+    dirEl.className=labelClass;
+    dirEl.style.cssText='font-size:.78rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;';
+    dirEl.textContent=JP[dir];
+    div.appendChild(dirEl);
+    if(subText){
+      const badge=document.createElement('div');
+      badge.className='dir-badge '+(dd.isKyo?'kyo':dd.rank>=4?'dai':'kichi');
+      badge.style.cssText='font-size:.38rem;margin-top:4px;padding:2px 3px;border-radius:3px;display:inline-block;writing-mode:vertical-rl;white-space:nowrap;';
+      badge.textContent=subText;
+      div.appendChild(badge);
+    }
+    return div;
+  }
+
+  const isSouth=gState.orient!=='north';
+  // 南上：盤面上段=SE/S/SW、下段=NE/N/NW
+  // 北上：盤面上段=NW/N/NE、下段=SW/S/SE
+  const topRow=   isSouth?['SE','S','SW']:['NW','N','NE'];
+  const bottomRow=isSouth?['NE','N','NW']:['SW','S','SE'];
+  const leftDir=  isSouth?'E':'W';
+  const rightDir= isSouth?'W':'E';
+
+  const gridStyle='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;max-width:280px;margin-left:auto;margin-right:auto;';
+
+  // 上段ラベル（盤面の上）
+  const topDiv=document.createElement('div');
+  topDiv.style.cssText=gridStyle+'margin-bottom:4px;';
+  topRow.forEach(dir=>topDiv.appendChild(makeDirCell(dir)));
+  wrap.insertBefore(topDiv, gridDiv);
+
+  // 東西ラベルで盤面を挟む（盤面と同じ幅に収める）
+  const midWrap=document.createElement('div');
+  midWrap.style.cssText='display:flex;align-items:center;max-width:320px;margin:0 auto;';
+  // gridDivをmidWrapに移す
+  wrap.insertBefore(midWrap, gridDiv);
+  const leftLabel=makeSideLabel(leftDir);
+  leftLabel.style.cssText+='min-width:28px;max-width:28px;';
+  const rightLabel=makeSideLabel(rightDir);
+  rightLabel.style.cssText+='min-width:28px;max-width:28px;';
+  midWrap.appendChild(leftLabel);
+  gridDiv.style.flex='1';
+  gridDiv.style.minWidth='0';
+  midWrap.appendChild(gridDiv);
+  midWrap.appendChild(rightLabel);
+
+  // 下段ラベル（盤面の下）
+  const bottomDiv=document.createElement('div');
+  bottomDiv.style.cssText=gridStyle+'margin-top:4px;';
+  bottomRow.forEach(dir=>bottomDiv.appendChild(makeDirCell(dir)));
+  wrap.appendChild(bottomDiv);
 
   // 吉方リスト
   renderKichiList(dirData,p2s);
