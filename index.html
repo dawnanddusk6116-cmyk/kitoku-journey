@@ -1493,10 +1493,12 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <div style="padding:14px 16px;">
 
-      <!-- 星情報テキスト -->
       <div style="font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:6px;font-weight:600;">① あなたの星情報（自動生成）</div>
       <div id="claude-star-text" style="background:rgba(0,0,0,.2);border:1px solid var(--rim);border-radius:8px;padding:12px 14px;font-size:.82rem;color:var(--snow);line-height:2;margin-bottom:8px;letter-spacing:.04em;">羅針盤を開くと自動で生成されます</div>
-      <button onclick="copyClaudeStar()" style="width:100%;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:6px;color:var(--goldlt);font-size:.78rem;letter-spacing:.1em;padding:9px;cursor:pointer;margin-bottom:16px;">📋 星情報をコピー</button>
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:8px;padding:8px 12px;background:rgba(196,160,67,.05);border-radius:6px;border:1px solid rgba(196,160,67,.15);">
+        💡 下の項目をタップすると<strong style="color:var(--goldlt);">星情報＋プロンプトが一度にコピー</strong>されます。<br>貼り付けは1回だけでOKです。
+      </div>
+      <button onclick="copyClaudeStar()" style="width:100%;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:6px;color:var(--goldlt);font-size:.78rem;letter-spacing:.1em;padding:9px;cursor:pointer;margin-bottom:16px;">📋 星情報だけをコピー（単体使用）</button>
 
       <!-- ★今日のアクション -->
       <div style="font-size:.62rem;letter-spacing:.14em;color:rgba(196,160,67,.8);margin-bottom:8px;font-weight:700;">★ 今日のアクション</div>
@@ -1532,15 +1534,47 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         </div>
         <div onclick="copyTemplate('roadmap')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
           <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">⑦ 🗺 今後5年のロードマップ</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">年盤を「画像として保存」→AIに画像と一緒に貼り付けると、5年間の流れを読み解いてくれます。</div>
+          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">5年分の年盤データを自動生成してAIに渡します。方位の誤認なく正確に読み解いてくれます。</div>
         </div>
       </div>
 
-      <div style="text-align:center;font-size:.72rem;color:var(--mist);line-height:1.9;margin-top:12px;margin-bottom:6px;">
+      <div style="text-align:center;font-size:.72rem;color:var(--mist);line-height:1.9;margin-top:12px;margin-bottom:10px;">
         ChatGPT・Claude・Geminiなど<br>お好きなAIに貼り付けてください
       </div>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;border-top:1px solid rgba(255,255,255,.05);padding-top:6px;">
-        ⚠️ AIの回答はあくまで参考です。人間関係・健康・重要な決断については、AIの内容を鵜呑みにせず、ご自身の判断を大切にしてください。
+
+      <!-- AIの可能性を伝えるメッセージ -->
+      <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:6px;">✦ AIをもっと自由に使ってみてください</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">上の7項目はあくまでヒントです。<br>星情報をコピーして、自分だけの質問をAIに投げかけてみてください。<br><em style="color:var(--goldlt);">「もっと〇〇について教えて」「具体的に△△するには？」</em><br>質問を重ねるほど、AIは深く答えてくれます。</div>
+      </div>
+
+      <!-- 注意書き -->
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.9;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;">
+        ⚠️ AIの回答はあくまで参考です。特にAIの種類によっては不正確な情報を自信を持って答えることがあります。人間関係・健康・重要な決断については、AIの内容を鵜呑みにせず、ご自身の判断と、信頼できる方への相談を大切にしてください。<br><br>
+        <span onclick="openKitokuAbout()" style="color:var(--gold);text-decoration:underline;cursor:pointer;">✦ KITOKUとは何か、大切にしていること</span>
+      </div>
+
+      <!-- KITOKUを育てる -->
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(196,160,67,.15);">
+        <div style="font-size:.68rem;letter-spacing:.12em;color:rgba(196,160,67,.75);margin-bottom:8px;font-weight:700;">✦ KITOKUを一緒に育てる</div>
+        <div style="font-size:.68rem;color:var(--mist);line-height:1.9;margin-bottom:10px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div onclick="openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+            <span style="font-size:1.1rem;">📐</span>
+            <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
+            <span style="margin-left:auto;color:var(--gold);">›</span>
+          </div>
+          <div onclick="openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+            <span style="font-size:1.1rem;">🔧</span>
+            <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
+            <span style="margin-left:auto;color:var(--gold);">›</span>
+          </div>
+          <div onclick="openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+            <span style="font-size:1.1rem;">💡</span>
+            <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
+            <span style="margin-left:auto;color:var(--gold);">›</span>
+          </div>
+        </div>
       </div>
     </div>
     <div id="copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。お好きなAIに貼り付けてください</div>
@@ -3325,7 +3359,8 @@ function copyTemplate(type){
       });
     }
     const dirText=kichiDirs.length>0?kichiDirs.join('・'):'吉方向（アプリで確認済み）';
-    prompt=`${starText}\n\n今日の吉方位：${dirText}\n\n私の現在地から、今日の吉方位の方向にある以下のようなスポットを教えてください。\n・コンビニ（セブン・ファミマ・ローソンなど）\n・ドラッグストア（マツキヨ・ウエルシアなど）\n・カフェ・喫茶店\n・公園・神社\n・スーパー\n\n【重要】750m以上の距離を目安にしてください。距離が遠いほどエネルギーが大きくなります。\n\n現在地：（ここに住所や最寄り駅を入力してください）\n\n地図アプリ（Googleマップなど）と組み合わせて、具体的な場所を教えてください。`;
+    const orient=gState.orient==='south'?'南上（気学式）：盤面の上が南・下が北・左が東・右が西':'北上（地図式）：盤面の上が北・下が南・左が西・右が東';
+    prompt=`${starText}\n\n今日の吉方位：${dirText}\n方位表示：${orient}\n\n私の現在地から、今日の吉方位の方向にある以下のようなスポットを教えてください。\n・コンビニ（セブン・ファミマ・ローソンなど）\n・ドラッグストア（マツキヨ・ウエルシアなど）\n・カフェ・喫茶店\n・公園・神社\n・スーパー\n\n【重要】750m以上の距離を目安にしてください。距離が遠いほどエネルギーが大きくなります。\n\n現在地：（ここに住所や最寄り駅を入力してください）\n\n地図アプリ（Googleマップなど）と組み合わせて、具体的な場所を教えてください。`;
   }else if(type==='lucky'){
     const today=gState.ty&&gState.tm&&gState.td?`${gState.ty}年${gState.tm}月${gState.td}日`:new Date().toLocaleDateString('ja-JP');
     const kanshi=gState.kanshi||'';
@@ -3337,7 +3372,21 @@ function copyTemplate(type){
     const nayinText=`年納音：${nayin?nayin.n+`（${nayin.ks}）`:'不明'}　月納音：${mNayin?mNayin.n+`（${mNayin.ks}）`:'不明'}${dNayin?`　日納音：${dNayin.n}（${dNayin.ks}）`:''}`;
     prompt=`${starText}\n\n${nayinText}\n\n3つの納音（魂の音色）をもとに、以下を深く読み解いてください。\n\n①私の「魂の本質」——3つの音色が重なって生まれる、私だけの個性とは？\n\n②私が最も輝ける「人生の舞台」——どんな場所・状況で才能が花開くか？\n\n③私が持ちやすい「人生のテーマ（課題）」と、それを乗り越えるヒント\n\n④3つの音色が教える「今の私へのメッセージ」\n\n干支や九星の枠を超えた、魂レベルの深い読み解きを琥珀色の言葉でお願いします。`;
   }else if(type==='roadmap'){
-    prompt=`${starText}\n\n【年盤画像を添付してください】\n※ KITOKUアプリの「年盤」を表示して「画像として保存・シェア」でスクショを撮影し、このプロンプトと一緒にAIに貼り付けてください。\n\n添付した年盤と私の星情報をもとに、以下を教えてください。\n\n①各年の「運気のテーマ」と私にとっての意味\n②特に「力を入れるべき年」と「充電すべき年」の見極め\n③今後5年の「ロードマップ」（何をいつ動かすか）\n④今すぐ準備を始めるべきこと\n\n不安を煽らず、「5000年の知恵が教える人生の設計図」として琥珀色の言葉でお願いします。`;
+    const starNames=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+    // 5年分の年盤を完全テキストで生成
+    const currentYear=gState.ty||new Date().getFullYear();
+    let yearBoardText='';
+    for(let i=0;i<5;i++){
+      const y=currentYear+i;
+      const c=yearCenter(y);
+      yearBoardText+=`\n【${y}年 年盤】中宮：${starNames[c-1]}\n`;
+      for(let s=1;s<=9;s++){
+        const pos=starPos(s,c);
+        const dir=JP[pos]||pos;
+        yearBoardText+=`  ${dir}：${starNames[s-1]}\n`;
+      }
+    }
+    prompt=`${starText}\n\n━━━ 今後5年の年盤データ ━━━${yearBoardText}\n━━━━━━━━━━━━━━━━━━━━\n\n上記の私の星情報と、今後5年間の年盤をもとに、以下を教えてください。\n\n①各年の「運気のテーマ」と私にとっての意味（中宮の星と私の本命星との関係）\n②特に「力を入れるべき年」と「充電すべき年」の見極め\n③今後5年の「ロードマップ」（何をいつ動かすか）\n④今すぐ準備を始めるべきこと\n\n不安を煽らず、「5000年の知恵が教える人生の設計図」として琥珀色の言葉でお願いします。`;
   }
   copyToClipboard(prompt);
 }
