@@ -822,6 +822,76 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-weight:600!important;
 }
 
+
+/* ── タップボタン統一デザイン ── */
+
+/* B) AIに聞く7項目カード：右矢印＋hover強調 */
+.ai-template-btn{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--rim);
+  border-radius:10px;
+  padding:12px 14px;
+  cursor:pointer;
+  transition:all .2s;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.ai-template-btn::after{
+  content:'›';
+  margin-left:auto;
+  color:var(--gold);
+  font-size:1.1rem;
+  flex-shrink:0;
+}
+.ai-template-btn:active{
+  background:rgba(196,160,67,.12);
+  transform:scale(.98);
+}
+[data-theme="light"] .ai-template-btn{
+  background:#ffffff;
+  border-color:rgba(120,90,20,.18);
+}
+[data-theme="light"] .ai-template-btn:active{
+  background:rgba(120,90,20,.08);
+}
+
+/* C) ポップアップ系カード：タップヒント強調 */
+.mystar-cell{
+  transition:all .15s;
+}
+.mystar-cell:active{
+  background:rgba(196,160,67,.12)!important;
+  transform:scale(.97);
+}
+
+/* 悩み別ボタン：active強調 */
+.nayami-btn:active{
+  transform:scale(.96);
+}
+
+
+/* ai-template-btn内部レイアウト */
+.ai-template-btn > div:first-child{flex:1;}
+.ai-template-btn .btn-title{
+  font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;
+}
+.ai-template-btn .btn-desc{
+  font-size:.65rem;color:var(--mist);line-height:1.7;
+}
+[data-theme="light"] .ai-template-btn .btn-title{color:#3a2a08;}
+[data-theme="light"] .ai-template-btn .btn-desc{color:#5a4020;}
+
+/* フィードバックボタンとの差別化：説明テキストは枠なし */
+.info-text-block{
+  font-size:.72rem;color:var(--mist);line-height:1.9;
+  padding:10px 14px;
+  background:rgba(196,160,67,.04);
+  border-left:2px solid rgba(196,160,67,.3);
+  border-radius:0 6px 6px 0;
+  margin-bottom:8px;
+}
+
 </style>
 </head>
 <body>
@@ -1382,7 +1452,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div style="font-size:1.3rem;flex-shrink:0;">⚙</div>
     <div style="flex:1;">
       <div style="font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:2px;">流派の設定をカスタマイズできます</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">KITOKUは「凶」で縛りません。他流派との違いも設定で確認できます。</div>
+      <div class="btn-desc">KITOKUは「凶」で縛りません。他流派との違いも設定で確認できます。</div>
     </div>
     <div style="font-size:.8rem;color:var(--gold);">›</div>
   </div>
@@ -1503,38 +1573,38 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <!-- ★今日のアクション -->
       <div style="font-size:.62rem;letter-spacing:.14em;color:rgba(196,160,67,.8);margin-bottom:8px;font-weight:700;">★ 今日のアクション</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <div onclick="copyTemplate('spot')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">① 📍 近所の吉方スポットを探す</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">今日の吉方向にあるコンビニ・カフェ・公園などを探します。750m以上を目安に。</div>
+        <div onclick="copyTemplate(\'spot\')" class="ai-template-btn">
+          <div class="btn-title">① 📍 近所の吉方スポットを探す</div>
+          <div class="btn-desc">今日の吉方向にあるコンビニ・カフェ・公園などを探します。750m以上を目安に。</div>
         </div>
-        <div onclick="copyTemplate('advice')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">② 🌿 今の私へのアドバイス</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">今年の運気・今の時期にやるべきこと・避けるべきことを琥珀色の言葉で。</div>
+        <div onclick="copyTemplate(\'advice\')" class="ai-template-btn">
+          <div class="btn-title">② 🌿 今の私へのアドバイス</div>
+          <div class="btn-desc">今年の運気・今の時期にやるべきこと・避けるべきことを琥珀色の言葉で。</div>
         </div>
-        <div onclick="copyTemplate('lucky')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">③ 🌟 今日のラッキーアイテム</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">今日の星・方位・干支から、持つと運気が上がるアイテム・色・食べ物を教えてもらいます。</div>
+        <div onclick="copyTemplate(\'lucky\')" class="ai-template-btn">
+          <div class="btn-title">③ 🌟 今日のラッキーアイテム</div>
+          <div class="btn-desc">今日の星・方位・干支から、持つと運気が上がるアイテム・色・食べ物を教えてもらいます。</div>
         </div>
       </div>
 
       <!-- ★自分を知る -->
       <div style="font-size:.62rem;letter-spacing:.14em;color:rgba(196,160,67,.8);margin-bottom:8px;font-weight:700;">★ 自分を知る</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <div onclick="copyTemplate('torisetsu')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">④ 📖 私の取説を教えてください</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">本命星・月命星・傾斜・同会・納音から強み・才能・動かし方を読み解きます。</div>
+        <div onclick="copyTemplate(\'torisetsu\')" class="ai-template-btn">
+          <div class="btn-title">④ 📖 私の取説を教えてください</div>
+          <div class="btn-desc">本命星・月命星・傾斜・同会・納音から強み・才能・動かし方を読み解きます。</div>
         </div>
-        <div onclick="copyTemplate('jisei')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">⑤ 🪞 自省・自分を知る</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">「なぜうまくいかないのか」の根本原因・星との関係・今日から始めるアクション。</div>
+        <div onclick="copyTemplate(\'jisei\')" class="ai-template-btn">
+          <div class="btn-title">⑤ 🪞 自省・自分を知る</div>
+          <div class="btn-desc">「なぜうまくいかないのか」の根本原因・星との関係・今日から始めるアクション。</div>
         </div>
-        <div onclick="copyTemplate('nayin')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">⑥ 🎵 納音から読み解く自分の本質</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">年・月・日の3つの納音（魂の音色）から、あなたの本質・才能・生き方を深く読み解きます。</div>
+        <div onclick="copyTemplate(\'nayin\')" class="ai-template-btn">
+          <div class="btn-title">⑥ 🎵 納音から読み解く自分の本質</div>
+          <div class="btn-desc">年・月・日の3つの納音（魂の音色）から、あなたの本質・才能・生き方を深く読み解きます。</div>
         </div>
-        <div onclick="copyTemplate('roadmap')" style="background:rgba(255,255,255,.03);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;" onmousedown="this.style.background='rgba(196,160,67,.08)'" onmouseup="this.style.background='rgba(255,255,255,.03)'">
-          <div style="font-size:.75rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">⑦ 🗺 今後5年のロードマップ</div>
-          <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">5年分の年盤データを自動生成してAIに渡します。方位の誤認なく正確に読み解いてくれます。</div>
+        <div onclick="copyTemplate(\'roadmap\')" class="ai-template-btn">
+          <div class="btn-title">⑦ 🗺 今後5年のロードマップ</div>
+          <div class="btn-desc">5年分の年盤データを自動生成してAIに渡します。方位の誤認なく正確に読み解いてくれます。</div>
         </div>
       </div>
 
@@ -3035,7 +3105,7 @@ function renderVessel(sei,mei,furi,seiTotal,meiTotal){
           <span style="font-size:.75rem;color:var(--snow);font-weight:600;">${t.name}</span>
           <span style="font-size:.72rem;color:${c};font-weight:600;">${t.val}</span>
         </div>
-        <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">${t.desc}</div>
+        <div class="btn-desc">${t.desc}</div>
       </div>
     </div>`;
   }).join('');
