@@ -894,6 +894,29 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   margin-bottom:8px;
 }
 
+
+/* 方位盤 上下左右ラベル */
+#compassTopLabel,#compassBottomLabel{
+  font-size:.72rem;font-weight:700;letter-spacing:.2em;text-align:center;
+}
+#compassLeftLabel,#compassRightLabel{
+  font-size:.72rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;
+  letter-spacing:.1em;
+}
+[data-theme="light"] #compassLeftLabel,
+[data-theme="light"] #compassRightLabel{color:rgba(60,40,10,.55)!important;}
+[data-theme="light"] #compassBottomLabel{color:rgba(60,40,10,.55)!important;}
+
+
+/* 方位ラベル文字を大きく */
+.dir-label-text.normal{color:rgba(200,215,240,.65);font-size:.88rem!important;}
+.dir-label-text.kyo{color:rgba(200,215,240,.55);font-size:.88rem!important;}
+.dir-label-text.kichi{color:var(--goldlt);font-weight:800!important;font-size:.95rem!important;}
+[data-theme="light"] .dir-label-text.normal{color:rgba(30,20,5,.7)!important;font-size:.88rem!important;}
+[data-theme="light"] .dir-label-text.kyo{color:rgba(30,20,5,.55)!important;font-size:.88rem!important;}
+[data-theme="light"] .dir-label-text.kichi{color:#4a2e00!important;font-size:.95rem!important;}
+.dir-badge{font-size:.52rem!important;padding:2px 6px!important;}
+
 </style>
 </head>
 <body>
@@ -2017,6 +2040,7 @@ let gState={};
   try{
     const savedOrient=localStorage.getItem('kitoku-orient')||'south';
     gState.orient=savedOrient;
+  updateCompassLabels(savedOrient);
     const btnS=document.getElementById('orient-s');
     const btnN=document.getElementById('orient-n');
     if(btnS)btnS.classList.toggle('active',savedOrient==='south');
@@ -2187,7 +2211,25 @@ function setOrient(dir){
     const b=document.getElementById('orient-'+x);
     if(b)b.classList.toggle('active',(x==='s'&&dir==='south')||(x==='n'&&dir==='north'));
   });
+  updateCompassLabels(dir);
   renderBan(gState.currentBan);
+}
+
+function updateCompassLabels(dir){
+  const isSouth=dir==='south';
+  const top=document.getElementById('compassTopLabel');
+  const bottom=document.getElementById('compassBottomLabel');
+  const left=document.getElementById('compassLeftLabel');
+  const right=document.getElementById('compassRightLabel');
+  if(top){top.textContent=isSouth?'南':'北';}
+  if(bottom){bottom.textContent=isSouth?'北':'南';}
+  if(left){left.textContent=isSouth?'東':'西';}
+  if(right){right.textContent=isSouth?'西':'東';}
+  // 吉方（南上は東が明るく）
+  const goldColor='var(--gold)';
+  const mistColor='rgba(200,215,240,.6)';
+  if(top)top.style.color=isSouth?goldColor:mistColor;
+  if(bottom)bottom.style.color=isSouth?mistColor:goldColor;
 }
 
 // ── 盤面使い方ガイド ──
@@ -2383,7 +2425,7 @@ function renderBan(type){
 
   // 方位ラベル（外側）— 正方形枠に収める
   const labelsDiv=document.createElement('div');
-  labelsDiv.style.cssText='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;margin-top:6px;max-width:260px;margin-left:auto;margin-right:auto;';
+  labelsDiv.style.cssText='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;margin-top:6px;max-width:280px;margin-left:auto;margin-right:auto;';
   const labelOrder=(gState.orient==='north')?['NW','N','NE','W','','E','SW','S','SE']:['SE','S','SW','E','','W','NE','N','NW'];
   labelOrder.forEach(dir=>{
     const div=document.createElement('div');
