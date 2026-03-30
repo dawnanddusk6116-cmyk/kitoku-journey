@@ -1082,27 +1082,26 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </div>
         </div>
 
-        <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:6px;font-weight:600;">月の影響</div>
-        <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;padding:12px 14px;gap:12px;">
-            <div style="flex:1;">
-              <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">月の影響度</div>
-              <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">月命殺・月命的殺 / 小児殺</div>
-              <div style="font-size:.65rem;color:var(--mist);">大人の日常行動では本命星を優先します</div>
-            </div>
-            <select id="sw-tsukimei-satsu" onchange="setTsukimeiSatsu(this.value)" style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:5px 8px;font-size:.72rem;">
-              <option value="off">大人（本命星のみ）</option>
-              <option value="on">詳細（月命的殺も表示）</option>
-            </select>
-          </div>
-        </div>
-
         <div style="font-size:.7rem;color:var(--mist);background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.12);border-radius:6px;padding:10px 14px;line-height:1.8;">
           これらは流派によって解釈が異なります。KITOKUの推奨は「5000年の知恵」に基づいた設定です。自由に試して、あなた自身で確かめてください。
         </div>
       </div>
 
-      <!-- フィードバック（フッターに移動済み） -->
+      <!-- 月の影響（常時表示） -->
+      <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:6px;font-weight:600;">月の影響</div>
+      <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;padding:12px 14px;gap:12px;">
+          <div style="flex:1;">
+            <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">月の影響度</div>
+            <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">月命殺・月命的殺 / 小児殺</div>
+            <div style="font-size:.65rem;color:var(--mist);">大人の日常行動では本命星を優先します</div>
+          </div>
+          <select id="sw-tsukimei-satsu" onchange="setTsukimeiSatsu(this.value)" style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:5px 8px;font-size:.72rem;">
+            <option value="off">大人（本命星のみ）</option>
+            <option value="on">詳細（月命的殺も表示）</option>
+          </select>
+        </div>
+      </div>
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--rim);text-align:center;">
         <div style="font-size:.72rem;color:var(--mist);">フィードバックはページ下部から送れます🙏</div>
       </div>
@@ -2106,10 +2105,16 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei){
   if(showTsukimei&&tsukimei){
     const tmDir=Object.keys(p2s).find(d=>p2s[d]===tsukimei)||null;
     const tmTDir=tmDir?OPP[tmDir]:null;
-    if(tmDir&&tmDir!=='C'&&!items.find(i=>i.dir===tmDir))
-      items.push({name:'月命殺',dir:tmDir});
-    if(tmTDir&&tmTDir!=='C'&&!items.find(i=>i.dir===tmTDir))
-      items.push({name:'月命的殺',dir:tmTDir});
+    if(tmDir&&tmDir!=='C'){
+      const existing=items.find(i=>i.dir===tmDir);
+      if(existing)existing.name+='・月命殺';
+      else items.push({name:'月命殺',dir:tmDir});
+    }
+    if(tmTDir&&tmTDir!=='C'){
+      const existing=items.find(i=>i.dir===tmTDir);
+      if(existing)existing.name+='・月命的殺';
+      else items.push({name:'月命的殺',dir:tmTDir});
+    }
   }
   const kyouSet=new Set(items.map(i=>i.dir));
   return{items,kyouSet};
