@@ -299,8 +299,14 @@ footer{
   font-size:.55rem;letter-spacing:.18em;color:var(--mist);opacity:.6;
 }
 footer .disclaimer{
-  display:block;font-size:.52rem;letter-spacing:.04em;line-height:1.8;
-  margin-top:10px;opacity:.7;color:var(--mist);
+  display:block;font-size:.55rem;letter-spacing:.04em;line-height:1.9;
+  margin-top:10px;color:rgba(200,215,240,.55);
+}
+[data-theme="light"] footer .disclaimer{
+  color:rgba(40,28,8,.6);
+}
+[data-theme="light"] footer{
+  color:rgba(40,28,8,.5);
 }
 
 /* ── ローディング ── */
@@ -1633,8 +1639,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <div class="section-body">
       <div class="section-body-text" style="margin-bottom:12px;">
-        吉方が決まったら、スマホのAIアシスタントに話しかけてみましょう。<br>
-        地図アプリと組み合わせれば、<em style="color:var(--goldlt);font-weight:600;">無料で最高の吉方取り</em>ができます。
+        吉方が決まったら、スマホのAIに話しかけてみましょう。<br>
+        星情報を渡すだけで、あなた専用の<em style="color:var(--goldlt);font-weight:600;">琥珀色のアドバイス</em>を届けてくれます。<br>
+        ChatGPT・Claude・Geminiはすべて<strong style="color:var(--goldlt);">無料</strong>から使えます。
       </div>
       <div class="ai-hint">
         <div class="ai-hint-title">💬 AIへのお手本プロンプト</div>
@@ -1642,8 +1649,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <button class="ai-copy-btn" onclick="copyPrompt()">📋 コピーして使う</button>
       </div>
       <div class="ai-note-text" style="font-size:.62rem;margin-top:10px;line-height:1.8;">
-        ※ ChatGPT・Claude・Geminiなど、お使いのAIに貼り付けてください。<br>
-        AIは無料で使えます。KITOKUが「AIの使い方」も一緒にお教えします。
+        ※ コピーしたプロンプトをお好きなAIに貼り付けるだけです。
       </div>
     </div>
   </div>
@@ -1658,7 +1664,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div style="padding:14px 16px;">
 
       <!-- 個人情報の取り扱い -->
-      <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,119,.25);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,119,.25);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
         <div style="font-size:.7rem;color:#5DCAA5;font-weight:700;margin-bottom:6px;">🔒 個人情報の取り扱いについて</div>
         <div style="font-size:.63rem;color:var(--mist);line-height:1.9;">
           ・生年月日はこの端末にのみ保存されます<br>
@@ -1667,10 +1673,24 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         </div>
       </div>
 
+      <!-- AIガイド＋コツ（統合） -->
+      <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+        <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">✦ AIの使い分けガイド</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:.63rem;color:var(--mist);line-height:1.8;margin-bottom:10px;">
+          <div><strong style="color:var(--goldlt);">Claude</strong>　深い対話・哲学的分析・星情報の深い読み解き</div>
+          <div><strong style="color:var(--goldlt);">ChatGPT</strong>　幅広い対応・汎用性が高い・情報整理が得意</div>
+          <div><strong style="color:var(--goldlt);">Gemini</strong>　Google連携・最新情報に強い</div>
+        </div>
+        <div style="border-top:1px solid rgba(196,160,67,.15);padding-top:8px;font-size:.63rem;color:var(--mist);line-height:1.9;">
+          💬 AIは同調しやすい性質があります。<strong style="color:var(--snow);">違うと思ったら遠慮なく言い直してください。</strong>質問を重ねるほど深く答えてくれます。<br>
+          📍 位置情報は不正確な場合があります。Googleマップなどと組み合わせてダブルチェックをしてください。
+        </div>
+      </div>
+
       <div style="font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:6px;font-weight:600;">① あなたの星情報（自動生成）</div>
       <div id="claude-star-text" style="background:rgba(0,0,0,.2);border:1px solid var(--rim);border-radius:8px;padding:12px 14px;font-size:.82rem;color:var(--snow);line-height:2;margin-bottom:8px;letter-spacing:.04em;">羅針盤を開くと自動で生成されます</div>
       <div style="font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:8px;padding:8px 12px;background:rgba(196,160,67,.05);border-radius:6px;border:1px solid rgba(196,160,67,.15);">
-        💡 下の項目をタップすると<strong style="color:var(--goldlt);">星情報＋プロンプトが一度にコピー</strong>されます。<br>貼り付けは1回だけでOKです。
+        💡 下の項目をタップすると<strong style="color:var(--goldlt);">星情報＋プロンプトが一度にコピー</strong>されます。貼り付けは1回だけでOKです。
       </div>
       <button onclick="copyClaudeStar()" style="width:100%;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:6px;color:var(--goldlt);font-size:.78rem;letter-spacing:.1em;padding:9px;cursor:pointer;margin-bottom:16px;">📋 星情報だけをコピー（単体使用）</button>
 
@@ -1695,29 +1715,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         ChatGPT・Claude・Geminiなど<br>お好きなAIに貼り付けてください
       </div>
 
-      <!-- ①AIの使い分けガイド -->
-      <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-        <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">✦ AIの使い分けガイド</div>
-        <div style="display:flex;flex-direction:column;gap:8px;font-size:.63rem;color:var(--mist);line-height:1.8;">
-          <div><strong style="color:var(--goldlt);">Claude</strong>　深い対話・哲学的分析・星情報の深い読み解き</div>
-          <div><strong style="color:var(--goldlt);">ChatGPT</strong>　幅広い対応・汎用性が高い・情報整理が得意</div>
-          <div><strong style="color:var(--goldlt);">Gemini</strong>　Google連携・最新情報に強い<br>　　　　　　※位置情報は不正確な場合があります</div>
-        </div>
-      </div>
-
-      <!-- ③AIの同調性の注意書き -->
-      <div style="background:rgba(255,200,50,.05);border:1px solid rgba(255,200,50,.2);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-        <div style="font-size:.7rem;color:rgba(255,200,80,.9);font-weight:700;margin-bottom:6px;">💬 AIを上手に使うコツ</div>
-        <div style="font-size:.63rem;color:var(--mist);line-height:1.9;">
-          AIは同調しやすい性質があります。<br>
-          <strong style="color:var(--snow);">違うと思ったら遠慮なく言い直してください。</strong><br>
-          質問を重ねるほど、AIは深く答えてくれます。
-        </div>
-      </div>
-
       <!-- 注意書き -->
       <div style="font-size:.6rem;color:var(--mist);line-height:1.9;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;">
-        ⚠️ AIの回答はあくまで参考です。特にAIの種類によっては不正確な情報を自信を持って答えることがあります。人間関係・健康・重要な決断については、AIの内容を鵜呑みにせず、ご自身の判断と、信頼できる方への相談を大切にしてください。<br><br>
+        ⚠️ AIの回答はあくまで参考です。重要な判断はご自身でお願いします。<br><br>
         <span onclick="openKitokuAbout()" style="color:var(--gold);text-decoration:underline;cursor:pointer;">✦ KITOKUとは何か、大切にしていること</span>
       </div>
 
