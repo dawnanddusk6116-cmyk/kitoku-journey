@@ -1088,12 +1088,11 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
             <div style="flex:1;">
               <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">月の影響度</div>
               <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">月命殺・月命的殺 / 小児殺</div>
-              <div style="font-size:.65rem;color:var(--mist);">大人は生まれた星を中心に読みます</div>
+              <div style="font-size:.65rem;color:var(--mist);">大人の日常行動では本命星を優先します</div>
             </div>
-            <select style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:5px 8px;font-size:.72rem;">
-              <option>大人（生まれた星のみ）</option>
-              <option>子供（月を中心に）</option>
-              <option>常に両方考慮</option>
+            <select id="sw-tsukimei-satsu" onchange="setTsukimeiSatsu(this.value)" style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:5px 8px;font-size:.72rem;">
+              <option value="off">大人（本命星のみ）</option>
+              <option value="on">詳細（月命的殺も表示）</option>
             </select>
           </div>
         </div>
@@ -2079,7 +2078,7 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet){
   if(inHon)return{rank:2,badges:['✦ 吉方']};
   return{rank:0,badges:[]};
 }
-function getKyouDirs(boardCenter,honmei,breakDir){
+function getKyouDirs(boardCenter,honmei,breakDir,tsukimei){
   const p2s=buildBoardFromCenter(boardCenter);
   const goouDir=Object.keys(p2s).find(d=>p2s[d]===5)||null;
   const ankenDir=goouDir?OPP[goouDir]:null;
@@ -2096,6 +2095,16 @@ function getKyouDirs(boardCenter,honmei,breakDir){
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
   if(teiiDir&&teiiDir!=='C')items.push({name:'定位対沖',dir:teiiDir});
   if(teiiTDir&&teiiTDir!=='C')items.push({name:'定位対沖（裏）',dir:teiiTDir});
+  // 月命的殺（設定がonの場合のみ）
+  const showTsukimei=gState.tsukimeiSatsu==='on';
+  if(showTsukimei&&tsukimei){
+    const tmDir=Object.keys(p2s).find(d=>p2s[d]===tsukimei)||null;
+    const tmTDir=tmDir?OPP[tmDir]:null;
+    if(tmDir&&tmDir!=='C'&&!items.find(i=>i.dir===tmDir))
+      items.push({name:'月命殺',dir:tmDir});
+    if(tmTDir&&tmTDir!=='C'&&!items.find(i=>i.dir===tmTDir))
+      items.push({name:'月命的殺',dir:tmTDir});
+  }
   const kyouSet=new Set(items.map(i=>i.dir));
   return{items,kyouSet};
 }
@@ -2134,6 +2143,13 @@ let gState={};
     const savedOrient=localStorage.getItem('kitoku-orient')||'south';
     gState.orient=savedOrient;
   updateCompassLabels(savedOrient);
+  // 月命的殺設定を読み込む
+  try{
+    const savedTm=localStorage.getItem('kitoku-tsukimei-satsu')||'off';
+    gState.tsukimeiSatsu=savedTm;
+    const sel=document.getElementById('sw-tsukimei-satsu');
+    if(sel)sel.value=savedTm;
+  }catch(e){gState.tsukimeiSatsu='off';}
     const btnS=document.getElementById('orient-s');
     const btnN=document.getElementById('orient-n');
     if(btnS)btnS.classList.toggle('active',savedOrient==='south');
@@ -2463,7 +2479,7 @@ function renderBan(type){
   else if(type==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
   else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
 
-  const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir);
+  const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei);
 
   // 各方向の吉凶ランク
   const dirData={};
@@ -2672,7 +2688,7 @@ function renderKichiList(dirData,p2s){
       else if(currentBan==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
       else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
       const p2s=buildBoardFromCenter(center);
-      const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir);
+      const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei);
       const allDirData={};
       ALL8.forEach(d=>{const starN=p2s[d];const r=rankDir(d,starN,honmei,tsukimei,sangoSet);allDirData[d]={starN,rank:r.rank,badges:r.badges,isKyo:kyouSet.has(d)};});
       openDirPopup(dir,center,allDirData,kyouItems,kyouSet);
@@ -3119,6 +3135,12 @@ function showDisclaimerDetail(){
 function closeDisclaimerDetail(){
   const p=document.getElementById('disclaimerDetailPanel');
   if(p){p.style.display='none';}
+}
+
+function setTsukimeiSatsu(val){
+  gState.tsukimeiSatsu=val;
+  try{localStorage.setItem('kitoku-tsukimei-satsu',val);}catch(e){}
+  if(gState.honmei)renderBan(gState.currentBan||'day');
 }
 
 // ── 設定パネル ──
