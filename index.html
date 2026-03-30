@@ -1018,7 +1018,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
             <div style="font-size:.65rem;color:var(--mist);">旅行のタイミングでそっとお知らせします</div>
           </div>
           <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
-            <input type="checkbox" id="sw-season" checked style="opacity:0;width:0;height:0;position:absolute;">
+            <input type="checkbox" id="sw-season" onchange="setSeasonMode(this.checked)" checked style="opacity:0;width:0;height:0;position:absolute;">
             <span id="sw-season-track" style="position:absolute;inset:0;background:#1D9E75;border-radius:13px;transition:background .2s;"></span>
             <span id="sw-season-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;transform:translateX(18px);"></span>
           </label>
@@ -1035,9 +1035,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
             <div style="font-size:.65rem;color:var(--mist);line-height:1.6;">KITOKUでは年盤・月盤が吉なら帰着日の日盤凶は無視してOK。OFFを推奨します。</div>
           </div>
           <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
-            <input type="checkbox" id="sw-kichaku" style="opacity:0;width:0;height:0;position:absolute;">
-            <span style="position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:13px;transition:background .2s;"></span>
-            <span style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
+            <input type="checkbox" id="sw-kichaku" onchange="setKichakuMode(this.checked)" style="opacity:0;width:0;height:0;position:absolute;">
+            <span id="sw-kichaku-track" style="position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:13px;transition:background .2s;"></span>
+            <span id="sw-kichaku-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
           </label>
         </div>
       </div>
@@ -1059,7 +1059,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
               <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
                 <input type="checkbox" id="sw-soukou" onchange="setSoukouMode(this.checked)" checked style="opacity:0;width:0;height:0;position:absolute;">
                 <span id="sw-soukou-track" style="position:absolute;inset:0;background:#1D9E75;border-radius:13px;transition:background .2s;"></span>
-                <span id="sw-soukou-thumb" style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
+                <span id="sw-soukou-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;transform:translateX(18px);"></span>
               </label>
             </div>
           </div>
@@ -2166,7 +2166,15 @@ let gState={};
     gState.teiiAsKyo=teiiKyo;
     const swT=document.getElementById('sw-teii');
     if(swT){swT.checked=teiiKyo;_updateToggleUI('sw-teii',teiiKyo);}
-  }catch(e){gState.soukouOff=false;gState.teiiAsKyo=false;}
+    const kichakuWarn=localStorage.getItem('kitoku-kichaku-warn')==='1';
+    gState.kichakuWarn=kichakuWarn;
+    const swK=document.getElementById('sw-kichaku');
+    if(swK){swK.checked=kichakuWarn;_updateToggleUI('sw-kichaku',kichakuWarn);}
+    const seasonAlert=localStorage.getItem('kitoku-season-alert')!=='0';
+    gState.seasonAlert=seasonAlert;
+    const swSeason=document.getElementById('sw-season');
+    if(swSeason){swSeason.checked=seasonAlert;_updateToggleUI('sw-season',seasonAlert);}
+  }catch(e){gState.soukouOff=false;gState.teiiAsKyo=false;gState.kichakuWarn=false;gState.seasonAlert=true;}
     const btnS=document.getElementById('orient-s');
     const btnN=document.getElementById('orient-n');
     if(btnS)btnS.classList.toggle('active',savedOrient==='south');
@@ -2652,7 +2660,7 @@ function renderBan(type){
   renderKichiList(dirData,p2s);
 
   // 凶方リスト
-  renderKyoList(kyouItems);
+  renderKyoList(kyouItems,type);
 
   // AIプロンプト生成
   generateAIPrompt(dirData,p2s,type);
@@ -2713,8 +2721,10 @@ function renderKichiList(dirData,p2s){
   });
 }
 
-function renderKyoList(kyouItems){
+function renderKyoList(kyouItems,type){
   const body=document.getElementById('kyoBody');
+  // 帰着日設定がOFFの場合、日盤の凶に「年盤・月盤が吉なら無視OK」の注釈を追加
+  const showKichakuNote=(!gState.kichakuWarn)&&(type==='day');
   if(kyouItems.length===0){
     body.innerHTML='<div style="font-size:.62rem;color:var(--mist);padding-top:6px;">今日は特に注意すべき方向はありません。</div>';
     return;
@@ -2729,7 +2739,13 @@ function renderKyoList(kyouItems){
       <div class="kyo-dir">${JP[dir]}</div>
       <div class="kyo-name">${names.join('・')}</div>
     </div>
-  `).join('');
+  `).join('')+(showKichakuNote?'<div style="font-size:.58rem;color:rgba(200,215,240,.4);margin-top:6px;line-height:1.7;">※ 年盤・月盤が吉なら日盤の凶は気にしすぎなくてOKです（KITOKU推奨）</div>':'');
+  // 土用期間中の注意（設定ONかつ日盤の場合）
+  if(gState.seasonAlert&&type==='day'&&gState.ty&&gState.tm&&gState.td){
+    if(isDoyoPeriod(gState.ty,gState.tm,gState.td)){
+      body.innerHTML+='<div style="margin-top:8px;padding:8px 10px;background:rgba(232,160,40,.08);border:1px solid rgba(232,160,40,.25);border-radius:6px;font-size:.62rem;color:rgba(232,160,40,.9);line-height:1.8;">🌿 土用期間中です。月建方向への<strong>旅行</strong>は注意。引越し（定住）は問題ありません。</div>';
+    }
+  }
 }
 
 function toggleKyo(){
@@ -3152,6 +3168,33 @@ function showDisclaimerDetail(){
 function closeDisclaimerDetail(){
   const p=document.getElementById('disclaimerDetailPanel');
   if(p){p.style.display='none';}
+}
+
+function setSeasonMode(checked){
+  gState.seasonAlert=checked;
+  try{localStorage.setItem('kitoku-season-alert',checked?'1':'0');}catch(e){}
+  _updateToggleUI('sw-season',checked);
+}
+
+// 土用期間判定（立春・立夏・立秋・立冬の前18日間）
+function isDoyoPeriod(y,m,d){
+  // 四季の節入り月（2=立春,5=立夏,8=立秋,11=立冬）
+  const setsuMonths=[2,5,8,11];
+  for(const sm of setsuMonths){
+    const setsuDay=getSekkiDay(y,sm);
+    const setsuDate=new Date(y,sm-1,setsuDay);
+    const targetDate=new Date(y,m-1,d);
+    const diffDays=Math.round((setsuDate-targetDate)/86400000);
+    if(diffDays>=0&&diffDays<18)return true;
+  }
+  return false;
+}
+
+function setKichakuMode(checked){
+  gState.kichakuWarn=checked;
+  try{localStorage.setItem('kitoku-kichaku-warn',checked?'1':'0');}catch(e){}
+  _updateToggleUI('sw-kichaku',checked);
+  if(gState.honmei)renderBan(gState.currentBan||'day');
 }
 
 function setSoukouMode(checked){
