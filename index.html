@@ -2266,8 +2266,17 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   const monthCenter=getMonthCenter(ty,tm,td);
   const yearCent=yearCenter(ty);
 
-  // 状態保存
+  // 状態保存（設定値を引き継ぐ）
+  const savedSettings={
+    orient:gState.orient||'south',
+    tsukimeiSatsu:gState.tsukimeiSatsu||'off',
+    soukouOff:gState.soukouOff||false,
+    teiiAsKyo:gState.teiiAsKyo||false,
+    kichakuWarn:gState.kichakuWarn||false,
+    seasonAlert:gState.seasonAlert!==undefined?gState.seasonAlert:true,
+  };
   gState={honmei,tsukimei,H,T,ty,tm,td,dayCenter,monthCenter,yearCent,kanshi,kY,kM,by,bm,bd};
+  Object.assign(gState,savedSettings);
   gState.currentBan='day';
   gState.orient=gState.orient||'south';
   gState.navYear=ty;
