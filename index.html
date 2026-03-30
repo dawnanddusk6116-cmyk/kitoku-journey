@@ -298,6 +298,10 @@ footer{
   text-align:center;padding:20px 16px env(safe-area-inset-bottom,20px);
   font-size:.55rem;letter-spacing:.18em;color:var(--mist);opacity:.6;
 }
+footer .disclaimer{
+  display:block;font-size:.52rem;letter-spacing:.04em;line-height:1.8;
+  margin-top:10px;opacity:.7;color:var(--mist);
+}
 
 /* ── ローディング ── */
 .loading{
@@ -1102,6 +1106,71 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   </div>
 </div>
 
+<!-- 初回ポップアップ（毎月1日リセット） -->
+<div id="disclaimerPanel" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid rgba(196,160,67,.3);border-radius:18px;width:100%;max-width:400px;padding:24px 22px;">
+    <div style="font-size:.62rem;letter-spacing:.2em;color:rgba(196,160,67,.7);margin-bottom:6px;">KITOKU@JOURNEY</div>
+    <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:16px;">⚠️ ご利用前に3点だけ</div>
+    <div style="font-size:.82rem;color:var(--snow);line-height:2.2;margin-bottom:18px;">
+      <div style="margin-bottom:10px;">① AIは嘘をつく場合があります<br><span style="font-size:.72rem;color:var(--mist);">（ハルシネーション）</span></div>
+      <div style="margin-bottom:10px;">② 方位情報は必ず<br>地図アプリでダブルチェックを</div>
+      <div>③ 最終判断はご自身で</div>
+    </div>
+    <button onclick="showDisclaimerDetail()" style="width:100%;background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.3);border-radius:8px;color:var(--gold);font-size:.78rem;letter-spacing:.1em;padding:10px;cursor:pointer;margin-bottom:10px;">詳しく読む ›</button>
+    <button onclick="closeDisclaimer()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(212,175,55,.12));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.9rem;letter-spacing:.15em;padding:13px;cursor:pointer;">理解しました ✦</button>
+    <div style="text-align:center;font-size:.55rem;color:rgba(200,215,240,.3);margin-top:10px;">毎月1日にリセットされます</div>
+  </div>
+</div>
+
+<!-- 詳しく読むパネル -->
+<div id="disclaimerDetailPanel" style="display:none;position:fixed;inset:0;z-index:750;background:rgba(0,0,0,.8);align-items:flex-end;justify-content:center;">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding:24px 22px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;">AIの正しい使い方について</div>
+      <button onclick="closeDisclaimerDetail()" style="background:rgba(255,255,255,.08);border:1px solid var(--rim);border-radius:8px;color:var(--mist);padding:6px 14px;font-size:.78rem;cursor:pointer;">閉じる</button>
+    </div>
+    <div style="font-size:.82rem;color:var(--snow);line-height:2.2;">
+
+      <div style="color:var(--goldlt);font-weight:700;margin-bottom:4px;">⭐️ 方位情報について</div>
+      <p style="margin:0 0 16px;color:var(--mist);">特に吉方取りの方位情報に関しては細心の注意を払ってチェックをして下さい。</p>
+
+      <div style="color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ AIは万能ではありません</div>
+      <p style="margin:0 0 16px;color:var(--mist);">ハルシネーション（嘘をつく）があることを前提に考えて下さい。一次情報、二次情報すらも疑う目が必要かもしれません。</p>
+
+      <div style="color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ AIは同調しやすいです</div>
+      <p style="margin:0 0 16px;color:var(--mist);">違うと思ったら言い直して下さい。どう活用するか？を前提にして下さい。</p>
+
+      <div style="color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 位置情報は不正確な場合あり</div>
+      <p style="margin:0 0 16px;color:var(--mist);">Googleマップと組み合わせたり諸派のマップを活用するなど、ダブルチェックをして下さい。</p>
+
+      <div style="color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 個人情報について</div>
+      <p style="margin:0 0 16px;color:var(--mist);">生年月日はこの端末にのみ保存。サーバーには送信しません。</p>
+
+      <div style="color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ AIの回答はあくまで参考</div>
+      <p style="margin:0 0 20px;color:var(--mist);">重要な判断は自分で行う。AIとどう向き合っていくか？を同時に考えていただければ幸です。人との関わり方も同じです。KITOKUはAIを正しく使い、自分自身を知るきっかけを作るツールです。</p>
+
+      <div style="border-top:1px solid var(--rim);padding-top:16px;margin-bottom:16px;">
+        <div style="color:var(--goldlt);font-weight:700;margin-bottom:10px;">✦ AIの使い分けガイド</div>
+        <div style="color:var(--mist);margin-bottom:8px;"><strong style="color:var(--snow);">Claude</strong>　深い対話・哲学的分析・星情報の深い読み解き</div>
+        <div style="color:var(--mist);margin-bottom:8px;"><strong style="color:var(--snow);">ChatGPT</strong>　幅広い対応・汎用性が高い・情報整理が得意</div>
+        <div style="color:var(--mist);margin-bottom:16px;"><strong style="color:var(--snow);">Gemini</strong>　Google連携・最新情報に強い<br><span style="font-size:.72rem;">※位置情報は不正確な場合があります</span></div>
+        <div style="color:var(--mist);font-size:.75rem;line-height:1.9;">
+          共通：AIの回答はあくまで参考<br>
+          違うと思ったら言い直して下さい<br>
+          質問を重ねるほど深く答えてくれます
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--rim);padding-top:16px;">
+        <p style="margin:0 0 12px;color:var(--mist);">自分も日々模索しながらやっています。皆様と一緒にKITOKUを育てていただければ幸です。</p>
+        <p style="margin:0 0 12px;color:var(--mist);">今一番大切なのは情報の波にのまれない事。自分軸をしっかりと確立すること。自分を知ることがその一番の近道ではないか？という仮説の上にこのOSを作ることになりました。</p>
+        <p style="margin:0;color:var(--goldlt);font-style:italic;">自分の気づきを共有できる人がいれば嬉しいです。</p>
+      </div>
+    </div>
+    <button onclick="closeDisclaimerDetail();closeDisclaimer();" style="width:100%;margin-top:20px;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(212,175,55,.12));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.9rem;letter-spacing:.15em;padding:13px;cursor:pointer;">理解しました ✦</button>
+  </div>
+</div>
+
 <!-- KITOKUとはパネル -->
 <div id="kitokuAboutPanel" style="display:none;position:fixed;inset:0;z-index:650;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center;">
   <div style="background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:24px 22px 40px;">
@@ -1365,7 +1434,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
   </div>
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
 </div>
 
 <!-- ══ 結果画面 ══ -->
@@ -1688,7 +1757,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <button class="deepen-btn" onclick="switchMainTab('vessel')">✦ 命の器タブへ</button>
   </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
   </div><!-- /tab-compass-content -->
 
   <!-- 命の器タブ -->
@@ -1770,7 +1839,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
   </div><!-- /tab-vessel-content -->
 
 </div><!-- /screenResult -->
@@ -3020,6 +3089,38 @@ function closeKitokuAbout(){
   if(p){p.style.display='none';document.body.style.overflow='';}
 }
 
+// 初回ポップアップ（毎月1日リセット）
+function checkDisclaimer(){
+  try{
+    const now=new Date();
+    const jst=new Date(now.getTime()+9*60*60*1000);
+    const key='kitoku-disclaimer-'+jst.getUTCFullYear()+'-'+(jst.getUTCMonth()+1);
+    const seen=localStorage.getItem(key);
+    if(!seen){
+      const p=document.getElementById('disclaimerPanel');
+      if(p){p.style.display='flex';document.body.style.overflow='hidden';}
+    }
+  }catch(e){}
+}
+function closeDisclaimer(){
+  try{
+    const now=new Date();
+    const jst=new Date(now.getTime()+9*60*60*1000);
+    const key='kitoku-disclaimer-'+jst.getUTCFullYear()+'-'+(jst.getUTCMonth()+1);
+    localStorage.setItem(key,'1');
+  }catch(e){}
+  const p=document.getElementById('disclaimerPanel');
+  if(p){p.style.display='none';document.body.style.overflow='';}
+}
+function showDisclaimerDetail(){
+  const p=document.getElementById('disclaimerDetailPanel');
+  if(p){p.style.display='flex';}
+}
+function closeDisclaimerDetail(){
+  const p=document.getElementById('disclaimerDetailPanel');
+  if(p){p.style.display='none';}
+}
+
 // ── 設定パネル ──
 function openSettings(){
   const p=document.getElementById('settingPanel');
@@ -3732,7 +3833,7 @@ function cycleHeroImage(){
   if(img) img.src = KITOKU_IMAGES.concept[keys[_heroIdx]];
 }
 // ページ読み込み後に実行
-document.addEventListener('DOMContentLoaded', initHeroImage);
+document.addEventListener('DOMContentLoaded', ()=>{initHeroImage();checkDisclaimer();});
 
 function setTheme(t){
   document.documentElement.setAttribute('data-theme',t);
