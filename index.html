@@ -1588,6 +1588,16 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <div style="padding:14px 16px;">
 
+      <!-- 個人情報の取り扱い -->
+      <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,119,.25);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+        <div style="font-size:.7rem;color:#5DCAA5;font-weight:700;margin-bottom:6px;">🔒 個人情報の取り扱いについて</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.9;">
+          ・生年月日はこの端末にのみ保存されます<br>
+          ・サーバーには送信しません<br>
+          ・お名前は任意入力です（入力しなくても使えます）
+        </div>
+      </div>
+
       <div style="font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:6px;font-weight:600;">① あなたの星情報（自動生成）</div>
       <div id="claude-star-text" style="background:rgba(0,0,0,.2);border:1px solid var(--rim);border-radius:8px;padding:12px 14px;font-size:.82rem;color:var(--snow);line-height:2;margin-bottom:8px;letter-spacing:.04em;">羅針盤を開くと自動で生成されます</div>
       <div style="font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:8px;padding:8px 12px;background:rgba(196,160,67,.05);border-radius:6px;border:1px solid rgba(196,160,67,.15);">
@@ -1616,10 +1626,24 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         ChatGPT・Claude・Geminiなど<br>お好きなAIに貼り付けてください
       </div>
 
-      <!-- AIの可能性を伝えるメッセージ -->
+      <!-- ①AIの使い分けガイド -->
       <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-        <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:6px;">✦ AIをもっと自由に使ってみてください</div>
-        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">上の7項目はあくまでヒントです。<br>星情報をコピーして、自分だけの質問をAIに投げかけてみてください。<br><em style="color:var(--goldlt);">「もっと〇〇について教えて」「具体的に△△するには？」</em><br>質問を重ねるほど、AIは深く答えてくれます。</div>
+        <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">✦ AIの使い分けガイド</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.63rem;color:var(--mist);line-height:1.8;">
+          <div><strong style="color:var(--goldlt);">Claude</strong>　深い対話・哲学的分析・星情報の深い読み解き</div>
+          <div><strong style="color:var(--goldlt);">ChatGPT</strong>　幅広い対応・汎用性が高い・情報整理が得意</div>
+          <div><strong style="color:var(--goldlt);">Gemini</strong>　Google連携・最新情報に強い<br>　　　　　　※位置情報は不正確な場合があります</div>
+        </div>
+      </div>
+
+      <!-- ③AIの同調性の注意書き -->
+      <div style="background:rgba(255,200,50,.05);border:1px solid rgba(255,200,50,.2);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:.7rem;color:rgba(255,200,80,.9);font-weight:700;margin-bottom:6px;">💬 AIを上手に使うコツ</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.9;">
+          AIは同調しやすい性質があります。<br>
+          <strong style="color:var(--snow);">違うと思ったら遠慮なく言い直してください。</strong><br>
+          質問を重ねるほど、AIは深く答えてくれます。
+        </div>
       </div>
 
       <!-- 注意書き -->
