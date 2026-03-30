@@ -1057,9 +1057,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
                 <div style="font-size:.65rem;color:var(--mist);">異なる個性との出会いを、イノベーションの種として捉えます</div>
               </div>
               <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
-                <input type="checkbox" checked style="opacity:0;width:0;height:0;position:absolute;">
-                <span style="position:absolute;inset:0;background:#1D9E75;border-radius:13px;"></span>
-                <span style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;"></span>
+                <input type="checkbox" id="sw-soukou" onchange="setSoukouMode(this.checked)" checked style="opacity:0;width:0;height:0;position:absolute;">
+                <span id="sw-soukou-track" style="position:absolute;inset:0;background:#1D9E75;border-radius:13px;transition:background .2s;"></span>
+                <span id="sw-soukou-thumb" style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
               </label>
             </div>
           </div>
@@ -1074,9 +1074,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
                 <div style="font-size:.65rem;color:var(--mist);">KITOKUでは運勢の現象として別に扱います</div>
               </div>
               <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
-                <input type="checkbox" style="opacity:0;width:0;height:0;position:absolute;">
-                <span style="position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:13px;"></span>
-                <span style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;"></span>
+                <input type="checkbox" id="sw-teii" onchange="setTeiiMode(this.checked)" style="opacity:0;width:0;height:0;position:absolute;">
+                <span id="sw-teii-track" style="position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:13px;transition:background .2s;"></span>
+                <span id="sw-teii-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
               </label>
             </div>
           </div>
@@ -2093,8 +2093,14 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei){
   if(breakDir&&breakDir!=='C')items.push({name:'歳破/月破/日破',dir:breakDir});
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
-  if(teiiDir&&teiiDir!=='C')items.push({name:'定位対沖',dir:teiiDir});
-  if(teiiTDir&&teiiTDir!=='C')items.push({name:'定位対沖（裏）',dir:teiiTDir});
+  if(teiiDir&&teiiDir!=='C'){
+    // 定位対冲：「宇宙のブレーキを方位に含める」がONの場合のみ凶に追加
+    if(gState.teiiAsKyo)items.push({name:'定位対冲',dir:teiiDir});
+  }
+  if(teiiTDir&&teiiTDir!=='C'){
+    if(gState.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiTDir});
+    else items.push({name:'定位対冲（裏）',dir:teiiTDir}); // 裏は常に表示
+  }
   // 月命的殺（設定がonの場合のみ）
   const showTsukimei=gState.tsukimeiSatsu==='on';
   if(showTsukimei&&tsukimei){
@@ -2150,6 +2156,17 @@ let gState={};
     const sel=document.getElementById('sw-tsukimei-satsu');
     if(sel)sel.value=savedTm;
   }catch(e){gState.tsukimeiSatsu='off';}
+  // 相剋・定位対冲設定を読み込む
+  try{
+    const soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
+    gState.soukouOff=soukouOff;
+    const swS=document.getElementById('sw-soukou');
+    if(swS){swS.checked=!soukouOff;_updateToggleUI('sw-soukou',!soukouOff);}
+    const teiiKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
+    gState.teiiAsKyo=teiiKyo;
+    const swT=document.getElementById('sw-teii');
+    if(swT){swT.checked=teiiKyo;_updateToggleUI('sw-teii',teiiKyo);}
+  }catch(e){gState.soukouOff=false;gState.teiiAsKyo=false;}
     const btnS=document.getElementById('orient-s');
     const btnN=document.getElementById('orient-n');
     if(btnS)btnS.classList.toggle('active',savedOrient==='south');
@@ -3135,6 +3152,25 @@ function showDisclaimerDetail(){
 function closeDisclaimerDetail(){
   const p=document.getElementById('disclaimerDetailPanel');
   if(p){p.style.display='none';}
+}
+
+function setSoukouMode(checked){
+  gState.soukouOff=!checked;
+  try{localStorage.setItem('kitoku-soukou-off',checked?'0':'1');}catch(e){}
+  _updateToggleUI('sw-soukou',checked);
+  if(gState.honmei)renderBan(gState.currentBan||'day');
+}
+function setTeiiMode(checked){
+  gState.teiiAsKyo=checked;
+  try{localStorage.setItem('kitoku-teii-kyo',checked?'1':'0');}catch(e){}
+  _updateToggleUI('sw-teii',checked);
+  if(gState.honmei)renderBan(gState.currentBan||'day');
+}
+function _updateToggleUI(id,checked){
+  const track=document.getElementById(id+'-track');
+  const thumb=document.getElementById(id+'-thumb');
+  if(track)track.style.background=checked?'#1D9E75':'rgba(255,255,255,.15)';
+  if(thumb)thumb.style.transform=checked?'translateX(18px)':'translateX(0)';
 }
 
 function setTsukimeiSatsu(val){
