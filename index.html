@@ -1246,8 +1246,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           <!-- SLIDE 1 -->
           <div class="kitoku-slide" onclick="toggleSlideBody(this)">
             <div class="slide-num">01 / 07</div>
-            <div class="slide-title">毎朝1分で、今日の自分の<br>「取扱説明書」が開く</div>
-            <div class="slide-body slide-body-collapsed">5000年の歴史を持つ東洋の知恵とAIを掛け合わせた、次世代の羅針盤アプリです。<br><br>慌ただしい日常の中で、あなたが「自分らしさ」を取り戻し、心地よく1日をスタートするためのヒントを、毎朝静かにお届けします。</div>
+            <div class="slide-title">はじめての方へ<br>安心してお使いください</div>
+            <div class="slide-body slide-body-collapsed">このアプリは「占い」ではありません。<br><br>✅ 個人情報はこの端末にのみ保存されます<br>✅ サーバーへの送信は一切ありません<br>✅ 名前の入力は任意です<br>✅ 無料でお使いいただけます<br><br>5000年の東洋の知恵をもとに、今日をどう生きるかの「ヒント」をお届けします。最終的な判断はいつもご自身で。</div>
             <div class="slide-tap-hint">タップで続きを読む ▾</div>
           </div>
 
@@ -3971,7 +3971,7 @@ function setFontSize(s){
 // 保存済みテーマ・フォント読み込み
 (function(){
   try{
-    const t=localStorage.getItem('kitoku-theme')||'dark';
+    const t=localStorage.getItem('kitoku-theme')||'light';
     const fs=localStorage.getItem('kitoku-fontsize')||'s';
     const hero=localStorage.getItem('kitoku-hero-img');
     setTheme(t);setFontSize(fs);
