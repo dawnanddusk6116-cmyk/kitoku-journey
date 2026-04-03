@@ -1468,9 +1468,10 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
     <div class="mystar-grid">
-      <div class="mystar-cell" onclick="openMystarPopup('honmei')" style="cursor:pointer;">
+      <div class="mystar-cell" onclick="openMystarPopup('honmei')" style="cursor:pointer;border:1.5px solid rgba(196,160,67,.4);background:rgba(196,160,67,.06);">
         <div class="mystar-cell-lbl">本命星 👆</div>
         <div class="mystar-cell-val" id="ms-honmei"></div>
+        <div id="ms-honmei-arch" style="font-size:.95rem;font-weight:800;letter-spacing:.08em;margin:4px 0;"></div>
         <div class="mystar-cell-sub" id="ms-honmei-sub"></div>
       </div>
       <div class="mystar-cell" onclick="openMystarPopup('tsukimei')" style="cursor:pointer;">
@@ -1848,31 +1849,31 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 // ══════════════════════════════════════════════════════
 
 const STARS={
-  1:{k:'一白',j:'一白水星',c:'#6dd4e8',elem:'水',elemColor:'#6dd4e8',
+  1:{k:'一白',j:'一白水星',arch:'静かな賢者',c:'#6dd4e8',elem:'水',elemColor:'#6dd4e8',
      color:'黒・紺・白',food:'塩味のもの・豆腐・海藻・貝類',
      conbini:['温かい昆布だし・お吸い物系スープ','豆腐・海藻サラダ','塩おにぎり（昆布・梅）']},
-  2:{k:'二黒',j:'二黒土星',c:'#c4a043',elem:'土',elemColor:'#c4a043',
+  2:{k:'二黒',j:'二黒土星',arch:'大地の守人',c:'#c4a043',elem:'土',elemColor:'#c4a043',
      color:'黄色・茶色・アイボリー',food:'甘味のもの・根菜・芋類・発酵食品',
      conbini:['さつまいもスイーツ・芋けんぴ','根菜の煮物・おでん（大根・芋）','甘酒・乳酸菌飲料']},
-  3:{k:'三碧',j:'三碧木星',c:'#78d060',elem:'木',elemColor:'#78d060',
+  3:{k:'三碧',j:'三碧木星',arch:'夜明けの先駆者',c:'#78d060',elem:'木',elemColor:'#78d060',
      color:'青・緑・碧',food:'酸味のもの・柑橘類・新鮮な野菜',
      conbini:['緑野菜サラダ・グリーンスムージー','柑橘系ジュース・レモネード','酢の物・さっぱり系おかず']},
-  4:{k:'四緑',j:'四緑木星',c:'#56cc94',elem:'木',elemColor:'#56cc94',
+  4:{k:'四緑',j:'四緑木星',arch:'縁結びの風',c:'#56cc94',elem:'木',elemColor:'#56cc94',
      color:'緑・青緑・白',food:'酸味のもの・ハーブ・風にさらしたもの',
      conbini:['ハーブティー・緑茶（さっぱり系）','青じそ入りサラダ・生野菜','ヨーグルト・乳酸菌系']},
-  5:{k:'五黄',j:'五黄土星',c:'#d4a830',elem:'土',elemColor:'#d4a830',
+  5:{k:'五黄',j:'五黄土星',arch:'孤高の帝王',c:'#d4a830',elem:'土',elemColor:'#d4a830',
      color:'黄色・金色・茶色',food:'甘味・根菜・土のもの全般',
      conbini:['かぼちゃ・さつまいも系スイーツ','おでん（全種）・根菜煮物','黒豆・ごま系和菓子']},
-  6:{k:'六白',j:'六白金星',c:'#b8cce0',elem:'金',elemColor:'#b8d0e8',
+  6:{k:'六白',j:'六白金星',arch:'天命のリーダー',c:'#b8cce0',elem:'金',elemColor:'#b8d0e8',
      color:'白・金・銀',food:'辛味のもの・白い食べ物・根菜',
      conbini:['大根おろし・辛み系サラダ','白米おにぎり・白パン','辛口缶コーヒー・白湯']},
-  7:{k:'七赤',j:'七赤金星',c:'#e870a0',elem:'金',elemColor:'#e87090',
+  7:{k:'七赤',j:'七赤金星',arch:'喜びの使者',c:'#e870a0',elem:'金',elemColor:'#e87090',
      color:'赤・ピンク・オレンジ',food:'辛味のもの・西洋料理・発酵食品',
      conbini:['スパイシーな洋風スナック','チーズ・発酵系食品','フルーツジュース（赤・オレンジ系）']},
-  8:{k:'八白',j:'八白土星',c:'#a09878',elem:'土',elemColor:'#b0a888',
+  8:{k:'八白',j:'八白土星',arch:'不屈の継承者',c:'#a09878',elem:'土',elemColor:'#b0a888',
      color:'白・黄色・ベージュ',food:'甘味・山のもの・根菜・漬物',
      conbini:['山菜おこわ・栗ご飯系','たくあん・浅漬け・糠漬け','温かい麦茶・ほうじ茶']},
-  9:{k:'九紫',j:'九紫火星',c:'#e86070',elem:'火',elemColor:'#e86070',
+  9:{k:'九紫',j:'九紫火星',arch:'真実の炎',c:'#e86070',elem:'火',elemColor:'#e86070',
      color:'赤・紫・オレンジ',food:'苦味のもの・南国フルーツ・赤い食べ物',
      conbini:['ビターチョコ・コーヒー','トマト・赤パプリカ系サラダ','マンゴー・パッションフルーツジュース']},
 };
@@ -2197,7 +2198,8 @@ let gState={};
       card.innerHTML=`
         <div style="font-size:1.3rem;font-family:'Cormorant Garamond',serif;color:${s.c};font-weight:600;margin-bottom:4px;">${n}</div>
         <div class="star-card-name" style="font-size:.72rem;letter-spacing:.03em;margin-bottom:2px;font-weight:600;">${s.k}</div>
-        <div class="star-card-elem" style="font-size:.6rem;letter-spacing:.04em;">${s.elem}</div>
+        <div style="font-size:.68rem;color:${s.c};font-weight:700;letter-spacing:.04em;margin-bottom:2px;">${s.arch||''}</div>
+        <div class="star-card-elem" style="font-size:.58rem;letter-spacing:.04em;">${s.elem}</div>
         <div style="font-size:.55rem;color:var(--gold);margin-top:5px;opacity:.7;">👆 タップ</div>
       `;
       card.onclick=()=>openStarPopup(n);
@@ -2292,7 +2294,7 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   document.getElementById('rDate').textContent=`${ty}年${months[tm-1]}${td}日`;
   document.getElementById('rKanshi').textContent=`${kanshi}の日`;
-  document.getElementById('rHonmei').textContent=`${H.j}（${honmei}）の羅針盤`;
+  document.getElementById('rHonmei').textContent=`${H.j}（${honmei}）${H.arch?'— '+H.arch:''} の羅針盤`;
 
   // 自分の星カード
   const keisha=calcKeisha(honmei,tsukimeiForKeisha);
@@ -2305,6 +2307,9 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   document.getElementById('ms-name').textContent=H.j;
   document.getElementById('ms-sub').textContent=`${H.elem}の星 — ${H.color}`;
   document.getElementById('ms-honmei').textContent=H.j;
+  // キャラ名を星の色で強調
+  const archEl=document.getElementById('ms-honmei-arch');
+  if(archEl){archEl.textContent=H.arch||'';archEl.style.color=H.c;}
   document.getElementById('ms-honmei-sub').textContent='魂の設計図';
   document.getElementById('ms-tsuki').textContent=T.j;
   document.getElementById('ms-tsuki-sub').textContent='内なる深層';
