@@ -2078,7 +2078,7 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet){
   if(inHon)return{rank:2,badges:['✦ 吉方']};
   return{rank:0,badges:[]};
 }
-function getKyouDirs(boardCenter,honmei,breakDir,tsukimei){
+function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   const p2s=buildBoardFromCenter(boardCenter);
   const goouDir=Object.keys(p2s).find(d=>p2s[d]===5)||null;
   const ankenDir=goouDir?OPP[goouDir]:null;
@@ -2090,7 +2090,9 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei){
   const items=[];
   if(goouDir&&goouDir!=='C')items.push({name:'五黄殺',dir:goouDir});
   if(ankenDir&&ankenDir!=='C')items.push({name:'暗剣殺',dir:ankenDir});
-  if(breakDir&&breakDir!=='C')items.push({name:'歳破/月破/日破',dir:breakDir});
+  // 破れの名前を盤種別で正しく表示
+  const breakName=banType==='year'?'歳破':banType==='month'?'月破':'日破';
+  if(breakDir&&breakDir!=='C')items.push({name:breakName,dir:breakDir});
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
   if(teiiDir&&teiiDir!=='C'){
@@ -2521,7 +2523,7 @@ function renderBan(type){
   else if(type==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
   else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
 
-  const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei);
+  const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
 
   // 各方向の吉凶ランク
   const dirData={};
@@ -2730,7 +2732,7 @@ function renderKichiList(dirData,p2s){
       else if(currentBan==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
       else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
       const p2s=buildBoardFromCenter(center);
-      const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei);
+      const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
       const allDirData={};
       ALL8.forEach(d=>{const starN=p2s[d];const r=rankDir(d,starN,honmei,tsukimei,sangoSet);allDirData[d]={starN,rank:r.rank,badges:r.badges,isKyo:kyouSet.has(d)};});
       openDirPopup(dir,center,allDirData,kyouItems,kyouSet);
