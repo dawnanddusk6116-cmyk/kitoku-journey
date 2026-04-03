@@ -426,6 +426,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 .mystar-cell-lbl{font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:4px;}
 .mystar-cell-val{font-size:.92rem;color:var(--snow);font-weight:600;}
 .mystar-cell-sub{font-size:.65rem;color:var(--mist);margin-top:2px;}
+/* 本命星セルのアニメーション */
+@keyframes honmeiPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(196,160,67,0);}
+  50%{box-shadow:0 0 0 4px rgba(196,160,67,.18);}
+}
+.honmei-pulse{
+  animation:honmeiPulse 2.5s ease-in-out infinite;
+}
 .nouin-row{
   padding:12px 16px;border-top:1px solid var(--rim);
   display:flex;align-items:center;gap:10px;
@@ -969,20 +977,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div id="smode-hint" style="font-size:.7rem;color:var(--mist);background:rgba(196,160,67,.05);border:1px solid rgba(196,160,67,.12);border-radius:6px;padding:8px 12px;margin-bottom:14px;line-height:1.8;">KITOKUの推奨設定で、安心してスタートできます。設定を変えなくても大丈夫です。</div>
 
       <!-- 表示設定 -->
-      <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:6px;font-weight:600;">表示設定</div>
-      <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;margin-bottom:14px;">
-        <div style="display:flex;align-items:center;padding:12px 14px;gap:12px;">
-          <div style="flex:1;">
-            <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">TOPにインフォグラフィックを表示</div>
-            <div style="font-size:.65rem;color:var(--mist);line-height:1.6;">気学の解説画像をTOP画面に表示します。デフォルトはOFFです。</div>
-          </div>
-          <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
-            <input type="checkbox" id="sw-hero-img" onchange="toggleHeroImg(this)" style="opacity:0;width:0;height:0;position:absolute;">
-            <span id="sw-hero-track" style="position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:13px;transition:background .2s;"></span>
-            <span id="sw-hero-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
-          </label>
-        </div>
-      </div>
       <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:6px;font-weight:600;">お子様の設定</div>
       <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;overflow:hidden;margin-bottom:14px;">
         <div style="display:flex;align-items:center;padding:12px 14px;gap:12px;">
@@ -1108,6 +1102,37 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
     </div>
   </div>
+</div>
+
+<!-- ギャラリーポップアップ -->
+<div id="imgGalleryPanel" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.92);overflow-y:auto;">
+  <div style="max-width:480px;margin:0 auto;padding:16px 16px env(safe-area-inset-bottom,20px);">
+    <!-- ヘッダー -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0 20px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#f0d878;letter-spacing:.15em;font-weight:700;">✦ KITOKUの世界</div>
+      <button onclick="closeImgGallery()" style="background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.4);border-radius:8px;color:#ffffff;font-size:.82rem;padding:7px 18px;cursor:pointer;font-weight:600;">閉じる</button>
+    </div>
+
+    <!-- 九星の設計図 -->
+    <div style="font-size:.72rem;letter-spacing:.14em;color:#f0d878;margin-bottom:10px;font-weight:700;">九星の設計図</div>
+    <div id="gallery-kyusei" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:24px;"></div>
+
+    <!-- 5000年の知恵 -->
+    <div style="font-size:.72rem;letter-spacing:.14em;color:#f0d878;margin-bottom:10px;font-weight:700;">5000年の知恵</div>
+    <div id="gallery-concept" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:24px;"></div>
+
+    <!-- 納音の音色 -->
+    <div style="font-size:.72rem;letter-spacing:.14em;color:#f0d878;margin-bottom:10px;font-weight:700;">納音の音色</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px;" id="gallery-nouin-tabs"></div>
+    <div id="gallery-nouin" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:20px;"></div>
+  </div>
+</div>
+
+<!-- 画像フルスクリーン表示 -->
+<div id="imgFullPanel" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;flex-direction:column;" onclick="closeImgFull()">
+  <img id="imgFullImg" src="" style="max-width:95%;max-height:85dvh;object-fit:contain;border-radius:8px;">
+  <div id="imgFullTitle" style="font-size:.75rem;color:rgba(212,175,55,.8);margin-top:12px;letter-spacing:.1em;"></div>
+  <div style="font-size:.65rem;color:rgba(255,255,255,.4);margin-top:6px;">タップで閉じる</div>
 </div>
 
 <!-- 初回ポップアップ（毎月1日リセット） -->
@@ -1236,6 +1261,18 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <!-- ランダム画像（設定でONの時のみ表示） -->
     <div id="heroImgWrap" style="display:none;position:relative;margin:0 16px 16px;border-radius:12px;overflow:hidden;border:1px solid rgba(196,160,67,.2);cursor:pointer;" onclick="cycleHeroImage()">
       <img id="heroImg" src="" alt="KITOKU" style="width:100%;height:auto;display:block;" onerror="this.parentElement.style.display='none'">
+    </div>
+
+    <!-- 5層ピラミッド 常時表示 → タップでギャラリー -->
+    <div onclick="openImgGallery()" style="margin:0 16px 16px;border-radius:12px;overflow:hidden;border:1px solid rgba(196,160,67,.25);cursor:pointer;position:relative;">
+      <img src="https://drive.google.com/thumbnail?id=1sGz1X0-5TT6YJ2y_fpNXQrdEGPnkblX0&sz=w600"
+        alt="5層の人生ピラミッド"
+        style="width:100%;height:auto;display:block;"
+        onerror="this.style.display='none'">
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(10,12,24,.75));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:.7rem;color:rgba(212,175,55,.9);letter-spacing:.1em;">✦ KITOKUの世界を見る</div>
+        <div style="font-size:.65rem;color:rgba(212,175,55,.7);letter-spacing:.06em;">一覧 ›</div>
+      </div>
     </div>
 
     <!-- プロジェクト概要スライド -->
@@ -1468,26 +1505,30 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
     <div class="mystar-grid">
-      <div class="mystar-cell" onclick="openMystarPopup('honmei')" style="cursor:pointer;border:1.5px solid rgba(196,160,67,.4);background:rgba(196,160,67,.06);">
+      <div class="mystar-cell honmei-pulse" onclick="openMystarPopup('honmei')" style="cursor:pointer;border:1.5px solid rgba(196,160,67,.4);background:rgba(196,160,67,.06);">
         <div class="mystar-cell-lbl">本命星 👆</div>
         <div class="mystar-cell-val" id="ms-honmei"></div>
         <div id="ms-honmei-arch" style="font-size:.95rem;font-weight:800;letter-spacing:.08em;margin:4px 0;"></div>
         <div class="mystar-cell-sub" id="ms-honmei-sub"></div>
+        <div style="font-size:.58rem;color:rgba(196,160,67,.6);margin-top:6px;letter-spacing:.08em;">✦ タップで詳しく見る</div>
       </div>
       <div class="mystar-cell" onclick="openMystarPopup('tsukimei')" style="cursor:pointer;">
         <div class="mystar-cell-lbl">月命星 👆</div>
         <div class="mystar-cell-val" id="ms-tsuki"></div>
         <div class="mystar-cell-sub" id="ms-tsuki-sub"></div>
+        <div style="font-size:.58rem;color:rgba(196,160,67,.45);margin-top:6px;letter-spacing:.08em;">✦ タップで詳しく見る</div>
       </div>
       <div class="mystar-cell" onclick="openMystarPopup('keisha')" style="cursor:pointer;">
         <div class="mystar-cell-lbl">傾斜 👆</div>
         <div class="mystar-cell-val" id="ms-keisha"></div>
         <div class="mystar-cell-sub">才能の方向</div>
+        <div style="font-size:.58rem;color:rgba(196,160,67,.45);margin-top:6px;letter-spacing:.08em;">✦ タップで詳しく見る</div>
       </div>
       <div class="mystar-cell" onclick="openMystarPopup('dokai')" style="cursor:pointer;">
         <div class="mystar-cell-lbl">同会 👆</div>
         <div class="mystar-cell-val" id="ms-dokai"></div>
         <div class="mystar-cell-sub">社会との響き</div>
+        <div style="font-size:.58rem;color:rgba(196,160,67,.45);margin-top:6px;letter-spacing:.08em;">✦ タップで詳しく見る</div>
       </div>
     </div>
     <div class="nouin-row" onclick="openMystarPopup('nouin')" style="cursor:pointer;">
@@ -1932,7 +1973,7 @@ const KITOKU_IMAGES = {
     "天上火":"https://drive.google.com/thumbnail?id=1C_KlM1r8fgs92Cd6OjObxuAIk0Jbo5Vg&sz=w600",
     "白蝋金":"https://drive.google.com/thumbnail?id=1VQ1iU9gP4A1nTm1xy11UL6SwtaXZlybU&sz=w600",
     "覆燈火":"https://drive.google.com/thumbnail?id=1_z7Wzgpb8eRWkA0KjoeKeoTlWex_12H-&sz=w600",
-    "平地木":"https://drive.google.com/thumbnail?id=13EeX1IXT51DVsy5hWNUGk7IdU3SK4i_e&sz=w600",
+    "平地木":"https://drive.google.com/thumbnail?id=13EeX1IXT51DVsy5hWNUCk7IdU3SK4i_e&sz=w600",
     "壁上土":"https://drive.google.com/thumbnail?id=19rWGVXDzg7HHGM-N6ZmOPet6h28X3UU-&sz=w600",
     "楊柳木":"https://drive.google.com/thumbnail?id=1JGnXXOoJFwjOxWraB8g2CF7KjTyeeCli&sz=w600",
     "炉中火":"https://drive.google.com/thumbnail?id=15SfDto0oyMOpqEXbruuY81S3EOKSqBuB&sz=w600",
@@ -3235,6 +3276,89 @@ function _updateToggleUI(id,checked){
   if(thumb)thumb.style.transform=checked?'translateX(18px)':'translateX(0)';
 }
 
+// ── インフォグラフィック ギャラリー ──
+const NOUIN_GROUPS={
+  '水':['井泉水','澗下水','大渓水','長流水','天河水','大海水'],
+  '木':['桑柘木','大林木','松柏木','石榴木','平地木','楊柳木'],
+  '火':['山下火','山頭火','天上火','覆燈火','霹靂火','炉中火'],
+  '土':['屋上土','沙中土','城頭土','大駅土','壁上土','路傍土'],
+  '金':['海中金','金箔金','剣鋒金','沙中金','白蝋金','釵釧金'],
+};
+let currentNouinGroup='水';
+
+function openImgGallery(){
+  const panel=document.getElementById('imgGalleryPanel');
+  panel.style.display='block';
+  renderGalleryKyusei();
+  renderGalleryConcept();
+  renderGalleryNouinTabs();
+  renderGalleryNouin(currentNouinGroup);
+}
+function closeImgGallery(){
+  document.getElementById('imgGalleryPanel').style.display='none';
+}
+function openImgFull(url,title){
+  const p=document.getElementById('imgFullPanel');
+  document.getElementById('imgFullImg').src=url;
+  document.getElementById('imgFullTitle').textContent=title;
+  p.style.display='flex';
+}
+function closeImgFull(){
+  document.getElementById('imgFullPanel').style.display='none';
+}
+function _galleryThumb(url,title){
+  const d=document.createElement('div');
+  d.style.cssText='border-radius:8px;overflow:hidden;border:1px solid rgba(196,160,67,.2);cursor:pointer;position:relative;aspect-ratio:1;background:rgba(255,255,255,.04);';
+  d.onclick=()=>openImgFull(url,title);
+  d.innerHTML=`
+    <img src="${url}" alt="${title}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.style.opacity='.3'">
+    <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:4px 5px;">
+      <div style="font-size:.52rem;color:rgba(212,175,55,.9);line-height:1.3;letter-spacing:.03em;">${title}</div>
+    </div>`;
+  return d;
+}
+function renderGalleryKyusei(){
+  const el=document.getElementById('gallery-kyusei');
+  if(!el||el.children.length)return;
+  Object.entries(KITOKU_IMAGES.kyusei).forEach(([name,url])=>{
+    el.appendChild(_galleryThumb(url,name));
+  });
+}
+function renderGalleryConcept(){
+  const el=document.getElementById('gallery-concept');
+  if(!el||el.children.length)return;
+  Object.entries(KITOKU_IMAGES.concept).forEach(([name,url])=>{
+    el.appendChild(_galleryThumb(url,name));
+  });
+}
+function renderGalleryNouinTabs(){
+  const el=document.getElementById('gallery-nouin-tabs');
+  if(!el||el.children.length)return;
+  Object.keys(NOUIN_GROUPS).forEach(g=>{
+    const btn=document.createElement('button');
+    btn.textContent=g+'行';
+    btn.id='nouin-tab-'+g;
+    btn.style.cssText=`padding:8px 4px;border-radius:6px;font-size:.68rem;cursor:pointer;letter-spacing:.06em;transition:all .2s;border:1px solid rgba(196,160,67,.5);background:${g===currentNouinGroup?'rgba(196,160,67,.4)':'rgba(255,255,255,.08)'};color:${g===currentNouinGroup?'#f0e0a0':'rgba(220,200,160,.8)'};font-weight:${g===currentNouinGroup?'700':'400'};`;
+    btn.onclick=()=>{
+      currentNouinGroup=g;
+      document.querySelectorAll('[id^="nouin-tab-"]').forEach(b=>{
+        b.style.background='rgba(255,255,255,.08)';b.style.color='rgba(220,200,160,.8)';b.style.fontWeight='400';
+      });
+      btn.style.background='rgba(196,160,67,.4)';btn.style.color='#f0e0a0';btn.style.fontWeight='700';
+      renderGalleryNouin(g);
+    };
+    el.appendChild(btn);
+  });
+}
+function renderGalleryNouin(group){
+  const el=document.getElementById('gallery-nouin');
+  el.innerHTML='';
+  (NOUIN_GROUPS[group]||[]).forEach(name=>{
+    const url=KITOKU_IMAGES.nacchin[name];
+    if(url)el.appendChild(_galleryThumb(url,name));
+  });
+}
+
 function setTsukimeiSatsu(val){
   gState.tsukimeiSatsu=val;
   try{localStorage.setItem('kitoku-tsukimei-satsu',val);}catch(e){}
@@ -3934,16 +4058,9 @@ function clearBirth(){
 // ── TOP画面ランダム画像 ──
 let _heroIdx = -1;
 function initHeroImage(){
-  setTimeout(()=>{
-    if(!KITOKU_IMAGES||!KITOKU_IMAGES.concept)return;
-    const keys=Object.keys(KITOKU_IMAGES.concept);
-    _heroIdx = Math.floor(Math.random()*keys.length);
-    const img = document.getElementById('heroImg');
-    if(img){
-      img.src = KITOKU_IMAGES.concept[keys[_heroIdx]];
-      img.parentElement.style.display='block';
-    }
-  }, 100);
+  // ギャラリー実装後は不要のため無効化
+  const heroWrap=document.getElementById('heroImgWrap');
+  if(heroWrap)heroWrap.style.display='none';
 }
 function cycleHeroImage(){
   if(!KITOKU_IMAGES||!KITOKU_IMAGES.concept)return;
@@ -3980,24 +4097,11 @@ function setFontSize(s){
   try{
     const t=localStorage.getItem('kitoku-theme')||'light';
     const fs=localStorage.getItem('kitoku-fontsize')||'s';
-    const hero=localStorage.getItem('kitoku-hero-img');
     setTheme(t);setFontSize(fs);
-    // HEROイメージ：デフォルトOFF、明示的に'1'の時だけON
+    // HEROイメージ：ギャラリー実装後は常にOFF
     const heroWrap=document.getElementById('heroImgWrap');
-    const heroSw=document.getElementById('sw-hero-img');
-    if(hero==='1'){
-      if(heroWrap)heroWrap.style.display='block';
-      if(heroSw){
-        heroSw.checked=true;
-        const t2=document.getElementById('sw-hero-track');
-        const t3=document.getElementById('sw-hero-thumb');
-        if(t2)t2.style.background='#1D9E75';
-        if(t3)t3.style.transform='translateX(18px)';
-      }
-    }else{
-      if(heroWrap)heroWrap.style.display='none';
-      if(heroSw)heroSw.checked=false;
-    }
+    if(heroWrap)heroWrap.style.display='none';
+    try{localStorage.setItem('kitoku-hero-img','0');}catch(e){}
     // 保存済み名前読み込み
     const savedName=localStorage.getItem('kitoku-vessel-name');
     if(savedName){
