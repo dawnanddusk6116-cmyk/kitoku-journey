@@ -2107,16 +2107,27 @@ function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS
 function getDayCenter(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return(((2-1+diff)%9)+9)%9+1;}return dd.star;}
 function getDayBranch(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return((1+diff)%12+12)%12;}return dd.branch;}
 function getDayStem(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 0;return dd.stem;}
-const TENDO_DIR=['N','W','S','E','N','W','S','E','N','W','S','E'];
-function getTendoDir(bi){return TENDO_DIR[bi];}
-function rankDir(dir,starN,honmei,tsukimei,sangoSet){
+// 天道：月の十干（天干）から算出
+// 甲乙→NE, 丙丁→S, 戊己→N, 庚辛→SW, 壬癸→N
+const TENDO_BY_STEM=['NE','NE','S','S','N','N','SW','SW','N','N'];
+function getTendoDir(ty,tm,td){
+  // 月の天干を計算
+  const yearStem=((ty-4)%10+10)%10;
+  const baseStems=[2,4,6,8,0,2,4,6,8,0];
+  const ni=getNodeMonthIdx(ty,tm,td); // 0-11
+  const mStem=(baseStems[yearStem]+ni)%10;
+  return TENDO_BY_STEM[mStem];
+}
+function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   if(dir==='C')return{rank:0,badges:[]};
   const honList=aiseiList(honmei),tsukiList=aiseiList(tsukimei);
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
-  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方']};
-  if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉']};
-  if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり']};
-  if(inHon)return{rank:2,badges:['✦ 吉方']};
+  const inTendo=tendoDir&&dir===tendoDir;
+  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon)return{rank:2,badges:['✦ 吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inTendo)return{rank:1,badges:['☀️ 天道']};
   return{rank:0,badges:[]};
 }
 function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
@@ -2566,11 +2577,14 @@ function renderBan(type){
 
   const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
 
+  // 天道：月盤・日盤のみ表示（年盤は不要）
+  const tendoDir=(type!=='year')?getTendoDir(ty,tm,td):null;
+
   // 各方向の吉凶ランク
   const dirData={};
   ALL8.forEach(dir=>{
     const starN=p2s[dir];
-    const r=rankDir(dir,starN,honmei,tsukimei,sangoSet);
+    const r=rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir);
     const isKyo=kyouSet.has(dir);
     dirData[dir]={starN,rank:r.rank,badges:r.badges,isKyo};
   });
@@ -2633,6 +2647,7 @@ function renderBan(type){
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
       else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
+      else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
       const dirEl=document.createElement('div');
       dirEl.className=labelClass;
       dirEl.style.cssText='font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
@@ -2664,9 +2679,7 @@ function renderBan(type){
     else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
     else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
     else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
-    const dirEl=document.createElement('div');
-    dirEl.className=labelClass;
-    dirEl.style.cssText='font-size:.78rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;';
+    else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
     dirEl.textContent=JP[dir];
     div.appendChild(dirEl);
     if(subText){
@@ -2775,7 +2788,8 @@ function renderKichiList(dirData,p2s){
       const p2s=buildBoardFromCenter(center);
       const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,currentBan);
       const allDirData={};
-      ALL8.forEach(d=>{const starN=p2s[d];const r=rankDir(d,starN,honmei,tsukimei,sangoSet);allDirData[d]={starN,rank:r.rank,badges:r.badges,isKyo:kyouSet.has(d)};});
+      const tendoDir2=(currentBan!=='year')?getTendoDir(ty,tm,td):null;
+      ALL8.forEach(d=>{const starN=p2s[d];const r=rankDir(d,starN,honmei,tsukimei,sangoSet,tendoDir2);allDirData[d]={starN,rank:r.rank,badges:r.badges,isKyo:kyouSet.has(d)};});
       openDirPopup(dir,center,allDirData,kyouItems,kyouSet);
     };
   });
