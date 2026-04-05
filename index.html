@@ -2290,7 +2290,7 @@ function launch(){
       computeAndRender(by,bm,bd,ty,tm,td,tStr);
     }catch(err){
       console.error(err);
-      alert('計算エラーが発生しました');
+      alert('計算エラーが発生しました\n'+err.message);
     }
     loading.classList.remove('show');
     document.getElementById('screenInput').classList.remove('active');
@@ -2680,6 +2680,9 @@ function renderBan(type){
     else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
     else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
     else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
+    const dirEl=document.createElement('div');
+    dirEl.className=labelClass;
+    dirEl.style.cssText='font-size:.78rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;';
     dirEl.textContent=JP[dir];
     div.appendChild(dirEl);
     if(subText){
