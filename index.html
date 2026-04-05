@@ -1236,7 +1236,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div id="feedbackDesc" style="font-size:.75rem;color:var(--mist);line-height:1.9;margin-bottom:14px;"></div>
       <textarea id="feedbackText" rows="5" placeholder="ここに入力してください..." style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;line-height:1.8;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
       <button onclick="sendFeedback()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(212,175,55,.12));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.9rem;letter-spacing:.15em;padding:14px;cursor:pointer;">送信する ✦</button>
-      <div id="feedbackSent" style="display:none;text-align:center;margin-top:12px;padding:10px;background:rgba(29,158,117,.1);border-radius:8px;font-size:.78rem;color:#5DCAA5;line-height:1.8;">ありがとうございます🙏<br>あなたの声がKITOKUを育てます。</div>
+      <div id="feedbackSent" style="display:none;text-align:center;margin-top:12px;padding:10px;background:rgba(29,158,117,.1);border-radius:8px;font-size:.78rem;color:#5DCAA5;line-height:1.8;">内容をコピーしました🙏<br>info@journey6112.jp<br>へ貼り付けて送ってください</div>
     </div>
   </div>
 </div>
@@ -1451,31 +1451,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
   </div>
 
-<div class="kitoku-footer" onclick="toggleFooterFeedback()">
-    <div class="footer-header">
-      <span style="color:var(--gold);letter-spacing:.1em;">✦ KITOKUを一緒に育てる</span>
-      <span id="footer-arrow" style="color:var(--gold);font-size:.8rem;transition:transform .3s;">▾</span>
-    </div>
-    <div style="font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:4px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
-    <div id="footer-btns" style="display:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;">
-      <div onclick="event.stopPropagation();openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
-        <span style="font-size:1.1rem;">📐</span>
-        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
-        <span style="margin-left:auto;color:var(--gold);">›</span>
-      </div>
-      <div onclick="event.stopPropagation();openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
-        <span style="font-size:1.1rem;">🔧</span>
-        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
-        <span style="margin-left:auto;color:var(--gold);">›</span>
-      </div>
-      <div onclick="event.stopPropagation();openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
-        <span style="font-size:1.1rem;">💡</span>
-        <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
-        <span style="margin-left:auto;color:var(--gold);">›</span>
-      </div>
-    </div>
-  </div>
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<br><span onclick="prompt('メールアドレスをコピーしてください','info@journey6112.jp')" style="color:rgba(196,160,67,.6);font-size:.6rem;letter-spacing:.08em;cursor:pointer;">📧 info@journey6112.jp（タップでコピー）</span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
 </div>
 
 <!-- ══ 結果画面 ══ -->
@@ -1766,19 +1742,24 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <div style="font-size:.68rem;letter-spacing:.12em;color:rgba(196,160,67,.75);margin-bottom:8px;font-weight:700;">✦ KITOKUを一緒に育てる</div>
         <div style="font-size:.68rem;color:var(--mist);line-height:1.9;margin-bottom:10px;">気学の専門家の方も、はじめての方も。<br>あなたの気づきがKITOKUを進化させます。</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
-          <div onclick="openFeedback('ryuha')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;opacity:.5;">
             <span style="font-size:1.1rem;">📐</span>
             <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">この流派ではこう計算します</div><div style="font-size:.62rem;color:var(--mist);">他流派との違い・算出ロジックの指摘</div></div>
             <span style="margin-left:auto;color:var(--gold);">›</span>
           </div>
-          <div onclick="openFeedback('bug')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;opacity:.5;">
             <span style="font-size:1.1rem;">🔧</span>
             <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">ここが違う気がします</div><div style="font-size:.62rem;color:var(--mist);">計算結果・表示のおかしな点</div></div>
             <span style="margin-left:auto;color:var(--gold);">›</span>
           </div>
-          <div onclick="openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--rim);border-radius:10px;opacity:.5;">
             <span style="font-size:1.1rem;">💡</span>
             <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">こんな機能が欲しい</div><div style="font-size:.62rem;color:var(--mist);">改善提案・アイデア</div></div>
+            <span style="margin-left:auto;color:var(--gold);">›</span>
+          </div>
+          <div onclick="openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid rgba(196,160,67,.4);border-radius:10px;cursor:pointer;">
+            <span style="font-size:1.1rem;">📧</span>
+            <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">お問い合わせ・ご意見</div><div style="font-size:.62rem;color:var(--mist);">info@journey6112.jp へ届きます</div></div>
             <span style="margin-left:auto;color:var(--gold);">›</span>
           </div>
         </div>
@@ -1797,7 +1778,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <button class="deepen-btn" onclick="switchMainTab('vessel')">✦ 命の器タブへ</button>
   </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<br><span onclick="prompt('メールアドレスをコピーしてください','info@journey6112.jp')" style="color:rgba(196,160,67,.6);font-size:.6rem;letter-spacing:.08em;cursor:pointer;">📧 info@journey6112.jp（タップでコピー）</span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
   </div><!-- /tab-compass-content -->
 
   <!-- 命の器タブ -->
@@ -1879,7 +1860,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<br><span onclick="prompt('メールアドレスをコピーしてください','info@journey6112.jp')" style="color:rgba(196,160,67,.6);font-size:.6rem;letter-spacing:.08em;cursor:pointer;">📧 info@journey6112.jp（タップでコピー）</span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
   </div><!-- /tab-vessel-content -->
 
 </div><!-- /screenResult -->
@@ -3741,14 +3722,7 @@ const FEEDBACK_DATA={
 let _feedbackType='';
 
 function openFeedback(type){
-  _feedbackType=type;
-  const d=FEEDBACK_DATA[type];
-  document.getElementById('feedbackTitle').textContent=d.title;
-  document.getElementById('feedbackDesc').textContent=d.desc;
-  document.getElementById('feedbackText').value='';
-  document.getElementById('feedbackSent').style.display='none';
-  document.getElementById('feedbackPanel').style.display='flex';
-  closeSettings();
+  prompt('以下のアドレスをコピーしてメールをお送りください','info@journey6112.jp');
 }
 function closeFeedback(){
   document.getElementById('feedbackPanel').style.display='none';
@@ -3758,18 +3732,23 @@ function sendFeedback(){
   if(!text){alert('内容を入力してください');return;}
   const d=FEEDBACK_DATA[_feedbackType];
   const star=buildStarText()||'（星情報なし）';
-  const subject=encodeURIComponent('【KITOKUフィードバック】'+d.title);
-  const body=encodeURIComponent(
+  const fullText=
     '【種別】'+d.title+'\n\n'+
     '【内容】\n'+text+'\n\n'+
     '【星情報】\n'+star+'\n\n'+
-    '── KITOKU@JOURNEY より自動生成 ──'
-  );
-  // メール送信（将軍のアドレスに届く）
-  const mailAddr='kitoku.journey.feedback@gmail.com';
-  const mailLink=`mailto:${mailAddr}?subject=${subject}&body=${body}`;
-  window.location.href=mailLink;
-  // 送信完了メッセージ
+    '── KITOKU@JOURNEY より ──';
+
+  // クリップボードにコピー
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(fullText).then(()=>{
+      document.getElementById('feedbackSent').style.display='block';
+      document.getElementById('feedbackText').value='';
+    }).catch(()=>{
+      prompt('以下をコピーしてinfo@journey6112.jpへ送ってください',fullText);
+    });
+  }else{
+    prompt('以下をコピーしてinfo@journey6112.jpへ送ってください',fullText);
+  }
   document.getElementById('feedbackSent').style.display='block';
   document.getElementById('feedbackText').value='';
 }
