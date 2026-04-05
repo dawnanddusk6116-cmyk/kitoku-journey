@@ -2641,8 +2641,8 @@ function renderBan(type){
       let labelClass='dir-label-text normal';
       if(dd.isKyo){
         labelClass='dir-label-text kyo';
-        const kn=kyouItems.find(k=>k.dir===dir);
-        if(kn)subText=kn.name.split('/')[0];
+        const kns=kyouItems.filter(k=>k.dir===dir);
+        if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
       else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
@@ -2673,8 +2673,8 @@ function renderBan(type){
     let subText='';
     if(dd.isKyo){
       labelClass='dir-label-text kyo';
-      const kn=kyouItems.find(k=>k.dir===dir);
-      if(kn)subText=kn.name.split('/')[0];
+      const kns=kyouItems.filter(k=>k.dir===dir);
+      if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
     else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
     else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
