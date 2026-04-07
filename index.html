@@ -2148,8 +2148,7 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   const ankenDir=goouDir?OPP[goouDir]:null;
   const hmDir=Object.keys(p2s).find(d=>p2s[d]===honmei)||null;
   const hmTDir=hmDir?OPP[hmDir]:null;
-  const TEII_MAP={1:'S',2:'NE',3:'W',4:'SE',5:null,6:'NW',7:'W',8:'NE',9:'N'};
-  const teiiDir=TEII_MAP[honmei]||null;
+  const teiiDir=Object.keys(p2s).find(function(d){var s=p2s[d];return d!=='C'&&s!==5&&HP[s]&&HP[s]!=='C'&&OPP[HP[s]]===d;})||null;
   const teiiTDir=teiiDir?OPP[teiiDir]:null;
   const items=[];
   if(goouDir&&goouDir!=='C')items.push({name:'五黄殺',dir:goouDir});
