@@ -1236,7 +1236,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div id="feedbackDesc" style="font-size:.75rem;color:var(--mist);line-height:1.9;margin-bottom:14px;"></div>
       <textarea id="feedbackText" rows="5" placeholder="ここに入力してください..." style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;line-height:1.8;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
       <button onclick="sendFeedback()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(212,175,55,.12));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.9rem;letter-spacing:.15em;padding:14px;cursor:pointer;">送信する ✦</button>
-      <div id="feedbackSent" style="display:none;text-align:center;margin-top:12px;padding:10px;background:rgba(29,158,117,.1);border-radius:8px;font-size:.78rem;color:#5DCAA5;line-height:1.8;">内容をコピーしました🙏<br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a9c0c7cfc6e9c3c6dcdbc7ccd09f98989b87c3d9">[email&#160;protected]</a><br>へ貼り付けて送ってください</div>
+      <div id="feedbackSent" style="display:none;text-align:center;margin-top:12px;padding:10px;background:rgba(29,158,117,.1);border-radius:8px;font-size:.78rem;color:#5DCAA5;line-height:1.8;">内容をコピーしました🙏<br>info@journey6112.jp<br>へ貼り付けて送ってください</div>
     </div>
   </div>
 </div>
@@ -1759,7 +1759,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </div>
           <div onclick="openFeedback('request')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid rgba(196,160,67,.4);border-radius:10px;cursor:pointer;">
             <span style="font-size:1.1rem;">📧</span>
-            <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">お問い合わせ・ご意見</div><div style="font-size:.62rem;color:var(--mist);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ef86818980af85809a9d818a96d9dededdc1859f">[email&#160;protected]</a> へ届きます</div></div>
+            <div><div style="font-size:.78rem;color:var(--snow);font-weight:600;">お問い合わせ・ご意見</div><div style="font-size:.62rem;color:var(--mist);">info@journey6112.jp へ届きます</div></div>
             <span style="margin-left:auto;color:var(--gold);">›</span>
           </div>
         </div>
@@ -1865,7 +1865,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 </div><!-- /screenResult -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ══════════════════════════════════════════════════════
 //  KITOKU JOURNEY v1.0 — 計算エンジン（v11より継承）
 // ══════════════════════════════════════════════════════
@@ -2148,17 +2148,9 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   const ankenDir=goouDir?OPP[goouDir]:null;
   const hmDir=Object.keys(p2s).find(d=>p2s[d]===honmei)||null;
   const hmTDir=hmDir?OPP[hmDir]:null;
-  // 定位対冲：盤面上で「定位の対面に来ている星」の方位を動的に特定（正しいアルゴリズム）
-  // ※本命星基準ではなく、今日の盤面で定位対冲になっている方位を検出する
-  const STAR_HOME={1:'N',2:'SW',3:'E',4:'SE',5:null,6:'NW',7:'W',8:'NE',9:'S'};
-  let teiiKyoDir=null;
-  for(const d of ALL8){
-    const s=p2s[d];
-    if(!s||s===5)continue;
-    const home=STAR_HOME[s];
-    if(home&&OPP[home]===d){teiiKyoDir=d;break;}
-  }
-  const teiiKyoTDir=teiiKyoDir?OPP[teiiKyoDir]:null;
+  const TEII_MAP={1:'S',2:'NE',3:'W',4:'SE',5:null,6:'NW',7:'W',8:'NE',9:'N'};
+  const teiiDir=TEII_MAP[honmei]||null;
+  const teiiTDir=teiiDir?OPP[teiiDir]:null;
   const items=[];
   if(goouDir&&goouDir!=='C')items.push({name:'五黄殺',dir:goouDir});
   if(ankenDir&&ankenDir!=='C')items.push({name:'暗剣殺',dir:ankenDir});
@@ -2167,13 +2159,13 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   if(breakDir&&breakDir!=='C')items.push({name:breakName,dir:breakDir});
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
-  if(teiiKyoDir&&teiiKyoDir!=='C'){
+  if(teiiDir&&teiiDir!=='C'){
     // 定位対冲：「宇宙のブレーキを方位に含める」がONの場合のみ凶に追加
-    if(gState.teiiAsKyo)items.push({name:'定位対冲',dir:teiiKyoDir});
+    if(gState.teiiAsKyo)items.push({name:'定位対冲',dir:teiiDir});
   }
-  if(teiiKyoTDir&&teiiKyoTDir!=='C'){
-    if(gState.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiKyoTDir});
-    else items.push({name:'定位対冲（裏）',dir:teiiKyoTDir}); // 裏は常に表示
+  if(teiiTDir&&teiiTDir!=='C'){
+    if(gState.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiTDir});
+    else items.push({name:'定位対冲（裏）',dir:teiiTDir}); // 裏は常に表示
   }
   // 月命的殺（設定がonの場合のみ）
   const showTsukimei=gState.tsukimeiSatsu==='on';
@@ -4144,4 +4136,17 @@ function setFontSize(s){
         const n=JSON.parse(savedName);
         if(n.sei)document.getElementById('v-sei').value=n.sei;
         if(n.mei)document.getElementById('v-mei').value=n.mei;
-        i
+        if(n.furi)document.getElementById('v-furi').value=n.furi;
+        document.getElementById('vessel-saved-note').style.display='block';
+      }catch(e){}
+    }
+  }catch(e){}
+})();
+
+// PWA
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
