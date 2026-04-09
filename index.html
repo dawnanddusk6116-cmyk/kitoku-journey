@@ -2182,7 +2182,8 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
       else items.push({name:'月命的殺',dir:tmTDir});
     }
   }
-  const kyouSet=new Set(items.map(i=>i.dir));
+  // 定位対冲（裏）はラベル表示のみ・吉方を上書きしない
+  const kyouSet=new Set(items.filter(i=>i.name!=='定位対冲（裏）').map(i=>i.dir));
   return{items,kyouSet};
 }
 
@@ -2650,14 +2651,15 @@ function renderBan(type){
       const dd=dirData[dir];
       let subText='';
       let labelClass='dir-label-text normal';
+      const isTendo=tendoDir&&dir===tendoDir;
       if(dd.isKyo){
         labelClass='dir-label-text kyo';
         const kns=kyouItems.filter(k=>k.dir===dir);
         if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
-      else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
-      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
-      else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
+      else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';if(isTendo)subText+='・天道';}
+      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
+      else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
       else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
       const dirEl=document.createElement('div');
       dirEl.className=labelClass;
@@ -2682,14 +2684,15 @@ function renderBan(type){
     const dd=dirData[dir];
     let labelClass='dir-label-text normal';
     let subText='';
+    const isTendo=tendoDir&&dir===tendoDir;
     if(dd.isKyo){
       labelClass='dir-label-text kyo';
       const kns=kyouItems.filter(k=>k.dir===dir);
       if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
-    else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
-    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
-    else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
+    else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';if(isTendo)subText+='・天道';}
+    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
+    else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
     else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
     const dirEl=document.createElement('div');
     dirEl.className=labelClass;
