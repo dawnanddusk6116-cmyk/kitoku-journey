@@ -2658,7 +2658,7 @@ function renderBan(type){
         if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';if(isTendo)subText+='・天道';}
-      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
+      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';if(isTendo)subText+='・天道';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
       else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
       const dirEl=document.createElement('div');
@@ -2691,7 +2691,7 @@ function renderBan(type){
       if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
     else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';if(isTendo)subText+='・天道';}
-    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
+    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';if(isTendo)subText+='・天道';}
     else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';}
     else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
     const dirEl=document.createElement('div');
