@@ -2160,12 +2160,12 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
   if(teiiDir&&teiiDir!=='C'){
-    // 定位対冲：「宇宙のブレーキを方位に含める」がONの場合のみ凶に追加
-    if(gState.teiiAsKyo)items.push({name:'定位対冲',dir:teiiDir});
+    // 定位対冲（表）：常に表示
+    items.push({name:'定位対冲',dir:teiiDir});
   }
   if(teiiTDir&&teiiTDir!=='C'){
     if(gState.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiTDir});
-    else items.push({name:'定位対冲（裏）',dir:teiiTDir}); // 裏は常に表示
+    // 裏は設定ONの時のみ（表を常に出すので裏は設定次第）
   }
   // 月命的殺（設定がonの場合のみ）
   const showTsukimei=gState.tsukimeiSatsu==='on';
@@ -2183,8 +2183,8 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
       else items.push({name:'月命的殺',dir:tmTDir});
     }
   }
-  // 定位対冲（裏）はラベル表示のみ・吉方を上書きしない
-  const kyouSet=new Set(items.filter(i=>i.name!=='定位対冲（裏）').map(i=>i.dir));
+  // 定位対冲（表）はラベル表示のみ・吉方を上書きしない
+  const kyouSet=new Set(items.filter(i=>i.name!=='定位対冲'&&i.name!=='定位対冲（裏）').map(i=>i.dir));
   return{items,kyouSet};
 }
 
