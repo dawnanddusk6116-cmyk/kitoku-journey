@@ -1764,7 +1764,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </div>
         </div>
       </div>
-      <div id="copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。お好きなAIに貼り付けてください</div>
+      <div id="copy-toast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;text-align:center;font-size:.78rem;color:#5DCAA5;padding:10px 20px;background:rgba(10,15,30,.95);border:1px solid rgba(29,158,117,.4);border-radius:20px;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4);">✓ コピーしました。お好きなAIに貼り付けてください</div>
     </div>
   </div>
 
@@ -3888,14 +3888,21 @@ function updateClaudeStarText(){
   if(el&&txt)el.textContent=txt;
 }
 function copyClaudeStar(){
+  haptic('light');
   const txt=buildStarText();
-  if(!txt||txt.includes('undefined')){alert('先に羅針盤を開いてください');return;}
+  if(!txt||txt.includes('undefined')){
+    showActionFeedback('⚠️ 先に羅針盤を開いて星情報を生成してください');
+    return;
+  }
   copyToClipboard(txt);
 }
 function copyTemplate(type){
   haptic('light');
   const starText=buildStarText();
-  if(!starText||starText.includes('undefined')){alert('先に羅針盤を開いてください');return;}
+  if(!starText||starText.includes('undefined')){
+    showActionFeedback('⚠️ 先に羅針盤を開いて星情報を生成してください');
+    return;
+  }
   let prompt='';
   if(type==='torisetsu'){
     prompt=`${starText}\n\n上記の星情報をもとに、私の「取説」を教えてください。\n・私の強みと才能\n・私の動かし方（何をすると力が出るか）\n・私が輝ける場所と方向性\n琥珀色の言葉で教えてください。`;
@@ -3950,16 +3957,44 @@ function copyTemplate(type){
   copyToClipboard(prompt);
 }
 function copyToClipboard(text){
+  // iOS Safari対応：非同期クリップボードAPIを優先、失敗時はフォールバック
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>showCopyToast()).catch(()=>fallbackCopy(text));
+    navigator.clipboard.writeText(text).then(()=>{
+      showCopyToast();
+    }).catch(()=>fallbackCopy(text));
   }else{fallbackCopy(text);}
 }
 function fallbackCopy(text){
   const ta=document.createElement('textarea');
-  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-  document.body.appendChild(ta);ta.select();
-  try{document.execCommand('copy');showCopyToast();}catch(e){alert('コピーできませんでした');}
+  ta.value=text;
+  ta.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.01;width:200px;height:50px;';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  // iOS用
+  ta.setSelectionRange(0,99999);
+  try{
+    const ok=document.execCommand('copy');
+    if(ok)showCopyToast();
+    else showActionFeedback('コピーできませんでした。テキストを長押しでコピーしてください');
+  }catch(e){
+    showActionFeedback('コピーできませんでした。テキストを長押しでコピーしてください');
+  }
   document.body.removeChild(ta);
+}
+// 汎用フィードバック表示（エラー・成功どちらにも使う）
+function showActionFeedback(msg){
+  const t=document.getElementById('copy-toast');
+  if(t){
+    t.textContent=msg;
+    t.style.display='block';
+    setTimeout(()=>{
+      t.style.display='none';
+      t.textContent='✓ コピーしました。お好きなAIに貼り付けてください';
+    },3000);
+  }else{
+    alert(msg);
+  }
 }
 // ── 触覚フィードバック ──
 function haptic(type='light'){
