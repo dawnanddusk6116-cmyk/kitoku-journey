@@ -2374,19 +2374,32 @@ async function openDaily(){
   if(gState.honmei){
     starText=buildStarText()||'';
   }else{
-    // まだ計算していない場合は簡易計算
     const [by,bm,bd]=bStr.split('-').map(Number);
-    const [ty,tm,td]=(dStr||new Date().toISOString().slice(0,10)).split('-').map(Number);
+    const [ty2,tm2,td2]=(dStr||new Date().toISOString().slice(0,10)).split('-').map(Number);
     const {kY,kM}=getKD(by,bm,bd);
     const honmei=calcHonmei(kY);
     const H=STARS[honmei];
-    starText=`私は${H?H.j:''}（${H?H.elem:''}）です。今日は${ty}年${tm}月${td}日です。`;
+    starText=`私は${H?H.j:''}（${H?H.elem:''}）です。今日は${ty2}年${tm2}月${td2}日です。`;
   }
 
   // 日付取得
   const dStr2=dStr||new Date().toISOString().slice(0,10);
   const [ty,tm,td]=dStr2.split('-').map(Number);
   const kanshi=getDayKanshiStr(ty,tm,td);
+
+  // 今日の五行を取得
+  const dayCenter=gState.dayCenter||calcDayCenter(ty,tm,td);
+  const dayElem=STARS[dayCenter]?STARS[dayCenter].elem:'土';
+
+  // 実際の吉方を取得（KITOKUの計算結果から）
+  let kichiText='なし';
+  if(gState.honmei&&gState.dayDirData){
+    const kichiDirs=Object.keys(gState.dayDirData)
+      .filter(d=>gState.dayDirData[d].rank>=2&&!gState.dayDirData[d].isKyo)
+      .map(d=>JP[d])
+      .filter(Boolean);
+    if(kichiDirs.length>0)kichiText=kichiDirs.join('・');
+  }
 
   // DAILY画面を表示
   showScreen('screenDaily');
@@ -2400,9 +2413,15 @@ async function openDaily(){
   // Groq APIにリクエスト
   const prompt=`${starText}
 今日の日付：${ty}年${tm}月${td}日（${kanshi}）
+今日の五行：${dayElem}
+今日の吉方：${kichiText}
 
-上記の星情報と今日の日付をもとに、以下を答えてください。
+上記の情報をもとに、以下を答えてください。
 必ずJSON形式のみで返してください。他の文字は不要です。
+
+【flowの書き方】
+- 吉方が「なし」の場合：「今日は〇〇（攻める/守る/整えるのどれか）日です。」のみ書くこと。吉方は絶対に書かない。
+- 吉方がある場合：「今日は〇〇日です。吉方は〇〇方向です。」と書くこと。
 
 【絶対に守る指示】
 - 全ての回答は必ず日本語のみで書くこと。英語・その他の言語は一切使わないこと。
@@ -2492,7 +2511,7 @@ async function openDaily(){
   → 徳・謙虚・誠実・感謝をベースに。20文字以内で必ず完結すること。
 
 {
-  "flow": "今日は〇〇（攻める/守る/整えるのどれか）日です。吉方がある場合のみ「吉方は〇〇方向です」を追加。吉方がない場合は流れだけ書くこと。",
+  "flow": "今日は〇〇日です。（吉方がある場合のみ「吉方は〇〇方向です。」を追加）",
   "kaori": "五行：〇〇｜成分：〇〇｜〇〇（調律効果）｜ブランド名 / 商品名",
   "iro": "根拠：〇〇｜〇〇色のアイテムを身につけると吉",
   "shoku": "根拠：〇〇｜セブン / 商品名｜ローソン / 商品名｜ファミマ / 商品名",
