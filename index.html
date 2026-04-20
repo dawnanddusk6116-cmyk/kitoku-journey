@@ -2490,11 +2490,11 @@ async function openDaily(){
   → 徳・謙虚・誠実・感謝・一歩踏み出す勇気をベースにした一言を生成すること。
 
 {
-  "flow": "今日は〇〇の日です。吉方は〇〇です。（自然な日本語で一文にすること）",
-  "kaori": "五行：〇〇｜成分：〇〇（1つだけ）｜〇〇（調律効果1つ）｜ブランド名 / 商品名（1つだけ）",
-  "iro": "根拠（五行：〇〇 または 吉方：〇〇）＋ 〇〇色のアイテムを身につけると吉",
-  "shoku": "根拠（五行：〇〇 または 吉方：〇〇）｜セブン / 商品名｜ローソン / 商品名｜ファミマ / 商品名",
-  "ippo": "実語教・童子教の精神に基づく一言（30文字以内）"
+  "flow": "今日は〇〇（攻める/守る/整えるのどれか）日です。吉方は〇〇（北・南・東・西・北東・北西・南東・南西のどれか）方向です。",
+  "kaori": "五行：〇〇｜成分：〇〇｜〇〇（調律効果）｜ブランド名 / 商品名",
+  "iro": "根拠：〇〇｜〇〇色のアイテムを身につけると吉",
+  "shoku": "根拠：〇〇｜セブン / 商品名｜ローソン / 商品名｜ファミマ / 商品名",
+  "ippo": "〇〇（30文字以内）"
 }`;
 
   try{
@@ -2513,6 +2513,38 @@ async function openDaily(){
     if(document.getElementById('daily-iro-text'))document.getElementById('daily-iro-text').textContent=result.iro||'—';
     if(document.getElementById('daily-shoku-text'))document.getElementById('daily-shoku-text').textContent=result.shoku||'—';
     if(document.getElementById('daily-ippo-text'))document.getElementById('daily-ippo-text').textContent=result.ippo||'—';
+
+    // 五行別コメントを各項目に追加
+    const gogyoComments={
+      '木':['停滞した空気が動き出す。今日、最初の一歩を踏み出せ。','アイデアの種が芽吹く日。思い立ったらすぐ動け。','春風のように軽やかに。新しい縁が生まれる予感がする。','木の気が満ちている。今日の行動が3ヶ月後の実りになる。','やる気スイッチが入る日。小さなことから始めよう。'],
+      '火':['内なる情熱に火がつく日。あなたの魅力が最大に輝く。','美意識が研ぎ澄まされている。センスを信じて動け。','カリスマ性が高まっている。人前に出ると良い日。','直感が冴える。今日感じたことを大切にせよ。','情熱の炎が燃える日。心に火を灯す出会いがある。'],
+      '土':['大地のように揺るぎなく。今日は焦らず丁寧に動け。','心が安定する日。大切な人との時間を大切にせよ。','地に足をつける日。急がず、確実に積み上げていこう。','基盤を固める日。報告・連絡・相談が運気の鍵。','大地が命を育むように。今日の誠実さが明日の実りになる。'],
+      '金':['豊かさを引き寄せる日。品格ある行動が未来を変える。','決断力が高まっている。迷っていたことに答えを出せ。','収穫の気が満ちる日。自分の価値を信じて動け。','品格が輝く日。言葉と行動を一致させよ。','金の気が研ぎ澄まされている。今日の判断を信じろ。'],
+      '水':['深い休息が心を整える。今日は無理せず自分を労れ。','直感力が研ぎ澄まされている。感じたままに動け。','人間関係が潤う日。話を聞くだけで縁が深まる。','浄化の気が流れる日。手放すことで新しいものが入る。','水のように柔軟に。今日は流れに乗ることが最善。']
+    };
+
+    // 今日の五行を抽出してコメントを追加
+    const kaoriText=result.kaori||'';
+    let todayGogyou='土';
+    if(kaoriText.includes('五行：木'))todayGogyou='木';
+    else if(kaoriText.includes('五行：火'))todayGogyou='火';
+    else if(kaoriText.includes('五行：金'))todayGogyou='金';
+    else if(kaoriText.includes('五行：水'))todayGogyou='水';
+
+    const comments=gogyoComments[todayGogyou]||gogyoComments['土'];
+    const pickComment=(seed)=>comments[seed%comments.length];
+
+    // 各項目に琥珀色のコメントを追加（日付をシードに毎日変わる）
+    const seed=(ty*10000+tm*100+td);
+    const addComment=(id,s)=>{
+      const el=document.getElementById(id);
+      if(el){
+        el.innerHTML=el.textContent+'<div style="font-size:.72rem;color:rgba(196,160,67,.8);margin-top:6px;line-height:1.8;font-style:italic;">✦ '+pickComment(s)+'</div>';
+      }
+    };
+    addComment('daily-kaori-text',seed);
+    addComment('daily-iro-text',seed+1);
+    addComment('daily-shoku-text',seed+2);
 
   }catch(e){
     console.error('Groq API error:',e);
