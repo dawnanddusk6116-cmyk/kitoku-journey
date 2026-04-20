@@ -1257,6 +1257,33 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 <!-- ══ 入力画面 ══ -->
 <div class="screen active" id="screenInput">
+
+  <!-- ① 生年月日入力エリア（最上部） -->
+  <div class="input-card" style="margin:16px 16px 0;">
+    <label class="input-label">生年月日</label>
+    <div id="birthRegistered" style="display:none;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.3);border-radius:6px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;">
+      <span style="font-size:.92rem;color:var(--snow);letter-spacing:.08em;">登録済み ✓</span>
+      <button onclick="clearBirth()" style="background:none;border:1px solid rgba(220,232,255,.2);border-radius:4px;color:var(--mist);font-size:.65rem;padding:4px 10px;cursor:pointer;letter-spacing:.06em;">変更する</button>
+    </div>
+    <input type="date" id="inputBirth" max="2015-12-31">
+    <div class="input-note" id="birthNote">※ 初回のみ入力します。次回から自動で読み込まれます。</div>
+    <div style="margin-top:10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <label class="input-label" style="margin:0;">生まれた時間</label>
+        <span style="font-size:.6rem;color:rgba(196,160,67,.5);background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:8px;padding:2px 8px;">任意</span>
+      </div>
+      <input type="time" id="inputBirthTime" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;">
+      <div class="input-note" style="margin-top:4px;">夜23時以降生まれの方は翌日の日干支で日納音を補正します。不明な場合は空欄で構いません。</div>
+    </div>
+    <label class="input-label" style="margin-top:10px;">調べる日付</label>
+    <input type="date" id="inputDate">
+  </div>
+
+  <!-- ② ボタン2つ -->
+  <button class="launch-btn" style="margin-top:14px;" onclick="launch()">今日の羅針盤を開く ✦</button>
+  <button class="launch-btn" onclick="openDaily()" style="margin-top:10px;background:linear-gradient(135deg,rgba(220,140,160,.25),rgba(200,110,140,.12));border:1px solid rgba(220,140,160,.6);color:#d4667a;font-size:.95rem;letter-spacing:.12em;font-weight:700;">✦ 今日の香り・色・食を知る</button>
+  <div class="save-note">生年月日はこの端末に保存されます</div>
+
   <div class="launch-hero">
     <!-- ランダム画像（設定でONの時のみ表示） -->
     <div id="heroImgWrap" style="display:none;position:relative;margin:0 16px 16px;border-radius:12px;overflow:hidden;border:1px solid rgba(196,160,67,.2);cursor:pointer;" onclick="cycleHeroImage()">
@@ -1403,33 +1430,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <span onclick="skipNayami()" style="font-size:.62rem;color:rgba(196,160,67,.45);cursor:pointer;letter-spacing:.08em;text-decoration:underline;">気学をご存知の方はスキップ →</span>
     </div>
   </div>
-
-  <div class="input-card">
-    <label class="input-label">生年月日</label>
-    <!-- 保存済みの場合はマスク表示、未入力の場合はdate入力 -->
-    <div id="birthRegistered" style="display:none;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.3);border-radius:6px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;">
-      <span style="font-size:.92rem;color:var(--snow);letter-spacing:.08em;">登録済み ✓</span>
-      <button onclick="clearBirth()" style="background:none;border:1px solid rgba(220,232,255,.2);border-radius:4px;color:var(--mist);font-size:.65rem;padding:4px 10px;cursor:pointer;letter-spacing:.06em;">変更する</button>
-    </div>
-    <input type="date" id="inputBirth" max="2015-12-31">
-    <div class="input-note" id="birthNote">※ 初回のみ入力します。次回から自動で読み込まれます。</div>
-
-    <!-- 生まれた時間（任意） -->
-    <div style="margin-top:10px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-        <label class="input-label" style="margin:0;">生まれた時間</label>
-        <span style="font-size:.6rem;color:rgba(196,160,67,.5);background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:8px;padding:2px 8px;">任意</span>
-      </div>
-      <input type="time" id="inputBirthTime" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;">
-      <div class="input-note" style="margin-top:4px;">夜23時以降生まれの方は翌日の日干支で日納音を補正します。不明な場合は空欄で構いません。</div>
-    </div>
-
-    <label class="input-label" style="margin-top:10px;">調べる日付</label>
-    <input type="date" id="inputDate">
-  </div>
-
-  <button class="launch-btn" onclick="launch()">今日の羅針盤を開く ✦</button>
-  <div class="save-note">生年月日はこの端末に保存されます</div>
 
   <!-- 九星を知る ── 強調版 -->
   <div style="margin:32px 16px 0;">
@@ -1764,7 +1764,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </div>
         </div>
       </div>
-      <div id="copy-toast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;text-align:center;font-size:.78rem;color:#5DCAA5;padding:10px 20px;background:rgba(10,15,30,.95);border:1px solid rgba(29,158,117,.4);border-radius:20px;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4);">✓ コピーしました。お好きなAIに貼り付けてください</div>
+      <div id="copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。お好きなAIに貼り付けてください</div>
     </div>
   </div>
 
@@ -1864,6 +1864,40 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   </div><!-- /tab-vessel-content -->
 
 </div><!-- /screenResult -->
+
+<!-- ══ DAILY画面 ══ -->
+<div class="screen" id="screenDaily">
+  <div class="app-header">
+    <div class="header-logo">✦ 今日の整え</div>
+    <button class="header-reset" onclick="showScreen('screenInput')">← 戻る</button>
+  </div>
+  <div style="padding:16px;">
+    <div id="daily-flow" style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
+      <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;">読み込み中...</div>
+      <div style="margin-top:12px;text-align:center;">
+        <button onclick="launch()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:6px;color:var(--goldlt);font-size:.75rem;padding:8px 16px;cursor:pointer;letter-spacing:.1em;">方位盤を開く →</button>
+      </div>
+    </div>
+    <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の整え</div>
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🌸 香り</div>
+      <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:1.9;">読み込み中...</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🎨 色</div>
+      <div id="daily-iro-text" style="font-size:.82rem;color:var(--snow);line-height:1.9;">読み込み中...</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🍵 食・お茶</div>
+      <div id="daily-shoku-text" style="font-size:.82rem;color:var(--snow);line-height:1.9;">読み込み中...</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.35);border-radius:12px;padding:16px;margin-bottom:20px;">
+      <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の一手</div>
+      <div id="daily-ippo-text" style="font-size:.88rem;color:var(--goldlt);line-height:2;font-style:italic;">読み込み中...</div>
+    </div>
+  </div>
+</div><!-- /screenDaily -->
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -2130,16 +2164,15 @@ function getTendoDir(ty,tm,td){
   const mStem=(baseStems[yearStem]+ni)%10;
   return TENDO_BY_STEM[mStem];
 }
-function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir,daiSangoDir){
+function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   if(dir==='C')return{rank:0,badges:[]};
   const honList=aiseiList(honmei),tsukiList=aiseiList(tsukimei);
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
-  const inDaiSango=daiSangoDir&&dir===daiSangoDir;
-  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null),(inDaiSango?'★ 大三合':null)].filter(Boolean)};
-  if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null),(inDaiSango?'★ 大三合':null)].filter(Boolean)};
-  if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null),(inDaiSango?'★ 大三合':null)].filter(Boolean)};
-  if(inHon)return{rank:2,badges:['✦ 吉方',(inTendo?'☀️ 天道':null),(inDaiSango?'★ 大三合':null)].filter(Boolean)};
+  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon)return{rank:2,badges:['✦ 吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inTendo)return{rank:1,badges:['☀️ 天道']};
   return{rank:0,badges:[]};
 }
@@ -2160,12 +2193,12 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
   if(teiiDir&&teiiDir!=='C'){
-    // 定位対冲（表）：常に表示
-    items.push({name:'定位対冲',dir:teiiDir});
+    // 定位対冲：「宇宙のブレーキを方位に含める」がONの場合のみ凶に追加
+    if(gState.teiiAsKyo)items.push({name:'定位対冲',dir:teiiDir});
   }
   if(teiiTDir&&teiiTDir!=='C'){
     if(gState.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiTDir});
-    // 裏は設定ONの時のみ（表を常に出すので裏は設定次第）
+    else items.push({name:'定位対冲（裏）',dir:teiiTDir}); // 裏は常に表示
   }
   // 月命的殺（設定がonの場合のみ）
   const showTsukimei=gState.tsukimeiSatsu==='on';
@@ -2183,8 +2216,7 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
       else items.push({name:'月命的殺',dir:tmTDir});
     }
   }
-  // 定位対冲（表）はラベル表示のみ・吉方を上書きしない
-  const kyouSet=new Set(items.filter(i=>i.name!=='定位対冲'&&i.name!=='定位対冲（裏）').map(i=>i.dir));
+  const kyouSet=new Set(items.map(i=>i.dir));
   return{items,kyouSet};
 }
 
@@ -2318,6 +2350,98 @@ function showInput(){
   document.getElementById('screenInput').classList.add('active');
   document.getElementById('headerReset').style.display='none';
   window.scrollTo(0,0);
+}
+
+// ══ KITOKU@DAILY ══
+
+function showScreen(id){
+  ['screenInput','screenResult','screenDaily'].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el)el.classList.remove('active');
+  });
+  const target=document.getElementById(id);
+  if(target)target.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+async function openDaily(){
+  const bStr=document.getElementById('inputBirth').value;
+  const dStr=document.getElementById('inputDate').value;
+  if(!bStr){alert('先に生年月日を入力してください');return;}
+
+  // 星情報を構築
+  let starText='';
+  if(gState.honmei){
+    starText=buildStarText()||'';
+  }else{
+    // まだ計算していない場合は簡易計算
+    const [by,bm,bd]=bStr.split('-').map(Number);
+    const [ty,tm,td]=(dStr||new Date().toISOString().slice(0,10)).split('-').map(Number);
+    const {kY,kM}=getKD(by,bm,bd);
+    const honmei=calcHonmei(kY);
+    const H=STARS[honmei];
+    starText=`私は${H?H.j:''}（${H?H.elem:''}）です。今日は${ty}年${tm}月${td}日です。`;
+  }
+
+  // 日付取得
+  const dStr2=dStr||new Date().toISOString().slice(0,10);
+  const [ty,tm,td]=dStr2.split('-').map(Number);
+  const kanshi=getDayKanshiStr(ty,tm,td);
+
+  // DAILY画面を表示
+  showScreen('screenDaily');
+
+  // 各項目を「生成中...」に
+  ['daily-flow-text','daily-kaori-text','daily-iro-text','daily-shoku-text','daily-ippo-text'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent='✦ 生成中...';
+  });
+
+  // Groq APIにリクエスト
+  const prompt=`${starText}
+今日の日付：${ty}年${tm}月${td}日（${kanshi}）
+
+上記の星情報と今日の日付をもとに、以下を答えてください。
+必ずJSON形式のみで返してください。他の文字は不要です。
+
+【重要な指示】
+- 香り：実在する香水・アロマ商品の具体的なブランド名と商品名を1つ挙げること（例：「ジョーマローン / イングリッシュペアー＆フリージア」「無印良品 / エッセンシャルオイル ラベンダー」）
+- 色：色名と「〇〇色のアイテムを身につけると吉」という形で具体的に表現すること
+- 食：セブンイレブン・ローソン・ファミマなどコンビニで実際に買える具体的な商品名を1つ挙げること（例：「ローソン / 宇治抹茶ラテ」「セブン / 緑茶」）
+- 今日の一手：不安を煽らず、背中を押す前向きな一言。30文字以内。
+
+{
+  "flow": "今日の流れ（攻める日か守る日かと、吉方の方角を一言で）",
+  "kaori": "ブランド名 / 商品名（香りの特徴を一言添えて）",
+  "iro": "色名 + 身につけると吉のアドバイスを一言",
+  "shoku": "コンビニ名 / 具体的な商品名（理由を一言添えて）",
+  "ippo": "今日の一手（30文字以内の前向きな言葉）"
+}`;
+
+  try{
+    const res=await fetch('/api/groq',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt})
+    });
+    const data=await res.json();
+    const text=data.choices?.[0]?.message?.content||'{}';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const result=JSON.parse(clean);
+
+    if(document.getElementById('daily-flow-text'))document.getElementById('daily-flow-text').textContent=result.flow||'—';
+    if(document.getElementById('daily-kaori-text'))document.getElementById('daily-kaori-text').textContent=result.kaori||'—';
+    if(document.getElementById('daily-iro-text'))document.getElementById('daily-iro-text').textContent=result.iro||'—';
+    if(document.getElementById('daily-shoku-text'))document.getElementById('daily-shoku-text').textContent=result.shoku||'—';
+    if(document.getElementById('daily-ippo-text'))document.getElementById('daily-ippo-text').textContent=result.ippo||'—';
+
+  }catch(e){
+    console.error('Groq API error:',e);
+    ['daily-flow-text','daily-kaori-text','daily-iro-text','daily-shoku-text','daily-ippo-text'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.textContent='通信エラーが発生しました。もう一度お試しください。';
+    });
+  }
 }
 
 function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
@@ -2593,14 +2717,11 @@ function renderBan(type){
   // 天道：月盤・日盤のみ表示（年盤は不要）
   const tendoDir=(type!=='year')?getTendoDir(ty,tm,td):null;
 
-  // 大三合：年盤のみ（4年後の干支の方位）
-  const daiSangoDir=(type==='year')?(()=>{const z4=getZodiac(ty+4);return z4.d;})():null;
-
   // 各方向の吉凶ランク
   const dirData={};
   ALL8.forEach(dir=>{
     const starN=p2s[dir];
-    const r=rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir,daiSangoDir);
+    const r=rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir);
     const isKyo=kyouSet.has(dir);
     dirData[dir]={starN,rank:r.rank,badges:r.badges,isKyo};
   });
@@ -2655,16 +2776,14 @@ function renderBan(type){
       const dd=dirData[dir];
       let subText='';
       let labelClass='dir-label-text normal';
-      const isTendo=tendoDir&&dir===tendoDir;
-      const isDaiSango=daiSangoDir&&dir===daiSangoDir;
       if(dd.isKyo){
         labelClass='dir-label-text kyo';
         const kns=kyouItems.filter(k=>k.dir===dir);
         if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
-      else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';if(isTendo)subText+='・天道';if(isDaiSango)subText+='・大三合';}
-      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText=isDaiSango?'吉方・大三合':'吉方・三合';if(isTendo)subText+='・天道';}
-      else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';if(isDaiSango)subText+='・大三合';}
+      else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
+      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
+      else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
       else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
       const dirEl=document.createElement('div');
       dirEl.className=labelClass;
@@ -2689,16 +2808,14 @@ function renderBan(type){
     const dd=dirData[dir];
     let labelClass='dir-label-text normal';
     let subText='';
-    const isTendo=tendoDir&&dir===tendoDir;
-    const isDaiSango=daiSangoDir&&dir===daiSangoDir;
     if(dd.isKyo){
       labelClass='dir-label-text kyo';
       const kns=kyouItems.filter(k=>k.dir===dir);
       if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
-    else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';if(isTendo)subText+='・天道';if(isDaiSango)subText+='・大三合';}
-    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText=isDaiSango?'吉方・大三合':'吉方・三合';if(isTendo)subText+='・天道';}
-    else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';if(isTendo)subText+='・天道';if(isDaiSango)subText+='・大三合';}
+    else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
+    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
+    else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
     else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
     const dirEl=document.createElement('div');
     dirEl.className=labelClass;
@@ -3888,21 +4005,14 @@ function updateClaudeStarText(){
   if(el&&txt)el.textContent=txt;
 }
 function copyClaudeStar(){
-  haptic('light');
   const txt=buildStarText();
-  if(!txt||txt.includes('undefined')){
-    showActionFeedback('⚠️ 先に羅針盤を開いて星情報を生成してください');
-    return;
-  }
+  if(!txt||txt.includes('undefined')){alert('先に羅針盤を開いてください');return;}
   copyToClipboard(txt);
 }
 function copyTemplate(type){
   haptic('light');
   const starText=buildStarText();
-  if(!starText||starText.includes('undefined')){
-    showActionFeedback('⚠️ 先に羅針盤を開いて星情報を生成してください');
-    return;
-  }
+  if(!starText||starText.includes('undefined')){alert('先に羅針盤を開いてください');return;}
   let prompt='';
   if(type==='torisetsu'){
     prompt=`${starText}\n\n上記の星情報をもとに、私の「取説」を教えてください。\n・私の強みと才能\n・私の動かし方（何をすると力が出るか）\n・私が輝ける場所と方向性\n琥珀色の言葉で教えてください。`;
@@ -3957,44 +4067,16 @@ function copyTemplate(type){
   copyToClipboard(prompt);
 }
 function copyToClipboard(text){
-  // iOS Safari対応：非同期クリップボードAPIを優先、失敗時はフォールバック
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>{
-      showCopyToast();
-    }).catch(()=>fallbackCopy(text));
+    navigator.clipboard.writeText(text).then(()=>showCopyToast()).catch(()=>fallbackCopy(text));
   }else{fallbackCopy(text);}
 }
 function fallbackCopy(text){
   const ta=document.createElement('textarea');
-  ta.value=text;
-  ta.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.01;width:200px;height:50px;';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  // iOS用
-  ta.setSelectionRange(0,99999);
-  try{
-    const ok=document.execCommand('copy');
-    if(ok)showCopyToast();
-    else showActionFeedback('コピーできませんでした。テキストを長押しでコピーしてください');
-  }catch(e){
-    showActionFeedback('コピーできませんでした。テキストを長押しでコピーしてください');
-  }
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showCopyToast();}catch(e){alert('コピーできませんでした');}
   document.body.removeChild(ta);
-}
-// 汎用フィードバック表示（エラー・成功どちらにも使う）
-function showActionFeedback(msg){
-  const t=document.getElementById('copy-toast');
-  if(t){
-    t.textContent=msg;
-    t.style.display='block';
-    setTimeout(()=>{
-      t.style.display='none';
-      t.textContent='✓ コピーしました。お好きなAIに貼り付けてください';
-    },3000);
-  }else{
-    alert(msg);
-  }
 }
 // ── 触覚フィードバック ──
 function haptic(type='light'){
