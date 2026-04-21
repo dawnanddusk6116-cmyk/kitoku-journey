@@ -2389,7 +2389,7 @@ async function openDaily(){
   const kanshi=getDayKanshiStr(ty,tm,td);
 
   // 今日の五行を取得
-  const dayCenter=gState.dayCenter||calcDayCenter(ty,tm,td);
+  const dayCenter=gState.dayCenter||getDayCenter(ty,tm,td);
   const dayElem=STARS[dayCenter]?STARS[dayCenter].elem:'土';
 
   // 実際の吉方を取得（ランク順にソート）
