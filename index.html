@@ -2859,6 +2859,9 @@ function renderBan(type){
   });
   dirData['C']={starN:p2s['C']||center,rank:0,badges:[],isKyo:false};
 
+  // DAILYで使えるよう日盤のdirDataをgStateに保存
+  if(type==='day') gState.dayDirData=dirData;
+
   // コンパス盤描画
   const wrap=document.getElementById('compassWrap');
   wrap.innerHTML='';
