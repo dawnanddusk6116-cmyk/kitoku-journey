@@ -2392,14 +2392,26 @@ async function openDaily(){
   const dayCenter=gState.dayCenter||calcDayCenter(ty,tm,td);
   const dayElem=STARS[dayCenter]?STARS[dayCenter].elem:'土';
 
-  // 実際の吉方を取得（KITOKUの計算結果から）
+  // 実際の吉方を取得（ランク順にソート）
   let kichiText='なし';
+  let bestKichiElem=dayElem;
+  let bestKichiDir='';
   if(gState.honmei&&gState.dayDirData){
     const kichiDirs=Object.keys(gState.dayDirData)
       .filter(d=>gState.dayDirData[d].rank>=2&&!gState.dayDirData[d].isKyo)
-      .map(d=>JP[d])
-      .filter(Boolean);
-    if(kichiDirs.length>0)kichiText=kichiDirs.join('・');
+      .sort((a,b)=>gState.dayDirData[b].rank-gState.dayDirData[a].rank);
+    if(kichiDirs.length>0){
+      // 方角＋五行をセットで渡す
+      kichiText=kichiDirs.map(d=>{
+        const sn=gState.dayDirData[d].starN;
+        const el=STARS[sn]?STARS[sn].elem:'';
+        return `${JP[d]}（五行：${el}）`;
+      }).join('・');
+      const bestDir=kichiDirs[0];
+      const bestStarN=gState.dayDirData[bestDir].starN;
+      if(STARS[bestStarN])bestKichiElem=STARS[bestStarN].elem;
+      bestKichiDir=JP[bestDir]||'';
+    }
   }
 
   // DAILY画面を表示
@@ -2414,17 +2426,14 @@ async function openDaily(){
   // Groq APIにリクエスト
   const prompt=`${starText}
 今日の日付：${ty}年${tm}月${td}日（${kanshi}）
-今日の日盤の五行：${dayElem}
 今日の吉方：${kichiText}
-
-【最重要ルール】
-吉方がある場合は吉方の星の五行を最優先で使うこと。
-例：吉方が西（七赤・金）なら五行は「金」を使う。
-複数ある場合は最初の吉方の五行を使う。
-吉方が「なし」の場合のみ日盤の五行を使うこと。
+【使う五行】：${bestKichiElem}（これを必ず使うこと）
 
 上記の情報をもとに、以下を答えてください。
 必ずJSON形式のみで返してください。他の文字は不要です。
+
+【絶対ルール】
+香り・色・食は必ず【使う五行】の${bestKichiElem}に基づいて選ぶこと。他の五行は使わない。
 
 【flowの書き方】
 - 吉方が「なし」の場合：「今日は〇〇（攻める/守る/整えるのどれか）日です。」のみ書くこと。吉方は絶対に書かない。
