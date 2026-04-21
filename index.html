@@ -1282,6 +1282,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <!-- ② ボタン2つ -->
   <button class="launch-btn" style="margin-top:14px;" onclick="launch()">今日の羅針盤を開く ✦</button>
   <button class="launch-btn" onclick="openDaily()" style="margin-top:10px;background:linear-gradient(135deg,rgba(220,140,160,.25),rgba(200,110,140,.12));border:1px solid rgba(220,140,160,.6);color:#d4667a;font-size:.95rem;letter-spacing:.12em;font-weight:700;">✦ 今日の香り・色・食を知る</button>
+  <div style="text-align:center;font-size:.72rem;color:rgba(180,100,80,.9);margin-top:6px;letter-spacing:.06em;font-weight:600;">※ 先に「今日の羅針盤を開く」を押してからご利用ください</div>
   <div class="save-note">生年月日はこの端末に保存されます</div>
 
   <div class="launch-hero">
@@ -2512,10 +2513,10 @@ async function openDaily(){
 
 {
   "flow": "今日は〇〇日です。（吉方がある場合のみ「吉方は〇〇方向です。」を追加）",
-  "kaori": "五行：〇〇｜成分：〇〇｜〇〇（調律効果）｜ブランド名 / 商品名",
-  "iro": "根拠：〇〇｜〇〇色のアイテムを身につけると吉",
-  "shoku": "根拠：〇〇｜セブン / 商品名｜ローソン / 商品名｜ファミマ / 商品名",
-  "ippo": "〇〇（30文字以内）"
+  "kaori": "五行：〇〇｜成分：〇〇｜〇〇｜ブランド名 / 商品名",
+  "iro": "五行：〇〇｜〇〇色のアイテムを身につけると吉",
+  "shoku": "五行：〇〇｜セブン / 商品名1つだけ｜ローソン / 商品名1つだけ｜ファミマ / 商品名1つだけ",
+  "ippo": "〇〇（20文字以内）"
 }`;
 
   try{
