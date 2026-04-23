@@ -938,6 +938,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 </style>
 </head>
 <body>
+<!-- コピートースト（画面固定・どこからでも表示可能） -->
+<div id="copy-toast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;background:rgba(20,30,20,.92);color:#5DCAA5;font-size:.82rem;font-weight:600;padding:12px 24px;border-radius:24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;pointer-events:none;">✓ コピーしました！AIに貼り付けてください</div>
 
 <!-- ヘッダー -->
 <div class="app-header">
@@ -1765,7 +1767,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </div>
         </div>
       </div>
-      <div id="copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。お好きなAIに貼り付けてください</div>
+      <div id="copy-toast-old" style="display:none;"></div>
     </div>
   </div>
 
