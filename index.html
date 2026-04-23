@@ -1873,29 +1873,26 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <button class="header-reset" onclick="showScreen('screenInput')">← 戻る</button>
   </div>
   <div style="padding:16px;">
-    <div id="daily-flow" style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;">
+    <!-- 今日の流れ -->
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
-      <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;">読み込み中...</div>
-      <div style="margin-top:12px;text-align:center;">
-        <button onclick="launch()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:6px;color:var(--goldlt);font-size:.75rem;padding:8px 16px;cursor:pointer;letter-spacing:.1em;">方位盤を開く →</button>
-      </div>
+      <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;"></div>
     </div>
-    <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の整え</div>
-    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:10px;">
-      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🌸 香り</div>
-      <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:1.9;">読み込み中...</div>
+    <!-- 吉方取り処方箋（既存データそのまま） -->
+    <div id="daily-body" style=""></div>
+    <!-- 香り -->
+    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="font-size:.72rem;color:#d4956a;font-weight:700;margin-bottom:8px;">🌸 今日の香り</div>
+      <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:2;"></div>
     </div>
-    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:10px;">
-      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🎨 色</div>
-      <div id="daily-iro-text" style="font-size:.82rem;color:var(--snow);line-height:1.9;">読み込み中...</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:10px;">
-      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🍵 食・お茶</div>
-      <div id="daily-shoku-text" style="font-size:.82rem;color:var(--snow);line-height:1.9;">読み込み中...</div>
-    </div>
-    <div style="background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.35);border-radius:12px;padding:16px;margin-bottom:20px;">
+    <!-- 今日の一手 -->
+    <div style="background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.35);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の一手</div>
-      <div id="daily-ippo-text" style="font-size:.88rem;color:var(--goldlt);line-height:2;font-style:italic;">読み込み中...</div>
+      <div id="daily-ippo-text" style="font-size:.88rem;color:var(--goldlt);line-height:2;font-style:italic;"></div>
+    </div>
+    <!-- 方位盤ボタン（一番下） -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <button onclick="launch()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:8px;color:var(--goldlt);font-size:.82rem;padding:12px 32px;cursor:pointer;letter-spacing:.12em;width:100%;">方位盤を開く →</button>
     </div>
   </div>
 </div><!-- /screenDaily -->
@@ -2369,127 +2366,115 @@ async function openDaily(){
   const bStr=document.getElementById('inputBirth').value;
   const dStr=document.getElementById('inputDate').value;
   if(!bStr){alert('先に生年月日を入力してください');return;}
+  if(!dStr){alert('調べる日付を入力してください');return;}
 
-  // 星情報を構築
-  let starText='';
-  if(gState.honmei){
-    starText=buildStarText()||'';
-  }else{
+  // 未計算なら自動で計算する（2度押し不要）
+  if(!gState.honmei||!gState.dayDirData){
+    const tStr=(document.getElementById('inputBirthTime').value||'').trim();
     const [by,bm,bd]=bStr.split('-').map(Number);
-    const [ty2,tm2,td2]=(dStr||new Date().toISOString().slice(0,10)).split('-').map(Number);
-    const {kY,kM}=getKD(by,bm,bd);
-    const honmei=calcHonmei(kY);
-    const H=STARS[honmei];
-    starText='私は'+(H?H.j:'')+'\uff08'+(H?H.elem:'')+'\uff09\u3067\u3059\u3002\u4eca\u65e5\u306f'+ty2+'\u5e74'+tm2+'\u6708'+td2+'\u65e5\u3067\u3059\u3002';
+    const [ty2,tm2,td2]=dStr.split('-').map(Number);
+    try{ computeAndRender(by,bm,bd,ty2,tm2,td2,tStr); }
+    catch(e){ console.error(e); }
   }
 
-  // 日付取得
   const dStr2=dStr||new Date().toISOString().slice(0,10);
   const [ty,tm,td]=dStr2.split('-').map(Number);
-  const kanshi=getDayKanshiStr(ty,tm,td);
 
-  // 今日の五行を取得
-  const dayCenter=gState.dayCenter||getDayCenter(ty,tm,td);
-  const dayElem=STARS[dayCenter]?STARS[dayCenter].elem:'土';
-
-  // 実際の吉方を取得（ランク順にソート）
-  let kichiText='なし';
-  let bestKichiElem=dayElem;
-  let bestKichiDir='';
-  let kichiCount=0;
+  // 全吉方をランク順で取得
+  var kDirs=[];
   if(gState.honmei&&gState.dayDirData){
-    const kichiDirs=Object.keys(gState.dayDirData)
-      .filter(d=>gState.dayDirData[d].rank>=2&&!gState.dayDirData[d].isKyo)
-      .sort((a,b)=>gState.dayDirData[b].rank-gState.dayDirData[a].rank);
-    kichiCount=kichiDirs.length;
-    if(kichiDirs.length>0){
-      kichiText=kichiDirs.map(d=>{
-        const sn=gState.dayDirData[d].starN;
-        const el=STARS[sn]?STARS[sn].elem:'';
-        return `${JP[d]}（五行：${el}）`;
-      }).join('・');
-      const bestDir=kichiDirs[0];
-      const bestStarN=gState.dayDirData[bestDir].starN;
-      if(STARS[bestStarN])bestKichiElem=STARS[bestStarN].elem;
-      bestKichiDir=JP[bestDir]||'';
-    }
+    kDirs=Object.keys(gState.dayDirData)
+      .filter(function(d){return gState.dayDirData[d].rank>=2&&!gState.dayDirData[d].isKyo;})
+      .sort(function(a,b){return gState.dayDirData[b].rank-gState.dayDirData[a].rank;});
+  }
+  var kichiCount=kDirs.length;
+  var bestStar=kichiCount>0?STARS[gState.dayDirData[kDirs[0]].starN]:null;
+
+  // 攻める・守る・整える
+  var flowType=kichiCount>=2?'攻める':kichiCount===1?'整える':'守る';
+  var flowText=kichiCount===0
+    ?'今日は'+flowType+'日です。'
+    :'今日は'+flowType+'日です。吉方は'+JP[kDirs[0]]+'方向です。';
+
+  // 全吉方の処方箋HTML（JOURNEYと同じデータをそのまま使う）
+  var foodIcons=['☕','🍱','🧃'];
+  var dailyBodyHTML='';
+
+  if(kichiCount>0){
+    kDirs.forEach(function(dir){
+      var dd=gState.dayDirData[dir];
+      var s=STARS[dd.starN];
+      if(!s)return;
+      var rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方'
+        :dd.rank>=4?'本命・月命　ともに吉方'
+        :dd.rank>=3?'吉方（三合の後押しあり）'
+        :'吉方（人に与える日）';
+      var foods=s.conbini||[];
+      var foodsHTML=foods.map(function(f,i){
+        return '<div class="food-card"><div class="food-icon">'+(foodIcons[i]||'🍀')+'</div>'
+          +'<div><div class="food-name">'+f+'</div>'
+          +'<div class="food-reason">'+s.elem+'のエネルギーを取り込む食べ物・飲み物です</div></div></div>';
+      }).join('');
+    dailyBodyHTML+=
+        '<div class="kichi-item'+(dd.rank>=4?' saiko':dd.rank>=3?' dai':'')+'" style="margin-bottom:6px;">'+
+          '<div class="kichi-dir-badge">'+
+            '<div class="kichi-dir">'+EN[dir]+'</div>'+
+            '<div class="kichi-dir-jp">'+JP[dir]+'</div>'+
+          '</div>'+
+          '<div class="kichi-info">'+
+            '<div class="kichi-rank">'+rankLabel+'</div>'+
+            '<div class="kichi-star">'+s.j+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="food-title">✦ 今日の吉方取り処方箋</div>'+
+        '<div class="food-cards" style="margin-bottom:10px;">'+foodsHTML+'</div>'+
+        '<div class="gogyou-box" style="margin-bottom:16px;">'+
+          '<div class="gogyou-title">五行の知恵 — '+s.elem+'のエネルギー</div>'+
+          '<div class="gogyou-text">🎨 色：'+s.color+'<br>🍽 食：'+s.food+'</div>'+
+        '</div>';
+    });
+  }else{
+    dailyBodyHTML='<div style="font-size:.82rem;color:var(--mist);line-height:2;padding:12px 0;">今日は特に吉方がありません。<br>内なる充電の日として、丁寧に過ごしましょう。</div>';
   }
 
-  // 攻める・守る・整えるをJavaScriptで判断（AIに任せない）
-  let flowType='守る';
-  if(kichiCount>=2) flowType='攻める';
-  else if(kichiCount===1) flowType='整える';
-  
-  // 今日の流れテキストをここで完成させる
-  const flowText = kichiText==='なし'
-    ? `今日は${flowType}日です。`
-    : `今日は${flowType}日です。吉方は${bestKichiDir}方向です。`;
-
-  // ══ KITOKU@DAILY 固定データベース（架空ゼロ・AI不使用）══
-  const DAILY_DB={
-    '木':{
-      kaori:{s:'ユーカリ',e:'やる気スイッチの起動',p:'無印良品 / エッセンシャルオイル ユーカリ'},
-      kaori2:{s:'レモン',e:'停滞した運気を動かす',p:'R fragrance / ティーブレイク（Celes・量り売りあり）'},
-      iro:'青・緑色のアイテムを身につけると吉',
-      shoku:{s7:'野菜サラダ',la:'野菜ジュース',fm:'野菜たっぷりサンド'},
-      cmts:['停滞した空気が動き出す。今日、最初の一歩を踏み出せ。','アイデアの種が芽吹く日。思い立ったらすぐ動け。','春風のように軽やかに。新しい縁が生まれる予感がする。','木の気が満ちている。今日の行動が3ヶ月後の実りになる。','やる気スイッチが入る日。小さなことから始めよう。'],
-      ippo:{a:'迷わず動け。今日の一歩が道になる',m:'誠実に積み上げる。それが全て',t:'縁を大切に。風のように軽やかに'}
-    },
-    '火':{
-      kaori:{s:'ローズ',e:'内なる情熱の点火',p:'青山フラワーマーケット / オードトワレ ローズ'},
-      kaori2:{s:'ジャスミン',e:'美意識の向上',p:'Maison Margiela / レイジーサンデーモーニング（Celes・量り売りあり）'},
-      iro:'赤・ピンク色のアイテムを身につけると吉',
-      shoku:{s7:'からあげ棒',la:'からあげクン',fm:'ファミチキ'},
-      cmts:['内なる情熱に火がつく日。あなたの魅力が最大に輝く。','美意識が研ぎ澄まされている。センスを信じて動け。','カリスマ性が高まっている。人前に出ると良い日。','直感が冴える。今日感じたことを大切にせよ。','情熱の炎が燃える日。心に火を灯す出会いがある。'],
-      ippo:{a:'情熱を解き放て。今日が最高の舞台',m:'美しく誠実に。輝きは内側から',t:'感謝の炎を灯せ。それが全ての始まり'}
-    },
-    '土':{
-      kaori:{s:'サンダルウッド',e:'心の安定',p:'無印良品 / エッセンシャルオイル くつろぎブレンド ウッディ'},
-      kaori2:{s:'白檀',e:'地に足をつける',p:'日本香堂 / かゆらぎ 白檀 ディフューザー'},
-      iro:'黄色・ベージュのアイテムを身につけると吉',
-      shoku:{s7:'おにぎり（梅・鮭）',la:'おにぎり（おかか）',fm:'おにぎり（昆布）'},
-      cmts:['大地のように揺るぎなく。今日は焦らず丁寧に動け。','心が安定する日。大切な人との時間を大切にせよ。','地に足をつける日。急がず、確実に積み上げていこう。','基盤を固める日。報告・連絡・相談が運気の鍵。','大地が命を育むように。今日の誠実さが明日の実りになる。'],
-      ippo:{a:'大地を踏みしめ、堂々と前へ',m:'急がず確実に。それが最強',t:'感謝を土台に。全ては育つ'}
-    },
-    '金':{
-      kaori:{s:'ベルガモット',e:'豊かさの引き寄せ',p:'無印良品 / インテリアフレグランスオイル シトラス'},
-      kaori2:{s:'キンモクセイ',e:'品格の向上',p:'青山フラワーマーケット / オードトワレ オスマンサス（金木犀）'},
-      iro:'白・金色のアイテムを身につけると吉',
-      shoku:{s7:'サラダチキン',la:'烏龍茶',fm:'ジャスミン茶'},
-      cmts:['豊かさを引き寄せる日。品格ある行動が未来を変える。','決断力が高まっている。迷っていたことに答えを出せ。','収穫の気が満ちる日。自分の価値を信じて動け。','品格が輝く日。言葉と行動を一致させよ。','金の気が研ぎ澄まされている。今日の判断を信じろ。'],
-      ippo:{a:'決断せよ。今日の判断が未来を変える',m:'品格を保て。それが最大の武器',t:'豊かさに感謝。それが次を呼ぶ'}
-    },
-    '水':{
-      kaori:{s:'ラベンダー',e:'深い休息',p:'無印良品 / エッセンシャルオイル ラベンダー'},
-      kaori2:{s:'カモミール',e:'人間関係の潤い',p:'KNEIPP / バスソルト ラベンダーの香り'},
-      iro:'黒・紺色のアイテムを身につけると吉',
-      shoku:{s7:'おでん（はんぺん・昆布）',la:'しじみのお味噌汁',fm:'わかめスープ'},
-      cmts:['深い休息が心を整える。今日は無理せず自分を労れ。','直感力が研ぎ澄まされている。感じたままに動け。','人間関係が潤う日。話を聞くだけで縁が深まる。','浄化の気が流れる日。手放すことで新しいものが入る。','水のように柔軟に。今日は流れに乗ることが最善。'],
-      ippo:{a:'直感を信じて動け。水は低きに流れる',m:'静かに深く。それが水の強さ',t:'手放すことで満たされる'}
-    }
+  // 香りDB（最強吉方の五行を使用）
+  var KAORI_DB={
+    '木':{s:'ユーカリ',e:'やる気スイッチの起動',p:'無印良品 / エッセンシャルオイル ユーカリ'},
+    '火':{s:'ローズ',e:'内なる情熱の点火',p:'青山フラワーマーケット / オードトワレ ローズ'},
+    '土':{s:'サンダルウッド',e:'心の安定',p:'無印良品 / エッセンシャルオイル くつろぎブレンド ウッディ'},
+    '金':{s:'ベルガモット',e:'豊かさの引き寄せ',p:'無印良品 / インテリアフレグランスオイル シトラス'},
+    '水':{s:'ラベンダー',e:'深い休息',p:'無印良品 / エッセンシャルオイル ラベンダー'}
   };
+  var useElem=bestStar?bestStar.elem:(gState.dayCenter?STARS[gState.dayCenter].elem:'土');
+  var kaori=KAORI_DB[useElem]||KAORI_DB['土'];
 
-  const db=DAILY_DB[bestKichiElem]||DAILY_DB['土'];
-  const seed=(ty*10000+tm*100+td);
-  const kaoriData=seed%2===0?db.kaori:db.kaori2;
-  const comments=db.cmts;
-  const c0=comments[seed%comments.length];
-  const c1=comments[(seed+1)%comments.length];
-  const c2=comments[(seed+2)%comments.length];
-  const ippoKey=flowType==='攻める'?'a':flowType==='整える'?'t':'m';
-  const ippo=db.ippo[ippoKey];
-  const cStyle='font-size:.72rem;color:rgba(196,160,67,.8);margin-top:6px;line-height:1.8;font-style:italic;';
+  // 今日の一手DB
+  var IPPO_DB={
+    '木':{a:'迷わず動け。今日の一歩が道になる',m:'誠実に積み上げる。それが全て',t:'縁を大切に。風のように軽やかに'},
+    '火':{a:'情熱を解き放て。今日が最高の舞台',m:'美しく誠実に。輝きは内側から',t:'感謝の炎を灯せ。それが全ての始まり'},
+    '土':{a:'大地を踏みしめ、堂々と前へ',m:'急がず確実に。それが最強',t:'感謝を土台に。全ては育つ'},
+    '金':{a:'決断せよ。今日の判断が未来を変える',m:'品格を保て。それが最大の武器',t:'豊かさに感謝。それが次を呼ぶ'},
+    '水':{a:'直感を信じて動け。水は低きに流れる',m:'静かに深く。それが水の強さ',t:'手放すことで満たされる'}
+  };
+  var ippoMap=IPPO_DB[useElem]||IPPO_DB['土'];
+  var ippoKey=flowType==='攻める'?'a':flowType==='整える'?'t':'m';
+  var ippo=ippoMap[ippoKey];
 
+  // 表示
   showScreen('screenDaily');
 
-  const setEl=function(id,html){var e=document.getElementById(id);if(e)e.innerHTML=html;};
-  const setTx=function(id,txt){var e=document.getElementById(id);if(e)e.textContent=txt;};
+  var e;
+  e=document.getElementById('daily-flow-text');
+  if(e)e.textContent=flowText;
 
-  setTx('daily-flow-text',flowText);
-  setEl('daily-kaori-text','五行:'+bestKichiElem+' | 成分:'+kaoriData.s+' | '+kaoriData.e+' | '+kaoriData.p+'<div style="'+cStyle+'">✦ '+c0+'</div>');
-  setEl('daily-iro-text',db.iro+'<div style="'+cStyle+'">✦ '+c1+'</div>');
-  setEl('daily-shoku-text','セブン:'+db.shoku.s7+' | ローソン:'+db.shoku.la+' | ファミマ:'+db.shoku.fm+'<div style="'+cStyle+'">✦ '+c2+'</div>');
-  setTx('daily-ippo-text',ippo);
+  e=document.getElementById('daily-body');
+  if(e)e.innerHTML=dailyBodyHTML;
+
+  e=document.getElementById('daily-kaori-text');
+  if(e)e.innerHTML='成分：'+kaori.s+' | '+kaori.e+'<br><span style="font-size:.78rem;color:var(--mist);">'+kaori.p+'</span>';
+
+  e=document.getElementById('daily-ippo-text');
+  if(e)e.textContent=ippo;
 }
 
 function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
@@ -3076,7 +3061,8 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
       <div class="ai-hint" style="margin-top:14px;">
         <div class="ai-hint-title">🤖 AIに聞いてみよう！</div>
         <div class="ai-prompt-box" style="font-size:.65rem;">${aiPrompt}</div>
-        <button class="ai-copy-btn" onclick="navigator.clipboard.writeText('${aiPrompt.replace(/'/g,"\\'")}').then(()=>alert('コピーしました！AIに貼り付けてください'))">📋 コピーして使う</button>
+        <button class="ai-copy-btn" onclick="navigator.clipboard.writeText('${aiPrompt.replace(/'/g,"\\'")}').then(function(){var t=document.getElementById('popup-copy-toast');if(t){t.style.display='block';setTimeout(function(){t.style.display='none';},2500);}})">📋 コピーして使う</button>
+        <div id="popup-copy-toast" style="display:none;text-align:center;font-size:.72rem;color:#5DCAA5;margin-top:8px;padding:6px;background:rgba(29,158,117,.1);border-radius:6px;">✓ コピーしました。ChatGPT・Claude・Geminiに貼り付けてください</div>
       </div>
       ` : isKyo?`
       <div class="popup-kyo-text" style="font-size:.88rem;line-height:2;">
@@ -3124,12 +3110,16 @@ function generateAIPrompt(dirData,p2s,type){
 
 function copyPrompt(){
   const prompt=gState.currentPrompt||'';
+  const showToast=function(){
+    const t=document.getElementById('copy-toast');
+    if(t){t.style.display='block';setTimeout(function(){t.style.display='none';},2500);}
+  };
   if(navigator.clipboard){
-    navigator.clipboard.writeText(prompt).then(()=>alert('コピーしました！\nChatGPT・Claude・GeminiなどのAIに貼り付けてください'));
+    navigator.clipboard.writeText(prompt).then(showToast);
   }else{
     const ta=document.createElement('textarea');
     ta.value=prompt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
-    alert('コピーしました！');
+    showToast();
   }
 }
 
