@@ -2400,6 +2400,81 @@ async function openDaily(){
 
   // 全吉方の処方箋HTML（JOURNEYと同じデータをそのまま使う）
   var foodIcons=['☕','🍱','🧃'];
+
+  // ══ 蔵のデータ固定DB ══
+  var KITOKU_DAILY_DB={
+    '木':{
+      conbini:{s7:'野菜サラダ・サンドイッチ',la:'サラダ・そば・うどん',fm:'サラダ・サンドイッチ'},
+      conbini_alt:'緑茶・柑橘系グミ・レモン系飲料でも可',
+      kaori:[
+        {s:'ライムミント',e:'やる気スイッチの起動・新しいスタートに',p:'クナイプ / バスソルト ライムミント 850g',scene:'朝の切り替え・新しい仕事を始める前',alt:'ペパーミント系のお茶・酸味のある柑橘系グミでも可'},
+        {s:'ウッド（植物・樹木）',e:'停滞した運気を動かす・アイデア出しに',p:'マツキヨ / アルジェラン ハンドセラムクリーム ウッド 50g',scene:'仕事中・アイデア出しの時',alt:'ユーカリのアロマオイル・新緑の入浴剤でも可'}
+      ],
+      iro:{
+        color:'青・緑',
+        effect:['アイデアの閃きをもたらしたい時','停滞した運気を動かしたい時','やる気スイッチを起動したい時'],
+        how:['ハンカチ・文房具・小物（手軽）','スマホ壁紙・LINEの背景（無料）','酸味のある食事と一緒に（ランチ）'],
+        avoid:'怒りやイライラを感じやすい時は避けてもOK'
+      }
+    },
+    '火':{
+      conbini:{s7:'からあげ棒・ホットコーヒー・激辛グミ',la:'からあげクン・マチカフェコーヒー・揚げ物',fm:'ファミチキ・コーヒー・ホットスナック'},
+      conbini_alt:'シナモン入り飲料・温かいお茶・辛いスナックでも可',
+      kaori:[
+        {s:'ジャスミン',e:'内なる情熱を点火・華やかな気分に',p:'バスクリン / ジャスミンの香り 600g（ウエルシア取扱）',scene:'夜のバスタイム・気分を上げたい時',alt:'ジャスミンティー・お香（沈香系）でも可'},
+        {s:'ネロリ',e:'気持ちを前向きに・プレゼン前に',p:'クナイプ / ネロリの香り シリーズ',scene:'人に会う前・商談・デート前',alt:'シナモンティー・ローズヒップティーでも可'}
+      ],
+      iro:{
+        color:'赤・ピンク・紫',
+        effect:['美意識やカリスマ性を高めたい時','内なる情熱を点火させたい時','直感やセンスを冴え渡らせたい時'],
+        how:['財布の中に赤い紙を入れる（内面に火のエネルギー）','ファッションのワンポイント・アクセサリー（手軽）','スマホ壁紙・LINEの背景（無料）'],
+        avoid:'燃え尽き感がある時・感情が息苦しい時は避けてもOK'
+      }
+    },
+    '土':{
+      conbini:{s7:'おにぎり・肉まん・カスタードシュー',la:'おにぎり・お弁当・焼き菓子',fm:'大きなおむすび・肉まん・チョコ系パン'},
+      conbini_alt:'ほうじ茶・麦茶・根菜スープでも可',
+      kaori:[
+        {s:'サンダルウッド',e:'心の安定・安心感を求める夜に',p:'クナイプ / バスソルト サンダルウッド 850g',scene:'夜のリラックス・疲れを取りたい時',alt:'白檀のお香・バニラのボディクリームでも可'},
+        {s:'シダーウッド',e:'家庭円満・信頼関係を築きたい時',p:'Beauwell / ゆったりバスソルト ヒーリングシダーウッド 40g（ウエルシア取扱）',scene:'帰宅後・家族との時間の前',alt:'はちみつ入りホットミルク・ほうじ茶でも可'}
+      ],
+      iro:{
+        color:'黄・ベージュ・茶',
+        effect:['心の安定（グラウンディング）を得たい時','生活や仕事の基盤を守りたい時','不満や心配事を和らげたい時'],
+        how:['服や下着・靴下にアースカラーを（日常）','スマホケース・マグカップ（デスク）','スマホ壁紙・LINEの背景（無料）'],
+        avoid:'変化への抵抗感や頑固さが強くなりすぎている時は避けてもOK'
+      }
+    },
+    '金':{
+      conbini:{s7:'サラダチキン・中華まん・こだわり弁当',la:'よだれ鶏・アイス・チルド弁当',fm:'チルド惣菜・アイス・中華まん'},
+      conbini_alt:'烏龍茶・ジャスミン茶・白いチキン系でも可',
+      kaori:[
+        {s:'金木犀',e:'自分へのご褒美・収穫を祝う豊かな気分に',p:'バスクリン / ソフレマイルドミー金木犀 600ml（ウエルシア取扱）',scene:'成果を出した後・豊かさを感じたい時',alt:'金木犀のお茶・フルーティーな香水でも可'},
+        {s:'ベルガモット',e:'決断力を高めたい・朝の気持ちを鋭くしたい',p:'ウエルシア / 泡洗顔 ベルガモットガーデンの香り 200g',scene:'朝の洗顔時・重要な決断の前',alt:'アールグレイティー（ベルガモットの香り）でも可'}
+      ],
+      iro:{
+        color:'白・金・銀',
+        effect:['豊かさを引き寄せたい時','決断力を強化したい時','品格や責任感を向上させたい時'],
+        how:['アクセサリー（ゴールド・シルバー）や高級感のある小物','香水のボトルカラーを視界に置く（デスク・空間）','スマホ壁紙・LINEの背景（無料）'],
+        avoid:'完璧主義が行き過ぎてイライラしている時は避けてもOK'
+      }
+    },
+    '水':{
+      conbini:{s7:'おでん・お寿司・冷凍食品',la:'おでん・お寿司・スープ',fm:'おでん・お寿司・わかめスープ'},
+      conbini_alt:'昆布おにぎり・豆腐・しじみのお味噌汁でも可',
+      kaori:[
+        {s:'ラベンダー',e:'深い休息・夜の静寂・内面を見つめる時',p:'Beauwell / バスソルト スリーピーラベンダー 40g（ウエルシア取扱）',scene:'寝る前・休息したい時',alt:'カモミールティー・無香料の保湿クリームでも可'},
+        {s:'ラベンダー・ミント',e:'心身を浄化・疲労回復・柔軟性を取り戻す',p:'クナイプ / スパークリングタブレット ラベンダーミント 50g',scene:'入浴時・疲れをリセットしたい時',alt:'海の香りのディフューザー・液体せっけんでも可'}
+      ],
+      iro:{
+        color:'黒・紺・グレー',
+        effect:['深い休息を得たい時','人間関係に潤いをもたらしたい時','感情の波を静め、直感力を研ぎ澄ましたい時'],
+        how:['ハンカチ・靴下・下着など肌に触れるもの（内側）','入浴時や睡眠前のリラックス空間のアイテム','スマホ壁紙・LINEの背景（無料）'],
+        avoid:'体が冷え切っている時・孤独感が強い時は避けてもOK'
+      }
+    }
+  };
+
   var dailyBodyHTML='';
 
   if(kichiCount>0){
@@ -2407,6 +2482,7 @@ async function openDaily(){
       var dd=gState.dayDirData[dir];
       var s=STARS[dd.starN];
       if(!s)return;
+      var db=KITOKU_DAILY_DB[s.elem]||KITOKU_DAILY_DB['土'];
       var rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方'
         :dd.rank>=4?'本命・月命　ともに吉方'
         :dd.rank>=3?'吉方（三合の後押しあり）'
@@ -2417,7 +2493,28 @@ async function openDaily(){
           +'<div><div class="food-name">'+f+'</div>'
           +'<div class="food-reason">'+s.elem+'のエネルギーを取り込む食べ物・飲み物です</div></div></div>';
       }).join('');
-    dailyBodyHTML+=
+      // コンビニ別おすすめ
+      var conbiniHTML=db?
+        '<div style="font-size:.72rem;color:var(--gold);margin:10px 0 4px;">🏪 コンビニで選ぶなら</div>'+
+        '<div style="font-size:.78rem;color:var(--snow);line-height:2;padding:8px 10px;background:rgba(196,160,67,.06);border-radius:8px;">'+
+          'セブン：'+db.conbini.s7+'<br>'+
+          'ローソン：'+db.conbini.la+'<br>'+
+          'ファミマ：'+db.conbini.fm+'<br>'+
+          '<span style="font-size:.68rem;color:var(--mist);">代替：'+db.conbini_alt+'</span>'+
+        '</div>':'';
+      // 色
+      var iro=db?db.iro:null;
+      var iroHTML=iro?
+        '<div style="font-size:.72rem;color:var(--gold);margin:10px 0 4px;">🎨 今日の色の使い方</div>'+
+        '<div style="font-size:.78rem;color:var(--snow);line-height:2;padding:8px 10px;background:rgba(196,160,67,.06);border-radius:8px;">'+
+          '<strong>'+iro.color+'</strong><br>'+
+          iro.effect.map(function(e){return '・'+e;}).join('<br>')+
+          '<br><span style="font-size:.72rem;color:var(--goldlt);">取り入れ方：</span><br>'+
+          iro.how.map(function(h){return '・'+h;}).join('<br>')+
+          '<br><span style="font-size:.68rem;color:var(--mist);">'+iro.avoid+'</span>'+
+        '</div>':'';
+
+      dailyBodyHTML+=
         '<div class="kichi-item'+(dd.rank>=4?' saiko':dd.rank>=3?' dai':'')+'" style="margin-bottom:6px;">'+
           '<div class="kichi-dir-badge">'+
             '<div class="kichi-dir">'+EN[dir]+'</div>'+
@@ -2429,38 +2526,24 @@ async function openDaily(){
           '</div>'+
         '</div>'+
         '<div class="food-title">✦ 今日の吉方取り処方箋</div>'+
-        '<div class="food-cards" style="margin-bottom:10px;">'+foodsHTML+'</div>'+
-        '<div class="gogyou-box" style="margin-bottom:16px;">'+
+        '<div class="food-cards" style="margin-bottom:6px;">'+foodsHTML+'</div>'+
+        conbiniHTML+
+        '<div class="gogyou-box" style="margin:10px 0;">'+
           '<div class="gogyou-title">五行の知恵 — '+s.elem+'のエネルギー</div>'+
           '<div class="gogyou-text">🎨 色：'+s.color+'<br>🍽 食：'+s.food+'</div>'+
-        '</div>';
+        '</div>'+
+        iroHTML+
+        '<div style="height:20px;border-bottom:1px solid var(--rim);margin-bottom:16px;"></div>';
     });
   }else{
     dailyBodyHTML='<div style="font-size:.82rem;color:var(--mist);line-height:2;padding:12px 0;">今日は特に吉方がありません。<br>内なる充電の日として、丁寧に過ごしましょう。</div>';
   }
 
-  // 香りDB（最強吉方の五行を使用）
-  var KAORI_DB={
-    '木':{s:'ユーカリ',e:'やる気スイッチの起動',p:'無印良品 / エッセンシャルオイル ユーカリ'},
-    '火':{s:'ローズ',e:'内なる情熱の点火',p:'青山フラワーマーケット / オードトワレ ローズ'},
-    '土':{s:'サンダルウッド',e:'心の安定',p:'無印良品 / エッセンシャルオイル くつろぎブレンド ウッディ'},
-    '金':{s:'ベルガモット',e:'豊かさの引き寄せ',p:'無印良品 / インテリアフレグランスオイル シトラス'},
-    '水':{s:'ラベンダー',e:'深い休息',p:'無印良品 / エッセンシャルオイル ラベンダー'}
-  };
+  // 香りDB（蔵のデータ）
   var useElem=bestStar?bestStar.elem:(gState.dayCenter?STARS[gState.dayCenter].elem:'土');
-  var kaori=KAORI_DB[useElem]||KAORI_DB['土'];
-
-  // 今日の一手DB
-  var IPPO_DB={
-    '木':{a:'迷わず動け。今日の一歩が道になる',m:'誠実に積み上げる。それが全て',t:'縁を大切に。風のように軽やかに'},
-    '火':{a:'情熱を解き放て。今日が最高の舞台',m:'美しく誠実に。輝きは内側から',t:'感謝の炎を灯せ。それが全ての始まり'},
-    '土':{a:'大地を踏みしめ、堂々と前へ',m:'急がず確実に。それが最強',t:'感謝を土台に。全ては育つ'},
-    '金':{a:'決断せよ。今日の判断が未来を変える',m:'品格を保て。それが最大の武器',t:'豊かさに感謝。それが次を呼ぶ'},
-    '水':{a:'直感を信じて動け。水は低きに流れる',m:'静かに深く。それが水の強さ',t:'手放すことで満たされる'}
-  };
-  var ippoMap=IPPO_DB[useElem]||IPPO_DB['土'];
-  var ippoKey=flowType==='攻める'?'a':flowType==='整える'?'t':'m';
-  var ippo=ippoMap[ippoKey];
+  var kaoriDB=KITOKU_DAILY_DB[useElem]||KITOKU_DAILY_DB['土'];
+  var seed=ty*10000+tm*100+td;
+  var kaori=kaoriDB.kaori[seed%kaoriDB.kaori.length];
 
   // 表示
   showScreen('screenDaily');
@@ -2473,10 +2556,17 @@ async function openDaily(){
   if(e)e.innerHTML=dailyBodyHTML;
 
   e=document.getElementById('daily-kaori-text');
-  if(e)e.innerHTML='成分：'+kaori.s+' | '+kaori.e+'<br><span style="font-size:.78rem;color:var(--mist);">'+kaori.p+'</span>';
+  if(e)e.innerHTML=
+    '<strong>成分：'+kaori.s+'</strong>｜'+kaori.e+'<br>'+
+    '<span style="font-size:.78rem;color:var(--mist);">'+kaori.p+'</span><br>'+
+    '<span style="font-size:.72rem;color:var(--goldlt);">'+
+      '✦ シーン：'+kaori.scene+
+    '</span><br>'+
+    '<span style="font-size:.68rem;color:var(--mist);">代替：'+kaori.alt+'</span>';
 
+  // 今日の一手は廃止
   e=document.getElementById('daily-ippo-text');
-  if(e)e.textContent=ippo;
+  if(e&&e.parentElement)e.parentElement.style.display='none';
 }
 
 function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
