@@ -1880,13 +1880,13 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
       <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;"></div>
     </div>
-    <!-- 香り（上部に移動） -->
-    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:14px;">
+    <!-- 吉方取り処方箋（既存データそのまま） -->
+    <div id="daily-body" style=""></div>
+    <!-- 香り -->
+    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:10px;">
       <div style="font-size:.72rem;color:#d4956a;font-weight:700;margin-bottom:8px;">🌸 今日の香り</div>
       <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:2;"></div>
     </div>
-    <!-- 吉方取り処方箋 -->
-    <div id="daily-body" style=""></div>
     <!-- 今日の一手 -->
     <div style="background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.35);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の一手</div>
@@ -2525,14 +2525,14 @@ async function openDaily(){
             '<div class="kichi-star">'+s.j+'</div>'+
           '</div>'+
         '</div>'+
-        iroHTML+
         '<div class="food-title">✦ 今日の吉方取り処方箋</div>'+
         '<div class="food-cards" style="margin-bottom:6px;">'+foodsHTML+'</div>'+
         conbiniHTML+
         '<div class="gogyou-box" style="margin:10px 0;">'+
           '<div class="gogyou-title">五行の知恵 — '+s.elem+'のエネルギー</div>'+
-          '<div class="gogyou-text">🍽 食：'+s.food+'</div>'+
+          '<div class="gogyou-text">🎨 色：'+s.color+'<br>🍽 食：'+s.food+'</div>'+
         '</div>'+
+        iroHTML+
         '<div style="height:20px;border-bottom:1px solid var(--rim);margin-bottom:16px;"></div>';
     });
   }else{
@@ -2544,6 +2544,21 @@ async function openDaily(){
   var kaoriDB=KITOKU_DAILY_DB[useElem]||KITOKU_DAILY_DB['土'];
   var seed=ty*10000+tm*100+td;
   var kaori=kaoriDB.kaori[seed%kaoriDB.kaori.length];
+
+  // 五行×香りの根拠テキスト
+  var ELEM_KAORI_BASIS={
+    '木':'今日の吉方（{star}）は<strong>木のエネルギー</strong>の星です。木の五行には「上昇・新緑・アイデアの閃き・停滞を動かす力」の作用があります。この香りは木のエネルギーを最も高める処方です。',
+    '火':'今日の吉方（{star}）は<strong>火のエネルギー</strong>の星です。火の五行には「拡散・情熱・美意識の向上・カリスマ性」の作用があります。この香りは火のエネルギーを最も高める処方です。',
+    '土':'今日の中宮（{star}）は<strong>土のエネルギー</strong>の星です。土の五行には「安定・グラウンディング・基盤の守護・心の静けさ」の作用があります。この香りは土のエネルギーを最も高める処方です。',
+    '金':'今日の吉方（{star}）は<strong>金のエネルギー</strong>の星です。金の五行には「収穫・決断力・豊かさの引き寄せ・品格の向上」の作用があります。この香りは金のエネルギーを最も高める処方です。',
+    '水':'今日の吉方（{star}）は<strong>水のエネルギー</strong>の星です。水の五行には「浸透・浄化・深い休息・直感力の研ぎ澄まし」の作用があります。この香りは水のエネルギーを最も高める処方です。',
+  };
+  var kaoriBasisStar=bestStar?bestStar.j:(gState.dayCenter?STARS[gState.dayCenter].j:'');
+  var kaoriBasisTemplate=ELEM_KAORI_BASIS[useElem]||'';
+  // 吉方なし（土）の場合は「中宮」表記、吉方あり時は「吉方」表記
+  var kaoriBasis=bestStar
+    ? kaoriBasisTemplate.replace('今日の中宮（{star}）は','今日の吉方（{star}）は').replace('{star}',kaoriBasisStar)
+    : kaoriBasisTemplate.replace('{star}',kaoriBasisStar);
 
   // 表示
   showScreen('screenDaily');
@@ -2557,6 +2572,7 @@ async function openDaily(){
 
   e=document.getElementById('daily-kaori-text');
   if(e)e.innerHTML=
+    (kaoriBasis?'<div style="font-size:.72rem;color:var(--goldlt);line-height:1.9;padding:8px 10px;background:rgba(196,160,67,.06);border-radius:8px;margin-bottom:10px;">✦ '+kaoriBasis+'</div>':'')+
     '<strong>成分：'+kaori.s+'</strong>｜'+kaori.e+'<br>'+
     '<span style="font-size:.78rem;color:var(--mist);">'+kaori.p+'</span><br>'+
     '<span style="font-size:.72rem;color:var(--goldlt);">✦ シーン：'+kaori.scene+'</span><br>'+
