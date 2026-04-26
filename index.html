@@ -1880,13 +1880,13 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
       <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;"></div>
     </div>
-    <!-- 吉方取り処方箋（既存データそのまま） -->
-    <div id="daily-body" style=""></div>
-    <!-- 香り -->
-    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:10px;">
+    <!-- 香り（上部に移動） -->
+    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:14px;">
       <div style="font-size:.72rem;color:#d4956a;font-weight:700;margin-bottom:8px;">🌸 今日の香り</div>
       <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:2;"></div>
     </div>
+    <!-- 吉方取り処方箋 -->
+    <div id="daily-body" style=""></div>
     <!-- 今日の一手 -->
     <div style="background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.35);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の一手</div>
@@ -2525,14 +2525,14 @@ async function openDaily(){
             '<div class="kichi-star">'+s.j+'</div>'+
           '</div>'+
         '</div>'+
+        iroHTML+
         '<div class="food-title">✦ 今日の吉方取り処方箋</div>'+
         '<div class="food-cards" style="margin-bottom:6px;">'+foodsHTML+'</div>'+
         conbiniHTML+
         '<div class="gogyou-box" style="margin:10px 0;">'+
           '<div class="gogyou-title">五行の知恵 — '+s.elem+'のエネルギー</div>'+
-          '<div class="gogyou-text">🎨 色：'+s.color+'<br>🍽 食：'+s.food+'</div>'+
+          '<div class="gogyou-text">🍽 食：'+s.food+'</div>'+
         '</div>'+
-        iroHTML+
         '<div style="height:20px;border-bottom:1px solid var(--rim);margin-bottom:16px;"></div>';
     });
   }else{
