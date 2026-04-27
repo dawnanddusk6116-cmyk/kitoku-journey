@@ -1880,13 +1880,13 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
       <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;"></div>
     </div>
-    <!-- 吉方取り処方箋（既存データそのまま） -->
-    <div id="daily-body" style=""></div>
-    <!-- 香り -->
-    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:10px;">
+    <!-- 香り（上部に移動） -->
+    <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:14px;">
       <div style="font-size:.72rem;color:#d4956a;font-weight:700;margin-bottom:8px;">🌸 今日の香り</div>
       <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:2;"></div>
     </div>
+    <!-- 吉方取り処方箋 -->
+    <div id="daily-body" style=""></div>
     <!-- 今日の一手 -->
     <div style="background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.35);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;">✦ 今日の一手</div>
@@ -2544,9 +2544,6 @@ async function openDaily(){
   var kaoriDB=KITOKU_DAILY_DB[useElem]||KITOKU_DAILY_DB['土'];
   var seed=ty*10000+tm*100+td;
   var kaori=kaoriDB.kaori[seed%kaoriDB.kaori.length];
-
-  // 五行×香りの根拠テキスト
-  // ① 調律の意図（詩的テキスト）
   var ELEM_KAORI_BASIS={
     '木':{kyo:'今日の吉方（{star}）は、風を呼ぶ<strong>木のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、風を呼ぶ<strong>木のエネルギー</strong>の星です。',desc:'停滞した気を動かし、新しい縁と閃きを引き寄せる日。この香りは、その上昇の波に乗るための処方です。'},
     '火':{kyo:'今日の吉方（{star}）は、真昼の太陽のような<strong>火のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、真昼の太陽のような<strong>火のエネルギー</strong>の星です。',desc:'あなたの内側にある情熱と美意識が最大化する日。この香りは、その炎に風を送り込む処方です。'},
@@ -2554,7 +2551,6 @@ async function openDaily(){
     '金':{kyo:'今日の吉方（{star}）は、天命を刻む<strong>金のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、天命を刻む<strong>金のエネルギー</strong>の星です。',desc:'品格と決断力が研ぎ澄まされ、豊かさを引き寄せる日。この香りは、あなたという器の格を一段引き上げる処方です。'},
     '水':{kyo:'今日の吉方（{star}）は、深淵なる知恵の<strong>水のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、深淵なる知恵の<strong>水のエネルギー</strong>の星です。',desc:'直感が冴え渡り、人間関係に深い潤いをもたらす日。この香りは、静寂の中に真実を見出す処方です。'},
   };
-  // ② 纏う部位
   var ELEM_MATOU={
     '木':'✦ 纏う部位：手首・耳の後ろ｜縁と風を呼び込み、アイデアが流れ込んできます。',
     '火':'✦ 纏う部位：首筋・胸元｜情熱の炎が内側から燃え上がり、存在感が増します。',
