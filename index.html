@@ -2546,19 +2546,28 @@ async function openDaily(){
   var kaori=kaoriDB.kaori[seed%kaoriDB.kaori.length];
 
   // 五行×香りの根拠テキスト
+  // ① 調律の意図（詩的テキスト）
   var ELEM_KAORI_BASIS={
-    '木':'今日の吉方（{star}）は<strong>木のエネルギー</strong>の星です。木の五行には「上昇・新緑・アイデアの閃き・停滞を動かす力」の作用があります。この香りは木のエネルギーを最も高める処方です。',
-    '火':'今日の吉方（{star}）は<strong>火のエネルギー</strong>の星です。火の五行には「拡散・情熱・美意識の向上・カリスマ性」の作用があります。この香りは火のエネルギーを最も高める処方です。',
-    '土':'今日の中宮（{star}）は<strong>土のエネルギー</strong>の星です。土の五行には「安定・グラウンディング・基盤の守護・心の静けさ」の作用があります。この香りは土のエネルギーを最も高める処方です。',
-    '金':'今日の吉方（{star}）は<strong>金のエネルギー</strong>の星です。金の五行には「収穫・決断力・豊かさの引き寄せ・品格の向上」の作用があります。この香りは金のエネルギーを最も高める処方です。',
-    '水':'今日の吉方（{star}）は<strong>水のエネルギー</strong>の星です。水の五行には「浸透・浄化・深い休息・直感力の研ぎ澄まし」の作用があります。この香りは水のエネルギーを最も高める処方です。',
+    '木':{kyo:'今日の吉方（{star}）は、風を呼ぶ<strong>木のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、風を呼ぶ<strong>木のエネルギー</strong>の星です。',desc:'停滞した気を動かし、新しい縁と閃きを引き寄せる日。この香りは、その上昇の波に乗るための処方です。'},
+    '火':{kyo:'今日の吉方（{star}）は、真昼の太陽のような<strong>火のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、真昼の太陽のような<strong>火のエネルギー</strong>の星です。',desc:'あなたの内側にある情熱と美意識が最大化する日。この香りは、その炎に風を送り込む処方です。'},
+    '土':{kyo:'今日の吉方（{star}）は、母なる大地の<strong>土のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、母なる大地の<strong>土のエネルギー</strong>の星です。',desc:'揺らぎがちな心を「静」へと導き、信頼の土壌を耕す日。この香りは、深く根を張り、あなたの言葉に重みと誠実さを宿す処方です。'},
+    '金':{kyo:'今日の吉方（{star}）は、天命を刻む<strong>金のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、天命を刻む<strong>金のエネルギー</strong>の星です。',desc:'品格と決断力が研ぎ澄まされ、豊かさを引き寄せる日。この香りは、あなたという器の格を一段引き上げる処方です。'},
+    '水':{kyo:'今日の吉方（{star}）は、深淵なる知恵の<strong>水のエネルギー</strong>の星です。',chuo:'今日の中宮（{star}）は、深淵なる知恵の<strong>水のエネルギー</strong>の星です。',desc:'直感が冴え渡り、人間関係に深い潤いをもたらす日。この香りは、静寂の中に真実を見出す処方です。'},
+  };
+  // ② 纏う部位
+  var ELEM_MATOU={
+    '木':'✦ 纏う部位：手首・耳の後ろ｜縁と風を呼び込み、アイデアが流れ込んできます。',
+    '火':'✦ 纏う部位：首筋・胸元｜情熱の炎が内側から燃え上がり、存在感が増します。',
+    '土':'✦ 纏う部位：足首・膝の裏｜大地にしっかり根を張るグラウンディング効果が高まります。',
+    '金':'✦ 纏う部位：手首・耳の後ろ｜決断力と品格が指先・言葉の端々に宿ります。',
+    '水':'✦ 纏う部位：手首の内側・うなじ｜深い直感と人を引き寄せる静かな磁力が生まれます。',
   };
   var kaoriBasisStar=bestStar?bestStar.j:(gState.dayCenter?STARS[gState.dayCenter].j:'');
-  var kaoriBasisTemplate=ELEM_KAORI_BASIS[useElem]||'';
-  // 吉方なし（土）の場合は「中宮」表記、吉方あり時は「吉方」表記
-  var kaoriBasis=bestStar
-    ? kaoriBasisTemplate.replace('今日の中宮（{star}）は','今日の吉方（{star}）は').replace('{star}',kaoriBasisStar)
-    : kaoriBasisTemplate.replace('{star}',kaoriBasisStar);
+  var kaoriBasisData=ELEM_KAORI_BASIS[useElem]||ELEM_KAORI_BASIS['土'];
+  var kaoriBasisTitle=bestStar
+    ? kaoriBasisData.kyo.replace('{star}',kaoriBasisStar)
+    : kaoriBasisData.chuo.replace('{star}',kaoriBasisStar);
+  var kaoriMatou=ELEM_MATOU[useElem]||ELEM_MATOU['土'];
 
   // 表示
   showScreen('screenDaily');
@@ -2572,11 +2581,15 @@ async function openDaily(){
 
   e=document.getElementById('daily-kaori-text');
   if(e)e.innerHTML=
-    (kaoriBasis?'<div style="font-size:.72rem;color:var(--goldlt);line-height:1.9;padding:8px 10px;background:rgba(196,160,67,.06);border-radius:8px;margin-bottom:10px;">✦ '+kaoriBasis+'</div>':'')+
-    '<strong>成分：'+kaori.s+'</strong>｜'+kaori.e+'<br>'+
-    '<span style="font-size:.78rem;color:var(--mist);">'+kaori.p+'</span><br>'+
-    '<span style="font-size:.72rem;color:var(--goldlt);">✦ シーン：'+kaori.scene+'</span><br>'+
-    '<div style="font-size:.72rem;color:var(--gold);margin-top:8px;">✨ 話題ブランド（Celes量り売りで試せる）</div>'+
+    '<div style="font-size:.75rem;color:var(--goldlt);line-height:2;padding:10px 12px;background:rgba(196,160,67,.07);border-radius:10px;margin-bottom:12px;">'+
+      kaoriBasisTitle+'<br>'+
+      '<span style="color:var(--snow);">'+kaoriBasisData.desc+'</span>'+
+    '</div>'+
+    '<strong style="font-size:.9rem;">'+kaori.s+'</strong><span style="font-size:.78rem;color:var(--mist);">｜'+kaori.e+'</span><br>'+
+    '<span style="font-size:.75rem;color:var(--mist);line-height:2;">'+kaori.p+'</span><br>'+
+    '<div style="font-size:.72rem;color:var(--goldlt);margin:8px 0;">✦ シーン：'+kaori.scene+'</div>'+
+    '<div style="font-size:.72rem;color:rgba(212,149,106,.9);padding:8px 10px;background:rgba(220,130,80,.08);border-left:2px solid rgba(220,130,80,.5);border-radius:6px;margin-bottom:10px;line-height:1.9;">'+kaoriMatou+'</div>'+
+    '<div style="font-size:.72rem;color:var(--gold);margin-bottom:4px;">✨ 話題ブランド（Celes量り売りで試せる）</div>'+
     '<div style="font-size:.75rem;color:var(--snow);line-height:2;">'+kaori.brand+'</div>'+
     '<span style="font-size:.68rem;color:var(--mist);">代替：'+kaori.alt+'</span>';
 
