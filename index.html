@@ -2507,24 +2507,24 @@ async function openDaily(){
       var kd=db?db.kondate:null;
       var ksd=(ty||0)*10000+(tm||0)*100+(td||0);
       var kondateHTML=kd?
-        '<div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:12px;padding:14px;margin-bottom:12px;">'+
-          '<div style="font-size:.62rem;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:10px;">🍱 今日の献立処方箋</div>'+
-          (db.kondateRiyu?'<div style="font-size:.72rem;color:var(--snow);line-height:1.9;padding:8px 10px;background:rgba(196,160,67,.06);border-radius:8px;margin-bottom:10px;">'+db.kondateRiyu+'</div>':'')+
+        '<div style="background:linear-gradient(135deg,rgba(80,160,120,.10),rgba(60,140,100,.05));border:1px solid rgba(80,160,120,.35);border-radius:12px;padding:14px;margin-bottom:12px;">'+
+          '<div style="font-size:.62rem;letter-spacing:.14em;color:#5aaa80;font-weight:700;margin-bottom:10px;">🍱 今日の献立処方箋</div>'+
+          (db.kondateRiyu?'<div style="font-size:.72rem;color:var(--snow);line-height:1.9;padding:8px 10px;background:rgba(80,160,120,.08);border-radius:8px;margin-bottom:10px;">'+db.kondateRiyu+'</div>':'')+
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
             '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
-              '<div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">☀️ 朝</div>'+
+              '<div style="font-size:.58rem;color:#5aaa80;margin-bottom:4px;">☀️ 朝</div>'+
               '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.asa[ksd%kd.asa.length]+'</div>'+
             '</div>'+
             '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
-              '<div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">🌤 昼</div>'+
+              '<div style="font-size:.58rem;color:#5aaa80;margin-bottom:4px;">🌤 昼</div>'+
               '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.hiru[ksd%kd.hiru.length]+'</div>'+
             '</div>'+
           '</div>'+
           '<div style="background:var(--card);border-radius:8px;padding:10px;margin-bottom:8px;">'+
-            '<div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">🌙 夜</div>'+
+            '<div style="font-size:.58rem;color:#5aaa80;margin-bottom:4px;">🌙 夜</div>'+
             '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.yoru[ksd%kd.yoru.length]+'</div>'+
           '</div>'+
-          '<div style="font-size:.7rem;color:var(--mist);padding:6px 0;">✦ 一品だけ足すなら：'+kd.ippin[ksd%kd.ippin.length]+'</div>'+
+          '<div style="font-size:.7rem;color:#5aaa80;padding:6px 0;">✦ 一品だけ足すなら：'+kd.ippin[ksd%kd.ippin.length]+'</div>'+
         '</div>':'';
       // コンビニ別おすすめ
       var conbiniHTML=db?
