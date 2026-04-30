@@ -2404,6 +2404,8 @@ async function openDaily(){
   // ══ 蔵のデータ固定DB ══
   var KITOKU_DAILY_DB={
     '木':{
+      kondateRiyu:'今日は木のエネルギーの日。木の五行には「上昇・新緑・停滞を動かす力」があります。酸味・緑の食材でそのエネルギーを体に取り込みましょう。',
+      kondate:{ippin:['鶏肉と野菜の炒め物','野菜炒め（もやし・ニラ）','酢鶏','青じそ入りサラダ'],asa:['ほうれん草の卵炒め・緑茶','アボカドトースト・柑橘ジュース'],hiru:['鶏肉と野菜の炒め物・そば','野菜炒め定食・緑茶'],yoru:['酢鶏・青じそサラダ','野菜炒め（もやし・ニラ）・冷奴ポン酢']},
       conbini:{s7:'野菜サラダ・サンドイッチ',la:'サラダ・そば・うどん',fm:'サラダ・サンドイッチ'},
       conbini_alt:'緑茶・柑橘系グミ・レモン系飲料でも可',
       kaori:[
@@ -2418,6 +2420,8 @@ async function openDaily(){
       }
     },
     '火':{
+      kondateRiyu:'今日は火のエネルギーの日。火の五行には「情熱・拡散・美意識の向上」があります。辛味・赤い食材が火のエネルギーを体に灯します。',
+      kondate:{ippin:['麻婆豆腐','キムチ炒め','エビチリ','回鍋肉'],asa:['トマトスクランブルエッグ・赤系スムージー','キムチ卵かけごはん'],hiru:['麻婆豆腐定食','トマトパスタ・赤ワインビネガーサラダ'],yoru:['回鍋肉・キムチスープ','エビチリ・麻婆豆腐']},
       conbini:{s7:'からあげ棒・ホットコーヒー・激辛グミ',la:'からあげクン・マチカフェコーヒー・揚げ物',fm:'ファミチキ・コーヒー・ホットスナック'},
       conbini_alt:'シナモン入り飲料・温かいお茶・辛いスナックでも可',
       kaori:[
@@ -2432,6 +2436,8 @@ async function openDaily(){
       }
     },
     '土':{
+      kondateRiyu:'今日は土のエネルギーの日。土の五行には「安定・グラウンディング・基盤の守護」があります。甘味・根菜が心身を落ち着かせます。',
+      kondate:{ippin:['肉じゃが','豚汁','筑前煮','里芋の煮物'],asa:['さつまいもトースト・ほうじ茶','かぼちゃスープ・おにぎり'],hiru:['肉じゃが定食・麦茶','根菜カレー・豚汁'],yoru:['筑前煮・里芋の煮物','豚の角煮・根菜の味噌汁']},
       conbini:{s7:'おにぎり・肉まん・カスタードシュー',la:'おにぎり・お弁当・焼き菓子',fm:'大きなおむすび・肉まん・チョコ系パン'},
       conbini_alt:'ほうじ茶・麦茶・根菜スープでも可',
       kaori:[
@@ -2446,6 +2452,8 @@ async function openDaily(){
       }
     },
     '金':{
+      kondateRiyu:'今日は金のエネルギーの日。金の五行には「収穫・決断力・品格の向上」があります。白い食材・辛味が頭をクリアにします。',
+      kondate:{ippin:['塩麹鶏','大根おろしステーキ','水炊き','白身魚の塩焼き'],asa:['白米おにぎり・大根の味噌汁','塩鮭・白湯'],hiru:['鶏の塩焼き定食・烏龍茶','白身魚定食・大根おろし添え'],yoru:['水炊き（鶏・白菜）','塩麹鶏・大根の煮物']},
       conbini:{s7:'サラダチキン・中華まん・こだわり弁当',la:'よだれ鶏・アイス・チルド弁当',fm:'チルド惣菜・アイス・中華まん'},
       conbini_alt:'烏龍茶・ジャスミン茶・白いチキン系でも可',
       kaori:[
@@ -2460,6 +2468,8 @@ async function openDaily(){
       }
     },
     '水':{
+      kondateRiyu:'今日は水のエネルギーの日。水の五行には「浄化・直感・深い休息」があります。塩味・海のものが感性を研ぎ澄まします。',
+      kondate:{ippin:['蒸し鶏ポン酢','冷奴','わかめスープ','牡蠣のソテー'],asa:['わかめスープ・豆腐の味噌汁','昆布おにぎり・白湯'],hiru:['海鮮丼・わかめスープ','冷奴定食・そば'],yoru:['鍋（昆布だし）・蒸し鶏ポン酢','牡蠣のソテー・しじみの味噌汁']},
       conbini:{s7:'おでん・お寿司・冷凍食品',la:'おでん・お寿司・スープ',fm:'おでん・お寿司・わかめスープ'},
       conbini_alt:'昆布おにぎり・豆腐・しじみのお味噌汁でも可',
       kaori:[
@@ -2493,6 +2503,29 @@ async function openDaily(){
           +'<div><div class="food-name">'+f+'</div>'
           +'<div class="food-reason">'+s.elem+'のエネルギーを取り込む食べ物・飲み物です</div></div></div>';
       }).join('');
+      // 献立処方箋HTML（seedをここで計算）
+      var kd=db?db.kondate:null;
+      var ksd=(ty||0)*10000+(tm||0)*100+(td||0);
+      var kondateHTML=kd?
+        '<div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:12px;padding:14px;margin-bottom:12px;">'+
+          '<div style="font-size:.62rem;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:10px;">🍱 今日の献立処方箋</div>'+
+          (db.kondateRiyu?'<div style="font-size:.72rem;color:var(--snow);line-height:1.9;padding:8px 10px;background:rgba(196,160,67,.06);border-radius:8px;margin-bottom:10px;">'+db.kondateRiyu+'</div>':'')+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
+            '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
+              '<div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">☀️ 朝</div>'+
+              '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.asa[ksd%kd.asa.length]+'</div>'+
+            '</div>'+
+            '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
+              '<div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">🌤 昼</div>'+
+              '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.hiru[ksd%kd.hiru.length]+'</div>'+
+            '</div>'+
+          '</div>'+
+          '<div style="background:var(--card);border-radius:8px;padding:10px;margin-bottom:8px;">'+
+            '<div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">🌙 夜</div>'+
+            '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.yoru[ksd%kd.yoru.length]+'</div>'+
+          '</div>'+
+          '<div style="font-size:.7rem;color:var(--mist);padding:6px 0;">✦ 一品だけ足すなら：'+kd.ippin[ksd%kd.ippin.length]+'</div>'+
+        '</div>':'';
       // コンビニ別おすすめ
       var conbiniHTML=db?
         '<div style="font-size:.72rem;color:var(--gold);margin:10px 0 4px;">🏪 コンビニで選ぶなら</div>'+
@@ -2526,6 +2559,7 @@ async function openDaily(){
           '</div>'+
         '</div>'+
         iroHTML+
+        kondateHTML+
         '<div class="food-title">✦ 今日の吉方取り処方箋</div>'+
         '<div class="food-cards" style="margin-bottom:6px;">'+foodsHTML+'</div>'+
         conbiniHTML+
