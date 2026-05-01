@@ -180,9 +180,9 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
 .kichi-item.dai .kichi-dir,.kichi-item.saiko .kichi-dir{color:#e8c840;}
 .kichi-dir-jp{font-size:.72rem;color:var(--mist);font-weight:600;}
 .kichi-info{flex:1;}
-.kichi-rank{font-size:.8rem;letter-spacing:.08em;color:var(--kichi);margin-bottom:4px;font-weight:700;}
+.kichi-rank{font-size:.86rem;letter-spacing:.1em;color:var(--kichi);margin-bottom:5px;font-weight:800;}
 .kichi-item.dai .kichi-rank,.kichi-item.saiko .kichi-rank{color:#e8c840;}
-.kichi-star{font-size:.92rem;color:var(--snow);font-weight:600;}
+.kichi-star{font-size:1.02rem;color:var(--snow);font-weight:700;}
 .kichi-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
 .kbadge{font-size:.52rem;padding:2px 7px;border-radius:10px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.25);color:var(--gold);}
 .kichi-tap{font-size:.72rem;color:rgba(196,160,67,.6);margin-top:6px;}
@@ -270,7 +270,7 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
 .sheet-body{padding:20px 22px;}
 
 /* 飲食提案カード */
-.food-title{font-size:.82rem;letter-spacing:.14em;color:var(--gold);margin-bottom:12px;font-weight:700;}
+.food-title{font-size:.72rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px;font-weight:800;}
 .food-cards{display:flex;flex-direction:column;gap:8px;}
 .food-card{
   display:flex;align-items:flex-start;gap:12px;
@@ -278,8 +278,8 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
   border-radius:8px;padding:12px;
 }
 .food-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
-.food-name{font-size:1.05rem;color:var(--snow);margin-bottom:5px;font-weight:700;}
-.food-reason{font-size:.88rem;color:var(--mist);line-height:1.9;}
+.food-name{font-size:.92rem;color:var(--snow);margin-bottom:5px;font-weight:700;letter-spacing:.01em;}
+.food-reason{font-size:.78rem;color:var(--mist);line-height:1.8;}
 .food-why-btn{
   margin-top:6px;background:none;border:1px solid rgba(196,160,67,.25);
   border-radius:4px;padding:4px 10px;font-size:.58rem;color:var(--gold);cursor:pointer;
@@ -290,8 +290,8 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
   background:rgba(196,160,67,.05);border:1px solid rgba(196,160,67,.15);
   border-radius:8px;
 }
-.gogyou-title{font-size:.78rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;font-weight:700;}
-.gogyou-text{font-size:.88rem;color:var(--mist);line-height:2.1;}
+.gogyou-title{font-size:.82rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;font-weight:800;}
+.gogyou-text{font-size:.9rem;color:var(--snow);line-height:2.1;}
 
 /* ── フッター ── */
 footer{
@@ -1878,12 +1878,12 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <!-- 今日の流れ -->
     <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
-      <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;"></div>
+      <div id="daily-flow-text" style="font-size:.95rem;color:var(--snow);line-height:2.2;font-weight:500;letter-spacing:.03em;"></div>
     </div>
     <!-- 香り（上部に移動） -->
     <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:14px;">
-      <div style="font-size:.72rem;color:#d4956a;font-weight:700;margin-bottom:8px;">🌸 今日の香り</div>
-      <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:2;"></div>
+      <div style="font-size:.72rem;color:#d4956a;font-weight:800;letter-spacing:.12em;margin-bottom:8px;">🌸 今日の香り</div>
+      <div id="daily-kaori-text" style="font-size:.88rem;color:var(--snow);line-height:2.1;"></div>
     </div>
     <!-- 吉方取り処方箋 -->
     <div id="daily-body" style=""></div>
@@ -1894,7 +1894,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <!-- 方位盤ボタン（一番下） -->
     <div style="text-align:center;margin-bottom:24px;">
-      <button onclick="launch()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:8px;color:var(--goldlt);font-size:.82rem;padding:12px 32px;cursor:pointer;letter-spacing:.12em;width:100%;">方位盤を開く →</button>
+      <button onclick="launch()" style="background:linear-gradient(135deg,rgba(196,160,67,.18),rgba(196,160,67,.08));border:1px solid rgba(196,160,67,.5);border-radius:10px;color:var(--gold);font-size:.9rem;padding:15px 32px;cursor:pointer;letter-spacing:.15em;width:100%;font-weight:700;">方位盤を開く →</button>
     </div>
   </div>
 </div><!-- /screenDaily -->
@@ -2503,28 +2503,27 @@ async function openDaily(){
           +'<div><div class="food-name">'+f+'</div>'
           +'<div class="food-reason">'+s.elem+'のエネルギーを取り込む食べ物・飲み物です</div></div></div>';
       }).join('');
-      // 献立処方箋HTML（seedをここで計算）
       var kd=db?db.kondate:null;
       var ksd=(ty||0)*10000+(tm||0)*100+(td||0);
       var kondateHTML=kd?
         '<div style="background:linear-gradient(135deg,rgba(80,160,120,.10),rgba(60,140,100,.05));border:1px solid rgba(80,160,120,.35);border-radius:12px;padding:14px;margin-bottom:12px;">'+
-          '<div style="font-size:.62rem;letter-spacing:.14em;color:#5aaa80;font-weight:700;margin-bottom:10px;">🍱 今日の献立処方箋</div>'+
-          (db.kondateRiyu?'<div style="font-size:.72rem;color:var(--snow);line-height:1.9;padding:8px 10px;background:rgba(80,160,120,.08);border-radius:8px;margin-bottom:10px;">'+db.kondateRiyu+'</div>':'')+
+          '<div style="font-size:.72rem;letter-spacing:.12em;color:#5aaa80;font-weight:800;margin-bottom:10px;">🍱 今日の献立処方箋</div>'+
+          (db.kondateRiyu?'<div style="font-size:.8rem;color:var(--snow);line-height:1.9;padding:8px 10px;background:rgba(80,160,120,.08);border-radius:8px;margin-bottom:10px;">'+db.kondateRiyu+'</div>':'')+
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
             '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
-              '<div style="font-size:.58rem;color:#5aaa80;margin-bottom:4px;">☀️ 朝</div>'+
-              '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.asa[ksd%kd.asa.length]+'</div>'+
+              '<div style="font-size:.6rem;color:#5aaa80;margin-bottom:5px;font-weight:700;">☀️ 朝</div>'+
+              '<div style="font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;">'+kd.asa[ksd%kd.asa.length]+'</div>'+
             '</div>'+
             '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
-              '<div style="font-size:.58rem;color:#5aaa80;margin-bottom:4px;">🌤 昼</div>'+
-              '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.hiru[ksd%kd.hiru.length]+'</div>'+
+              '<div style="font-size:.6rem;color:#5aaa80;margin-bottom:5px;font-weight:700;">🌤 昼</div>'+
+              '<div style="font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;">'+kd.hiru[ksd%kd.hiru.length]+'</div>'+
             '</div>'+
           '</div>'+
           '<div style="background:var(--card);border-radius:8px;padding:10px;margin-bottom:8px;">'+
-            '<div style="font-size:.58rem;color:#5aaa80;margin-bottom:4px;">🌙 夜</div>'+
-            '<div style="font-size:.78rem;color:var(--snow);line-height:1.8;">'+kd.yoru[ksd%kd.yoru.length]+'</div>'+
+            '<div style="font-size:.6rem;color:#5aaa80;margin-bottom:5px;font-weight:700;">🌙 夜</div>'+
+            '<div style="font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;">'+kd.yoru[ksd%kd.yoru.length]+'</div>'+
           '</div>'+
-          '<div style="font-size:.7rem;color:#5aaa80;padding:6px 0;">✦ 一品だけ足すなら：'+kd.ippin[ksd%kd.ippin.length]+'</div>'+
+          '<div style="font-size:.8rem;color:#5aaa80;padding:8px 0;font-weight:600;">✦ 一品だけ足すなら：'+kd.ippin[ksd%kd.ippin.length]+'</div>'+
         '</div>':'';
       // コンビニ別おすすめ
       var conbiniHTML=db?
