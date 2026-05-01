@@ -1,1 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU @ RELATIONS</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a6ab0;--love:#b04060;--fam:#3a8a4a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;font-size:16px;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
+.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);}
+.header-back{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.78rem;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:600;}
+.screen{display:none;padding:20px 16px;}
+.screen.active{display:block;}
+.big-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.2em;color:var(--goldlt);text-align:center;margin-bottom:4px;padding-top:8px;}
+.big-sub{font-size:.63rem;letter-spacing:.16em;color:var(--mist);text-align:center;margin-bottom:24px;}
+.purpose-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:16px;margin-bottom:12px;}
+.purpose-card.biz{border-left:3px solid var(--biz);}
+.purpose-card.love{border-left:3px solid var(--love);}
+.purpose-card.fam{border-left:3px solid var(--fam);}
+.p-icon{font-size:1.8rem;width:44px;text-align:center;}
+.p-name{font-size:.95rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;}
+.p-desc{font-size:.7rem;color:var(--mist);line-height:1.7;}
+.section-badge{display:inline-block;font-size:.62rem;letter-spacing:.12em;padding:4px 12px;border-radius:20px;font-weight:700;margin-bottom:10px;}
+.section-badge.biz{background:rgba(42,106,176,.1);color:var(--biz);border:1px solid rgba(42,106,176,.25);}
+.section-badge.love{background:rgba(176,64,96,.1);color:var(--love);border:1px solid rgba(176,64,96,.25);}
+.section-badge.fam{background:rgba(58,138,74,.1);color:var(--fam);border:1px solid rgba(58,138,74,.25);}
+.form-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;margin-bottom:12px;}
+.form-label{font-size:.72rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
+.form-input{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;}
+.form-input:focus{border-color:var(--gold);}
+.date-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:4px;}
+.date-unit{font-size:.6rem;color:var(--mist);text-align:center;margin-top:3px;}
+.form-note{font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;}
+.main-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;color:var(--gold);font-size:.92rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
+.saved-list{margin-top:16px;}
+.saved-title{font-size:.62rem;letter-spacing:.14em;color:var(--mist);margin-bottom:8px;}
+.saved-item{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;}
+.saved-name{font-size:.88rem;color:var(--snow);font-weight:600;}
+.saved-star{font-size:.66rem;color:var(--mist);}
+.plan-note{text-align:center;font-size:.6rem;color:var(--mist);margin-top:12px;line-height:2;}
+.res-header{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.res-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:4px;}
+.res-star{font-size:.7rem;color:var(--mist);}
+.tab-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
+.tab-bar::-webkit-scrollbar{height:2px;}
+.tab-btn{flex-shrink:0;background:var(--card);border:1px solid var(--rim);border-radius:20px;padding:7px 13px;font-size:.66rem;letter-spacing:.06em;color:var(--mist);cursor:pointer;font-family:'Noto Serif JP',serif;white-space:nowrap;}
+.tab-btn.active{background:rgba(100,80,40,.1);border-color:var(--gold);color:var(--gold);font-weight:700;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+.pane-sub{font-size:.6rem;letter-spacing:.14em;color:var(--mist);margin-bottom:12px;}
+.stars-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:12px;}
+.star-box{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px;text-align:center;}
+.star-box-lbl{font-size:.56rem;color:var(--mist);margin-bottom:5px;}
+.star-box-nm{font-size:.86rem;color:var(--snow);font-weight:700;margin-bottom:4px;}
+.star-box-el{font-size:.68rem;font-weight:700;padding:2px 10px;border-radius:10px;display:inline-block;}
+.el-木{background:rgba(58,138,58,.12);color:#2a7a2a;}
+.el-火{background:rgba(184,64,48,.12);color:#a03020;}
+.el-土{background:rgba(138,104,32,.12);color:#7a5810;}
+.el-金{background:rgba(138,120,32,.12);color:#7a6810;}
+.el-水{background:rgba(42,106,176,.12);color:#1a5aa0;}
+.vs{text-align:center;color:var(--gold);font-size:1.1rem;}
+.compat{text-align:center;padding:10px 14px;border-radius:10px;margin-bottom:12px;font-weight:700;font-size:.86rem;}
+.compat.saiko{background:rgba(58,138,58,.1);border:1px solid rgba(58,138,58,.28);color:#2a7a2a;}
+.compat.yoi{background:rgba(100,80,40,.07);border:1px solid rgba(100,80,40,.2);color:var(--gold);}
+.compat.chui{background:rgba(176,80,32,.08);border:1px solid rgba(176,80,32,.22);color:#8a4018;}
+.accord{background:var(--card);border:1px solid var(--rim);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.accord-head{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.accord-ttl{font-size:.84rem;color:var(--snow);font-weight:700;}
+.accord-arr{color:var(--gold);font-size:.75rem;transition:transform .22s;}
+.accord-arr.open{transform:rotate(180deg);}
+.accord-body{display:none;padding:0 16px 14px;font-size:.8rem;color:var(--mist);line-height:2;border-top:1px solid var(--rim);padding-top:12px;}
+.accord-body.open{display:block;}
+.today-box{background:linear-gradient(135deg,rgba(100,80,40,.08),rgba(100,80,40,.03));border:1px solid rgba(100,80,40,.2);border-radius:var(--radius);padding:16px;margin-bottom:10px;}
+.today-ttl{font-size:.63rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+.today-action{background:var(--card);border-radius:8px;padding:12px 14px;font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;border-left:3px solid var(--gold);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.sel-card{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 10px;cursor:pointer;text-align:center;}
+.sel-card.active{background:rgba(100,80,40,.1);border-color:var(--gold);}
+.sel-icon{font-size:1.4rem;margin-bottom:4px;}
+.sel-name{font-size:.78rem;color:var(--snow);font-weight:700;margin-bottom:2px;}
+.sel-card.active .sel-name{color:var(--goldlt);}
+.sel-desc{font-size:.6rem;color:var(--mist);line-height:1.5;}
+.sel-full{grid-column:span 2;}
+.ai-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.18),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.5);border-radius:12px;color:var(--goldlt);font-size:.88rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:800;font-family:'Noto Serif JP',serif;}
+.ai-btn:disabled{opacity:.5;cursor:not-allowed;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.loading-dot{width:12px;height:12px;border-radius:50%;background:var(--gold);margin:0 auto;animation:pulse 1.2s infinite;}
+.ai-report-text{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;font-size:.82rem;color:var(--snow);line-height:2.1;white-space:pre-wrap;}
+.sec-label{font-size:.65rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-logo">✦ KITOKU @ RELATIONS</div>
+  <button class="header-back" id="backBtn" onclick="goBack()" style="display:none;">← 戻る</button>
+</header>
 
+<!-- 画面①：用途選択 -->
+<div class="screen active" id="screenPurpose">
+  <div class="big-title">大切な人との縁を知る</div>
+  <div class="big-sub">KITOKU @ RELATIONS</div>
+  <div style="font-size:.68rem;color:var(--mist);margin-bottom:12px;">何のための鑑定ですか？</div>
+  <div class="purpose-card biz" onclick="selectPurpose('biz')"><div class="p-icon">💼</div><div><div class="p-name">ビジネス</div><div class="p-desc">取引先・同僚との付き合い方<br>採用・配属判断</div></div></div>
+  <div class="purpose-card love" onclick="selectPurpose('love')"><div class="p-icon">💕</div><div><div class="p-name">恋愛・友人</div><div class="p-desc">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
+  <div class="purpose-card fam" onclick="selectPurpose('fam')"><div class="p-icon">👨‍👩‍👧</div><div><div class="p-name">家族</div><div class="p-desc">家族との関係を整える<br>カルマの修復・二生の縁</div></div></div>
+</div>
+
+<!-- 画面②：入力 -->
+<div class="screen" id="screenInput">
+  <div style="margin-bottom:16px;">
+    <span class="section-badge" id="purposeBadge">💼 ビジネス</span>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);">縁を読み解く</div>
+  </div>
+  <div class="form-card">
+    <div class="form-label">✦ あなたの生年月日</div>
+    <div class="date-row">
+      <div><input class="form-input" type="number" id="myYear" placeholder="1967"><div class="date-unit">年</div></div>
+      <div><input class="form-input" type="number" id="myMonth" placeholder="6"><div class="date-unit">月</div></div>
+      <div><input class="form-input" type="number" id="myDay" placeholder="14"><div class="date-unit">日</div></div>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-label">✦ 相手のお名前</div>
+    <input class="form-input" type="text" id="partnerName" placeholder="例：田中さん" style="margin-bottom:16px;">
+    <div class="form-label">✦ 相手の生年月日</div>
+    <div class="date-row">
+      <div><input class="form-input" type="number" id="partnerYear" placeholder="1985"><div class="date-unit">年</div></div>
+      <div><input class="form-input" type="number" id="partnerMonth" placeholder="3"><div class="date-unit">月</div></div>
+      <div><input class="form-input" type="number" id="partnerDay" placeholder="15"><div class="date-unit">日</div></div>
+    </div>
+    <div class="form-note">※生年月日は端末内にのみ保存されます</div>
+    <button class="main-btn" onclick="startReading()">✦ 縁を読み解く</button>
+  </div>
+  <div class="saved-list" id="savedList" style="display:none;">
+    <div class="saved-title">✦ 登録済みの人</div>
+    <div id="savedItems"></div>
+  </div>
+  <div class="plan-note">無料：5人まで登録可能</div>
+</div>
+
+<!-- 画面③：結果 -->
+<div class="screen" id="screenResult">
+  <div class="res-header">
+    <span class="section-badge" id="resBadge">💼 ビジネス</span>
+    <div class="res-name" id="resName">—</div>
+    <div class="res-star" id="resStar">—</div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('honmei',this)">① 本命星</button>
+    <button class="tab-btn" onclick="switchTab('tsuki',this)">② 月命星</button>
+    <button class="tab-btn" onclick="switchTab('keisha',this)">③ 傾斜</button>
+    <button class="tab-btn" onclick="switchTab('nacchi',this)">④ 納音</button>
+    <button class="tab-btn" onclick="switchTab('sogo',this)">⑤ 総合</button>
+    <button class="tab-btn" onclick="switchTab('today',this)">⑥ 今日</button>
+  </div>
+
+  <!-- ① 本命星 -->
+  <div class="tab-pane active" id="tab-honmei">
+    <div class="pane-sub">宿命的な相性</div>
+    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなた</div><div class="star-box-nm" id="myHonmei">—</div><div class="star-box-el" id="myHonmeiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl" id="partnerLbl">相手</div><div class="star-box-nm" id="partnerHonmei">—</div><div class="star-box-el" id="partnerHonmeiEl">—</div></div></div>
+    <div class="compat" id="honmeiCompat">—</div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">この関係の本質</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiDesc">—</div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の強み</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiStr">—</div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">注意すること</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiCau">—</div></div>
+  </div>
+
+  <!-- ② 月命星 -->
+  <div class="tab-pane" id="tab-tsuki">
+    <div class="pane-sub">精神面・内面の相性</div>
+    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなたの内面</div><div class="star-box-nm" id="myTsuki">—</div><div class="star-box-el" id="myTsukiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl">相手の内面</div><div class="star-box-nm" id="partnerTsuki">—</div><div class="star-box-el" id="partnerTsukiEl">—</div></div></div>
+    <div class="compat" id="tsukiCompat">—</div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">精神的なつながり</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="tsukiDesc">—</div></div>
+  </div>
+
+  <!-- ③ 傾斜 -->
+  <div class="tab-pane" id="tab-keisha">
+    <div class="pane-sub">潜在的な性格</div>
+    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなたの傾斜</div><div class="star-box-nm" id="myKeishaNm">—</div><div class="star-box-el" id="myKeishaEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl">相手の傾斜</div><div class="star-box-nm" id="partnerKeishaNm">—</div><div class="star-box-el" id="partnerKeishaEl">—</div></div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">あなたの深層の動機</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="myKeisha">—</div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">相手の深層の動機</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="partnerKeisha">—</div></div>
+  </div>
+
+  <!-- ④ 納音 -->
+  <div class="tab-pane" id="tab-nacchi">
+    <div class="pane-sub">深い縁の分析</div>
+    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなたの本命</div><div class="star-box-nm" id="myNacchiNm">—</div><div class="star-box-el" id="myNacchiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl">相手の本命</div><div class="star-box-nm" id="partnerNacchiNm">—</div><div class="star-box-el" id="partnerNacchiEl">—</div></div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の納音の関係</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="nacchiDesc">—</div></div>
+  </div>
+
+  <!-- ⑤ 総合 -->
+  <div class="tab-pane" id="tab-sogo">
+    <div class="pane-sub">総合診断とアドバイス</div>
+    <div class="compat" id="sogoCompat">—</div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の関係の全体像</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="sogoDesc">—</div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">関係を良くするアドバイス</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="sogoAdvice">—</div></div>
+
+    <!-- キャラクター選択 -->
+    <div style="margin-top:24px;">
+      <div class="sec-label">✦ 誰の言葉で語りますか？</div>
+      <div class="grid2">
+        <div class="sel-card active" id="char-kitoku" onclick="selectChar('kitoku',this)"><div class="sel-icon">🏯</div><div class="sel-name">格さん</div><div class="sel-desc">KITOKUオリジナル</div></div>
+        <div class="sel-card" id="char-confucius" onclick="selectChar('confucius',this)"><div class="sel-icon">📜</div><div class="sel-name">孔子</div><div class="sel-desc">論語の言葉で</div></div>
+        <div class="sel-card" id="char-sunzi" onclick="selectChar('sunzi',this)"><div class="sel-icon">⚔️</div><div class="sel-name">孫子</div><div class="sel-desc">兵法の言葉で</div></div>
+        <div class="sel-card" id="char-shibusawa" onclick="selectChar('shibusawa',this)"><div class="sel-icon">💴</div><div class="sel-name">渋沢栄一</div><div class="sel-desc">論語と算盤で</div></div>
+        <div class="sel-card sel-full" id="char-ryoma" onclick="selectChar('ryoma',this)"><div class="sel-icon">⛵</div><div class="sel-name">坂本龍馬</div><div class="sel-desc">熱く・突破力のある言葉で</div></div>
+      </div>
+    </div>
+
+    <!-- シチュエーション選択 -->
+    <div style="margin-top:16px;">
+      <div class="sec-label">✦ どんな場面で使いますか？</div>
+      <div class="grid2">
+        <div class="sel-card active" id="sit-basic" onclick="selectSit('basic',this)"><div class="sel-icon">🤝</div><div class="sel-name">基本の相性</div><div class="sel-desc">二人の縁を読み解く</div></div>
+        <div class="sel-card" id="sit-hire" onclick="selectSit('hire',this)"><div class="sel-icon">👤</div><div class="sel-name">採用判断</div><div class="sel-desc">この人材を採るべきか</div></div>
+        <div class="sel-card" id="sit-team" onclick="selectSit('team',this)"><div class="sel-icon">👥</div><div class="sel-name">チーム編成</div><div class="sel-desc">上司・部下の相性</div></div>
+        <div class="sel-card" id="sit-partner" onclick="selectSit('partner',this)"><div class="sel-icon">🤜</div><div class="sel-name">パートナー選定</div><div class="sel-desc">長期で組めるか判断</div></div>
+        <div class="sel-card" id="sit-deal" onclick="selectSit('deal',this)"><div class="sel-icon">💬</div><div class="sel-name">商談・提案</div><div class="sel-desc">最適なアプローチ</div></div>
+        <div class="sel-card" id="sit-project" onclick="selectSit('project',this)"><div class="sel-icon">🚀</div><div class="sel-name">プロジェクト</div><div class="sel-desc">チームの強みと注意点</div></div>
+      </div>
+      <button class="ai-btn" id="aiBtn" onclick="generateReport()" style="margin-top:12px;">✦ AI深掘りレポートを生成する</button>
+      <div style="font-size:.6rem;color:var(--mist);text-align:center;margin-top:6px;" id="sitHint">採用・配属・ビジネス判断に使える詳細レポート</div>
+    </div>
+
+    <!-- レポート表示 -->
+    <div id="reportArea" style="display:none;margin-top:16px;">
+      <div class="sec-label">✦ AI深掘りレポート（<span id="reportCharLabel">格さん</span>）</div>
+      <div id="reportLoading" style="text-align:center;padding:24px;display:none;"><div class="loading-dot"></div><div style="font-size:.75rem;color:var(--mist);margin-top:10px;">縁を読み解いています…</div></div>
+      <div class="ai-report-text" id="reportText" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- ⑥ 今日 -->
+  <div class="tab-pane" id="tab-today">
+    <div class="pane-sub">今日できること</div>
+    <div class="today-box"><div class="today-ttl">🌿 今日の関係処方箋</div><div class="today-action" id="todayAction">—</div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">今日の第3のピース（色）</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="todayColor">—</div></div>
+    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">今日の伝え方のコツ</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="todayHow">—</div></div>
+  </div>
+</div>
+
+<script>
+/* ===== APIキー設定 ===== */
+// APIキーはVercel環境変数で管理（api/groq.js経由）
+/* ====================== */
+
+/* ===== データ ===== */
+var STARS = {1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
+var DB = {
+  '水木':{t:'saiko',l:'水生木 ― 最高の相性',d:'水が木を育てる関係。相手のサポートがあなたの成長を促します。',s:'相手のサポートを受けて伸び伸びと力を発揮できます。',c:'甘えすぎず自立した姿勢も大切です。'},
+  '木火':{t:'saiko',l:'木生火 ― 最高の相性',d:'木が火に燃料を与える関係。互いの熱量が増幅します。',s:'共に取り組む仕事で大きな成果が出ます。',c:'熱くなりすぎず時には冷静さも大切に。'},
+  '火土':{t:'saiko',l:'火生土 ― 最高の相性',d:'火が土を豊かにする関係。情熱が基盤を強固にします。',s:'情熱を地に足のついた形に変換できます。',c:'変化のペースを意識して進みましょう。'},
+  '土金':{t:'saiko',l:'土生金 ― 最高の相性',d:'土が金を生み出す関係。安定が決断力を磨きます。',s:'積み重ねが確かな実力につながります。',c:'慎重になりすぎずタイミングを逃さないよう。'},
+  '金水':{t:'saiko',l:'金生水 ― 最高の相性',d:'金が水を生み出す関係。決断力が柔軟な発想を引き出します。',s:'あなたがリードし相手が調整する理想的な協力関係です。',c:'引っ張りすぎず相手のペースも尊重しましょう。'},
+  '木土':{t:'chui',l:'木剋土 ― 緊張感のある関係',d:'木が土を剋す関係。一方がリードしすぎると摩擦が生まれます。',s:'違いを認め合うことで補完関係になれます。',c:'自分のやり方を押し付けず相手を尊重しましょう。'},
+  '土水':{t:'chui',l:'土剋水 ― 緊張感のある関係',d:'土が水を剋す関係。安定志向が相手の柔軟性を制限しやすい。',s:'バランスが結果として良い判断を生むことがあります。',c:'変化を阻まず安定を添える意識を持ちましょう。'},
+  '水火':{t:'chui',l:'水剋火 ― 緊張感のある関係',d:'水が火を消す関係。行き過ぎた情熱を整える役割も担います。',s:'冷静な判断力が暴走を防ぎます。',c:'相手の熱意を否定せず適切に整える視点を。'},
+  '火金':{t:'chui',l:'火剋金 ― 緊張感のある関係',d:'火が金を溶かす関係。情熱が判断力を揺さぶります。',s:'情熱が決断に勢いを与え大胆な行動ができます。',c:'感情的な判断を避け冷静なタイミングで決断を。'},
+  '金木':{t:'chui',l:'金剋木 ― 緊張感のある関係',d:'金が木を剋す関係。鋭い判断力が相手の成長を阻むことも。',s:'明確な基準でぶれない方向性を示せます。',c:'批判より提案を。建設的な言い方を心がけましょう。'},
+  '木木':{t:'yoi',l:'比和（木） ― 共鳴する関係',d:'同じ五行同士。価値観が似ているため深く共感できます。',s:'コミュニケーションがスムーズです。',c:'外からの新しい視点を積極的に取り入れましょう。'},
+  '火火':{t:'yoi',l:'比和（火） ― 共鳴する関係',d:'情熱と行動力が共鳴し大きなエネルギーが生まれます。',s:'大きな目標に向かって一気に進めます。',c:'振り返りの時間を意識的に設けましょう。'},
+  '土土':{t:'yoi',l:'比和（土） ― 共鳴する関係',d:'安定・継続・信頼が共鳴する関係です。',s:'長期的な信頼関係を築けます。',c:'時には大胆な一手も必要です。'},
+  '金金':{t:'yoi',l:'比和（金） ― 共鳴する関係',d:'決断力と責任感が共鳴します。',s:'質の高いアウトプットを生み出せます。',c:'完璧主義が摩擦を生むことも。柔軟さを持ちましょう。'},
+  '水水':{t:'yoi',l:'比和（水） ― 共鳴する関係',d:'柔軟性・適応力・知恵が共鳴します。',s:'深い理解と信頼が自然に生まれます。',c:'どちらかがリーダーシップを担う場面を作りましょう。'}
+};
+var KEISHA = {1:'深い内省と洞察力を持ち人の痛みに静かに寄り添える才能があります。本質を重んじます。',2:'縁の下の力持ちとして周囲を支えることに喜びを感じます。コツコツ積み上げることが得意です。',3:'新しいことへの好奇心と行動力が潜在的な原動力。変化の中に可能性を見出します。',4:'人と人をつなぐことが自然にできる才能があります。コミュニケーションで道を開くタイプです。',5:'強烈なエネルギーと影響力を持ちます。その力の使い方が人生の質を決めます。',6:'高い理想と完成への意志が潜在的な動機。妥協を嫌い最高の形を追求し続けます。',7:'喜びと楽しさを生み出すことで周囲を活性化します。明るさの裏に繊細な感受性を持っています。',8:'一度決めたら動かない強い意志と粘り強さが潜在的な強み。変革期に真価を発揮します。',9:'真実を見抜く直感と美意識が潜在的な才能。感性で世界を捉え光を当てる役割を持っています。'};
+var TODAY_BIZ = ['まず相手の話を最後まで聞いてから意見を言う日です。','今日は相手に「助かりました」と一言伝える日です。','メールより一本の電話が関係を深める日です。','今日の打ち合わせは相手の意見を引き出すことに集中しましょう。','小さな感謝を言葉にするだけで関係が一段上がる日です。'];
+var TODAY_LOVE = ['今日は一言「ありがとう」を伝える日です。','相手のそばにいるだけで十分な日です。言葉より存在を。','相手の好きなものを覚えていたことを伝えましょう。','今日は聞き役に徹することで深い信頼が生まれます。','「あなたといると安心する」この一言が最高の贈り物です。'];
+var TODAY_FAM = ['今日は「いつもありがとう」を素直に伝える日です。','一緒に食事をとることが関係を整える最善の行動です。','過去のことより今日のことを話しましょう。','「そうだね」と共感するだけで十分な日です。','小さな手伝いが大きな愛情として伝わる日です。'];
+var ELEM_COLORS = {木:'青・緑',火:'赤・オレンジ',土:'黄・ベージュ・茶',金:'白・金・銀',水:'黒・紺・グレー'};
+
+var CHAR_LABELS = {kitoku:'格さん',confucius:'孔子（論語）',sunzi:'孫子（兵法）',shibusawa:'渋沢栄一',ryoma:'坂本龍馬'};
+var CHAR_PROMPTS = {
+  kitoku:'琥珀色のトーンで、温かく静かに力強く語ってください。処方箋・調律・共鳴・宇宙の配剤という言葉を自然に使い、最後は具体的な食・色・場の処方箋で締めてください。',
+  confucius:'孔子と論語の精神で語ってください。子曰く・仁・礼・徳という言葉を自然に織り交ぜ、人間関係の本質を簡潔な言葉で突いてください。格言調で深く静かに。',
+  sunzi:'孫子の兵法の精神で語ってください。彼を知り己を知ればなど兵法の言葉を自然に使い、ビジネス戦略として二人の相性と動き方を分析してください。戦略的・簡潔に。',
+  shibusawa:'渋沢栄一の論語と算盤の精神で語ってください。道徳と経済の融合という視点で二人の関係とビジネスの展望を語ってください。実直・誠実・前向きなトーンで。',
+  ryoma:'坂本龍馬の魂で語ってください。世の人は我を何とも言わば言えの精神で、熱く分かりやすく突破力のある言葉で二人の未来を語ってください。情熱的に。'
+};
+var SIT_LABELS = {basic:'基本の相性分析',hire:'採用判断レポート',team:'チーム編成・上司部下の相性',partner:'ビジネスパートナー選定',deal:'商談・提案アプローチ',project:'プロジェクトチームの強みと注意点'};
+var SIT_PROMPTS = {
+  basic:'宿命的な相性・内面の共鳴・潜在的な力学の3つの観点から分析してください。',
+  hire:'採用判断の観点から：潜在的な強みと職場での役割、どんな環境で力を発揮するか、採用する場合の育て方・配属先の提案を含めてください。',
+  team:'チーム編成の観点から：上司としての管理スタイル、この組み合わせの強みとなる場面、摩擦が起きやすい場面と対処法を含めてください。',
+  partner:'ビジネスパートナーの観点から：長期的な見通し（3年・5年）、最適な役割分担、契約・合意の際に確認すべきことを含めてください。',
+  deal:'商談・提案の観点から：この相手への最適なアプローチ、響くキーワード・価値観、避けるべき言葉・態度を含めてください。',
+  project:'プロジェクトの観点から：二人の最適な役割分担、このチームの最大の強み、進行中の注意点を含めてください。'
+};
+
+/* ===== 状態 ===== */
+var currentPurpose = 'biz';
+var currentChar = 'kitoku';
+var currentSit = 'basic';
+var purposeLabels = {biz:'💼 ビジネス',love:'💕 恋愛・友人',fam:'👨‍👩‍👧 家族'};
+var reportData = {};
+
+/* ===== 計算 ===== */
+function pal(n,C){return((n-C+4)%9+9)%9+1;}
+function calcKeisha(h,t){return pal(h,t);}
+function calcHonmeiNum(y,m){var ky=(m<=2)?y-1:y;var ds=(ky%9+9)%9||9;return((11-ds-1)%9+9)%9+1;}
+function calcTsukiNum(y,m){var SK=[0,11,1,2,3,4,5,6,7,8,9,10,11];var ky=(m<=2)?y-1:y;var h=calcHonmeiNum(ky,m);var kM=SK[m];var b=([1,4,7].indexOf(h)>=0)?10:([2,5,8].indexOf(h)>=0)?13:16;return((b-(kM+1)-1)%9+9)%9+1;}
+function getCompatKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'};if(ss[e1]===e2)return e2+e1;if(ss[e2]===e1)return e1+e2;if(e1===e2)return e1+e2;var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};if(sk[e1]===e2)return e1+e2;if(sk[e2]===e1)return e2+e1;return e1+e2;}
+
+/* ===== UI共通 ===== */
+function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function setClass(id,c){var e=document.getElementById(id);if(e)e.className=c;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.getElementById('backBtn').style.display=(id==='screenPurpose')?'none':'block';}
+function goBack(){if(document.getElementById('screenResult').classList.contains('active')){showScreen('screenInput');}else{showScreen('screenPurpose');}}
+function switchTab(id,btn){document.querySelectorAll('.tab-pane').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById('tab-'+id).classList.add('active');if(btn)btn.classList.add('active');}
+function toggleAccord(head){var body=head.nextElementSibling;var arr=head.querySelector('.accord-arr');var open=body.classList.contains('open');body.classList.toggle('open',!open);arr.classList.toggle('open',!open);}
+function resetReport(){document.getElementById('reportArea').style.display='none';document.getElementById('reportText').style.display='none';document.getElementById('reportText').textContent='';var btn=document.getElementById('aiBtn');if(btn){btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';}}
+
+function selectChar(id,el){currentChar=id;document.querySelectorAll('#char-kitoku,#char-confucius,#char-sunzi,#char-shibusawa,#char-ryoma').forEach(function(c){c.classList.remove('active');});el.classList.add('active');resetReport();}
+function selectSit(id,el){currentSit=id;document.querySelectorAll('#sit-basic,#sit-hire,#sit-team,#sit-partner,#sit-deal,#sit-project').forEach(function(c){c.classList.remove('active');});el.classList.add('active');resetReport();}
+
+/* ===== 入力処理 ===== */
+function selectPurpose(p){currentPurpose=p;document.getElementById('purposeBadge').textContent=purposeLabels[p];document.getElementById('purposeBadge').className='section-badge '+p;loadSaved();showScreen('screenInput');}
+function loadSaved(){var saved=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var list=document.getElementById('savedList');var items=document.getElementById('savedItems');if(saved.length>0){list.style.display='block';items.innerHTML=saved.map(function(p,i){var s=STARS[calcHonmeiNum(p.year,p.month)];return '<div class="saved-item" onclick="fillSaved('+i+')"><div><div class="saved-name">'+p.name+'</div><div class="saved-star">'+(s?s.k:'')+'</div></div><div style="color:var(--gold);">→</div></div>';}).join('');}else{list.style.display='none';}}
+function fillSaved(i){var saved=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var p=saved[i];document.getElementById('partnerName').value=p.name;document.getElementById('partnerYear').value=p.year;document.getElementById('partnerMonth').value=p.month;document.getElementById('partnerDay').value=p.day||'';}
+function startReading(){var mY=parseInt(document.getElementById('myYear').value)||0;var mM=parseInt(document.getElementById('myMonth').value)||0;var mD=parseInt(document.getElementById('myDay').value)||1;var nm=document.getElementById('partnerName').value.trim();var pY=parseInt(document.getElementById('partnerYear').value)||0;var pM=parseInt(document.getElementById('partnerMonth').value)||0;var pD=parseInt(document.getElementById('partnerDay').value)||1;if(!mY||!mM){alert('あなたの生年月日（年・月）を入力してください');return;}if(!nm){alert('相手のお名前を入力してください');return;}if(!pY||!pM){alert('相手の生年月日（年・月）を入力してください');return;}localStorage.setItem('kitoku-birth',mY+'-'+mM+'-'+mD);var saved=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var isNew=!saved.find(function(p){return p.name===nm;});if(isNew&&saved.length>=5){alert('無料プランは5人まで登録可能です。');return;}if(isNew){saved.push({name:nm,year:pY,month:pM,day:pD,purpose:currentPurpose});localStorage.setItem('kitoku_relations',JSON.stringify(saved));}showResult(mY,mM,mD,nm,pY,pM,pD);}
+
+/* ===== 結果表示 ===== */
+function showResult(mY,mM,mD,nm,pY,pM,pD){
+  var myN=calcHonmeiNum(mY,mM);var pN=calcHonmeiNum(pY,pM);
+  var myS=STARS[myN];var pS=STARS[pN];
+  var myTN=calcTsukiNum(mY,mM);var pTN=calcTsukiNum(pY,pM);
+  var myTS=STARS[myTN]||STARS[1];var pTS=STARS[pTN]||STARS[1];
+  var myKN=calcKeisha(myN,myTN);var pKN=calcKeisha(pN,pTN);
+  var myKS=STARS[myKN]||STARS[1];var pKS=STARS[pKN]||STARS[1];
+
+  setText('resName',nm+'さん');setText('resStar',pS.k+'・'+pS.e+'のエネルギー');
+  document.getElementById('resBadge').textContent=purposeLabels[currentPurpose];document.getElementById('resBadge').className='section-badge '+currentPurpose;setText('partnerLbl',nm+'さん');
+
+  setText('myHonmei',myS.k);setText('myHonmeiEl',myS.e);setClass('myHonmeiEl','star-box-el el-'+myS.e);
+  setText('partnerHonmei',pS.k);setText('partnerHonmeiEl',pS.e);setClass('partnerHonmeiEl','star-box-el el-'+pS.e);
+  var hKey=getCompatKey(myS.e,pS.e);var hC=DB[hKey]||{t:'yoi',l:'個性的な組み合わせ',d:'互いの違いを活かすことが鍵です。',s:'違いを強みに変えられます。',c:'丁寧なコミュニケーションを。'};
+  var hEl=document.getElementById('honmeiCompat');hEl.textContent=hC.l;hEl.className='compat '+hC.t;
+  setText('honmeiDesc',hC.d);setText('honmeiStr',hC.s);setText('honmeiCau',hC.c);
+
+  setText('myTsuki',myTS.k);setText('myTsukiEl',myTS.e);setClass('myTsukiEl','star-box-el el-'+myTS.e);
+  setText('partnerTsuki',pTS.k);setText('partnerTsukiEl',pTS.e);setClass('partnerTsukiEl','star-box-el el-'+pTS.e);
+  var tKey=getCompatKey(myTS.e,pTS.e);var tC=DB[tKey]||{t:'yoi',l:'内面の相性',d:'内面では互いの違いが補完関係を生みます。',s:'深く理解し合うほど深まります。',c:'表面と内面の違いに気づいてあげましょう。'};
+  var tEl=document.getElementById('tsukiCompat');tEl.textContent=tC.l;tEl.className='compat '+tC.t;
+  setText('tsukiDesc',tC.d+'　内面では'+tC.s);
+
+  setText('myKeishaNm',myKS.k);setText('myKeishaEl',myKS.e);setClass('myKeishaEl','star-box-el el-'+myKS.e);
+  setText('partnerKeishaNm',pKS.k);setText('partnerKeishaEl',pKS.e);setClass('partnerKeishaEl','star-box-el el-'+pKS.e);
+  setText('myKeisha',KEISHA[myKN]||KEISHA[myN]||'');setText('partnerKeisha',KEISHA[pKN]||KEISHA[pN]||'');
+
+  setText('myNacchiNm',myS.k);setText('myNacchiEl',myS.e);setClass('myNacchiEl','star-box-el el-'+myS.e);
+  setText('partnerNacchiNm',pS.k);setText('partnerNacchiEl',pS.e);setClass('partnerNacchiEl','star-box-el el-'+pS.e);
+  setText('nacchiDesc','あなた（'+myS.k+'・'+myS.e+'）と相手（'+pS.k+'・'+pS.e+'）の波動の共鳴。五行の相互作用が表面的な相性を超えた魂の次元での結びつきを示しています。傾斜にあなた（'+myKS.k+'）・相手（'+pKS.k+'）の潜在的な縁の深さも加わり、この関係はより立体的に見えてきます。');
+
+  var sEl=document.getElementById('sogoCompat');sEl.textContent=hC.l;sEl.className='compat '+hC.t;
+  setText('sogoDesc','本命星では「'+hC.l+'」の関係。月命星の内面では「'+tC.l+'」という深みがあります。');
+  setText('sogoAdvice',hC.s+'　'+hC.c);
+
+  var d=new Date();var seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  var acts=currentPurpose==='biz'?TODAY_BIZ:currentPurpose==='fam'?TODAY_FAM:TODAY_LOVE;
+  setText('todayAction',acts[seed%acts.length]);
+  setText('todayColor','今日は'+pS.e+'のエネルギーを意識して、'+(ELEM_COLORS[pS.e]||'')+'の小物を一つ身につけましょう。');
+  setText('todayHow',currentPurpose==='biz'?'今日は結論から先に伝えると伝わりやすい日です。':currentPurpose==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
+
+  reportData={purpose:currentPurpose,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,compat:hC.l};
+
+  currentChar='kitoku';currentSit='basic';
+  document.querySelectorAll('#char-kitoku,#char-confucius,#char-sunzi,#char-shibusawa,#char-ryoma').forEach(function(c,i){c.classList.toggle('active',i===0);});
+  document.querySelectorAll('#sit-basic,#sit-hire,#sit-team,#sit-partner,#sit-deal,#sit-project').forEach(function(c,i){c.classList.toggle('active',i===0);});
+  resetReport();
+
+  document.querySelectorAll('.tab-pane').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-honmei').classList.add('active');
+  document.querySelector('#screenResult .tab-btn').classList.add('active');
+  showScreen('screenResult');
+}
+
+/* ===== AIレポート生成 ===== */
+function generateReport(){
+  if(!reportData.nm){alert('先に縁を読み解いてください');return;}
+
+  var btn=document.getElementById('aiBtn');var area=document.getElementById('reportArea');var loading=document.getElementById('reportLoading');var textEl=document.getElementById('reportText');
+  btn.disabled=true;btn.textContent='生成中…';area.style.display='block';loading.style.display='block';textEl.style.display='none';textEl.textContent='';
+  setText('reportCharLabel',CHAR_LABELS[currentChar]||'格さん');
+  var d=reportData;
+  var prompt='あなたは東洋の気の学問（5000年の知恵）に基づく関係性の鑑定師です。\n語り口の指示：'+CHAR_PROMPTS[currentChar]+'\n\n以下の二人の星データを分析し「'+SIT_LABELS[currentSit]+'」の観点でレポートを作成してください。\n\n【あなた】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n傾斜宮：'+d.myK+'\n\n【相手：'+d.nm+'】\n本命星：'+d.pH+'（'+d.pE+'）\n月命星：'+d.pT+'\n傾斜宮：'+d.pK+'\n\n【五行相性】'+d.compat+'\n\n'+SIT_PROMPTS[currentSit]+'\n\n最後に「今すぐできること（今日・今週・今月）」を具体的に1つずつ提案してください。\n\n制約：占い・当たる・凶・悪いという言葉を使わない。5000年の知恵として伝える。700〜900文字程度。';
+
+  fetch('/api/groq',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){loading.style.display='none';var text=data.choices&&data.choices[0]?data.choices[0].message.content:'レポートの生成に失敗しました。';textEl.textContent=text;textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを再生成する';})
+  .catch(function(){loading.style.display='none';textEl.textContent='エラーが発生しました。しばらくしてお試しください。';textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';});
+}
+
+/* ===== 初期化 ===== */
+(function(){
+  try{var b=localStorage.getItem('kitoku-birth');if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('myYear').value=a[0];if(a[1])document.getElementById('myMonth').value=a[1];if(a[2])document.getElementById('myDay').value=a[2];}}catch(e){}
+})();
+</script>
+</body>
+</html>
