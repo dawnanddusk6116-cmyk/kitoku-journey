@@ -386,8 +386,25 @@ function generateReport(){
   setText('reportCharLabel',CHAR_LABELS[currentChar]||'格さん');
   var d=reportData;
   var sitPromptText = SIT_PROMPTS[currentSit]||'';
+
+  // 二人の五行相性に応じた具体的な処方箋を生成
+  var elemPair = d.myE + 'x' + d.pE;
+  var specificShohosen = '';
+  var sosei = {木:'水',火:'木',土:'火',金:'土',水:'金'};
+  var sokoku = {木:'土',土:'水',水:'火',火:'金',金:'木'};
+  if(d.myE === d.pE){
+    specificShohosen = '【比和の処方箋】同じ五行同士。互いの死角（欠けている五行）を補う第3のピースが必須。';
+  } else if(sosei[d.myE]===d.pE||sosei[d.pE]===d.myE){
+    specificShohosen = '【相生の処方箋】自然な循環がある。ただし死角が必ず生まれる。欠けている五行の人・色・食を加えること。';
+  } else if(sokoku[d.myE]===d.pE){
+    var medBridge = {木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'}[d.myE]||'土';
+    specificShohosen = '【相剋＝死角ゼロの最強チームへの処方箋】間に挟む：'+medBridge+'。色：'+(d.myE==='金'||d.pE==='金'?'黄・茶・ベージュ':d.myE==='火'||d.pE==='火'?'青・緑':'白・銀')+'。食：'+(d.myE==='金'?'すき焼き・鍋・牛肉':'お刺身・お寿司・野菜')+'。';
+  } else if(sokoku[d.pE]===d.myE){
+    var medBridge2 = {木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'}[d.pE]||'土';
+    specificShohosen = '【相剋＝死角ゼロの最強チームへの処方箋】間に挟む：'+medBridge2+'。';
+  }
   var prompt = [
-    '【重要】必ず日本語のみで回答してください。他の言語の文字を一切使わないでください。',
+    '【重要】必ず日本語のみで回答してください。他の言語・アルファベット・記号を文中に混ぜないでください。',
     '',
     '=== 鑑定師としての役割 ===',
     CHAR_PROMPTS[currentChar],
@@ -413,6 +430,10 @@ function generateReport(){
     '【あなた】本命星：'+d.myH+'（'+d.myE+'） 月命星：'+d.myT+' 傾斜宮：'+d.myK,
     '【'+d.nm+'】本命星：'+d.pH+'（'+d.pE+'） 月命星：'+d.pT+' 傾斜宮：'+d.pK,
     '【五行相性】'+d.compat,
+    specificShohosen,
+    '',
+    '【六白×九紫の場合の核心語録】「九紫も六白も自分が一番頭がいいと思っている。だからこそ死角がゼロになり最高の錬金術が生まれる。炎が黄金を精錬するように。間に土（大地）を挟めば完璧」',
+    '【合わない時の言葉】「合わないがゆえに全部できるようになるんです。合わない星が凶方だと思わないように」',
     '',
     '=== レポートの構成（'+SIT_LABELS[currentSit]+'）===',
     sitPromptText,
