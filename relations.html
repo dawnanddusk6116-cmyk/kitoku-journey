@@ -149,16 +149,16 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
     <div class="res-star" id="resStar">—</div>
   </div>
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('honmei',this)">① 本命星</button>
-    <button class="tab-btn" onclick="switchTab('tsuki',this)">② 月命星</button>
-    <button class="tab-btn" onclick="switchTab('keisha',this)">③ 傾斜</button>
-    <button class="tab-btn" onclick="switchTab('nacchi',this)">④ 納音</button>
-    <button class="tab-btn" onclick="switchTab('sogo',this)">⑤ 総合</button>
+    <button class="tab-btn active" onclick="switchTab('sogo',this)">① 総合</button>
+    <button class="tab-btn" onclick="switchTab('honmei',this)">② 本命星</button>
+    <button class="tab-btn" onclick="switchTab('tsuki',this)">③ 月命星</button>
+    <button class="tab-btn" onclick="switchTab('keisha',this)">④ 傾斜</button>
+    <button class="tab-btn" onclick="switchTab('nacchi',this)">⑤ 納音</button>
     <button class="tab-btn" onclick="switchTab('today',this)">⑥ 今日</button>
   </div>
 
   <!-- ① 本命星 -->
-  <div class="tab-pane active" id="tab-honmei">
+  <div class="tab-pane" id="tab-honmei">
     <div class="pane-sub">宿命的な相性</div>
     <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなた</div><div class="star-box-nm" id="myHonmei">—</div><div class="star-box-el" id="myHonmeiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl" id="partnerLbl">相手</div><div class="star-box-nm" id="partnerHonmei">—</div><div class="star-box-el" id="partnerHonmeiEl">—</div></div></div>
     <div class="compat" id="honmeiCompat">—</div>
@@ -191,7 +191,7 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
   </div>
 
   <!-- ⑤ 総合 -->
-  <div class="tab-pane" id="tab-sogo">
+  <div class="tab-pane active" id="tab-sogo">
     <div class="pane-sub">総合診断とアドバイス</div>
     <div class="compat" id="sogoCompat">—</div>
     <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の関係の全体像</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="sogoDesc">—</div></div>
@@ -208,7 +208,7 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
         <div class="sel-card" id="char-saikon" onclick="selectChar('saikon',this)"><div class="sel-icon">🌿</div><div class="sel-name">菜根譚</div><div class="sel-desc">処世の極意で</div></div>
         <div class="sel-card" id="char-shibusawa" onclick="selectChar('shibusawa',this)"><div class="sel-icon">💴</div><div class="sel-name">渋沢栄一</div><div class="sel-desc">論語と算盤で</div></div>
         <div class="sel-card" id="char-jitsugokyo" onclick="selectChar('jitsugokyo',this)"><div class="sel-icon">📖</div><div class="sel-name">実語教</div><div class="sel-desc">人としての根本</div></div>
-        <div class="sel-card sel-full" id="char-dojikyo" onclick="selectChar('dojikyo',this)"><div class="sel-icon">🌱</div><div class="sel-name">童子教</div><div class="sel-desc">礼・縁・人の道</div></div>
+        <div class="sel-card" id="char-dojikyo" onclick="selectChar('dojikyo',this)"><div class="sel-icon">🌱</div><div class="sel-name">童子教</div><div class="sel-desc">礼・縁・人の道</div></div>
       </div>
     </div>
 
@@ -387,7 +387,7 @@ function showResult(mY,mM,mD,nm,pY,pM,pD){
 
   document.querySelectorAll('.tab-pane').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('tab-honmei').classList.add('active');
+  document.getElementById('tab-sogo').classList.add('active');
   document.querySelector('#screenResult .tab-btn').classList.add('active');
   showScreen('screenResult');
 }
