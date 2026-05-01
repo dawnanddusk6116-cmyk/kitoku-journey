@@ -451,13 +451,13 @@ function generateReport(){
     '・必ず日本語のみで書く'
   ].join('\n');
 
-  fetch('/api/groq',{
+  fetch('/api/claude',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({prompt:prompt})
   })
   .then(function(r){return r.json();})
-  .then(function(data){loading.style.display='none';var text=data.choices&&data.choices[0]?data.choices[0].message.content:'レポートの生成に失敗しました。';textEl.textContent=text;textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを再生成する';})
+  .then(function(data){loading.style.display='none';var text=data.content&&data.content[0]?data.content[0].text:'レポートの生成に失敗しました。';textEl.textContent=text;textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを再生成する';})
   .catch(function(){loading.style.display='none';textEl.textContent='エラーが発生しました。しばらくしてお試しください。';textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';});
 }
 
