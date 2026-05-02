@@ -1,1 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU for BUSINESS</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2ec;--card:#ffffff;--rim:rgba(100,80,40,.14);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
+.home-btn{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.75rem;padding:7px 12px;border-radius:6px;cursor:pointer;}
+.screen{display:none;padding:20px 16px;}
+.screen.on{display:block;}
+/* トップ */
+.hero{text-align:center;padding:24px 0 20px;}
+.hero-en{font-family:'Cormorant Garamond',serif;font-size:.75rem;letter-spacing:.3em;color:var(--gold);margin-bottom:8px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:8px;}
+.hero-sub{font-size:.7rem;color:var(--mist);line-height:1.9;letter-spacing:.08em;}
+.menu-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:20px;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;gap:16px;transition:all .2s;}
+.menu-card:active{background:rgba(100,80,40,.04);}
+.menu-card.hire{border-left:3px solid #8a6820;}
+.menu-icon{font-size:2rem;width:48px;text-align:center;}
+.menu-name{font-size:1rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;letter-spacing:.06em;}
+.menu-desc{font-size:.7rem;color:var(--mist);line-height:1.7;}
+.free-badge{display:inline-block;background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.25);border-radius:20px;padding:3px 12px;font-size:.6rem;color:var(--gold);font-weight:700;margin-top:6px;}
+/* フォーム */
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:16px;}
+.form-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;margin-bottom:12px;}
+.form-label{font-size:.72rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
+.form-input{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;}
+.form-input:focus{border-color:var(--gold);}
+.date-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
+.date-unit{font-size:.6rem;color:var(--mist);text-align:center;margin-top:3px;}
+.divider{display:flex;align-items:center;gap:10px;margin:8px 0;}
+.divider-line{flex:1;height:1px;background:var(--rim);}
+.divider-text{font-size:.62rem;color:var(--mist);}
+.main-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;color:var(--gold);font-size:.92rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
+.form-note{font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;}
+/* 結果 */
+.result-header{background:linear-gradient(135deg,rgba(100,80,40,.1),rgba(100,80,40,.04));border:1px solid rgba(100,80,40,.2);border-radius:var(--radius);padding:18px;margin-bottom:16px;}
+.result-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:4px;}
+.result-star{font-size:.72rem;color:var(--mist);}
+.stars-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:14px;}
+.star-box{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px;text-align:center;}
+.star-lbl{font-size:.56rem;color:var(--mist);margin-bottom:4px;}
+.star-nm{font-size:.86rem;color:var(--snow);font-weight:700;margin-bottom:4px;}
+.star-el{font-size:.66rem;font-weight:700;padding:2px 10px;border-radius:10px;display:inline-block;}
+.el-木{background:rgba(58,138,58,.12);color:#2a7a2a;}
+.el-火{background:rgba(184,64,48,.12);color:#a03020;}
+.el-土{background:rgba(138,104,32,.12);color:#7a5810;}
+.el-金{background:rgba(138,120,32,.12);color:#7a6810;}
+.el-水{background:rgba(42,106,176,.12);color:#1a5aa0;}
+.vs-arrow{text-align:center;color:var(--gold);font-size:1.1rem;}
+.compat-badge{text-align:center;padding:10px;border-radius:10px;margin-bottom:14px;font-weight:700;font-size:.86rem;}
+.compat-badge.saiko{background:rgba(58,138,58,.1);border:1px solid rgba(58,138,58,.28);color:#2a7a2a;}
+.compat-badge.yoi{background:rgba(100,80,40,.07);border:1px solid rgba(100,80,40,.2);color:var(--gold);}
+.compat-badge.chui{background:rgba(176,80,32,.08);border:1px solid rgba(176,80,32,.22);color:#8a4018;}
+.accord{background:var(--card);border:1px solid var(--rim);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.accord-head{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.accord-ttl{font-size:.84rem;color:var(--snow);font-weight:700;}
+.accord-arr{color:var(--gold);font-size:.75rem;transition:transform .22s;}
+.accord-arr.open{transform:rotate(180deg);}
+.accord-body{display:none;padding:12px 16px 14px;font-size:.8rem;color:var(--mist);line-height:2.1;border-top:1px solid var(--rim);}
+.accord-body.open{display:block;}
+/* AIレポート */
+.ai-section{margin-top:16px;}
+.ai-sec-label{font-size:.65rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+.ai-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.18),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.5);border-radius:12px;color:var(--goldlt);font-size:.88rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:800;font-family:'Noto Serif JP',serif;}
+.ai-btn:disabled{opacity:.5;cursor:not-allowed;}
+.ai-hint{font-size:.6rem;color:var(--mist);text-align:center;margin-top:6px;}
+.ai-count{font-size:.6rem;color:var(--gold);text-align:center;margin-top:4px;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.loading-dot{width:12px;height:12px;border-radius:50%;background:var(--gold);margin:0 auto;animation:pulse 1.2s infinite;}
+.ai-report{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;font-size:.82rem;color:var(--snow);line-height:2.1;white-space:pre-wrap;}
+.back-btn{width:100%;background:none;border:1px solid var(--rim);border-radius:10px;color:var(--mist);font-size:.82rem;padding:14px;cursor:pointer;font-family:'Noto Serif JP',serif;margin-top:12px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">✦ KITOKU for BUSINESS</div>
+  <button class="home-btn" onclick="window.location.href='index.html'">🏠 JOURNEY</button>
+</header>
 
+<!-- トップ画面 -->
+<div class="screen on" id="s0">
+  <div class="hero">
+    <div class="hero-en">KITOKU for BUSINESS</div>
+    <div class="hero-title">ビジネスに<br>5000年の知恵を</div>
+    <div class="hero-sub">人事・採用・チーム編成に<br>東洋の気の学問という視点を添える</div>
+  </div>
+
+  <div class="menu-card hire" onclick="showScreen('s1')">
+    <div class="menu-icon">👤</div>
+    <div>
+      <div class="menu-name">採用判断</div>
+      <div class="menu-desc">
+        候補者の特性・才能を読み解く<br>
+        あなたとの相性・能力の伸ばし方<br>
+        面談で確認すべき質問を提案
+      </div>
+      <div class="free-badge">🎁 1日1回無料</div>
+    </div>
+  </div>
+</div>
+
+<!-- 採用判断：入力画面 -->
+<div class="screen" id="s1">
+  <div class="sec-title">採用判断</div>
+
+  <!-- あなた（社長・採用担当）-->
+  <div class="form-card">
+    <div class="form-label">✦ あなたの生年月日</div>
+    <div class="date-row">
+      <div><input class="form-input" type="number" id="myYear" placeholder="1967"><div class="date-unit">年</div></div>
+      <div><input class="form-input" type="number" id="myMonth" placeholder="6"><div class="date-unit">月</div></div>
+      <div><input class="form-input" type="number" id="myDay" placeholder="14"><div class="date-unit">日</div></div>
+    </div>
+  </div>
+
+  <!-- 候補者 -->
+  <div class="form-card">
+    <div class="form-label">✦ 候補者のお名前</div>
+    <input class="form-input" type="text" id="candidateName" placeholder="例：田中太郎" style="margin-bottom:16px;">
+    <div class="form-label">✦ 候補者の生年月日</div>
+    <div class="date-row">
+      <div><input class="form-input" type="number" id="cYear" placeholder="1990"><div class="date-unit">年</div></div>
+      <div><input class="form-input" type="number" id="cMonth" placeholder="4"><div class="date-unit">月</div></div>
+      <div><input class="form-input" type="number" id="cDay" placeholder="1"><div class="date-unit">日</div></div>
+    </div>
+    <div class="form-note">※ 生年月日はこの端末内にのみ保存されます</div>
+    <button class="main-btn" onclick="analyze()">✦ 候補者を読み解く</button>
+  </div>
+  <button class="back-btn" onclick="showScreen('s0')">← 戻る</button>
+</div>
+
+<!-- 採用判断：結果画面 -->
+<div class="screen" id="s2">
+  <div class="result-header">
+    <div class="result-name" id="resName">—</div>
+    <div class="result-star" id="resStar">—</div>
+  </div>
+
+  <!-- 星の比較 -->
+  <div class="stars-row">
+    <div class="star-box"><div class="star-lbl">あなた</div><div class="star-nm" id="myHonmei">—</div><div class="star-el" id="myEl">—</div></div>
+    <div class="vs-arrow">⟷</div>
+    <div class="star-box"><div class="star-lbl">候補者</div><div class="star-nm" id="cHonmei">—</div><div class="star-el" id="cEl">—</div></div>
+  </div>
+  <div class="compat-badge" id="compatBadge">—</div>
+
+  <!-- 基本情報アコーディオン -->
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">候補者の本質と才能</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="charDesc">—</div></div>
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">あなたとの相性</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="compatDesc">—</div></div>
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">能力を伸ばす上での注意点</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="growthDesc">—</div></div>
+
+  <!-- AIレポート -->
+  <div class="ai-section">
+    <div class="ai-sec-label">✦ AI深掘り採用レポート</div>
+    <button class="ai-btn" id="aiBtn" onclick="genReport()">✦ 詳細レポートを生成する</button>
+    <div class="ai-hint">候補者の特性・相性・面談質問を生成</div>
+    <div class="ai-count" id="aiCount"></div>
+    <div id="aiArea" style="display:none;margin-top:14px;">
+      <div id="aiLoading" style="text-align:center;padding:24px;display:none;"><div class="loading-dot"></div><div style="font-size:.75rem;color:var(--mist);margin-top:10px;">候補者を読み解いています…</div></div>
+      <div class="ai-report" id="aiReport" style="display:none;"></div>
+    </div>
+  </div>
+
+  <button class="back-btn" onclick="showScreen('s1')">← 別の候補者を見る</button>
+</div>
+
+<script>
+/* ===== データ ===== */
+var STARS={1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
+
+var CHAR_DESC={
+  1:'深い洞察力と共感力を持ち、人の痛みに静かに寄り添える人材です。情報収集と分析が得意で、縁の下の力持ちとして組織を支えます。表には出にくいが、信頼関係を築くと驚くほどの粘り強さを発揮します。',
+  2:'コツコツと積み上げることが得意な誠実な人材です。縁の下の力持ちとして組織を支え、継続力と実行力が強みです。チームの調和を大切にし、長期的な信頼関係を築けます。',
+  3:'好奇心旺盛でアイデアが豊富な人材です。新しい分野への挑戦を恐れず、変化の中で輝きます。スピード感があり、停滞を嫌う傾向があります。',
+  4:'人と人をつなぐことが自然にできる人材です。コミュニケーション能力が高く、ネットワークを広げることが得意です。調和を重んじ、チームの潤滑油になります。',
+  5:'強烈なエネルギーと存在感を持つ人材です。中心に立つ力があり、影響力が非常に大きい。その力をどう使うかが人生の分岐点となります。',
+  6:'高い理想と完成への意志を持つ人材です。妥協を嫌い、最高の形を追求し続けます。責任感が強く、リーダーシップを発揮できます。',
+  7:'喜びと楽しさを生み出すことで周囲を活性化させる人材です。コミュニケーション力と発想力が強みで、営業・接客・企画に向いています。',
+  8:'一度決めたら動かない強い意志と粘り強さを持つ人材です。変革期に真価を発揮し、困難な状況でも諦めません。',
+  9:'真実を見抜く直感と美意識を持つ人材です。感性で世界を捉え、クリエイティブな分野で光を放ちます。'
+};
+
+var GROWTH_ADVICE={
+  1:'深く考えすぎて動けなくなることがあります。定期的に「今の状況を共有する」場を作り、内に抱えすぎないよう促してください。',
+  2:'変化への対応が遅くなりがちです。新しい取り組みを強制せず、なぜ変化が必要かを丁寧に説明し、移行の時間を十分に取ってください。',
+  3:'熱しやすく冷めやすい面があります。短期プロジェクトと長期プロジェクトをバランスよく与え、飽きないよう環境を変化させてください。',
+  4:'決断を先延ばしにする傾向があります。「あなたの意見を聞かせてほしい」と主体性を引き出す声かけが効果的です。',
+  5:'自分のやり方への強いこだわりがあります。まず相手のアイデアを全肯定してから提案すると、素直に受け入れてもらえます。',
+  6:'完璧主義ゆえに自分にも他人にも厳しくなりがちです。「60点でまず動く」という文化を作り、完璧でなくても進めることを認めてあげてください。',
+  7:'感情的になりやすい場面があります。批判より提案で、楽しさや意義を伝えることで動機付けができます。',
+  8:'頑固さが出ると意見を聞かなくなることがあります。変化を提案する際は、過去の成功体験と結びつけて話すと受け入れやすくなります。',
+  9:'プライドが高く批判を受け入れにくいことがあります。フィードバックは「あなたの才能をさらに活かすために」という文脈で伝えてください。'
+};
+
+var INTERVIEW_Q={
+  1:['「これまでで最も難しかった人間関係をどう乗り越えましたか？」','「チームの中で気づいたことを、どのように伝えるタイプですか？」','「一人で長期的に取り組んだプロジェクトを教えてください」'],
+  2:['「過去に最後まで諦めずに完遂した経験を教えてください」','「チームの中でどんな役割を担うことが多いですか？」','「変化が求められた時、どのように対応しましたか？」'],
+  3:['「これまでで最も大きな失敗と、そこから学んだことを教えてください」','「新しいアイデアが浮かんだ時、どのように実行に移しますか？」','「飽きずに継続できたことは何ですか？」'],
+  4:['「社内外の人間関係を築く上で大切にしていることは？」','「意見が対立した時、どのように調整しますか？」','「自分で意思決定した経験を教えてください」'],
+  5:['「これまで周囲に大きな影響を与えた経験を教えてください」','「逆境に立たされた時の対処法を教えてください」','「自分の強みと弱みを率直に教えてください」'],
+  6:['「仕事における最高の成果を出した経験を教えてください」','「妥協せざるを得なかった時、どのように決断しましたか？」','「部下や後輩を育てた経験はありますか？」'],
+  7:['「チームの雰囲気を良くするために取り組んだことは？」','「お客様や取引先との関係で工夫していることは？」','「モチベーションが下がった時、どのように立て直しましたか？」'],
+  8:['「大きな変化や困難に直面した時の対応を教えてください」','「一度決めたことをやり遂げた経験を教えてください」','「過去を変えるとしたら何を変えますか？」'],
+  9:['「自分の直感が正しかった経験を教えてください」','「美意識やこだわりが仕事に活きた場面はありますか？」','「批判を受けた時、どのように受け止めますか？」']
+};
+
+var DB={
+  '水木':{t:'saiko',l:'水生木 ― 最高の相性'},
+  '木火':{t:'saiko',l:'木生火 ― 最高の相性'},
+  '火土':{t:'saiko',l:'火生土 ― 最高の相性'},
+  '土金':{t:'saiko',l:'土生金 ― 最高の相性'},
+  '金水':{t:'saiko',l:'金生水 ― 最高の相性'},
+  '木土':{t:'chui',l:'木剋土 ― 緊張感のある相性'},
+  '土水':{t:'chui',l:'土剋水 ― 緊張感のある相性'},
+  '水火':{t:'chui',l:'水剋火 ― 緊張感のある相性'},
+  '火金':{t:'chui',l:'火剋金 ― 緊張感のある相性'},
+  '金木':{t:'chui',l:'金剋木 ― 緊張感のある相性'},
+  '木木':{t:'yoi',l:'比和（木） ― 共鳴する相性'},
+  '火火':{t:'yoi',l:'比和（火） ― 共鳴する相性'},
+  '土土':{t:'yoi',l:'比和（土） ― 共鳴する相性'},
+  '金金':{t:'yoi',l:'比和（金） ― 共鳴する相性'},
+  '水水':{t:'yoi',l:'比和（水） ― 共鳴する相性'}
+};
+
+var COMPAT_DESC={
+  saiko:'相生の関係。自然にサポートし合える理想的な組み合わせです。あなたのエネルギーが候補者の成長を促すか、候補者があなたの活動を自然に支える流れが生まれます。採用後、比較的スムーズに馴染める可能性が高いです。',
+  yoi:'比和の関係。価値観や行動パターンが似ているため深く共感し合えます。コミュニケーションがスムーズで、即戦力として期待できます。ただし同質すぎて刺激が少なくなることも。外からの視点を意識的に取り入れましょう。',
+  chui:'相剋の関係。緊張感のある組み合わせですが、「合わないがゆえに全部できるようになる」死角ゼロの最強チームになれる可能性を秘めています。互いの違いを活かす役割分担が鍵です。'
+};
+
+/* ===== 計算 ===== */
+function calcH(y,m){var ky=(m<=2)?y-1:y;var ds=(ky%9+9)%9||9;return((11-ds-1)%9+9)%9+1;}
+function calcT(y,m){var SK=[0,11,1,2,3,4,5,6,7,8,9,10,11];var ky=(m<=2)?y-1:y;var h=calcH(ky,m);var kM=SK[m];var b=([1,4,7].indexOf(h)>=0)?10:([2,5,8].indexOf(h)>=0)?13:16;return((b-(kM+1)-1)%9+9)%9+1;}
+function ckKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'};if(ss[e1]===e2)return e2+e1;if(ss[e2]===e1)return e1+e2;if(e1===e2)return e1+e2;var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};if(sk[e1]===e2)return e1+e2;if(sk[e2]===e1)return e2+e1;return e1+e2;}
+
+/* ===== 回数制限 ===== */
+var FREE_LIMIT=1;
+function todayKey(){var d=new Date();return 'kitoku_biz_count_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
+function getCount(){return parseInt(localStorage.getItem(todayKey())||'0');}
+function addCount(){localStorage.setItem(todayKey(),getCount()+1);}
+function updateCount(){var r=Math.max(0,FREE_LIMIT-getCount());var el=document.getElementById('aiCount');if(!el)return;el.textContent=r>0?'本日あと'+r+'回無料（1日'+FREE_LIMIT+'回）':'本日の無料回数を使い切りました';}
+
+/* ===== UI ===== */
+var rData={};
+function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function sc(id,c){var e=document.getElementById(id);if(e)e.className=c;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');}
+function tog(head){var body=head.nextElementSibling;var arr=head.querySelector('.accord-arr');body.classList.toggle('open');arr.classList.toggle('open');}
+
+function analyze(){
+  var mY=parseInt(document.getElementById('myYear').value)||0;
+  var mM=parseInt(document.getElementById('myMonth').value)||0;
+  var nm=document.getElementById('candidateName').value.trim();
+  var cY=parseInt(document.getElementById('cYear').value)||0;
+  var cM=parseInt(document.getElementById('cMonth').value)||0;
+  var cD=parseInt(document.getElementById('cDay').value)||1;
+
+  if(!mY||!mM){alert('あなたの生年月日を入力してください');return;}
+  if(!nm){alert('候補者のお名前を入力してください');return;}
+  if(!cY||!cM){alert('候補者の生年月日を入力してください');return;}
+
+  localStorage.setItem('kitoku-birth',mY+'-'+mM+'-'+(parseInt(document.getElementById('myDay').value)||1));
+
+  var myN=calcH(mY,mM);var cN=calcH(cY,cM);
+  var myS=STARS[myN];var cS=STARS[cN];
+  var myTN=calcT(mY,mM);var cTN=calcT(cY,cM);
+  var myTS=STARS[myTN]||STARS[1];var cTS=STARS[cTN]||STARS[1];
+
+  st('resName',nm+'さん');
+  st('resStar',cS.k+'（'+cS.e+'のエネルギー）・月命：'+cTS.k);
+  st('myHonmei',myS.k);st('myEl',myS.e);sc('myEl','star-el el-'+myS.e);
+  st('cHonmei',cS.k);st('cEl',cS.e);sc('cEl','star-el el-'+cS.e);
+
+  var key=ckKey(myS.e,cS.e);
+  var compat=DB[key]||{t:'yoi',l:'個性的な組み合わせ'};
+  var cb=document.getElementById('compatBadge');
+  cb.textContent=compat.l;cb.className='compat-badge '+compat.t;
+
+  st('charDesc',CHAR_DESC[cN]||'');
+  st('compatDesc',COMPAT_DESC[compat.t]||'');
+  st('growthDesc',GROWTH_ADVICE[cN]||'');
+
+  // AIレポート用データ保存
+  rData={nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,cH:cS.k,cE:cS.e,cT:cTS.k,compat:compat.l,compatType:compat.t};
+  updateCount();
+  document.getElementById('aiArea').style.display='none';
+  document.getElementById('aiReport').style.display='none';
+  document.getElementById('aiReport').textContent='';
+  var btn=document.getElementById('aiBtn');
+  btn.disabled=false;btn.textContent='✦ 詳細レポートを生成する';
+  showScreen('s2');
+}
+
+function genReport(){
+  if(!rData.nm){alert('先に候補者を読み解いてください');return;}
+  if(getCount()>=FREE_LIMIT){
+    document.getElementById('aiArea').style.display='block';
+    document.getElementById('aiReport').textContent='本日の無料回数（1日'+FREE_LIMIT+'回）を使い切りました。\n\n明日またご利用いただけます。\n\n※有料プランでは無制限でご利用いただけます。';
+    document.getElementById('aiReport').style.display='block';
+    return;
+  }
+
+  var btn=document.getElementById('aiBtn');
+  var area=document.getElementById('aiArea');
+  var loading=document.getElementById('aiLoading');
+  var report=document.getElementById('aiReport');
+
+  btn.disabled=true;btn.textContent='生成中…';
+  area.style.display='block';loading.style.display='block';
+  report.style.display='none';report.textContent='';
+
+  var d=rData;
+  var qs=INTERVIEW_Q[Object.keys(STARS).find(function(k){return STARS[k].k===d.cH;})||'1']||[];
+
+  var prompt='あなたは東洋の気の学問（5000年の知恵）に基づく採用コンサルタントです。\n以下のデータをもとに採用判断レポートを作成してください。\n\n【採用担当者（あなた）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【候補者：'+d.nm+'】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n\n【相性】'+d.compat+'\n\n以下の構成でレポートを作成してください：\n\n■ この候補者の本質と才能\n（本命星・月命星から読み解く特性。Y理論（全肯定）で語ること）\n\n■ 採用担当者との相性と職場での関係\n（相性タイプから：'+d.compatType==='saiko'?'相生の流れを活かした関係作り':d.compatType==='yoi'?'比和の共鳴を活かした関係作り':'相剋を死角ゼロの最強チームに変える方法'+'）\n\n■ どんな環境・役割で輝くか\n（適性・最適なポジションの提案）\n\n■ 能力を最大限に伸ばすための関わり方\n（マネジメントの具体的なアドバイス）\n\n■ 面談で確認すべき3つの質問\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n■ 採用判断の総合所見\n（一言で核心を伝える）\n\n【制約】\n・占い・当たる・凶・悪いという言葉を使わない\n・5000年の知恵・気の法則として伝える\n・Y理論（全肯定）で語る\n・採用担当者が実際に使える具体的な内容\n・800〜1000文字程度';
+
+  fetch('/api/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    loading.style.display='none';
+    var text=data.content&&data.content[0]?data.content[0].text:'レポートの生成に失敗しました。';
+    report.textContent=text;report.style.display='block';
+    btn.disabled=false;btn.textContent='✦ 詳細レポートを再生成する';
+    addCount();updateCount();
+  })
+  .catch(function(){
+    loading.style.display='none';
+    report.textContent='エラーが発生しました。しばらくしてお試しください。';
+    report.style.display='block';
+    btn.disabled=false;btn.textContent='✦ 詳細レポートを生成する';
+  });
+}
+
+// 初期化
+(function(){
+  updateCount();
+  try{var b=localStorage.getItem('kitoku-birth');if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('myYear').value=a[0];if(a[1])document.getElementById('myMonth').value=a[1];if(a[2])document.getElementById('myDay').value=a[2];}}catch(e){}
+})();
+</script>
+</body>
+</html>
