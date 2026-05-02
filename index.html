@@ -946,7 +946,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <div onclick="openKitokuAbout()" style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);cursor:pointer;">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
-  <button class="header-reset" id="headerReset" onclick="showScreen('screenTop')" style="display:none;">← トップへ戻る</button>
+  <button class="header-reset" id="headerReset" onclick="showInput()" style="display:none;">← トップへ戻る</button>
 </div>
 
 <!-- ツールバー（テーマ・フォント・設定） -->
@@ -1258,74 +1258,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 </div>
 
 <!-- ══ 入力画面 ══ -->
-<!-- ===== トップ画面 ===== -->
-<div class="screen active" id="screenTop">
-  <div style="padding:28px 18px 20px;text-align:center;">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.3em;color:var(--gold);margin-bottom:8px;">KITOKU @ JOURNEY</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:6px;">5000年の知恵を<br>日常に</div>
-    <div style="font-size:.65rem;color:var(--mist);letter-spacing:.1em;">何を知りたいですか？</div>
-  </div>
-
-  <div style="padding:0 16px 40px;display:flex;flex-direction:column;gap:10px;">
-
-    <!-- 自分の九星を知る -->
-    <button onclick="goToMystar()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">⭐</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">自分の九星を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">本命星・月命星・傾斜・納音<br>あなたの魂の設計図を読み解く</div>
-      </div>
-    </button>
-
-    <!-- 吉方位を知る -->
-    <button onclick="goToKiho()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🧭</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">吉方位を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日・今月の吉方向<br>近所の吉方スポットを地図で探す</div>
-      </div>
-    </button>
-
-    <!-- 香り・色・食を知る -->
-    <button onclick="goToDaily()" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🌸</div>
-      <div>
-        <div style="font-size:.95rem;color:#d4667a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香り・色・食を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日の五感の処方箋<br>星に合わせた色・食・香りを知る</div>
-      </div>
-    </button>
-
-    <!-- 気学 × AI -->
-    <button onclick="goToAI()" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🤖</div>
-      <div>
-        <div style="font-size:.95rem;color:#2a8a60;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">気学 × AI</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">星情報をAIに渡してアドバイスをもらう<br>ChatGPT・Claude・Gemini・Genspark</div>
-      </div>
-    </button>
-
-    <!-- KITOKU @ RELATIONS -->
-    <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">💫</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">大切な人との相性を読み解く<br>AI深掘りレポート・8人の賢者が語る</div>
-      </div>
-    </button>
-
-    <!-- KITOKU for BUSINESS -->
-    <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">💼</div>
-      <div>
-        <div style="font-size:.95rem;color:#6080c0;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div>
-      </div>
-    </button>
-
-  </div>
-</div>
-
-<div class="screen" id="screenInput">
+<div class="screen active" id="screenInput">
 
   <!-- ① 生年月日入力エリア（最上部） -->
   <div class="input-card" style="margin:16px 16px 0;">
@@ -1349,7 +1282,29 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   </div>
 
   <!-- ② ボタン2つ -->
+  <!-- 今日の羅針盤ボタン -->
+  <button class="launch-btn" style="margin-top:14px;" onclick="launch()">
+    今日の羅針盤を開く ✦<br>
+    <span style="font-size:.68rem;opacity:.75;letter-spacing:.06em;font-weight:400;">今日の運気・吉方位・色・食・香りを知る</span>
+  </button>
 
+  <!-- 香りボタン -->
+  <button class="launch-btn" onclick="openDaily()" style="margin-top:10px;background:linear-gradient(135deg,rgba(220,140,160,.25),rgba(200,110,140,.12));border:1px solid rgba(220,140,160,.6);color:#d4667a;">
+    ✦ 今日の香り・色・食を知る<br>
+    <span style="font-size:.68rem;opacity:.8;letter-spacing:.06em;font-weight:400;">五感で今日を整える処方箋</span>
+  </button>
+
+  <!-- RELATIONSボタン -->
+  <button class="launch-btn" onclick="window.location.href='relations.html'" style="margin-top:10px;background:linear-gradient(135deg,rgba(100,80,40,.2),rgba(100,80,40,.08));border:1px solid rgba(100,80,40,.5);color:#5c4010;">
+    ✦ KITOKU @ RELATIONS<br>
+    <span style="font-size:.68rem;opacity:.8;letter-spacing:.06em;font-weight:400;">大切な人との相性・AI深掘りレポート</span>
+  </button>
+
+  <!-- BUSINESSボタン -->
+  <button class="launch-btn" onclick="window.location.href='business.html'" style="margin-top:10px;background:linear-gradient(135deg,rgba(40,60,100,.18),rgba(40,60,100,.06));border:1px solid rgba(40,60,100,.4);color:#2a3c64;">
+    ✦ KITOKU for BUSINESS<br>
+    <span style="font-size:.68rem;opacity:.8;letter-spacing:.06em;font-weight:400;">採用・人材判断に5000年の知恵を</span>
+  </button>
   <div class="save-note">生年月日はこの端末に保存されます</div>
 
   <div class="launch-hero">
@@ -2374,25 +2329,6 @@ let gState={};
   }
 })();
 
-// ===== トップ画面ナビゲーション =====
-function goToMystar(){
-  // 生年月日入力画面へ（mystar.html作成後に変更）
-  showScreen('screenInput');
-}
-
-function goToKiho(){
-  // 既存の羅針盤
-  showScreen('screenInput');
-}
-
-function goToDaily(){
-  openDaily();
-}
-
-function goToAI(){
-  window.location.href='ai.html';
-}
-
 function launch(){
   const bStr=document.getElementById('inputBirth').value;
   const dStr=document.getElementById('inputDate').value;
@@ -2439,7 +2375,7 @@ function showInput(){
 // ══ KITOKU@DAILY ══
 
 function showScreen(id){
-  ['screenTop','screenInput','screenResult','screenDaily'].forEach(s=>{
+  ['screenInput','screenResult','screenDaily'].forEach(s=>{
     const el=document.getElementById(s);
     if(el)el.classList.remove('active');
   });
@@ -3135,13 +3071,6 @@ function renderKichiList(dirData,p2s){
     if(dd.rank>=5||dd.rank>=4)cls+=' saiko';
     else if(dd.rank>=3)cls+=' dai';
     const rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方':dd.rank>=4?'本命・月命　ともに吉方':dd.rank>=3?'吉方（三合の後押しあり）':'吉方（人に与える日）';
-    // 方位を角度に変換（地図検索用）
-    const dirAngle={N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
-    const angle=dirAngle[dir]||0;
-    const dirJP=JP[dir]||dir;
-    const googleUrl=`https://www.google.com/maps/search/${encodeURIComponent(dirJP+'方向 カフェ')}`;
-    const appleUrl=`maps://maps.apple.com/?q=${encodeURIComponent(dirJP+'方向')}`;
-    const yahooUrl=`https://map.yahoo.co.jp/search?q=${encodeURIComponent(dirJP+'方向 スポット')}`;
     return `<div class="${cls}">
       <div class="kichi-dir-badge">
         <div class="kichi-dir">${EN[dir]}</div>
@@ -3152,11 +3081,6 @@ function renderKichiList(dirData,p2s){
         <div class="kichi-star">${s.j}</div>
         <div class="kichi-badges">${dd.badges.map(b=>`<span class="kbadge">${b}</span>`).join('')}</div>
         <div class="kichi-tap">タップして飲食提案を見る 👆</div>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
-          <a href="${googleUrl}" target="_blank" style="display:inline-block;background:rgba(66,133,244,.12);border:1px solid rgba(66,133,244,.3);border-radius:6px;padding:5px 10px;font-size:.62rem;color:#4285f4;text-decoration:none;font-family:'Noto Serif JP',serif;">🗺 Google</a>
-          <a href="${appleUrl}" style="display:inline-block;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:6px;padding:5px 10px;font-size:.62rem;color:var(--goldlt);text-decoration:none;font-family:'Noto Serif JP',serif;">🍎 Apple</a>
-          <a href="${yahooUrl}" target="_blank" style="display:inline-block;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.2);border-radius:6px;padding:5px 10px;font-size:.62rem;color:#cc0000;text-decoration:none;font-family:'Noto Serif JP',serif;">🔴 Yahoo!</a>
-        </div>
       </div>
     </div>`;
   }).join('');
