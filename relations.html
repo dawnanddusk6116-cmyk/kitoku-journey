@@ -6,479 +6,441 @@
 <title>KITOKU @ RELATIONS</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a6ab0;--love:#b04060;--fam:#3a8a4a;}
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;--biz:#2a6ab0;--love:#b04060;--fam:#3a8a4a;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;font-size:16px;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
-.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);}
-.header-back{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.78rem;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:600;}
-.screen{display:none;padding:20px 16px;}
-.screen.active{display:block;}
-.big-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.2em;color:var(--goldlt);text-align:center;margin-bottom:4px;padding-top:8px;}
-.big-sub{font-size:.63rem;letter-spacing:.16em;color:var(--mist);text-align:center;margin-bottom:24px;}
-.purpose-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:16px;margin-bottom:12px;}
-.purpose-card.biz{border-left:3px solid var(--biz);}
-.purpose-card.love{border-left:3px solid var(--love);}
-.purpose-card.fam{border-left:3px solid var(--fam);}
-.p-icon{font-size:1.8rem;width:44px;text-align:center;}
-.p-name{font-size:.95rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;}
-.p-desc{font-size:.7rem;color:var(--mist);line-height:1.7;}
-.section-badge{display:inline-block;font-size:.62rem;letter-spacing:.12em;padding:4px 12px;border-radius:20px;font-weight:700;margin-bottom:10px;}
-.section-badge.biz{background:rgba(42,106,176,.1);color:var(--biz);border:1px solid rgba(42,106,176,.25);}
-.section-badge.love{background:rgba(176,64,96,.1);color:var(--love);border:1px solid rgba(176,64,96,.25);}
-.section-badge.fam{background:rgba(58,138,74,.1);color:var(--fam);border:1px solid rgba(58,138,74,.25);}
-.form-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;margin-bottom:12px;}
-.form-label{font-size:.72rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
-.form-input{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;}
-.form-input:focus{border-color:var(--gold);}
-.date-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:4px;}
-.date-unit{font-size:.6rem;color:var(--mist);text-align:center;margin-top:3px;}
-.form-note{font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;}
-.main-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;color:var(--gold);font-size:.92rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
-.saved-list{margin-top:16px;}
-.saved-title{font-size:.62rem;letter-spacing:.14em;color:var(--mist);margin-bottom:8px;}
-.saved-item{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;}
-.saved-name{font-size:.88rem;color:var(--snow);font-weight:600;}
-.saved-star{font-size:.66rem;color:var(--mist);}
-.plan-note{text-align:center;font-size:.6rem;color:var(--mist);margin-top:12px;line-height:2;}
-.res-header{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
-.res-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:4px;}
-.res-star{font-size:.7rem;color:var(--mist);}
-.tab-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
-.tab-bar::-webkit-scrollbar{height:2px;}
-.tab-btn{flex-shrink:0;background:var(--card);border:1px solid var(--rim);border-radius:20px;padding:7px 13px;font-size:.66rem;letter-spacing:.06em;color:var(--mist);cursor:pointer;font-family:'Noto Serif JP',serif;white-space:nowrap;}
-.tab-btn.active{background:rgba(100,80,40,.1);border-color:var(--gold);color:var(--gold);font-weight:700;}
-.tab-pane{display:none;}
-.tab-pane.active{display:block;}
-.pane-sub{font-size:.6rem;letter-spacing:.14em;color:var(--mist);margin-bottom:12px;}
-.stars-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:12px;}
-.star-box{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px;text-align:center;}
-.star-box-lbl{font-size:.56rem;color:var(--mist);margin-bottom:5px;}
-.star-box-nm{font-size:.86rem;color:var(--snow);font-weight:700;margin-bottom:4px;}
-.star-box-el{font-size:.68rem;font-weight:700;padding:2px 10px;border-radius:10px;display:inline-block;}
-.el-木{background:rgba(58,138,58,.12);color:#2a7a2a;}
-.el-火{background:rgba(184,64,48,.12);color:#a03020;}
-.el-土{background:rgba(138,104,32,.12);color:#7a5810;}
-.el-金{background:rgba(138,120,32,.12);color:#7a6810;}
-.el-水{background:rgba(42,106,176,.12);color:#1a5aa0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
+.hdr-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);}
+.hdr-back{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.78rem;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:600;}
+.scr{display:none;padding:20px 16px;}
+.scr.on{display:block;}
+.big-t{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.2em;color:var(--goldlt);text-align:center;margin-bottom:4px;padding-top:8px;}
+.big-s{font-size:.63rem;letter-spacing:.16em;color:var(--mist);text-align:center;margin-bottom:24px;}
+.pc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:16px;margin-bottom:12px;}
+.pc.biz{border-left:3px solid var(--biz);}
+.pc.love{border-left:3px solid var(--love);}
+.pc.fam{border-left:3px solid var(--fam);}
+.pi{font-size:1.8rem;width:44px;text-align:center;}
+.pn{font-size:.95rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;}
+.pd{font-size:.7rem;color:var(--mist);line-height:1.7;}
+.badge{display:inline-block;font-size:.62rem;letter-spacing:.12em;padding:4px 12px;border-radius:20px;font-weight:700;margin-bottom:10px;}
+.badge.biz{background:rgba(42,106,176,.1);color:var(--biz);border:1px solid rgba(42,106,176,.25);}
+.badge.love{background:rgba(176,64,96,.1);color:var(--love);border:1px solid rgba(176,64,96,.25);}
+.badge.fam{background:rgba(58,138,74,.1);color:var(--fam);border:1px solid rgba(58,138,74,.25);}
+.fc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.fl{font-size:.72rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
+.fi{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;}
+.fi:focus{border-color:var(--gold);}
+.dr{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:4px;}
+.du{font-size:.6rem;color:var(--mist);text-align:center;margin-top:3px;}
+.fn{font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;}
+.mb{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;color:var(--gold);font-size:.92rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
+.sl{margin-top:16px;}
+.st{font-size:.62rem;letter-spacing:.14em;color:var(--mist);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.sd{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 16px;margin-bottom:8px;}
+.sn{font-size:.88rem;color:var(--snow);font-weight:600;}
+.ss{font-size:.66rem;color:var(--mist);}
+.del-btn{background:none;border:none;color:var(--mist);font-size:1.1rem;cursor:pointer;padding:4px 8px;}
+.del-all{font-size:.6rem;color:var(--mist);background:none;border:1px solid var(--rim);border-radius:6px;padding:4px 10px;cursor:pointer;}
+.pn2{text-align:center;font-size:.6rem;color:var(--mist);margin-top:12px;line-height:2;}
+.rh{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:14px;}
+.rn{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:4px;}
+.rs{font-size:.7rem;color:var(--mist);}
+.tb{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
+.tb::-webkit-scrollbar{height:2px;}
+.tbb{flex-shrink:0;background:var(--card);border:1px solid var(--rim);border-radius:20px;padding:7px 13px;font-size:.66rem;letter-spacing:.06em;color:var(--mist);cursor:pointer;font-family:'Noto Serif JP',serif;white-space:nowrap;}
+.tbb.on{background:rgba(100,80,40,.1);border-color:var(--gold);color:var(--gold);font-weight:700;}
+.tp{display:none;}
+.tp.on{display:block;}
+.ps{font-size:.6rem;letter-spacing:.14em;color:var(--mist);margin-bottom:12px;}
+.sr{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:12px;}
+.sb{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px;text-align:center;}
+.sl2{font-size:.56rem;color:var(--mist);margin-bottom:5px;}
+.sn2{font-size:.86rem;color:var(--snow);font-weight:700;margin-bottom:4px;}
+.se{font-size:.68rem;font-weight:700;padding:2px 10px;border-radius:10px;display:inline-block;}
+.e木{background:rgba(58,138,58,.12);color:#2a7a2a;}
+.e火{background:rgba(184,64,48,.12);color:#a03020;}
+.e土{background:rgba(138,104,32,.12);color:#7a5810;}
+.e金{background:rgba(138,120,32,.12);color:#7a6810;}
+.e水{background:rgba(42,106,176,.12);color:#1a5aa0;}
 .vs{text-align:center;color:var(--gold);font-size:1.1rem;}
-.compat{text-align:center;padding:10px 14px;border-radius:10px;margin-bottom:12px;font-weight:700;font-size:.86rem;}
-.compat.saiko{background:rgba(58,138,58,.1);border:1px solid rgba(58,138,58,.28);color:#2a7a2a;}
-.compat.yoi{background:rgba(100,80,40,.07);border:1px solid rgba(100,80,40,.2);color:var(--gold);}
-.compat.chui{background:rgba(176,80,32,.08);border:1px solid rgba(176,80,32,.22);color:#8a4018;}
-.accord{background:var(--card);border:1px solid var(--rim);border-radius:10px;margin-bottom:8px;overflow:hidden;}
-.accord-head{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
-.accord-ttl{font-size:.84rem;color:var(--snow);font-weight:700;}
-.accord-arr{color:var(--gold);font-size:.75rem;transition:transform .22s;}
-.accord-arr.open{transform:rotate(180deg);}
-.accord-body{display:none;padding:0 16px 14px;font-size:.8rem;color:var(--mist);line-height:2;border-top:1px solid var(--rim);padding-top:12px;}
-.accord-body.open{display:block;}
-.today-box{background:linear-gradient(135deg,rgba(100,80,40,.08),rgba(100,80,40,.03));border:1px solid rgba(100,80,40,.2);border-radius:var(--radius);padding:16px;margin-bottom:10px;}
-.today-ttl{font-size:.63rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
-.today-action{background:var(--card);border-radius:8px;padding:12px 14px;font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;border-left:3px solid var(--gold);}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
-.sel-card{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 10px;cursor:pointer;text-align:center;}
-.sel-card.active{background:rgba(100,80,40,.1);border-color:var(--gold);}
-.sel-icon{font-size:1.4rem;margin-bottom:4px;}
-.sel-name{font-size:.78rem;color:var(--snow);font-weight:700;margin-bottom:2px;}
-.sel-card.active .sel-name{color:var(--goldlt);}
-.sel-desc{font-size:.6rem;color:var(--mist);line-height:1.5;}
-.sel-full{grid-column:span 2;}
+.cp{text-align:center;padding:10px 14px;border-radius:10px;margin-bottom:12px;font-weight:700;font-size:.86rem;}
+.cp.s{background:rgba(58,138,58,.1);border:1px solid rgba(58,138,58,.28);color:#2a7a2a;}
+.cp.y{background:rgba(100,80,40,.07);border:1px solid rgba(100,80,40,.2);color:var(--gold);}
+.cp.c{background:rgba(176,80,32,.08);border:1px solid rgba(176,80,32,.22);color:#8a4018;}
+.ac{background:var(--card);border:1px solid var(--rim);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.ah{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.at{font-size:.84rem;color:var(--snow);font-weight:700;}
+.aa{color:var(--gold);font-size:.75rem;transition:transform .22s;}
+.aa.o{transform:rotate(180deg);}
+.ab{display:none;padding:12px 16px 14px;font-size:.8rem;color:var(--mist);line-height:2;border-top:1px solid var(--rim);}
+.ab.o{display:block;}
+.tb2{background:linear-gradient(135deg,rgba(100,80,40,.08),rgba(100,80,40,.03));border:1px solid rgba(100,80,40,.2);border-radius:var(--r);padding:16px;margin-bottom:10px;}
+.tt{font-size:.63rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+.ta{background:var(--card);border-radius:8px;padding:12px 14px;font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;border-left:3px solid var(--gold);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.sc2{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 10px;cursor:pointer;text-align:center;}
+.sc2.on{background:rgba(100,80,40,.1);border-color:var(--gold);}
+.si{font-size:1.4rem;margin-bottom:4px;}
+.sn3{font-size:.78rem;color:var(--snow);font-weight:700;margin-bottom:2px;}
+.sc2.on .sn3{color:var(--goldlt);}
+.sd2{font-size:.6rem;color:var(--mist);line-height:1.5;}
+.sf{grid-column:span 2;}
 .ai-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.18),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.5);border-radius:12px;color:var(--goldlt);font-size:.88rem;padding:16px;cursor:pointer;letter-spacing:.18em;font-weight:800;font-family:'Noto Serif JP',serif;}
 .ai-btn:disabled{opacity:.5;cursor:not-allowed;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.loading-dot{width:12px;height:12px;border-radius:50%;background:var(--gold);margin:0 auto;animation:pulse 1.2s infinite;}
-.ai-report-text{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;font-size:.82rem;color:var(--snow);line-height:2.1;white-space:pre-wrap;}
-.sec-label{font-size:.65rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+.ld{width:12px;height:12px;border-radius:50%;background:var(--gold);margin:0 auto;animation:pulse 1.2s infinite;}
+.art{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px;font-size:.82rem;color:var(--snow);line-height:2.1;white-space:pre-wrap;}
+.sl3{font-size:.65rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
 </style>
 </head>
 <body>
-<header class="header">
-  <div class="header-logo">✦ KITOKU @ RELATIONS</div>
-  <button class="header-back" id="backBtn" onclick="goBack()" style="display:none;">← 戻る</button>
+<header class="hdr">
+  <div class="hdr-logo">✦ KITOKU @ RELATIONS</div>
+  <button class="hdr-back" id="backBtn" onclick="goBack()" style="display:none;">← 戻る</button>
 </header>
 
-<!-- 画面①：用途選択 -->
-<div class="screen active" id="screenPurpose">
-  <div class="big-title">大切な人との縁を知る</div>
-  <div class="big-sub">KITOKU @ RELATIONS</div>
+<div class="scr on" id="s0">
+  <div class="big-t">大切な人との縁を知る</div>
+  <div class="big-s">KITOKU @ RELATIONS</div>
   <div style="font-size:.68rem;color:var(--mist);margin-bottom:12px;">何のための鑑定ですか？</div>
-  <div class="purpose-card biz" onclick="selectPurpose('biz')"><div class="p-icon">💼</div><div><div class="p-name">ビジネス</div><div class="p-desc">取引先・同僚との付き合い方<br>採用・配属判断</div></div></div>
-  <div class="purpose-card love" onclick="selectPurpose('love')"><div class="p-icon">💕</div><div><div class="p-name">恋愛・友人</div><div class="p-desc">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
-  <div class="purpose-card fam" onclick="selectPurpose('fam')"><div class="p-icon">👨‍👩‍👧</div><div><div class="p-name">家族</div><div class="p-desc">家族との関係を整える<br>カルマの修復・二生の縁</div></div></div>
+  <div class="pc biz" onclick="selP('biz')"><div class="pi">💼</div><div><div class="pn">ビジネス</div><div class="pd">取引先・同僚との付き合い方<br>採用・配属判断</div></div></div>
+  <div class="pc love" onclick="selP('love')"><div class="pi">💕</div><div><div class="pn">恋愛・友人</div><div class="pd">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
+  <div class="pc fam" onclick="selP('fam')"><div class="pi">👨‍👩‍👧</div><div><div class="pn">家族</div><div class="pd">家族との関係を整える<br>親の介護・カルマの修復・二生の縁</div></div></div>
 </div>
 
-<!-- 画面②：入力 -->
-<div class="screen" id="screenInput">
+<div class="scr" id="s1">
   <div style="margin-bottom:16px;">
-    <span class="section-badge" id="purposeBadge">💼 ビジネス</span>
+    <span class="badge" id="pBadge">💼 ビジネス</span>
     <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);">縁を読み解く</div>
   </div>
-  <div class="form-card">
-    <div class="form-label">✦ あなたの生年月日</div>
-    <div class="date-row">
-      <div><input class="form-input" type="number" id="myYear" placeholder="1967"><div class="date-unit">年</div></div>
-      <div><input class="form-input" type="number" id="myMonth" placeholder="6"><div class="date-unit">月</div></div>
-      <div><input class="form-input" type="number" id="myDay" placeholder="14"><div class="date-unit">日</div></div>
+  <div class="fc">
+    <div class="fl">✦ あなたの生年月日</div>
+    <div class="dr">
+      <div><input class="fi" type="number" id="mY" placeholder="1967"><div class="du">年</div></div>
+      <div><input class="fi" type="number" id="mM" placeholder="6"><div class="du">月</div></div>
+      <div><input class="fi" type="number" id="mD" placeholder="14"><div class="du">日</div></div>
     </div>
   </div>
-  <div class="form-card">
-    <div class="form-label">✦ 相手のお名前</div>
-    <input class="form-input" type="text" id="partnerName" placeholder="例：田中さん" style="margin-bottom:16px;">
-    <div class="form-label">✦ 相手の生年月日</div>
-    <div class="date-row">
-      <div><input class="form-input" type="number" id="partnerYear" placeholder="1985"><div class="date-unit">年</div></div>
-      <div><input class="form-input" type="number" id="partnerMonth" placeholder="3"><div class="date-unit">月</div></div>
-      <div><input class="form-input" type="number" id="partnerDay" placeholder="15"><div class="date-unit">日</div></div>
+  <div class="fc">
+    <div class="fl">✦ 相手のお名前</div>
+    <input class="fi" type="text" id="pName" placeholder="例：田中さん" style="margin-bottom:16px;">
+    <div class="fl">✦ 相手の生年月日</div>
+    <div class="dr">
+      <div><input class="fi" type="number" id="pY" placeholder="1985"><div class="du">年</div></div>
+      <div><input class="fi" type="number" id="pM" placeholder="3"><div class="du">月</div></div>
+      <div><input class="fi" type="number" id="pD" placeholder="15"><div class="du">日</div></div>
     </div>
-    <div class="form-note">※生年月日は端末内にのみ保存されます</div>
-    <button class="main-btn" onclick="startReading()">✦ 縁を読み解く</button>
+    <div class="fn">※生年月日は端末内にのみ保存されます</div>
+    <button class="mb" onclick="startReading()">✦ 縁を読み解く</button>
   </div>
-  <div class="saved-list" id="savedList" style="display:none;">
-    <div class="saved-title">✦ 登録済みの人</div>
-    <div id="savedItems"></div>
+  <div class="sl" id="svList" style="display:none;">
+    <div class="st"><span>✦ 登録済みの人</span><button class="del-all" onclick="delAll()">全削除</button></div>
+    <div id="svItems"></div>
   </div>
-  <div class="plan-note">無料：5人まで登録可能</div>
+  <div class="pn2">無料：5人まで登録可能</div>
 </div>
 
-<!-- 画面③：結果 -->
-<div class="screen" id="screenResult">
-  <div class="res-header">
-    <span class="section-badge" id="resBadge">💼 ビジネス</span>
-    <div class="res-name" id="resName">—</div>
-    <div class="res-star" id="resStar">—</div>
+<div class="scr" id="s2">
+  <div class="rh">
+    <span class="badge" id="rBadge">💼 ビジネス</span>
+    <div class="rn" id="rName">—</div>
+    <div class="rs" id="rStar">—</div>
   </div>
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('sogo',this)">① 総合</button>
-    <button class="tab-btn" onclick="switchTab('honmei',this)">② 本命星</button>
-    <button class="tab-btn" onclick="switchTab('tsuki',this)">③ 月命星</button>
-    <button class="tab-btn" onclick="switchTab('keisha',this)">④ 傾斜</button>
-    <button class="tab-btn" onclick="switchTab('nacchi',this)">⑤ 納音</button>
-    <button class="tab-btn" onclick="switchTab('today',this)">⑥ 今日</button>
-  </div>
-
-  <!-- ① 本命星 -->
-  <div class="tab-pane" id="tab-honmei">
-    <div class="pane-sub">宿命的な相性</div>
-    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなた</div><div class="star-box-nm" id="myHonmei">—</div><div class="star-box-el" id="myHonmeiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl" id="partnerLbl">相手</div><div class="star-box-nm" id="partnerHonmei">—</div><div class="star-box-el" id="partnerHonmeiEl">—</div></div></div>
-    <div class="compat" id="honmeiCompat">—</div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">この関係の本質</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiDesc">—</div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の強み</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiStr">—</div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">注意すること</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiCau">—</div></div>
+  <div class="tb">
+    <button class="tbb on" onclick="swTab('sogo',this)">① 総合</button>
+    <button class="tbb" onclick="swTab('honmei',this)">② 本命星</button>
+    <button class="tbb" onclick="swTab('tsuki',this)">③ 月命星</button>
+    <button class="tbb" onclick="swTab('keisha',this)">④ 傾斜</button>
+    <button class="tbb" onclick="swTab('nacchi',this)">⑤ 納音</button>
+    <button class="tbb" onclick="swTab('today',this)">⑥ 今日</button>
   </div>
 
-  <!-- ② 月命星 -->
-  <div class="tab-pane" id="tab-tsuki">
-    <div class="pane-sub">精神面・内面の相性</div>
-    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなたの内面</div><div class="star-box-nm" id="myTsuki">—</div><div class="star-box-el" id="myTsukiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl">相手の内面</div><div class="star-box-nm" id="partnerTsuki">—</div><div class="star-box-el" id="partnerTsukiEl">—</div></div></div>
-    <div class="compat" id="tsukiCompat">—</div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">精神的なつながり</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="tsukiDesc">—</div></div>
-  </div>
-
-  <!-- ③ 傾斜 -->
-  <div class="tab-pane" id="tab-keisha">
-    <div class="pane-sub">潜在的な性格</div>
-    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなたの傾斜</div><div class="star-box-nm" id="myKeishaNm">—</div><div class="star-box-el" id="myKeishaEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl">相手の傾斜</div><div class="star-box-nm" id="partnerKeishaNm">—</div><div class="star-box-el" id="partnerKeishaEl">—</div></div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">あなたの深層の動機</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="myKeisha">—</div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">相手の深層の動機</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="partnerKeisha">—</div></div>
-  </div>
-
-  <!-- ④ 納音 -->
-  <div class="tab-pane" id="tab-nacchi">
-    <div class="pane-sub">深い縁の分析</div>
-    <div class="stars-row"><div class="star-box"><div class="star-box-lbl">あなたの本命</div><div class="star-box-nm" id="myNacchiNm">—</div><div class="star-box-el" id="myNacchiEl">—</div></div><div class="vs">⟷</div><div class="star-box"><div class="star-box-lbl">相手の本命</div><div class="star-box-nm" id="partnerNacchiNm">—</div><div class="star-box-el" id="partnerNacchiEl">—</div></div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の納音の関係</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="nacchiDesc">—</div></div>
-  </div>
-
-  <!-- ⑤ 総合 -->
-  <div class="tab-pane active" id="tab-sogo">
-    <div class="pane-sub">総合診断とアドバイス</div>
-    <div class="compat" id="sogoCompat">—</div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">二人の関係の全体像</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="sogoDesc">—</div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">関係を良くするアドバイス</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="sogoAdvice">—</div></div>
-
-    <!-- キャラクター選択 -->
-    <div style="margin-top:24px;">
-      <div class="sec-label">✦ 誰の言葉で語りますか？</div>
-      <div class="grid2">
-        <div class="sel-card active" id="char-kitoku" onclick="selectChar('kitoku',this)"><div class="sel-icon">🏯</div><div class="sel-name">格さん</div><div class="sel-desc">KITOKUオリジナル</div></div>
-        <div class="sel-card" id="char-confucius" onclick="selectChar('confucius',this)"><div class="sel-icon">📜</div><div class="sel-name">孔子</div><div class="sel-desc">論語の言葉で</div></div>
-        <div class="sel-card" id="char-sunzi" onclick="selectChar('sunzi',this)"><div class="sel-icon">⚔️</div><div class="sel-name">孫子</div><div class="sel-desc">兵法の言葉で</div></div>
-        <div class="sel-card" id="char-musashi" onclick="selectChar('musashi',this)"><div class="sel-icon">🗡️</div><div class="sel-name">宮本武蔵</div><div class="sel-desc">五輪書の言葉で</div></div>
-        <div class="sel-card" id="char-saikon" onclick="selectChar('saikon',this)"><div class="sel-icon">🌿</div><div class="sel-name">菜根譚</div><div class="sel-desc">処世の極意で</div></div>
-        <div class="sel-card" id="char-shibusawa" onclick="selectChar('shibusawa',this)"><div class="sel-icon">💴</div><div class="sel-name">渋沢栄一</div><div class="sel-desc">論語と算盤で</div></div>
-        <div class="sel-card" id="char-jitsugokyo" onclick="selectChar('jitsugokyo',this)"><div class="sel-icon">📖</div><div class="sel-name">実語教</div><div class="sel-desc">人としての根本</div></div>
-        <div class="sel-card" id="char-dojikyo" onclick="selectChar('dojikyo',this)"><div class="sel-icon">🌱</div><div class="sel-name">童子教</div><div class="sel-desc">礼・縁・人の道</div></div>
-      </div>
+  <div class="tp on" id="tab-sogo">
+    <div class="ps">総合診断とアドバイス</div>
+    <div class="cp" id="sogoC">—</div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の関係の全体像</div><div class="aa o">▼</div></div><div class="ab o" id="sogoD">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">関係を良くするアドバイス</div><div class="aa o">▼</div></div><div class="ab o" id="sogoA">—</div></div>
+    <div style="margin-top:24px;"><div class="sl3">✦ 誰の言葉で語りますか？</div>
+    <div class="g2">
+      <div class="sc2 on" id="c-kitoku" onclick="selC('kitoku',this)"><div class="si">🏯</div><div class="sn3">格さん</div><div class="sd2">KITOKUオリジナル</div></div>
+      <div class="sc2" id="c-confucius" onclick="selC('confucius',this)"><div class="si">📜</div><div class="sn3">孔子</div><div class="sd2">論語の言葉で</div></div>
+      <div class="sc2" id="c-sunzi" onclick="selC('sunzi',this)"><div class="si">⚔️</div><div class="sn3">孫子</div><div class="sd2">兵法の言葉で</div></div>
+      <div class="sc2" id="c-musashi" onclick="selC('musashi',this)"><div class="si">🗡️</div><div class="sn3">宮本武蔵</div><div class="sd2">五輪書の言葉で</div></div>
+      <div class="sc2" id="c-saikon" onclick="selC('saikon',this)"><div class="si">🌿</div><div class="sn3">菜根譚</div><div class="sd2">処世の極意で</div></div>
+      <div class="sc2" id="c-shibusawa" onclick="selC('shibusawa',this)"><div class="si">💴</div><div class="sn3">渋沢栄一</div><div class="sd2">論語と算盤で</div></div>
+      <div class="sc2" id="c-jitsugokyo" onclick="selC('jitsugokyo',this)"><div class="si">📖</div><div class="sn3">実語教</div><div class="sd2">人としての根本</div></div>
+      <div class="sc2" id="c-dojikyo" onclick="selC('dojikyo',this)"><div class="si">🌱</div><div class="sn3">童子教</div><div class="sd2">礼・縁・人の道</div></div>
+    </div></div>
+    <div style="margin-top:16px;"><div class="sl3">✦ どんな場面で使いますか？</div>
+    <div class="g2">
+      <div class="sc2 on" id="t-basic" onclick="selT('basic',this)"><div class="si">🤝</div><div class="sn3">基本の相性</div><div class="sd2">二人の縁を読み解く</div></div>
+      <div class="sc2" id="t-hire" onclick="selT('hire',this)"><div class="si">👤</div><div class="sn3">採用判断</div><div class="sd2">この人材を採るべきか</div></div>
+      <div class="sc2" id="t-team" onclick="selT('team',this)"><div class="si">👥</div><div class="sn3">チーム編成</div><div class="sd2">上司・部下の相性</div></div>
+      <div class="sc2" id="t-partner" onclick="selT('partner',this)"><div class="si">🤜</div><div class="sn3">パートナー選定</div><div class="sd2">長期で組めるか判断</div></div>
+      <div class="sc2" id="t-deal" onclick="selT('deal',this)"><div class="si">💬</div><div class="sn3">商談・提案</div><div class="sd2">最適なアプローチ</div></div>
+      <div class="sc2" id="t-project" onclick="selT('project',this)"><div class="si">🚀</div><div class="sn3">プロジェクト</div><div class="sd2">チームの強みと注意点</div></div>
+      <div class="sc2 sf" id="t-kaigo" onclick="selT('kaigo',this)"><div class="si">🌸</div><div class="sn3">親の介護・家族の絆</div><div class="sd2">大切な親との残りの時間を最善に</div></div>
     </div>
-
-    <!-- シチュエーション選択 -->
-    <div style="margin-top:16px;">
-      <div class="sec-label">✦ どんな場面で使いますか？</div>
-      <div class="grid2">
-        <div class="sel-card active" id="sit-basic" onclick="selectSit('basic',this)"><div class="sel-icon">🤝</div><div class="sel-name">基本の相性</div><div class="sel-desc">二人の縁を読み解く</div></div>
-        <div class="sel-card" id="sit-hire" onclick="selectSit('hire',this)"><div class="sel-icon">👤</div><div class="sel-name">採用判断</div><div class="sel-desc">この人材を採るべきか</div></div>
-        <div class="sel-card" id="sit-team" onclick="selectSit('team',this)"><div class="sel-icon">👥</div><div class="sel-name">チーム編成</div><div class="sel-desc">上司・部下の相性</div></div>
-        <div class="sel-card" id="sit-partner" onclick="selectSit('partner',this)"><div class="sel-icon">🤜</div><div class="sel-name">パートナー選定</div><div class="sel-desc">長期で組めるか判断</div></div>
-        <div class="sel-card" id="sit-deal" onclick="selectSit('deal',this)"><div class="sel-icon">💬</div><div class="sel-name">商談・提案</div><div class="sel-desc">最適なアプローチ</div></div>
-        <div class="sel-card" id="sit-project" onclick="selectSit('project',this)"><div class="sel-icon">🚀</div><div class="sel-name">プロジェクト</div><div class="sel-desc">チームの強みと注意点</div></div>
-      </div>
-      <button class="ai-btn" id="aiBtn" onclick="generateReport()" style="margin-top:12px;">✦ AI深掘りレポートを生成する</button>
-      <div style="font-size:.6rem;color:var(--mist);text-align:center;margin-top:6px;" id="sitHint">採用・配属・ビジネス判断に使える詳細レポート</div>
+    <button class="ai-btn" id="aiBtn" onclick="genReport()" style="margin-top:12px;">✦ AI深掘りレポートを生成する</button>
+    <div style="font-size:.6rem;color:var(--gold);text-align:center;margin-top:6px;" id="cntHint"></div>
     </div>
-
-    <!-- レポート表示 -->
-    <div id="reportArea" style="display:none;margin-top:16px;">
-      <div class="sec-label">✦ AI深掘りレポート（<span id="reportCharLabel">格さん</span>）</div>
-      <div id="reportLoading" style="text-align:center;padding:24px;display:none;"><div class="loading-dot"></div><div style="font-size:.75rem;color:var(--mist);margin-top:10px;">縁を読み解いています…</div></div>
-      <div class="ai-report-text" id="reportText" style="display:none;"></div>
+    <div id="rptArea" style="display:none;margin-top:16px;">
+      <div class="sl3">✦ AI深掘りレポート（<span id="rptChar">格さん</span>）</div>
+      <div id="rptLoading" style="text-align:center;padding:24px;display:none;"><div class="ld"></div><div style="font-size:.75rem;color:var(--mist);margin-top:10px;">縁を読み解いています…</div></div>
+      <div class="art" id="rptText" style="display:none;"></div>
     </div>
   </div>
 
-  <!-- ⑥ 今日 -->
-  <div class="tab-pane" id="tab-today">
-    <div class="pane-sub">今日できること</div>
-    <div class="today-box"><div class="today-ttl">🌿 今日の関係処方箋</div><div class="today-action" id="todayAction">—</div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">今日の第3のピース（色）</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="todayColor">—</div></div>
-    <div class="accord"><div class="accord-head" onclick="toggleAccord(this)"><div class="accord-ttl">今日の伝え方のコツ</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="todayHow">—</div></div>
+  <div class="tp" id="tab-honmei">
+    <div class="ps">宿命的な相性</div>
+    <div class="sr"><div class="sb"><div class="sl2">あなた</div><div class="sn2" id="myH">—</div><div class="se" id="myHE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2" id="pLbl">相手</div><div class="sn2" id="pH">—</div><div class="se" id="pHE">—</div></div></div>
+    <div class="cp" id="hC">—</div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">この関係の本質</div><div class="aa o">▼</div></div><div class="ab o" id="hD">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の強み</div><div class="aa o">▼</div></div><div class="ab o" id="hS">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">注意すること</div><div class="aa o">▼</div></div><div class="ab o" id="hCa">—</div></div>
+  </div>
+
+  <div class="tp" id="tab-tsuki">
+    <div class="ps">精神面・内面の相性</div>
+    <div class="sr"><div class="sb"><div class="sl2">あなたの内面</div><div class="sn2" id="myT">—</div><div class="se" id="myTE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2">相手の内面</div><div class="sn2" id="pT">—</div><div class="se" id="pTE">—</div></div></div>
+    <div class="cp" id="tC">—</div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">精神的なつながり</div><div class="aa o">▼</div></div><div class="ab o" id="tD">—</div></div>
+  </div>
+
+  <div class="tp" id="tab-keisha">
+    <div class="ps">潜在的な性格</div>
+    <div class="sr"><div class="sb"><div class="sl2">あなたの傾斜</div><div class="sn2" id="myK">—</div><div class="se" id="myKE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2">相手の傾斜</div><div class="sn2" id="pK">—</div><div class="se" id="pKE">—</div></div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">あなたの深層の動機</div><div class="aa o">▼</div></div><div class="ab o" id="myKD">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">相手の深層の動機</div><div class="aa o">▼</div></div><div class="ab o" id="pKD">—</div></div>
+  </div>
+
+  <div class="tp" id="tab-nacchi">
+    <div class="ps">魂の音色の分析</div>
+    <div class="sr"><div class="sb"><div class="sl2">あなたの納音</div><div class="sn2" id="myN">—</div><div class="se" id="myNE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2">相手の納音</div><div class="sn2" id="pN">—</div><div class="se" id="pNE">—</div></div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">あなたの魂の音色</div><div class="aa o">▼</div></div><div class="ab o" id="myND">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">相手の魂の音色</div><div class="aa o">▼</div></div><div class="ab o" id="pND">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の納音の共鳴</div><div class="aa o">▼</div></div><div class="ab o" id="nD">—</div></div>
+  </div>
+
+  <div class="tp" id="tab-today">
+    <div class="ps">今日できること</div>
+    <div class="tb2"><div class="tt">🌿 今日の関係処方箋</div><div class="ta" id="todayA">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">今日の第3のピース（色）</div><div class="aa o">▼</div></div><div class="ab o" id="todayC">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">今日の伝え方のコツ</div><div class="aa o">▼</div></div><div class="ab o" id="todayH">—</div></div>
   </div>
 </div>
 
 <script>
-/* ===== APIキー設定 ===== */
-// APIキーはVercel環境変数で管理（api/groq.js経由）
-/* ====================== */
+var STARS={1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
+var DB={'水木':{t:'s',l:'水生木 ― 最高の相性',d:'水が木を育てる関係。サポートが成長を促します。',s:'相手のサポートを受けて力を発揮できます。',c:'甘えすぎず自立した姿勢も大切です。'},'木火':{t:'s',l:'木生火 ― 最高の相性',d:'木が火に燃料を与える関係。熱量が増幅します。',s:'共に取り組む仕事で大きな成果が出ます。',c:'熱くなりすぎず冷静さも大切に。'},'火土':{t:'s',l:'火生土 ― 最高の相性',d:'火が土を豊かにする関係。情熱が基盤を強固にします。',s:'情熱を地に足のついた形に変換できます。',c:'変化のペースを意識して進みましょう。'},'土金':{t:'s',l:'土生金 ― 最高の相性',d:'土が金を生み出す関係。安定が決断力を磨きます。',s:'積み重ねが確かな実力につながります。',c:'慎重になりすぎずタイミングを逃さないよう。'},'金水':{t:'s',l:'金生水 ― 最高の相性',d:'金が水を生み出す関係。決断力が柔軟な発想を引き出します。',s:'リードし調整する理想的な協力関係です。',c:'引っ張りすぎず相手のペースも尊重しましょう。'},'木土':{t:'c',l:'木剋土 ― 緊張感のある関係',d:'一方がリードしすぎると摩擦が生まれます。',s:'違いを認め合うことで補完関係になれます。',c:'自分のやり方を押し付けず相手を尊重しましょう。'},'土水':{t:'c',l:'土剋水 ― 緊張感のある関係',d:'安定志向が相手の柔軟性を制限しやすい。',s:'バランスが良い判断を生むことがあります。',c:'変化を阻まず安定を添える意識を持ちましょう。'},'水火':{t:'c',l:'水剋火 ― 緊張感のある関係',d:'行き過ぎた情熱を整える役割も担います。',s:'冷静な判断力が暴走を防ぎます。',c:'相手の熱意を否定せず適切に整える視点を。'},'火金':{t:'c',l:'火剋金 ― 緊張感のある関係',d:'情熱が判断力を揺さぶります。',s:'情熱が決断に勢いを与え大胆な行動ができます。',c:'感情的な判断を避け冷静なタイミングで決断を。'},'金木':{t:'c',l:'金剋木 ― 緊張感のある関係',d:'鋭い判断力が相手の成長を阻むことも。',s:'明確な基準でぶれない方向性を示せます。',c:'批判より提案を。建設的な言い方を心がけましょう。'},'木木':{t:'y',l:'比和（木） ― 共鳴する関係',d:'価値観が似ているため深く共感できます。',s:'コミュニケーションがスムーズです。',c:'外からの新しい視点を積極的に取り入れましょう。'},'火火':{t:'y',l:'比和（火） ― 共鳴する関係',d:'情熱と行動力が共鳴し大きなエネルギーが生まれます。',s:'大きな目標に向かって一気に進めます。',c:'振り返りの時間を意識的に設けましょう。'},'土土':{t:'y',l:'比和（土） ― 共鳴する関係',d:'安定・継続・信頼が共鳴する関係です。',s:'長期的な信頼関係を築けます。',c:'時には大胆な一手も必要です。'},'金金':{t:'y',l:'比和（金） ― 共鳴する関係',d:'決断力と責任感が共鳴します。',s:'質の高いアウトプットを生み出せます。',c:'完璧主義が摩擦を生むことも。柔軟さを持ちましょう。'},'水水':{t:'y',l:'比和（水） ― 共鳴する関係',d:'柔軟性・適応力・知恵が共鳴します。',s:'深い理解と信頼が自然に生まれます。',c:'どちらかがリーダーシップを担う場面を作りましょう。'}};
+var KEISHA={1:'深い内省と洞察力を持ち人の痛みに静かに寄り添える才能があります。',2:'縁の下の力持ちとして周囲を支えることに喜びを感じます。',3:'新しいことへの好奇心と行動力が潜在的な原動力。',4:'人と人をつなぐことが自然にできる才能があります。',5:'強烈なエネルギーと影響力を持ちます。',6:'高い理想と完成への意志が潜在的な動機。妥協を嫌い最高を追求します。',7:'喜びと楽しさで周囲を活性化します。',8:'一度決めたら動かない強い意志と粘り強さが潜在的な強みです。',9:'真実を見抜く直感と美意識が潜在的な才能。'};
+var NL=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','井泉水','屋上土','霹靂火','松柏木','長流水','沙中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','柘榴木','大海水'];
+var NE=['金','火','木','土','金','火','水','土','金','木','水','土','火','木','水','金','火','木','土','金','火','水','土','金','木','水','土','火','木','水'];
+var ND={'海中金':'深海に眠る秘められた才能。時間をかけて磨かれるほど本物の輝きを放つ晩成型の金。','炉中火':'炉の中で燃え続ける持続する情熱。育てることと創造することに天賦の才を持つ火。','大林木':'大きな森のような包容力とネットワーク。多くの命を育み共生することが使命の木。','路傍土':'道端の土のような忍耐と誠実さ。踏まれるほどに強くなる不屈の大地。','剣鋒金':'剣の刃先のような切れ味と決断力。真理を守り本質を見抜く知性の金。','山頭火':'山頂に立つカリスマの炎。孤高の道標として多くの人を導く使命を持つ火。','澗下水':'岩間を流れる清廉な水。継続力と不屈の精神で深い知性を磨き続ける水。','城頭土':'城の頂上に立つ守護の土。高い視座から誠実に人と組織を守る土。','白蝋金':'白蝋のように柔軟に形を変える美意識の金。環境の中で最も美しく輝く変容の才能。','楊柳木':'柳のようにしなやかな強さと適応力。深い根を持ちながら風に揺れる柔軟な木。','井泉水':'井戸から湧き続ける純粋な水。枯れることなく誰かを潤し続ける慈しみの一滴。','屋上土':'屋根の上の高潔な土。高いところから世を俯瞰し守護し続ける孤独な盾。','霹靂火':'天の雷のような覚醒と瞬間の変革力。一撃で時代を動かす天の電撃。','松柏木':'松と柏のように年輪を刻む品格と一貫性。どんな季節にも緑を保つ不変の木。','長流水':'止まらない大河のような継続力と影響力。多くの命を潤しながら大海へ向かう水。','沙中金':'砂の中に隠れた砂金のような隠れた才能。洗われるほどに本物の輝きを放つ晩成の金。','山下火':'山の麓の夕暮れのような洗練された美意識。深まるほどに美しくなる夜の才能の火。','平地木':'平地に広がる安心感の木。社会の基盤として人々に木陰と安らぎを与える共生の木。','壁上土':'高い壁のような高潔と秩序。清潔な美しさで場を守り整える土。','金箔金':'金箔のような審美眼とプロデュース力。場を聖域に変える価値の証明の金。','覆燈火':'覆いに守られた消えない知性の灯火。嵐の中でも燃え続ける静かな羅針盤の火。','天河水':'銀河から降り注ぐ慈雨のような博愛と高い視座。すべての命を平等に潤す天の水。','大駅土':'四方八方に道が延びるターミナルの土。人・物・情報を循環させる夢の実現力。','釵釧金':'完成された装飾品のような品格と不変の美。磨き抜かれた魂の宝飾の金。','桑柘木':'桑と柘の変容する木。他者のために価値を織りなす利他の知恵の木。','大渓水':'急流のような突破力と意志ある流れ。目標に向かって一直線に進む大渓の水。','沙中土':'砂のようなフィルタリングと柔軟な受容力。隠れた価値を見抜く蒸留の土。','天上火':'天上に輝く太陽のような公明正大と博愛。すべてを平等に照らす慈愛の火。','柘榴木':'柘榴のような逆転と晩成の木。内に秘めた情熱の宝石が時を経て輝く木。','大海水':'大海のような包摂と無限の器。宇宙的な調和で全てを受け止める大海の水。'};
+var TBZ=['まず相手の話を最後まで聞いてから意見を言う日です。','今日は相手に「助かりました」と一言伝える日です。','メールより一本の電話が関係を深める日です。','今日は相手の意見を引き出すことに集中しましょう。','小さな感謝を言葉にするだけで関係が一段上がる日です。'];
+var TLV=['今日は一言「ありがとう」を伝える日です。','相手のそばにいるだけで十分な日です。言葉より存在を。','相手の好きなものを覚えていたことを伝えましょう。','今日は聞き役に徹することで深い信頼が生まれます。','「あなたといると安心する」この一言が最高の贈り物です。'];
+var TFM=['今日は「いつもありがとう」を素直に伝える日です。','一緒に食事をとることが関係を整える最善の行動です。','過去のことより今日のことを話しましょう。','「そうだね」と共感するだけで十分な日です。','小さな手伝いが大きな愛情として伝わる日です。','今日は隣に座るだけで十分です。言葉よりも存在が伝わる日です。','「ありがとう」この一言が今日の最大の処方箋です。'];
+var EC={木:'青・緑',火:'赤・オレンジ',土:'黄・ベージュ・茶',金:'白・金・銀',水:'黒・紺・グレー'};
+var CL={kitoku:'格さん',confucius:'孔子（論語）',sunzi:'孫子（兵法）',musashi:'宮本武蔵（五輪書）',saikon:'菜根譚',shibusawa:'渋沢栄一（論語と算盤）',jitsugokyo:'実語教',dojikyo:'童子教'};
+var CP={kitoku:'琥珀色のトーンで、温かく静かに力強く語ってください。処方箋・調律・共鳴・宇宙の配剤という言葉を自然に使い、最後は具体的な食・色・場の処方箋で締めてください。',confucius:'孔子と論語の精神で語ってください。「子曰く」「仁」「礼」「徳」「君子」という言葉を自然に織り交ぜ、人間関係の本質を簡潔な格言調で深く静かに語ってください。',sunzi:'孫子の兵法の精神で語ってください。「彼を知り己を知れば百戦して殆うからず」など兵法の言葉を自然に使い、ビジネス戦略として二人の相性と動き方を戦略的・簡潔に分析してください。',musashi:'宮本武蔵と五輪書の精神で語ってください。「千日の稽古を鍛とし万日の稽古を錬とす」「場の空気を読む」「機を制する」という言葉を使い、二人の関係を武道・人生の修練として力強く・実直に語ってください。',saikon:'菜根譚の精神で語ってください。「逆境の中にこそ真の力がある」「花は半開を看るに宜し」という処世の極意を使い、二人の関係の深い智慧を静かで深い東洋の言葉で語ってください。',shibusawa:'渋沢栄一の論語と算盤の精神で語ってください。道徳と経済の融合という視点で、二人の関係とビジネスの展望を実直・誠実・前向きなトーンで語ってください。',jitsugokyo:'実語教の精神で語ってください。「人学ばざれば智なし 智なき者は愚人に近し」「山高きゆえに貴からず 樹あるをもって貴しとす」という言葉を使い、二人が互いから学び合える智慧をシンプルで力強く語ってください。',dojikyo:'童子教の精神で語ってください。人としての礼・縁・道という視点で、二人の関係の本質を語ってください。特に家族・介護・親子関係の場面に深く響く温かい言葉を選んでください。'};
+var SL={basic:'基本の相性分析',hire:'採用判断レポート',team:'チーム編成・上司部下の相性',partner:'ビジネスパートナー選定',deal:'商談・提案アプローチ',project:'プロジェクトチームの強みと注意点',kaigo:'親の介護・家族の絆'};
+var SP={basic:'宿命的な相性・内面の共鳴・潜在的な力学の3つの観点から分析してください。',hire:'採用判断の観点から：潜在的な強みと職場での役割、どんな環境で力を発揮するか、採用する場合の育て方・配属先の提案を含めてください。',team:'チーム編成の観点から：上司としての管理スタイル、この組み合わせの強みとなる場面、摩擦が起きやすい場面と対処法を含めてください。',partner:'ビジネスパートナーの観点から：長期的な見通し（3年・5年）、最適な役割分担、契約・合意の際に確認すべきことを含めてください。',deal:'商談・提案の観点から：この相手への最適なアプローチ、響くキーワード・価値観、避けるべき言葉・態度を含めてください。',project:'プロジェクトの観点から：二人の最適な役割分担、このチームの最大の強み、進行中の注意点を含めてください。',kaigo:'親の介護・家族の絆という観点から：この二人の星から見える自然な関わり方、なぜぶつかるのかの本質的な理由、介護の中で心が穏やかになる具体的なアプローチ、感謝を伝える最善のタイミングと方法、そして今この関係で最も大切なことを含めてください。不安を煽らず、5000年の知恵として温かく伝えてください。'};
 
-/* ===== データ ===== */
-var STARS = {1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
-var DB = {
-  '水木':{t:'saiko',l:'水生木 ― 最高の相性',d:'水が木を育てる関係。相手のサポートがあなたの成長を促します。',s:'相手のサポートを受けて伸び伸びと力を発揮できます。',c:'甘えすぎず自立した姿勢も大切です。'},
-  '木火':{t:'saiko',l:'木生火 ― 最高の相性',d:'木が火に燃料を与える関係。互いの熱量が増幅します。',s:'共に取り組む仕事で大きな成果が出ます。',c:'熱くなりすぎず時には冷静さも大切に。'},
-  '火土':{t:'saiko',l:'火生土 ― 最高の相性',d:'火が土を豊かにする関係。情熱が基盤を強固にします。',s:'情熱を地に足のついた形に変換できます。',c:'変化のペースを意識して進みましょう。'},
-  '土金':{t:'saiko',l:'土生金 ― 最高の相性',d:'土が金を生み出す関係。安定が決断力を磨きます。',s:'積み重ねが確かな実力につながります。',c:'慎重になりすぎずタイミングを逃さないよう。'},
-  '金水':{t:'saiko',l:'金生水 ― 最高の相性',d:'金が水を生み出す関係。決断力が柔軟な発想を引き出します。',s:'あなたがリードし相手が調整する理想的な協力関係です。',c:'引っ張りすぎず相手のペースも尊重しましょう。'},
-  '木土':{t:'chui',l:'木剋土 ― 緊張感のある関係',d:'木が土を剋す関係。一方がリードしすぎると摩擦が生まれます。',s:'違いを認め合うことで補完関係になれます。',c:'自分のやり方を押し付けず相手を尊重しましょう。'},
-  '土水':{t:'chui',l:'土剋水 ― 緊張感のある関係',d:'土が水を剋す関係。安定志向が相手の柔軟性を制限しやすい。',s:'バランスが結果として良い判断を生むことがあります。',c:'変化を阻まず安定を添える意識を持ちましょう。'},
-  '水火':{t:'chui',l:'水剋火 ― 緊張感のある関係',d:'水が火を消す関係。行き過ぎた情熱を整える役割も担います。',s:'冷静な判断力が暴走を防ぎます。',c:'相手の熱意を否定せず適切に整える視点を。'},
-  '火金':{t:'chui',l:'火剋金 ― 緊張感のある関係',d:'火が金を溶かす関係。情熱が判断力を揺さぶります。',s:'情熱が決断に勢いを与え大胆な行動ができます。',c:'感情的な判断を避け冷静なタイミングで決断を。'},
-  '金木':{t:'chui',l:'金剋木 ― 緊張感のある関係',d:'金が木を剋す関係。鋭い判断力が相手の成長を阻むことも。',s:'明確な基準でぶれない方向性を示せます。',c:'批判より提案を。建設的な言い方を心がけましょう。'},
-  '木木':{t:'yoi',l:'比和（木） ― 共鳴する関係',d:'同じ五行同士。価値観が似ているため深く共感できます。',s:'コミュニケーションがスムーズです。',c:'外からの新しい視点を積極的に取り入れましょう。'},
-  '火火':{t:'yoi',l:'比和（火） ― 共鳴する関係',d:'情熱と行動力が共鳴し大きなエネルギーが生まれます。',s:'大きな目標に向かって一気に進めます。',c:'振り返りの時間を意識的に設けましょう。'},
-  '土土':{t:'yoi',l:'比和（土） ― 共鳴する関係',d:'安定・継続・信頼が共鳴する関係です。',s:'長期的な信頼関係を築けます。',c:'時には大胆な一手も必要です。'},
-  '金金':{t:'yoi',l:'比和（金） ― 共鳴する関係',d:'決断力と責任感が共鳴します。',s:'質の高いアウトプットを生み出せます。',c:'完璧主義が摩擦を生むことも。柔軟さを持ちましょう。'},
-  '水水':{t:'yoi',l:'比和（水） ― 共鳴する関係',d:'柔軟性・適応力・知恵が共鳴します。',s:'深い理解と信頼が自然に生まれます。',c:'どちらかがリーダーシップを担う場面を作りましょう。'}
-};
-var KEISHA = {1:'深い内省と洞察力を持ち人の痛みに静かに寄り添える才能があります。本質を重んじます。',2:'縁の下の力持ちとして周囲を支えることに喜びを感じます。コツコツ積み上げることが得意です。',3:'新しいことへの好奇心と行動力が潜在的な原動力。変化の中に可能性を見出します。',4:'人と人をつなぐことが自然にできる才能があります。コミュニケーションで道を開くタイプです。',5:'強烈なエネルギーと影響力を持ちます。その力の使い方が人生の質を決めます。',6:'高い理想と完成への意志が潜在的な動機。妥協を嫌い最高の形を追求し続けます。',7:'喜びと楽しさを生み出すことで周囲を活性化します。明るさの裏に繊細な感受性を持っています。',8:'一度決めたら動かない強い意志と粘り強さが潜在的な強み。変革期に真価を発揮します。',9:'真実を見抜く直感と美意識が潜在的な才能。感性で世界を捉え光を当てる役割を持っています。'};
-var TODAY_BIZ = ['まず相手の話を最後まで聞いてから意見を言う日です。','今日は相手に「助かりました」と一言伝える日です。','メールより一本の電話が関係を深める日です。','今日の打ち合わせは相手の意見を引き出すことに集中しましょう。','小さな感謝を言葉にするだけで関係が一段上がる日です。'];
-var TODAY_LOVE = ['今日は一言「ありがとう」を伝える日です。','相手のそばにいるだけで十分な日です。言葉より存在を。','相手の好きなものを覚えていたことを伝えましょう。','今日は聞き役に徹することで深い信頼が生まれます。','「あなたといると安心する」この一言が最高の贈り物です。'];
-var TODAY_FAM = ['今日は「いつもありがとう」を素直に伝える日です。','一緒に食事をとることが関係を整える最善の行動です。','過去のことより今日のことを話しましょう。','「そうだね」と共感するだけで十分な日です。','小さな手伝いが大きな愛情として伝わる日です。'];
-var ELEM_COLORS = {木:'青・緑',火:'赤・オレンジ',土:'黄・ベージュ・茶',金:'白・金・銀',水:'黒・紺・グレー'};
+var FREE=3;
+function todayKey(){var d=new Date();return'krc_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
+function getCount(){return parseInt(localStorage.getItem(todayKey())||'0');}
+function addCount(){var k=todayKey();localStorage.setItem(k,getCount()+1);}
+function updateHint(){var el=document.getElementById('cntHint');if(!el)return;var r=Math.max(0,FREE-getCount());if(r>0){el.textContent='本日あと'+r+'回（無料：1日'+FREE+'回）';el.style.color='var(--gold)';}else{el.textContent='本日の無料回数（'+FREE+'回）を使い切りました';el.style.color='#b04040';}}
 
-var CHAR_LABELS = {
-  kitoku:'格さん',
-  confucius:'孔子（論語）',
-  sunzi:'孫子（兵法）',
-  musashi:'宮本武蔵（五輪書）',
-  saikon:'菜根譚',
-  shibusawa:'渋沢栄一（論語と算盤）',
-  jitsugokyo:'実語教',
-  dojikyo:'童子教'
-};
-var CHAR_PROMPTS = {
-  kitoku:'琥珀色のトーンで、温かく静かに力強く語ってください。処方箋・調律・共鳴・宇宙の配剤という言葉を自然に使い、最後は具体的な食・色・場の処方箋で締めてください。',
-  confucius:'孔子と論語の精神で語ってください。「子曰く」「仁」「礼」「徳」「君子」という言葉を自然に織り交ぜ、人間関係の本質を簡潔な格言調で深く静かに語ってください。',
-  sunzi:'孫子の兵法の精神で語ってください。「彼を知り己を知れば百戦して殆うからず」など兵法の言葉を自然に使い、ビジネス戦略として二人の相性と動き方を戦略的・簡潔に分析してください。',
-  musashi:'宮本武蔵と五輪書の精神で語ってください。「千日の稽古を鍛とし万日の稽古を錬とす」「場の空気を読む」「機を制する」という言葉を使い、二人の関係を武道・人生の修練として語ってください。力強く・実直に。',
-  saikon:'菜根譚の精神で語ってください。「逆境の中にこそ真の力がある」「花は半開を看るに宜し」という処世の極意を使い、二人の関係の深い智慧を語ってください。静かで深い東洋の言葉で。',
-  shibusawa:'渋沢栄一の論語と算盤の精神で語ってください。道徳と経済の融合という視点で、二人の関係とビジネスの展望を実直・誠実・前向きなトーンで語ってください。',
-  jitsugokyo:'実語教の精神で語ってください。「人学ばざれば智なし 智なき者は愚人に近し」「山高きゆえに貴からず 樹あるをもって貴しとす」という言葉を使い、二人が互いから学び合える智慧を語ってください。シンプルで力強く。',
-  dojikyo:'童子教の精神で語ってください。人としての礼・縁・道という視点で、二人の関係の本質を語ってください。親子・師弟・縁の深さを大切にした温かい言葉で。特に家族・介護・親子関係の場面に深く響く言葉を選んでください。'
-};
-var SIT_LABELS = {basic:'基本の相性分析',hire:'採用判断レポート',team:'チーム編成・上司部下の相性',partner:'ビジネスパートナー選定',deal:'商談・提案アプローチ',project:'プロジェクトチームの強みと注意点'};
-var SIT_PROMPTS = {
-  basic:'宿命的な相性・内面の共鳴・潜在的な力学の3つの観点から分析してください。',
-  hire:'採用判断の観点から：潜在的な強みと職場での役割、どんな環境で力を発揮するか、採用する場合の育て方・配属先の提案を含めてください。',
-  team:'チーム編成の観点から：上司としての管理スタイル、この組み合わせの強みとなる場面、摩擦が起きやすい場面と対処法を含めてください。',
-  partner:'ビジネスパートナーの観点から：長期的な見通し（3年・5年）、最適な役割分担、契約・合意の際に確認すべきことを含めてください。',
-  deal:'商談・提案の観点から：この相手への最適なアプローチ、響くキーワード・価値観、避けるべき言葉・態度を含めてください。',
-  project:'プロジェクトの観点から：二人の最適な役割分担、このチームの最大の強み、進行中の注意点を含めてください。'
-};
+var curP='biz',curC='kitoku',curT='basic';
+var PL={biz:'💼 ビジネス',love:'💕 恋愛・友人',fam:'👨‍👩‍👧 家族'};
+var RD={};
 
-/* ===== 状態 ===== */
-var currentPurpose = 'biz';
-var currentChar = 'kitoku';
-var currentSit = 'basic';
-var purposeLabels = {biz:'💼 ビジネス',love:'💕 恋愛・友人',fam:'👨‍👩‍👧 家族'};
-var reportData = {};
-
-/* ===== 計算 ===== */
 function pal(n,C){return((n-C+4)%9+9)%9+1;}
-function calcKeisha(h,t){return pal(h,t);}
-function calcHonmeiNum(y,m){var ky=(m<=2)?y-1:y;var ds=(ky%9+9)%9||9;return((11-ds-1)%9+9)%9+1;}
-function calcTsukiNum(y,m){var SK=[0,11,1,2,3,4,5,6,7,8,9,10,11];var ky=(m<=2)?y-1:y;var h=calcHonmeiNum(ky,m);var kM=SK[m];var b=([1,4,7].indexOf(h)>=0)?10:([2,5,8].indexOf(h)>=0)?13:16;return((b-(kM+1)-1)%9+9)%9+1;}
-function getCompatKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'};if(ss[e1]===e2)return e2+e1;if(ss[e2]===e1)return e1+e2;if(e1===e2)return e1+e2;var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};if(sk[e1]===e2)return e1+e2;if(sk[e2]===e1)return e2+e1;return e1+e2;}
+function calcH(y,m){var ky=(m<=2)?y-1:y;var ds=(ky%9+9)%9||9;return((11-ds-1)%9+9)%9+1;}
+function calcT(y,m){var SK=[0,11,1,2,3,4,5,6,7,8,9,10,11];var ky=(m<=2)?y-1:y;var h=calcH(ky,m);var kM=SK[m];var b=([1,4,7].indexOf(h)>=0)?10:([2,5,8].indexOf(h)>=0)?13:16;return((b-(kM+1)-1)%9+9)%9+1;}
+function calcK(h,t){return pal(h,t);}
+function calcNacchi(y){var idx=(y-4+240)%60;return{name:NL[Math.floor(idx/2)],elem:NE[Math.floor(idx/2)]};}
+function ckKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'};if(ss[e1]===e2)return e2+e1;if(ss[e2]===e1)return e1+e2;if(e1===e2)return e1+e2;var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};if(sk[e1]===e2)return e1+e2;if(sk[e2]===e1)return e2+e1;return e1+e2;}
 
-/* ===== UI共通 ===== */
-function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-function setClass(id,c){var e=document.getElementById(id);if(e)e.className=c;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.getElementById('backBtn').style.display=(id==='screenPurpose')?'none':'block';}
-function goBack(){if(document.getElementById('screenResult').classList.contains('active')){showScreen('screenInput');}else{showScreen('screenPurpose');}}
-function switchTab(id,btn){document.querySelectorAll('.tab-pane').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});document.getElementById('tab-'+id).classList.add('active');if(btn)btn.classList.add('active');}
-function toggleAccord(head){var body=head.nextElementSibling;var arr=head.querySelector('.accord-arr');var open=body.classList.contains('open');body.classList.toggle('open',!open);arr.classList.toggle('open',!open);}
-function resetReport(){document.getElementById('reportArea').style.display='none';document.getElementById('reportText').style.display='none';document.getElementById('reportText').textContent='';var btn=document.getElementById('aiBtn');if(btn){btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';}}
+function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function sc(id,c){var e=document.getElementById(id);if(e)e.className=c;}
+function showScr(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');document.getElementById('backBtn').style.display=(id==='s0')?'none':'block';}
+function goBack(){if(document.getElementById('s2').classList.contains('on')){showScr('s1');}else{showScr('s0');}}
+function swTab(id,btn){document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('on');});document.querySelectorAll('.tbb').forEach(function(b){b.classList.remove('on');});document.getElementById('tab-'+id).classList.add('on');if(btn)btn.classList.add('on');}
+function tog(h){var b=h.nextElementSibling;var a=h.querySelector('.aa');b.classList.toggle('o');a.classList.toggle('o');}
+function resetRpt(){document.getElementById('rptArea').style.display='none';document.getElementById('rptText').style.display='none';document.getElementById('rptText').textContent='';var btn=document.getElementById('aiBtn');if(btn){btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';}}
 
-function selectChar(id,el){currentChar=id;document.querySelectorAll('#char-kitoku,#char-confucius,#char-sunzi,#char-musashi,#char-saikon,#char-shibusawa,#char-jitsugokyo,#char-dojikyo').forEach(function(c){c.classList.remove('active');});el.classList.add('active');resetReport();}
-function selectSit(id,el){currentSit=id;document.querySelectorAll('#sit-basic,#sit-hire,#sit-team,#sit-partner,#sit-deal,#sit-project').forEach(function(c){c.classList.remove('active');});el.classList.add('active');resetReport();}
+function selC(id,el){curC=id;document.querySelectorAll('#c-kitoku,#c-confucius,#c-sunzi,#c-musashi,#c-saikon,#c-shibusawa,#c-jitsugokyo,#c-dojikyo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
+function selT(id,el){curT=id;document.querySelectorAll('#t-basic,#t-hire,#t-team,#t-partner,#t-deal,#t-project,#t-kaigo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
+function selP(p){curP=p;document.getElementById('pBadge').textContent=PL[p];document.getElementById('pBadge').className='badge '+p;loadSaved();showScr('s1');}
 
-/* ===== 入力処理 ===== */
-function selectPurpose(p){currentPurpose=p;document.getElementById('purposeBadge').textContent=purposeLabels[p];document.getElementById('purposeBadge').className='section-badge '+p;loadSaved();showScreen('screenInput');}
-function loadSaved(){var saved=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var list=document.getElementById('savedList');var items=document.getElementById('savedItems');if(saved.length>0){list.style.display='block';items.innerHTML=saved.map(function(p,i){var s=STARS[calcHonmeiNum(p.year,p.month)];return '<div class="saved-item" onclick="fillSaved('+i+')"><div><div class="saved-name">'+p.name+'</div><div class="saved-star">'+(s?s.k:'')+'</div></div><div style="color:var(--gold);">→</div></div>';}).join('');}else{list.style.display='none';}}
-function fillSaved(i){var saved=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var p=saved[i];document.getElementById('partnerName').value=p.name;document.getElementById('partnerYear').value=p.year;document.getElementById('partnerMonth').value=p.month;document.getElementById('partnerDay').value=p.day||'';}
-function startReading(){var mY=parseInt(document.getElementById('myYear').value)||0;var mM=parseInt(document.getElementById('myMonth').value)||0;var mD=parseInt(document.getElementById('myDay').value)||1;var nm=document.getElementById('partnerName').value.trim();var pY=parseInt(document.getElementById('partnerYear').value)||0;var pM=parseInt(document.getElementById('partnerMonth').value)||0;var pD=parseInt(document.getElementById('partnerDay').value)||1;if(!mY||!mM){alert('あなたの生年月日（年・月）を入力してください');return;}if(!nm){alert('相手のお名前を入力してください');return;}if(!pY||!pM){alert('相手の生年月日（年・月）を入力してください');return;}localStorage.setItem('kitoku-birth',mY+'-'+mM+'-'+mD);var saved=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var isNew=!saved.find(function(p){return p.name===nm;});if(isNew&&saved.length>=5){alert('無料プランは5人まで登録可能です。');return;}if(isNew){saved.push({name:nm,year:pY,month:pM,day:pD,purpose:currentPurpose});localStorage.setItem('kitoku_relations',JSON.stringify(saved));}showResult(mY,mM,mD,nm,pY,pM,pD);}
+function loadSaved(){
+  var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');
+  var list=document.getElementById('svList'),items=document.getElementById('svItems');
+  if(sv.length>0){
+    list.style.display='block';
+    items.innerHTML=sv.map(function(p,i){var s=STARS[calcH(p.year,p.month)];return '<div class="sd"><div onclick="fillSv('+i+')" style="flex:1;cursor:pointer;"><div class="sn">'+p.name+'</div><div class="ss">'+(s?s.k:'')+'</div></div><button class="del-btn" onclick="delOne('+i+')">✕</button></div>';}).join('');
+  }else{list.style.display='none';}
+}
+function fillSv(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var p=sv[i];document.getElementById('pName').value=p.name;document.getElementById('pY').value=p.year;document.getElementById('pM').value=p.month;document.getElementById('pD').value=p.day||'';}
+function delOne(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');sv.splice(i,1);localStorage.setItem('kitoku_relations',JSON.stringify(sv));loadSaved();}
+function delAll(){if(confirm('登録済みの人を全員削除しますか？')){localStorage.removeItem('kitoku_relations');loadSaved();}}
 
-/* ===== 結果表示 ===== */
-function showResult(mY,mM,mD,nm,pY,pM,pD){
-  var myN=calcHonmeiNum(mY,mM);var pN=calcHonmeiNum(pY,pM);
-  var myS=STARS[myN];var pS=STARS[pN];
-  var myTN=calcTsukiNum(mY,mM);var pTN=calcTsukiNum(pY,pM);
-  var myTS=STARS[myTN]||STARS[1];var pTS=STARS[pTN]||STARS[1];
-  var myKN=calcKeisha(myN,myTN);var pKN=calcKeisha(pN,pTN);
-  var myKS=STARS[myKN]||STARS[1];var pKS=STARS[pKN]||STARS[1];
-
-  setText('resName',nm+'さん');setText('resStar',pS.k+'・'+pS.e+'のエネルギー');
-  document.getElementById('resBadge').textContent=purposeLabels[currentPurpose];document.getElementById('resBadge').className='section-badge '+currentPurpose;setText('partnerLbl',nm+'さん');
-
-  setText('myHonmei',myS.k);setText('myHonmeiEl',myS.e);setClass('myHonmeiEl','star-box-el el-'+myS.e);
-  setText('partnerHonmei',pS.k);setText('partnerHonmeiEl',pS.e);setClass('partnerHonmeiEl','star-box-el el-'+pS.e);
-  var hKey=getCompatKey(myS.e,pS.e);var hC=DB[hKey]||{t:'yoi',l:'個性的な組み合わせ',d:'互いの違いを活かすことが鍵です。',s:'違いを強みに変えられます。',c:'丁寧なコミュニケーションを。'};
-  var hEl=document.getElementById('honmeiCompat');hEl.textContent=hC.l;hEl.className='compat '+hC.t;
-  setText('honmeiDesc',hC.d);setText('honmeiStr',hC.s);setText('honmeiCau',hC.c);
-
-  setText('myTsuki',myTS.k);setText('myTsukiEl',myTS.e);setClass('myTsukiEl','star-box-el el-'+myTS.e);
-  setText('partnerTsuki',pTS.k);setText('partnerTsukiEl',pTS.e);setClass('partnerTsukiEl','star-box-el el-'+pTS.e);
-  var tKey=getCompatKey(myTS.e,pTS.e);var tC=DB[tKey]||{t:'yoi',l:'内面の相性',d:'内面では互いの違いが補完関係を生みます。',s:'深く理解し合うほど深まります。',c:'表面と内面の違いに気づいてあげましょう。'};
-  var tEl=document.getElementById('tsukiCompat');tEl.textContent=tC.l;tEl.className='compat '+tC.t;
-  setText('tsukiDesc',tC.d+'　内面では'+tC.s);
-
-  setText('myKeishaNm',myKS.k);setText('myKeishaEl',myKS.e);setClass('myKeishaEl','star-box-el el-'+myKS.e);
-  setText('partnerKeishaNm',pKS.k);setText('partnerKeishaEl',pKS.e);setClass('partnerKeishaEl','star-box-el el-'+pKS.e);
-  setText('myKeisha',KEISHA[myKN]||KEISHA[myN]||'');setText('partnerKeisha',KEISHA[pKN]||KEISHA[pN]||'');
-
-  setText('myNacchiNm',myS.k);setText('myNacchiEl',myS.e);setClass('myNacchiEl','star-box-el el-'+myS.e);
-  setText('partnerNacchiNm',pS.k);setText('partnerNacchiEl',pS.e);setClass('partnerNacchiEl','star-box-el el-'+pS.e);
-  setText('nacchiDesc','あなた（'+myS.k+'・'+myS.e+'）と相手（'+pS.k+'・'+pS.e+'）の波動の共鳴。五行の相互作用が表面的な相性を超えた魂の次元での結びつきを示しています。傾斜にあなた（'+myKS.k+'）・相手（'+pKS.k+'）の潜在的な縁の深さも加わり、この関係はより立体的に見えてきます。');
-
-  var sEl=document.getElementById('sogoCompat');sEl.textContent=hC.l;sEl.className='compat '+hC.t;
-  setText('sogoDesc','本命星では「'+hC.l+'」の関係。月命星の内面では「'+tC.l+'」という深みがあります。');
-  setText('sogoAdvice',hC.s+'　'+hC.c);
-
-  var d=new Date();var seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
-  var acts=currentPurpose==='biz'?TODAY_BIZ:currentPurpose==='fam'?TODAY_FAM:TODAY_LOVE;
-  setText('todayAction',acts[seed%acts.length]);
-  setText('todayColor','今日は'+pS.e+'のエネルギーを意識して、'+(ELEM_COLORS[pS.e]||'')+'の小物を一つ身につけましょう。');
-  setText('todayHow',currentPurpose==='biz'?'今日は結論から先に伝えると伝わりやすい日です。':currentPurpose==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
-
-  reportData={purpose:currentPurpose,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,compat:hC.l};
-
-  currentChar='kitoku';currentSit='basic';
-  document.querySelectorAll('#char-kitoku,#char-confucius,#char-sunzi,#char-musashi,#char-saikon,#char-shibusawa,#char-jitsugokyo,#char-dojikyo').forEach(function(c,i){c.classList.toggle('active',i===0);});
-  document.querySelectorAll('#sit-basic,#sit-hire,#sit-team,#sit-partner,#sit-deal,#sit-project').forEach(function(c,i){c.classList.toggle('active',i===0);});
-  resetReport();
-
-  document.querySelectorAll('.tab-pane').forEach(function(t){t.classList.remove('active');});
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('tab-sogo').classList.add('active');
-  document.querySelector('#screenResult .tab-btn').classList.add('active');
-  showScreen('screenResult');
+function startReading(){
+  var mYv=parseInt(document.getElementById('mY').value)||0;
+  var mMv=parseInt(document.getElementById('mM').value)||0;
+  var mDv=parseInt(document.getElementById('mD').value)||1;
+  var nm=document.getElementById('pName').value.trim();
+  var pYv=parseInt(document.getElementById('pY').value)||0;
+  var pMv=parseInt(document.getElementById('pM').value)||0;
+  var pDv=parseInt(document.getElementById('pD').value)||1;
+  if(!mYv||!mMv){alert('あなたの生年月日（年・月）を入力してください');return;}
+  if(!nm){alert('相手のお名前を入力してください');return;}
+  if(!pYv||!pMv){alert('相手の生年月日（年・月）を入力してください');return;}
+  localStorage.setItem('kitoku-birth',mYv+'-'+mMv+'-'+mDv);
+  var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');
+  var isNew=!sv.find(function(p){return p.name===nm;});
+  if(isNew&&sv.length>=5){alert('無料プランは5人まで登録可能です。');return;}
+  if(isNew){sv.push({name:nm,year:pYv,month:pMv,day:pDv,purpose:curP});localStorage.setItem('kitoku_relations',JSON.stringify(sv));}
+  showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv);
 }
 
-/* ===== AIレポート生成 ===== */
-function generateReport(){
-  if(!reportData.nm){alert('先に縁を読み解いてください');return;}
+function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
+  var myN=calcH(mYv,mMv),pN=calcH(pYv,pMv);
+  var myS=STARS[myN],pS=STARS[pN];
+  var myTN=calcT(mYv,mMv),pTN=calcT(pYv,pMv);
+  var myTS=STARS[myTN]||STARS[1],pTS=STARS[pTN]||STARS[1];
+  var myKN=calcK(myN,myTN),pKN=calcK(pN,pTN);
+  var myKS=STARS[myKN]||STARS[1],pKS=STARS[pKN]||STARS[1];
+  var myNa=calcNacchi(mYv),pNa=calcNacchi(pYv);
 
-  var btn=document.getElementById('aiBtn');var area=document.getElementById('reportArea');var loading=document.getElementById('reportLoading');var textEl=document.getElementById('reportText');
-  btn.disabled=true;btn.textContent='生成中…';area.style.display='block';loading.style.display='block';textEl.style.display='none';textEl.textContent='';
-  setText('reportCharLabel',CHAR_LABELS[currentChar]||'格さん');
-  var d=reportData;
-  var sitPromptText = SIT_PROMPTS[currentSit]||'';
+  st('rName',nm+'さん');st('rStar',pS.k+'・'+pS.e+'のエネルギー');
+  document.getElementById('rBadge').textContent=PL[curP];document.getElementById('rBadge').className='badge '+curP;
+  st('pLbl',nm+'さん');
 
-  // 二人の五行相性に応じた具体的な処方箋を生成
-  var elemPair = d.myE + 'x' + d.pE;
-  var specificShohosen = '';
-  var sosei = {木:'水',火:'木',土:'火',金:'土',水:'金'};
-  var sokoku = {木:'土',土:'水',水:'火',火:'金',金:'木'};
-  if(d.myE === d.pE){
-    specificShohosen = '【比和の処方箋】同じ五行同士。互いの死角（欠けている五行）を補う第3のピースが必須。';
-  } else if(sosei[d.myE]===d.pE||sosei[d.pE]===d.myE){
-    specificShohosen = '【相生の処方箋】自然な循環がある。ただし死角が必ず生まれる。欠けている五行の人・色・食を加えること。';
-  } else if(sokoku[d.myE]===d.pE){
-    var medBridge = {木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'}[d.myE]||'土';
-    specificShohosen = '【相剋＝死角ゼロの最強チームへの処方箋】間に挟む：'+medBridge+'。色：'+(d.myE==='金'||d.pE==='金'?'黄・茶・ベージュ':d.myE==='火'||d.pE==='火'?'青・緑':'白・銀')+'。食：'+(d.myE==='金'?'すき焼き・鍋・牛肉':'お刺身・お寿司・野菜')+'。';
-  } else if(sokoku[d.pE]===d.myE){
-    var medBridge2 = {木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'}[d.pE]||'土';
-    specificShohosen = '【相剋＝死角ゼロの最強チームへの処方箋】間に挟む：'+medBridge2+'。';
+  st('myH',myS.k);st('myHE',myS.e);sc('myHE','se e'+myS.e);
+  st('pH',pS.k);st('pHE',pS.e);sc('pHE','se e'+pS.e);
+  var hk=ckKey(myS.e,pS.e);
+  var hC=DB[hk]||{t:'y',l:'個性的な組み合わせ',d:'互いの違いを活かすことが鍵です。',s:'違いを強みに変えられます。',c:'丁寧なコミュニケーションを。'};
+  var hEl=document.getElementById('hC');hEl.textContent=hC.l;hEl.className='cp '+hC.t;
+  st('hD',hC.d);st('hS',hC.s);st('hCa',hC.c);
+
+  st('myT',myTS.k);st('myTE',myTS.e);sc('myTE','se e'+myTS.e);
+  st('pT',pTS.k);st('pTE',pTS.e);sc('pTE','se e'+pTS.e);
+  var tk=ckKey(myTS.e,pTS.e);
+  var tC=DB[tk]||{t:'y',l:'内面の相性',d:'内面では互いの違いが補完関係を生みます。',s:'深く理解し合うほど深まります。',c:'表面と内面の違いに気づいてあげましょう。'};
+  var tEl=document.getElementById('tC');tEl.textContent=tC.l;tEl.className='cp '+tC.t;
+  st('tD',tC.d+'　内面では'+tC.s);
+
+  st('myK',myKS.k);st('myKE',myKS.e);sc('myKE','se e'+myKS.e);
+  st('pK',pKS.k);st('pKE',pKS.e);sc('pKE','se e'+pKS.e);
+  st('myKD',KEISHA[myKN]||KEISHA[myN]||'');
+  st('pKD',KEISHA[pKN]||KEISHA[pN]||'');
+
+  st('myN',myNa.name);st('myNE',myNa.elem);sc('myNE','se e'+myNa.elem);
+  st('pN',pNa.name);st('pNE',pNa.elem);sc('pNE','se e'+pNa.elem);
+  st('myND',ND[myNa.name]||'');
+  st('pND',ND[pNa.name]||'');
+  var nRel=myNa.name===pNa.name?'二人は同じ「'+myNa.name+'」の魂の音色を持つ稀な縁。魂の次元で完全に共鳴し合う、宇宙が用意した特別な関係です。':myNa.elem===pNa.elem?'二人の納音は同じ五行（'+myNa.elem+'）で共鳴しています。表面の相性を超えた魂レベルでの深い理解が自然に生まれます。':'「'+myNa.name+'」と「'+pNa.name+'」。異なる音色が重なることで、一人ではたどり着けない深みへと二人の縁は響き合います。';
+  st('nD',nRel);
+
+  var sEl=document.getElementById('sogoC');sEl.textContent=hC.l;sEl.className='cp '+hC.t;
+  st('sogoD','本命星では「'+hC.l+'」の関係。月命星の内面では「'+tC.l+'」という深みがあります。');
+  st('sogoA',hC.s+'　'+hC.c);
+
+  var d2=new Date();var seed=d2.getFullYear()*10000+(d2.getMonth()+1)*100+d2.getDate();
+  var acts=curP==='biz'?TBZ:curP==='fam'?TFM:TLV;
+  st('todayA',acts[seed%acts.length]);
+  st('todayC','今日は'+pS.e+'のエネルギーを意識して、'+(EC[pS.e]||'')+'の小物を一つ身につけましょう。');
+  st('todayH',curP==='biz'?'今日は結論から先に伝えると伝わりやすい日です。':curP==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
+
+  RD={purpose:curP,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myNa:myNa.name,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,pNa:pNa.name,compat:hC.l};
+
+  curC='kitoku';curT='basic';
+  document.querySelectorAll('#c-kitoku,#c-confucius,#c-sunzi,#c-musashi,#c-saikon,#c-shibusawa,#c-jitsugokyo,#c-dojikyo').forEach(function(c,i){c.classList.toggle('on',i===0);});
+  document.querySelectorAll('#t-basic,#t-hire,#t-team,#t-partner,#t-deal,#t-project,#t-kaigo').forEach(function(c,i){c.classList.toggle('on',i===0);});
+  resetRpt();
+  document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('on');});
+  document.querySelectorAll('.tbb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('tab-sogo').classList.add('on');
+  document.querySelector('#s2 .tbb').classList.add('on');
+  updateHint();
+  showScr('s2');
+}
+
+function genReport(){
+  if(!RD.nm){alert('先に縁を読み解いてください');return;}
+  if(getCount()>=FREE){
+    var area=document.getElementById('rptArea'),txt=document.getElementById('rptText');
+    area.style.display='block';
+    txt.textContent='本日の無料回数（1日'+FREE+'回）を使い切りました。\n\n明日またご利用いただけます。\n\n※有料プランでは無制限でご利用いただけます。';
+    txt.style.display='block';
+    return;
   }
-  var prompt = [
-    '【重要】必ず日本語のみで回答してください。他の言語・アルファベット・記号を文中に混ぜないでください。',
+  var btn=document.getElementById('aiBtn'),area=document.getElementById('rptArea'),loading=document.getElementById('rptLoading'),txt=document.getElementById('rptText');
+  btn.disabled=true;btn.textContent='生成中…';area.style.display='block';loading.style.display='block';txt.style.display='none';txt.textContent='';
+  st('rptChar',CL[curC]||'格さん');
+
+  var d=RD;
+  var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};
+  var bm={木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'};
+  var bridge='';
+  if(sk[d.myE]===d.pE){bridge='【相剋処方箋】間に挟む：'+(bm[d.myE]||'土');}
+  else if(sk[d.pE]===d.myE){bridge='【相剋処方箋】間に挟む：'+(bm[d.pE]||'土');}
+
+  var prompt=[
+    '【重要】必ず日本語のみで回答してください。他の言語の文字を一切使わないでください。',
     '',
-    '=== 鑑定師としての役割 ===',
-    CHAR_PROMPTS[currentChar],
+    '=== 語り口 ===',
+    CP[curC],
     '',
-    '=== 絶対に使わない言葉 ===',
-    '・剋する・破壊・凶・悪い・ダメ・当たる・占い・激情・消す・溶かす',
-    '・「可能性があります」という曖昧な表現',
+    '=== 禁止ワード ===',
+    '剋する・破壊・凶・悪い・ダメ・当たる・占い・可能性があります（曖昧表現）',
     '',
-    '=== KITOKUの哲学（必ず守る） ===',
-    '・相剋は「死角ゼロの最強チーム」として全肯定する',
-    '・「合わないからこそ全部できるようになる」という視点で語る',
-    '・相生でも必ず死角があることを伝える',
-    '・間に挟む「第3のピース（色・食・人・場所）」を必ず提案する',
-    '・処方箋は具体的に（例：白・銀のアイテム、鍋料理、水辺のカフェ）',
+    '=== KITOKUの哲学 ===',
+    '相剋は「死角ゼロの最強チーム」として全肯定する。「合わないからこそ全部できるようになる」。',
+    '間に挟む「第3のピース（色・食・場・人）」を必ず提案する。処方箋は具体的に。',
+    bridge,
     '',
-    '=== 五行の処方箋ルール ===',
-    '・金×火（相剋）→ 間に土を挟む。茶・黄・ベージュの場。鍋・牛肉・ピザ。',
-    '・金×木（相剋）→ 間に水を挟む。白・黒の場。お刺身・お寿司。',
-    '・金×水（相生）→ 間に木を挟む。青・緑のアイテム。',
-    '・比和（同じ五行）→ 違う五行の第3者か食・色を加える。',
+    '=== 星データ ===',
+    'あなた：本命'+d.myH+'（'+d.myE+'） 月命'+d.myT+' 傾斜'+d.myK+' 納音'+d.myNa,
+    d.nm+'：本命'+d.pH+'（'+d.pE+'） 月命'+d.pT+' 傾斜'+d.pK+' 納音'+d.pNa,
+    '五行相性：'+d.compat,
     '',
-    '=== 二人の星データ ===',
-    '【あなた】本命星：'+d.myH+'（'+d.myE+'） 月命星：'+d.myT+' 傾斜宮：'+d.myK,
-    '【'+d.nm+'】本命星：'+d.pH+'（'+d.pE+'） 月命星：'+d.pT+' 傾斜宮：'+d.pK,
-    '【五行相性】'+d.compat,
-    specificShohosen,
+    '=== レポート（'+SL[curT]+'） ===',
+    SP[curT],
     '',
-    '【六白×九紫の場合の核心語録】「九紫も六白も自分が一番頭がいいと思っている。だからこそ死角がゼロになり最高の錬金術が生まれる。炎が黄金を精錬するように。間に土（大地）を挟めば完璧」',
-    '【合わない時の言葉】「合わないがゆえに全部できるようになるんです。合わない星が凶方だと思わないように」',
+    '■ 第3のピース処方箋（色・食・場・人物タイプ）',
+    '■ 今すぐできること（今日・今週・今月 各1つ）',
     '',
-    '=== レポートの構成（'+SIT_LABELS[currentSit]+'）===',
-    sitPromptText,
-    '',
-    '■ 第3のピース処方箋',
-    '（二人の死角を埋める具体的な色・食・場・人物タイプ）',
-    '',
-    '■ 今すぐできること',
-    '今日・今週・今月の具体的なアクションを1つずつ',
-    '',
-    '=== 文体の指示 ===',
-    '・700〜900文字程度',
-    '・見出しは「■」を使う',
-    '・最後は希望と行動で締める',
-    '・必ず日本語のみで書く'
+    '700〜900文字。見出しは「■」。最後は希望と行動で締める。日本語のみ。'
   ].join('\n');
 
-  fetch('/api/claude',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt:prompt})
-  })
+  fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})})
   .then(function(r){return r.json();})
-  .then(function(data){loading.style.display='none';var text=data.content&&data.content[0]?data.content[0].text:'レポートの生成に失敗しました。';textEl.textContent=text;textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを再生成する';})
-  .catch(function(){loading.style.display='none';textEl.textContent='エラーが発生しました。しばらくしてお試しください。';textEl.style.display='block';btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';});
+  .then(function(data){
+    loading.style.display='none';
+    var text=data.content&&data.content[0]?data.content[0].text:'レポートの生成に失敗しました。';
+    txt.textContent=text;txt.style.display='block';
+    btn.disabled=false;btn.textContent='✦ AI深掘りレポートを再生成する';
+    addCount();updateHint();
+  })
+  .catch(function(){
+    loading.style.display='none';
+    txt.textContent='エラーが発生しました。しばらくしてお試しください。';
+    txt.style.display='block';
+    btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';
+  });
 }
 
-/* ===== 初期化 ===== */
 (function(){
-  try{var b=localStorage.getItem('kitoku-birth');if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('myYear').value=a[0];if(a[1])document.getElementById('myMonth').value=a[1];if(a[2])document.getElementById('myDay').value=a[2];}}catch(e){}
+  updateHint();
+  try{
+    var b=localStorage.getItem('kitoku-birth');
+    if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('mY').value=a[0];if(a[1])document.getElementById('mM').value=a[1];if(a[2])document.getElementById('mD').value=a[2];}
+  }catch(e){}
 })();
 </script>
 </body>
