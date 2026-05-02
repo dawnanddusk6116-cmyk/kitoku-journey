@@ -2397,12 +2397,6 @@ let gState={};
 })();
 
 // ===== トップ画面ナビゲーション =====
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-
 function goToMystar(){
   // 生年月日入力→星表示のみ（吉方なし）
   window.location.href='mystar.html';
@@ -2414,22 +2408,7 @@ function goToKiho(){
 }
 
 function goToDaily(){
-  // 既存の香り・色・食
-  // まず生年月日が登録済みか確認
-  const b=localStorage.getItem('kitoku-birth');
-  if(b){
-    // 登録済みなら直接dailyへ
-    const arr=b.split('/');
-    if(arr.length>=2){
-      // screenDailyを表示
-      showScreen('screenDaily');
-    } else {
-      showScreen('screenInput');
-      document.getElementById('dailyAfterInput') && (dailyMode=true);
-    }
-  } else {
-    showScreen('screenInput');
-  }
+  openDaily();
 }
 
 function goToAI(){
@@ -2482,7 +2461,7 @@ function showInput(){
 // ══ KITOKU@DAILY ══
 
 function showScreen(id){
-  ['screenInput','screenResult','screenDaily'].forEach(s=>{
+  ['screenTop','screenInput','screenResult','screenDaily'].forEach(s=>{
     const el=document.getElementById(s);
     if(el)el.classList.remove('active');
   });
