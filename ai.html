@@ -1,1 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>気学×AI | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
+.back-btn{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.75rem;padding:7px 12px;border-radius:6px;cursor:pointer;}
 
+/* リード */
+.lead{padding:18px 16px 0;}
+.lead-box{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:16px;}
+.lead-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.1em;color:var(--goldlt);margin-bottom:8px;}
+.lead-text{font-size:.75rem;color:var(--mist);line-height:2;}
+
+/* AI使い分けガイド */
+.guide{margin:14px 0;background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;}
+.guide-label{font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;}
+.guide-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.guide-ai{font-size:.68rem;font-weight:700;min-width:60px;color:var(--goldlt);}
+.guide-desc{font-size:.68rem;color:var(--mist);line-height:1.7;}
+
+/* 注意書き */
+.caution{background:rgba(176,64,64,.04);border:1px solid rgba(176,64,64,.2);border-radius:8px;padding:10px 12px;margin-top:10px;}
+.caution-text{font-size:.65rem;color:#804040;line-height:1.9;}
+
+/* 星情報ブロック */
+.star-block{margin:14px 16px 0;}
+.star-info-box{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;margin-bottom:8px;}
+.star-info-label{font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;}
+.star-info-text{font-size:.78rem;color:var(--snow);line-height:2.1;font-weight:500;}
+.copy-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:8px;padding:11px;font-size:.75rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;display:flex;align-items:center;justify-content:center;gap:6px;}
+.copy-btn:active{background:rgba(100,80,40,.16);}
+
+/* プロンプトカテゴリ */
+.cat{padding:16px 16px 0;}
+.cat-label{font-size:.6rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.cat-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+
+/* プロンプトカード */
+.prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:all .15s;}
+.prompt-card:active{transform:scale(.99);}
+.prompt-head{display:flex;align-items:center;gap:10px;padding:14px;}
+.prompt-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;}
+.prompt-info{flex:1;}
+.prompt-title{font-size:.82rem;font-weight:700;margin-bottom:2px;}
+.prompt-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
+.prompt-arrow{font-size:.7rem;color:rgba(100,80,40,.3);}
+.prompt-body{display:none;padding:0 14px 14px;}
+.prompt-body.open{display:block;}
+.prompt-text{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;margin-bottom:10px;white-space:pre-wrap;}
+.prompt-copy-btn{width:100%;background:var(--goldlt);color:#fff;border:none;border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;}
+.prompt-copy-btn:active{opacity:.85;}
+
+/* フッター */
+.footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
+.footer-note{font-size:.65rem;color:rgba(176,64,64,.6);text-align:center;padding:0 16px 12px;line-height:1.9;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">✦ 気学 × AI</div>
+  <button class="back-btn" onclick="history.back()">← TOPへ戻る</button>
+</header>
+
+<!-- リード -->
+<div class="lead">
+  <div class="lead-box">
+    <div class="lead-title">AIに聞く</div>
+    <div class="lead-text">
+      高額な鑑定も、長い行列も不要です。<br>
+      あなたの星情報を渡すだけで、ChatGPT・Claude・GeminiなどのAIが、あなた専用の答えを返してくれます。<br><br>
+      <strong>正しく聞けば、AIは最高の相談相手になります。</strong>
+    </div>
+
+    <!-- AI使い分けガイド -->
+    <div class="guide">
+      <div class="guide-label">✦ AIの使い分けガイド</div>
+      <div class="guide-row">
+        <div class="guide-ai">Claude</div>
+        <div class="guide-desc">深い対話・哲学的分析・星情報の精緻な読み解き</div>
+      </div>
+      <div class="guide-row">
+        <div class="guide-ai">ChatGPT</div>
+        <div class="guide-desc">幅広い対応・汎用性が高い・具体的な整理が得意</div>
+      </div>
+      <div class="guide-row">
+        <div class="guide-ai">Gemini</div>
+        <div class="guide-desc">Google連携・最新情報に強い・検索との組み合わせ</div>
+      </div>
+      <div class="guide-row" style="margin-bottom:0;">
+        <div class="guide-ai" style="color:#c04040;">⚠</div>
+        <div class="guide-desc" style="color:#904040;">AIは間違う場合があります。位置情報・日程は必ず別途ご確認を。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 星情報ブロック -->
+<div class="star-block">
+  <div class="star-info-box">
+    <div class="star-info-label">① あなたの星情報（自動生成）</div>
+    <div class="star-info-text" id="starInfoText">生年月日を登録すると自動で表示されます</div>
+  </div>
+  <button class="copy-btn" onclick="copyStarInfo()">
+    <span>📋</span> 星情報だけをコピー（単体使用）
+  </button>
+</div>
+
+<!-- カテゴリ：今日・今この瞬間 -->
+<div class="cat">
+  <div class="cat-label">🌅 今日・今この瞬間</div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q1')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🧭</div>
+      <div class="prompt-info">
+        <div class="prompt-title">今の私へのアドバイス</div>
+        <div class="prompt-desc">今の運気・時期にやるべきこと・避けるべきことを琥珀色の言葉で</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q1">
+      <div class="prompt-text" id="qt1">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt1',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q2')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🎯</div>
+      <div class="prompt-info">
+        <div class="prompt-title">今日の決断を相談する</div>
+        <div class="prompt-desc">迷っていることを話して、5000年の知恵で後押ししてもらう</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q2">
+      <div class="prompt-text" id="qt2">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt2',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- カテゴリ：自分を知る -->
+<div class="cat">
+  <div class="cat-label">🪞 自分を知る</div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q3')">
+    <div class="prompt-head">
+      <div class="prompt-icon">📖</div>
+      <div class="prompt-info">
+        <div class="prompt-title">私の取説を教えてください</div>
+        <div class="prompt-desc">強み・才能・動かし方・エネルギーが上がる条件を読み解く</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q3">
+      <div class="prompt-text" id="qt3">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt3',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q4')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🔍</div>
+      <div class="prompt-info">
+        <div class="prompt-title">うまくいかない本当の理由</div>
+        <div class="prompt-desc">「なぜうまくいかないのか」の根本原因を星から読み解く</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q4">
+      <div class="prompt-text" id="qt4">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt4',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q5')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🎵</div>
+      <div class="prompt-info">
+        <div class="prompt-title">納音から読み解く魂の本質</div>
+        <div class="prompt-desc">年・月・日の3つの納音（魂の音色）から、本質・才能・生き方を深く読む</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q5">
+      <div class="prompt-text" id="qt5">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt5',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- カテゴリ：人間関係・仕事 -->
+<div class="cat">
+  <div class="cat-label">🤝 人間関係・仕事</div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q6')">
+    <div class="prompt-head">
+      <div class="prompt-icon">💬</div>
+      <div class="prompt-info">
+        <div class="prompt-title">人間関係で困っていること</div>
+        <div class="prompt-desc">家族・職場・友人関係の悩みを、五行と星の関係から整理する</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q6">
+      <div class="prompt-text" id="qt6">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt6',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q7')">
+    <div class="prompt-head">
+      <div class="prompt-icon">💼</div>
+      <div class="prompt-info">
+        <div class="prompt-title">仕事・キャリアの相談</div>
+        <div class="prompt-desc">今の仕事が合っているか・転職・独立のタイミングを星から見る</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q7">
+      <div class="prompt-text" id="qt7">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt7',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- カテゴリ：健康・お金・未来 -->
+<div class="cat">
+  <div class="cat-label">🌱 健康・お金・未来</div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q8')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🌿</div>
+      <div class="prompt-info">
+        <div class="prompt-title">体調・健康を五行で整える</div>
+        <div class="prompt-desc">疲れやすい・体調が優れない時の、五行的な原因と整え方</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q8">
+      <div class="prompt-text" id="qt8">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt8',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q9')">
+    <div class="prompt-head">
+      <div class="prompt-icon">💰</div>
+      <div class="prompt-info">
+        <div class="prompt-title">お金・豊かさの相談</div>
+        <div class="prompt-desc">金運・豊かさへの向き合い方を、自分の星の特性から読み解く</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q9">
+      <div class="prompt-text" id="qt9">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt9',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+  <div class="prompt-card" onclick="togglePrompt(this,'q10')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🗺</div>
+      <div class="prompt-info">
+        <div class="prompt-title">今後5年のロードマップ</div>
+        <div class="prompt-desc">5年分の年盤データを渡して、方位の読み方・動くタイミングを教えてもらう</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q10">
+      <div class="prompt-text" id="qt10">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt10',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">
+  ⚠ AIの回答はあくまで参考です。最終的な判断はご自身でお願いします。<br>
+  ChatGPT・Claude・Geminiなどお好きなAIに貼り付けてご使用ください。
+</div>
+<div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+
+<script>
+// ============================================================
+// データ・計算
+// ============================================================
+const NACHIN=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','泉中水','屋上土','霹靂火','松柏木','長流水','砂中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','石榴木','大海水'];
+const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const STARS={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const ELEMS={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+const ARCHS={1:'静かな賢者',2:'大地の守人',3:'夜明けの先駆者',4:'縁結びの風',5:'孤高の帝王',6:'天命のリーダー',7:'喜びの使者',8:'不屈の継承者',9:'真実の炎'};
+
+function nc(idx){idx=((idx%60)+60)%60;return NACHIN[Math.floor(idx/2)];}
+function ks(idx){idx=((idx%60)+60)%60;return GAN[idx%10]+ZHI[idx%12];}
+function yIdx(y){return((y-1984)%60+600)%60;}
+function mIdx(y,m){const yi=yIdx(y);const bases=[2,14,26,38,50];const base=bases[(yi%10)%5];const zhi=(m===1)?11:m-2;return(base+zhi)%60;}
+function dIdx(y,m,d){const ref=new Date(2026,4,3);const tgt=new Date(y,m-1,d);const diff=Math.round((tgt-ref)/86400000);return((13+diff)%60+600)%60;}
+
+const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7}};
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};return A[m];}
+function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
+function ds9(n){while(n>9){let s=0;while(n>0){s+=n%10;n=Math.floor(n/10);}n=s;}return n;}
+function m9(x){const r=((x%9)+9)%9;return r===0?9:r;}
+function red(v){if(v>=10)return v-9;if(v<=0)return v+9;return v;}
+function pal(n,C){return((n-C+4)%9+9)%9+1;}
+function sat(P,C){return((C+P-6)%9+9)%9+1;}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+function calcKeisha(h,t){return pal(h,t);}
+function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
+
+// 年盤（今後5年分）
+function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
+
+// ============================================================
+// プロンプト生成
+// ============================================================
+let gInfo={};
+
+function buildStarText(info){
+  return `私は${info.honmei}・月命${info.tsukimei}・傾斜${info.keisha}・同会${info.dokai}・納音 ${info.yNac}（年）${info.mNac}（月）${info.dNac}（日）です。`;
+}
+
+function buildPrompts(info){
+  const base=buildStarText(info);
+  const elem=ELEMS[info.h]||'';
+
+  document.getElementById('qt1').textContent=
+`${base}
+
+今の私の運気と時期について教えてください。
+・今この時期（季節・年・月）にやるべきこと
+・今この時期に避けた方がいいこと
+・今の私が意識するといい一つの言葉
+
+温かく、しかし正直に答えてください。`;
+
+  document.getElementById('qt2').textContent=
+`${base}
+
+今、〇〇について迷っています。（ここに迷っていることを書いてください）
+
+5000年の東洋の知恵と私の星から見て、
+・この迷いはどんな意味があるか
+・どちらの方向に動くべきか
+・今動くべきか、待つべきか
+
+率直に教えてください。`;
+
+  document.getElementById('qt3').textContent=
+`${base}
+
+私の「取説（トリセツ）」を教えてください。
+・私の本質的な強みと才能
+・私が力を発揮できる環境・条件
+・私のエネルギーが上がる行動パターン
+・私の弱点と、その活かし方
+
+他のMBTIや性格診断より深い、星から見た私だけの取説をお願いします。`;
+
+  document.getElementById('qt4').textContent=
+`${base}
+
+「なぜうまくいかないのか」を正直に教えてください。
+・星から見た、私がつまずきやすいパターン
+・${elem}の五行から見た、私の課題
+・今の状況を好転させるための、一番シンプルな行動
+・自分を責めずに前に進むためのアドバイス
+
+厳しくても構いません。正直に教えてください。`;
+
+  document.getElementById('qt5').textContent=
+`私の納音は 年・${info.yNac} 月・${info.mNac} 日・${info.dNac} です。
+本命星は${info.honmei}です。
+
+この3つの納音（魂の音色）を深く読み解いてください。
+・それぞれの納音の本質的な意味
+・3つの組み合わせが示す、私の魂のテーマ
+・この納音を持つ人が才能を開花させる方法
+・歴史上で同じ納音を持つ有名人がいれば教えてください`;
+
+  document.getElementById('qt6').textContent=
+`${base}
+
+今、〇〇との関係で悩んでいます。（相手の星がわかれば書いてください）
+
+・私の星から見た、この関係のパターン
+・${elem}の五行から見た、この悩みの本質
+・相手との関係を改善するための具体的な言葉・行動
+・「手放した方がいい」か「もう少し続けるべき」か
+
+優しく、しかし的確に教えてください。`;
+
+  document.getElementById('qt7').textContent=
+`${base}
+
+仕事・キャリアについて相談します。
+
+・私の星から見た、向いている仕事・役割の特性
+・今の仕事環境が合っているかどうかのチェックポイント
+・転職・独立・現職継続、それぞれのメリットを星から見ると
+・今の私が仕事で一番意識すべきこと
+
+具体的に教えてください。`;
+
+  document.getElementById('qt8').textContent=
+`${base}
+
+最近、体調や気力が優れません。
+
+・${elem}の五行から見た、今の体調不良のパターン
+・私の星から見た、疲れやすい状況・整えやすい状況
+・五行的に今の私に必要な食べ物・飲み物・行動
+・心と体を整えるための、今日からできる小さなこと
+
+優しく、実践的に教えてください。`;
+
+  document.getElementById('qt9').textContent=
+`${base}
+
+お金・豊かさについて相談します。
+
+・私の星から見た、お金との関係のパターン
+・${elem}の五行から見た、豊かさの受け取り方
+・私が無意識にやってしまう、お金を遠ざける行動
+・今の私が豊かさに近づくための、具体的な一歩
+
+正直に、しかし希望を持てる答えをお願いします。`;
+
+  // 今後5年（2026-2030）
+  const y=new Date().getFullYear();
+  const years=[y,y+1,y+2,y+3,y+4];
+  const yearData=years.map(yr=>`${yr}年：中宮${yearCenter(yr)}（${STARS[yearCenter(yr)]}）`).join('\n');
+  document.getElementById('qt10').textContent=
+`${base}
+
+私の今後5年間の年盤データです：
+${yearData}
+
+この5年間のロードマップを教えてください。
+・各年の大まかなテーマと運気の流れ
+・特に力を入れるべき年、慎重に動く年
+・どの年に大きな決断（転職・引越・結婚など）をするのが良いか
+・2028年に向けての準備として今何をすべきか
+
+年ごとに整理して、わかりやすく教えてください。`;
+}
+
+// ============================================================
+// UI操作
+// ============================================================
+function togglePrompt(card,id){
+  const body=document.getElementById(id);
+  const arrow=card.querySelector('.prompt-arrow');
+  const isOpen=body.classList.contains('open');
+  // 全部閉じる
+  document.querySelectorAll('.prompt-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.prompt-arrow').forEach(a=>a.textContent='›');
+  // 今開いてたなら閉じて終了、閉じてたなら開く
+  if(!isOpen){body.classList.add('open');arrow.textContent='˅';}
+}
+
+function copyStarInfo(){
+  const text=gInfo.starText||document.getElementById('starInfoText').textContent;
+  navigator.clipboard.writeText(text).then(()=>flashBtn('copy-btn','✅ コピーしました','📋 星情報だけをコピー（単体使用）'));
+}
+
+function copyPrompt(id,e){
+  e.stopPropagation();
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=e.target;
+    const orig=btn.textContent;
+    btn.textContent='✅ コピーしました！';
+    setTimeout(()=>{btn.textContent=orig;},2000);
+  });
+}
+
+function flashBtn(cls,msg,orig){
+  const btn=document.querySelector('.'+cls);
+  if(!btn)return;
+  const span=btn.querySelector('span');
+  const origHtml=btn.innerHTML;
+  btn.innerHTML=`<span>✅</span> ${msg}`;
+  setTimeout(()=>{btn.innerHTML=origHtml;},2000);
+}
+
+// ============================================================
+// 初期化
+// ============================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+  if(!b)return;
+  const arr=b.split('-').map(Number);
+  const [by,bm,bd=1]=arr;
+  if(!by||!bm)return;
+
+  const {kY,kM}=getKD(by,bm,bd);
+  const h=calcHonmei(kY);
+  let t=calcTsukimei(h,kM);
+  const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
+  const tFK=(h===t&&TAICHUU[t])?TAICHUU[t]:t;
+  const k=calcKeisha(h,tFK);
+  const d=calcDokai(h,tFK);
+
+  const yI=yIdx(by),mI=mIdx(by,bm),dI=dIdx(by,bm,bd);
+  const yNac=nc(yI),mNac=nc(mI),dNac=nc(dI);
+
+  const info={
+    h,honmei:STARS[h]||'',
+    tsukimei:STARS[tFK]||'',
+    keisha:STARS[k]||'',
+    dokai:STARS[d]||'',
+    yNac,mNac,dNac,
+    starText:''
+  };
+  info.starText=buildStarText(info);
+  gInfo=info;
+
+  document.getElementById('starInfoText').textContent=info.starText;
+  buildPrompts(info);
+});
+</script>
+</body>
+</html>
