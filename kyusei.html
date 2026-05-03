@@ -3656,7 +3656,7 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }
 </script>
-</body>
+
 
 
 <script>
@@ -3668,7 +3668,8 @@ if('serviceWorker' in navigator){
     if(saved) document.getElementById('appWrap').setAttribute('data-theme', saved);
   }catch(e){}
 
-  window.addEventListener('DOMContentLoaded', function(){
+  // DOMが既に読み込まれていれば即実行、まだなら待つ
+  function runInit(){
     const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
 
     // 今日の日付セット
@@ -3706,7 +3707,12 @@ if('serviceWorker' in navigator){
 
     // 九星グリッドは常に表示（starGrid描画）
     // → computeAndRenderが内部でbuildStarGrid()を呼ぶ
-  });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', runInit);
+  } else {
+    runInit();
+  }
 })();
 </script>
 </body>
