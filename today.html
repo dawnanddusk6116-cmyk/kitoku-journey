@@ -1,1 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>今日の整え | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;--amber:rgba(196,160,67,.12);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
 
+/* ヘッダー */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
+.back-btn{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.75rem;padding:7px 12px;border-radius:6px;cursor:pointer;}
+
+/* セクション共通 */
+.section{padding:16px 16px 0;}
+.sec-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+.card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+
+/* ① 今日の一言 */
+.kotoba-card{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.kotoba-date{font-size:.62rem;letter-spacing:.14em;color:var(--gold);margin-bottom:8px;}
+.kotoba-text{font-size:.9rem;line-height:2.1;color:var(--goldlt);}
+.kotoba-kanshi{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(100,80,40,.3);float:right;margin-top:-4px;}
+
+/* ② 今日の色 */
+.color-swatch{width:100%;height:56px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;letter-spacing:.1em;}
+.color-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.color-item{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:10px 12px;}
+.color-item-label{font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:4px;}
+.color-item-text{font-size:.75rem;color:var(--snow);line-height:1.7;}
+
+/* ③ 香り */
+.scene-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.scene-tab{border:1px solid var(--rim);background:transparent;border-radius:20px;padding:6px 12px;font-size:.68rem;color:var(--mist);cursor:pointer;font-family:'Noto Serif JP',serif;transition:all .2s;}
+.scene-tab.active{background:var(--gold);border-color:var(--gold);color:#fff;}
+.scene-tab:active{transform:scale(.97);}
+
+.scent-result{min-height:120px;border-radius:10px;background:rgba(100,80,40,.04);border:1px solid var(--rim);padding:14px;}
+.scent-loading{text-align:center;padding:30px 0;color:var(--mist);font-size:.78rem;}
+.scent-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--goldlt);margin-bottom:4px;}
+.scent-reason{font-size:.78rem;color:var(--snow);line-height:2;margin-bottom:10px;}
+.scent-how{font-size:.7rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(100,80,40,.04);border-radius:8px;margin-bottom:10px;}
+.scent-how-label{font-size:.55rem;letter-spacing:.1em;color:var(--gold);margin-bottom:4px;}
+
+/* アフィリエイト枠 */
+.affiliate-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.affiliate-btn{border-radius:8px;padding:10px 8px;text-align:center;font-size:.68rem;font-weight:700;font-family:'Noto Serif JP',serif;border:1px solid;position:relative;overflow:hidden;}
+.affiliate-btn.celes{background:rgba(232,112,160,.08);border-color:rgba(232,112,160,.3);color:#c04080;}
+.affiliate-btn.amazon{background:rgba(255,153,0,.08);border-color:rgba(255,153,0,.3);color:#c07000;}
+.affiliate-badge{position:absolute;top:0;right:0;background:rgba(100,80,40,.15);font-size:.44rem;padding:2px 5px;color:var(--mist);}
+
+/* リトライボタン */
+.retry-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:10px;font-size:.72rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;margin-top:8px;}
+.retry-btn:active{background:rgba(100,80,40,.15);}
+
+/* ④ キーワード */
+.keyword-card{background:linear-gradient(135deg,rgba(100,80,40,.08),rgba(100,80,40,.03));border:1px solid rgba(100,80,40,.2);border-radius:var(--r);padding:16px;margin-bottom:12px;text-align:center;}
+.keyword-text{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--goldlt);letter-spacing:.08em;line-height:1.9;}
+.keyword-sub{font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.8;}
+
+/* 未登録 */
+.no-data{text-align:center;padding:60px 20px;color:var(--mist);}
+.no-data-icon{font-size:2.5rem;margin-bottom:12px;}
+.no-data-btn{display:inline-block;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;padding:10px 24px;font-size:.82rem;color:var(--goldlt);font-weight:700;text-decoration:none;}
+
+.footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">✦ 今日の整え</div>
+  <button class="back-btn" onclick="history.back()">← TOPへ戻る</button>
+</header>
+
+<!-- 未登録 -->
+<div id="noData" style="display:none;">
+  <div class="no-data">
+    <div class="no-data-icon">🌸</div>
+    <div style="font-size:.82rem;line-height:2;margin-bottom:16px;">生年月日を登録すると<br>あなた専用の今日の整えが届きます</div>
+    <a href="index.html" class="no-data-btn">✦ TOPから登録する</a>
+  </div>
+</div>
+
+<!-- メインコンテンツ -->
+<div id="mainContent" style="display:none;">
+
+  <!-- ① 今日の一言 -->
+  <div class="section">
+    <div class="kotoba-card">
+      <div class="kotoba-date" id="todayDate">—</div>
+      <div class="kotoba-kanshi" id="todayKanshi">—</div>
+      <div class="kotoba-text" id="todayKotoba">—</div>
+    </div>
+  </div>
+
+  <!-- ② 今日の色 -->
+  <div class="section">
+    <div class="sec-label">✦ 今日の色</div>
+    <div class="card">
+      <div class="color-swatch" id="colorSwatch">—</div>
+      <div class="color-grid">
+        <div class="color-item">
+          <div class="color-item-label">✦ 洋服・ファッション</div>
+          <div class="color-item-text" id="colorFashion">—</div>
+        </div>
+        <div class="color-item">
+          <div class="color-item-label">✦ アクセサリー・小物</div>
+          <div class="color-item-text" id="colorItem">—</div>
+        </div>
+      </div>
+      <div style="font-size:.68rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(100,80,40,.04);border-radius:8px;">
+        <div style="font-size:.55rem;letter-spacing:.1em;color:var(--gold);margin-bottom:3px;">✦ 五行の知恵</div>
+        <div id="colorWisdom">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 今日の香り -->
+  <div class="section">
+    <div class="sec-label">✦ 今日の香り</div>
+    <div class="card">
+      <!-- シーン選択 -->
+      <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">シーンを選ぶと、あなた専用の香りを提案します</div>
+      <div class="scene-tabs">
+        <button class="scene-tab active" data-scene="朝の準備" onclick="selectScene(this)">🌅 朝の準備</button>
+        <button class="scene-tab" data-scene="仕事・商談" onclick="selectScene(this)">💼 仕事・商談</button>
+        <button class="scene-tab" data-scene="リラックス" onclick="selectScene(this)">🌿 リラックス</button>
+        <button class="scene-tab" data-scene="特別な日" onclick="selectScene(this)">✨ 特別な日</button>
+      </div>
+
+      <!-- 香り提案エリア -->
+      <div class="scent-result" id="scentResult">
+        <div class="scent-loading">シーンを選ぶと香りの提案が届きます</div>
+      </div>
+
+      <!-- アフィリエイト枠（設計済み・公開準備中） -->
+      <div class="affiliate-row" id="affiliateRow" style="display:none;">
+        <div class="affiliate-btn celes" id="celesBtn">
+          <div class="affiliate-badge">準備中</div>
+          🌸 Celesで試せる<br>
+          <span style="font-size:.6rem;opacity:.7;">近日公開予定</span>
+        </div>
+        <div class="affiliate-btn amazon" id="amazonBtn">
+          <div class="affiliate-badge">準備中</div>
+          📦 Amazonで探す<br>
+          <span style="font-size:.6rem;opacity:.7;">近日公開予定</span>
+        </div>
+      </div>
+
+      <button class="retry-btn" id="retryBtn" style="display:none;" onclick="fetchScent()">
+        🔄 もう一度提案してもらう
+      </button>
+    </div>
+  </div>
+
+  <!-- ④ 今日のキーワード -->
+  <div class="section">
+    <div class="sec-label">✦ 今日のキーワード</div>
+    <div class="keyword-card">
+      <div class="keyword-text" id="todayKeyword">—</div>
+      <div class="keyword-sub" id="todayKeywordSub">—</div>
+    </div>
+  </div>
+
+  <div style="height:16px;"></div>
+</div>
+
+<div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+
+<script>
+// ============================================================
+// データ
+// ============================================================
+const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const NACHIN=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','泉中水','屋上土','霹靂火','松柏木','長流水','砂中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','石榴木','大海水'];
+const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+// 星データ（色・食・五行の知恵）
+const STAR_DATA={
+  1:{j:'一白水星',elem:'水',
+     colors:['#1a3a5c','#2a4a6c','#6a8aac'],
+     colorName:'黒・紺・深青',
+     fashion:'ネイビーのシャツ・チャコールグレーのパンツ・黒のワンピース',
+     items:'ブラックパール・ダークグレーのバッグ・紺のマフラー',
+     wisdom:'水は低きに流れて万物を潤す。今日は柔軟に、相手の話に耳を傾けましょう。',
+     keywords:['静かに聴く','縁の下で支える','深く考える','柔軟に流れる'],
+     kwSub:'今日は話すより聴くことで、大切な縁が結ばれます。'},
+  2:{j:'二黒土星',elem:'土',
+     colors:['#8a6820','#c4a043','#e8d080'],
+     colorName:'黄・ベージュ・茶',
+     fashion:'ベージュのブラウス・茶色のコーデュロイ・アイボリーのニット',
+     items:'ゴールドのピアス・黄色のスカーフ・茶色の革財布',
+     wisdom:'大地は問わず語らず、すべての命を育む。今日は黙々と積み上げる日。',
+     keywords:['コツコツ積み上げる','人を育てる','誠実に動く','縁の下で支える'],
+     kwSub:'地道な継続が、やがて大きな実りになります。'},
+  3:{j:'三碧木星',elem:'木',
+     colors:['#2a7a2a','#4a9a4a','#6aba6a'],
+     colorName:'青・緑・碧',
+     fashion:'グリーンのジャケット・青いデニム・碧色のスカーフ',
+     items:'グリーン系のアクセサリー・青いバッグ・ボタニカル柄',
+     wisdom:'雷は一声にして天地を驚かし、万物を目覚めさせる。今日は声を出す日。',
+     keywords:['新しく始める','声を出して動く','スピードで行動','先頭に立つ'],
+     kwSub:'迷っている時間はいりません。今日は即断即決が吉です。'},
+  4:{j:'四緑木星',elem:'木',
+     colors:['#1a7a4a','#3a9a6a','#5aba8a'],
+     colorName:'緑・青緑・白',
+     fashion:'ミントグリーンのトップス・白いリネンシャツ・薄緑のワンピース',
+     items:'グリーン系のブレスレット・白いバッグ・植物モチーフ',
+     wisdom:'風は見えずして動く。縁もまた風の如し。今日は人との縁を大切に。',
+     keywords:['縁を結ぶ','信用を積む','丁寧に伝える','調和をとる'],
+     kwSub:'今日つながった縁が、半年後に大きな実りをもたらします。'},
+  5:{j:'五黄土星',elem:'土',
+     colors:['#8a6820','#d4a830','#f0c840'],
+     colorName:'黄・金・茶',
+     fashion:'マスタードイエローのトップス・金色のアクセ・茶系のコーデ',
+     items:'ゴールドのネックレス・黄色のハンカチ・アンバー系小物',
+     wisdom:'帝王は中に居して四方を治む。今日は中心に立って、周囲を引っ張る日。',
+     keywords:['中心に立つ','困難を引き受ける','強い決意で進む','誰かの力になる'],
+     kwSub:'あなたのエネルギーが最も強く輝く日。大きな挑戦に踏み出しましょう。'},
+  6:{j:'六白金星',elem:'金',
+     colors:['#c8c8c8','#e8e8d8','#f0f0e0'],
+     colorName:'白・金・銀',
+     fashion:'白いシャツ・シルバーグレーのジャケット・ゴールドボタンのコート',
+     items:'シルバーのネックレス・金ボタン・パールのピアス',
+     wisdom:'天は高く、誰よりも先に雨を降らせ、万物を照らす。今日は高い視点で動く。',
+     keywords:['高い理想を持つ','責任を引き受ける','完成させる','リードする'],
+     kwSub:'完璧を求める気持ちが、今日は最大の武器になります。'},
+  7:{j:'七赤金星',elem:'金',
+     colors:['#e0c8c8','#f0d8d8','#ffeaea'],
+     colorName:'白・金・淡いピンク',
+     fashion:'白いワンピース・淡いピンクのブラウス・シャンパンゴールドのアクセ',
+     items:'ローズゴールドのリング・白いバッグ・パールのブレスレット',
+     wisdom:'夕暮れの金色は、一日の労働への最高の報酬である。今日は喜びを分かち合う。',
+     keywords:['笑顔を届ける','喜びを分かち合う','言葉で場を和ませる','楽しむ'],
+     kwSub:'あなたの笑顔が、今日の最高のアイテムです。'},
+  8:{j:'八白土星',elem:'土',
+     colors:['#e8e0d0','#f0e8d8','#d8c8a8'],
+     colorName:'白・ベージュ・アイボリー',
+     fashion:'アイボリーのニット・ベージュのパンツ・白いコート',
+     items:'べっ甲のバレッタ・ナチュラルウッドのアクセ・ベージュのバッグ',
+     wisdom:'山は動かぬように見えて、内側では絶えず変化している。今日は動かず観察する。',
+     keywords:['継承する','改革の準備をする','ゆっくり深める','家族を大切にする'],
+     kwSub:'焦らず、しかし確実に。今日の積み重ねが次の山になります。'},
+  9:{j:'九紫火星',elem:'火',
+     colors:['#c04040','#d06060','#e08080'],
+     colorName:'赤・紫・オレンジ',
+     fashion:'赤いスカーフ・紫のジャケット・オレンジのアクセント',
+     items:'ガーネットのアクセ・赤いバッグ・紫のハンカチ',
+     wisdom:'火は一切を照らし、不純なるものを浄化する。今日は真実を照らす日。',
+     keywords:['真実を見抜く','知性を輝かせる','美しいものを選ぶ','直感を信じる'],
+     kwSub:'あなたの直感が今日は神がかっています。迷ったら感性に従って。'},
+};
+
+// ============================================================
+// 干支・納音
+// ============================================================
+function ks(idx){idx=((idx%60)+60)%60;return GAN[idx%10]+ZHI[idx%12];}
+function nc(idx){idx=((idx%60)+60)%60;return NACHIN[Math.floor(idx/2)];}
+
+// 節入りDB
+const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}};
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};return A[m];}
+function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
+
+// 年干支インデックス
+function yIdx(y){return((y-1984)%60+600)%60;}
+// 月干支
+function mIdx(y,m){const yi=yIdx(y);const bases=[2,14,26,38,50];const base=bases[(yi%10)%5];const zhi=(m===1)?11:m-2;return(base+zhi)%60;}
+// 日干支（基準:2026-05-03=丁丑=13）
+function dIdx(y,m,d){const ref=new Date(2026,4,3);const tgt=new Date(y,m-1,d);const diff=Math.round((tgt-ref)/86400000);return((13+diff)%60+600)%60;}
+
+// 九星計算
+function ds9(n){while(n>9){let s=0;while(n>0){s+=n%10;n=Math.floor(n/10);}n=s;}return n;}
+function m9(x){const r=((x%9)+9)%9;return r===0?9:r;}
+function red(v){if(v>=10)return v-9;if(v<=0)return v+9;return v;}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+
+// 日盤の干支（NICHIBAN_ANCHORS使用）
+const NICHIBAN_ANCHORS={
+  2025:{yoto:{ref:new Date(2025,2,6),stem:1,branch:0,star:9,endDate:new Date(2025,5,21)},into:{ref:new Date(2025,5,22),stem:2,branch:1,star:8}},
+  2026:{yoto:{ref:new Date(2026,2,4),stem:3,branch:1,star:2,endDate:new Date(2026,5,20)},into:{ref:new Date(2026,5,21),stem:2,branch:2,star:7}},
+  2027:{yoto:{ref:new Date(2027,2,6),stem:5,branch:3,star:9,endDate:new Date(2027,5,21)},into:{ref:new Date(2027,5,22),stem:6,branch:4,star:8}},
+  2028:{yoto:{ref:new Date(2028,2,5),stem:7,branch:5,star:7,endDate:new Date(2028,5,20)},into:{ref:new Date(2028,5,21),stem:8,branch:6,star:6}}
+};
+function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS[y];if(!a)return null;const useY=t<=a.yoto.endDate;const anc=useY?a.yoto:a.into;const diff=Math.round((t-anc.ref)/86400000);const stem=((anc.stem+diff)%10+10)%10;const branch=((anc.branch+diff)%12+12)%12;const star=useY?(((anc.star-1+diff)%9)+9)%9+1:(((anc.star-1-diff)%9)+9)%9+1;return{stem,branch,star};}
+function getDayKanshi(y,m,d){const dd=_getDayData(y,m,d);if(!dd){const di=dIdx(y,m,d);return{kan:GAN[di%10],shi:ZHI[di%12]};}return{kan:KAN[dd.stem],shi:SHI[dd.branch]};}
+
+// ============================================================
+// アプリ状態
+// ============================================================
+let gStar={honmei:6,tsukimei:1,honmeiNachin:'天河水',tsukimeiNachin:'天河水',dayNachin:'大駅土'};
+let curScene='朝の準備';
+
+// ============================================================
+// 描画
+// ============================================================
+function init(){
+  // 日付（JST）
+  const now=new Date();
+  const jst=new Date(now.getTime()+9*3600000);
+  const ty=jst.getUTCFullYear(),tm=jst.getUTCMonth()+1,td=jst.getUTCDate();
+  const weekday=['日','月','火','水','木','金','土'];
+  const wd=new Date(ty,tm-1,td).getDay();
+  const dks=getDayKanshi(ty,tm,td);
+
+  document.getElementById('todayDate').textContent=`${ty}年${tm}月${td}日（${weekday[wd]}）`;
+  document.getElementById('todayKanshi').textContent=dks.kan+dks.shi;
+
+  // 生年月日読込
+  const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+  if(!b){document.getElementById('noData').style.display='block';return;}
+  const arr=b.split('-').map(Number);
+  const [by,bm,bd=1]=arr;
+  if(!by||!bm){document.getElementById('noData').style.display='block';return;}
+
+  const {kY,kM}=getKD(by,bm,bd);
+  const h=calcHonmei(kY);
+  const t=calcTsukimei(h,kM);
+  const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
+  const tFK=(h===t&&TAICHUU[t])?TAICHUU[t]:t;
+
+  // 納音
+  const yI=yIdx(by),mI=mIdx(by,bm),dI=dIdx(by,bm,bd);
+  const yNac=nc(yI),mNac=nc(mI),dNac=nc(dI);
+
+  gStar={honmei:h,tsukimei:tFK,honmeiNachin:yNac,tsukimeiNachin:mNac,dayNachin:dNac};
+
+  document.getElementById('mainContent').style.display='block';
+
+  // 各セクション描画
+  drawKotoba(dks.kan,dks.shi,h,ty,tm,td);
+  drawColor(h);
+  drawKeyword(h,tFK);
+}
+
+// ① 今日の一言
+function drawKotoba(kan,shi,honmei,ty,tm,td){
+  const s=STAR_DATA[honmei]||{};
+  const elemMsgs={
+    水:'流れるように、しなやかに。今日は柔軟さが最大の武器です。',
+    木:'新しい芽が出る日。一歩踏み出すことを恐れないで。',
+    火:'光を当てる日。あなたの知性と直感が輝きます。',
+    土:'大地のように静かに、しかし確実に積み上げる日です。',
+    金:'天命の輝きを発揮する日。高い視点で物事を見渡して。'
+  };
+  document.getElementById('todayKotoba').textContent=
+    `今日は${kan}${shi}の日。${s.elem||''}の気が満ちています。\n${elemMsgs[s.elem]||'今日も一歩一歩、着実に。'}`;
+}
+
+// ② 今日の色
+function drawColor(honmei){
+  const s=STAR_DATA[honmei]||{};
+  const cols=s.colors||['#888'];
+  // スウォッチ（グラデーション）
+  const grad=`linear-gradient(135deg, ${cols.join(', ')})`;
+  const sw=document.getElementById('colorSwatch');
+  sw.style.background=grad;
+  sw.style.color='rgba(255,255,255,0.9)';
+  sw.textContent=s.colorName||'—';
+  document.getElementById('colorFashion').textContent=s.fashion||'—';
+  document.getElementById('colorItem').textContent=s.items||'—';
+  document.getElementById('colorWisdom').textContent=s.wisdom||'—';
+}
+
+// ③ 香り（Claude API）
+function selectScene(btn){
+  document.querySelectorAll('.scene-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  curScene=btn.dataset.scene;
+  fetchScent();
+}
+
+async function fetchScent(){
+  const s=STAR_DATA[gStar.honmei]||{};
+  const result=document.getElementById('scentResult');
+  result.innerHTML='<div class="scent-loading">✨ あなた専用の香りを選んでいます…</div>';
+  document.getElementById('retryBtn').style.display='none';
+  document.getElementById('affiliateRow').style.display='none';
+
+  const prompt=`あなたは5000年の東洋の知恵を持つ香り師です。以下のプロフィールの方に、今日の「${curScene}」シーンに最適な香りを提案してください。
+
+【プロフィール】
+- 本命星：${s.j||''}（五行：${s.elem||''}）
+- 年の納音：${gStar.honmeiNachin}
+- 月の納音：${gStar.tsukimeiNachin}
+- 日の納音：${gStar.dayNachin}
+- 今日のシーン：${curScene}
+
+【回答形式（JSONのみ・前後に文字なし）】
+{
+  "name": "香りの名前（成分・系統）",
+  "reason": "この香りを選んだ理由（100字以内・です・ます調）",
+  "howto": "取り入れ方の具体的なアドバイス（80字以内）",
+  "brand": "具体的なブランド名と商品名（市販品・1〜2例）",
+  "celes": "Celesで試せる類似香りのキーワード（例：ベルガモット系）",
+  "keyword": "この香りを一言で（例：凜とした清潔感）"
+}`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await res.json();
+    const text=(data.content||[]).map(c=>c.text||'').join('');
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    renderScent(parsed);
+  }catch(e){
+    result.innerHTML=`<div class="scent-loading" style="color:#b04040;">香りの提案を取得できませんでした<br><span style="font-size:.65rem;">ネットワーク接続をご確認ください</span></div>`;
+    document.getElementById('retryBtn').style.display='block';
+  }
+}
+
+function renderScent(d){
+  const result=document.getElementById('scentResult');
+  result.innerHTML=`
+    <div style="font-size:.6rem;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;">✦ ${curScene}の香り</div>
+    <div class="scent-name">${d.name||'—'}</div>
+    <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;font-style:italic;">${d.keyword||''}</div>
+    <div class="scent-reason">${d.reason||'—'}</div>
+    <div class="scent-how">
+      <div class="scent-how-label">✦ 取り入れ方</div>
+      ${d.howto||'—'}
+    </div>
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+      <span style="color:var(--gold);font-size:.55rem;letter-spacing:.1em;">✦ おすすめブランド</span><br>
+      ${d.brand||'—'}
+    </div>`;
+
+  // アフィリエイト枠を表示（準備中状態）
+  const celesBtn=document.getElementById('celesBtn');
+  const amazonBtn=document.getElementById('amazonBtn');
+  // 将来の実装用パラメータ（設計済み）
+  // celesBtn.href=`https://celes.cloud/search?q=${encodeURIComponent(d.celes||d.name)}`;
+  // amazonBtn.href=`https://amazon.co.jp/s?k=${encodeURIComponent(d.brand)}`;
+  window._scentData={
+    starName:STAR_DATA[gStar.honmei]?.j||'',
+    nachinName:gStar.honmeiNachin,
+    sceneName:curScene,
+    scentName:d.name||'',
+    celesKeyword:d.celes||'',
+    brandName:d.brand||''
+  };
+  document.getElementById('affiliateRow').style.display='grid';
+  document.getElementById('retryBtn').style.display='block';
+}
+
+// ④ キーワード
+function drawKeyword(honmei,tsukimei){
+  const s=STAR_DATA[honmei]||{};
+  const kws=s.keywords||[];
+  const kw=kws[Math.floor(Math.random()*kws.length)]||'今日も着実に';
+  document.getElementById('todayKeyword').textContent='「 '+kw+' 」';
+  document.getElementById('todayKeywordSub').textContent=s.kwSub||'';
+}
+
+// ============================================================
+// 初期化
+// ============================================================
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
