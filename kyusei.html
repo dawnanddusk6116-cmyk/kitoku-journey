@@ -3689,12 +3689,27 @@ if('serviceWorker' in navigator){
         if(ib) ib.value = birth;
       }catch(e){}
 
+      // デバッグ表示エリア
+      const dbg = document.createElement('div');
+      dbg.style.cssText='margin:10px 16px;padding:10px;border-radius:8px;font-size:.7rem;font-family:monospace;';
+      document.getElementById('appWrap').appendChild(dbg);
+      function showDebug(msg, isError){
+        dbg.style.background=isError?'rgba(176,64,64,.1)':'rgba(90,138,58,.1)';
+        dbg.style.border=isError?'1px solid rgba(176,64,64,.3)':'1px solid rgba(90,138,58,.3)';
+        dbg.style.color=isError?'#904040':'#3a6a1a';
+        dbg.textContent=msg;
+      }
       // 計算・星カード表示
       try{
+        showDebug('birth='+birth+' 計算開始...', false);
         const [by,bm,bd] = birth.split('-').map(Number);
         const [ty,tm,td] = [yyyy,+mm,+dd];
+        showDebug('by='+by+' bm='+bm+' bd='+bd, false);
         if(typeof computeAndRender === 'function'){
           computeAndRender(by, bm, bd||1, ty, tm, td, '');
+          showDebug('九星: 描画完了 ✅', false);
+        } else {
+          showDebug('❌ computeAndRender が見つかりません', true);
         }
         // 星カードを表示
         const mc = document.getElementById('mystarCard');
@@ -3702,7 +3717,10 @@ if('serviceWorker' in navigator){
         // 結果ヘッダーを表示
         const rh = document.getElementById('resultHeader');
         if(rh) rh.style.display = 'block';
-      }catch(e){ console.error('kyusei init error:', e); }
+      }catch(e){
+        showDebug('❌ エラー: '+e.message, true);
+        console.error('kyusei init error:', e);
+      }
     }
 
     // 九星グリッドは常に表示（starGrid描画）
