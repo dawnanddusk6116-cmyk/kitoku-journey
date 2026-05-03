@@ -3927,16 +3927,35 @@ if('serviceWorker' in navigator){
       });
     }catch(e){}
 
+    // デバッグ表示エリア
+    const dbg = document.createElement('div');
+    dbg.id='kitoku-debug';
+    dbg.style.cssText='margin:10px 16px;padding:10px;border-radius:8px;font-size:.7rem;font-family:monospace;display:none;';
+    document.getElementById('appWrap').appendChild(dbg);
+    function showDebug(msg, isError){
+      dbg.style.display='block';
+      dbg.style.background=isError?'rgba(176,64,64,.1)':'rgba(90,138,58,.1)';
+      dbg.style.border=isError?'1px solid rgba(176,64,64,.3)':'1px solid rgba(90,138,58,.3)';
+      dbg.style.color=isError?'#904040':'#3a6a1a';
+      dbg.textContent=msg;
+    }
+
     // 計算・描画実行
     try{
+      showDebug('birth='+birth+' / 計算開始...', false);
       const bStr = birth;
       const dStr = yyyy+'-'+mm+'-'+dd;
       const [by,bm,bd] = bStr.split('-').map(Number);
       const [ty,tm,td] = dStr.split('-').map(Number);
+      showDebug('by='+by+' bm='+bm+' bd='+bd+' / ty='+ty+' tm='+tm+' td='+td, false);
       if(typeof computeAndRender === 'function'){
         computeAndRender(by, bm, bd||1, ty, tm, td, '');
+        showDebug('吉方位: 描画完了', false);
+      } else {
+        showDebug('❌ computeAndRender が見つかりません', true);
       }
     }catch(e){
+      showDebug('❌ エラー: '+e.message+' / '+e.stack?.split('\n')[1], true);
       console.error('direction init error:', e);
     }
   }
