@@ -934,59 +934,101 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 </head>
 <body>
 <div class="app-wrap" id="appWrap" data-theme="dark">
-
-  <!-- ヘッダー -->
   <div class="app-header">
     <div class="header-logo">✦ 九星を知る</div>
     <button class="header-reset" onclick="window.location.href='index.html'">← TOPへ戻る</button>
   </div>
-
-  <!-- ダミー要素（JS互換性・非表示） -->
   <div style="display:none;" aria-hidden="true">
-    <input type="date" id="inputDate">
-    <input type="text" id="inputBirth">
-    <input type="text" id="inputBirthTime">
-    <div id="birthRegistered"></div>
-    <div id="birthNote"></div>
-    <div id="screenInput"></div>
-    <div id="screenResult"></div>
-    <div id="screenDaily"></div>
-    <div id="headerReset"></div>
-    <div id="tab-compass-content"></div>
-    <div id="tab-vessel-content"></div>
-    <div id="rDate"></div>
-    <div id="rKanshi"></div>
-    <div id="rHonmei"></div>
-    <div id="compassWrap"></div>
-    <div id="kichiList"></div>
-    <div id="kyoBody"></div>
-    <div id="banNav"></div>
+    <div id="aiPromptBox"></div>
     <div id="banNavLabel"></div>
     <div id="banNavSub"></div>
-    <div id="todayWord"></div>
-    <div id="todayWordWrap"></div>
-    <div id="slideWrap"></div>
-    <div id="slideTrack"></div>
-    <div id="slideDots"></div>
-    <div id="nayamiMode"></div>
-    <div id="nayamiMessage"></div>
-    <div id="nayamiMsgText"></div>
-    <input id="v-sei"><input id="v-mei"><input id="v-furi">
+    <div id="bat-label-bat"></div>
+    <input id="bat-manual">
+    <div id="bat-manual-input"></div>
+    <div id="bat-numeric-input"></div>
+    <div id="bat-val"></div>
+    <div id="batArrow"></div>
+    <div id="battery-result"></div>
+    <div id="batteryBody"></div>
+    <div id="birthNote"></div>
+    <div id="birthRegistered"></div>
+    <div id="child-age-row"></div>
+    <div id="claude-star-text"></div>
+    <div id="compassBottomLabel"></div>
+    <div id="compassLeftLabel"></div>
+    <div id="compassRightLabel"></div>
+    <div id="compassTopLabel"></div>
+    <div id="compassWrap"></div>
+    <div id="copy-toast"></div>
+    <div id="daily-body"></div>
+    <div id="daily-flow-text"></div>
+    <div id="daily-ippo-text"></div>
+    <div id="daily-kaori-text"></div>
+    <div id="disclaimerDetailPanel"></div>
+    <div id="disclaimerPanel"></div>
+    <div id="expert-settings"></div>
+    <div id="feedbackPanel"></div>
+    <div id="feedbackSent"></div>
     <textarea id="feedbackText"></textarea>
+    <div id="gallery-concept"></div>
+    <div id="gallery-kyusei"></div>
+    <div id="gallery-nouin"></div>
+    <div id="gallery-nouin-tabs"></div>
+    <div id="gokaku-card"></div>
+    <div id="gokaku-grid"></div>
+    <div id="gotruth-grid"></div>
+    <div id="headerReset"></div>
+    <div id="heroImg"></div>
+    <div id="heroImgWrap"></div>
+    <div id="imgFullImg"></div>
+    <div id="imgFullPanel"></div>
+    <div id="imgFullTitle"></div>
+    <div id="imgGalleryPanel"></div>
+    <input id="inputBirth">
+    <input id="inputBirthTime">
+    <input id="inputDate">
+    <div id="kichiList"></div>
+    <div id="kitokuAboutPanel"></div>
+    <div id="kyoArrow"></div>
+    <div id="kyoBody"></div>
     <div id="loading"></div>
+    <div id="nayamiMessage"></div>
+    <div id="nayamiMode"></div>
+    <div id="nayamiMsgText"></div>
+    <div id="orient-n"></div>
+    <div id="orient-s"></div>
+    <div id="popupContent"></div>
+    <div id="popupOverlay"></div>
+    <div id="screenInput"></div>
+    <div id="settingPanel"></div>
+    <div id="slideDots"></div>
+    <div id="slideTrack"></div>
+    <div id="slideWrap"></div>
+    <input id="slp-manual">
+    <div id="slp-val"></div>
+    <div id="smode-basic"></div>
+    <div id="smode-expert"></div>
+    <div id="smode-hint"></div>
+    <div id="sw-child-thumb"></div>
+    <div id="sw-child-track"></div>
+    <div id="sw-hero-thumb"></div>
+    <div id="sw-hero-track"></div>
+    <div id="sw-kichaku"></div>
+    <div id="sw-season"></div>
+    <div id="sw-soukou"></div>
+    <div id="sw-teii"></div>
     <div id="sw-tsukimei-satsu"></div>
-    <div id="sw-soukou"></div><div id="sw-teii"></div>
-    <div id="sw-kichaku"></div><div id="sw-season"></div>
+    <div id="tab-vessel-content"></div>
+    <div id="todayWord"></div>
+    <input id="v-furi">
+    <input id="v-mei">
+    <input id="v-sei">
+    <div id="vessel-input-area"></div>
+    <div id="vessel-name-title"></div>
+    <div id="vessel-reading-card"></div>
+    <div id="vessel-rx-card"></div>
+    <div id="vessel-saved-note"></div>
   </div>
-
-  <!-- 結果ヘッダー（日付・干支・星名） -->
-  <div class="result-header" id="resultHeader" style="display:none;">
-    <div class="result-date" id="msDate"></div>
-    <div class="result-kanshi" id="msKanshi"></div>
-    <div class="result-honmei" id="msHonmeiTitle"></div>
-  </div>
-
-  <!-- 自分の星カード（mystarCard）-->
 <div class="screen" id="screenResult">
   <div class="result-header">
     <div class="result-date" id="rDate"></div>
@@ -1062,8 +1104,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   </div>
 
 
-
-  <!-- 九星グリッド（はじめての方へ） -->
   <!-- 九星を知る ── 強調版 -->
   <div style="margin:32px 16px 0;">
     <!-- タイトル帯 -->
@@ -1087,10 +1127,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
 </div>
 
+<!-- ══ 結果画面 ══ -->
 
-
-</div><!-- /app-wrap -->
-
+</div>
 <script>
 // ══════════════════════════════════════════════════════
 //  KITOKU JOURNEY v1.0 — 計算エンジン（v11より継承）
@@ -3656,81 +3695,30 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }
 </script>
-
-
+</body>
+</script>
 
 <script>
-// kyusei.html 専用初期化
 (function(){
-  // テーマ復元
-  try{
-    const saved = localStorage.getItem('kitoku-theme');
-    if(saved) document.getElementById('appWrap').setAttribute('data-theme', saved);
-  }catch(e){}
-
-  // DOMが既に読み込まれていれば即実行、まだなら待つ
+  try{var t=localStorage.getItem('kitoku-theme')||'light';var fs=localStorage.getItem('kitoku-fontsize')||'s';if(typeof setTheme==='function')setTheme(t);if(typeof setFontSize==='function')setFontSize(fs);}catch(e){}
   function runInit(){
-    const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
-
-    // 今日の日付セット
-    const now = new Date();
-    const jst = new Date(now.getTime()+9*3600000);
-    const yyyy = jst.getUTCFullYear();
-    const mm = String(jst.getUTCMonth()+1).padStart(2,'0');
-    const dd = String(jst.getUTCDate()).padStart(2,'0');
-    try{
-      const id = document.getElementById('inputDate');
-      if(id) id.value = yyyy+'-'+mm+'-'+dd;
-    }catch(e){}
-
-    if(birth){
-      try{
-        const ib = document.getElementById('inputBirth');
-        if(ib) ib.value = birth;
-      }catch(e){}
-
-      // デバッグ表示エリア
-      const dbg = document.createElement('div');
-      dbg.style.cssText='margin:10px 16px;padding:10px;border-radius:8px;font-size:.7rem;font-family:monospace;';
-      document.getElementById('appWrap').appendChild(dbg);
-      function showDebug(msg, isError){
-        dbg.style.background=isError?'rgba(176,64,64,.1)':'rgba(90,138,58,.1)';
-        dbg.style.border=isError?'1px solid rgba(176,64,64,.3)':'1px solid rgba(90,138,58,.3)';
-        dbg.style.color=isError?'#904040':'#3a6a1a';
-        dbg.textContent=msg;
-      }
-      // 計算・星カード表示
-      try{
-        showDebug('birth='+birth+' 計算開始...', false);
-        const [by,bm,bd] = birth.split('-').map(Number);
-        const [ty,tm,td] = [yyyy,+mm,+dd];
-        showDebug('by='+by+' bm='+bm+' bd='+bd, false);
-        if(typeof computeAndRender === 'function'){
-          computeAndRender(by, bm, bd||1, ty, tm, td, '');
-          showDebug('九星: 描画完了 ✅', false);
-        } else {
-          showDebug('❌ computeAndRender が見つかりません', true);
-        }
-        // 星カードを表示
-        const mc = document.getElementById('mystarCard');
-        if(mc) mc.style.display = 'block';
-        // 結果ヘッダーを表示
-        const rh = document.getElementById('resultHeader');
-        if(rh) rh.style.display = 'block';
-      }catch(e){
-        showDebug('❌ エラー: '+e.message, true);
-        console.error('kyusei init error:', e);
-      }
+    var birth=localStorage.getItem('kitoku-birth');
+    if(!birth){
+      var wrap=document.getElementById('appWrap');
+      var d=document.createElement('div');
+      d.style.cssText='text-align:center;padding:80px 20px;font-family:Noto Serif JP,serif;';
+      d.innerHTML='⭐<br><div style="font-size:.85rem;line-height:2.2;color:#8a7a60;margin-bottom:20px;">生年月日を登録すると<br>あなた専用の九星情報が表示されます</div><a href=\"index.html\" style=\"display:inline-block;background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);border-radius:10px;padding:12px 28px;font-size:.85rem;color:#5c4010;font-weight:700;text-decoration:none;\">✦ TOPから登録する</a>';
+      wrap.appendChild(d);return;
     }
-
-    // 九星グリッドは常に表示（starGrid描画）
-    // → computeAndRenderが内部でbuildStarGrid()を呼ぶ
+    var now=new Date(),jst=new Date(now.getTime()+9*3600000);
+    var yyyy=jst.getUTCFullYear(),mm=('0'+(jst.getUTCMonth()+1)).slice(-2),dd=('0'+jst.getUTCDate()).slice(-2);
+    var el;
+    el=document.getElementById('inputBirth');if(el)el.value=birth;
+    el=document.getElementById('inputDate');if(el)el.value=yyyy+'-'+mm+'-'+dd;
+    try{var so=localStorage.getItem('kitoku-orient')||'south';if(typeof gState!=='undefined')gState.orient=so;if(typeof updateCompassLabels==='function')updateCompassLabels(so);['s','n'].forEach(function(x){var b=document.getElementById('orient-'+x);if(b)b.classList.toggle('active',(x==='s'&&so==='south')||(x==='n'&&so==='north'));});}catch(e){}
+    try{var sp=birth.split('-');var by=+sp[0],bm=+sp[1],bd=+(sp[2]||1);if(typeof computeAndRender==='function')computeAndRender(by,bm,bd,+yyyy,+mm,+dd,'');}catch(e){console.error('kyusei:',e);}
   }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', runInit);
-  } else {
-    runInit();
-  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',runInit);}else{runInit();}
 })();
 </script>
 </body>
