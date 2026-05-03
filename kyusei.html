@@ -1,1 +1,400 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>九星を知る | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
+.home-btn{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.75rem;padding:7px 12px;border-radius:6px;cursor:pointer;}
+.hero{text-align:center;padding:24px 16px 16px;}
+.hero-label{font-size:.65rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:8px;}
+.hero-desc{font-size:.72rem;color:var(--mist);line-height:2;padding:0 8px;}
+.stars-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 16px 16px;}
+.star-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.star-card:active{transform:scale(.97);}
+.star-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;margin-bottom:4px;line-height:1;}
+.star-name{font-size:.78rem;font-weight:700;margin-bottom:4px;}
+.star-nickname{font-size:.62rem;font-weight:700;margin-bottom:4px;}
+.star-elem{font-size:.6rem;color:var(--mist);}
+.star-tap{font-size:.55rem;color:var(--gold);margin-top:6px;}
+.s1{border-top:3px solid #4a90d9;}.s1 .star-num,.s1 .star-nickname{color:#4a90d9;}
+.s2{border-top:3px solid #8a6820;}.s2 .star-num,.s2 .star-nickname{color:#8a6820;}
+.s3{border-top:3px solid #4a9a4a;}.s3 .star-num,.s3 .star-nickname{color:#4a9a4a;}
+.s4{border-top:3px solid #6ab06a;}.s4 .star-num,.s4 .star-nickname{color:#6ab06a;}
+.s5{border-top:3px solid #888;}.s5 .star-num,.s5 .star-nickname{color:#888;}
+.s6{border-top:3px solid #a0a020;}.s6 .star-num{color:#a0a020;}.s6 .star-nickname{color:#5c4010;}
+.s7{border-top:3px solid #d4667a;}.s7 .star-num,.s7 .star-nickname{color:#d4667a;}
+.s8{border-top:3px solid #7a5a30;}.s8 .star-num,.s8 .star-nickname{color:#7a5a30;}
+.s9{border-top:3px solid #c04040;}.s9 .star-num,.s9 .star-nickname{color:#c04040;}
+.note-box{margin:0 16px 16px;background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:10px;padding:12px 16px;font-size:.68rem;color:var(--mist);line-height:1.9;text-align:center;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;overflow-y:auto;}
+.modal-overlay.open{display:block;}
+.modal{background:var(--bg);border-radius:16px 16px 0 0;padding:24px 20px 40px;position:absolute;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;max-height:90vh;overflow-y:auto;}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(100,80,40,.1);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--mist);}
+.modal-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;text-align:center;margin-bottom:4px;}
+.modal-name{font-size:1.1rem;font-weight:700;text-align:center;margin-bottom:4px;}
+.modal-nick{font-size:.8rem;font-weight:700;text-align:center;margin-bottom:16px;}
+.modal-section{margin-bottom:16px;}
+.modal-sec-label{font-size:.62rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.modal-text{font-size:.8rem;color:var(--mist);line-height:2.1;}
+.modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.modal-tag{background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.2);border-radius:20px;padding:4px 12px;font-size:.65rem;color:var(--goldlt);}
+.footer{text-align:center;font-size:.58rem;color:var(--mist);padding:20px 16px;opacity:.7;}
+.q-card{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;}
+.q-card:active{transform:scale(.97);}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">✦ 九星を知る</div>
+  <button class="home-btn" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+</header>
 
+<!-- あなたの星（全表示） -->
+<div id="myStarSection" style="display:none;padding:16px 16px 4px;">
+  <div style="background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;" id="myStarCard">
+
+    <!-- ヘッダー -->
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--rim);">
+      <div id="msNum" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;line-height:1;">—</div>
+      <div>
+        <div id="msName" style="font-size:1rem;font-weight:700;margin-bottom:3px;">—</div>
+        <div id="msSub" style="font-size:.62rem;color:var(--mist);">—</div>
+      </div>
+    </div>
+
+    <!-- 4分割グリッド -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="q-card" id="card-h" onclick="openStar(window._h)">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin-bottom:5px;">本命星 👆</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:2px;" id="q-h-name">—</div>
+        <div style="font-size:.66rem;margin-bottom:3px;" id="q-h-nick">—</div>
+        <div style="font-size:.6rem;color:var(--gold);">魂の設計図</div>
+        <div style="font-size:.52rem;color:rgba(100,80,40,.4);margin-top:4px;">※タップで詳しく見る</div>
+      </div>
+      <div class="q-card" id="card-t" onclick="openStar(window._t)">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin-bottom:5px;">月命星 👆</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:2px;" id="q-t-name">—</div>
+        <div style="font-size:.66rem;margin-bottom:3px;" id="q-t-nick">—</div>
+        <div style="font-size:.6rem;color:var(--mist);">内なる深層</div>
+        <div style="font-size:.52rem;color:rgba(100,80,40,.4);margin-top:4px;">※タップで詳しく見る</div>
+      </div>
+      <div class="q-card" id="card-k" onclick="openStar(window._k)">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin-bottom:5px;">傾斜 👆</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:2px;" id="q-k-name">—</div>
+        <div style="font-size:.66rem;margin-bottom:3px;" id="q-k-nick">—</div>
+        <div style="font-size:.6rem;color:var(--mist);">才能の方向</div>
+        <div style="font-size:.52rem;color:rgba(100,80,40,.4);margin-top:4px;">※タップで詳しく見る</div>
+      </div>
+      <div class="q-card" id="card-d" onclick="openStar(window._d)">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin-bottom:5px;">同会 👆</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:2px;" id="q-d-name">—</div>
+        <div style="font-size:.66rem;margin-bottom:3px;" id="q-d-nick">—</div>
+        <div style="font-size:.6rem;color:var(--mist);">社会との響き</div>
+        <div style="font-size:.52rem;color:rgba(100,80,40,.4);margin-top:4px;">※タップで詳しく見る</div>
+      </div>
+    </div>
+
+    <!-- 納音 -->
+    <div style="background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;">
+      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin-bottom:10px;">納音（ナッチン）👆</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px;">
+        <div style="text-align:center;">
+          <div id="ny-badge" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.3);border-radius:8px;padding:7px 4px;font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;line-height:1.3;">—</div>
+          <div style="font-size:.55rem;color:var(--mist);">年</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="nm-badge" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.3);border-radius:8px;padding:7px 4px;font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;line-height:1.3;">—</div>
+          <div style="font-size:.55rem;color:var(--mist);">月</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="nd-badge" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.3);border-radius:8px;padding:7px 4px;font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;line-height:1.3;">—</div>
+          <div style="font-size:.55rem;color:var(--mist);">日</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+        <div id="ny-ks" style="text-align:center;font-size:.56rem;color:var(--mist);">年：—</div>
+        <div id="nm-ks" style="text-align:center;font-size:.56rem;color:var(--mist);">月：—</div>
+        <div id="nd-ks" style="text-align:center;font-size:.56rem;color:var(--mist);">日：—</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="hero" style="padding-top:20px;">
+  <div class="hero-label">はじめての方へ</div>
+  <div class="hero-title">自分の星を知る</div>
+  <div class="hero-desc">
+    九星気学では、生まれた年によって<br>
+    「<strong>本命星</strong>」という星が決まります。<br>
+    あなたの星をタップして、その意味を知りましょう。
+  </div>
+</div>
+
+<div class="stars-grid">
+  <div class="star-card s1" onclick="openStar(1)"><div class="star-num">1</div><div class="star-name">一白水星</div><div class="star-nickname">静かな賢者</div><div class="star-elem">水</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s2" onclick="openStar(2)"><div class="star-num">2</div><div class="star-name">二黒土星</div><div class="star-nickname">大地の守人</div><div class="star-elem">土</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s3" onclick="openStar(3)"><div class="star-num">3</div><div class="star-name">三碧木星</div><div class="star-nickname">夜明けの先駆者</div><div class="star-elem">木</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s4" onclick="openStar(4)"><div class="star-num">4</div><div class="star-name">四緑木星</div><div class="star-nickname">縁結びの風</div><div class="star-elem">木</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s5" onclick="openStar(5)"><div class="star-num">5</div><div class="star-name">五黄土星</div><div class="star-nickname">孤高の帝王</div><div class="star-elem">土</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s6" onclick="openStar(6)"><div class="star-num">6</div><div class="star-name">六白金星</div><div class="star-nickname">天命のリーダー</div><div class="star-elem">金</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s7" onclick="openStar(7)"><div class="star-num">7</div><div class="star-name">七赤金星</div><div class="star-nickname">喜びの使者</div><div class="star-elem">金</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s8" onclick="openStar(8)"><div class="star-num">8</div><div class="star-name">八白土星</div><div class="star-nickname">不屈の継承者</div><div class="star-elem">土</div><div class="star-tap">👆 タップ</div></div>
+  <div class="star-card s9" onclick="openStar(9)"><div class="star-num">9</div><div class="star-name">九紫火星</div><div class="star-nickname">真実の炎</div><div class="star-elem">火</div><div class="star-tap">👆 タップ</div></div>
+</div>
+
+<div class="note-box" id="noteBox">
+  ⚠️ 1月・2月生まれの方は前年の星になる場合があります。<br>
+  生年月日を入力すると正確に計算されます。
+</div>
+
+<div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+
+<!-- 詳細モーダル -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-num" id="mNum">—</div>
+    <div class="modal-name" id="mName">—</div>
+    <div class="modal-nick" id="mNick">—</div>
+    <div class="modal-section"><div class="modal-sec-label">✦ 本質・才能</div><div class="modal-text" id="mDesc">—</div></div>
+    <div class="modal-section"><div class="modal-sec-label">✦ キーワード</div><div class="modal-tags" id="mTags"></div></div>
+    <div class="modal-section"><div class="modal-sec-label">✦ 相性の良い星</div><div class="modal-text" id="mCompat">—</div></div>
+    <div class="modal-section"><div class="modal-sec-label">✦ 今日の色・食</div><div class="modal-text" id="mColor">—</div></div>
+  </div>
+</div>
+
+<script>
+// ===== 九星データ =====
+const STARS={
+  1:{num:'1',name:'一白水星',nick:'静かな賢者',elem:'水',color:'#4a90d9',
+    desc:'深い洞察力と共感力を持ち、人の痛みに静かに寄り添える才能があります。表面には穏やかですが、内に秘めた知性と粘り強さは本物です。縁の下の力持ちとして組織を支え、時間をかけて信頼を積み上げていきます。',
+    tags:['洞察力','共感力','粘り強さ','知性','縁の下の力持ち'],
+    compat:'六白金星（相生）・四緑木星（相生）との相性が特に良い',
+    color_food:'色：黒・紺・グレー　食：海産物・黒豆・そば'},
+  2:{num:'2',name:'二黒土星',nick:'大地の守人',elem:'土',color:'#8a6820',
+    desc:'母なる大地のように包容力があり、人を育て支えることに喜びを感じます。コツコツと積み上げる継続力と、誠実で誰にでも平等に接する姿勢が強みです。縁の下の力持ちとして、組織の基盤を静かに支えます。',
+    tags:['包容力','継続力','誠実さ','縁の下','育てる力'],
+    compat:'七赤金星（相生）・九紫火星（相生）との相性が特に良い',
+    color_food:'色：黄・ベージュ・茶　食：根菜・かぼちゃ・芋類'},
+  3:{num:'3',name:'三碧木星',nick:'夜明けの先駆者',elem:'木',color:'#4a9a4a',
+    desc:'雷のような瞬発力と行動力で、新しい時代を切り開く先駆者です。好奇心旺盛で変化を恐れず、停滞を嫌います。アイデアを形にするスピードは9星の中でも随一。若々しいエネルギーで周囲を活気づけます。',
+    tags:['行動力','好奇心','スピード','先駆者','革新'],
+    compat:'一白水星（相生）・二黒土星（相生）との相性が特に良い',
+    color_food:'色：青・緑　食：野菜・山菜・緑茶'},
+  4:{num:'4',name:'四緑木星',nick:'縁結びの風',elem:'木',color:'#6ab06a',
+    desc:'風のように人と人をつなぎ、縁を紡ぐ才能があります。コミュニケーション能力が高く、どんな人とも自然に打ち解けます。信頼のネットワークを広げることで、大きな仕事を成し遂げる人です。',
+    tags:['縁結び','コミュニケーション','調和','信頼','ネットワーク'],
+    compat:'一白水星（相生）・二黒土星（相生）との相性が特に良い',
+    color_food:'色：青・緑　食：野菜・そうめん・風に当たって'},
+  5:{num:'5',name:'五黄土星',nick:'孤高の帝王',elem:'土',color:'#888',
+    desc:'9星の中心に座する王者の星。強烈なエネルギーと圧倒的な存在感を持ちます。その力の使い方が人生の質を決定します。逆境を乗り越えるたびに強くなり、真の意味での帝王へと成長していく宿命を持ちます。',
+    tags:['強烈なエネルギー','存在感','逆境に強い','中心','宿命'],
+    compat:'どの星とも独自の関係を持つ。土の星（二黒・八白）と安定しやすい',
+    color_food:'色：黄・ベージュ　食：大地の恵み・土鍋料理・根菜'},
+  6:{num:'6',name:'六白金星',nick:'天命のリーダー',elem:'金',color:'#a0a020',
+    desc:'天の意志を体現するリーダーの星。高い理想と完成への意志を持ち、妥協を嫌います。責任感が強く、集団の先頭に立つ宿命があります。完璧を追求するゆえに孤高になることもありますが、その背中が多くの人を導きます。',
+    tags:['リーダーシップ','完璧主義','責任感','天命','高い理想'],
+    compat:'一白水星（相生）・土の星（相生）との相性が特に良い',
+    color_food:'色：白・金・銀　食：白い食材・鶏肉・大根'},
+  7:{num:'7',name:'七赤金星',nick:'喜びの使者',elem:'金',color:'#d4667a',
+    desc:'喜びと楽しさで周囲を照らす、天性のエンターテイナー。コミュニケーション能力と発想力に優れ、場の空気を一変させる力があります。明るさの裏に繊細な感受性を秘め、美しいものへの深い感性を持ちます。',
+    tags:['喜び','社交性','発想力','繊細','美意識'],
+    compat:'二黒土星（相生）・五黄土星（相生）との相性が特に良い',
+    color_food:'色：白・金・赤　食：甘いもの・西洋料理・お酒'},
+  8:{num:'8',name:'八白土星',nick:'不屈の継承者',elem:'土',color:'#7a5a30',
+    desc:'山のように揺るがない意志と粘り強さを持ちます。一度決めたら動かない強さは9星随一。変革期に真価を発揮し、困難な状況でも諦めません。伝統を守りながらも、時代の変化を力に変えていきます。',
+    tags:['不屈','継承','粘り強さ','変革','意志の強さ'],
+    compat:'七赤金星（相生）・六白金星（相生）との相性が特に良い',
+    color_food:'色：黄・白・ベージュ　食：山の食材・きのこ・雑穀'},
+  9:{num:'9',name:'九紫火星',nick:'真実の炎',elem:'火',color:'#c04040',
+    desc:'真実を見抜く直感と美意識を持ち、感性で世界を捉えます。光を当てる役割を持ち、隠れた才能や真実を明らかにします。自分が一番頭が良いという自負がある反面、その知性で周囲を照らす使命を持ちます。',
+    tags:['直感','美意識','知性','真実','光を当てる'],
+    compat:'木の星（三碧・四緑）（相生）との相性が特に良い',
+    color_food:'色：赤・紫・オレンジ　食：苦いもの・ハーブ・赤い食材'}
+};
+
+// ===== 干支・納音 =====
+const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const NACHIN=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','泉中水','屋上土','霹靂火','松柏木','長流水','砂中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','石榴木','大海水'];
+
+function ks(idx){idx=((idx%60)+60)%60;return GAN[idx%10]+ZHI[idx%12];}
+function nc(idx){idx=((idx%60)+60)%60;return NACHIN[Math.floor(idx/2)];}
+
+// 年干支インデックス（1984=甲子=0）
+function yIdx(y){return((y-1984)%60+600)%60;}
+
+// 月干支インデックス
+function mIdx(y,m){
+  const yi=yIdx(y);const yg=yi%10;
+  const bases=[2,14,26,38,50];
+  const base=bases[yg%5];
+  const zhi=(m===1)?11:m-2;
+  return(base+zhi)%60;
+}
+
+// 日干支インデックス（基準:2026-05-03=丁丑=13）
+function dIdx(y,m,d){
+  const ref=new Date(2026,4,3);
+  const tgt=new Date(y,m-1,d);
+  const diff=Math.round((tgt-ref)/86400000);
+  return((13+diff)%60+600)%60;
+}
+
+// ===== 九星計算（index.htmlから移植） =====
+function red(v){if(v>=10)return v-9;if(v<=0)return v+9;return v;}
+function pal(n,C){return((n-C+4)%9+9)%9+1;}
+function sat(P,C){return((C+P-6)%9+9)%9+1;}
+
+// 節入り日DB（2020-2028）
+const SEKKI_DB={
+  2020:{1:6,2:4,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},
+  2021:{1:5,2:3,3:5,4:5,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},
+  2022:{1:5,2:4,3:6,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},
+  2023:{1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:8,9:8,10:8,11:8,12:7},
+  2024:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:8,11:7,12:7},
+  2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},
+  2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},
+  2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},
+  2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}
+};
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+
+function getSekkiDay(y,m){
+  if(SEKKI_DB[y])return SEKKI_DB[y][m];
+  const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};
+  return A[m];
+}
+
+function getKD(y,mo,d){
+  const sd=getSekkiDay(y,mo);
+  if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}
+  return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};
+}
+
+function calcHonmei(y,m,d){
+  const {kY}=getKD(y,m,d);
+  const ds=(kY%9+9)%9||9;
+  return((11-ds-1)%9+9)%9+1;
+}
+
+function calcTsukimei(h,kM){
+  const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;
+  return red(b-(kM+1));
+}
+
+// 先天対冲テーブル（本命=月命の場合に使用）
+const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
+
+function calcKeisha(h,t){return pal(h,t);}
+function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
+
+// ===== ロード =====
+window._h=6;window._t=1;window._k=1;window._d=2;
+
+function setCard(pfx,n,role,roleColor){
+  const s=STARS[n];
+  const el=document.getElementById('q-'+pfx+'-name');
+  const el2=document.getElementById('q-'+pfx+'-nick');
+  if(el){el.textContent=s.name;el.style.color=s.color;}
+  if(el2){el2.textContent=s.nick;el2.style.color=s.color;}
+  const card=document.getElementById('card-'+pfx);
+  if(card)card.style.borderTop='2px solid '+s.color+'55';
+}
+
+function loadMystar(){
+  const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+  if(!b){
+    document.getElementById('myStarSection').style.display='block';
+    document.getElementById('msNum').textContent='⭐';
+    document.getElementById('msNum').style.fontSize='2rem';
+    document.getElementById('msName').textContent='あなたの本命星を知りましょう';
+    document.getElementById('msSub').textContent='生年月日を入力すると自動で表示されます';
+    document.getElementById('noteBox').innerHTML='<a href="index.html" style="display:inline-block;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;padding:10px 24px;font-size:.82rem;color:var(--goldlt);font-weight:700;text-decoration:none;font-family:Noto Serif JP,serif;letter-spacing:.1em;">✦ TOPページから生年月日を登録する</a>';
+    return;
+  }
+  const arr=b.split('-').map(Number);
+  const [by,bm,bd=1]=arr;
+  if(!by||!bm)return;
+
+  // 計算
+  const {kM}=getKD(by,bm,bd);
+  const h=calcHonmei(by,bm,bd);
+  const t=calcTsukimei(h,kM);
+  // 本命=月命の場合、先天対冲に変換してから傾斜・同会を算出
+  const tForKD=(h===t&&TAICHUU[t])?TAICHUU[t]:t;
+  const k=calcKeisha(h,tForKD);
+  const dv=calcDokai(h,tForKD);
+
+  window._h=h;window._t=t;window._k=k;window._d=dv;
+
+  const sh=STARS[h];
+
+  // ヘッダー
+  document.getElementById('myStarSection').style.display='block';
+  document.getElementById('msNum').textContent=sh.num;
+  document.getElementById('msNum').style.color=sh.color;
+  document.getElementById('msNum').style.fontSize='3rem';
+  document.getElementById('msName').textContent=sh.name;
+  document.getElementById('msSub').textContent=sh.elem+'の星ー'+{水:'黒・藍',木:'青・緑',火:'赤・紫',土:'黄・茶',金:'白・金・銀'}[sh.elem];
+  document.getElementById('myStarCard').style.borderTop='3px solid '+sh.color;
+
+  // 4枚カード
+  setCard('h',h);setCard('t',t);setCard('k',k);setCard('d',dv);
+
+  // 納音
+  const yI=yIdx(by),mI=mIdx(by,bm),dI=dIdx(by,bm,bd);
+  const yn=nc(yI),mn=nc(mI),dn=nc(dI);
+  document.getElementById('ny-badge').textContent=yn;
+  document.getElementById('nm-badge').textContent=mn;
+  document.getElementById('nd-badge').textContent=dn;
+  document.getElementById('ny-ks').textContent='年：'+ks(yI);
+  document.getElementById('nm-ks').textContent='月：'+ks(mI);
+  document.getElementById('nd-ks').textContent='日：'+ks(dI);
+
+  // 同じ納音をハイライト
+  [['ny-badge',yn],['nm-badge',mn],['nd-badge',dn]].forEach(([id,v])=>{
+    if([yn,mn,dn].filter(x=>x===v).length>=2){
+      const el=document.getElementById(id);
+      el.style.background='rgba(196,160,67,.22)';
+      el.style.borderColor='rgba(196,160,67,.6)';
+      el.style.color='#8a6820';
+    }
+  });
+}
+
+// ===== モーダル =====
+function openStar(n){
+  const s=STARS[n];if(!s)return;
+  document.getElementById('mNum').textContent=s.num;
+  document.getElementById('mNum').style.color=s.color;
+  document.getElementById('mName').textContent=s.name;
+  document.getElementById('mNick').textContent='— '+s.nick+' —';
+  document.getElementById('mNick').style.color=s.color;
+  document.getElementById('mDesc').textContent=s.desc;
+  document.getElementById('mCompat').textContent=s.compat;
+  document.getElementById('mColor').textContent=s.color_food;
+  document.getElementById('mTags').innerHTML=s.tags.map(t=>'<span class="modal-tag">'+t+'</span>').join('');
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modalOverlay')){
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+
+window.addEventListener('DOMContentLoaded',loadMystar);
+</script>
+</body>
+</html>
