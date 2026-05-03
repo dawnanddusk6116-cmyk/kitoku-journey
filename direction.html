@@ -3876,7 +3876,7 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }
 </script>
-</body>
+
 
 
 <script>
@@ -3888,7 +3888,8 @@ if('serviceWorker' in navigator){
     if(saved) document.getElementById('appWrap').setAttribute('data-theme', saved);
   }catch(e){}
 
-  window.addEventListener('DOMContentLoaded', function(){
+  // DOMが既に読み込まれていれば即実行、まだなら待つ
+  function runInit(){
     const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
     if(!birth){
       // 未登録メッセージ
@@ -3938,7 +3939,12 @@ if('serviceWorker' in navigator){
     }catch(e){
       console.error('direction init error:', e);
     }
-  });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', runInit);
+  } else {
+    runInit();
+  }
 })();
 </script>
 </body>
