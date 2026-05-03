@@ -474,7 +474,11 @@ function drawKeyword(honmei,tsukimei){
 // ============================================================
 // 初期化
 // ============================================================
-window.addEventListener('DOMContentLoaded',init);
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',init);
+}else{
+  init();
+}
 </script>
 </body>
 </html>
