@@ -42,13 +42,13 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 .stars-section{padding:20px 16px 0;}
 .stars-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;}
 .stars-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.star-card{background:var(--card);border:1px solid var(--rim);border-top-width:3px;border-radius:var(--r);padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;}
+.star-card{background:var(--card);border:1px solid rgba(100,80,40,.1);border-radius:var(--r);padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;}
 .star-card:active{transform:scale(.97);}
-.star-card-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;line-height:1;margin-bottom:4px;}
-.star-card-name{font-size:.72rem;font-weight:700;margin-bottom:3px;}
-.star-card-arch{font-size:.6rem;font-weight:700;margin-bottom:3px;}
+.star-card-num{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;line-height:1;margin-bottom:3px;}
+.star-card-name{font-size:.72rem;font-weight:600;color:var(--snow);margin-bottom:2px;}
+.star-card-arch{font-size:.62rem;font-weight:700;margin-bottom:2px;}
 .star-card-elem{font-size:.58rem;color:var(--mist);}
-.star-card-tap{font-size:.52rem;color:var(--gold);margin-top:5px;}
+.star-card-tap{font-size:.52rem;color:var(--gold);margin-top:4px;}
 
 /* モーダル */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;overflow-y:auto;}
@@ -69,13 +69,86 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 .no-data-btn{display:inline-block;background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);border-radius:10px;padding:10px 24px;font-size:.82rem;color:var(--goldlt);font-weight:700;text-decoration:none;}
 
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
+.toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
+
+/* ライトモード：方位盤セル */
+[data-theme="light"] .cell-normal{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);}
+[data-theme="light"] .cell-kyo{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);}
+[data-theme="light"] .cell-kichi{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);}
+[data-theme="light"] .cell-daikichi{background:rgba(120,90,20,.18);border-color:rgba(120,90,20,.55);}
+[data-theme="light"] .cell-saikokichi{background:rgba(120,90,20,.26);border-color:rgba(120,90,20,.7);}
+[data-theme="light"] .cell-kichi .cell-num,[data-theme="light"] .cell-daikichi .cell-num,[data-theme="light"] .cell-saikokichi .cell-num{color:#5a3e08;}
+[data-theme="light"] .cell-kyo .cell-num{color:rgba(60,50,40,.4);}
+[data-theme="light"] .cell-normal .cell-num{color:rgba(60,50,40,.4);}
+[data-theme="light"] .cell-kichi .cell-name,[data-theme="light"] .cell-daikichi .cell-name{color:rgba(90,62,8,.7);}
+[data-theme="light"] .compass-grid{background:rgba(120,90,20,.04);border-color:rgba(120,90,20,.2);}
+
+/* ライトモード：方位ラベル */
+[data-theme="light"] .dir-label.kichi,[data-theme="light"] .dir-label.daikichi{color:#5a3e08;}
+[data-theme="light"] .dir-label.kyo{color:rgba(60,50,40,.45);}
+[data-theme="light"] .dir-label.normal{color:rgba(60,50,40,.35);}
+
+[data-theme="light"] .popup-sheet{background:#fefcf8;border-color:rgba(100,80,40,.2);}
+[data-theme="light"] input[type="date"]{background:#fff;color:#1c1208;border-color:rgba(100,80,40,.25);}
+[data-theme="light"] .kyo-list{background:rgba(100,100,120,.06);border-color:rgba(100,100,120,.15);}
+[data-theme="light"] #settingPanel > div{background:#fefcf8!important;}
+[data-theme="light"] .save-note{color:rgba(60,40,10,.55)!important;}
+[data-theme="light"] footer{color:rgba(60,40,10,.45)!important;}
+[data-theme="light"] .ryuha-note{color:#3a2a10!important;}
+[data-theme="light"] .kyo-header{color:rgba(50,50,70,.75)!important;}
+[data-theme="light"] .kyo-dir{color:rgba(50,50,70,.7)!important;}
+[data-theme="light"] .kyo-name{color:rgba(50,50,70,.7)!important;}
+[data-theme="light"] .ai-note-text{color:rgba(40,28,8,.55)!important;}
+[data-theme="light"] .slide-num{color:rgba(100,80,40,.6)!important;}
+[data-theme="light"] .loading-text{color:#7a5a10!important;}
+
+/* ── フォントサイズ切り替え ── */
+html[data-fontsize="m"],html[data-fontsize="m"] body{font-size:18px;}
+html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
+
+/* ── ツールバー（テーマ・フォント） ── */
+.toolbar{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;border-bottom:1px solid var(--rim);
+  background:var(--card);
+}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+
+/* ── ツールバー ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+.tb-btn{background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;}
+.tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
+[data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
+[data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
+[data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.header-reset{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;}
 </style>
 </head>
 <body>
-<header class="hdr">
-  <div class="logo">✦ 九星を知る</div>
-  <button class="back-btn" onclick="history.back()">← TOPへ戻る</button>
-</header>
+<!-- ヘッダー -->
+<div class="app-header">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);">
+    ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
+  </div>
+  <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+</div>
+
+<!-- ツールバー -->
+<div class="toolbar">
+  <span class="tb-label">表示</span>
+  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <span class="tb-label" style="margin-left:8px;">文字</span>
+  <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
+  <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
+  <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
+  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
+</div>
+
+<!-- 設定パネル -->
+
 
 <!-- 未登録 -->
 <div id="noData" style="display:none;">
@@ -128,8 +201,8 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
         </div>
       </div>
       <!-- 納音 -->
-      <div class="nouin-row" onclick="openModal('nouin')">
-        <div class="nouin-lbl">納音（ナッチン）👆</div>
+      <div class="nouin-row">
+        <div class="nouin-lbl">納音（ナッチン）👆 各バッジをタップ</div>
         <div class="nouin-badges" id="nouinBadges"></div>
         <div class="nouin-ks" id="nouinKs">—</div>
       </div>
@@ -153,6 +226,9 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-num" id="mNum">—</div>
+    <div id="mImgWrap" style="text-align:center;margin:10px -4px 14px;display:none;">
+      <img id="mImg" src="" style="width:100%;max-width:100%;border-radius:10px;" onerror="this.parentNode.style.display='none'">
+    </div>
     <div class="modal-name" id="mName">—</div>
     <div class="modal-arch" id="mArch">—</div>
     <div class="modal-sec"><div class="modal-sec-lbl">✦ 本質・才能</div><div class="modal-text" id="mDesc">—</div></div>
@@ -161,6 +237,7 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
     <div id="mNouinSection" style="display:none;">
       <div class="modal-sec"><div class="modal-sec-lbl">✦ 年の納音</div><div class="modal-text" id="mNouinY">—</div></div>
       <div class="modal-sec"><div class="modal-sec-lbl">✦ 月の納音</div><div class="modal-text" id="mNouinM">—</div></div>
+      <div class="modal-sec" id="mNouinDSec" style="display:none;"><div class="modal-sec-lbl">✦ 日の納音</div><div class="modal-text" id="mNouinD">—</div></div>
     </div>
   </div>
 </div>
@@ -168,6 +245,36 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 <!-- kitoku-engine.js 読み込み -->
 <script src="kitoku-engine.js"></script>
 <script>
+
+// 日納音計算関数（index.htmlから移植）
+const KANSHI_BASE_DATE = new Date(2026, 0, 1);
+const KANSHI_BASE_NUM  = 12;
+const KAN_LIST = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const SHI_LIST = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+function getDayKanshiNum(year, month, day){
+  const target = new Date(year, month - 1, day);
+  const diffMs  = target - KANSHI_BASE_DATE;
+  const diffDays = Math.round(diffMs / 86400000);
+  return ((KANSHI_BASE_NUM - 1 + diffDays) % 60 + 60) % 60 + 1;
+}
+function getBirthDayKanshiNum(year, month, day, timeStr){
+  if(!timeStr) return getDayKanshiNum(year, month, day);
+  const hour = parseInt((timeStr||'0').split(':')[0]);
+  if(hour >= 23){
+    const d = new Date(year, month - 1, day + 1);
+    return getDayKanshiNum(d.getFullYear(), d.getMonth()+1, d.getDate());
+  }
+  return getDayKanshiNum(year, month, day);
+}
+function calcDayNayin(year, month, day, timeStr){
+  const n = getBirthDayKanshiNum(year, month, day, timeStr||'');
+  const i = n - 1;
+  const idx = Math.floor(i / 2);
+  const ks = KAN_LIST[i % 10] + SHI_LIST[i % 12];
+  return {...NT[idx], ks, idx};
+}
+
 // ============================================================
 // kyusei_v2.html — UIのみ（エンジンはkitoku-engine.jsを使用）
 // ============================================================
@@ -230,7 +337,7 @@ function init(){
   document.getElementById('msNum').style.color = SH.c;
   document.getElementById('msName').textContent = SH.j;
   document.getElementById('msSub').textContent = SH.elem+'の星 — '+SH.color;
-  document.getElementById('mystarCard').style.borderTop = '3px solid '+SH.c;
+  document.getElementById('mystarCard').style.borderLeft = '3px solid '+SH.c+'66';
 
   // 4枚カード
   setCell('h', SH, h); setCell('t', ST, t);
@@ -239,14 +346,19 @@ function init(){
   // 納音バッジ
   const badges = document.getElementById('nouinBadges');
   const ksEl = document.getElementById('nouinKs');
-  const isSame = yn.n === mn.n;
+  const dn = calcDayNayin(by,bm,bd||1,'');
+  gKyusei.dn = dn;
+  const allNac = [yn.n, mn.n, dn.n];
+  function isSameNac(n){ return allNac.filter(x=>x===n).length>=2; }
   badges.innerHTML = `
     <span class="nouin-tag">年</span>
-    <span class="nouin-badge${isSame?' same':''}">${yn.n}</span>
+    <span class="nouin-badge${isSameNac(yn.n)?' same':''}" onclick="openNouinModal('year')" style="cursor:pointer;">${yn.n}</span>
     <span class="nouin-tag" style="margin-left:4px;">月</span>
-    <span class="nouin-badge${isSame?' same':''}">${mn.n}</span>
+    <span class="nouin-badge${isSameNac(mn.n)?' same':''}" onclick="openNouinModal('month')" style="cursor:pointer;">${mn.n}</span>
+    <span class="nouin-tag" style="margin-left:4px;color:rgba(109,212,232,.8);background:rgba(109,212,232,.08);border-color:rgba(109,212,232,.2);">日</span>
+    <span class="nouin-badge${isSameNac(dn.n)?' same':''}" onclick="openNouinModal('day')" style="cursor:pointer;color:rgba(109,212,232,.9);">${dn.n}</span>
   `;
-  ksEl.textContent = '年：'+yn.ks+'　月：'+mn.ks;
+  ksEl.textContent = '年：'+yn.ks+'　月：'+mn.ks+'　日：'+dn.ks;
 
   document.getElementById('noData').style.display='none';
   document.getElementById('mainContent').style.display='block';
@@ -260,7 +372,7 @@ function setCell(pfx, s, n){
   el('name').style.color = 'var(--snow)';
   el('arch').textContent = s.arch||'';
   el('arch').style.color = s.c;
-  document.getElementById('cell-'+pfx).style.borderTop = '2px solid '+s.c+'55';
+  /* borderはCSSで管理 */
 }
 
 function buildStarGrid(myHonmei){
@@ -271,8 +383,7 @@ function buildStarGrid(myHonmei){
     const isMe = n === myHonmei;
     const card = document.createElement('div');
     card.className = 'star-card';
-    card.style.borderTopColor = s.c;
-    if(isMe) card.style.background = s.c+'11';
+    card.style.cssText = '';
     card.innerHTML = `
       <div class="star-card-num" style="color:${s.c}">${n}</div>
       <div class="star-card-name">${s.k}</div>
@@ -283,6 +394,36 @@ function buildStarGrid(myHonmei){
     card.onclick = () => openModal('star', n);
     grid.appendChild(card);
   });
+}
+
+
+function openNouinModal(type){
+  const map = {year: gKyusei.yn, month: gKyusei.mn, day: gKyusei.dn};
+  const nac = map[type];
+  if(!nac) return;
+
+  const labelMap = {year:'年の納音', month:'月の納音', day:'日の納音'};
+
+  document.getElementById('mNum').textContent = '';
+  document.getElementById('mNum').style.color = 'var(--gold)';
+  document.getElementById('mName').textContent = labelMap[type];
+  document.getElementById('mArch').textContent = nac.n + '（'+nac.ks+'）';
+  document.getElementById('mArch').style.color = 'var(--gold)';
+  document.getElementById('mDesc').textContent = NACHIN_DETAIL[nac.n] || '魂の音色を深く読み解きます。';
+  document.getElementById('mTags').innerHTML = '';
+  document.getElementById('mColor').textContent = '';
+  document.getElementById('mNouinSection').style.display = 'none';
+
+  // 納音の画像表示
+  const imgWrap = document.getElementById('mImgWrap');
+  const imgEl = document.getElementById('mImg');
+  const imgUrl = (typeof KITOKU_IMAGES!=='undefined' && KITOKU_IMAGES.nacchin)
+    ? KITOKU_IMAGES.nacchin[nac.n] : '';
+  if(imgUrl){ imgEl.src=imgUrl; imgWrap.style.display='block'; }
+  else { imgWrap.style.display='none'; }
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
 }
 
 function openModal(type, n){
@@ -299,17 +440,29 @@ function openModal(type, n){
     n = gKyusei.d; s = STARS[n];
   } else if(type==='nouin'){
     // 納音モーダル
-    document.getElementById('mNum').textContent = '🎵';
+    document.getElementById('mNum').textContent = '';
     document.getElementById('mNum').style.color = 'var(--gold)';
     document.getElementById('mName').textContent = '納音（ナッチン）';
     document.getElementById('mArch').textContent = '魂の音色';
     document.getElementById('mArch').style.color = 'var(--gold)';
+    // 年納音の画像を表示
+    const imgWrapN = document.getElementById('mImgWrap');
+    const imgElN = document.getElementById('mImg');
+    const yNacName = gKyusei.yn ? gKyusei.yn.n : '';
+    const nImgUrl = (typeof KITOKU_IMAGES!=='undefined'&&KITOKU_IMAGES.nacchin&&yNacName)
+      ? KITOKU_IMAGES.nacchin[yNacName] : '';
+    if(nImgUrl){ imgElN.src=nImgUrl; imgWrapN.style.display='block'; }
+    else { imgWrapN.style.display='none'; }
     document.getElementById('mDesc').textContent = '納音とは、生まれた年・月・日の干支から読み解く「魂の音色」です。年・月・日の納音が重なるほど、その特質が強く現れます。';
     document.getElementById('mTags').innerHTML = '';
     document.getElementById('mColor').textContent = '';
     const ny = gKyusei.yn, mn = gKyusei.mn;
-    document.getElementById('mNouinY').textContent = ny.n+'（'+ny.ks+'）— '+(NACHIN_DETAIL[ny.n]||ny.n);
-    document.getElementById('mNouinM').textContent = mn.n+'（'+mn.ks+'）— '+(NACHIN_DETAIL[mn.n]||mn.n);
+    document.getElementById('mNouinY').textContent = ny.n+'（'+ny.ks+'）— '+(NACHIN_DETAIL[ny.n]||'');
+    document.getElementById('mNouinM').textContent = mn.n+'（'+mn.ks+'）— '+(NACHIN_DETAIL[mn.n]||'');
+    if(gKyusei.dn){
+      document.getElementById('mNouinD').textContent = gKyusei.dn.n+'（'+gKyusei.dn.ks+'）— '+(NACHIN_DETAIL[gKyusei.dn.n]||'');
+      document.getElementById('mNouinDSec').style.display='block';
+    }
     document.getElementById('mNouinSection').style.display='block';
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow='hidden';
@@ -322,6 +475,12 @@ function openModal(type, n){
   document.getElementById('mName').textContent = s.j;
   document.getElementById('mArch').textContent = '— '+(s.arch||'')+' —';
   document.getElementById('mArch').style.color = s.c;
+  // インフォグラフィックス画像
+  const imgWrap = document.getElementById('mImgWrap');
+  const imgEl = document.getElementById('mImg');
+  const imgUrl = (typeof KITOKU_IMAGES!=='undefined'&&KITOKU_IMAGES.kyusei)?KITOKU_IMAGES.kyusei[s.j]:'';
+  if(imgUrl){ imgEl.src=imgUrl; imgWrap.style.display='block'; }
+  else { imgWrap.style.display='none'; }
   document.getElementById('mDesc').textContent = det.desc||'';
   document.getElementById('mTags').innerHTML = (det.tags||[]).map(t=>`<span class="modal-tag">${t}</span>`).join('');
   document.getElementById('mColor').textContent = det.color_food||s.color+' / '+s.food;
@@ -342,6 +501,62 @@ if(document.readyState==='loading'){
 }else{
   init();
 }
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===t);
+  });
+}
+
+function setFontSize(s){
+  document.documentElement.setAttribute('data-fontsize',s);
+  try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
+  ['s','m','l'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===s);
+  });
+  // html要素のfont-sizeを直接変更（rem基準）
+  if(s==='s')document.documentElement.style.fontSize='15px';
+  else if(s==='m')document.documentElement.style.fontSize='18px';
+  else document.documentElement.style.fontSize='21px';
+}
+
+function openSettings(){
+  const p=document.getElementById('settingPanel');
+  if(p){p.style.display='flex';}
+}
+
+function closeSettings(){
+  const p=document.getElementById('settingPanel');
+  if(p){p.style.display='none';}
+}
+
+
+// ツールバー初期化
+(function(){
+  const t=localStorage.getItem('kitoku-theme')||'light';
+  const fs=localStorage.getItem('kitoku-fontsize')||'s';
+  // テーマ適用
+  document.addEventListener('DOMContentLoaded',function(){
+    const wrap=document.getElementById('appWrap');
+    if(wrap) wrap.setAttribute('data-theme',t);
+    // ボタン状態
+    ['dark','light'].forEach(x=>{
+      const b=document.getElementById('tb-'+x);
+      if(b) b.classList.toggle('active',x===t);
+    });
+    ['s','m','l'].forEach(x=>{
+      const b=document.getElementById('tb-'+x);
+      if(b) b.classList.toggle('active',x===fs);
+    });
+    // フォントサイズ適用
+    const fsMap={s:'15px',m:'17px',l:'19px'};
+    document.documentElement.style.fontSize=fsMap[fs]||'15px';
+  });
+})();
+
 </script>
 </body>
 </html>
