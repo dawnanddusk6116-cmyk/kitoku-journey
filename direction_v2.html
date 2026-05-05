@@ -1346,6 +1346,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   </div>
 
   <!-- 羅針盤タブ -->
+  <div id="tab-vessel-content" style="display:none;"></div>
   <div id="tab-compass-content">
 
   <!-- 自分の星カード -->
@@ -3074,8 +3075,10 @@ const TODAY_WORDS=[
 })();
 function switchMainTab(tab){
   const isCompass=tab==='compass';
-  document.getElementById('tab-compass-content').style.display=isCompass?'block':'none';
-  document.getElementById('tab-vessel-content').style.display=isCompass?'none':'block';
+  const tcc=document.getElementById('tab-compass-content');
+  const tvc=document.getElementById('tab-vessel-content');
+  if(tcc)tcc.style.display=isCompass?'block':'none';
+  if(tvc)tvc.style.display=isCompass?'none':'block';
   const tc=document.getElementById('main-tab-compass');
   const tv=document.getElementById('main-tab-vessel');
   if(tc){tc.style.borderBottomColor=isCompass?'var(--gold)':'transparent';tc.style.color=isCompass?'var(--goldlt)':'var(--mist)';tc.style.fontWeight=isCompass?'700':'400';}
