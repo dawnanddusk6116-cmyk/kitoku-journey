@@ -80,38 +80,36 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 /* 保存ボタン */
 .save-btn{width:100%;margin-top:10px;padding:10px;border:1px solid var(--rim);border-radius:8px;background:rgba(100,80,40,.06);color:var(--mist);font-size:.72rem;cursor:pointer;font-family:'Noto Serif JP',serif;}
 
-/* 吉方・凶方 */
-.kichi-section{padding:0 16px;margin-top:14px;}
-.kichi-section-title{font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;padding:0 0 8px;display:flex;align-items:center;gap:6px;}
-.kichi-section-title::before{content:'✦';color:var(--gold);}
-.kichi-list{display:flex;flex-direction:column;gap:8px;}
-.kichi-item{background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;}
+.kichi-list{margin:4px 16px 0;display:flex;flex-direction:column;gap:8px;}
+.kichi-item{
+  background:var(--card);border:1px solid var(--rim);border-radius:10px;
+  padding:14px 16px;cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;gap:12px;
+}
+.kichi-item.dai{border-color:rgba(230,150,20,.45);background:rgba(230,150,20,.06);}
+.kichi-item.saiko{border-color:rgba(220,160,20,.6);background:rgba(220,160,20,.1);}
 .kichi-item:active{transform:scale(.98);}
-.kichi-dir-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;font-size:.85rem;font-weight:700;flex-shrink:0;}
-.kichi-item-inner{display:flex;align-items:center;gap:12px;}
-.kichi-star-name{font-size:.82rem;font-weight:700;margin-bottom:3px;}
-.kichi-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
-.kichi-badge{font-size:.58rem;padding:3px 8px;border-radius:10px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.25);color:var(--goldlt);}
+.kichi-dir-badge{
+  width:44px;height:44px;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;flex-shrink:0;
+  background:rgba(232,116,138,.15);border:1px solid rgba(232,116,138,.4);
+}
+.kichi-item.dai .kichi-dir-badge{background:rgba(230,150,20,.15);border-color:rgba(230,150,20,.4);}
+.kichi-item.saiko .kichi-dir-badge{background:rgba(220,160,20,.2);border-color:rgba(220,160,20,.5);}
+.kichi-dir{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--kichi);font-weight:600;}
+.kichi-item.dai .kichi-dir,.kichi-item.saiko .kichi-dir{color:#e8c840;}
+.kichi-dir-jp{font-size:.72rem;color:var(--mist);font-weight:600;}
+.kichi-info{flex:1;}
+.kichi-rank{font-size:.86rem;letter-spacing:.1em;color:var(--kichi);margin-bottom:5px;font-weight:800;}
+.kichi-item.dai .kichi-rank,.kichi-item.saiko .kichi-rank{color:#e8c840;}
+.kichi-star{font-size:1.02rem;color:var(--snow);font-weight:700;}
+.kichi-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.kbadge{font-size:.52rem;padding:2px 7px;border-radius:10px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.25);color:var(--gold);}
+.kichi-tap{font-size:.72rem;color:rgba(196,160,67,.6);margin-top:6px;}
 
-/* 凶方 */
-.kyo-list{margin:8px 16px 0;background:rgba(80,90,110,.1);border-radius:10px;border:1px solid rgba(80,90,110,.25);overflow:hidden;}
-.kyo-header{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;font-size:.72rem;color:var(--mist);}
-.kyo-body{display:none;padding:0 14px 12px;}
-.kyo-body.open{display:block;}
-.kyo-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(80,90,110,.15);font-size:.72rem;color:var(--mist);}
-.kyo-dir{font-weight:700;width:24px;}
-[data-theme="light"] .kyo-list{background:rgba(100,100,120,.06);border-color:rgba(100,100,120,.15);}
-
-/* 土用アラート */
-.doyo-alert{margin:8px 16px 0;padding:10px 14px;background:rgba(232,160,40,.08);border:1px solid rgba(232,160,40,.25);border-radius:8px;font-size:.68rem;color:rgba(200,130,20,.9);line-height:1.8;display:none;}
-[data-theme="dark"] .doyo-alert{color:rgba(232,200,80,.9);}
-
-/* 処方箋・AI・地図 */
-.rx-section{margin:14px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;}
-.rx-section-lbl{font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;}
-.rx-empty{font-size:.72rem;color:var(--mist);text-align:center;padding:10px 0;}
-.map-links{display:flex;gap:8px;margin-top:10px;}
-.map-link{flex:1;padding:10px;border-radius:8px;text-align:center;font-size:.72rem;font-weight:700;text-decoration:none;font-family:'Noto Serif JP',serif;}
+/* 凶方リスト */
+.kyo-list{margin:12px 16px 0;background:rgba(80,90,110,.1);border-radius:10px;border:1px solid rgba(80,90,110,.25);overflow:hidden;}
+.kyo-header{padding:13px 16px;font-size:.82rem;letter-spacing:.1em;color:var(--kyo);display:flex;align-items:center;gap:8px;cursor:pointer;}
 
 /* ポップアップ */
 .popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;overflow-y:auto;}
@@ -120,6 +118,55 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 .popup-close{position:absolute;top:16px;right:16px;background:rgba(100,80,40,.1);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--mist);}
 
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
+.kichi-list{margin:4px 16px 0;display:flex;flex-direction:column;gap:8px;}
+.kichi-item{
+  background:var(--card);border:1px solid var(--rim);border-radius:10px;
+  padding:14px 16px;cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;gap:12px;
+}
+.kichi-item.dai{border-color:rgba(230,150,20,.45);background:rgba(230,150,20,.06);}
+.kichi-item.saiko{border-color:rgba(220,160,20,.6);background:rgba(220,160,20,.1);}
+.kichi-item:active{transform:scale(.98);}
+.kichi-dir-badge{
+  width:44px;height:44px;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;flex-shrink:0;
+  background:rgba(232,116,138,.15);border:1px solid rgba(232,116,138,.4);
+}
+.kichi-item.dai .kichi-dir-badge{background:rgba(230,150,20,.15);border-color:rgba(230,150,20,.4);}
+.kichi-item.saiko .kichi-dir-badge{background:rgba(220,160,20,.2);border-color:rgba(220,160,20,.5);}
+.kichi-dir{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--kichi);font-weight:600;}
+.kichi-item.dai .kichi-dir,.kichi-item.saiko .kichi-dir{color:#e8c840;}
+.kichi-dir-jp{font-size:.72rem;color:var(--mist);font-weight:600;}
+.kichi-info{flex:1;}
+.kichi-rank{font-size:.86rem;letter-spacing:.1em;color:var(--kichi);margin-bottom:5px;font-weight:800;}
+.kichi-item.dai .kichi-rank,.kichi-item.saiko .kichi-rank{color:#e8c840;}
+.kichi-star{font-size:1.02rem;color:var(--snow);font-weight:700;}
+.kichi-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.kbadge{font-size:.52rem;padding:2px 7px;border-radius:10px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.25);color:var(--gold);}
+.kichi-tap{font-size:.72rem;color:rgba(196,160,67,.6);margin-top:6px;}
+
+/* 凶方リスト */
+.kyo-list{margin:12px 16px 0;background:rgba(80,90,110,.1);border-radius:10px;border:1px solid rgba(80,90,110,.25);overflow:hidden;}
+.kyo-header{padding:13px 16px;font-size:.82rem;letter-spacing:.1em;color:var(--kyo);display:flex;align-items:center;gap:8px;cursor:pointer;}
+.kyo-body{padding:0 14px 12px;display:none;}
+.kyo-body.open{display:block;}
+.kyo-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.kyo-row:last-child{border-bottom:none;}
+.kyo-dir{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:rgba(160,170,190,.7);width:24px;}
+.kyo-name{font-size:.8rem;color:rgba(160,170,190,.7);}
+
+/* 注意書き */
+.ryuha-note{
+  margin:12px 16px 0;padding:10px 14px;
+  background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.12);
+  border-radius:8px;font-size:.6rem;color:rgba(220,232,255,.4);
+  line-height:1.9;letter-spacing:.04em;
+}
+
+/* ── セクション区切り ── */
+.section{margin:16px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);overflow:hidden;}
+.section-head{padding:14px 16px;border-bottom:1px solid var(--rim);}
+
 </style>
 </head>
 <body>
@@ -412,8 +459,8 @@ function renderPage(){
   // 土用
   renderDoyo(ty, tm, td);
 
-  // 処方箋・AI・地図
-  renderRxAiMap();
+  // 処方箋・AI・地図（dayDirDataが確実にセットされた後に実行）
+  setTimeout(renderRxAiMap, 50);
 }
 
 function switchBan(type){
@@ -524,6 +571,13 @@ function copyAIPrompt(){
 }
 
 // ── 凶方トグル ──
+// engine.jsから呼ばれる（direction_v2では独自実装で上書き）
+function generateAIPrompt(dirData, p2s, type){
+  if(type !== 'day') return;
+  gState.dayDirData = dirData; // 確実にセット
+  setTimeout(renderRxAiMap, 0);
+}
+
 function openSettings(){
   var p = document.getElementById('settingPanel');
   if(p){ p.style.display='flex'; document.body.style.overflow='hidden'; }
