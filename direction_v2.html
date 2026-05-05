@@ -1501,8 +1501,8 @@ const BRANCH_DIR=['N','NE','NE','E','SE','SE','S','SW','SW','W','NW','NW'];
 const BRANCH_NAME=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 function getZodiac(y){return ZODIAC[((y-2020)%12+12)%12];}
 const SANGO_MAP={子:{group:'水局',dirs:['N','SE','SW']},丑:{group:'金局',dirs:['SE','W','NE']},寅:{group:'火局',dirs:['NE','S','NW']},卯:{group:'木局',dirs:['NW','E','SW']},辰:{group:'水局',dirs:['N','SE','SW']},巳:{group:'金局',dirs:['SE','W','NE']},午:{group:'火局',dirs:['NE','S','NW']},未:{group:'木局',dirs:['NW','E','SW']},申:{group:'水局',dirs:['N','SE','SW']},酉:{group:'金局',dirs:['SE','W','NE']},戌:{group:'火局',dirs:['NE','S','NW']},亥:{group:'木局',dirs:['NW','E','SW']}};
-const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
-function aiseiList(s){return new Set((AISEI[s]||[]).filter(x=>x!==5&&x!==s));}
+const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
+function aiseiList(s,tsukimei,gender){if(s===5&&tsukimei===5){return new Set([2,6,7,8,9]);}return new Set((AISEI[s]||[]).filter(x=>x!==5&&x!==s));}
 const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
 const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -1722,11 +1722,17 @@ function getTendoDir(ty,tm,td){
 }
 function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   if(dir==='C')return{rank:0,badges:[]};
-  const honList=aiseiList(honmei),tsukiList=aiseiList(tsukimei);
+  const gender=localStorage.getItem('kitoku-gender')||'male';
+  const is55=(honmei===5&&tsukimei===5);
+  const bonus55=is55?(gender==='female'?6:7):null;
+  const honList=aiseiList(honmei,tsukimei,gender);
+  const tsukiList=is55?honList:aiseiList(tsukimei);
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
+  const inBonus55=is55&&bonus55&&starN===bonus55;
   if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inBonus55)return{rank:3,badges:['✦ 特大ボーナス方位','⭐ 5-5特例',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon)return{rank:2,badges:['✦ 吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inTendo)return{rank:1,badges:['☀️ 天道']};
@@ -1809,7 +1815,8 @@ let gState={};
   try{
     const savedOrient=localStorage.getItem('kitoku-orient')||'south';
     gState.orient=savedOrient;
-  updateCompassLabels(savedOrient);
+    updateCompassLabels(savedOrient);
+  }catch(e){}
   // 月命的殺設定を読み込む
   try{
     const savedTm=localStorage.getItem('kitoku-tsukimei-satsu')||'off';
@@ -1836,6 +1843,7 @@ let gState={};
     const swSeason=document.getElementById('sw-season');
     if(swSeason){swSeason.checked=seasonAlert;_updateToggleUI('sw-season',seasonAlert);}
   }catch(e){gState.soukouOff=false;gState.teiiAsKyo=false;gState.kichakuWarn=false;gState.seasonAlert=true;}
+  try{
     const btnS=document.getElementById('orient-s');
     const btnN=document.getElementById('orient-n');
     if(btnS)btnS.classList.toggle('active',savedOrient==='south');
@@ -2192,8 +2200,11 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   const H=STARS[honmei];
 
   // 本命＝月命の場合、月命を先天対冲に変換してから傾斜・同会を算出
-  const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
-  const tsukimeiForKeisha=(honmei===tsukimei&&TAICHUU[tsukimei])?TAICHUU[tsukimei]:tsukimei;
+  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
+  const gender=localStorage.getItem('kitoku-gender')||'male';
+  TAICHUU[5]=gender==='female'?6:7;
+  let tsukimeiForKeisha=tsukimei;
+  if(honmei===tsukimei){tsukimeiForKeisha=TAICHUU[tsukimei]||tsukimei;}
   const T=STARS[tsukimei];
 
   // 調べる日の情報
@@ -4078,13 +4089,14 @@ function renderRxAiMap(){
   const dirJP = JP[bestDir]||bestDir;
   const mapEl = document.getElementById('mapDirLabel');
   if(mapEl) mapEl.textContent = `${dirJP}方向のスポットを探す（750m以上離れた場所が目安）`;
-  const q = encodeURIComponent(dirJP+'方向 カフェ');
+  const q = encodeURIComponent(dirJP+'方向');
+  const qCafe = encodeURIComponent(dirJP+'方向 カフェ コンビニ');
   const gEl=document.getElementById('mapGoogle');
   const aEl=document.getElementById('mapApple');
   const yEl=document.getElementById('mapYahoo');
-  if(gEl) gEl.href=`https://www.google.com/maps/search/${q}`;
-  if(aEl) aEl.href=`https://maps.apple.com/?q=${q}`;
-  if(yEl) yEl.href=`https://map.yahoo.co.jp/search?q=${q}`;
+  if(gEl) gEl.href=`https://www.google.com/maps/search/?api=1&query=${qCafe}`;
+  if(aEl) aEl.href=`https://maps.apple.com/?q=${qCafe}`;
+  if(yEl) yEl.href=`https://map.yahoo.co.jp/search?p=${qCafe}`;
 }
 
 function copyAIPrompt(){
@@ -4101,11 +4113,28 @@ function copyAIPrompt(){
   });
 }
 
+// ツールバー関数（direction専用・先に定義）
+if(typeof setTheme==='undefined'){
+  window.setTheme=function(t){
+    var el=document.getElementById('appWrap');
+    if(el)el.setAttribute('data-theme',t);
+    document.body.setAttribute('data-theme',t);
+    try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+    ['dark','light'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+  };
+  window.setFontSize=function(s){
+    var m={s:'15px',m:'17px',l:'19px'};
+    document.documentElement.style.fontSize=m[s]||'15px';
+    try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
+    ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
+  };
+}
+
 // direction.html 専用初期化
 (function(){
   // テーマ復元
   try{
-    var t=localStorage.getItem('kitoku-theme')||'dark';
+    var t=localStorage.getItem('kitoku-theme')||'light';
     document.getElementById('appWrap').setAttribute('data-theme',t);
     // フォントサイズ復元
     var fs=localStorage.getItem('kitoku-fontsize')||'s';
