@@ -551,10 +551,10 @@ window.addEventListener('DOMContentLoaded',()=>{
   const yNac=nc(yI),mNac=nc(mI),dNac=nc(dI);
 
   const info={
-    h,honmei:STARS[h]||'',
-    tsukimei:STARS[tFK]||'',
-    keisha:STARS[k]||'',
-    dokai:STARS[d]||'',
+    h,honmei:(STARS[h]||{}).j||'',
+    tsukimei:(STARS[t]||{}).j||'',
+    keisha:(STARS[k]||{}).j||'',
+    dokai:(STARS[d]||{}).j||'',
     yNac,mNac,dNac,
     starText:''
   };
