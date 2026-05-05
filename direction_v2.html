@@ -4201,6 +4201,8 @@ if(typeof setTheme==='undefined'){
 
     document.getElementById('screenInput').classList.remove('active');
     document.getElementById('screenResult').classList.add('active');
+    // タブを初期化（羅針盤を表示）
+    if(typeof switchMainTab==='function') switchMainTab('compass');
     // renderRxAiMapはrenderBan内で呼ばれる
     var hr=document.getElementById('headerReset');
     if(hr)hr.style.display='block';
