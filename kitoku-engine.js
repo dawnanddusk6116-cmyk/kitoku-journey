@@ -60,8 +60,14 @@ const BRANCH_DIR=['N','NE','NE','E','SE','SE','S','SW','SW','W','NW','NW'];
 const BRANCH_NAME=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 function getZodiac(y){return ZODIAC[((y-2020)%12+12)%12];}
 const SANGO_MAP={子:{group:'水局',dirs:['N','SE','SW']},丑:{group:'金局',dirs:['SE','W','NE']},寅:{group:'火局',dirs:['NE','S','NW']},卯:{group:'木局',dirs:['NW','E','SW']},辰:{group:'水局',dirs:['N','SE','SW']},巳:{group:'金局',dirs:['SE','W','NE']},午:{group:'火局',dirs:['NE','S','NW']},未:{group:'木局',dirs:['NW','E','SW']},申:{group:'水局',dirs:['N','SE','SW']},酉:{group:'金局',dirs:['SE','W','NE']},戌:{group:'火局',dirs:['NE','S','NW']},亥:{group:'木局',dirs:['NW','E','SW']}};
-const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
-function aiseiList(s){return new Set((AISEI[s]||[]).filter(x=>x!==5&&x!==s));}
+const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
+function aiseiList(s,tsukimei,gender){
+  if(s===5&&tsukimei===5){
+    const g=gender||(typeof localStorage!=='undefined'?localStorage.getItem('kitoku-gender'):null)||'male';
+    return new Set([2,6,7,8,9]);
+  }
+  return new Set((AISEI[s]||[]).filter(x=>x!==5&&x!==s));
+}
 const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
 const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -255,6 +261,22 @@ function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,
 function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
 function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+// 定位対冲テーブル（村山先生指示書準拠）
+// 本命=月命の場合に傾斜・同会計算用の月命を切り替える
+const TAICHUU_BASE={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
+// 五黄土星は性別で分岐（男:7・女:6）
+
+function getTsukimeiForKeisha(honmei, tsukimei){
+  if(honmei !== tsukimei) return tsukimei;
+  if(honmei === 5){
+    // 五黄土星：localStorageから性別を取得
+    const gender = (typeof localStorage!=='undefined'
+      ? localStorage.getItem('kitoku-gender') : null) || 'male';
+    return gender === 'female' ? 6 : 7;
+  }
+  return TAICHUU_BASE[tsukimei] || tsukimei;
+}
+
 function calcKeisha(h,t){return pal(h,t);}
 function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
 function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
@@ -281,11 +303,17 @@ function getTendoDir(ty,tm,td){
 }
 function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   if(dir==='C')return{rank:0,badges:[]};
-  const honList=aiseiList(honmei),tsukiList=aiseiList(tsukimei);
+  const gender=(typeof localStorage!=='undefined'?localStorage.getItem('kitoku-gender'):null)||'male';
+  const is55=(honmei===5&&tsukimei===5);
+  const bonus55=is55?(gender==='female'?6:7):null;
+  const honList=aiseiList(honmei,tsukimei,gender);
+  const tsukiList=is55?honList:aiseiList(tsukimei);
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
+  const inBonus55=is55&&bonus55&&starN===bonus55;
   if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inBonus55)return{rank:3,badges:['✦ 特大ボーナス方位','⭐ 5-5特例',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon)return{rank:2,badges:['✦ 吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inTendo)return{rank:1,badges:['☀️ 天道']};
