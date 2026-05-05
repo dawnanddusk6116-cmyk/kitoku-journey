@@ -310,6 +310,7 @@ function setCell(pfx, s, n){
 
 function buildStarGrid(myHonmei){
   const grid = document.getElementById('starsGrid');
+  if(!grid) return;
   grid.innerHTML = '';
   [1,2,3,4,5,6,7,8,9].forEach(n=>{
     const s = STARS[n];
