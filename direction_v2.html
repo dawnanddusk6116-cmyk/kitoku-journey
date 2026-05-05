@@ -141,6 +141,7 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
+  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
 </div>
 
 <!-- 未登録 -->
@@ -191,6 +192,16 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
     🌿 <strong>土用期間中です。</strong>月建方向への旅行は注意。引越し（定住）は問題ありません。
   </div>
 
+  <!-- 流派バナー -->
+  <div style="margin:12px 16px 0;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.2);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="openSettings()">
+    <span style="font-size:.68rem;color:var(--gold);">⚙</span>
+    <div>
+      <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;margin-bottom:2px;">流派の設定をカスタマイズできます</div>
+      <div style="font-size:.62rem;color:var(--mist);">KITOKUは「凶」で縛りません。他流派との違いも設定で確認できます。</div>
+    </div>
+    <span style="font-size:.7rem;color:var(--mist);margin-left:auto;">›</span>
+  </div>
+
   <!-- 吉方リスト -->
   <div class="kichi-section">
     <div class="kichi-section-title">行くべき方向</div>
@@ -232,6 +243,51 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
     <div style="font-size:.62rem;color:var(--mist);margin-top:8px;line-height:1.8;">750m以上離れた場所への外出で吉方を取ることができます</div>
   </div>
 
+</div>
+
+
+<!-- 設定パネル -->
+<div id="settingPanel" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center;">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--rim);width:100%;max-width:480px;max-height:85dvh;overflow-y:auto;padding:0 0 40px;margin:0 auto;">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:12px auto 0;"></div>
+    <div style="padding:16px 20px 12px;border-bottom:1px solid var(--rim);display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--goldlt);letter-spacing:.15em;">設定</div>
+      <button onclick="closeSettings()" style="background:none;border:1px solid var(--rim);border-radius:6px;color:var(--mist);font-size:.75rem;padding:5px 12px;cursor:pointer;">閉じる</button>
+    </div>
+    <div style="padding:16px 20px;">
+      <div style="font-size:.6rem;letter-spacing:.14em;color:var(--gold);margin-bottom:10px;">✦ 流派の設定</div>
+      <div style="font-size:.72rem;color:var(--mist);line-height:2;margin-bottom:14px;background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.15);border-radius:8px;padding:10px 14px;">
+        KITOKUは「凶」で縛りません。他流派との違いも設定で確認できます。
+      </div>
+      <!-- 月命的殺 -->
+      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:.78rem;font-weight:700;margin-bottom:2px;">月命的殺・月命殺</div>
+          <div style="font-size:.62rem;color:var(--mist);">月命星の対面・同位を凶方に追加</div>
+        </div>
+        <select id="sw-tsukimei-satsu" onchange="saveSetting('tsukimeiSatsu',this.value)" style="font-size:.72rem;border:1px solid var(--rim);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--snow);">
+          <option value="off">大人（本命星のみ）</option>
+          <option value="on">厳密（月命星も含む）</option>
+        </select>
+      </div>
+      <!-- 定位対冲 -->
+      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:.78rem;font-weight:700;margin-bottom:2px;">定位対冲を凶方に含める</div>
+          <div style="font-size:.62rem;color:var(--mist);">他流派設定。KITOKUはデフォルトOFF</div>
+        </div>
+        <input type="checkbox" id="sw-teii" onchange="saveSetting('teiiAsKyo',this.checked)" style="width:20px;height:20px;cursor:pointer;">
+      </div>
+      <!-- 相剋 -->
+      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:.78rem;font-weight:700;margin-bottom:2px;">相剋を吉方から除く</div>
+          <div style="font-size:.62rem;color:var(--mist);">他流派設定。KITOKUはデフォルトOFF</div>
+        </div>
+        <input type="checkbox" id="sw-soukou" onchange="saveSetting('soukouOff',!this.checked)" style="width:20px;height:20px;cursor:pointer;">
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
@@ -308,7 +364,7 @@ function init(){
 
   gState.by = by; gState.bm = bm; gState.bd = bd;
   gState.kY = kd.kY; gState.kM = kd.kM;
-  gState.honmei = h; gState.tsukimei = tFK;
+  gState.honmei = h; gState.tsukimei = t; // 本来の月命星（engine.jsが切替処理する）
   gState.H = STARS[h]; gState.T = STARS[t];
 
   // 今日の日付（JST）
@@ -468,6 +524,27 @@ function copyAIPrompt(){
 }
 
 // ── 凶方トグル ──
+function openSettings(){
+  var p = document.getElementById('settingPanel');
+  if(p){ p.style.display='flex'; document.body.style.overflow='hidden'; }
+  var sel = document.getElementById('sw-tsukimei-satsu');
+  if(sel) sel.value = gState.tsukimeiSatsu || 'off';
+  var teii = document.getElementById('sw-teii');
+  if(teii) teii.checked = gState.teiiAsKyo || false;
+  var soukou = document.getElementById('sw-soukou');
+  if(soukou) soukou.checked = !gState.soukouOff;
+}
+function closeSettings(){
+  var p = document.getElementById('settingPanel');
+  if(p){ p.style.display='none'; document.body.style.overflow=''; }
+}
+function saveSetting(key, val){
+  gState[key] = val;
+  var lsMap = {tsukimeiSatsu:'kitoku-tsukimei-satsu', teiiAsKyo:'kitoku-teii-kyo', soukouOff:'kitoku-soukou-off'};
+  try{ if(lsMap[key]) localStorage.setItem(lsMap[key], typeof val==='boolean'?(val?'1':'0'):val); }catch(e){}
+  renderPage();
+}
+
 function toggleKyo(){
   var body = document.getElementById('kyoBody');
   var arrow = document.getElementById('kyoArrow');
