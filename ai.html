@@ -61,14 +61,87 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 /* フッター */
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
 .footer-note{font-size:.65rem;color:rgba(176,64,64,.6);text-align:center;padding:0 16px 12px;line-height:1.9;}
+.toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
+
+/* ライトモード：方位盤セル */
+[data-theme="light"] .cell-normal{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);}
+[data-theme="light"] .cell-kyo{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);}
+[data-theme="light"] .cell-kichi{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);}
+[data-theme="light"] .cell-daikichi{background:rgba(120,90,20,.18);border-color:rgba(120,90,20,.55);}
+[data-theme="light"] .cell-saikokichi{background:rgba(120,90,20,.26);border-color:rgba(120,90,20,.7);}
+[data-theme="light"] .cell-kichi .cell-num,[data-theme="light"] .cell-daikichi .cell-num,[data-theme="light"] .cell-saikokichi .cell-num{color:#5a3e08;}
+[data-theme="light"] .cell-kyo .cell-num{color:rgba(60,50,40,.4);}
+[data-theme="light"] .cell-normal .cell-num{color:rgba(60,50,40,.4);}
+[data-theme="light"] .cell-kichi .cell-name,[data-theme="light"] .cell-daikichi .cell-name{color:rgba(90,62,8,.7);}
+[data-theme="light"] .compass-grid{background:rgba(120,90,20,.04);border-color:rgba(120,90,20,.2);}
+
+/* ライトモード：方位ラベル */
+[data-theme="light"] .dir-label.kichi,[data-theme="light"] .dir-label.daikichi{color:#5a3e08;}
+[data-theme="light"] .dir-label.kyo{color:rgba(60,50,40,.45);}
+[data-theme="light"] .dir-label.normal{color:rgba(60,50,40,.35);}
+
+[data-theme="light"] .popup-sheet{background:#fefcf8;border-color:rgba(100,80,40,.2);}
+[data-theme="light"] input[type="date"]{background:#fff;color:#1c1208;border-color:rgba(100,80,40,.25);}
+[data-theme="light"] .kyo-list{background:rgba(100,100,120,.06);border-color:rgba(100,100,120,.15);}
+[data-theme="light"] #settingPanel > div{background:#fefcf8!important;}
+[data-theme="light"] .save-note{color:rgba(60,40,10,.55)!important;}
+[data-theme="light"] footer{color:rgba(60,40,10,.45)!important;}
+[data-theme="light"] .ryuha-note{color:#3a2a10!important;}
+[data-theme="light"] .kyo-header{color:rgba(50,50,70,.75)!important;}
+[data-theme="light"] .kyo-dir{color:rgba(50,50,70,.7)!important;}
+[data-theme="light"] .kyo-name{color:rgba(50,50,70,.7)!important;}
+[data-theme="light"] .ai-note-text{color:rgba(40,28,8,.55)!important;}
+[data-theme="light"] .slide-num{color:rgba(100,80,40,.6)!important;}
+[data-theme="light"] .loading-text{color:#7a5a10!important;}
+
+/* ── フォントサイズ切り替え ── */
+html[data-fontsize="m"],html[data-fontsize="m"] body{font-size:18px;}
+html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
+
+/* ── ツールバー（テーマ・フォント） ── */
+.toolbar{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;border-bottom:1px solid var(--rim);
+  background:var(--card);
+}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+
+/* ── ツールバー ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+.tb-btn{background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;}
+.tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
+[data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
+[data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
+[data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.header-reset{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;}
 </style>
 </head>
 <body>
 
-<header class="hdr">
-  <div class="logo">✦ 気学 × AI</div>
-  <button class="back-btn" onclick="history.back()">← TOPへ戻る</button>
-</header>
+<!-- ヘッダー -->
+<div class="app-header">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);">
+    ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
+  </div>
+  <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+</div>
+
+<!-- ツールバー -->
+<div class="toolbar">
+  <span class="tb-label">表示</span>
+  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <span class="tb-label" style="margin-left:8px;">文字</span>
+  <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
+  <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
+  <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
+  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
+</div>
+
+<!-- 設定パネル -->
+
 
 <!-- リード -->
 <div class="lead">
@@ -536,6 +609,62 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('starInfoText').textContent=info.starText;
   buildPrompts(info);
 });
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===t);
+  });
+}
+
+function setFontSize(s){
+  document.documentElement.setAttribute('data-fontsize',s);
+  try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
+  ['s','m','l'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===s);
+  });
+  // html要素のfont-sizeを直接変更（rem基準）
+  if(s==='s')document.documentElement.style.fontSize='15px';
+  else if(s==='m')document.documentElement.style.fontSize='18px';
+  else document.documentElement.style.fontSize='21px';
+}
+
+function openSettings(){
+  const p=document.getElementById('settingPanel');
+  if(p){p.style.display='flex';}
+}
+
+function closeSettings(){
+  const p=document.getElementById('settingPanel');
+  if(p){p.style.display='none';}
+}
+
+
+// ツールバー初期化
+(function(){
+  const t=localStorage.getItem('kitoku-theme')||'light';
+  const fs=localStorage.getItem('kitoku-fontsize')||'s';
+  // テーマ適用
+  document.addEventListener('DOMContentLoaded',function(){
+    const wrap=document.getElementById('appWrap');
+    if(wrap) wrap.setAttribute('data-theme',t);
+    // ボタン状態
+    ['dark','light'].forEach(x=>{
+      const b=document.getElementById('tb-'+x);
+      if(b) b.classList.toggle('active',x===t);
+    });
+    ['s','m','l'].forEach(x=>{
+      const b=document.getElementById('tb-'+x);
+      if(b) b.classList.toggle('active',x===fs);
+    });
+    // フォントサイズ適用
+    const fsMap={s:'15px',m:'17px',l:'19px'};
+    document.documentElement.style.fontSize=fsMap[fs]||'15px';
+  });
+})();
+
 </script>
 </body>
 </html>
