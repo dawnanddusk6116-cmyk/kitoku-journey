@@ -583,7 +583,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 }
 .ban-nav-sub{font-size:.6rem;color:var(--mist);letter-spacing:.08em;margin-top:2px;}
 [data-theme="light"] .ban-nav-btn{background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.3);color:#5a3e08;}
-[data-theme="light"] .ban-nav-sub{color:rgba(80,60,20,.6)!important;}
 
 
 /* ── 盤面向き切り替え・説明ボタン ── */
@@ -943,19 +942,18 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 <body>
 <div class="app-wrap" id="appWrap" data-theme="dark">
 
-<!-- ヘッダー -->
 <div class="app-header">
-  <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);">
+  <div onclick="openKitokuAbout()" style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);cursor:pointer;">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
-  <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+  <button class="header-reset" id="headerReset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
 </div>
 
-<!-- ツールバー -->
+<!-- ツールバー（テーマ・フォント・設定） -->
 <div class="toolbar">
   <span class="tb-label">表示</span>
-  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
-  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <button class="tb-btn active" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn" id="tb-light" onclick="setTheme('light')">昼</button>
   <span class="tb-label" style="margin-left:8px;">文字</span>
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
