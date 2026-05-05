@@ -275,8 +275,11 @@ function init(){
   const {kY,kM} = getKD(by,bm,bd);
   const h = calcHonmei(kY);
   const t = calcTsukimei(h,kM);
-  const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
-  const tFK = (h===t&&TAICHUU[t])?TAICHUU[t]:t;
+  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
+  const gender=localStorage.getItem('kitoku-gender')||'male';
+  TAICHUU[5]=gender==='female'?6:7;
+  let tFK=t;
+  if(h===t){ tFK=TAICHUU[t]||t; }
   const k = calcKeisha(h,tFK);
   const d = calcDokai(h,tFK);
   const yn = calcNayin(by);
