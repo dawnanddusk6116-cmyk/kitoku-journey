@@ -180,9 +180,9 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
 .kichi-item.dai .kichi-dir,.kichi-item.saiko .kichi-dir{color:#e8c840;}
 .kichi-dir-jp{font-size:.72rem;color:var(--mist);font-weight:600;}
 .kichi-info{flex:1;}
-.kichi-rank{font-size:.8rem;letter-spacing:.08em;color:var(--kichi);margin-bottom:4px;font-weight:700;}
+.kichi-rank{font-size:.86rem;letter-spacing:.1em;color:var(--kichi);margin-bottom:5px;font-weight:800;}
 .kichi-item.dai .kichi-rank,.kichi-item.saiko .kichi-rank{color:#e8c840;}
-.kichi-star{font-size:.92rem;color:var(--snow);font-weight:600;}
+.kichi-star{font-size:1.02rem;color:var(--snow);font-weight:700;}
 .kichi-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
 .kbadge{font-size:.52rem;padding:2px 7px;border-radius:10px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.25);color:var(--gold);}
 .kichi-tap{font-size:.72rem;color:rgba(196,160,67,.6);margin-top:6px;}
@@ -270,7 +270,7 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
 .sheet-body{padding:20px 22px;}
 
 /* 飲食提案カード */
-.food-title{font-size:.82rem;letter-spacing:.14em;color:var(--gold);margin-bottom:12px;font-weight:700;}
+.food-title{font-size:.72rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px;font-weight:800;}
 .food-cards{display:flex;flex-direction:column;gap:8px;}
 .food-card{
   display:flex;align-items:flex-start;gap:12px;
@@ -278,8 +278,8 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
   border-radius:8px;padding:12px;
 }
 .food-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
-.food-name{font-size:1.05rem;color:var(--snow);margin-bottom:5px;font-weight:700;}
-.food-reason{font-size:.88rem;color:var(--mist);line-height:1.9;}
+.food-name{font-size:.92rem;color:var(--snow);margin-bottom:5px;font-weight:700;letter-spacing:.01em;}
+.food-reason{font-size:.78rem;color:var(--mist);line-height:1.8;}
 .food-why-btn{
   margin-top:6px;background:none;border:1px solid rgba(196,160,67,.25);
   border-radius:4px;padding:4px 10px;font-size:.58rem;color:var(--gold);cursor:pointer;
@@ -290,8 +290,8 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
   background:rgba(196,160,67,.05);border:1px solid rgba(196,160,67,.15);
   border-radius:8px;
 }
-.gogyou-title{font-size:.78rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;font-weight:700;}
-.gogyou-text{font-size:.88rem;color:var(--mist);line-height:2.1;}
+.gogyou-title{font-size:.82rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;font-weight:800;}
+.gogyou-text{font-size:.9rem;color:var(--snow);line-height:2.1;}
 
 /* ── フッター ── */
 footer{
@@ -946,14 +946,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <div onclick="openKitokuAbout()" style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);cursor:pointer;">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
-  <button class="header-reset" id="headerReset" onclick="showScreen('screenTop')" style="display:none;">← トップへ戻る</button>
+  <button class="header-reset" id="headerReset" onclick="showInput()" style="display:none;">← トップへ戻る</button>
 </div>
 
 <!-- ツールバー（テーマ・フォント・設定） -->
 <div class="toolbar">
   <span class="tb-label">表示</span>
-  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
-  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <button class="tb-btn active" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn" id="tb-light" onclick="setTheme('light')">昼</button>
   <span class="tb-label" style="margin-left:8px;">文字</span>
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
@@ -1269,7 +1269,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <input type="date" id="inputBirth" max="2015-12-31">
     <div class="input-note" id="birthNote">※ 初回のみ入力します。次回から自動で読み込まれます。</div>
-
+    <div style="margin-top:10px;">
+      <label class="input-label" style="margin-bottom:6px;display:block;">性別</label>
+      <div style="display:flex;gap:8px;">
+        <button id="gender-male" onclick="setGender('male')" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--rim);background:transparent;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.85rem;cursor:pointer;">男性</button>
+        <button id="gender-female" onclick="setGender('female')" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--rim);background:transparent;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.85rem;cursor:pointer;">女性</button>
+      </div>
+      <div class="input-note" style="margin-top:4px;">※ 五黄土星の方の傾斜・同会の計算に使用します</div>
+    </div>
     <div style="margin-top:10px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
         <label class="input-label" style="margin:0;">生まれた時間</label>
@@ -1278,54 +1285,28 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <input type="time" id="inputBirthTime" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;">
       <div class="input-note" style="margin-top:4px;">夜23時以降生まれの方は翌日の日干支で日納音を補正します。不明な場合は空欄で構いません。</div>
     </div>
-    <!-- 性別選択 -->
-    <div style="margin-top:10px;" id="genderBlock">
-      <label class="input-label" style="margin-bottom:6px;display:block;">性別</label>
-      <div style="display:flex;gap:8px;">
-        <button id="gender-male" onclick="setGender('male')" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--rim);background:transparent;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.85rem;cursor:pointer;">男性</button>
-        <button id="gender-female" onclick="setGender('female')" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--rim);background:transparent;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.85rem;cursor:pointer;">女性</button>
-      </div>
-      <div class="input-note" style="margin-top:4px;">※ 五黄土星の方の傾斜・同会の計算に使用します</div>
-    </div>
-
     <label class="input-label" style="margin-top:10px;">調べる日付</label>
     <input type="date" id="inputDate">
   </div>
 
-  <!-- ② 6つのボタン -->
-  <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+  <!-- ② ボタン2つ -->
+  <button class="launch-btn" style="margin-top:14px;" onclick="launch()">今日の羅針盤を開く ✦</button>
+  <button class="launch-btn" onclick="openDaily()" style="margin-top:10px;background:linear-gradient(135deg,rgba(220,140,160,.25),rgba(200,110,140,.12));border:1px solid rgba(220,140,160,.6);color:#d4667a;font-size:.95rem;letter-spacing:.12em;font-weight:700;">✦ 今日の香り・色・食を知る</button>
+  <div style="text-align:center;font-size:.72rem;color:rgba(180,100,80,.9);margin-top:6px;letter-spacing:.06em;font-weight:600;">※ 先に「今日の羅針盤を開く」を押してからご利用ください</div>
 
-    <button onclick="window.location.href='kyusei_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">⭐</div>
-      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">九星を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;">本命星・月命星・傾斜・納音</div></div>
-    </button>
+  <!-- KITOKU @ RELATIONS -->
+  <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;margin-top:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+    <span style="font-size:1.6rem;">💫</span>
+    <div><div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div>
+    <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">大切な人との相性を読み解く<br>AI深掘りレポート・8人の賢者が語る</div></div>
+  </button>
 
-    <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🧭</div>
-      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">吉方位を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;">今日・今月の吉方向・地図で探す</div></div>
-    </button>
-
-    <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🌸</div>
-      <div><div style="font-size:.9rem;color:#d4667a;font-weight:700;font-family:'Noto Serif JP',serif;">香り・色・食を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;">今日の五感の処方箋</div></div>
-    </button>
-
-    <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🤖</div>
-      <div><div style="font-size:.9rem;color:#2a8a60;font-weight:700;font-family:'Noto Serif JP',serif;">気学 × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;">ChatGPT・Claude・Gemini・Genspark</div></div>
-    </button>
-
-    <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">💫</div>
-      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;">大切な人との相性・AI深掘りレポート</div></div>
-    </button>
-
-    <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">💼</div>
-      <div><div style="font-size:.9rem;color:#6080c0;font-weight:700;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;">採用・人材判断に5000年の知恵を</div></div>
-    </button>
-
-  </div>
+  <!-- KITOKU for BUSINESS -->
+  <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:18px 20px;margin-top:10px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+    <span style="font-size:1.6rem;">💼</span>
+    <div><div style="font-size:.95rem;color:#6080c0;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div>
+    <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div></div>
+  </button>
 
   <div class="save-note">生年月日はこの端末に保存されます</div>
 
@@ -1347,6 +1328,83 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
 
+    <!-- プロジェクト概要スライド -->
+    <div style="margin:0 16px 16px;position:relative;">
+      <div id="slideWrap" style="overflow:hidden;border-radius:12px;border:1px solid rgba(196,160,67,.2);">
+        <div id="slideTrack" style="display:flex;transition:transform .35s ease;will-change:transform;">
+
+          <!-- SLIDE 1 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">01 / 07</div>
+            <div class="slide-title">はじめての方へ<br>安心してお使いください</div>
+            <div class="slide-body slide-body-collapsed">このアプリは「占い」ではありません。<br><br>✅ 個人情報はこの端末にのみ保存されます<br>✅ サーバーへの送信は一切ありません<br>✅ 名前の入力は任意です<br>✅ 無料でお使いいただけます<br><br>5000年の東洋の知恵をもとに、今日をどう生きるかの「ヒント」をお届けします。最終的な判断はいつもご自身で。</div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+          <!-- SLIDE 2 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">02 / 07</div>
+            <div class="slide-title">なぜ、がんばっているのに<br>空回りしてしまうの？</div>
+            <div class="slide-body slide-body-collapsed">それはあなたの能力や努力のせいではありません。<br><br>目に見えない自然の大きなリズムと、あなた自身のリズムの歯車が、ほんの少しずれているだけかもしれません。</div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+          <!-- SLIDE 3 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">03 / 07</div>
+            <div class="slide-title">未来を「当てる」のではなく<br>自分の「OS」を知ること</div>
+            <div class="slide-body slide-body-collapsed">生まれた年と月から、あなたが本来持っている「命のエンジン」のタイプがわかります。<br><br>KITOKUの根底にあるのは、すべてを肯定する力。あなたの個性に良い・悪いというジャッジを下しません。</div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+          <!-- SLIDE 4 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">04 / 07</div>
+            <div class="slide-title">毎朝開くと、<br>3つのことがわかります</div>
+            <div class="slide-body slide-body-collapsed">
+              <div class="slide-item">① 今日の方位<br><span>どこへ足を運べば、エネルギーが高まるかをナビゲート</span></div>
+              <div class="slide-item">② 自分の取説<br><span>星情報をAIに渡すだけ。才能・動かし方を届けてくれます</span></div>
+              <div class="slide-item">③ 今日の言葉<br><span>背中を温かく押してくれる一言</span></div>
+            </div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+          <!-- SLIDE 5 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">05 / 07</div>
+            <div class="slide-title">KITOKUは、<br>あなたを「縛らない」</div>
+            <div class="slide-body slide-body-collapsed">「あの方角へ行ってはいけない」「これをしてはダメ」——従来のサービスは時に人を不安にさせることがありました。<br><br>KITOKUはあなたを縛りません。設定はあなたの信じるルールに合わせて自由にカスタマイズできます。</div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+          <!-- SLIDE 6 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">06 / 07</div>
+            <div class="slide-title">こんな人に<br>届けたい</div>
+            <div class="slide-body slide-body-collapsed">
+              <div class="slide-item">・毎日をもう少し意味のある豊かなものにしたい人</div>
+              <div class="slide-item">・自分の隠れた才能や心の声をもっと深く知りたい人</div>
+              <div class="slide-item">・占いは苦手だけど、東洋の知恵には惹かれる人</div>
+            </div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+          <!-- SLIDE 7 -->
+          <div class="kitoku-slide" onclick="toggleSlideBody(this)">
+            <div class="slide-num">07 / 07</div>
+            <div class="slide-title">2026年4月、<br>無料公開</div>
+            <div class="slide-body slide-body-collapsed">まずは、あなた自身に与えられた命の設計図を知るところから始めてみませんか。<br><br>KITOKU@JOURNEYは、あなたの孤独な旅の<em style="color:var(--goldlt);font-style:normal;">静かな道連れ</em>として、いつも手のひらで寄り添い続けます。</div>
+            <div class="slide-tap-hint">タップで続きを読む ▾</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- ドット -->
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:10px;" id="slideDots"></div>
+      <!-- 左右ボタン -->
+      <button onclick="slideMove(-1)" style="position:absolute;left:-8px;top:50%;transform:translateY(-60%);background:rgba(10,12,24,.7);border:1px solid var(--rim);border-radius:50%;width:32px;height:32px;color:var(--gold);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+      <button onclick="slideMove(1)" style="position:absolute;right:-8px;top:50%;transform:translateY(-60%);background:rgba(10,12,24,.7);border:1px solid var(--rim);border-radius:50%;width:32px;height:32px;color:var(--gold);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
+    </div>
     <!-- 今日のあなたへ贈る言葉 -->
     <div id="todayWordWrap" style="margin:0 16px 16px;padding:14px 18px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:12px;text-align:left;">
       <div style="font-size:.58rem;letter-spacing:.2em;color:rgba(196,160,67,.7);margin-bottom:8px;font-weight:600;">✦ 今日のあなたへ贈る言葉</div>
@@ -1357,83 +1415,72 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div class="launch-sub">天地統合コンシェルジュ</div>
   </div>
 
+  <!-- 悩み別モード入口 -->
+  <div id="nayamiMode" style="margin:8px 16px 0;">
+    <div style="font-size:.65rem;letter-spacing:.18em;color:rgba(196,160,67,.6);text-align:center;margin-bottom:10px;">✦ はじめての方へ — 悩みから始める</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <button onclick="selectNayami('love')" id="nayami-love" class="nayami-btn">
+        <div class="nayami-icon">💫</div>
+        <div class="nayami-label">モテたい・愛されたい</div>
+      </button>
+      <button onclick="selectNayami('money')" id="nayami-money" class="nayami-btn">
+        <div class="nayami-icon">✨</div>
+        <div class="nayami-label">稼ぎたい・豊かになりたい</div>
+      </button>
+      <button onclick="selectNayami('relation')" id="nayami-relation" class="nayami-btn">
+        <div class="nayami-icon">🌿</div>
+        <div class="nayami-label">人間関係をよくしたい</div>
+      </button>
+      <button onclick="selectNayami('change')" id="nayami-change" class="nayami-btn">
+        <div class="nayami-icon">🌅</div>
+        <div class="nayami-label">自分を変えたい・成長したい</div>
+      </button>
+    </div>
+
+    <!-- MBTI入口 -->
+    <button onclick="selectNayami('mbti')" id="nayami-mbti" class="nayami-btn" style="width:100%;margin-bottom:10px;background:rgba(100,120,200,.06);border-color:rgba(100,140,220,.25);">
+      <div style="display:flex;align-items:center;gap:10px;padding:2px 4px;">
+        <div style="font-size:1.4rem;">🔤</div>
+        <div style="text-align:left;">
+          <div style="font-size:.78rem;color:var(--snow);font-weight:600;letter-spacing:.04em;">MBTIが気になる方へ</div>
+          <div style="font-size:.62rem;color:var(--mist);margin-top:2px;">16タイプより深い「あなただけの設計図」があります</div>
+        </div>
+      </div>
+    </button>
+    <!-- 選択後メッセージ -->
+    <div id="nayamiMessage" style="display:none;margin-bottom:10px;padding:14px 16px;background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.25);border-radius:10px;">
+      <div id="nayamiMsgText" style="font-size:.82rem;color:var(--snow);line-height:2;margin-bottom:8px;"></div>
+      <div style="font-size:.72rem;color:var(--mist);">まず生年月日を入力してください。あなたの星から答えが見つかります。</div>
+    </div>
+    <div style="text-align:center;margin-bottom:8px;">
+      <span onclick="skipNayami()" style="font-size:.62rem;color:rgba(196,160,67,.45);cursor:pointer;letter-spacing:.08em;text-decoration:underline;">気学をご存知の方はスキップ →</span>
+    </div>
+  </div>
+
+  <!-- 九星を知る ── 強調版 -->
+  <div style="margin:32px 16px 0;">
+    <!-- タイトル帯 -->
+    <div class="intro-section" style="background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:12px;padding:18px 20px 14px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:.7rem;letter-spacing:.28em;color:var(--gold);margin-bottom:8px;">✦ はじめての方へ</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--goldlt);letter-spacing:.12em;margin-bottom:10px;">自分の星を知る</div>
+      <div class="intro-desc" style="font-size:.82rem;line-height:2;padding:0 4px;">
+        九星気学では、生まれた年によって<br>
+        <em style="color:var(--goldlt);font-style:normal;font-weight:600;">「本命星」</em>という星が決まります。<br>
+        あなたの星をタップして、その意味を知りましょう。
+      </div>
+    </div>
+    <!-- 九星グリッド -->
+    <div id="starGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+    <!-- 注意書き -->
+    <div class="intro-note" style="margin-top:14px;padding:12px 16px;background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.15);border-radius:8px;font-size:.75rem;line-height:2;text-align:center;">
+      ⚠️ 1月・2月生まれの方は前年の星になる場合があります。<br>生年月日を入力すると正確に計算されます。
+    </div>
+  </div>
+
   <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
 </div>
 
 <!-- ══ 結果画面 ══ -->
-<!-- ══ 結果画面 ══ -->
-<!-- ===== メニュー画面 ===== -->
-<div class="screen" id="screenMenu">
-  <div style="padding:20px 16px 10px;text-align:center;">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:.7rem;letter-spacing:.3em;color:var(--gold);margin-bottom:6px;">KITOKU @ JOURNEY</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.1em;color:var(--goldlt);margin-bottom:4px;" id="menuStarName">—</div>
-    <div style="font-size:.62rem;color:var(--mist);margin-bottom:20px;" id="menuStarSub">何を知りたいですか？</div>
-  </div>
-
-  <div style="padding:0 16px 40px;display:flex;flex-direction:column;gap:10px;">
-
-    <!-- ⭐ 九星を知る -->
-    <button onclick="window.location.href='kyusei_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">⭐</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">九星を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">本命星・月命星・傾斜・納音<br>あなたの魂の設計図を読み解く</div>
-      </div>
-    </button>
-
-    <!-- 🧭 吉方位を知る -->
-    <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🧭</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">吉方位を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日・今月の吉方向<br>近所の吉方スポットを地図で探す</div>
-      </div>
-    </button>
-
-    <!-- 🌸 香り・色・食を知る -->
-    <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🌸</div>
-      <div>
-        <div style="font-size:.95rem;color:#d4667a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香り・色・食を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日の五感の処方箋<br>星に合わせた色・食・香りを知る</div>
-      </div>
-    </button>
-
-    <!-- 🤖 気学 × AI -->
-    <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🤖</div>
-      <div>
-        <div style="font-size:.95rem;color:#2a8a60;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">気学 × AI</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">星情報をAIに渡してアドバイスをもらう<br>ChatGPT・Claude・Gemini・Genspark</div>
-      </div>
-    </button>
-
-    <!-- 💫 KITOKU @ RELATIONS -->
-    <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">💫</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">大切な人との相性を読み解く<br>AI深掘りレポート・8人の賢者が語る</div>
-      </div>
-    </button>
-
-    <!-- 💼 KITOKU for BUSINESS -->
-    <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">💼</div>
-      <div>
-        <div style="font-size:.95rem;color:#6080c0;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div>
-      </div>
-    </button>
-
-    <!-- 生年月日を変更 -->
-    <button onclick="backToInput()" style="width:100%;background:none;border:1px solid var(--rim);border-radius:10px;padding:12px;cursor:pointer;font-size:.75rem;color:var(--mist);font-family:'Noto Serif JP',serif;margin-top:4px;">
-      ← 生年月日を変更する
-    </button>
-
-  </div>
-</div>
-
 <div class="screen" id="screenResult">
   <div class="result-header">
     <div class="result-date" id="rDate"></div>
@@ -1854,12 +1901,12 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <!-- 今日の流れ -->
     <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;">
       <div style="font-size:.6rem;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;">✦ 今日の流れ</div>
-      <div id="daily-flow-text" style="font-size:.85rem;color:var(--snow);line-height:2;"></div>
+      <div id="daily-flow-text" style="font-size:.95rem;color:var(--snow);line-height:2.2;font-weight:500;letter-spacing:.03em;"></div>
     </div>
     <!-- 香り（上部に移動） -->
     <div style="background:linear-gradient(135deg,rgba(232,160,100,.12),rgba(220,130,80,.06));border:1px solid rgba(220,140,80,.4);border-radius:12px;padding:14px;margin-bottom:14px;">
-      <div style="font-size:.72rem;color:#d4956a;font-weight:700;margin-bottom:8px;">🌸 今日の香り</div>
-      <div id="daily-kaori-text" style="font-size:.82rem;color:var(--snow);line-height:2;"></div>
+      <div style="font-size:.72rem;color:#d4956a;font-weight:800;letter-spacing:.12em;margin-bottom:8px;">🌸 今日の香り</div>
+      <div id="daily-kaori-text" style="font-size:.88rem;color:var(--snow);line-height:2.1;"></div>
     </div>
     <!-- 吉方取り処方箋 -->
     <div id="daily-body" style=""></div>
@@ -1870,7 +1917,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <!-- 方位盤ボタン（一番下） -->
     <div style="text-align:center;margin-bottom:24px;">
-      <button onclick="launch()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:8px;color:var(--goldlt);font-size:.82rem;padding:12px 32px;cursor:pointer;letter-spacing:.12em;width:100%;">方位盤を開く →</button>
+      <button onclick="launch()" style="background:linear-gradient(135deg,rgba(196,160,67,.18),rgba(196,160,67,.08));border:1px solid rgba(196,160,67,.5);border-radius:10px;color:var(--gold);font-size:.9rem;padding:15px 32px;cursor:pointer;letter-spacing:.15em;width:100%;font-weight:700;">方位盤を開く →</button>
     </div>
   </div>
 </div><!-- /screenDaily -->
@@ -1923,7 +1970,14 @@ function getZodiac(y){return ZODIAC[((y-2020)%12+12)%12];}
 const SANGO_MAP={子:{group:'水局',dirs:['N','SE','SW']},丑:{group:'金局',dirs:['SE','W','NE']},寅:{group:'火局',dirs:['NE','S','NW']},卯:{group:'木局',dirs:['NW','E','SW']},辰:{group:'水局',dirs:['N','SE','SW']},巳:{group:'金局',dirs:['SE','W','NE']},午:{group:'火局',dirs:['NE','S','NW']},未:{group:'木局',dirs:['NW','E','SW']},申:{group:'水局',dirs:['N','SE','SW']},酉:{group:'金局',dirs:['SE','W','NE']},戌:{group:'火局',dirs:['NE','S','NW']},亥:{group:'木局',dirs:['NW','E','SW']}};
 const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
 function aiseiList(s,tsukimei,gender){
-  if(s===5&&tsukimei===5){return new Set([2,6,7,8,9]);}
+  // 五黄土星（5-5）の特別処理
+  if(s===5&&tsukimei===5){
+    const g=gender||localStorage.getItem('kitoku-gender')||'male';
+    // 基本吉方（五黄の相生）＋ボーナス方位（切替星）
+    const base=[2,6,7,8,9];
+    const bonus=g==='female'?6:7; // 女:六白・男:七赤
+    return new Set(base.filter(x=>x!==5));
+  }
   return new Set((AISEI[s]||[]).filter(x=>x!==5&&x!==s));
 }
 const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
@@ -2150,9 +2204,10 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   const bonus55=is55?(gender==='female'?6:7):null;
   const honList=aiseiList(honmei,tsukimei,gender);
   const tsukiList=is55?honList:aiseiList(tsukimei);
+  // 5-5ボーナス方位（六白or七赤の方位も吉）
+  const inBonus55=is55&&bonus55&&starN===bonus55;
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
-  const inBonus55=is55&&bonus55&&starN===bonus55;
   if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inBonus55)return{rank:3,badges:['✦ 特大ボーナス方位','⭐ 5-5特例',(inTendo?'☀️ 天道':null)].filter(Boolean)};
@@ -2294,52 +2349,6 @@ let gState={};
   }
 })();
 
-// ===== トップ画面ナビゲーション =====
-function goToMystar(){
-  // 生年月日入力→星表示のみ（吉方なし）
-  window.location.href='mystar.html';
-}
-
-function goToKiho(){
-  // 既存の羅針盤
-  showScreen('screenInput');
-}
-
-function goToDaily(){
-  // 既存の香り・色・食
-  // まず生年月日が登録済みか確認
-  const b=localStorage.getItem('kitoku-birth');
-  if(b){
-    // 登録済みなら直接dailyへ
-    const arr=b.split('/');
-    if(arr.length>=2){
-      // screenDailyを表示
-      showScreen('screenDaily');
-    } else {
-      showScreen('screenInput');
-      document.getElementById('dailyAfterInput') && (dailyMode=true);
-    }
-  } else {
-    showScreen('screenInput');
-  }
-}
-
-function goToAI(){
-  window.location.href='ai.html';
-}
-
-function backToInput(){
-  showScreen('screenInput');
-}
-
-// メニュー画面の星名を更新
-function updateMenuStar(starName,starSub){
-  const nm=document.getElementById('menuStarName');
-  const sb=document.getElementById('menuStarSub');
-  if(nm)nm.textContent=starName||'—';
-  if(sb)sb.textContent=starSub||'何を知りたいですか？';
-}
-
 function launch(){
   const bStr=document.getElementById('inputBirth').value;
   const dStr=document.getElementById('inputDate').value;
@@ -2370,13 +2379,7 @@ function launch(){
     }
     loading.classList.remove('show');
     document.getElementById('screenInput').classList.remove('active');
-    // メニューの星名を更新
-    try{
-      const [by,bm]=document.getElementById('inputBirth').value.split('-').map(Number);
-      const sn=gState&&gState.honmei?STARS[gState.honmei.n]:null;
-      updateMenuStar(sn?sn.j:'あなたの星','何を知りたいですか？');
-    }catch(e){}
-    // メニュー不要
+    document.getElementById('screenResult').classList.add('active');
     document.getElementById('headerReset').style.display='block';
     window.scrollTo(0,0);
   },600);
@@ -2392,7 +2395,7 @@ function showInput(){
 // ══ KITOKU@DAILY ══
 
 function showScreen(id){
-  ['screenInput','screenResult','screenDaily','screenMenu'].forEach(s=>{
+  ['screenInput','screenResult','screenDaily'].forEach(s=>{
     const el=document.getElementById(s);
     if(el)el.classList.remove('active');
   });
@@ -2441,6 +2444,8 @@ async function openDaily(){
   // ══ 蔵のデータ固定DB ══
   var KITOKU_DAILY_DB={
     '木':{
+      kondateRiyu:'今日は木のエネルギーの日。木の五行には「上昇・新緑・停滞を動かす力」があります。酸味・緑の食材でそのエネルギーを体に取り込みましょう。',
+      kondate:{ippin:['鶏肉と野菜の炒め物','野菜炒め（もやし・ニラ）','酢鶏','青じそ入りサラダ'],asa:['ほうれん草の卵炒め・緑茶','アボカドトースト・柑橘ジュース'],hiru:['鶏肉と野菜の炒め物・そば','野菜炒め定食・緑茶'],yoru:['酢鶏・青じそサラダ','野菜炒め（もやし・ニラ）・冷奴ポン酢']},
       conbini:{s7:'野菜サラダ・サンドイッチ',la:'サラダ・そば・うどん',fm:'サラダ・サンドイッチ'},
       conbini_alt:'緑茶・柑橘系グミ・レモン系飲料でも可',
       kaori:[
@@ -2455,6 +2460,8 @@ async function openDaily(){
       }
     },
     '火':{
+      kondateRiyu:'今日は火のエネルギーの日。火の五行には「情熱・拡散・美意識の向上」があります。辛味・赤い食材が火のエネルギーを体に灯します。',
+      kondate:{ippin:['麻婆豆腐','キムチ炒め','エビチリ','回鍋肉'],asa:['トマトスクランブルエッグ・赤系スムージー','キムチ卵かけごはん'],hiru:['麻婆豆腐定食','トマトパスタ・赤ワインビネガーサラダ'],yoru:['回鍋肉・キムチスープ','エビチリ・麻婆豆腐']},
       conbini:{s7:'からあげ棒・ホットコーヒー・激辛グミ',la:'からあげクン・マチカフェコーヒー・揚げ物',fm:'ファミチキ・コーヒー・ホットスナック'},
       conbini_alt:'シナモン入り飲料・温かいお茶・辛いスナックでも可',
       kaori:[
@@ -2469,6 +2476,8 @@ async function openDaily(){
       }
     },
     '土':{
+      kondateRiyu:'今日は土のエネルギーの日。土の五行には「安定・グラウンディング・基盤の守護」があります。甘味・根菜が心身を落ち着かせます。',
+      kondate:{ippin:['肉じゃが','豚汁','筑前煮','里芋の煮物'],asa:['さつまいもトースト・ほうじ茶','かぼちゃスープ・おにぎり'],hiru:['肉じゃが定食・麦茶','根菜カレー・豚汁'],yoru:['筑前煮・里芋の煮物','豚の角煮・根菜の味噌汁']},
       conbini:{s7:'おにぎり・肉まん・カスタードシュー',la:'おにぎり・お弁当・焼き菓子',fm:'大きなおむすび・肉まん・チョコ系パン'},
       conbini_alt:'ほうじ茶・麦茶・根菜スープでも可',
       kaori:[
@@ -2483,6 +2492,8 @@ async function openDaily(){
       }
     },
     '金':{
+      kondateRiyu:'今日は金のエネルギーの日。金の五行には「収穫・決断力・品格の向上」があります。白い食材・辛味が頭をクリアにします。',
+      kondate:{ippin:['塩麹鶏','大根おろしステーキ','水炊き','白身魚の塩焼き'],asa:['白米おにぎり・大根の味噌汁','塩鮭・白湯'],hiru:['鶏の塩焼き定食・烏龍茶','白身魚定食・大根おろし添え'],yoru:['水炊き（鶏・白菜）','塩麹鶏・大根の煮物']},
       conbini:{s7:'サラダチキン・中華まん・こだわり弁当',la:'よだれ鶏・アイス・チルド弁当',fm:'チルド惣菜・アイス・中華まん'},
       conbini_alt:'烏龍茶・ジャスミン茶・白いチキン系でも可',
       kaori:[
@@ -2497,6 +2508,8 @@ async function openDaily(){
       }
     },
     '水':{
+      kondateRiyu:'今日は水のエネルギーの日。水の五行には「浄化・直感・深い休息」があります。塩味・海のものが感性を研ぎ澄まします。',
+      kondate:{ippin:['蒸し鶏ポン酢','冷奴','わかめスープ','牡蠣のソテー'],asa:['わかめスープ・豆腐の味噌汁','昆布おにぎり・白湯'],hiru:['海鮮丼・わかめスープ','冷奴定食・そば'],yoru:['鍋（昆布だし）・蒸し鶏ポン酢','牡蠣のソテー・しじみの味噌汁']},
       conbini:{s7:'おでん・お寿司・冷凍食品',la:'おでん・お寿司・スープ',fm:'おでん・お寿司・わかめスープ'},
       conbini_alt:'昆布おにぎり・豆腐・しじみのお味噌汁でも可',
       kaori:[
@@ -2530,6 +2543,28 @@ async function openDaily(){
           +'<div><div class="food-name">'+f+'</div>'
           +'<div class="food-reason">'+s.elem+'のエネルギーを取り込む食べ物・飲み物です</div></div></div>';
       }).join('');
+      var kd=db?db.kondate:null;
+      var ksd=(ty||0)*10000+(tm||0)*100+(td||0);
+      var kondateHTML=kd?
+        '<div style="background:linear-gradient(135deg,rgba(80,160,120,.10),rgba(60,140,100,.05));border:1px solid rgba(80,160,120,.35);border-radius:12px;padding:14px;margin-bottom:12px;">'+
+          '<div style="font-size:.72rem;letter-spacing:.12em;color:#5aaa80;font-weight:800;margin-bottom:10px;">🍱 今日の献立処方箋</div>'+
+          (db.kondateRiyu?'<div style="font-size:.8rem;color:var(--snow);line-height:1.9;padding:8px 10px;background:rgba(80,160,120,.08);border-radius:8px;margin-bottom:10px;">'+db.kondateRiyu+'</div>':'')+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'+
+            '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
+              '<div style="font-size:.6rem;color:#5aaa80;margin-bottom:5px;font-weight:700;">☀️ 朝</div>'+
+              '<div style="font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;">'+kd.asa[ksd%kd.asa.length]+'</div>'+
+            '</div>'+
+            '<div style="background:var(--card);border-radius:8px;padding:10px;">'+
+              '<div style="font-size:.6rem;color:#5aaa80;margin-bottom:5px;font-weight:700;">🌤 昼</div>'+
+              '<div style="font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;">'+kd.hiru[ksd%kd.hiru.length]+'</div>'+
+            '</div>'+
+          '</div>'+
+          '<div style="background:var(--card);border-radius:8px;padding:10px;margin-bottom:8px;">'+
+            '<div style="font-size:.6rem;color:#5aaa80;margin-bottom:5px;font-weight:700;">🌙 夜</div>'+
+            '<div style="font-size:.86rem;color:var(--snow);line-height:1.9;font-weight:600;">'+kd.yoru[ksd%kd.yoru.length]+'</div>'+
+          '</div>'+
+          '<div style="font-size:.8rem;color:#5aaa80;padding:8px 0;font-weight:600;">✦ 一品だけ足すなら：'+kd.ippin[ksd%kd.ippin.length]+'</div>'+
+        '</div>':'';
       // コンビニ別おすすめ
       var conbiniHTML=db?
         '<div style="font-size:.72rem;color:var(--gold);margin:10px 0 4px;">🏪 コンビニで選ぶなら</div>'+
@@ -2563,6 +2598,7 @@ async function openDaily(){
           '</div>'+
         '</div>'+
         iroHTML+
+        kondateHTML+
         '<div class="food-title">✦ 今日の吉方取り処方箋</div>'+
         '<div class="food-cards" style="margin-bottom:6px;">'+foodsHTML+'</div>'+
         conbiniHTML+
@@ -2639,11 +2675,14 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   const H=STARS[honmei];
 
   // 本命＝月命の場合、月命を先天対冲に変換してから傾斜・同会を算出
+  // 定位対冲テーブル（村山先生指示書準拠）
   const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
   const gender=localStorage.getItem('kitoku-gender')||'male';
   TAICHUU[5]=gender==='female'?6:7;
   let tsukimeiForKeisha=tsukimei;
-  if(honmei===tsukimei){ tsukimeiForKeisha=TAICHUU[tsukimei]||tsukimei; }
+  if(honmei===tsukimei){
+    tsukimeiForKeisha=TAICHUU[tsukimei]||tsukimei;
+  }
   const T=STARS[tsukimei];
 
   // 調べる日の情報
@@ -2695,6 +2734,22 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   document.getElementById('ms-tsuki').textContent=T.j;
   document.getElementById('ms-tsuki-sub').textContent='内なる深層';
   document.getElementById('ms-keisha').textContent=K.j;
+
+  // 本命=月命の場合Y理論メッセージ
+  const taiMsg=document.getElementById('ms-taichuu-msg');
+  if(taiMsg){
+    if(honmei===tsukimei){
+      const switchedStar=STARS[tsukimeiForKeisha];
+      taiMsg.style.display='block';
+      taiMsg.innerHTML=`<div style="font-size:.68rem;line-height:2;color:var(--goldlt);padding:10px 12px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.2);border-radius:8px;margin-top:10px;">
+        ✦ あなたは本命星と月命星に同じ星を持つ、極めて純度が高く、強烈なエネルギーを秘めた方です。<br>
+        宇宙はその強すぎるエネルギーが暴走しないよう、あなたに<strong>「${switchedStar?switchedStar.j:''}」</strong>という特別なサブエンジン（潜在能力・舞台）を与えました。<br>
+        ご自身の根底にある圧倒的な強さと、いざ社会に出た時の<strong>「${switchedStar?switchedStar.j:''}」</strong>としての柔軟さ・知恵を使いこなすことで、あなたの人生は無敵のステージへと広がります。
+      </div>`;
+    } else {
+      taiMsg.style.display='none';
+    }
+  }
   document.getElementById('ms-dokai').textContent=Dk.j;
   document.getElementById('ms-nouin').textContent=nayin.n;
   // 月納音
@@ -3091,13 +3146,6 @@ function renderKichiList(dirData,p2s){
     if(dd.rank>=5||dd.rank>=4)cls+=' saiko';
     else if(dd.rank>=3)cls+=' dai';
     const rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方':dd.rank>=4?'本命・月命　ともに吉方':dd.rank>=3?'吉方（三合の後押しあり）':'吉方（人に与える日）';
-    // 方位を角度に変換（地図検索用）
-    const dirAngle={N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
-    const angle=dirAngle[dir]||0;
-    const dirJP=JP[dir]||dir;
-    const googleUrl=`https://www.google.com/maps/search/${encodeURIComponent(dirJP+'方向 カフェ')}`;
-    const appleUrl=`maps://maps.apple.com/?q=${encodeURIComponent(dirJP+'方向')}`;
-    const yahooUrl=`https://map.yahoo.co.jp/search?q=${encodeURIComponent(dirJP+'方向 スポット')}`;
     return `<div class="${cls}">
       <div class="kichi-dir-badge">
         <div class="kichi-dir">${EN[dir]}</div>
@@ -3108,11 +3156,6 @@ function renderKichiList(dirData,p2s){
         <div class="kichi-star">${s.j}</div>
         <div class="kichi-badges">${dd.badges.map(b=>`<span class="kbadge">${b}</span>`).join('')}</div>
         <div class="kichi-tap">タップして飲食提案を見る 👆</div>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
-          <a href="${googleUrl}" target="_blank" style="display:inline-block;background:rgba(66,133,244,.12);border:1px solid rgba(66,133,244,.3);border-radius:6px;padding:5px 10px;font-size:.62rem;color:#4285f4;text-decoration:none;font-family:'Noto Serif JP',serif;">🗺 Google</a>
-          <a href="${appleUrl}" style="display:inline-block;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:6px;padding:5px 10px;font-size:.62rem;color:var(--goldlt);text-decoration:none;font-family:'Noto Serif JP',serif;">🍎 Apple</a>
-          <a href="${yahooUrl}" target="_blank" style="display:inline-block;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.2);border-radius:6px;padding:5px 10px;font-size:.62rem;color:#cc0000;text-decoration:none;font-family:'Noto Serif JP',serif;">🔴 Yahoo!</a>
-        </div>
       </div>
     </div>`;
   }).join('');
@@ -4144,7 +4187,7 @@ function selectNayami(type){
 function skipNayami(){
   _selectedNayami=null;
   gState.nayamiType=null;
-  const nm=document.getElementById('nayamiMode');if(nm)nm.style.display='none';
+  document.getElementById('nayamiMode').style.display='none';
 }
 
 // 悩み別テンプレートのコピー（AIに聞くから呼ばれる）
