@@ -4184,8 +4184,12 @@ function copyAIPrompt(){
     document.getElementById('screenInput').classList.remove('active');
     document.getElementById('screenResult').classList.add('active');
     if(typeof switchMainTab==='function') switchMainTab('compass');
-    // ← 画面表示後に方位盤を再描画（aspect-ratio対策）
-    if(typeof renderBan==='function') renderBan(gState.currentBan||'day');
+    // ← 画面表示後に方位盤を再描画（aspect-ratio対策・1フレーム待つ）
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        if(typeof renderBan==='function') renderBan(gState.currentBan||'day');
+      });
+    });
     var hr=document.getElementById('headerReset');
     if(hr)hr.style.display='block';
     window.scrollTo(0,0);
