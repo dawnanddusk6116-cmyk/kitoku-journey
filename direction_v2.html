@@ -1109,7 +1109,10 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 <!-- ギャラリーポップアップ -->
 <div id="imgGalleryPanel" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.92);overflow-y:auto;">
   <div style="max-width:480px;margin:0 auto;padding:16px 16px env(safe-area-inset-bottom,20px);">
-    <!-- ヘッダー -->
+    <!-- ── DEBUGエリア ── -->
+<div id="computeDebug" style="padding:6px 12px;background:rgba(255,0,0,.08);border-bottom:1px solid rgba(255,0,0,.2);font-size:.62rem;color:#c04040;word-break:break-all;min-height:18px;"></div>
+
+<!-- ヘッダー -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0 20px;">
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#f0d878;letter-spacing:.15em;font-weight:700;">✦ KITOKUの世界</div>
       <button onclick="closeImgGallery()" style="background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.4);border-radius:8px;color:#ffffff;font-size:.82rem;padding:7px 18px;cursor:pointer;font-weight:600;">閉じる</button>
@@ -2199,6 +2202,12 @@ async function openDaily(){
 }
 
 function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
+  // ── DEBUGスタート ──
+  try{
+    const dbgEl = document.getElementById('computeDebug');
+    if(dbgEl) dbgEl.textContent = `DEBUG START: by=${by} bm=${bm} bd=${bd} ty=${ty} tm=${tm} td=${td}`;
+  }catch(e){}
+
   // 本命星算出
   const {kY,kM}=getKD(by,bm,bd);
   const honmei=calcHonmei(kY);
@@ -2290,20 +2299,16 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   updateBanNavLabel();
   updateClaudeStarText();
 
-  // デバッグ：renderBan完了後にcompassWrapの状態を確認
-  setTimeout(function(){
+  // ── DEBUG renderBan後 ──
+  try{
+    const dbgEl = document.getElementById('computeDebug');
     const w = document.getElementById('compassWrap');
-    if(!w) return;
-    const grid = w.querySelector('.compass-grid');
-    const dbg = document.createElement('div');
-    dbg.style.cssText = 'font-size:.6rem;color:#a04040;padding:4px 8px;background:rgba(255,0,0,.06);border-radius:4px;margin-top:4px;';
-    if(!grid){
-      dbg.textContent = '⚠️ DEBUG: compass-grid が存在しない';
-    } else {
-      dbg.textContent = `✅ DEBUG: grid存在 / offsetWidth=${grid.offsetWidth} / offsetHeight=${grid.offsetHeight} / children=${grid.children.length}`;
-    }
-    w.parentNode.insertBefore(dbg, w.nextSibling);
-  }, 200);
+    const grid = w ? w.querySelector('.compass-grid') : null;
+    if(dbgEl) dbgEl.textContent += ` | renderBan完了 | grid=${grid?'あり':'なし'} | w=${grid?grid.offsetWidth+'x'+grid.offsetHeight:'N/A'}`;
+  }catch(e2){
+    const dbgEl = document.getElementById('computeDebug');
+    if(dbgEl) dbgEl.textContent += ` | renderBan後エラー:${e2.message}`;
+  }
 }
 
 function switchBan(type){
