@@ -166,6 +166,8 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
           <div class="mystar-cell-tap">✦ タップで詳しく見る</div>
         </div>
       </div>
+      <!-- 本命＝月命の場合のY理論メッセージ -->
+      <div id="sameStarMsg" style="display:none;margin-top:10px;padding:14px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.2);border-radius:10px;"></div>
       <!-- 納音 -->
       <div class="nouin-row">
         <div class="nouin-lbl">納音（ナッチン）👆 各バッジをタップ</div>
@@ -287,18 +289,18 @@ function init(){
   const [by,bm,bd=1] = arr;
   if(!by||!bm){ document.getElementById('noData').style.display='block'; return; }
 
-  // エンジン関数で計算
+  // エンジン関数で計算（engine.jsのgetTsukimeiForKeishaを使用）
   const {kY,kM} = getKD(by,bm,bd);
   const h = calcHonmei(kY);
   const t = calcTsukimei(h,kM);
-  const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
-  const tFK = (h===t&&TAICHUU[t])?TAICHUU[t]:t;
+  const tFK = getTsukimeiForKeisha(h, t); // ← engine.jsの正しい定位対冲ロジック
+  const isSameStar = (h === t); // 本命＝月命フラグ
   const k = calcKeisha(h,tFK);
   const d = calcDokai(h,tFK);
   const yn = calcNayin(by);
   const mn = calcMonthNayin(by,bm,bd);
 
-  gKyusei = {h,t,tFK,k,d,yn,mn};
+  gKyusei = {h,t,tFK,k,d,yn,mn,isSameStar};
 
   const SH = STARS[h], ST = STARS[t], SK = STARS[k], SD = STARS[d];
 
@@ -308,6 +310,24 @@ function init(){
   document.getElementById('msName').textContent = SH.j;
   document.getElementById('msSub').textContent = SH.elem+'の星 — '+SH.color;
   document.getElementById('mystarCard').style.borderLeft = '3px solid '+SH.c+'66';
+
+  // 本命＝月命の場合：Y理論メッセージを表示
+  const sameMsg = document.getElementById('sameStarMsg');
+  if(sameMsg){
+    if(isSameStar){
+      const subName = STARS[tFK] ? STARS[tFK].j : '';
+      sameMsg.style.display = 'block';
+      sameMsg.innerHTML = `
+        <div style="font-size:.62rem;letter-spacing:.12em;color:rgba(196,160,67,.8);font-weight:700;margin-bottom:6px;">✦ 特別なメッセージ</div>
+        <div style="font-size:.75rem;line-height:2;color:var(--mist);">
+          あなたは本命星と月命星に同じ星を持つ、極めて純度が高く、強烈なエネルギーを秘めた方です。
+          宇宙はその強すぎるエネルギーが暴走しないよう、あなたに<strong style="color:var(--goldlt);">「${subName}」</strong>という特別なサブエンジン（潜在能力・舞台）を与えました。
+          ご自身の根底にある圧倒的な強さと、いざ社会に出た時の「${subName}」としての柔軟さ・知恵を使いこなすことで、あなたの人生は無敵のステージへと広がります。
+        </div>`;
+    } else {
+      sameMsg.style.display = 'none';
+    }
+  }
 
   // 4枚カード
   setCell('h', SH, h); setCell('t', ST, t);
@@ -472,6 +492,10 @@ if(document.readyState==='loading'){
 }else{
   init();
 }
+// ← 戻るボタン対策：キャッシュから復元された時も再実行
+window.addEventListener('pageshow', function(e){
+  if(e.persisted) init();
+});
 
 function setTheme(t){
   document.body.setAttribute('data-theme',t);
