@@ -958,7 +958,25 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
-  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
+  <button class="tb-btn" onclick="openBirthModal()" style="margin-left:auto;border-color:rgba(109,212,232,.4);color:rgba(109,212,232,.9);font-weight:700;letter-spacing:.06em;">👤 変更</button>
+  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:4px;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
+</div>
+
+<!-- 生年月日変更モーダル -->
+<div id="birthChangeModal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.75);align-items:flex-end;justify-content:center;">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--rim);width:100%;max-width:480px;padding:24px 24px env(safe-area-inset-bottom,32px);animation:slideUp .3s ease;margin:0 auto;">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--goldlt);letter-spacing:.15em;margin-bottom:6px;">生年月日を変更する</div>
+    <div style="font-size:.68rem;color:var(--mist);margin-bottom:18px;line-height:1.8;">ご家族や知人の方位を調べる場合もここから変更できます。<br>変更後は「方位盤を更新」を押してください。</div>
+    <label style="font-size:.78rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:8px;font-weight:600;">生年月日</label>
+    <input type="date" id="birthChangeInput" max="2015-12-31" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;margin-bottom:12px;">
+    <label style="font-size:.78rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:8px;font-weight:600;">調べる日付</label>
+    <input type="date" id="birthChangeDateInput" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;margin-bottom:20px;">
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeBirthModal()" style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:8px;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.88rem;padding:13px;cursor:pointer;letter-spacing:.08em;">キャンセル</button>
+      <button onclick="applyBirthChange()" style="flex:2;background:linear-gradient(135deg,rgba(196,160,67,.28),rgba(196,160,67,.14));border:1px solid rgba(196,160,67,.6);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.88rem;padding:13px;cursor:pointer;letter-spacing:.1em;font-weight:700;">方位盤を更新 ✦</button>
+    </div>
+  </div>
 </div>
 
 <!-- 設定パネル -->
@@ -1845,6 +1863,11 @@ let gState={};
     const swSeason=document.getElementById('sw-season');
     if(swSeason){swSeason.checked=seasonAlert;_updateToggleUI('sw-season',seasonAlert);}
   }catch(e){gState.soukouOff=false;gState.teiiAsKyo=false;gState.kichakuWarn=false;gState.seasonAlert=true;}
+  // 設定モード（かんたん/くわしい）の復元
+  try{
+    const savedMode = localStorage.getItem('kitoku-setting-mode') || 'basic';
+    setSettingMode(savedMode);
+  }catch(e){}
     const btnS=document.getElementById('orient-s');
     const btnN=document.getElementById('orient-n');
     if(btnS)btnS.classList.toggle('active',savedOrient==='south');
@@ -3295,6 +3318,7 @@ function closeSettings(){
   if(p){p.style.display='none';}
 }
 function setSettingMode(m){
+  try{localStorage.setItem('kitoku-setting-mode',m);}catch(e){}
   const isExpert=m==='expert';
   const es=document.getElementById('expert-settings');
   const hint=document.getElementById('smode-hint');
@@ -3966,11 +3990,51 @@ function calcDayNayin(year, month, day, timeStr){
 
 // ── ライトモード改善 ──
 function clearBirth(){
-  try{localStorage.removeItem('kitoku-birth');}catch(e){}
-  document.getElementById('birthRegistered').style.display='none';
-  document.getElementById('inputBirth').style.display='block';
-  document.getElementById('inputBirth').value='';
-  document.getElementById('birthNote').style.display='block';
+  openBirthModal();
+}
+
+// ── 生年月日変更モーダル ──
+function openBirthModal(){
+  const modal = document.getElementById('birthChangeModal');
+  if(!modal) return;
+  // 現在の生年月日をプリセット
+  const saved = localStorage.getItem('kitoku-birth') || '';
+  const birthInput = document.getElementById('birthChangeInput');
+  if(birthInput) birthInput.value = saved;
+  // 調べる日付をプリセット（今日）
+  const dateInput = document.getElementById('birthChangeDateInput');
+  if(dateInput){
+    const dEl = document.getElementById('inputDate');
+    dateInput.value = dEl ? dEl.value : '';
+  }
+  modal.style.display = 'flex';
+}
+function closeBirthModal(){
+  const modal = document.getElementById('birthChangeModal');
+  if(modal) modal.style.display = 'none';
+}
+function applyBirthChange(){
+  const bStr = document.getElementById('birthChangeInput').value;
+  const dStr = document.getElementById('birthChangeDateInput').value;
+  if(!bStr){ alert('生年月日を入力してください'); return; }
+  if(!dStr){ alert('調べる日付を入力してください'); return; }
+  // localStorage更新
+  try{ localStorage.setItem('kitoku-birth', bStr); }catch(e){}
+  // 調べる日付を反映
+  const dEl = document.getElementById('inputDate');
+  if(dEl) dEl.value = dStr;
+  const bEl = document.getElementById('inputBirth');
+  if(bEl) bEl.value = bStr;
+  closeBirthModal();
+  // 再計算
+  try{
+    const [by,bm,bd] = bStr.split('-').map(Number);
+    const [ty,tm,td] = dStr.split('-').map(Number);
+    const tStr = (document.getElementById('inputBirthTime') || {}).value || '';
+    computeAndRender(by,bm,bd,ty,tm,td,tStr);
+  }catch(err){
+    alert('計算エラーが発生しました: ' + err.message);
+  }
 }
 
 // ── TOP画面ランダム画像 ──
