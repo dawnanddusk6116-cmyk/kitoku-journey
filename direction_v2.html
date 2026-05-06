@@ -4170,6 +4170,13 @@ function copyAIPrompt(){
     var tarr=dStr.split('-').map(Number);
     var ty=tarr[0],tm=tarr[1],td=tarr[2];
 
+    // ← 先にscreenResultを表示してからcomputeAndRenderを呼ぶ（方位盤の幅を確保）
+    document.getElementById('screenInput').classList.remove('active');
+    document.getElementById('screenResult').classList.add('active');
+    if(typeof switchMainTab==='function') switchMainTab('compass');
+    var hr=document.getElementById('headerReset');
+    if(hr)hr.style.display='block';
+
     computeAndRender(by,bm,bd,ty,tm,td,tStr);
 
     // 土用アラートを強制表示（2026年5月は土用期間）
@@ -4181,17 +4188,6 @@ function copyAIPrompt(){
       }
     }catch(e){}
 
-    document.getElementById('screenInput').classList.remove('active');
-    document.getElementById('screenResult').classList.add('active');
-    if(typeof switchMainTab==='function') switchMainTab('compass');
-    // ← 画面表示後に方位盤を再描画（aspect-ratio対策・1フレーム待つ）
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        if(typeof renderBan==='function') renderBan(gState.currentBan||'day');
-      });
-    });
-    var hr=document.getElementById('headerReset');
-    if(hr)hr.style.display='block';
     window.scrollTo(0,0);
   }
 
