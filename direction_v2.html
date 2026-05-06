@@ -114,7 +114,7 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
 .compass-grid{
   display:grid;grid-template-columns:1fr 1.4fr 1fr;
   grid-template-rows:1fr 1.4fr 1fr;
-  gap:4px;aspect-ratio:1;
+  gap:4px;width:100%;aspect-ratio:1;
   border:1px solid rgba(196,160,67,.2);
   border-radius:10px;padding:6px;
   background:rgba(196,160,67,.03);
@@ -2453,6 +2453,7 @@ function updateBanNavLabel(){
 }
 
 function renderBan(type){
+  try {
   const {honmei,tsukimei,ty,tm,td,dayCenter,monthCenter,yearCent}=gState;
   let center;
   if(type==='day')center=dayCenter;
@@ -2527,12 +2528,6 @@ function renderBan(type){
     });
   });
   wrap.appendChild(gridDiv);
-
-  // aspect-ratioが効かないブラウザ対策：wrapの幅に合わせて高さを明示設定
-  requestAnimationFrame(function(){
-    const w = wrap.offsetWidth;
-    if(w > 0) gridDiv.style.height = w + 'px';
-  });
 
 
   function makeDirCell(dir){
@@ -2643,6 +2638,21 @@ function renderBan(type){
 
   // AIプロンプト生成
   generateAIPrompt(dirData,p2s,type);
+
+  } catch(e) {
+    // エラーを方位盤エリアに表示（デバッグ用）
+    const wrap = document.getElementById('compassWrap');
+    if(wrap){
+      wrap.innerHTML = `<div style="padding:16px;background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.4);border-radius:8px;font-size:.7rem;color:#c04040;word-break:break-all;line-height:1.8;">
+        ⚠️ renderBanエラー<br>
+        type: ${type}<br>
+        honmei: ${gState.honmei} / tsukimei: ${gState.tsukimei}<br>
+        dayCenter: ${gState.dayCenter}<br>
+        エラー: ${e.message}<br>
+        場所: ${e.stack ? e.stack.split('\n')[1] : '不明'}
+      </div>`;
+    }
+  }
 }
 
 function renderKichiList(dirData,p2s){
