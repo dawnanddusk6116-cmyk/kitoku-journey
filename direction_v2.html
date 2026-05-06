@@ -961,23 +961,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
 </div>
 
-<!-- 生年月日変更モーダル -->
-<div id="birthChangeModal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.75);align-items:flex-end;justify-content:center;">
-  <div style="background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--rim);width:100%;max-width:480px;padding:24px 24px env(safe-area-inset-bottom,32px);animation:slideUp .3s ease;margin:0 auto;">
-    <div style="width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 20px;"></div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--goldlt);letter-spacing:.15em;margin-bottom:6px;">生年月日を変更する</div>
-    <div style="font-size:.68rem;color:var(--mist);margin-bottom:18px;line-height:1.8;">ご家族や知人の方位を調べる場合もここから変更できます。<br>変更後は「方位盤を更新」を押してください。</div>
-    <label style="font-size:.78rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:8px;font-weight:600;">生年月日</label>
-    <input type="date" id="birthChangeInput" max="2015-12-31" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;margin-bottom:12px;">
-    <label style="font-size:.78rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:8px;font-weight:600;">調べる日付</label>
-    <input type="date" id="birthChangeDateInput" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;margin-bottom:20px;">
-    <div style="display:flex;gap:10px;">
-      <button onclick="closeBirthModal()" style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:8px;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.88rem;padding:13px;cursor:pointer;letter-spacing:.08em;">キャンセル</button>
-      <button onclick="applyBirthChange()" style="flex:2;background:linear-gradient(135deg,rgba(196,160,67,.28),rgba(196,160,67,.14));border:1px solid rgba(196,160,67,.6);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.88rem;padding:13px;cursor:pointer;letter-spacing:.1em;font-weight:700;">方位盤を更新 ✦</button>
-    </div>
-  </div>
-</div>
-
 <!-- 設定パネル -->
 <div id="settingPanel" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center;">
   <div style="background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--rim);width:100%;max-width:480px;max-height:85dvh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom,20px);animation:slideUp .3s ease;margin:0 auto;">
@@ -987,17 +970,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <button onclick="closeSettings()" style="background:none;border:1px solid var(--rim);border-radius:6px;color:var(--mist);font-size:.75rem;padding:5px 12px;cursor:pointer;">閉じる</button>
     </div>
     <div style="padding:16px 20px;">
-
-      <!-- 生年月日変更 -->
-      <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:8px;font-weight:600;">生年月日</div>
-      <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;padding:14px 16px;margin-bottom:16px;">
-        <div style="font-size:.75rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">ご家族や知人の方位を調べる場合もここから変更できます。</div>
-        <label style="font-size:.72rem;color:var(--gold);letter-spacing:.08em;display:block;margin-bottom:6px;font-weight:600;">生年月日を入力</label>
-        <input type="date" id="birthChangeInput" max="2015-12-31" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 12px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;outline:none;margin-bottom:6px;">
-        <label style="font-size:.72rem;color:var(--gold);letter-spacing:.08em;display:block;margin-bottom:6px;font-weight:600;">調べる日付</label>
-        <input type="date" id="birthChangeDateInput" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 12px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;outline:none;margin-bottom:10px;">
-        <button onclick="applyBirthChange()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(196,160,67,.1));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.85rem;padding:11px;cursor:pointer;letter-spacing:.1em;font-weight:700;">方位盤を更新 ✦</button>
-      </div>
 
       <!-- モード切り替え -->
       <div style="display:flex;gap:8px;margin-bottom:16px;">
@@ -3321,14 +3293,7 @@ function setTsukimeiSatsu(val){
 // ── 設定パネル ──
 function openSettings(){
   const p=document.getElementById('settingPanel');
-  if(!p) return;
-  const saved=localStorage.getItem('kitoku-birth')||'';
-  const bi=document.getElementById('birthChangeInput');
-  if(bi) bi.value=saved;
-  const di=document.getElementById('birthChangeDateInput');
-  const dEl=document.getElementById('inputDate');
-  if(di&&dEl) di.value=dEl.value;
-  p.style.display='flex';
+  if(p) p.style.display='flex';
 }
 function closeSettings(){
   const p=document.getElementById('settingPanel');
@@ -4005,55 +3970,6 @@ function calcDayNayin(year, month, day, timeStr){
   return {...NT[idx], ks, idx};
 }
 
-// ── ライトモード改善 ──
-function clearBirth(){
-  openBirthModal();
-}
-
-// ── 生年月日変更モーダル ──
-function openBirthModal(){
-  const modal = document.getElementById('birthChangeModal');
-  if(!modal) return;
-  // 現在の生年月日をプリセット
-  const saved = localStorage.getItem('kitoku-birth') || '';
-  const birthInput = document.getElementById('birthChangeInput');
-  if(birthInput) birthInput.value = saved;
-  // 調べる日付をプリセット（今日）
-  const dateInput = document.getElementById('birthChangeDateInput');
-  if(dateInput){
-    const dEl = document.getElementById('inputDate');
-    dateInput.value = dEl ? dEl.value : '';
-  }
-  modal.style.display = 'flex';
-}
-function closeBirthModal(){
-  const modal = document.getElementById('birthChangeModal');
-  if(modal) modal.style.display = 'none';
-}
-function applyBirthChange(){
-  const bStr = document.getElementById('birthChangeInput').value;
-  const dStr = document.getElementById('birthChangeDateInput').value;
-  if(!bStr){ alert('生年月日を入力してください'); return; }
-  if(!dStr){ alert('調べる日付を入力してください'); return; }
-  // localStorage更新
-  try{ localStorage.setItem('kitoku-birth', bStr); }catch(e){}
-  // 調べる日付を反映
-  const dEl = document.getElementById('inputDate');
-  if(dEl) dEl.value = dStr;
-  const bEl = document.getElementById('inputBirth');
-  if(bEl) bEl.value = bStr;
-  closeBirthModal();
-  // 再計算
-  try{
-    const [by,bm,bd] = bStr.split('-').map(Number);
-    const [ty,tm,td] = dStr.split('-').map(Number);
-    const tStr = (document.getElementById('inputBirthTime') || {}).value || '';
-    computeAndRender(by,bm,bd,ty,tm,td,tStr);
-  }catch(err){
-    alert('計算エラーが発生しました: ' + err.message);
-  }
-}
-
 // ── TOP画面ランダム画像 ──
 let _heroIdx = -1;
 function initHeroImage(){
@@ -4268,6 +4184,8 @@ function copyAIPrompt(){
     document.getElementById('screenInput').classList.remove('active');
     document.getElementById('screenResult').classList.add('active');
     if(typeof switchMainTab==='function') switchMainTab('compass');
+    // ← 画面表示後に方位盤を再描画（aspect-ratio対策）
+    if(typeof renderBan==='function') renderBan(gState.currentBan||'day');
     var hr=document.getElementById('headerReset');
     if(hr)hr.style.display='block';
     window.scrollTo(0,0);
