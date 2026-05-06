@@ -114,30 +114,6 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
-  <button class="tb-btn" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
-</div>
-
-<!-- 設定パネル -->
-<div id="settingPanel" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center;">
-  <div style="background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--rim);width:100%;max-width:480px;max-height:85dvh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom,20px);margin:0 auto;">
-    <div style="width:40px;height:4px;background:rgba(100,80,40,.15);border-radius:2px;margin:12px auto 0;"></div>
-    <div style="padding:16px 20px 8px;border-bottom:1px solid var(--rim);display:flex;align-items:center;justify-content:space-between;">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--goldlt);letter-spacing:.15em;">設定</div>
-      <button onclick="closeSettings()" style="background:none;border:1px solid var(--rim);border-radius:6px;color:var(--mist);font-size:.75rem;padding:5px 12px;cursor:pointer;">閉じる</button>
-    </div>
-    <div style="padding:16px 20px;">
-
-      <!-- 生年月日変更 -->
-      <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:8px;font-weight:600;">生年月日</div>
-      <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;padding:14px 16px;margin-bottom:16px;">
-        <div style="font-size:.75rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">ご家族や知人の九星を調べる場合もここから変更できます。</div>
-        <label style="font-size:.72rem;color:var(--gold);letter-spacing:.08em;display:block;margin-bottom:6px;font-weight:600;">生年月日を入力</label>
-        <input type="date" id="birthChangeInput" max="2015-12-31" style="width:100%;background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 12px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;outline:none;margin-bottom:10px;">
-        <button onclick="applyBirthChange()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(196,160,67,.1));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.85rem;padding:11px;cursor:pointer;letter-spacing:.1em;font-weight:700;">九星を更新 ✦</button>
-      </div>
-
-    </div>
-  </div>
 </div>
 
 <!-- 未登録 -->
@@ -294,15 +270,15 @@ const NACHIN_DETAIL = {
 let gKyusei = {};
 
 function init(){
-  // 再呼び出し時のリセット
   document.getElementById('noData').style.display='none';
   document.getElementById('mainContent').style.display='none';
 
   const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
+
   if(!birth){
     document.getElementById('noData').style.display='block';
     document.getElementById('personalWrap').style.display='none';
-    document.getElementById('mainContent').style.display='block'; // starsGridは表示
+    document.getElementById('mainContent').style.display='block';
     buildStarGrid();
     return;
   }
@@ -508,29 +484,8 @@ function setFontSize(s){
   try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
   ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
 }
-function openSettings(){
-  const p=document.getElementById('settingPanel');
-  if(!p) return;
-  const saved=localStorage.getItem('kitoku-birth')||'';
-  const inp=document.getElementById('birthChangeInput');
-  if(inp) inp.value=saved;
-  p.style.display='flex';
-}
-function closeSettings(){
-  const p=document.getElementById('settingPanel');
-  if(p) p.style.display='none';
-}
-
-// ── 生年月日変更 ──
-function openBirthModal(){ openSettings(); }
-function closeBirthModal(){ closeSettings(); }
-function applyBirthChange(){
-  const bStr=document.getElementById('birthChangeInput').value;
-  if(!bStr){ alert('生年月日を入力してください'); return; }
-  try{ localStorage.setItem('kitoku-birth',bStr); }catch(e){}
-  closeSettings();
-  init();
-}
+function openSettings(){}
+function closeSettings(){}
 
 // 初期化
 (function(){
