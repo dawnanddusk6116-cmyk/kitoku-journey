@@ -122,6 +122,8 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
     <div style="font-size:2.5rem;margin-bottom:12px;">⭐</div>
     <div style="font-size:.82rem;line-height:2;margin-bottom:16px;">生年月日を登録すると<br>あなた専用の九星情報が表示されます</div>
     <a href="index.html" class="no-data-btn">✦ TOPから登録する</a>
+    <!-- デバッグ：localStorage確認 -->
+    <div id="debugInfo" style="margin-top:16px;padding:10px;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.3);border-radius:8px;font-size:.65rem;color:#a04040;text-align:left;word-break:break-all;"></div>
   </div>
 </div>
 
@@ -278,6 +280,13 @@ function init(){
   const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
 
   if(!birth){
+    // デバッグ：localStorage全キーを表示
+    const dbg = document.getElementById('debugInfo');
+    if(dbg){
+      const keys = [];
+      try{ for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i)+'='+localStorage.getItem(localStorage.key(i))); }catch(e){}
+      dbg.textContent = keys.length ? keys.join('\n') : 'localStorage空（またはアクセス不可）';
+    }
     document.getElementById('noData').style.display='block';
     document.getElementById('personalWrap').style.display='none';
     document.getElementById('mainContent').style.display='block';
