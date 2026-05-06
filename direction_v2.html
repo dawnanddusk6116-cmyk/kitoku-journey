@@ -2289,6 +2289,21 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   renderBan('day');
   updateBanNavLabel();
   updateClaudeStarText();
+
+  // デバッグ：renderBan完了後にcompassWrapの状態を確認
+  setTimeout(function(){
+    const w = document.getElementById('compassWrap');
+    if(!w) return;
+    const grid = w.querySelector('.compass-grid');
+    const dbg = document.createElement('div');
+    dbg.style.cssText = 'font-size:.6rem;color:#a04040;padding:4px 8px;background:rgba(255,0,0,.06);border-radius:4px;margin-top:4px;';
+    if(!grid){
+      dbg.textContent = '⚠️ DEBUG: compass-grid が存在しない';
+    } else {
+      dbg.textContent = `✅ DEBUG: grid存在 / offsetWidth=${grid.offsetWidth} / offsetHeight=${grid.offsetHeight} / children=${grid.children.length}`;
+    }
+    w.parentNode.insertBefore(dbg, w.nextSibling);
+  }, 200);
 }
 
 function switchBan(type){
