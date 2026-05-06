@@ -958,8 +958,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
-  <button class="tb-btn" onclick="openBirthModal()" style="margin-left:auto;border-color:rgba(109,212,232,.4);color:rgba(109,212,232,.9);font-weight:700;letter-spacing:.06em;">👤 変更</button>
-  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:4px;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
+  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
 </div>
 
 <!-- 生年月日変更モーダル -->
@@ -988,6 +987,17 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <button onclick="closeSettings()" style="background:none;border:1px solid var(--rim);border-radius:6px;color:var(--mist);font-size:.75rem;padding:5px 12px;cursor:pointer;">閉じる</button>
     </div>
     <div style="padding:16px 20px;">
+
+      <!-- 生年月日変更 -->
+      <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:8px;font-weight:600;">生年月日</div>
+      <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-size:.75rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">ご家族や知人の方位を調べる場合もここから変更できます。</div>
+        <label style="font-size:.72rem;color:var(--gold);letter-spacing:.08em;display:block;margin-bottom:6px;font-weight:600;">生年月日を入力</label>
+        <input type="date" id="birthChangeInput" max="2015-12-31" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 12px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;outline:none;margin-bottom:6px;">
+        <label style="font-size:.72rem;color:var(--gold);letter-spacing:.08em;display:block;margin-bottom:6px;font-weight:600;">調べる日付</label>
+        <input type="date" id="birthChangeDateInput" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:6px;padding:10px 12px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.85rem;outline:none;margin-bottom:10px;">
+        <button onclick="applyBirthChange()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.22),rgba(196,160,67,.1));border:1px solid rgba(196,160,67,.55);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.85rem;padding:11px;cursor:pointer;letter-spacing:.1em;font-weight:700;">方位盤を更新 ✦</button>
+      </div>
 
       <!-- モード切り替え -->
       <div style="display:flex;gap:8px;margin-bottom:16px;">
@@ -3311,7 +3321,14 @@ function setTsukimeiSatsu(val){
 // ── 設定パネル ──
 function openSettings(){
   const p=document.getElementById('settingPanel');
-  if(p){p.style.display='flex';}
+  if(!p) return;
+  const saved=localStorage.getItem('kitoku-birth')||'';
+  const bi=document.getElementById('birthChangeInput');
+  if(bi) bi.value=saved;
+  const di=document.getElementById('birthChangeDateInput');
+  const dEl=document.getElementById('inputDate');
+  if(di&&dEl) di.value=dEl.value;
+  p.style.display='flex';
 }
 function closeSettings(){
   const p=document.getElementById('settingPanel');
