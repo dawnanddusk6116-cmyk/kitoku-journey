@@ -69,13 +69,68 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 .no-data-btn{display:inline-block;background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);border-radius:10px;padding:10px 24px;font-size:.82rem;color:var(--goldlt);font-weight:700;text-decoration:none;}
 
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
+
+/* ── ダークモード ── */
+[data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);--r:14px;}
+[data-theme="dark"] .star-card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);}
+[data-theme="dark"] .mystar-card{background:#12152a;border-color:rgba(212,175,55,.18);}
+[data-theme="dark"] .mystar-cell{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);}
+[data-theme="dark"] .nouin-row{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);}
+[data-theme="dark"] .nouin-badge{background:rgba(196,160,67,.12);border-color:rgba(196,160,67,.3);color:var(--goldlt);}
+[data-theme="dark"] .nouin-badge.same{background:rgba(196,160,67,.25);border-color:rgba(196,160,67,.55);}
+[data-theme="dark"] .modal{background:#12152a;}
+[data-theme="dark"] .modal-overlay{background:rgba(0,0,0,.7);}
+[data-theme="dark"] .modal-close{background:rgba(255,255,255,.08);}
+[data-theme="dark"] .modal-tag{background:rgba(196,160,67,.1);border-color:rgba(196,160,67,.25);color:var(--goldlt);}
+
+/* ── app-header ── */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.header-reset{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;}
+/* ── ツールバー ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+.tb-btn{background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;}
+.tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
+[data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
+[data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
+[data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
 </style>
 </head>
 <body>
-<header class="hdr">
-  <div class="logo">✦ 九星を知る</div>
-  <button class="back-btn" onclick="history.back()">← TOPへ戻る</button>
-</header>
+<!-- ヘッダー -->
+<div class="app-header">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);">
+    ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
+  </div>
+  <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+</div>
+
+<!-- ツールバー -->
+<div class="toolbar">
+  <span class="tb-label">表示</span>
+  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <span class="tb-label" style="margin-left:8px;">文字</span>
+  <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
+  <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
+  <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
+  <button class="tb-btn" onclick="openBirthModal()" style="margin-left:auto;border-color:rgba(109,212,232,.4);color:rgba(109,212,232,.9);font-weight:700;letter-spacing:.06em;">👤 変更</button>
+</div>
+
+<!-- 生年月日変更モーダル -->
+<div id="birthChangeModal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.75);align-items:flex-end;justify-content:center;">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--rim);width:100%;max-width:480px;padding:24px 24px env(safe-area-inset-bottom,32px);margin:0 auto;">
+    <div style="width:40px;height:4px;background:rgba(100,80,40,.15);border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--goldlt);letter-spacing:.15em;margin-bottom:6px;">生年月日を変更する</div>
+    <div style="font-size:.68rem;color:var(--mist);margin-bottom:18px;line-height:1.8;">ご家族や知人の九星を調べる場合もここから変更できます。<br>変更後は「九星を更新」を押してください。</div>
+    <label style="font-size:.78rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:8px;font-weight:600;">生年月日</label>
+    <input type="date" id="birthChangeInput" max="2015-12-31" style="width:100%;background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:6px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;margin-bottom:20px;">
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeBirthModal()" style="flex:1;background:rgba(100,80,40,.06);border:1px solid var(--rim);border-radius:8px;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.88rem;padding:13px;cursor:pointer;letter-spacing:.08em;">キャンセル</button>
+      <button onclick="applyBirthChange()" style="flex:2;background:linear-gradient(135deg,rgba(196,160,67,.28),rgba(196,160,67,.14));border:1px solid rgba(196,160,67,.6);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.88rem;padding:13px;cursor:pointer;letter-spacing:.1em;font-weight:700;">九星を更新 ✦</button>
+    </div>
+  </div>
+</div>
 
 <!-- 未登録 -->
 <div id="noData" style="display:none;">
@@ -172,10 +227,6 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 <!-- kitoku-engine.js 読み込み -->
 <script src="kitoku-engine.js"></script>
 <script>
-function generateAIPrompt(){}
-function openDirPopup(){}
-</script>
-<script>
 
 // 日納音計算関数（index.htmlから移植）
 const KANSHI_BASE_DATE = new Date(2026, 0, 1);
@@ -235,11 +286,16 @@ const NACHIN_DETAIL = {
 let gKyusei = {};
 
 function init(){
+  // 再呼び出し時のリセット
+  document.getElementById('noData').style.display='none';
+  document.getElementById('mainContent').style.display='none';
+
   const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if(!birth){
     document.getElementById('noData').style.display='block';
     document.getElementById('mainContent').style.display='none';
     buildStarGrid();
+    document.getElementById('mainContent').style.display='block';
     return;
   }
 
@@ -251,11 +307,8 @@ function init(){
   const {kY,kM} = getKD(by,bm,bd);
   const h = calcHonmei(kY);
   const t = calcTsukimei(h,kM);
-  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
-  const gender=localStorage.getItem('kitoku-gender')||'male';
-  TAICHUU[5]=gender==='female'?6:7;
-  let tFK=t;
-  if(h===t){tFK=TAICHUU[t]||t;}
+  const TAICHUU={1:9,9:1,2:6,6:2,3:7,7:3,4:8,8:4};
+  const tFK = (h===t&&TAICHUU[t])?TAICHUU[t]:t;
   const k = calcKeisha(h,tFK);
   const d = calcDokai(h,tFK);
   const yn = calcNayin(by);
@@ -310,7 +363,6 @@ function setCell(pfx, s, n){
 
 function buildStarGrid(myHonmei){
   const grid = document.getElementById('starsGrid');
-  if(!grid) return;
   grid.innerHTML = '';
   [1,2,3,4,5,6,7,8,9].forEach(n=>{
     const s = STARS[n];
@@ -435,6 +487,55 @@ if(document.readyState==='loading'){
 }else{
   init();
 }
+
+function setTheme(t){
+  document.body.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+}
+function setFontSize(s){
+  const m={s:'15px',m:'17px',l:'19px'};
+  document.documentElement.style.fontSize=m[s]||'15px';
+  try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
+  ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
+}
+function openSettings(){} // 未使用（互換性のために残す）
+function closeSettings(){}
+
+// ── 生年月日変更モーダル ──
+function openBirthModal(){
+  const modal = document.getElementById('birthChangeModal');
+  if(!modal) return;
+  const saved = localStorage.getItem('kitoku-birth') || '';
+  const inp = document.getElementById('birthChangeInput');
+  if(inp) inp.value = saved;
+  modal.style.display = 'flex';
+}
+function closeBirthModal(){
+  const modal = document.getElementById('birthChangeModal');
+  if(modal) modal.style.display = 'none';
+}
+function applyBirthChange(){
+  const bStr = document.getElementById('birthChangeInput').value;
+  if(!bStr){ alert('生年月日を入力してください'); return; }
+  try{ localStorage.setItem('kitoku-birth', bStr); }catch(e){}
+  closeBirthModal();
+  init(); // 再計算・再描画
+}
+
+// 初期化
+(function(){
+  const t=localStorage.getItem('kitoku-theme')||'light';
+  const fs=localStorage.getItem('kitoku-fontsize')||'s';
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.setAttribute('data-theme',t);
+    ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+    const fm={s:'15px',m:'17px',l:'19px'};
+    document.documentElement.style.fontSize=fm[fs]||'15px';
+    ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===fs);});
+  });
+})();
+
 </script>
 </body>
 </html>
