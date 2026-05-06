@@ -289,12 +289,21 @@ function init(){
   const [by,bm,bd=1] = arr;
   if(!by||!bm){ document.getElementById('noData').style.display='block'; return; }
 
-  // エンジン関数で計算（engine.jsのgetTsukimeiForKeishaを使用）
+  // エンジン関数で計算
   const {kY,kM} = getKD(by,bm,bd);
   const h = calcHonmei(kY);
   const t = calcTsukimei(h,kM);
-  const tFK = getTsukimeiForKeisha(h, t); // ← engine.jsの正しい定位対冲ロジック
-  const isSameStar = (h === t); // 本命＝月命フラグ
+
+  // 定位対冲ロジック（正しい値・村山先生指示書準拠）
+  const isSameStar = (h === t);
+  let tFK = t;
+  if(isSameStar){
+    const gender = localStorage.getItem('kitoku-gender') || 'male';
+    const TAICHUU_CORRECT = {1:9, 2:8, 3:4, 4:3, 6:2, 7:1, 8:7, 9:1};
+    tFK = (h === 5)
+      ? (gender === 'female' ? 6 : 7)
+      : (TAICHUU_CORRECT[h] || t);
+  }
   const k = calcKeisha(h,tFK);
   const d = calcDokai(h,tFK);
   const yn = calcNayin(by);
