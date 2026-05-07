@@ -1332,9 +1332,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 <div class="screen active" id="screenResult">
 
-<!-- ── DEBUGエリア（正しい配置） ── -->
-<div id="computeDebug" style="position:fixed;top:0;left:0;right:0;z-index:9999;padding:6px 12px;background:rgba(255,0,0,.85);font-size:.62rem;color:#fff;word-break:break-all;min-height:18px;display:none;"></div>
-
   <div class="result-header">
     <div class="result-date" id="rDate"></div>
     <div class="result-kanshi" id="rKanshi"></div>
@@ -2201,12 +2198,6 @@ async function openDaily(){
 }
 
 function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
-  // ── DEBUGスタート ──
-  try{
-    const dbgEl = document.getElementById('computeDebug');
-    if(dbgEl){ dbgEl.style.display='block'; dbgEl.textContent = `START: by=${by} bm=${bm} bd=${bd} ty=${ty} tm=${tm} td=${td}`; }
-  }catch(e){}
-
   // 本命星算出
   const {kY,kM}=getKD(by,bm,bd);
   const honmei=calcHonmei(kY);
@@ -2257,39 +2248,45 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   const dokai=calcDokai(honmei,tsukimeiForKeisha);
   const K=STARS[keisha],Dk=STARS[dokai];
   const nayin=calcNayin(by);
-  document.getElementById('mystarCard').style.display='block';
-  document.getElementById('ms-num').textContent=honmei;
-  document.getElementById('ms-num').style.color=H.c;
-  document.getElementById('ms-name').textContent=H.j;
-  document.getElementById('ms-sub').textContent=`${H.elem}の星 — ${H.color}`;
-  document.getElementById('ms-honmei').textContent=H.j;
-  // キャラ名を星の色で強調
+  // 自分の星カード（要素が存在する場合のみ更新）
+  const mystarCardEl=document.getElementById('mystarCard');
+  if(mystarCardEl) mystarCardEl.style.display='block';
+  const setTxt=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
+  const setCol=(id,col)=>{const el=document.getElementById(id);if(el)el.style.color=col;};
+  setTxt('ms-num', honmei); setCol('ms-num', H.c);
+  setTxt('ms-name', H.j);
+  setTxt('ms-sub', `${H.elem}の星 — ${H.color}`);
+  setTxt('ms-honmei', H.j);
   const archEl=document.getElementById('ms-honmei-arch');
   if(archEl){archEl.textContent=H.arch||'';archEl.style.color=H.c;}
-  document.getElementById('ms-honmei-sub').textContent='魂の設計図';
-  document.getElementById('ms-tsuki').textContent=T.j;
-  document.getElementById('ms-tsuki-sub').textContent='内なる深層';
-  document.getElementById('ms-keisha').textContent=K.j;
-  document.getElementById('ms-dokai').textContent=Dk.j;
-  document.getElementById('ms-nouin').textContent=nayin.n;
+  setTxt('ms-honmei-sub', '魂の設計図');
+  setTxt('ms-tsuki', T.j);
+  setTxt('ms-tsuki-sub', '内なる深層');
+  setTxt('ms-keisha', K.j);
+  setTxt('ms-dokai', Dk.j);
+  setTxt('ms-nouin', nayin.n);
   // 月納音
   const mNayin=calcMonthNayin(by,bm,bd);
-  document.getElementById('ms-nouin-month').textContent=mNayin.n;
+  const elNouinMonth=document.getElementById('ms-nouin-month');
+  if(elNouinMonth) elNouinMonth.textContent=mNayin.n;
   // 日納音（生まれた時間が入力されている場合のみ表示）
   const dayWrap=document.getElementById('ms-nouin-day-wrap');
   if(birthTimeStr){
     const dNayin=calcDayNayin(by,bm,bd,birthTimeStr);
-    document.getElementById('ms-nouin-day').textContent=dNayin.n;
-    if(dayWrap)dayWrap.style.display='flex';
+    const elNouinDay=document.getElementById('ms-nouin-day');
+    if(elNouinDay) elNouinDay.textContent=dNayin.n;
+    if(dayWrap) dayWrap.style.display='flex';
     const hour=parseInt((birthTimeStr||'0').split(':')[0]);
     const corrected=hour>=23;
-    document.getElementById('ms-nouin-sub').textContent=
+    const elNouinSub=document.getElementById('ms-nouin-sub');
+    if(elNouinSub) elNouinSub.textContent=
       `年：${nayin.ks}　月：${mNayin.ks}　日：${dNayin.ks}`+
       (corrected?' ※23時以降のため翌日干支で補正':'');
     gState.dNayin=dNayin;
   }else{
-    if(dayWrap)dayWrap.style.display='none';
-    document.getElementById('ms-nouin-sub').textContent=`年：${nayin.ks}　月：${mNayin.ks}`;
+    if(dayWrap) dayWrap.style.display='none';
+    const elNouinSub=document.getElementById('ms-nouin-sub');
+    if(elNouinSub) elNouinSub.textContent=`年：${nayin.ks}　月：${mNayin.ks}`;
     gState.dNayin=null;
   }
   gState.keisha=keisha;gState.dokai=dokai;gState.K=K;gState.Dk=Dk;gState.nayin=nayin;gState.mNayin=mNayin;
@@ -2297,17 +2294,6 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
   renderBan('day');
   updateBanNavLabel();
   updateClaudeStarText();
-
-  // ── DEBUG renderBan後 ──
-  try{
-    const dbgEl = document.getElementById('computeDebug');
-    const w = document.getElementById('compassWrap');
-    const grid = w ? w.querySelector('.compass-grid') : null;
-    if(dbgEl) dbgEl.textContent += ` | DONE grid=${grid?'あり':'なし'} ${grid?grid.offsetWidth+'x'+grid.offsetHeight:''}`;
-  }catch(e2){
-    const dbgEl = document.getElementById('computeDebug');
-    if(dbgEl) dbgEl.textContent += ` | ERR:${e2.message}`;
-  }
 }
 
 function switchBan(type){
