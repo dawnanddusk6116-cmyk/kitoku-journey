@@ -601,13 +601,19 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   color:var(--goldlt);font-weight:700;
 }
 .ban-help-link{
-  font-size:.65rem;color:var(--gold);cursor:pointer;
-  letter-spacing:.06em;text-decoration:underline;opacity:.75;
+  font-size:.72rem;color:var(--goldlt);cursor:pointer;
+  letter-spacing:.06em;
+  background:rgba(196,160,67,.12);
+  border:1px solid rgba(196,160,67,.35);
+  border-radius:6px;
+  padding:4px 10px;
+  opacity:.9;
+  white-space:nowrap;
 }
-.ban-help-link:hover{opacity:1;}
+.ban-help-link:hover{opacity:1;background:rgba(196,160,67,.2);}
 [data-theme="light"] .ban-orient-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .ban-orient-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);color:#5a3e08;}
-[data-theme="light"] .ban-help-link{color:#7a5a10;}
+[data-theme="light"] .ban-help-link{color:#7a5a10;background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.25);}
 
 .slide-body-collapsed{
   display:none;
@@ -1358,7 +1364,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <button class="ban-orient-btn active" id="orient-s" onclick="setOrient('south')">南上（気学式）</button>
         <button class="ban-orient-btn" id="orient-n" onclick="setOrient('north')">北上（地図式）</button>
       </div>
-      <span class="ban-help-link" onclick="showBanGuide()">使い方 ？</span>
+      <span class="ban-help-link" onclick="showBanGuide()">📖 吉方の取り方・使い方</span>
     </div>
     <div class="ban-tabs">
       <button class="ban-tab active" id="tab-day" onclick="switchBan('day')">日盤</button>
@@ -1380,7 +1386,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <button onclick="saveBanImage()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.35);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.75rem;letter-spacing:.1em;padding:9px 20px;cursor:pointer;transition:all .2s;">
         📷 画像として保存・シェア
       </button>
-      <div style="font-size:.58rem;color:rgba(220,232,255,.25);margin-top:5px;line-height:1.7;">保存した画像をLINE・SNS・AIに送れます</div>
+      <div style="font-size:.62rem;color:var(--mist);margin-top:5px;line-height:1.7;opacity:.8;">保存した画像をLINE・SNS・AIに送れます</div>
     </div>
   </div>
 
