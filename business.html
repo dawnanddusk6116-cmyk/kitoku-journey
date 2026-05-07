@@ -8,7 +8,7 @@
 <style>
 :root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a3c64;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
 .logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
 .home-btn{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.75rem;padding:7px 12px;border-radius:6px;cursor:pointer;}
@@ -86,7 +86,6 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 [data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
-[data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
 </style>
 </head>
 <body>
@@ -107,7 +106,6 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
   <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
-  <button class="tb-btn" id="tb-setting" onclick="openSettings()" style="margin-left:auto;border-color:rgba(196,160,67,.45);color:var(--goldlt);font-weight:700;letter-spacing:.08em;">⚙ 設定</button>
 </div>
 
 <!-- トップ画面 -->
@@ -375,7 +373,7 @@ function genReport(){
 })();
 
 function setTheme(t){
-  document.body.setAttribute('data-theme',t);
+  document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);
   try{localStorage.setItem('kitoku-theme',t);}catch(e){}
   ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
 }
@@ -391,7 +389,7 @@ function closeSettings(){const p=document.getElementById('settingPanel');if(p)p.
   const t=localStorage.getItem('kitoku-theme')||'light';
   const fs=localStorage.getItem('kitoku-fontsize')||'s';
   document.addEventListener('DOMContentLoaded',function(){
-    document.body.setAttribute('data-theme',t);
+    document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);
     ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
     const fm={s:'15px',m:'17px',l:'19px'};
     document.documentElement.style.fontSize=fm[fs]||'15px';
