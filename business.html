@@ -83,6 +83,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
 .tb-btn{background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;}
 .tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
+
+/* ── ダークモード ── */
+[data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
+[data-theme="dark"] .toolbar{background:var(--card);border-bottom-color:var(--rim);}
+[data-theme="dark"] .tb-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:var(--mist);}
+[data-theme="dark"] .tb-btn.active{background:rgba(196,160,67,.25);border-color:rgba(196,160,67,.6);color:var(--goldlt);}
+[data-theme="dark"] .app-header,[data-theme="dark"] .hdr{background:var(--bg);border-bottom-color:var(--rim);}
+[data-theme="dark"] .card{background:var(--card);border-color:var(--rim);}
 [data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
