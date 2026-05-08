@@ -196,6 +196,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="cp" id="sogoC">—</div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の関係の全体像</div><div class="aa o">▼</div></div><div class="ab o" id="sogoD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">関係を良くするアドバイス</div><div class="aa o">▼</div></div><div class="ab o" id="sogoA">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">媒介星の活用</div><div class="aa o">▼</div></div><div class="ab o" id="bridgeD">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二生の関係</div><div class="aa o">▼</div></div><div class="ab o" id="niseiD">—</div></div>
     <div style="margin-top:28px;border-top:1px solid rgba(100,80,40,.15);padding-top:20px;">
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.2em;color:#5c4010;font-weight:600;margin-bottom:8px;">✦ 誰の言葉で語りますか？</div>
       <div style="display:inline-block;background:linear-gradient(135deg,rgba(100,80,40,.12),rgba(100,80,40,.05));border:1px solid rgba(100,80,40,.3);border-radius:20px;padding:5px 16px;font-size:.68rem;color:#8a6820;font-weight:700;letter-spacing:.1em;margin-bottom:14px;">🎁 5月中は全キャラクター無料公開中</div>
@@ -283,6 +285,26 @@ var CL={kitoku:'格さん',confucius:'孔子（論語）',sunzi:'孫子（兵法
 var CP={kitoku:'琥珀色のトーンで、温かく静かに力強く語ってください。処方箋・調律・共鳴・宇宙の配剤という言葉を自然に使い、最後は具体的な食・色・場の処方箋で締めてください。',confucius:'孔子と論語の精神で語ってください。「子曰く」「仁」「礼」「徳」「君子」という言葉を自然に織り交ぜ、人間関係の本質を簡潔な格言調で深く静かに語ってください。',sunzi:'孫子の兵法の精神で語ってください。「彼を知り己を知れば百戦して殆うからず」など兵法の言葉を自然に使い、ビジネス戦略として二人の相性と動き方を戦略的・簡潔に分析してください。',musashi:'宮本武蔵と五輪書の精神で語ってください。「千日の稽古を鍛とし万日の稽古を錬とす」「場の空気を読む」「機を制する」という言葉を使い、二人の関係を武道・人生の修練として力強く・実直に語ってください。',saikon:'菜根譚の精神で語ってください。「逆境の中にこそ真の力がある」「花は半開を看るに宜し」という処世の極意を使い、二人の関係の深い智慧を静かで深い東洋の言葉で語ってください。',shibusawa:'渋沢栄一の論語と算盤の精神で語ってください。道徳と経済の融合という視点で、二人の関係とビジネスの展望を実直・誠実・前向きなトーンで語ってください。',jitsugokyo:'実語教の精神で語ってください。「人学ばざれば智なし 智なき者は愚人に近し」「山高きゆえに貴からず 樹あるをもって貴しとす」という言葉を使い、二人が互いから学び合える智慧をシンプルで力強く語ってください。',dojikyo:'童子教の精神で語ってください。人としての礼・縁・道という視点で、二人の関係の本質を語ってください。特に家族・介護・親子関係の場面に深く響く温かい言葉を選んでください。'};
 var SL={basic:'基本の相性分析',hire:'採用判断レポート',team:'チーム編成・上司部下の相性',partner:'ビジネスパートナー選定',deal:'商談・提案アプローチ',project:'プロジェクトチームの強みと注意点',kaigo:'親の介護・家族の絆'};
 var SP={basic:'宿命的な相性・内面の共鳴・潜在的な力学の3つの観点から分析してください。',hire:'採用判断の観点から：潜在的な強みと職場での役割、どんな環境で力を発揮するか、採用する場合の育て方・配属先の提案を含めてください。',team:'チーム編成の観点から：上司としての管理スタイル、この組み合わせの強みとなる場面、摩擦が起きやすい場面と対処法を含めてください。',partner:'ビジネスパートナーの観点から：長期的な見通し（3年・5年）、最適な役割分担、契約・合意の際に確認すべきことを含めてください。',deal:'商談・提案の観点から：この相手への最適なアプローチ、響くキーワード・価値観、避けるべき言葉・態度を含めてください。',project:'プロジェクトの観点から：二人の最適な役割分担、このチームの最大の強み、進行中の注意点を含めてください。',kaigo:'親の介護・家族の絆という観点から：この二人の星から見える自然な関わり方、なぜぶつかるのかの本質的な理由、介護の中で心が穏やかになる具体的なアプローチ、感謝を伝える最善のタイミングと方法、そして今この関係で最も大切なことを含めてください。不安を煽らず、5000年の知恵として温かく伝えてください。'};
+var BRIDGE_ELEMENT={木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'};
+var ELEMENT_ACTION={水:'透明感のある香り・静かな対話・白湯や水辺の時間',木:'ハーブや柑橘・散歩・新しい企画を書き出す時間',火:'明るい照明・赤や紫の小物・感謝や称賛を言葉にする時間',土:'温かい食事・黄色や茶色・安心できる場所づくり',金:'白や金の小物・ルール整理・短く明確な約束'};
+function relationCycle(star){return [1,7,4,2].includes(star)?'peace':[3,8,6,9].includes(star)?'passion':'center';}
+function niseiText(a,b){
+  if(a===5||b===5){return '五黄土星は中心に座る星です。二生の輪にそのまま収まるというより、二人の関係全体を一度中心へ戻し、余計な感情をリセットする役割を持ちます。勝ち負けではなく「この関係をどう再生するか」を問い直すと、縁が整いやすくなります。';}
+  var ca=relationCycle(a),cb=relationCycle(b);
+  if(ca===cb&&ca==='peace') return '二人は「癒やし・喜び・縁結び・育成」の輪に属する関係です。激しく押すより、安心感・感謝・小さな約束を積み重ねるほど縁が深まります。';
+  if(ca===cb&&ca==='passion') return '二人は「行動・変革・完成・知恵」の輪に属する関係です。同じ目標や挑戦を持つと力が噛み合います。停滞した時は、共通のゴールを言葉に戻すことが鍵です。';
+  return '二人は異なる二生の輪を持つ関係です。感じ方や動く速度に違いが出やすい一方で、片方だけでは見えない世界を見せ合える縁です。急いで同じにしようとせず、役割を分けるほど調和します。';
+}
+function bridgeText(myE,pE){
+  var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};
+  var source='';
+  if(sk[myE]===pE) source=myE;
+  else if(sk[pE]===myE) source=pE;
+  if(!source){return '二人の五行は強い摩擦よりも、自然な共鳴や支え合いが出やすい関係です。媒介星を無理に探すより、今日の小さな習慣として「'+(ELEMENT_ACTION[myE]||'落ち着く時間')+'」を取り入れると、関係の流れが整います。';}
+  var bridge=BRIDGE_ELEMENT[source]||'土';
+  var elem=bridge.includes('水')?'水':bridge.includes('木')?'木':bridge.includes('火')?'火':bridge.includes('土')?'土':'金';
+  return '相剋は「合わない」という意味ではなく、互いの死角を照らす関係です。この組み合わせでは、間に '+bridge+' の要素を挟むと、摩擦が調律されやすくなります。実際には、'+(ELEMENT_ACTION[elem]||'場を整える小さな行動')+'を取り入れてください。人・色・食・香り・場所のどれか一つで十分です。';
+}
 
 var FREE=3;
 function todayKey(){var d=new Date();return'krc_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
@@ -386,6 +408,8 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   var sEl=document.getElementById('sogoC');sEl.textContent=hC.l;sEl.className='cp '+hC.t;
   st('sogoD','本命星では「'+hC.l+'」の関係。月命星の内面では「'+tC.l+'」という深みがあります。');
   st('sogoA',hC.s+'　'+hC.c);
+  st('bridgeD',bridgeText(myS.e,pS.e));
+  st('niseiD',niseiText(myN,pN));
 
   var d2=new Date();var seed=d2.getFullYear()*10000+(d2.getMonth()+1)*100+d2.getDate();
   var acts=curP==='biz'?TBZ:curP==='fam'?TFM:TLV;
@@ -393,7 +417,7 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   st('todayC','今日は'+pS.e+'のエネルギーを意識して、'+(EC[pS.e]||'')+'の小物を一つ身につけましょう。');
   st('todayH',curP==='biz'?'今日は結論から先に伝えると伝わりやすい日です。':curP==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
 
-  RD={purpose:curP,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myNa:myNa.name,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,pNa:pNa.name,compat:hC.l};
+  RD={purpose:curP,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myNa:myNa.name,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,pNa:pNa.name,compat:hC.l,bridge:bridgeText(myS.e,pS.e),nisei:niseiText(myN,pN)};
 
   curC='kitoku';curT='basic';
   document.querySelectorAll('#c-kitoku,#c-confucius,#c-sunzi,#c-musashi,#c-saikon,#c-shibusawa,#c-jitsugokyo,#c-dojikyo').forEach(function(c,i){c.classList.toggle('on',i===0);});
@@ -440,6 +464,8 @@ function genReport(){
     '相剋は「死角ゼロの最強チーム」として全肯定する。「合わないからこそ全部できるようになる」。',
     '間に挟む「第3のピース（色・食・場・人）」を必ず提案する。処方箋は具体的に。',
     bridge,
+    '媒介星の活用：'+(d.bridge||''),
+    '二生の関係：'+(d.nisei||''),
     '',
     '=== 星データ ===',
     'あなた：本命'+d.myH+'（'+d.myE+'） 月命'+d.myT+' 傾斜'+d.myK+' 納音'+d.myNa,
