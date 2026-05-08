@@ -29,6 +29,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .mystar-cell-sub{font-size:.6rem;color:var(--mist);}
 .mystar-guide{font-size:.68rem;color:var(--mist);line-height:1.9;margin:-4px 0 14px;padding:10px 12px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;}
 .mystar-cell-tap{display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--goldlt);margin-top:7px;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);border-radius:999px;padding:3px 9px;font-weight:700;}
+.avatar-name{font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.04em;font-weight:700;}
+.avatar-jp{font-size:.58rem;color:var(--mist);margin-top:1px;}
 
 /* 納音 */
 .nouin-row{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;cursor:pointer;}
@@ -42,6 +44,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 /* 九星グリッド */
 .stars-section{padding:20px 16px 0;}
 .stars-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;}
+.avatar-intro{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.035));border:1px solid rgba(196,160,67,.22);border-radius:12px;padding:13px 14px;margin-bottom:12px;}
+.avatar-intro-title{font-size:.78rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:5px;}
+.avatar-intro-text{font-size:.68rem;color:var(--mist);line-height:1.9;}
 .stars-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .star-card{background:var(--card);border:1px solid rgba(100,80,40,.1);border-radius:var(--r);padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;}
 .star-card:active{transform:scale(.97);}
@@ -186,6 +191,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <!-- 九星グリッド -->
   <div class="stars-section">
     <div class="stars-label">✦ はじめての方へ — 自分の星を知る</div>
+    <div class="avatar-intro">
+      <div class="avatar-intro-title">九星は、あなたの役割を教えてくれる9つのアバター</div>
+      <div class="avatar-intro-text">生まれた瞬間に受け取った本命星は、一生変わらない自分の核。9つの星は、性格を決めつけるものではなく、あなたの役割・才能・整え方を知るための美しい入口です。</div>
+    </div>
     <div class="stars-grid" id="starsGrid"></div>
     <div style="margin:12px 0 0;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.15);border-radius:8px;padding:10px 14px;font-size:.68rem;color:var(--mist);line-height:1.9;text-align:center;">
       ⚠️ 1月・2月生まれの方は前年の星になる場合があります。<br>生年月日を入力すると正確に計算されます。
@@ -254,6 +263,18 @@ function calcDayNayin(year, month, day, timeStr){
 // ============================================================
 
 // 星の詳細テキスト
+const STAR_AVATAR = {
+  1:{en:'Crystal Water',jp:'澄み切った水'},
+  2:{en:'Mother Earth',jp:'母なる大地'},
+  3:{en:'Sunrise Sound',jp:'朝日の響き'},
+  4:{en:'Harmonic Breeze',jp:'調和の風'},
+  5:{en:'Center Core',jp:'再生の核'},
+  6:{en:'Royal Sky',jp:'気高き天'},
+  7:{en:'Joyful Harvest',jp:'喜びの収穫'},
+  8:{en:'Evolution Mountain',jp:'変革の山'},
+  9:{en:'Brilliant Fire',jp:'輝く炎'}
+};
+
 const STAR_DETAIL = {
   1:{desc:'深い洞察力と共感力を持ち、人の痛みに静かに寄り添える才能があります。表面には穏やかですが、内に秘めた知性と粘り強さは本物です。縁の下の力持ちとして組織を支え、時間をかけて信頼を積み上げていきます。',tags:['洞察力','共感力','粘り強さ','知性','縁の下'],color_food:'色：黒・紺・白　食：海産物・豆腐・海藻・塩味のもの'},
   2:{desc:'母なる大地のように包容力があり、人を育て支えることに喜びを感じます。コツコツと積み上げる継続力と、誠実で誰にでも平等に接する姿勢が強みです。縁の下の力持ちとして、組織の基盤を静かに支えます。',tags:['包容力','継続力','誠実さ','育てる力','縁の下'],color_food:'色：黄・ベージュ・茶　食：根菜・かぼちゃ・芋類'},
@@ -330,7 +351,7 @@ function init(){
   document.getElementById('msNum').textContent = h;
   document.getElementById('msNum').style.color = SH.c;
   document.getElementById('msName').textContent = SH.j;
-  document.getElementById('msSub').textContent = SH.elem+'の星 — '+SH.color;
+  document.getElementById('msSub').textContent = (STAR_AVATAR[h]?.en||SH.arch||'')+' / '+(STAR_AVATAR[h]?.jp||SH.elem+'の星');
   document.getElementById('mystarCard').style.borderLeft = '3px solid '+SH.c+'66';
 
   // 本命＝月命の場合：Y理論メッセージを表示
@@ -383,7 +404,8 @@ function setCell(pfx, s, n){
   const el = id => document.getElementById(pfx+'-'+id);
   el('name').textContent = s.j;
   el('name').style.color = 'var(--snow)';
-  el('arch').textContent = s.arch||'';
+  const av = STAR_AVATAR[n]||{};
+  el('arch').innerHTML = `<div class="avatar-name">${av.en||s.arch||''}</div><div class="avatar-jp">${av.jp||''}</div>`;
   el('arch').style.color = s.c;
   /* borderはCSSで管理 */
 }
@@ -400,7 +422,7 @@ function buildStarGrid(myHonmei){
     card.innerHTML = `
       <div class="star-card-num" style="color:${s.c}">${n}</div>
       <div class="star-card-name">${s.k}</div>
-      <div class="star-card-arch" style="color:${s.c}">${s.arch||''}</div>
+      <div class="star-card-arch" style="color:${s.c}"><div class="avatar-name">${STAR_AVATAR[n]?.en||s.arch||''}</div><div class="avatar-jp">${STAR_AVATAR[n]?.jp||''}</div></div>
       <div class="star-card-elem">${s.elem}</div>
       <div class="star-card-tap">詳しく見る</div>
     `;
@@ -486,7 +508,8 @@ function openModal(type, n){
   document.getElementById('mNum').textContent = n;
   document.getElementById('mNum').style.color = s.c;
   document.getElementById('mName').textContent = s.j;
-  document.getElementById('mArch').textContent = '— '+(s.arch||'')+' —';
+  const av = STAR_AVATAR[n]||{};
+  document.getElementById('mArch').textContent = '— '+(av.en||s.arch||'')+(av.jp?' / '+av.jp:'')+' —';
   document.getElementById('mArch').style.color = s.c;
   // インフォグラフィックス画像
   const imgWrap = document.getElementById('mImgWrap');
