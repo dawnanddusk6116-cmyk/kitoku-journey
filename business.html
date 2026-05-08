@@ -130,20 +130,20 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="menu-card hire" onclick="showScreen('s1')">
     <div class="menu-icon">👤</div>
     <div>
-      <div class="menu-name">採用判断</div>
+      <div class="menu-name">候補者理解</div>
       <div class="menu-desc">
         候補者の特性・才能を読み解く<br>
-        あなたとの相性・能力の伸ばし方<br>
-        面談で確認すべき質問を提案
+        面談の質を上げる問いを整える<br>
+        採用後の育成視点を持つ
       </div>
       <div class="free-badge">🎁 1日1回無料</div>
     </div>
   </div>
 </div>
 
-<!-- 採用判断：入力画面 -->
+<!-- 候補者理解：入力画面 -->
 <div class="screen" id="s1">
-  <div class="sec-title">採用判断</div>
+  <div class="sec-title">候補者理解</div>
 
   <!-- あなた（社長・採用担当）-->
   <div class="form-card">
@@ -166,12 +166,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div><input class="form-input" type="number" id="cDay" placeholder="1"><div class="date-unit">日</div></div>
     </div>
     <div class="form-note">※ 生年月日はこの端末内にのみ保存されます</div>
-    <button class="main-btn" onclick="analyze()">✦ 候補者を読み解く</button>
+    <button class="main-btn" onclick="analyze()">✦ 候補者理解レポートを作る</button>
   </div>
   <button class="back-btn" onclick="showScreen('s0')">← 戻る</button>
 </div>
 
-<!-- 採用判断：結果画面 -->
+<!-- 候補者理解：結果画面 -->
 <div class="screen" id="s2">
   <div class="result-header">
     <div class="result-name" id="resName">—</div>
@@ -193,9 +193,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <!-- AIレポート -->
   <div class="ai-section">
-    <div class="ai-sec-label">✦ AI軍師 採用レポート</div>
-    <button class="ai-btn" id="aiBtn" onclick="genReport()">✦ 軍師レポートを生成する</button>
-    <div class="ai-hint">理・響き・指揮の3段構成で面談準備を整える</div>
+    <div class="ai-sec-label">✦ AI軍師 候補者理解レポート</div>
+    <button class="ai-btn" id="aiBtn" onclick="genReport()">✦ 候補者理解レポートを生成する</button>
+    <div class="ai-hint">候補者を理解し、面談の質を上げ、育成の視点を持つ</div>
     <div class="ai-count" id="aiCount"></div>
     <div id="aiArea" style="display:none;margin-top:14px;">
       <div id="aiLoading" style="text-align:center;padding:24px;display:none;"><div class="loading-dot"></div><div style="font-size:.75rem;color:var(--mist);margin-top:10px;">候補者を読み解いています…</div></div>
@@ -265,7 +265,7 @@ var DB={
 };
 
 var COMPAT_DESC={
-  saiko:'相生の関係。自然にサポートし合える理想的な組み合わせです。あなたのエネルギーが候補者の成長を促すか、候補者があなたの活動を自然に支える流れが生まれます。採用後、比較的スムーズに馴染める可能性が高いです。',
+  saiko:'相生の関係。自然にサポートし合える理想的な組み合わせです。あなたのエネルギーが候補者の成長を促すか、候補者があなたの活動を自然に支える流れが生まれます。入社後、比較的スムーズに馴染める可能性が高いです。',
   yoi:'比和の関係。価値観や行動パターンが似ているため深く共感し合えます。コミュニケーションがスムーズで、即戦力として期待できます。ただし同質すぎて刺激が少なくなることも。外からの視点を意識的に取り入れましょう。',
   chui:'相剋の関係。緊張感のある組み合わせですが、「合わないがゆえに全部できるようになる」死角ゼロの最強チームになれる可能性を秘めています。互いの違いを活かす役割分担が鍵です。'
 };
@@ -329,7 +329,7 @@ function analyze(){
   document.getElementById('aiReport').style.display='none';
   document.getElementById('aiReport').textContent='';
   var btn=document.getElementById('aiBtn');
-  btn.disabled=false;btn.textContent='✦ 軍師レポートを生成する';
+  btn.disabled=false;btn.textContent='✦ 候補者理解レポートを生成する';
   showScreen('s2');
 }
 
@@ -359,7 +359,7 @@ function genReport(){
       ? '比和の共鳴を活かし、似ている強みと盲点を整理する関係作り'
       : '相剋を否定せず、死角ゼロの補完関係に変える関係作り';
 
-  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、活かすための面談準備に翻訳してください。\n\n以下の確定済みデータだけを使い、星の計算は行わないでください。\n\n【採用担当者（あなた）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【候補者：'+d.nm+'】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n\n以下の3段構成でレポートを作成してください。\n\n【現状の構造（理）】\n星盤から見た候補者のエネルギー状態、採用担当者との関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n本命星・月命星から見た本質、才能、内側の動機、安心して力を発揮しやすい環境を琥珀色の言葉で伝える。\n\n【軍略的助言（指揮）】\n面談でどう引き出すか、採用後にどう伸ばすか、2〜3年後の成長展望、明日から使える関わり方を具体的に示す。\n\n必ず最後に「面談で確認すべき3つの質問」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n【制約】\n・四柱推命・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採用可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・採用担当者が面談でそのまま使える具体的な内容にする\n・候補者への敬意を失わない\n・900〜1200文字程度';
+  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、面談の質を上げ、育成の視点を持つための補助資料に翻訳してください。\n\n以下の確定済みデータだけを使い、星の計算は行わないでください。\n\n【面談担当者（あなた）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【候補者：'+d.nm+'】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n\nレポートタイトルは「KITOKU for BUSINESS｜候補者理解レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た候補者のエネルギー状態、面談担当者との関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n本命星・月命星から見た本質、才能、内側の動機、安心して力を発揮しやすい環境を琥珀色の言葉で伝える。\n\n【軍略的助言（指揮）】\n面談でどう引き出すか、入社後にどう伸ばすか、2〜3年後の成長展望、明日から使える関わり方を具体的に示す。\n\n必ず最後に「面談で確認すべき3つの質問」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは採否を決めるものではなく、面談で候補者の可能性を見つけるための補助資料です。\n\n【制約】\n・四柱推命・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採用可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・面談担当者がそのまま使える具体的な内容にする\n・候補者への敬意を失わない\n・900〜1200文字程度';
 
   fetch('/api/claude',{
     method:'POST',
@@ -371,14 +371,14 @@ function genReport(){
     loading.style.display='none';
     var text=data.content&&data.content[0]?data.content[0].text:'レポートの生成に失敗しました。';
     report.textContent=text;report.style.display='block';
-    btn.disabled=false;btn.textContent='✦ 軍師レポートを再生成する';
+    btn.disabled=false;btn.textContent='✦ 候補者理解レポートを再生成する';
     addCount();updateCount();
   })
   .catch(function(){
     loading.style.display='none';
     report.textContent='エラーが発生しました。しばらくしてお試しください。';
     report.style.display='block';
-    btn.disabled=false;btn.textContent='✦ 軍師レポートを生成する';
+    btn.disabled=false;btn.textContent='✦ 候補者理解レポートを生成する';
   });
 }
 
