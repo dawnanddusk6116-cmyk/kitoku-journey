@@ -57,6 +57,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .prompt-text{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;margin-bottom:10px;white-space:pre-wrap;}
 .prompt-copy-btn{width:100%;background:var(--goldlt);color:#fff;border:none;border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;}
 .prompt-copy-btn:active{opacity:.85;}
+.prompt-share-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;margin-top:8px;}
+.prompt-share-btn:active{background:rgba(100,80,40,.14);}
+.prompt-use-note{font-size:.6rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;}
 
 /* フッター */
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
@@ -524,6 +527,48 @@ function copyPrompt(id,e){
   });
 }
 
+function sharePrompt(id,e){
+  e.stopPropagation();
+  const text=document.getElementById(id).textContent;
+  const btn=e.target;
+  const orig=btn.textContent;
+  navigator.clipboard.writeText(text).catch(()=>{});
+  if(navigator.share){
+    navigator.share({
+      title:'KITOKU AIプロンプト',
+      text:text
+    }).then(()=>{
+      btn.textContent='✅ 送信しました';
+      setTimeout(()=>{btn.textContent=orig;},2000);
+    }).catch(()=>{
+      btn.textContent='📋 コピー済み';
+      setTimeout(()=>{btn.textContent=orig;},2000);
+    });
+  }else{
+    btn.textContent='📋 コピーしました';
+    alert('プロンプトをコピーしました。\n普段使っているAIアプリを開いて、入力欄に貼り付けてください。');
+    setTimeout(()=>{btn.textContent=orig;},2000);
+  }
+}
+
+function setupShareButtons(){
+  document.querySelectorAll('.prompt-body').forEach(body=>{
+    const textEl=body.querySelector('.prompt-text');
+    const copyBtn=body.querySelector('.prompt-copy-btn');
+    if(!textEl||!copyBtn||body.querySelector('.prompt-share-btn')) return;
+    const id=textEl.id;
+    const shareBtn=document.createElement('button');
+    shareBtn.className='prompt-share-btn';
+    shareBtn.textContent='📤 AIアプリに送る';
+    shareBtn.onclick=function(e){sharePrompt(id,e);};
+    const note=document.createElement('div');
+    note.className='prompt-use-note';
+    note.textContent='スマホでは共有先にChatGPTなどを選べます。対応しない場合はコピーして貼り付けてください。';
+    copyBtn.insertAdjacentElement('afterend',shareBtn);
+    shareBtn.insertAdjacentElement('afterend',note);
+  });
+}
+
 function flashBtn(cls,msg,orig){
   const btn=document.querySelector('.'+cls);
   if(!btn)return;
@@ -537,6 +582,7 @@ function flashBtn(cls,msg,orig){
 // 初期化
 // ============================================================
 window.addEventListener('DOMContentLoaded',()=>{
+  setupShareButtons();
   const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
   if(!b)return;
   const arr=b.split('-').map(Number);
