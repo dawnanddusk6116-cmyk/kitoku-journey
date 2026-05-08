@@ -82,6 +82,33 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
 .launch-btn:active{transform:scale(.98);}
 
 .save-note{text-align:center;font-size:.58rem;color:var(--mist);margin-top:10px;letter-spacing:.08em;opacity:.7;}
+.trust-card{
+  margin:14px 16px 0;
+  padding:13px 14px;
+  background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.035));
+  border:1px solid rgba(196,160,67,.26);
+  border-radius:12px;
+}
+.trust-row{display:flex;gap:10px;align-items:flex-start;}
+.trust-icon{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(196,160,67,.14);
+  color:var(--gold);
+  font-size:.86rem;
+  flex-shrink:0;
+}
+.trust-title{font-size:.76rem;color:var(--goldlt);font-weight:600;letter-spacing:.06em;margin-bottom:3px;}
+.trust-text{font-size:.66rem;color:var(--mist);line-height:1.8;}
+.trust-actions{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:10px;padding-top:10px;border-top:1px solid rgba(196,160,67,.16);
+}
+.trust-link{
+  border:0;background:transparent;color:var(--gold);font-family:'Noto Serif JP',serif;
+  font-size:.7rem;letter-spacing:.08em;cursor:pointer;padding:0;
+}
+.trust-hint{font-size:.58rem;color:var(--mist);line-height:1.6;}
 
 /* ══ 結果画面 ══ */
 .result-header{
@@ -367,6 +394,8 @@ footer .disclaimer{
 [data-theme="light"] .kyo-list{background:rgba(100,100,120,.06);border-color:rgba(100,100,120,.15);}
 [data-theme="light"] #settingPanel > div{background:#fefcf8!important;}
 [data-theme="light"] .save-note{color:rgba(60,40,10,.55)!important;}
+[data-theme="light"] .trust-card{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.72));border-color:rgba(196,160,67,.34);}
+[data-theme="light"] .trust-text,[data-theme="light"] .trust-hint{color:rgba(60,40,10,.62);}
 [data-theme="light"] footer{color:rgba(60,40,10,.45)!important;}
 [data-theme="light"] .ryuha-note{color:#3a2a10!important;}
 [data-theme="light"] .kyo-header{color:rgba(50,50,70,.75)!important;}
@@ -1327,9 +1356,18 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
   </div>
 
-  <div class="save-note">生年月日はこの端末に保存されます</div>
-  <div style="text-align:center;margin-top:12px;padding-bottom:4px;">
-    <span onclick="openKitokuAbout()" style="font-size:.68rem;color:var(--gold);letter-spacing:.1em;cursor:pointer;opacity:.8;">✦ KITOKUとは？</span>
+  <div class="trust-card">
+    <div class="trust-row">
+      <div class="trust-icon">鍵</div>
+      <div>
+        <div class="trust-title">生年月日はこの端末だけに保存</div>
+        <div class="trust-text">星の計算に使う情報です。サーバーには送信せず、次回から入力を省くためにこの端末内で読み込みます。</div>
+      </div>
+    </div>
+    <div class="trust-actions">
+      <button class="trust-link" onclick="openKitokuAbout()">✦ KITOKUとは？</button>
+      <div class="trust-hint">自分を知り、自分で動くための羅針盤</div>
+    </div>
   </div>
 
   <div class="launch-hero">
