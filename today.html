@@ -45,6 +45,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .scent-reason{font-size:.78rem;color:var(--snow);line-height:2;margin-bottom:10px;}
 .scent-how{font-size:.7rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(100,80,40,.04);border-radius:8px;margin-bottom:10px;}
 .scent-how-label{font-size:.55rem;letter-spacing:.1em;color:var(--gold);margin-bottom:4px;}
+.scent-use-grid{display:grid;gap:8px;margin-bottom:10px;}
+.scent-use-card{border:1px solid var(--rim);border-radius:8px;padding:9px 10px;background:rgba(255,255,255,.42);}
+.scent-use-label{font-size:.56rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin-bottom:4px;}
+.scent-use-text{font-size:.68rem;color:var(--mist);line-height:1.8;}
 
 /* アフィリエイト枠 */
 .affiliate-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
@@ -462,8 +466,41 @@ async function fetchScent(){
   },600);
 }
 
+function scentUseGuide(d){
+  const name=d.name||'今日の香り';
+  const guides={
+    '朝の準備':[
+      ['香水で整える',`${name}を手首や首筋に少量。外へ出る前に、自分の輪郭を静かに整える使い方。`],
+      ['ボディケアで整える','同じ系統のボディクリームやハンドクリームを薄く。香りを強く出さず、肌から気分を立ち上げる。'],
+      ['空間で整える','洗面所や玄関にルームフレグランスを置く。出発前の場所を整えることで、一日の入り方が変わります。']
+    ],
+    '仕事・商談':[
+      ['香水で整える',`${name}は1プッシュまで。相手に届けるより、自分の集中と落ち着きを支える量に。`],
+      ['ボディケアで整える','会議前はハンドクリームが使いやすいです。手元の所作が整うと、言葉の印象も落ち着きます。'],
+      ['空間で整える','デスクや車内に控えめな香りを。商談前の数分を、呼吸を整える小さな準備時間にします。']
+    ],
+    'リラックス':[
+      ['香水で整える',`${name}を寝る前の布や手首にほんの少し。強く纏うより、深呼吸のきっかけに。`],
+      ['ボディケアで整える','入浴後のボディクリームやオイルに。体を労わる時間そのものを、今日の回復の儀式にします。'],
+      ['空間で整える','寝室や読書スペースにディフューザーを。部屋の気配をゆるめ、休む許可を出す使い方。']
+    ],
+    '特別な日':[
+      ['香水で整える',`${name}を耳の後ろや服の内側に。華やかさより、今日の自分らしさを支える香りとして。`],
+      ['ボディケアで整える','外出前に同系統のクリームを下地に。香りの持続より、肌と気持ちの準備を大切に。'],
+      ['空間で整える','出発前の部屋や車に香りを一吹き。特別な日の記憶と香りを、静かに結びます。']
+    ]
+  };
+  return guides[curScene]||guides['朝の準備'];
+}
+
 function renderScent(d){
   const result=document.getElementById('scentResult');
+  const useGuide=scentUseGuide(d).map(([label,text])=>`
+    <div class="scent-use-card">
+      <div class="scent-use-label">✦ ${label}</div>
+      <div class="scent-use-text">${text}</div>
+    </div>
+  `).join('');
   result.innerHTML=`
     <div style="font-size:.6rem;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;">✦ ${curScene}の香り</div>
     <div class="scent-name">${d.name||'—'}</div>
@@ -472,6 +509,9 @@ function renderScent(d){
     <div class="scent-how">
       <div class="scent-how-label">✦ 取り入れ方</div>
       ${d.howto||'—'}
+    </div>
+    <div class="scent-use-grid">
+      ${useGuide}
     </div>
     <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
       <span style="color:var(--gold);font-size:.55rem;letter-spacing:.1em;">✦ おすすめブランド</span><br>
