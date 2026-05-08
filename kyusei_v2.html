@@ -35,6 +35,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 /* 納音 */
 .nouin-row{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;cursor:pointer;}
 .nouin-lbl{font-size:.62rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;font-weight:800;}
+.nouin-lead{font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:9px;}
 .nouin-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;}
 .nouin-badge{font-size:.68rem;font-weight:700;padding:5px 12px;border-radius:20px;background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);}
 .nouin-badge.same{background:rgba(196,160,67,.2);border-color:rgba(196,160,67,.5);color:#7a5010;}
@@ -182,6 +183,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <!-- 納音 -->
       <div class="nouin-row">
         <div class="nouin-lbl">納音（ナッチン）— 魂の音色</div>
+        <div class="nouin-lead">九星が人生の設計図なら、納音はその人だけの魂の音色です。同じ星を持つ人でも、納音が違えば人生で奏でる響きは変わります。</div>
         <div class="nouin-badges" id="nouinBadges"></div>
         <div class="nouin-ks" id="nouinKs">—</div>
       </div>
@@ -444,7 +446,7 @@ function openNouinModal(type){
   document.getElementById('mName').textContent = labelMap[type];
   document.getElementById('mArch').textContent = nac.n + '（'+nac.ks+'）';
   document.getElementById('mArch').style.color = 'var(--gold)';
-  document.getElementById('mDesc').textContent = NACHIN_DETAIL[nac.n] || '魂の音色を深く読み解きます。';
+  document.getElementById('mDesc').textContent = '九星が人生の設計図なら、納音はその人だけの魂の音色です。同じ星を持つ人でも、納音が違えば人生で奏でる響きは変わります。\n\n'+(NACHIN_DETAIL[nac.n] || '魂の音色を深く読み解きます。');
   document.getElementById('mTags').innerHTML = '';
   document.getElementById('mColor').textContent = '';
   document.getElementById('mNouinSection').style.display = 'none';
@@ -488,7 +490,7 @@ function openModal(type, n){
       ? KITOKU_IMAGES.nacchin[yNacName] : '';
     if(nImgUrl){ imgElN.src=nImgUrl; imgWrapN.style.display='block'; }
     else { imgWrapN.style.display='none'; }
-    document.getElementById('mDesc').textContent = '納音とは、生まれた年・月・日の干支から読み解く「魂の音色」です。年・月・日の納音が重なるほど、その特質が強く現れます。';
+    document.getElementById('mDesc').textContent = '納音とは、生まれた年・月・日の干支から読み解く「魂の音色」です。九星が人生の設計図なら、納音はその設計図がどんな響きで表現されるかを教えてくれます。同じ星を持つ人でも、納音が違えば人生で奏でる音楽は変わります。年・月・日の納音が重なるほど、その特質が強く現れます。';
     document.getElementById('mTags').innerHTML = '';
     document.getElementById('mColor').textContent = '';
     const ny = gKyusei.yn, mn = gKyusei.mn;
