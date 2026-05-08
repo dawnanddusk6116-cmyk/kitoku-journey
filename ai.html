@@ -18,6 +18,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-box{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:16px;}
 .lead-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.1em;color:var(--goldlt);margin-bottom:8px;}
 .lead-text{font-size:.75rem;color:var(--mist);line-height:2;}
+.lead-point{margin-top:12px;background:rgba(255,255,255,.45);border:1px solid rgba(196,160,67,.28);border-radius:10px;padding:12px;}
+.lead-point-title{font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;}
+.lead-point-text{font-size:.68rem;color:var(--mist);line-height:1.9;}
+.lead-steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px;}
+.lead-step{background:rgba(100,80,40,.05);border:1px solid var(--rim);border-radius:8px;padding:8px 6px;text-align:center;}
+.lead-step-num{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1rem;line-height:1;}
+.lead-step-text{font-size:.58rem;color:var(--mist);line-height:1.5;margin-top:3px;}
 
 /* AI使い分けガイド */
 .guide{margin:14px 0;background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;}
@@ -45,6 +52,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 /* プロンプトカード */
 .prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:all .15s;}
+.prompt-card.featured{border-color:rgba(196,160,67,.55);box-shadow:0 8px 24px rgba(100,80,40,.08);}
+.prompt-card.featured .prompt-head{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.03));}
 .prompt-card:active{transform:scale(.99);}
 .prompt-head{display:flex;align-items:center;gap:10px;padding:14px;}
 .prompt-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;}
@@ -55,6 +64,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .prompt-body{display:none;padding:0 14px 14px;}
 .prompt-body.open{display:block;}
 .prompt-text{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;margin-bottom:10px;white-space:pre-wrap;}
+.write-guide{background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.42);border-radius:10px;padding:11px 12px;margin-bottom:10px;}
+.write-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:5px;}
+.write-guide-text{font-size:.66rem;color:var(--mist);line-height:1.85;}
+.write-guide-example{margin-top:8px;background:rgba(255,255,255,.5);border:1px dashed rgba(138,104,32,.45);border-radius:8px;padding:8px 9px;font-size:.66rem;color:var(--goldlt);line-height:1.8;}
 .prompt-copy-btn{width:100%;background:var(--goldlt);color:#fff;border:none;border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;}
 .prompt-copy-btn:active{opacity:.85;}
 .prompt-share-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;margin-top:8px;}
@@ -110,9 +123,18 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="lead-box">
     <div class="lead-title">AIに聞く</div>
     <div class="lead-text">
-      高額な鑑定も、長い行列も不要です。<br>
-      あなたの星情報を渡すだけで、ChatGPT・Claude・GeminiなどのAIが、あなた専用の答えを返してくれます。<br><br>
-      <strong>正しく聞けば、AIは最高の相談相手になります。</strong>
+      ここは、星のデータを使ってAIと対話する入口です。<br>
+      MBTIのような一般分類ではなく、本命星・月命・傾斜・同会・納音を重ねた、あなた専用の相談文を作れます。<br><br>
+      <strong>大切なのは、答えを一回で決めることではなく、対話を重ねて自分の判断軸を育てることです。</strong>
+    </div>
+    <div class="lead-point">
+      <div class="lead-point-title">使い方は3ステップ</div>
+      <div class="lead-point-text">気になるテーマを開き、相談したいことを書き足して、いつも使っているAIに送ってください。</div>
+      <div class="lead-steps">
+        <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">テーマを選ぶ</div></div>
+        <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">悩みを書く</div></div>
+        <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">AIと話す</div></div>
+      </div>
     </div>
 
     <!-- AI使い分けガイド -->
@@ -183,16 +205,21 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
-  <div class="prompt-card" onclick="togglePrompt(this,'q11')">
+  <div class="prompt-card featured" onclick="togglePrompt(this,'q11')">
     <div class="prompt-head">
       <div class="prompt-icon">🧩</div>
       <div class="prompt-info">
         <div class="prompt-title">AI軍師セッション</div>
-        <div class="prompt-desc">問い → 現状 → 理想 → ボトルネック → 次の一手で思考を整理する</div>
+        <div class="prompt-desc">ここに悩みを書き足すだけで、問い → 現状 → 理想 → 次の一手まで整理する</div>
       </div>
       <div class="prompt-arrow">›</div>
     </div>
     <div class="prompt-body" id="q11">
+      <div class="write-guide">
+        <div class="write-guide-title">ここが一番大切です</div>
+        <div class="write-guide-text">コピーしたあと、AIアプリ側で「相談したいこと」の部分だけをあなたの言葉に書き換えてください。短くても大丈夫です。</div>
+        <div class="write-guide-example">例：仕事を続けるか迷っている / 人間関係で疲れている / 次の一歩が決められない</div>
+      </div>
       <div class="prompt-text" id="qt11">—</div>
       <button class="prompt-copy-btn" onclick="copyPrompt('qt11',event)">📋 コピーして貼り付ける</button>
     </div>
@@ -419,8 +446,11 @@ function buildPrompts(info){
 あなたはKITOKUのAI軍師です。
 私の悩みを、答えを押し付けるのではなく、以下の左脳マップで整理してください。
 
+＝＝＝＝ここを書き換えてください＝＝＝＝
 【相談したいこと】
-（ここに今の悩み・迷いを書いてください）
+（ここに今の悩み・迷いをあなたの言葉で書いてください）
+例：仕事を続けるか迷っている / 人間関係で疲れている / 次の一歩が決められない
+＝＝＝＝ここまで＝＝＝＝
 
 【整理してほしい順番】
 1. 問い
