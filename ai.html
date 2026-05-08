@@ -200,6 +200,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="prompt-arrow">›</div>
     </div>
     <div class="prompt-body" id="q2">
+      <div class="write-guide">
+        <div class="write-guide-title">迷っていることを書き足してください</div>
+        <div class="write-guide-text">コピーしたあと、AIアプリ側で「〇〇」の部分をあなたの迷いに書き換えてください。</div>
+        <div class="write-guide-example">例：転職するか迷っている / 今日この話を切り出すか迷っている / A案とB案で迷っている</div>
+      </div>
       <div class="prompt-text" id="qt2">—</div>
       <button class="prompt-copy-btn" onclick="copyPrompt('qt2',event)">📋 コピーして貼り付ける</button>
     </div>
@@ -292,6 +297,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="prompt-arrow">›</div>
     </div>
     <div class="prompt-body" id="q6">
+      <div class="write-guide">
+        <div class="write-guide-title">相手との関係を書き足してください</div>
+        <div class="write-guide-text">コピーしたあと、AIアプリ側で「〇〇」の部分を相手との関係や悩みに書き換えてください。相手の星がわかれば一緒に入れると深く読めます。</div>
+        <div class="write-guide-example">例：上司との関係で疲れている / 家族に気持ちが伝わらない / 友人と距離を置くか迷っている</div>
+      </div>
       <div class="prompt-text" id="qt6">—</div>
       <button class="prompt-copy-btn" onclick="copyPrompt('qt6',event)">📋 コピーして貼り付ける</button>
     </div>
@@ -431,7 +441,12 @@ function buildPrompts(info){
   document.getElementById('qt2').textContent=
 `${base}
 
-今、〇〇について迷っています。（ここに迷っていることを書いてください）
+＝＝＝＝ここを書き換えてください＝＝＝＝
+【今日の決断】
+今、〇〇について迷っています。
+（ここに迷っていることをあなたの言葉で書いてください）
+例：転職するか迷っている / 今日この話を切り出すか迷っている / A案とB案で迷っている
+＝＝＝＝ここまで＝＝＝＝
 
 5000年の東洋の知恵と私の星から見て、
 ・この迷いはどんな意味があるか
@@ -521,7 +536,12 @@ function buildPrompts(info){
   document.getElementById('qt6').textContent=
 `${base}
 
-今、〇〇との関係で悩んでいます。（相手の星がわかれば書いてください）
+＝＝＝＝ここを書き換えてください＝＝＝＝
+【人間関係の相談】
+今、〇〇との関係で悩んでいます。
+（相手との関係・起きていること・相手の星がわかれば書いてください）
+例：上司との関係で疲れている / 家族に気持ちが伝わらない / 友人と距離を置くか迷っている
+＝＝＝＝ここまで＝＝＝＝
 
 ・私の星から見た、この関係のパターン
 ・${elem}の五行から見た、この悩みの本質
