@@ -183,6 +183,21 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
+  <div class="prompt-card" onclick="togglePrompt(this,'q11')">
+    <div class="prompt-head">
+      <div class="prompt-icon">🧩</div>
+      <div class="prompt-info">
+        <div class="prompt-title">AI軍師セッション</div>
+        <div class="prompt-desc">問い → 現状 → 理想 → ボトルネック → 次の一手で思考を整理する</div>
+      </div>
+      <div class="prompt-arrow">›</div>
+    </div>
+    <div class="prompt-body" id="q11">
+      <div class="prompt-text" id="qt11">—</div>
+      <button class="prompt-copy-btn" onclick="copyPrompt('qt11',event)">📋 コピーして貼り付ける</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- カテゴリ：自分を知る -->
@@ -397,6 +412,35 @@ function buildPrompts(info){
 ・今動くべきか、待つべきか
 
 率直に教えてください。`;
+
+  document.getElementById('qt11').textContent=
+`${base}
+
+あなたはKITOKUのAI軍師です。
+私の悩みを、答えを押し付けるのではなく、以下の左脳マップで整理してください。
+
+【相談したいこと】
+（ここに今の悩み・迷いを書いてください）
+
+【整理してほしい順番】
+1. 問い
+私が本当に向き合うべき問いを、背景を踏まえて再設定してください。
+
+2. 現状
+今起きていること、私の行動・思考・感情を分けて整理してください。
+
+3. 理想
+数字や結果だけでなく、私はどんな感情を得たいのかまで掘り下げてください。
+
+4. ボトルネック
+行動を止めている思い込み・恐れ・ズレを、責めずに見つけてください。
+
+5. ネクストアクション
+24時間以内にできる小さな一手、7日以内に整えること、今はやらないことを提案してください。
+
+【大切な姿勢】
+不安を煽らず、でも甘やかしすぎず、琥珀色の言葉で正直に導いてください。
+最後は「自分で選ぶための判断材料」としてまとめてください。`;
 
   document.getElementById('qt3').textContent=
 `${base}
