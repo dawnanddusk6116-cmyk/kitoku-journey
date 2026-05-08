@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>はじめてのKITOKU | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.16em;color:var(--gold);}
+.back{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.78rem;padding:9px 14px;border-radius:8px;text-decoration:none;font-weight:700;}
+.hero{padding:28px 20px 18px;text-align:center;}
+.eyebrow{font-size:.62rem;letter-spacing:.2em;color:var(--gold);font-weight:700;margin-bottom:10px;}
+h1{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:1.8rem;letter-spacing:.08em;color:var(--goldlt);line-height:1.5;margin-bottom:8px;}
+.lead{font-size:.82rem;line-height:2;color:var(--mist);}
+.nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:0 16px 14px;}
+.nav a{display:block;text-align:center;text-decoration:none;border:1px solid var(--rim);border-radius:10px;padding:9px 6px;color:var(--mist);font-size:.68rem;background:rgba(255,255,255,.45);}
+.nav a.active{background:rgba(196,160,67,.16);border-color:rgba(196,160,67,.42);color:var(--goldlt);font-weight:700;}
+.section{padding:0 16px 14px;}
+.card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+h2{font-size:1rem;color:var(--goldlt);letter-spacing:.06em;margin-bottom:10px;}
+h3{font-size:.82rem;color:var(--gold);letter-spacing:.08em;margin:12px 0 6px;}
+p{font-size:.78rem;line-height:2;color:var(--snow);margin-bottom:10px;}
+ul,ol{padding-left:1.2rem;margin:8px 0;}
+li{font-size:.76rem;line-height:1.9;color:var(--mist);margin-bottom:4px;}
+.callout{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.3);border-radius:12px;padding:13px;margin:12px 0;}
+.callout strong{color:var(--goldlt);}
+.mini{display:grid;gap:8px;margin-top:10px;}
+.mini div{border:1px solid var(--rim);border-radius:10px;padding:10px 12px;background:rgba(100,80,40,.035);font-size:.74rem;line-height:1.8;color:var(--mist);}
+.mini strong{display:block;color:var(--goldlt);font-size:.78rem;margin-bottom:3px;}
+.next{display:block;text-align:center;text-decoration:none;margin:4px 16px 30px;border:1px solid rgba(196,160,67,.45);border-radius:12px;padding:13px;background:rgba(196,160,67,.12);color:var(--goldlt);font-weight:700;font-size:.82rem;}
+.footer{text-align:center;font-size:.58rem;color:var(--mist);padding:8px 16px 34px;opacity:.7;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo">✦ KITOKU@JOURNEY</div>
+  <a class="back" href="index.html">TOPへ</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">GUIDE 01</div>
+  <h1>はじめてのKITOKU</h1>
+  <div class="lead">登録、今日の整え、吉方位、香り・色・食。<br>まずはここだけ読めば大丈夫です。</div>
+</div>
+
+<div class="nav">
+  <a class="active" href="guide_01.html">はじめて</a>
+  <a href="guide_02.html">自分を知る</a>
+  <a href="guide_03.html">人と関わる</a>
+</div>
+
+<div class="section">
+  <div class="card">
+    <h2>KITOKUは何をするもの？</h2>
+    <p>KITOKUは、吉凶で人を縛るためのものではありません。星のデータを入口にして、今日の状態を知り、自分で選ぶための判断材料を持つための羅針盤です。</p>
+    <div class="callout"><strong>基本姿勢</strong><br>自分を知る。自分を愛する。自分で動く。</div>
+  </div>
+
+  <div class="card">
+    <h2>最初の3ステップ</h2>
+    <ol>
+      <li>トップ画面で生年月日・生まれた時間・性別・調べる日付を確認します。</li>
+      <li>「九星を知る」で、本命星・月命星・傾斜・同会・納音を見ます。</li>
+      <li>「今日の羅針盤」「香り・色・食」「気学 × AI」から、今日の行動を整えます。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>6つの入口</h2>
+    <div class="mini">
+      <div><strong>九星を知る</strong>あなたの性質、才能、人生の舞台を知る入口です。</div>
+      <div><strong>吉方位を知る</strong>今日・今月の方位盤を見て、動き方の判断材料にします。</div>
+      <div><strong>香り・色・食を知る</strong>香水、ボディケア、空間、服、食事で自分を整えます。</div>
+      <div><strong>気学 × AI</strong>星情報つきの相談文を作り、AIと対話する入口です。</div>
+      <div><strong>RELATIONS</strong>大切な人との違いを、責めずに調律するために使います。</div>
+      <div><strong>BUSINESS</strong>候補者理解、面談の質、育成視点を整える補助資料です。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>受け取り方</h2>
+    <ul>
+      <li>当たる・当たらないより、使えるかどうかで見てください。</li>
+      <li>凶方位は怖がるものではなく、安全運転の目安です。</li>
+      <li>香り・色・食は、日々を整える小さな行動として使います。</li>
+      <li>迷った時は、AIに答えを決めてもらうのではなく、問いを深めるために使います。</li>
+    </ul>
+  </div>
+</div>
+
+<a class="next" href="guide_02.html">次へ：自分を知るKITOKU</a>
+<div class="footer">KITOKU OS GUIDE<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+</body>
+</html>
