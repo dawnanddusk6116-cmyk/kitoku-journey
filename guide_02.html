@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>自分を知るKITOKU | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.16em;color:var(--gold);}
+.back{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.78rem;padding:9px 14px;border-radius:8px;text-decoration:none;font-weight:700;}
+.hero{padding:28px 20px 18px;text-align:center;}
+.eyebrow{font-size:.62rem;letter-spacing:.2em;color:var(--gold);font-weight:700;margin-bottom:10px;}
+h1{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:1.8rem;letter-spacing:.08em;color:var(--goldlt);line-height:1.5;margin-bottom:8px;}
+.lead{font-size:.82rem;line-height:2;color:var(--mist);}
+.nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:0 16px 14px;}
+.nav a{display:block;text-align:center;text-decoration:none;border:1px solid var(--rim);border-radius:10px;padding:9px 6px;color:var(--mist);font-size:.68rem;background:rgba(255,255,255,.45);}
+.nav a.active{background:rgba(196,160,67,.16);border-color:rgba(196,160,67,.42);color:var(--goldlt);font-weight:700;}
+.section{padding:0 16px 14px;}
+.card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+h2{font-size:1rem;color:var(--goldlt);letter-spacing:.06em;margin-bottom:10px;}
+h3{font-size:.82rem;color:var(--gold);letter-spacing:.08em;margin:12px 0 6px;}
+p{font-size:.78rem;line-height:2;color:var(--snow);margin-bottom:10px;}
+ul,ol{padding-left:1.2rem;margin:8px 0;}
+li{font-size:.76rem;line-height:1.9;color:var(--mist);margin-bottom:4px;}
+.callout{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.3);border-radius:12px;padding:13px;margin:12px 0;font-size:.76rem;line-height:1.9;color:var(--mist);}
+.callout strong{color:var(--goldlt);}
+.grid{display:grid;gap:8px;margin-top:10px;}
+.cell{border:1px solid var(--rim);border-radius:10px;padding:10px 12px;background:rgba(100,80,40,.035);}
+.cell strong{display:block;color:var(--goldlt);font-size:.8rem;margin-bottom:3px;}
+.cell span{display:block;font-size:.72rem;color:var(--mist);line-height:1.8;}
+.prompt{background:rgba(100,80,40,.04);border:1px dashed rgba(138,104,32,.35);border-radius:10px;padding:11px;font-size:.72rem;line-height:1.9;color:var(--mist);white-space:pre-wrap;}
+.next{display:block;text-align:center;text-decoration:none;margin:4px 16px 30px;border:1px solid rgba(196,160,67,.45);border-radius:12px;padding:13px;background:rgba(196,160,67,.12);color:var(--goldlt);font-weight:700;font-size:.82rem;}
+.footer{text-align:center;font-size:.58rem;color:var(--mist);padding:8px 16px 34px;opacity:.7;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo">✦ KITOKU@JOURNEY</div>
+  <a class="back" href="index.html">TOPへ</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">GUIDE 02</div>
+  <h1>自分を知るKITOKU</h1>
+  <div class="lead">九星、納音、AI軍師、マインドマップ。<br>自分軸を育てるための中核です。</div>
+</div>
+
+<div class="nav">
+  <a href="guide_01.html">はじめて</a>
+  <a class="active" href="guide_02.html">自分を知る</a>
+  <a href="guide_03.html">人と関わる</a>
+</div>
+
+<div class="section">
+  <div class="card">
+    <h2>星は「型」ではなく入口</h2>
+    <p>本命星・月命星・傾斜・同会・納音は、あなたを決めつけるためのものではありません。自分の強み、疲れやすいパターン、人生で響きやすいテーマを知る入口です。</p>
+    <div class="callout"><strong>大切な見方</strong><br>同じ九星でも、納音が違えば人生で奏でる響きは変わります。九星は設計図、納音は魂の音色です。</div>
+  </div>
+
+  <div class="card">
+    <h2>見る順番</h2>
+    <div class="grid">
+      <div class="cell"><strong>本命星</strong><span>人生の中心。根っこの性質、役割、長期的なテーマ。</span></div>
+      <div class="cell"><strong>月命星</strong><span>感情や内面。親しい人との関わり方や、心の動き。</span></div>
+      <div class="cell"><strong>傾斜</strong><span>潜在能力。無意識に引っ張られやすい才能や方向性。</span></div>
+      <div class="cell"><strong>同会</strong><span>社会で求められる役割。縁が広がりやすい舞台。</span></div>
+      <div class="cell"><strong>納音</strong><span>魂の音色。年・月・日の響きから、本質の細部を見る。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>AI軍師セッション</h2>
+    <p>AIに聞く機能は、単なるコピー機能ではありません。星情報を渡した状態で、AIと対話を始めるための入口です。</p>
+    <ol>
+      <li>テーマを選ぶ</li>
+      <li>「相談したいこと」を自分の言葉で書く</li>
+      <li>AIに送り、返ってきた答えにさらに質問を重ねる</li>
+    </ol>
+    <div class="prompt">問い → 現状 → 理想 → ボトルネック → 次の一手
+
+最後にマインドマップ形式で整理してもらうと、全体像が見えやすくなります。</div>
+  </div>
+
+  <div class="card">
+    <h2>対話を深める質問</h2>
+    <ul>
+      <li>この中で、私が本当に向き合うべき問いは何ですか？</li>
+      <li>私の感情・思考・行動はどこでズレていますか？</li>
+      <li>今すぐやること、7日以内に整えること、今はやらないことを分けてください。</li>
+      <li>この答えをマインドマップとして整理してください。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>使う時の注意</h2>
+    <p>AIの答えは、最終判断ではなく判断材料です。重要な予定、場所、健康、法律、お金に関わることは、現実の情報と信頼できる人の意見も必ず照らし合わせてください。</p>
+  </div>
+</div>
+
+<a class="next" href="guide_03.html">次へ：人と関わるKITOKU</a>
+<div class="footer">KITOKU OS GUIDE<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+</body>
+</html>
