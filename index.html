@@ -108,6 +108,7 @@ input[type="date"]:focus{border-color:rgba(196,160,67,.5);}
   border:0;background:transparent;color:var(--gold);font-family:'Noto Serif JP',serif;
   font-size:.7rem;letter-spacing:.08em;cursor:pointer;padding:0;
 }
+.trust-link.secondary{color:var(--goldlt);}
 .trust-hint{font-size:.58rem;color:var(--mist);line-height:1.6;}
 
 /* ══ 結果画面 ══ */
@@ -1260,6 +1261,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           <div><strong style="color:var(--goldlt);">KITOKU for BUSINESS</strong><br>候補者を理解し、面談の質を上げ、育成の視点を持つための補助資料を作ります。</div>
         </div>
       </div>
+      <div style="border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:14px;margin-bottom:16px;background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.03));">
+        <div style="font-size:.72rem;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:10px;">✦ 使い方ガイド</div>
+        <div style="display:grid;gap:8px;font-size:.74rem;line-height:1.8;">
+          <a href="guide_01.html" style="color:var(--goldlt);text-decoration:none;">01 はじめてのKITOKU — 登録・今日の整え・吉方位</a>
+          <a href="guide_02.html" style="color:var(--goldlt);text-decoration:none;">02 自分を知るKITOKU — 九星・納音・AI軍師</a>
+          <a href="guide_03.html" style="color:var(--goldlt);text-decoration:none;">03 人と関わるKITOKU — RELATIONS・BUSINESS</a>
+        </div>
+      </div>
       <p style="margin:0 0 16px;text-align:center;font-size:.82rem;color:var(--mist);">その旅の<br>小さな道連れになれれば幸いです。</p>
       <p style="text-align:center;font-size:.68rem;color:rgba(196,160,67,.5);letter-spacing:.12em;">KITOKU@JOURNEY<br>inspired by 5000 Years of Eastern Celestial Wisdom</p>
     </div>
@@ -1341,7 +1350,10 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
     <div class="trust-actions">
-      <button class="trust-link" onclick="openKitokuAbout()">✦ KITOKUとは？</button>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="trust-link" onclick="openKitokuAbout()">✦ KITOKUとは？</button>
+        <button class="trust-link secondary" onclick="window.location.href='guide_01.html'">使い方ガイド</button>
+      </div>
       <div class="trust-hint">自分を知り、自分で動くための羅針盤</div>
     </div>
   </div>
