@@ -587,7 +587,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 /* ── 盤面向き切り替え・説明ボタン ── */
 .ban-orient-bar{
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:center;
   margin-bottom:8px;padding:0 2px;
 }
 .ban-orient-btns{display:flex;gap:4px;}
@@ -611,9 +611,33 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   white-space:nowrap;
 }
 .ban-help-link:hover{opacity:1;background:rgba(196,160,67,.2);}
+.ban-guide-card{
+  width:100%;
+  display:flex;align-items:center;gap:12px;
+  margin:8px 0 12px;
+  padding:12px 13px;
+  border:1.5px solid rgba(196,160,67,.45);
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(196,160,67,.16),rgba(255,255,255,.06));
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(100,80,40,.06);
+}
+.ban-guide-icon{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(196,160,67,.18);
+  color:var(--goldlt);
+  font-size:1rem;
+  flex-shrink:0;
+}
+.ban-guide-kicker{font-size:.56rem;letter-spacing:.16em;color:var(--gold);font-weight:700;margin-bottom:3px;}
+.ban-guide-title{font-size:.8rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:2px;}
+.ban-guide-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
+.ban-guide-arrow{margin-left:auto;color:var(--gold);font-size:1rem;}
 [data-theme="light"] .ban-orient-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .ban-orient-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);color:#5a3e08;}
 [data-theme="light"] .ban-help-link{color:#7a5a10;background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.25);}
+[data-theme="light"] .ban-guide-card{background:linear-gradient(135deg,rgba(196,160,67,.18),rgba(255,255,255,.78));border-color:rgba(196,160,67,.45);}
 
 .slide-body-collapsed{
   display:none;
@@ -1364,7 +1388,15 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <button class="ban-orient-btn active" id="orient-s" onclick="setOrient('south')">南上（気学式）</button>
         <button class="ban-orient-btn" id="orient-n" onclick="setOrient('north')">北上（地図式）</button>
       </div>
-      <span class="ban-help-link" onclick="showBanGuide()">📖 吉方の取り方・使い方</span>
+    </div>
+    <div class="ban-guide-card" onclick="showBanGuide()">
+      <div class="ban-guide-icon">本</div>
+      <div>
+        <div class="ban-guide-kicker">はじめての方へ</div>
+        <div class="ban-guide-title">吉方の取り方・方位盤の使い方</div>
+        <div class="ban-guide-text">日盤・月盤・年盤の違い、南上/北上、距離の目安を確認できます。</div>
+      </div>
+      <div class="ban-guide-arrow">›</div>
     </div>
     <div class="ban-tabs">
       <button class="ban-tab active" id="tab-day" onclick="switchBan('day')">日盤</button>
