@@ -1249,6 +1249,17 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div style="text-align:center;padding:16px 0;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim);margin-bottom:16px;">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--goldlt);letter-spacing:.1em;line-height:2;">「自分を知る・自分を愛する・自分で動く」</div>
       </div>
+      <div style="border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:16px;background:rgba(100,80,40,.035);">
+        <div style="font-size:.72rem;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:10px;">✦ 6つの入口</div>
+        <div style="display:grid;gap:10px;font-size:.74rem;color:var(--mist);line-height:1.8;">
+          <div><strong style="color:var(--goldlt);">九星を知る</strong><br>本命星・月命星・傾斜・同会・納音から、自分の性質と人生の舞台を知ります。</div>
+          <div><strong style="color:var(--goldlt);">吉方位を知る</strong><br>今日・今月の方位盤を見て、行く方向や注意する方向を判断材料にします。</div>
+          <div><strong style="color:var(--goldlt);">香り・色・食を知る</strong><br>今日の星に合わせて、香り・色・食で自分と場を整える小さな行動を選びます。</div>
+          <div><strong style="color:var(--goldlt);">気学 × AI</strong><br>星の情報をAIに渡せる形に整え、悩みや問いを深く整理します。</div>
+          <div><strong style="color:var(--goldlt);">KITOKU @ RELATIONS</strong><br>大切な人との違いを責めず、相性・納音・関係の調律として読み解きます。</div>
+          <div><strong style="color:var(--goldlt);">KITOKU for BUSINESS</strong><br>候補者を理解し、面談の質を上げ、育成の視点を持つための補助資料を作ります。</div>
+        </div>
+      </div>
       <p style="margin:0 0 16px;text-align:center;font-size:.82rem;color:var(--mist);">その旅の<br>小さな道連れになれれば幸いです。</p>
       <p style="text-align:center;font-size:.68rem;color:rgba(196,160,67,.5);letter-spacing:.12em;">KITOKU@JOURNEY<br>inspired by 5000 Years of Eastern Celestial Wisdom</p>
     </div>
@@ -1321,6 +1332,20 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <input type="date" id="inputDate">
   </div>
 
+  <div class="trust-card">
+    <div class="trust-row">
+      <div class="trust-icon">鍵</div>
+      <div>
+        <div class="trust-title">生年月日はこの端末だけに保存</div>
+        <div class="trust-text">星の計算に使う情報です。サーバーには送信せず、次回から入力を省くためにこの端末内で読み込みます。</div>
+      </div>
+    </div>
+    <div class="trust-actions">
+      <button class="trust-link" onclick="openKitokuAbout()">✦ KITOKUとは？</button>
+      <div class="trust-hint">自分を知り、自分で動くための羅針盤</div>
+    </div>
+  </div>
+
   <!-- ② 6つのボタン -->
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
 
@@ -1354,20 +1379,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div><div style="font-size:.9rem;color:#6080c0;font-weight:700;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div></div>
     </button>
 
-  </div>
-
-  <div class="trust-card">
-    <div class="trust-row">
-      <div class="trust-icon">鍵</div>
-      <div>
-        <div class="trust-title">生年月日はこの端末だけに保存</div>
-        <div class="trust-text">星の計算に使う情報です。サーバーには送信せず、次回から入力を省くためにこの端末内で読み込みます。</div>
-      </div>
-    </div>
-    <div class="trust-actions">
-      <button class="trust-link" onclick="openKitokuAbout()">✦ KITOKUとは？</button>
-      <div class="trust-hint">自分を知り、自分で動くための羅針盤</div>
-    </div>
   </div>
 
   <div class="launch-hero">
