@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>香りAI先生 | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--rose:#c75d7a;--green:#2f8a60;--r:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.08rem;letter-spacing:.15em;color:var(--gold);}
+.back{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.78rem;padding:9px 14px;border-radius:8px;text-decoration:none;font-weight:700;}
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+.tb-btn{background:rgba(0,0,0,.04);border:1px solid rgba(120,90,20,.2);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;letter-spacing:.06em;}
+.tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);color:var(--goldlt);font-weight:700;}
+.hero{padding:20px 16px 8px;}
+.hero-box{background:linear-gradient(135deg,rgba(220,140,160,.16),rgba(196,160,67,.05));border:1px solid rgba(220,140,160,.32);border-radius:var(--r);padding:18px;}
+.eyebrow{font-size:.58rem;letter-spacing:.2em;color:var(--rose);font-weight:800;margin-bottom:8px;}
+.title{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:1.55rem;color:var(--goldlt);letter-spacing:.08em;margin-bottom:8px;}
+.lead{font-size:.76rem;line-height:2;color:var(--mist);}
+.lead strong{color:var(--goldlt);}
+.star-card{margin:12px 16px;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:13px 14px;}
+.star-label{font-size:.56rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.star-text{font-size:.75rem;color:var(--snow);line-height:2;}
+.section{padding:4px 16px 0;}
+.sec-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin:8px 0 10px;}
+.mode-grid{display:grid;gap:9px;}
+.mode-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:13px;display:flex;gap:11px;align-items:flex-start;cursor:pointer;transition:.15s;}
+.mode-card.active{border-color:rgba(220,140,160,.55);background:linear-gradient(135deg,rgba(220,140,160,.13),rgba(255,255,255,.72));box-shadow:0 8px 22px rgba(100,80,40,.06);}
+.mode-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(220,140,160,.12);font-size:1rem;flex-shrink:0;}
+.mode-title{font-size:.82rem;color:var(--goldlt);font-weight:800;letter-spacing:.04em;margin-bottom:3px;}
+.mode-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
+.form-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.field{margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:.65rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:6px;}
+select,textarea,input{width:100%;background:rgba(100,80,40,.035);border:1px solid var(--rim);border-radius:9px;padding:10px 11px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.78rem;line-height:1.8;outline:none;}
+textarea{min-height:86px;resize:vertical;}
+.hint{font-size:.6rem;color:var(--mist);line-height:1.7;margin-top:5px;}
+.triad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px;}
+.pill{border:1px solid var(--rim);border-radius:10px;padding:9px 7px;text-align:center;background:rgba(100,80,40,.035);}
+.pill b{display:block;font-size:.64rem;color:var(--goldlt);margin-bottom:3px;}
+.pill span{font-size:.56rem;color:var(--mist);line-height:1.4;}
+.prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.prompt-title{font-size:.82rem;color:var(--goldlt);font-weight:800;margin-bottom:8px;}
+.prompt-box{background:rgba(100,80,40,.04);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;white-space:pre-wrap;max-height:360px;overflow:auto;}
+.btn{width:100%;border:none;border-radius:9px;padding:11px 12px;font-family:'Noto Serif JP',serif;font-size:.76rem;letter-spacing:.06em;cursor:pointer;margin-top:9px;}
+.btn.primary{background:var(--goldlt);color:#fff;}
+.btn.secondary{background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);}
+.link-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.link-btn{display:block;text-align:center;text-decoration:none;border-radius:9px;padding:10px 8px;font-size:.68rem;font-weight:800;line-height:1.5;border:1px solid;}
+.link-btn.revenue{background:rgba(220,140,160,.08);border-color:rgba(220,140,160,.35);color:#b14a68;}
+.link-btn.ref{background:rgba(196,160,67,.08);border-color:rgba(196,160,67,.3);color:var(--goldlt);}
+.note{font-size:.6rem;color:var(--mist);line-height:1.8;text-align:center;margin-top:8px;}
+.footer{text-align:center;font-size:.58rem;color:var(--mist);padding:22px 16px 38px;opacity:.72;line-height:1.8;}
+[data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
+[data-theme="dark"] .hdr{background:var(--bg);}
+[data-theme="dark"] .toolbar{background:var(--card);}
+[data-theme="dark"] .tb-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);}
+[data-theme="dark"] .tb-btn.active{background:rgba(196,160,67,.24);border-color:rgba(196,160,67,.55);color:var(--goldlt);}
+[data-theme="dark"] select,[data-theme="dark"] textarea,[data-theme="dark"] input{background:rgba(255,255,255,.04);}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo">✦ KITOKU@JOURNEY</div>
+  <a class="back" href="index.html">TOPへ</a>
+</div>
+<div class="toolbar">
+  <span class="tb-label">表示</span>
+  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <span class="tb-label" style="margin-left:8px;">文字</span>
+  <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
+  <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
+  <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
+</div>
+
+<div class="hero">
+  <div class="hero-box">
+    <div class="eyebrow">SCENT AI TEACHER</div>
+    <div class="title">香りAI先生</div>
+    <div class="lead">人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>から、香りの使い分けをAIに相談する入口です。</div>
+    <div class="triad">
+      <div class="pill"><b>High</b><span>香水<br>勝負</span></div>
+      <div class="pill"><b>Mid</b><span>ボディケア<br>日常</span></div>
+      <div class="pill"><b>Low</b><span>空間<br>浄化</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="star-card">
+  <div class="star-label">あなたの星情報</div>
+  <div class="star-text" id="starText">TOPで生年月日を登録すると自動で表示されます。</div>
+</div>
+
+<div class="section">
+  <div class="sec-label">✦ 相談モード</div>
+  <div class="mode-grid">
+    <div class="mode-card active" data-mode="self" onclick="selectMode('self')">
+      <div class="mode-icon">🌸</div><div><div class="mode-title">自分の香りを選ぶ</div><div class="mode-desc">九星・気分・シーンから、High/Mid/Lowで香りを提案</div></div>
+    </div>
+    <div class="mode-card" data-mode="wardrobe" onclick="selectMode('wardrobe')">
+      <div class="mode-icon">🧥</div><div><div class="mode-title">手持ち香水を使い分ける</div><div class="mode-desc">いま持っている香りを、五行・場面・タイミングで整理</div></div>
+    </div>
+    <div class="mode-card" data-mode="person" onclick="selectMode('person')">
+      <div class="mode-icon">🤝</div><div><div class="mode-title">会う人に合わせる</div><div class="mode-desc">相手の星や関係性に合わせ、圧を下げる香り・場を整える香りを選ぶ</div></div>
+    </div>
+    <div class="mode-card" data-mode="gift" onclick="selectMode('gift')">
+      <div class="mode-icon">🎁</div><div><div class="mode-title">贈り物・救済モード</div><div class="mode-desc">疲れている人、眠れない人、勝負前の人に香り・色・空間を処方</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-label">✦ 条件を選ぶ</div>
+  <div class="form-card">
+    <div class="field">
+      <label>シーン</label>
+      <select id="scene" onchange="buildPrompt()">
+        <option>朝の準備</option>
+        <option>仕事・商談</option>
+        <option>デート・会食</option>
+        <option>休息・リラックス</option>
+        <option>帰宅後の浄化</option>
+        <option>特別な日・勝負どころ</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>今の気分・目的</label>
+      <select id="mood" onchange="buildPrompt()">
+        <option>自分を整えたい</option>
+        <option>背中を押してほしい</option>
+        <option>安心して眠りたい</option>
+        <option>集中したい</option>
+        <option>色気や遊び心を足したい</option>
+        <option>相手に安心感を与えたい</option>
+      </select>
+    </div>
+    <div class="field" id="personField" style="display:none;">
+      <label>会う相手・贈る相手</label>
+      <textarea id="personText" oninput="buildPrompt()" placeholder="例：二黒土星のパートナー。最近疲れていて、安眠できる香りを探している。"></textarea>
+      <div class="hint">相手の九星・関係性・最近の状態がわかるほど深く提案できます。</div>
+    </div>
+    <div class="field" id="wardrobeField" style="display:none;">
+      <label>手持ちの香水・香りアイテム</label>
+      <textarea id="wardrobeText" oninput="buildPrompt()" placeholder="例：クリニーク ハッピーフォーメン、DIOR ソバージュ、エルメス ナイルの庭、マルジェラ ジャズクラブ、レイジーサンデーモーニング"></textarea>
+      <div class="hint">香水・お香・ボディクリーム・柔軟剤など、香りなら何でも入れられます。</div>
+    </div>
+    <div class="field">
+      <label>補足したいこと</label>
+      <textarea id="freeText" oninput="buildPrompt()" placeholder="例：強すぎる香りは苦手。Celesで少量から試したい。ビジネスでも使える香りがいい。"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-label">✦ AIに渡す相談文</div>
+  <div class="prompt-card">
+    <div class="prompt-title" id="promptTitle">香りAI先生への相談</div>
+    <div class="prompt-box" id="promptBox">—</div>
+    <button class="btn primary" onclick="copyPrompt()">📋 コピーして貼り付ける</button>
+    <button class="btn secondary" onclick="sharePrompt()">📤 AIアプリに送る</button>
+    <div class="link-row">
+      <a class="link-btn revenue" href="https://coloria.jp/" target="_blank" rel="noopener">カラリアで探す<br><span style="font-size:.58rem;opacity:.75;">A8リンクに差し替え予定</span></a>
+      <a class="link-btn ref" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<br><span style="font-size:.58rem;opacity:.75;">参考リンク</span></a>
+    </div>
+    <div class="note">商品名・価格・在庫・提携可否は変わるため、公開前に必ず確認します。</div>
+  </div>
+</div>
+
+<div class="footer">KITOKU ENGINE — 香りの調律<br>High / Mid / Lowで、自分の毎日を整える</div>
+
+<script>
+const NACHIN=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','泉中水','屋上土','霹靂火','松柏木','長流水','砂中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','石榴木','大海水'];
+const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const STARS={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const ELEMS={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+const AVATAR={1:'Crystal Water / 澄み切った水',2:'Mother Earth / 母なる大地',3:'Sunrise Sound / 朝日の響き',4:'Harmonic Breeze / 調和の風',5:'Center Core / 再生の核',6:'Royal Sky / 気高き天',7:'Joyful Harvest / 喜びの収穫',8:'Evolution Mountain / 変革の山',9:'Brilliant Fire / 輝く炎'};
+const COLORS={1:'黒・紺・白',2:'黄・茶・赤・紫',3:'青・紺・水色',4:'緑・淡い青・白',5:'黄・茶・ゴールド',6:'白・金・銀・パール',7:'白・金・ピンク',8:'黄・茶・ベージュ',9:'赤・紫・緑'};
+const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7}};
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+let gInfo=null;
+let currentMode='self';
+
+function nc(idx){idx=((idx%60)+60)%60;return NACHIN[Math.floor(idx/2)];}
+function yIdx(y){return((y-1984)%60+600)%60;}
+function mIdx(y,m){const yi=yIdx(y);const bases=[2,14,26,38,50];const base=bases[(yi%10)%5];const zhi=(m===1)?11:m-2;return(base+zhi)%60;}
+function dIdx(y,m,d){const ref=new Date(2026,4,3);const tgt=new Date(y,m-1,d);const diff=Math.round((tgt-ref)/86400000);return((13+diff)%60+600)%60;}
+function ds9(n){while(n>9){let s=0;while(n>0){s+=n%10;n=Math.floor(n/10);}n=s;}return n;}
+function m9(x){const r=((x%9)+9)%9;return r===0?9:r;}
+function red(v){if(v>=10)return v-9;if(v<=0)return v+9;return v;}
+function pal(n,C){return((n-C+4)%9+9)%9+1;}
+function sat(P,C){return((C+P-6)%9+9)%9+1;}
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};return A[m];}
+function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+function calcKeisha(h,t){return pal(h,t);}
+function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
+function starLine(info){return `私は${info.honmei}・月命${info.tsukimei}・傾斜${info.keisha}・同会${info.dokai}・納音 ${info.yNac}（年）${info.mNac}（月）${info.dNac}（日）です。`;}
+
+function loadInfo(){
+  const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+  if(!b){buildPrompt();return;}
+  const [by,bm,bd=1]=b.split('-').map(Number);
+  if(!by||!bm){buildPrompt();return;}
+  const {kY,kM}=getKD(by,bm,bd);
+  const h=calcHonmei(kY);
+  let t=calcTsukimei(h,kM);
+  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
+  const gender=localStorage.getItem('kitoku-gender')||'male';
+  TAICHUU[5]=gender==='female'?6:7;
+  let tFK=t;
+  if(h===t){tFK=TAICHUU[t]||t;}
+  const k=calcKeisha(h,tFK);
+  const d=calcDokai(h,tFK);
+  const info={h,t,k,d,honmei:STARS[h],tsukimei:STARS[t],keisha:STARS[k],dokai:STARS[d],yNac:nc(yIdx(by)),mNac:nc(mIdx(by,bm)),dNac:nc(dIdx(by,bm,bd))};
+  gInfo=info;
+  document.getElementById('starText').textContent=starLine(info);
+  buildPrompt();
+}
+
+function selectMode(mode){
+  currentMode=mode;
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.toggle('active',c.dataset.mode===mode));
+  document.getElementById('personField').style.display=(mode==='person'||mode==='gift')?'block':'none';
+  document.getElementById('wardrobeField').style.display=(mode==='wardrobe')?'block':'none';
+  buildPrompt();
+}
+
+function buildPrompt(){
+  const scene=document.getElementById('scene')?.value||'朝の準備';
+  const mood=document.getElementById('mood')?.value||'自分を整えたい';
+  const person=document.getElementById('personText')?.value.trim()||'';
+  const wardrobe=document.getElementById('wardrobeText')?.value.trim()||'';
+  const free=document.getElementById('freeText')?.value.trim()||'';
+  const info=gInfo;
+  const base=info?starLine(info):'私はまだ星情報を登録していません。一般的な九星気学の観点で、やさしく提案してください。';
+  const star=info?`${info.honmei}（${AVATAR[info.h]}）`:'私の九星';
+  const color=info?COLORS[info.h]:'星に合う色';
+  const modeTitle={self:'自分の香りを選ぶ',wardrobe:'手持ち香水を使い分ける',person:'会う人に合わせる',gift:'贈り物・救済モード'}[currentMode]||'香り相談';
+  document.getElementById('promptTitle').textContent=`香りAI先生への相談：${modeTitle}`;
+
+  let body=`${base}
+
+あなたはKITOKUの「香りAI先生」です。
+九星気学を主役に、香り・色・シーン・相手との関係を統合して、押し付けではなく「自分で選ぶための香りの処方箋」を作ってください。
+
+【今回の相談モード】
+${modeTitle}
+
+【私の星のスタイル】
+${star}
+
+【目的】
+シーン：${scene}
+気分・目的：${mood}
+調律カラー：${color}
+`;
+
+  if(currentMode==='wardrobe'){
+    body+=`
+【手持ちの香り】
+${wardrobe||'（ここに手持ちの香水・お香・ボディケアを書いてください）'}
+
+お願い：
+手持ちの香りを、五行・九星・使うタイミングで分類してください。
+それぞれを「朝」「仕事」「会食」「休息」「浄化」「勝負どころ」のどこで使うとよいか整理してください。
+新たに買い足すなら、足りない五行を補う香りを1〜3点だけ提案してください。`;
+  }else if(currentMode==='person'){
+    body+=`
+【会う相手・関係性】
+${person||'（ここに相手の九星・関係性・会う目的を書いてください）'}
+
+お願い：
+相手に圧をかけない香り、安心させる香り、場を明るくする香りを分けて提案してください。
+ビジネス・デート・家族・友人のどの場面かを考慮し、香りの強さと距離感も教えてください。`;
+  }else if(currentMode==='gift'){
+    body+=`
+【贈りたい相手・救いたい状態】
+${person||'（ここに相手の星・状態・悩み・予算を書いてください）'}
+
+お願い：
+相手の属性を肯定し、心が軽くなるように、香水・ボディケア・空間の香りを提案してください。
+贈り物として重すぎない言葉も添えてください。`;
+  }else{
+    body+=`
+お願い：
+私の九星と今日の目的に合わせて、香りをHigh/Mid/Lowで提案してください。
+自分を整えるための使い方、避けた方がよい香りの強さ、色の取り入れ方も教えてください。`;
+  }
+
+  body+=`
+
+【補足】
+${free||'（苦手な香り、予算、使いたい場面、Celesで少量から試したい等があればここに書きます）'}
+
+【出力形式】
+1. 属性の肯定
+2. High（勝負・魂）：香水、または少量で試せる候補
+3. Mid（日常・体）：ハンドクリーム、ボディケア、ヘアミスト等
+4. Low（浄化・空間）：お香、シャンプー、花、ルームフレグランス等
+5. 色の調律：外側・内側・空間での取り入れ方
+6. 今日の使い方：いつ、どこに、どのくらい使うか
+7. 最後に一言：自分で選ぶための判断材料として、温かく締める
+
+【大切な条件】
+商品名・価格・在庫・発売日・アフィリエイト可否は変わるため、断定しすぎず、確認前提で提案してください。
+高いものだけを良いとせず、100円から始められるLowの選択肢も必ず入れてください。`;
+
+  document.getElementById('promptBox').textContent=body;
+}
+
+function copyPrompt(){
+  const text=document.getElementById('promptBox').textContent;
+  navigator.clipboard.writeText(text).then(()=>alert('コピーしました'));
+}
+async function sharePrompt(){
+  const text=document.getElementById('promptBox').textContent;
+  try{
+    if(navigator.share){await navigator.share({title:'KITOKU 香りAI先生',text});return;}
+  }catch(e){}
+  try{await navigator.clipboard.writeText(text);}catch(e){}
+  alert('共有に対応していないため、相談文をコピーしました。AIアプリに貼り付けてください。');
+}
+function setTheme(t){
+  document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+}
+function setFontSize(s){
+  const m={s:'15px',m:'17px',l:'19px'};
+  document.documentElement.style.fontSize=m[s]||'15px';
+  try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
+  ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const t=localStorage.getItem('kitoku-theme')||'light';
+  const fs=localStorage.getItem('kitoku-fontsize')||'s';
+  setTheme(t);setFontSize(fs);loadInfo();
+});
+</script>
+</body>
+</html>
