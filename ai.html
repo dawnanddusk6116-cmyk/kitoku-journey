@@ -44,6 +44,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .star-info-text{font-size:.78rem;color:var(--snow);line-height:2.1;font-weight:500;}
 .copy-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:8px;padding:11px;font-size:.75rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;display:flex;align-items:center;justify-content:center;gap:6px;}
 .copy-btn:active{background:rgba(100,80,40,.16);}
+.target-box{background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.58));border:1px solid rgba(196,160,67,.25);border-radius:var(--r);padding:13px;margin-top:10px;}
+.target-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:5px;}
+.target-desc{font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:10px;}
+.target-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:8px;margin-bottom:8px;}
+.target-box label{display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:5px;}
+.target-box input,.target-box select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.62);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:9px;}
+.target-preview{font-size:.68rem;color:var(--snow);line-height:1.8;background:rgba(255,255,255,.44);border:1px dashed rgba(138,104,32,.3);border-radius:9px;padding:9px;margin-top:8px;}
 
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
@@ -169,6 +176,28 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <button class="copy-btn" onclick="copyStarInfo()">
     <span>📋</span> 星情報だけをコピー（単体使用）
   </button>
+  <div class="target-box">
+    <div class="target-title">相手の星も入れる（この画面だけ）</div>
+    <div class="target-desc">関係性・仕事・相談内容に相手の生年月日を一時的に加えます。保存はしません。</div>
+    <div class="target-grid">
+      <div>
+        <label>相手の名前・メモ</label>
+        <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
+      </div>
+      <div>
+        <label>性別</label>
+        <select id="targetGender" onchange="updateTargetInfo()">
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label>相手の生年月日</label>
+      <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+    </div>
+    <div class="target-preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+  </div>
 </div>
 
 <!-- カテゴリ：今日・今この瞬間 -->
@@ -419,13 +448,62 @@ function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
 // プロンプト生成
 // ============================================================
 let gInfo={};
+let gTargetInfo=null;
 
 function buildStarText(info){
   return `私は${info.honmei}・月命${info.tsukimei}・傾斜${info.keisha}・同会${info.dokai}・納音 ${info.yNac}（年）${info.mNac}（月）${info.dNac}（日）です。`;
 }
 
+function calcInfoFromBirth(y,m,d,gender='male'){
+  const {kY,kM}=getKD(y,m,d);
+  const h=calcHonmei(kY);
+  let t=calcTsukimei(h,kM);
+  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
+  TAICHUU[5]=gender==='female'?6:7;
+  let tFK=t;
+  if(h===t){tFK=TAICHUU[t]||t;}
+  const k=calcKeisha(h,tFK);
+  const dstar=calcDokai(h,tFK);
+  return {
+    h,honmei:STARS[h]||'',
+    tsukimei:STARS[t]||'',
+    keisha:STARS[k]||'',
+    dokai:STARS[dstar]||'',
+    yNac:nc(yIdx(y)),
+    mNac:nc(mIdx(y,m)),
+    dNac:nc(dIdx(y,m,d))
+  };
+}
+
+function targetPromptText(){
+  if(!gTargetInfo)return '';
+  const name=(document.getElementById('targetName')?.value||'相手').trim()||'相手';
+  return `
+
+【相手の星情報（この画面だけ・未保存）】
+${name}：${gTargetInfo.honmei}・月命${gTargetInfo.tsukimei}・傾斜${gTargetInfo.keisha}・同会${gTargetInfo.dokai}・納音 ${gTargetInfo.yNac}（年）${gTargetInfo.mNac}（月）${gTargetInfo.dNac}（日）です。`;
+}
+
+function updateTargetInfo(){
+  const birth=document.getElementById('targetBirth')?.value||'';
+  const preview=document.getElementById('targetPreview');
+  if(!birth){
+    gTargetInfo=null;
+    if(preview)preview.textContent='相手の生年月日を入れると、ここに星情報が表示されます。';
+    if(gInfo&&gInfo.honmei)buildPrompts(gInfo);
+    return;
+  }
+  const [y,m,d]=birth.split('-').map(Number);
+  const gender=document.getElementById('targetGender')?.value||'male';
+  gTargetInfo=calcInfoFromBirth(y,m,d||1,gender);
+  const name=(document.getElementById('targetName')?.value||'相手').trim()||'相手';
+  if(preview)preview.textContent=`${name}：${gTargetInfo.honmei}・月命${gTargetInfo.tsukimei}・傾斜${gTargetInfo.keisha}・同会${gTargetInfo.dokai}・納音 ${gTargetInfo.yNac}（年）${gTargetInfo.mNac}（月）${gTargetInfo.dNac}（日）`;
+  if(gInfo&&gInfo.honmei)buildPrompts(gInfo);
+}
+
 function buildPrompts(info){
   const base=buildStarText(info);
+  const target=targetPromptText();
   const elem=ELEMS[info.h]||'';
 
   document.getElementById('qt1').textContent=
@@ -440,6 +518,7 @@ function buildPrompts(info){
 
   document.getElementById('qt2').textContent=
 `${base}
+${target}
 
 ＝＝＝＝ここを書き換えてください＝＝＝＝
 【今日の決断】
@@ -457,6 +536,7 @@ function buildPrompts(info){
 
   document.getElementById('qt11').textContent=
 `${base}
+${target}
 
 あなたはKITOKUのAI軍師です。
 私の悩みを、答えを押し付けるのではなく、以下の左脳マップで整理してください。
@@ -535,11 +615,12 @@ function buildPrompts(info){
 
   document.getElementById('qt6').textContent=
 `${base}
+${target}
 
 ＝＝＝＝ここを書き換えてください＝＝＝＝
 【人間関係の相談】
 今、〇〇との関係で悩んでいます。
-（相手との関係・起きていること・相手の星がわかれば書いてください）
+（相手との関係・起きていることを書いてください）
 例：上司との関係で疲れている / 家族に気持ちが伝わらない / 友人と距離を置くか迷っている
 ＝＝＝＝ここまで＝＝＝＝
 
@@ -552,6 +633,7 @@ function buildPrompts(info){
 
   document.getElementById('qt7').textContent=
 `${base}
+${target}
 
 仕事・キャリアについて相談します。
 
@@ -697,28 +779,9 @@ window.addEventListener('DOMContentLoaded',()=>{
   const [by,bm,bd=1]=arr;
   if(!by||!bm)return;
 
-  const {kY,kM}=getKD(by,bm,bd);
-  const h=calcHonmei(kY);
-  let t=calcTsukimei(h,kM);
-  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
   const gender=localStorage.getItem('kitoku-gender')||'male';
-  TAICHUU[5]=gender==='female'?6:7;
-  let tFK=t;
-  if(h===t){tFK=TAICHUU[t]||t;}
-  const k=calcKeisha(h,tFK);
-  const d=calcDokai(h,tFK);
-
-  const yI=yIdx(by),mI=mIdx(by,bm),dI=dIdx(by,bm,bd);
-  const yNac=nc(yI),mNac=nc(mI),dNac=nc(dI);
-
-  const info={
-    h,honmei:STARS[h]||'',
-    tsukimei:STARS[t]||'',
-    keisha:STARS[k]||'',
-    dokai:STARS[d]||'',
-    yNac,mNac,dNac,
-    starText:''
-  };
+  const info=calcInfoFromBirth(by,bm,bd,gender);
+  info.starText='';
   info.starText=buildStarText(info);
   gInfo=info;
 
