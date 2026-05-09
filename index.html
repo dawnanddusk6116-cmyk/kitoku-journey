@@ -2539,7 +2539,7 @@ function launch(){
       alert('計算エラーが発生しました\n'+err.message);
     }
     loading.classList.remove('show');
-    document.getElementById('screenInput').classList.remove('active');
+    showScreen('screenResult');
     // メニューの星名を更新
     try{
       const [by,bm]=document.getElementById('inputBirth').value.split('-').map(Number);
@@ -2547,7 +2547,6 @@ function launch(){
       updateMenuStar(sn?sn.j:'あなたの星','何を知りたいですか？');
     }catch(e){}
     // メニュー不要
-    document.getElementById('headerReset').style.display='block';
     window.scrollTo(0,0);
   },600);
 }
