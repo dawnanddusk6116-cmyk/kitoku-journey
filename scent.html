@@ -56,9 +56,11 @@ textarea{min-height:86px;resize:vertical;}
 .btn.primary{background:var(--goldlt);color:#fff;}
 .btn.secondary{background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);}
 .link-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.link-row.resources{grid-template-columns:1fr 1fr 1fr;margin-top:8px;}
 .link-btn{display:block;text-align:center;text-decoration:none;border-radius:9px;padding:10px 8px;font-size:.68rem;font-weight:800;line-height:1.5;border:1px solid;}
 .link-btn.revenue{background:rgba(220,140,160,.08);border-color:rgba(220,140,160,.35);color:#b14a68;}
 .link-btn.ref{background:rgba(196,160,67,.08);border-color:rgba(196,160,67,.3);color:var(--goldlt);}
+.link-btn.resource{background:rgba(120,96,60,.045);border-color:rgba(120,96,60,.18);color:var(--snow);font-size:.62rem;}
 .note{font-size:.6rem;color:var(--mist);line-height:1.8;text-align:center;margin-top:8px;}
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:22px 16px 38px;opacity:.72;line-height:1.8;}
 [data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
@@ -206,6 +208,11 @@ textarea{min-height:86px;resize:vertical;}
       <a class="link-btn revenue" href="https://px.a8.net/svt/ejp?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" target="_blank" rel="nofollow sponsored noopener">カラリアで探す<br><span style="font-size:.58rem;opacity:.75;">香りを試す</span></a>
       <a class="link-btn ref" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<br><span style="font-size:.58rem;opacity:.75;">参考リンク</span></a>
     </div>
+    <div class="link-row resources">
+      <a class="link-btn resource" href="https://www.aoyamaflowermarket.com/item/510112.html" target="_blank" rel="noopener">青山フラワー<br><span style="font-size:.54rem;opacity:.72;">花の香り</span></a>
+      <a class="link-btn resource" href="https://www.fromcocoro.com/kaori/" target="_blank" rel="noopener">From COCORO<br><span style="font-size:.54rem;opacity:.72;">和の香り</span></a>
+      <a class="link-btn resource" href="https://noseshop.jp/" target="_blank" rel="noopener">NOSE SHOP<br><span style="font-size:.54rem;opacity:.72;">個性派</span></a>
+    </div>
     <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" alt="">
     <div class="note">商品名・価格・在庫は変わるため、購入前に公式ページで確認してください。</div>
   </div>
@@ -344,6 +351,15 @@ ${person||'（ここに相手の星・状態・悩み・予算を書いてくだ
 
 【補足】
 ${free||'（苦手な香り、予算、使いたい場面、Celesで少量から試したい等があればここに書きます）'}
+
+【参考にしてよい香りの入口】
+・カラリア：香りを試しながら探す
+・Celes：少量から試せる香水を探す
+・青山フラワーマーケット：花の香り、手頃なオードトワレ
+・From COCORO：和の香り、浄化や空間の香り
+・NOSE SHOP：個性的な香り、ストーリー性のある香水
+
+上記に限らず、High/Mid/Lowの考え方に合うものを提案してください。
 
 【出力形式】
 1. 属性の肯定
