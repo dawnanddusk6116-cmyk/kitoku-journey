@@ -292,6 +292,9 @@ function renderMyAvatar(dateStr){
   const star=lifeStarFromBirth(dateStr);
   if(!star)return;
   const info=AVATAR_NAMES[star];
+  localStorage.setItem('kitoku_en_avatar_star',String(star));
+  localStorage.setItem('kitoku_en_avatar_name',info.name);
+  localStorage.setItem('kitoku_en_avatar_sub',info.sub);
   document.getElementById('myAvatar').classList.add('show');
   document.getElementById('myAvatarNum').textContent=star;
   document.getElementById('myAvatarName').textContent=`Your 9 Avatar: ${info.name}`;

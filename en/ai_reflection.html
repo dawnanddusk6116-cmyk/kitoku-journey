@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}body{max-width:520px;margin:0 auto;background:var(--bg);color:var(--ink);font-family:'Noto Serif',serif;line-height:1.75;padding-bottom:42px}.topbar{position:sticky;top:0;background:rgba(247,244,239,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--rim);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;z-index:10}.brand{font-family:'Cormorant Garamond',serif;letter-spacing:.18em;color:var(--gold);font-size:1.08rem}.back{border:1px solid rgba(138,104,32,.35);border-radius:999px;color:var(--gold);text-decoration:none;font-size:.68rem;padding:7px 11px;background:rgba(255,255,255,.58)}.hero{padding:28px 22px 14px}.eyebrow{font-size:.66rem;letter-spacing:.22em;color:var(--blue);font-weight:800;margin-bottom:8px}h1{font-family:'Cormorant Garamond',serif;font-size:2.05rem;line-height:1.08;color:#314d73}.lead{font-size:.84rem;color:var(--muted);line-height:1.9;margin-top:12px}.section{margin:14px 18px 0;background:var(--card);border:1px solid var(--rim);border-radius:16px;padding:16px;box-shadow:0 10px 26px rgba(100,80,40,.04)}.label{font-size:.64rem;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:8px}.field{margin-top:10px}.field label{display:block;font-size:.68rem;color:#4b300c;font-weight:800;margin-bottom:5px}textarea,select,input{width:100%;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);padding:11px;color:var(--ink);font-family:'Noto Serif',serif;font-size:.78rem;line-height:1.7}textarea{min-height:94px;resize:vertical}.prompt{border:1px dashed rgba(61,100,145,.35);background:rgba(255,255,255,.66);border-radius:12px;padding:12px;white-space:pre-wrap;font-size:.72rem;line-height:1.85;margin-top:10px}.primary{width:100%;border:none;border-radius:10px;background:linear-gradient(135deg,#3d6491,#81a5cf);color:#fff;font-family:'Noto Serif',serif;font-weight:800;letter-spacing:.08em;padding:12px;margin-top:12px;cursor:pointer}.note{font-size:.64rem;color:var(--muted);line-height:1.75;margin-top:8px}
 </style>
 </head>
-<body>
+<body onload="init()">
 <div class="topbar"><div class="brand">✦ KITOKU OS</div><a class="back" href="index.html">Back</a></div>
 <main>
   <section class="hero">
@@ -22,7 +22,7 @@
     <div class="label">CREATE YOUR PROMPT</div>
     <div class="field"><label>Your avatar or feeling</label><input id="avatar" placeholder="Example: Royal Sky, Crystal Water, or I feel stuck"></div>
     <div class="field"><label>What do you want to understand?</label><textarea id="concern" placeholder="Example: I want to understand why I get tired in relationships."></textarea></div>
-    <div class="field"><label>Tone</label><select id="tone"><option>Warm and practical</option><option>Deep and philosophical</option><option>Simple and gentle</option><option>Direct but kind</option></select></div>
+    <div class="field"><label>Tone</label><select id="tone"><option value="Warm and practical">Warm and practical</option><option value="Deep and philosophical">Deep and philosophical</option><option value="Simple and gentle">Simple and gentle</option><option value="Direct but kind">Direct but kind</option></select></div>
     <button class="primary" onclick="buildPrompt()">Create prompt</button>
     <div class="prompt" id="prompt">Your AI prompt will appear here.</div>
     <button class="primary" onclick="copyPrompt()">Copy prompt</button>
@@ -30,6 +30,18 @@
   </section>
 </main>
 <script>
+function savedAvatarText(){
+  const star=localStorage.getItem('kitoku_en_avatar_star');
+  const name=localStorage.getItem('kitoku_en_avatar_name');
+  const sub=localStorage.getItem('kitoku_en_avatar_sub');
+  if(star&&name)return `${name} (${star}) - ${sub||'my KITOKU avatar'}`;
+  return '';
+}
+function init(){
+  const saved=savedAvatarText();
+  if(saved)document.getElementById('avatar').value=saved;
+  buildPrompt();
+}
 function buildPrompt(){
   const avatar=document.getElementById('avatar').value.trim()||'unknown';
   const concern=document.getElementById('concern').value.trim()||'I want to understand myself better.';
