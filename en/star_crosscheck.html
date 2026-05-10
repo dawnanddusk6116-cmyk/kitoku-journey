@@ -40,9 +40,17 @@ function savedKitokuText(){
  if(star&&name)return `${name} (${star}) - ${sub||'my KITOKU avatar'}`;
  return '';
 }
+function savedBirthText(){
+ const birth=localStorage.getItem('kitoku_en_birth');
+ const time=localStorage.getItem('kitoku_en_time')||'12:00';
+ if(!birth)return '';
+ return `Birth data saved in KITOKU preview: ${birth}, ${time}. Birthplace is not entered yet. Please use this as a simple Western star-reading doorway.`;
+}
 function init(){
  const saved=savedKitokuText();
  if(saved)document.getElementById('kitoku').value=saved;
+ const birth=savedBirthText();
+ if(birth)document.getElementById('notes').value=birth;
  ['notes','kitoku'].forEach(id=>{
   document.getElementById(id).addEventListener('input',buildPrompt);
   document.getElementById(id).addEventListener('change',buildPrompt);
