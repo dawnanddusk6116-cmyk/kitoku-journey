@@ -44,10 +44,22 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-next-label{font-size:.62rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-top:10px;}
 .report-next-card{display:flex;align-items:center;gap:10px;text-decoration:none;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(196,160,67,.08));border:1.4px solid rgba(196,160,67,.34);border-radius:12px;padding:12px 11px;color:inherit;box-shadow:0 6px 18px rgba(100,80,40,.06);}
 .report-next-card:active{transform:scale(.99);}
+.report-next-card.ai{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(112,156,210,.13));border-color:rgba(112,156,210,.38);}
+.report-next-card.astro{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(126,98,180,.14));border-color:rgba(126,98,180,.4);}
+.report-next-card.scent{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(220,116,150,.14));border-color:rgba(220,116,150,.38);}
 .report-next-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.14);color:var(--goldlt);font-size:.95rem;flex-shrink:0;}
+.report-next-card.ai .report-next-icon{background:rgba(112,156,210,.16);color:#3d6491;}
+.report-next-card.astro .report-next-icon{background:rgba(126,98,180,.16);color:#6b4b9a;}
+.report-next-card.scent .report-next-icon{background:rgba(220,116,150,.16);color:#a94d72;}
 .report-next-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
+.report-next-card.ai .report-next-title{color:#3d6491;}
+.report-next-card.astro .report-next-title{color:#6b4b9a;}
+.report-next-card.scent .report-next-title{color:#a94d72;}
 .report-next-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
 .report-next-badge{font-size:.58rem;color:#fff;background:var(--goldlt);border-radius:999px;padding:4px 8px;letter-spacing:.06em;margin-left:auto;white-space:nowrap;font-weight:800;}
+.report-next-card.ai .report-next-badge{background:#3d6491;}
+.report-next-card.astro .report-next-badge{background:#6b4b9a;}
+.report-next-card.scent .report-next-badge{background:#a94d72;}
 .report-next-note{font-size:.58rem;color:var(--mist);line-height:1.65;text-align:center;margin-top:2px;}
 
 /* 納音 */
@@ -224,7 +236,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         </div>
         <div class="report-next">
           <div class="report-next-label">✦ 次にできること</div>
-          <a class="report-next-card" href="ai.html">
+          <a class="report-next-card ai" href="ai.html">
             <div class="report-next-icon">AI</div>
             <div>
               <div class="report-next-title">悩みをAIに相談する</div>
@@ -232,15 +244,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
             </div>
             <div class="report-next-badge">開く</div>
           </a>
-          <a class="report-next-card" href="astro64.html">
-            <div class="report-next-icon">星</div>
+          <a class="report-next-card astro" href="astro64.html">
+            <div class="report-next-icon">Astro</div>
             <div>
-              <div class="report-next-title">自分を別角度から見る</div>
-              <div class="report-next-text">西洋星読みのような入口から、KITOKU解釈で自己理解を深めます。</div>
+              <div class="report-next-title">西洋星読みで別角度から見る</div>
+              <div class="report-next-text">太陽・月・金星・火星を入口に、KITOKU解釈で自己理解を深めます。</div>
             </div>
             <div class="report-next-badge">開く</div>
           </a>
-          <a class="report-next-card" href="scent.html">
+          <a class="report-next-card scent" href="scent.html">
             <div class="report-next-icon">香</div>
             <div>
               <div class="report-next-title">今日の整え方を選ぶ</div>
