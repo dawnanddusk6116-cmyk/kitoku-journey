@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星読みクロスチェック | KITOKU</title>
+<script src="astro64_words.js"></script>
+<script src="astro64_engine.js"></script>
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.16);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--accent:#b16b78;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--snow);font-family:serif;max-width:520px;margin:0 auto;line-height:1.8;padding-bottom:40px;}
+header{padding:20px 18px 14px;border-bottom:1px solid var(--rim);}
+.logo{font-size:.72rem;letter-spacing:.24em;color:var(--gold);font-weight:700;}
+h1{font-size:1.4rem;color:var(--goldlt);font-weight:500;margin-top:8px;letter-spacing:.08em;}
+.lead{font-size:.78rem;color:var(--mist);margin-top:8px;}
+.notice{margin:14px 18px 0;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.3);border-radius:12px;padding:12px 14px;font-size:.72rem;color:var(--mist);}
+.concept{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 18px 0;}
+.concept-item{background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:10px 6px;text-align:center;}
+.concept-num{font-size:.95rem;color:var(--gold);font-weight:700;line-height:1;}
+.concept-text{font-size:.6rem;color:var(--mist);line-height:1.55;margin-top:4px;}
+.section{margin:14px 18px 0;background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:15px;}
+.label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:700;margin-bottom:8px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.grid.three{grid-template-columns:1fr 1fr 1fr;}
+.field{margin-bottom:10px;}
+.field label{display:block;font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;}
+input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(100,80,40,.035);font-size:.78rem;padding:9px 10px;color:var(--snow);}
+textarea.input-area{width:100%;min-height:96px;border:1px solid var(--rim);border-radius:9px;background:rgba(100,80,40,.035);padding:10px;font-size:.76rem;color:var(--snow);line-height:1.8;resize:vertical;}
+button{width:100%;border:1px solid rgba(138,104,32,.45);border-radius:9px;background:linear-gradient(135deg,rgba(138,104,32,.95),rgba(196,160,67,.78));color:#fff;font-weight:700;letter-spacing:.1em;padding:12px;margin-top:5px;cursor:pointer;}
+.hint{font-size:.64rem;color:var(--mist);margin-top:6px;}
+.plain-guide{margin-top:10px;background:rgba(255,255,255,.58);border:1px solid rgba(196,160,67,.22);border-radius:10px;padding:10px 11px;font-size:.68rem;color:var(--mist);line-height:1.8;}
+.plain-guide strong{color:var(--goldlt);}
+.results{display:grid;gap:8px;}
+.row{border:1px solid var(--rim);border-radius:10px;padding:10px;background:rgba(100,80,40,.025);}
+.row-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
+.planet{font-size:.82rem;color:var(--goldlt);font-weight:700;}
+.code{font-size:.76rem;color:var(--accent);font-weight:700;}
+.arch{font-size:.9rem;color:var(--snow);font-weight:700;margin-top:3px;}
+.role,.theme{font-size:.68rem;color:var(--mist);}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.mini{font-size:.64rem;background:rgba(255,255,255,.55);border:1px solid rgba(100,80,40,.1);border-radius:8px;padding:7px;color:var(--mist);}
+textarea{width:100%;min-height:300px;border:1px dashed rgba(138,104,32,.35);border-radius:10px;background:rgba(100,80,40,.035);padding:12px;font-size:.72rem;color:var(--snow);line-height:1.9;white-space:pre-wrap;}
+.copy{background:rgba(100,80,40,.08);color:var(--goldlt);border-color:rgba(100,80,40,.25);}
+.prompt-guide{background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:12px;margin-bottom:10px;font-size:.7rem;color:var(--mist);line-height:1.85;}
+.prompt-guide-title{font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;}
+footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-top:22px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">KITOKU STAR READING</div>
+  <h1>星読みクロスチェック</h1>
+  <div class="lead">太陽・月・金星・火星などの星の位置を、KITOKU解釈で自己理解の相談文に整えるページです。</div>
+</header>
+
+<div class="notice">
+  これはKITOKU独自の補助レイヤーです。天文計算式と黄道64分割ルールを使い、自分を知るための言葉を整えます。結果は「決めつけ」ではなく、自分の感覚と照らし合わせるための鏡として使います。現在の天体計算は依存なしの簡易モデルです。
+</div>
+
+<div class="concept">
+  <div class="concept-item"><div class="concept-num">1</div><div class="concept-text">自分を知る</div></div>
+  <div class="concept-item"><div class="concept-num">2</div><div class="concept-text">自分を責めない</div></div>
+  <div class="concept-item"><div class="concept-num">3</div><div class="concept-text">今日の一手へ</div></div>
+</div>
+
+<section class="section">
+  <div class="label">BIRTH DATA</div>
+  <div class="grid">
+    <div class="field"><label>年</label><input id="year" type="number" value="1967"></div>
+    <div class="field"><label>月</label><input id="month" type="number" value="6"></div>
+    <div class="field"><label>日</label><input id="day" type="number" value="14"></div>
+    <div class="field"><label>時</label><input id="hour" type="number" value="12"></div>
+    <div class="field"><label>分</label><input id="minute" type="number" value="0"></div>
+    <div class="field"><label>UTC差</label><input id="timezone" type="number" value="9"></div>
+  </div>
+  <div class="field"><label>出生地メモ</label><input id="place" type="text" value="東京"></div>
+  <div class="field">
+    <label>64分割オフセット</label>
+    <input id="offset" type="number" value="0" step="0.1">
+    <div class="hint">結果照合用の調整値です。後でサンプルと合わせながら検証します。</div>
+  </div>
+  <button onclick="runAstro64()">64象意を計算する</button>
+</section>
+
+<section class="section">
+  <div class="label">KITOKU OS DATA</div>
+  <div class="field">
+    <label>あなたのKITOKU星情報</label>
+    <textarea id="kitokuData" class="input-area" oninput="runAstro64()" placeholder="例：私は六白金星・月命一白水星・傾斜一白水星・同会二黒土星・納音 天河水（年）天河水（月）大駅土（日）です。"></textarea>
+    <div class="hint">九星・納音・傾斜・同会を貼ると、AI相談文の中で64象意と照合できます。空欄でも使えます。</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="label">RESULT</div>
+  <div class="plain-guide">
+    <strong>ここは計算結果です。</strong><br>
+    太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。下の「AIに渡す相談文」に、この結果が自動で反映されます。
+  </div>
+  <div id="results" class="results">
+    <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="label">AIに渡す相談文</div>
+  <div class="prompt-guide">
+    <div class="prompt-guide-title">コピーするのは、この下の大きな枠です</div>
+    上の計算結果とKITOKU星情報は、すでにこの相談文の中に入っています。下の枠をコピーして、ChatGPT・Claude・GeminiなどのAIに貼り付けてください。
+  </div>
+  <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
+  <button class="copy" onclick="copyPrompt()">相談文をコピー</button>
+</section>
+
+<footer><a href="kyusei_v2.html" style="color:var(--goldlt);text-decoration:none;">← 九星を知るへ戻る</a><br>KITOKU STAR READING — 自分を知り、自分を愛し、自分で動く</footer>
+
+<script>
+function getInput(){
+  return {
+    year:Number(document.getElementById('year').value),
+    month:Number(document.getElementById('month').value),
+    day:Number(document.getElementById('day').value),
+    hour:Number(document.getElementById('hour').value || 0),
+    minute:Number(document.getElementById('minute').value || 0),
+    timezone:Number(document.getElementById('timezone').value || 0),
+    place:document.getElementById('place').value.trim(),
+    offset:Number(document.getElementById('offset').value || 0),
+    kitokuData:document.getElementById('kitokuData').value.trim()
+  };
+}
+
+function runAstro64(){
+  const input=getInput();
+  const rows=computeAstro64(input);
+  const html=rows.map((r)=>`
+    <div class="row">
+      <div class="row-head">
+        <div class="planet">${r.planet}</div>
+        <div class="code">${r.number}.${r.line} / ${formatDeg(r.longitude)}</div>
+      </div>
+      <div class="arch">${r.archetype}</div>
+      <div class="role">${r.role}</div>
+      <div class="theme">${r.theme}</div>
+      <div class="pair">
+        <div class="mini">光：${r.light}</div>
+        <div class="mini">影：${r.shadow}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('results').innerHTML=html;
+  document.getElementById('prompt').value=buildAstroPrompt(input, rows);
+}
+
+function copyPrompt(){
+  const text=document.getElementById('prompt').value;
+  navigator.clipboard.writeText(text).then(()=>alert('コピーしました'));
+}
+
+runAstro64();
+</script>
+</body>
+</html>
