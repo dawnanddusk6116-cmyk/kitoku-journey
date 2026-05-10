@@ -40,12 +40,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-text{font-size:.68rem;color:var(--mist);line-height:1.9;}
 .report-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .report-tag{font-size:.6rem;color:var(--goldlt);background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.25);border-radius:999px;padding:3px 8px;font-weight:700;}
-.report-next{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
-.report-next-card{display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,.5);border:1px solid rgba(100,80,40,.12);border-radius:10px;padding:10px;color:inherit;}
+.report-next{display:grid;grid-template-columns:1fr;gap:9px;margin-top:12px;}
+.report-next-label{font-size:.62rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-top:10px;}
+.report-next-card{display:flex;align-items:center;gap:10px;text-decoration:none;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(196,160,67,.08));border:1.4px solid rgba(196,160,67,.34);border-radius:12px;padding:12px 11px;color:inherit;box-shadow:0 6px 18px rgba(100,80,40,.06);}
+.report-next-card:active{transform:scale(.99);}
 .report-next-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.14);color:var(--goldlt);font-size:.95rem;flex-shrink:0;}
 .report-next-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
 .report-next-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
-.report-next-badge{font-size:.52rem;color:var(--gold);letter-spacing:.08em;margin-left:auto;white-space:nowrap;}
+.report-next-badge{font-size:.58rem;color:#fff;background:var(--goldlt);border-radius:999px;padding:4px 8px;letter-spacing:.06em;margin-left:auto;white-space:nowrap;font-weight:800;}
+.report-next-note{font-size:.58rem;color:var(--mist);line-height:1.65;text-align:center;margin-top:2px;}
 
 /* 納音 */
 .nouin-row{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;cursor:pointer;}
@@ -220,13 +223,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
           <div class="report-tags" id="reportTags"></div>
         </div>
         <div class="report-next">
+          <div class="report-next-label">✦ 次にできること</div>
           <a class="report-next-card" href="ai.html">
             <div class="report-next-icon">AI</div>
             <div>
               <div class="report-next-title">気学 × AIで深く聞く</div>
               <div class="report-next-text">この星情報を相談文にして、ChatGPT・Claude・Geminiなどに貼れます。</div>
             </div>
-            <div class="report-next-badge">おすすめ</div>
+            <div class="report-next-badge">開く</div>
           </a>
           <a class="report-next-card" href="astro64.html">
             <div class="report-next-icon">星</div>
@@ -234,8 +238,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
               <div class="report-next-title">星読みクロスチェック BY KITOKU</div>
               <div class="report-next-text">西洋星読みのような入口から、KITOKU解釈で自分を見つめる実験版です。</div>
             </div>
-            <div class="report-next-badge">別エンジン</div>
+            <div class="report-next-badge">開く</div>
           </a>
+          <div class="report-next-note">星読みを公開する場合は、astro64.html / astro64_engine.js / astro64_words.js の3つも同じ場所にアップしてください。</div>
         </div>
       </div>
     </div>
