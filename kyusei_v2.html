@@ -31,6 +31,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .mystar-cell-tap{display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--goldlt);margin-top:7px;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);border-radius:999px;padding:3px 9px;font-weight:700;}
 .avatar-name{font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.04em;font-weight:700;}
 .avatar-jp{font-size:.58rem;color:var(--mist);margin-top:1px;}
+.kitoku-report{margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.7));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:14px;}
+.report-kicker{font-size:.56rem;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.report-title{font-size:.92rem;color:var(--goldlt);font-weight:800;letter-spacing:.06em;margin-bottom:6px;}
+.report-lead{font-size:.74rem;color:var(--snow);line-height:1.95;font-weight:600;margin-bottom:10px;}
+.report-block{background:rgba(255,255,255,.45);border:1px solid rgba(100,80,40,.1);border-radius:10px;padding:10px;margin-top:8px;}
+.report-block-title{font-size:.66rem;color:var(--goldlt);font-weight:800;margin-bottom:4px;}
+.report-text{font-size:.68rem;color:var(--mist);line-height:1.9;}
+.report-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.report-tag{font-size:.6rem;color:var(--goldlt);background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.25);border-radius:999px;padding:3px 8px;font-weight:700;}
 
 /* 納音 */
 .nouin-row{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;cursor:pointer;}
@@ -187,6 +196,24 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         <div class="nouin-badges" id="nouinBadges"></div>
         <div class="nouin-ks" id="nouinKs">—</div>
       </div>
+      <div class="kitoku-report" id="kitokuReport">
+        <div class="report-kicker">BY KITOKU INTERPRETATION</div>
+        <div class="report-title">私のKITOKUレポート</div>
+        <div class="report-lead" id="reportLead">—</div>
+        <div class="report-block">
+          <div class="report-block-title">九星の骨格</div>
+          <div class="report-text" id="reportStructure">—</div>
+        </div>
+        <div class="report-block">
+          <div class="report-block-title">納音の音色</div>
+          <div class="report-text" id="reportNacchin">—</div>
+        </div>
+        <div class="report-block">
+          <div class="report-block-title">自分を扱うヒント</div>
+          <div class="report-text" id="reportAction">—</div>
+          <div class="report-tags" id="reportTags"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -297,6 +324,26 @@ const NACHIN_DETAIL = {
   '白蝋金':'白蝋のような金。柔軟で適応力のある才能。どんな形にも変化できる強さがあります。',
 };
 
+const STAR_REPORT = {
+  1:{verb:'静かに感じ取り、深く整える',care:'急いで答えを出さず、ひとりで落ち着く時間を持つほど本来の知恵が戻ります。',tone:'水のように柔らかく、見えないものを受け取る人'},
+  2:{verb:'受け止め、育て、形にする',care:'人のために動きすぎた時は、自分にも同じだけ手をかけてください。',tone:'大地のように安心を育てる人'},
+  3:{verb:'停滞を破り、新しい朝を呼ぶ',care:'思いついた勢いを大切にしながら、言葉の強さだけは少し整えると伝わりやすくなります。',tone:'朝日のように周りを動かす人'},
+  4:{verb:'縁を結び、風通しをよくする',care:'人に合わせすぎると軸が薄くなります。自分の本音を小さく確認してください。',tone:'風のように人と場を整える人'},
+  5:{verb:'壊れたものを再生し、中心から変える',care:'力が強い分、抱え込むと重くなります。任せることも才能の一部です。',tone:'中心から場を再生する人'},
+  6:{verb:'高い理想を掲げ、完成へ導く',care:'完璧を求めすぎた時ほど、少し休むことで判断が澄みます。',tone:'天の視点で道を示す人'},
+  7:{verb:'喜びを分かち合い、場を明るくする',care:'笑顔の奥の繊細さを無視しないでください。楽しいことは休息にもなります。',tone:'喜びを循環させる人'},
+  8:{verb:'立ち止まり、次の山へ切り替える',care:'変わる前に止まる時間が必要です。焦らず節目を見極めてください。',tone:'山のように節目を守る人'},
+  9:{verb:'真実を照らし、美しく表現する',care:'見えすぎる時ほど、相手に届く温度へ言葉を整えると才能が光ります。',tone:'炎のように本質を照らす人'}
+};
+
+const NACHIN_REPORT = {
+  '天河水':'広い視野と、天から降り注ぐ水のような直感。情報や経験を濾過して、人を潤す知恵へ変える響きです。',
+  '大駅土':'人・物・情報が行き交う場所を支える響き。直感や理想を、実際に使える仕組みや流れへ落とし込む力があります。',
+  '海中金':'静かな深みに眠る価値。すぐには見えなくても、時間をかけるほど本物の輝きが表に出ます。',
+  '覆燈火':'内側で灯るやさしい光。派手ではなくても、そばにいる人の心を温める響きです。',
+  '白蝋金':'柔らかく形を変えられる金の響き。環境に合わせながら、自分の価値を磨いていけます。'
+};
+
 // 現在の計算結果を保持
 let gKyusei = {};
 
@@ -394,12 +441,38 @@ function init(){
     <span class="nouin-badge${isSameNac(dn.n)?' same':''}" onclick="openNouinModal('day')" style="cursor:pointer;color:rgba(109,212,232,.9);">${dn.n}</span>
   `;
   ksEl.textContent = '年：'+yn.ks+'　月：'+mn.ks+'　日：'+dn.ks;
+  renderKitokuReport({SH,ST,SK,SD,h,t,k,d,yn,mn,dn});
 
   document.getElementById('noData').style.display='none';
   document.getElementById('personalWrap').style.display='block';
   document.getElementById('mainContent').style.display='block';
 
   buildStarGrid(h);
+}
+
+function renderKitokuReport(ctx){
+  const hRep = STAR_REPORT[ctx.h] || {};
+  const tRep = STAR_REPORT[ctx.t] || {};
+  const kRep = STAR_REPORT[ctx.k] || {};
+  const dRep = STAR_REPORT[ctx.d] || {};
+  const ynText = NACHIN_REPORT[ctx.yn.n] || NACHIN_DETAIL[ctx.yn.n] || '年の納音は、人生全体に流れる魂の響きを示します。';
+  const mnText = NACHIN_REPORT[ctx.mn.n] || NACHIN_DETAIL[ctx.mn.n] || '月の納音は、内面や感情の響きを示します。';
+  const dnText = NACHIN_REPORT[ctx.dn.n] || NACHIN_DETAIL[ctx.dn.n] || '日の納音は、日常で表に出る行動の響きを示します。';
+  const oneLine = `あなたは、${hRep.tone || ctx.SH.j+'の性質を持つ人'}。${ctx.ST.j}の内面を持ち、${ctx.SK.j}の才能を、${ctx.SD.j}の舞台で育てていく人です。`;
+  const structure = `本命星の${ctx.SH.j}は「${hRep.verb || '自分の中心を育てる'}」力。月命星の${ctx.ST.j}は、安心感や素の反応に${tRep.tone || ctx.ST.j+'の響き'}を与えます。傾斜の${ctx.SK.j}は眠っている才能、同会の${ctx.SD.j}は社会から求められやすい役割です。`;
+  const nacchin = `年の納音「${ctx.yn.n}」は、人生全体の響きです。${ynText}\n月の納音「${ctx.mn.n}」は、心の奥の響きです。${mnText}\n日の納音「${ctx.dn.n}」は、日常で出やすい響きです。${dnText}`;
+  const action = `${hRep.care || '自分の星を決めつけにせず、扱い方のヒントとして使ってください。'} ${kRep.care ? '才能面では、'+kRep.care : ''} 今日は「自分の感覚を一つ信じる」「無理に急がない」「自分に合う色や香りで整える」の3つを意識してみてください。`;
+  document.getElementById('reportLead').textContent = oneLine;
+  document.getElementById('reportStructure').textContent = structure;
+  document.getElementById('reportNacchin').textContent = nacchin;
+  document.getElementById('reportAction').textContent = action;
+  document.getElementById('reportTags').innerHTML = [
+    ctx.SH.j,
+    ctx.ST.j,
+    ctx.yn.n,
+    ctx.mn.n,
+    ctx.dn.n
+  ].map(x=>`<span class="report-tag">${x}</span>`).join('');
 }
 
 function setCell(pfx, s, n){
