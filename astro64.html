@@ -53,6 +53,10 @@ textarea{width:100%;min-height:300px;border:1px dashed rgba(138,104,32,.35);bord
 .copy{background:rgba(100,80,40,.08);color:var(--goldlt);border-color:rgba(100,80,40,.25);}
 .prompt-guide{background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:12px;margin-bottom:10px;font-size:.7rem;color:var(--mist);line-height:1.85;}
 .prompt-guide-title{font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;}
+.deep-dive{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.deep-btn{width:100%;border:1px solid rgba(196,160,67,.34);border-radius:10px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(196,160,67,.08));color:var(--goldlt);font-size:.68rem;font-weight:700;letter-spacing:.02em;line-height:1.55;padding:10px 8px;margin:0;cursor:pointer;}
+.deep-btn:active{transform:scale(.99);}
+.deep-note{font-size:.62rem;color:var(--mist);line-height:1.8;text-align:center;margin-top:8px;}
 footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-top:22px;}
 [data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
 [data-theme="dark"] .app-header{background:var(--bg);border-bottom-color:var(--rim);}
@@ -143,6 +147,13 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   </div>
   <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
   <button class="copy" onclick="copyPrompt()">相談文をコピー</button>
+  <div class="deep-dive">
+    <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
+    <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
+    <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
+    <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
+  </div>
+  <div class="deep-note">まず上の相談文をAIに貼り、次に気になる深掘り文を続けて貼ると、会話が進めやすくなります。</div>
 </section>
 
 <footer><a href="kyusei_v2.html" style="color:var(--goldlt);text-decoration:none;">← 九星を知るへ戻る</a><br>KITOKU STAR READING — 自分を知り、自分を愛し、自分で動く</footer>
@@ -290,6 +301,19 @@ function loadSavedBirthData(){
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
   navigator.clipboard.writeText(text).then(()=>alert('コピーしました'));
+}
+
+const DEEP_DIVE_PROMPTS={
+  love:'この読みをもとに、恋愛だけを深掘りしてください。惹かれやすい相手、心地よい距離感、すれ違いやすいポイント、長く続く関係の育て方を、やさしく具体例つきで教えてください。',
+  work:'この読みをもとに、仕事の向き不向きと働き方のコツを整理してください。向いている役割、苦しくなりやすい環境、力を発揮しやすい場面を、見やすい表でまとめてください。',
+  plan:'この内容を、今日から30日で試せる自己理解・自己受容の実践プランにしてください。1日1つの小さな行動を、チェックリスト形式で作ってください。',
+  words:'この読みをもとに、自己肯定感が下がったときに読み返せる「自分への言葉」を10個作ってください。責めずに整え直せる、短くてやさしい言葉でお願いします。'
+};
+
+function copyDeepDive(type){
+  const text=DEEP_DIVE_PROMPTS[type]||'';
+  if(!text)return;
+  navigator.clipboard.writeText(text).then(()=>alert('深掘り用の相談文をコピーしました'));
 }
 
 function setTheme(t){
