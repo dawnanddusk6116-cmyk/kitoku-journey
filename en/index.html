@@ -1,1 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU OS | Japanese Life Compass</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fffdf8;--rim:rgba(100,80,40,.15);--gold:#8a6820;--gold2:#c4a043;--ink:#1c1208;--muted:#5d503d;--rose:#a94d72;--blue:#3d6491;--violet:#6b4b9a;--green:#4c8b68;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);min-height:100dvh}
+body{max-width:520px;margin:0 auto;background:var(--bg);color:var(--ink);font-family:'Noto Serif',serif;line-height:1.75;min-height:100dvh;padding-bottom:42px}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(247,244,239,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--rim);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:'Cormorant Garamond',serif;letter-spacing:.18em;color:var(--gold);font-size:1.1rem;white-space:nowrap}
+.jp-link{border:1px solid rgba(138,104,32,.35);border-radius:999px;color:var(--gold);text-decoration:none;font-size:.68rem;padding:7px 11px;background:rgba(255,255,255,.58);white-space:nowrap}
+.hero{padding:28px 22px 18px}
+.eyebrow{font-size:.66rem;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:9px}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.18rem;line-height:1.08;color:#4b300c;font-weight:600;letter-spacing:.02em}
+.hero-sub{font-size:.88rem;color:var(--muted);line-height:1.9;margin-top:14px}
+.mantra{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:18px}
+.mantra div{background:rgba(255,255,255,.58);border:1px solid rgba(196,160,67,.24);border-radius:12px;text-align:center;padding:10px 6px}
+.mantra strong{display:block;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1}
+.mantra span{display:block;color:var(--muted);font-size:.58rem;line-height:1.45;margin-top:5px}
+.section{margin:14px 18px 0;background:var(--card);border:1px solid var(--rim);border-radius:16px;padding:16px;box-shadow:0 10px 26px rgba(100,80,40,.04)}
+.section.soft{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.72))}
+.section.preview{background:linear-gradient(135deg,rgba(61,100,145,.08),rgba(255,255,255,.72));border-color:rgba(61,100,145,.22)}
+.label{font-size:.64rem;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:8px}
+.title{font-size:1rem;color:#4b300c;font-weight:700;letter-spacing:.04em;margin-bottom:5px}
+.text{font-size:.78rem;color:var(--muted);line-height:1.9}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.field label{display:block;font-size:.66rem;color:var(--gold);font-weight:700;margin-bottom:5px}
+.field input,.field select{width:100%;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);padding:10px;color:var(--ink);font-family:'Noto Serif',serif;font-size:.78rem}
+.full{grid-column:1/-1}
+.primary{width:100%;border:none;border-radius:10px;background:linear-gradient(135deg,#8a6820,#d0aa4b);color:#fff;font-family:'Noto Serif',serif;font-weight:700;letter-spacing:.08em;padding:12px;margin-top:12px;cursor:pointer}
+.note{font-size:.64rem;color:var(--muted);line-height:1.75;margin-top:8px}
+.steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:13px}
+.step{background:#fff;border:1px solid rgba(196,160,67,.22);border-radius:12px;padding:11px 7px;text-align:center}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:1.12rem;color:var(--gold);font-weight:700;line-height:1}
+.step-text{font-size:.64rem;color:var(--muted);line-height:1.45;margin-top:5px}
+.my-avatar{display:none;margin-top:13px;background:#fff;border:1px solid rgba(196,160,67,.28);border-radius:14px;padding:14px}
+.my-avatar.show{display:flex;align-items:center;gap:12px}
+.my-avatar-num{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.12);font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--gold);font-weight:700;flex-shrink:0}
+.my-avatar-name{font-size:.88rem;color:#4b300c;font-weight:800}
+.my-avatar-sub{font-size:.64rem;color:var(--muted);line-height:1.65;margin-top:2px}
+.cards{display:grid;gap:10px;margin-top:12px}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.mini-card{background:#fff;border:1px solid rgba(196,160,67,.22);border-radius:12px;padding:11px 8px;text-align:center}
+.mini-card strong{display:block;color:#4b300c;font-size:.72rem;line-height:1.4}
+.mini-card span{display:block;color:var(--muted);font-size:.58rem;line-height:1.5;margin-top:5px}
+.action{display:flex;align-items:center;gap:11px;background:#fff;border:1.4px solid rgba(196,160,67,.24);border-radius:13px;padding:13px 12px;text-decoration:none;color:inherit}
+.action.disabled{opacity:.72}
+.action-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.76rem;flex-shrink:0}
+.action.ai{border-color:rgba(61,100,145,.34);background:linear-gradient(135deg,#fff,rgba(61,100,145,.08))}
+.action.astro{border-color:rgba(107,75,154,.34);background:linear-gradient(135deg,#fff,rgba(107,75,154,.09))}
+.action.scent{border-color:rgba(169,77,114,.32);background:linear-gradient(135deg,#fff,rgba(169,77,114,.08))}
+.action.ai .action-icon{background:rgba(61,100,145,.14);color:var(--blue)}
+.action.astro .action-icon{background:rgba(107,75,154,.14);color:var(--violet)}
+.action.scent .action-icon{background:rgba(169,77,114,.14);color:var(--rose)}
+.action-title{font-size:.78rem;color:#4b300c;font-weight:800}
+.action-text{font-size:.65rem;color:var(--muted);line-height:1.6;margin-top:2px}
+.avatar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.avatar{background:#fff;border:1px solid rgba(100,80,40,.12);border-radius:14px;padding:13px 7px;text-align:center;min-height:116px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+.avatar:active{transform:scale(.98)}
+.avatar.active{border-color:rgba(196,160,67,.56);box-shadow:0 8px 22px rgba(100,80,40,.08)}
+.avatar-num{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;line-height:1}
+.avatar-en{font-size:.72rem;font-weight:800;line-height:1.25;margin-top:7px}
+.avatar-jp{font-size:.58rem;color:var(--muted);line-height:1.45;margin-top:5px}
+.water{color:#3f8aa3}.earth{color:#a77b22}.wood{color:#3b9b55}.center{color:#b68720}.metal{color:#9bb2c8}.joy{color:#d65b8b}.mountain{color:#8d8469}.fire{color:#d94d5e}
+.avatar-detail{display:none;margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.26);border-radius:14px;padding:14px}
+.avatar-detail.show{display:block}
+.avatar-detail-kicker{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:5px}
+.avatar-detail-title{font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:#4b300c;font-weight:700;line-height:1.15}
+.avatar-detail-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
+.avatar-detail-text{font-size:.76rem;color:var(--muted);line-height:1.9;margin-top:10px}
+.avatar-detail-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.avatar-detail-tags span{font-size:.58rem;border:1px solid rgba(138,104,32,.22);border-radius:999px;background:rgba(255,255,255,.55);color:var(--gold);padding:3px 8px;font-weight:700}
+.mini-prompt{background:#fff;border:1px dashed rgba(138,104,32,.32);border-radius:10px;padding:10px;font-size:.67rem;color:var(--ink);line-height:1.75;white-space:pre-wrap;margin-top:10px}
+.prompt-box{border:1px dashed rgba(138,104,32,.36);border-radius:12px;background:rgba(255,255,255,.62);padding:12px;font-size:.72rem;color:var(--ink);line-height:1.85;white-space:pre-wrap;margin-top:10px}
+.tuning-grid{display:grid;grid-template-columns:1fr;gap:9px;margin-top:12px}
+.tuning{border:1px solid rgba(196,160,67,.24);border-radius:13px;background:#fff;padding:12px}
+.tuning-title{font-size:.78rem;color:#4b300c;font-weight:800;margin-bottom:3px}
+.tuning-text{font-size:.65rem;color:var(--muted);line-height:1.65}
+.secondary{width:100%;border:1px solid rgba(138,104,32,.3);border-radius:10px;background:rgba(100,80,40,.07);color:var(--gold);font-family:'Noto Serif',serif;font-weight:700;padding:11px;margin-top:10px;cursor:pointer}
+.support{border-color:rgba(76,139,104,.28);background:linear-gradient(135deg,rgba(76,139,104,.09),rgba(255,255,255,.75))}
+.support .title{color:#365f48}
+footer{text-align:center;font-size:.62rem;color:rgba(93,80,61,.72);line-height:1.8;margin-top:24px;padding:0 18px}
+@media(max-width:390px){h1{font-size:1.9rem}.avatar-grid{gap:7px}.avatar{padding:11px 5px}.action{padding:12px 10px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY</div>
+  <a class="jp-link" href="../KITOKU/新バージョン６ボタン/index.html">Japanese</a>
+</div>
 
+<main>
+  <section class="hero">
+    <div class="eyebrow">JAPAN OS PREVIEW</div>
+    <h1>A Japanese OS for Self-Understanding</h1>
+    <p class="hero-sub">
+      KITOKU OS blends ancient Eastern wisdom with modern AI prompts.
+      This English preview is not a full translation of the Japanese app.
+      It is a simple doorway into JAPAN OS: know yourself, love yourself, and move by your own compass.
+    </p>
+    <div class="mantra">
+      <div><strong>Know</strong><span>yourself</span></div>
+      <div><strong>Love</strong><span>yourself</span></div>
+      <div><strong>Move</strong><span>by your compass</span></div>
+    </div>
+  </section>
+
+  <section class="section preview">
+    <div class="label">WHAT THIS PREVIEW IS</div>
+    <div class="title">A doorway, not a rulebook</div>
+    <p class="text">
+      The Japanese version includes deeper direction readings and traditional calendar logic.
+      This English preview focuses on self-understanding, AI reflection, and daily tuning.
+      If you want to go deeper, you can use the Japanese version with your favorite AI translator.
+    </p>
+    <div class="mini-grid">
+      <div class="mini-card"><strong>9 Avatars</strong><span>your role and rhythm</span></div>
+      <div class="mini-card"><strong>AI Reflection</strong><span>better questions</span></div>
+      <div class="mini-card"><strong>Daily Tuning</strong><span>small choices</span></div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="label">FIRST 3 MINUTES</div>
+    <div class="title">Start with your birth date</div>
+    <p class="text">Enter your birth data first. Your information stays only on this device for this preview.</p>
+    <div class="grid">
+      <div class="field"><label>Birth date</label><input id="birth" type="date"></div>
+      <div class="field"><label>Birth time</label><input id="time" type="time" value="12:00"></div>
+      <div class="field"><label>Gender</label><select id="gender"><option value="male">Male</option><option value="female">Female</option></select></div>
+      <div class="field"><label>Reading date</label><input id="target" type="date"></div>
+    </div>
+    <button class="primary" onclick="saveBirth()">Save on this device</button>
+    <div class="note" id="saveNote">No account. No server upload. This preview uses local storage only.</div>
+    <div class="my-avatar" id="myAvatar">
+      <div class="my-avatar-num" id="myAvatarNum">-</div>
+      <div>
+        <div class="my-avatar-name" id="myAvatarName">Your avatar</div>
+        <div class="my-avatar-sub" id="myAvatarSub">Save your birth date to see your 9 Avatar.</div>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text">Find your avatar</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Tune your day</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Ask AI better</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="label">NEXT EXPERIENCE</div>
+    <div class="title">Choose your doorway</div>
+    <div class="cards">
+      <a class="action ai" href="ai_reflection.html">
+        <div class="action-icon">AI</div>
+        <div>
+          <div class="action-title">Ask AI with your stars</div>
+          <div class="action-text">Create a personal prompt for ChatGPT, Claude, Gemini, Genspark, or Manus.</div>
+        </div>
+      </a>
+      <a class="action astro" href="star_crosscheck.html">
+        <div class="action-icon">Astro</div>
+        <div>
+          <div class="action-title">Western star-reading cross-check</div>
+          <div class="action-text">Use Sun, Moon, Venus, and Mars as an accessible doorway into KITOKU interpretation.</div>
+        </div>
+      </a>
+      <a class="action scent" href="daily_tuning.html">
+        <div class="action-icon">Scent</div>
+        <div>
+          <div class="action-title">Tune yourself with scent and color</div>
+          <div class="action-text">Choose fragrance, color, and small rituals by scene, mood, and relationship.</div>
+        </div>
+      </a>
+    </div>
+    <div class="note">This preview keeps the experience simple: know your avatar, reflect with AI, and tune your day.</div>
+  </section>
+
+  <section class="section">
+    <div class="label">DAILY TUNING</div>
+    <div class="title">Small choices can return you to yourself</div>
+    <p class="text">JAPAN OS is not only about knowing your type. It is about choosing one small action that helps you feel aligned today.</p>
+    <div class="tuning-grid">
+      <div class="tuning">
+        <div class="tuning-title">Color</div>
+        <div class="tuning-text">Choose one color that supports the state you want: clarity, calm, courage, warmth, or renewal.</div>
+      </div>
+      <div class="tuning">
+        <div class="tuning-title">Scent</div>
+        <div class="tuning-text">Use scent lightly as a signal to your body: begin, rest, focus, soften, or let go.</div>
+      </div>
+      <div class="tuning">
+        <div class="tuning-title">Words</div>
+        <div class="tuning-text">Keep one sentence as your compass. Not to force yourself, but to return to your center.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="label">9 AVATARS</div>
+    <div class="title">Nine roles from Japanese star wisdom</div>
+    <p class="text">The nine avatars are not labels to trap you. They are gentle entry points to understand your role, rhythm, and natural way of moving.</p>
+    <div class="avatar-grid">
+      <div class="avatar" onclick="showAvatar(1,this)"><div class="avatar-num water">1</div><div class="avatar-en water">Crystal Water</div><div class="avatar-jp">clear water</div></div>
+      <div class="avatar" onclick="showAvatar(2,this)"><div class="avatar-num earth">2</div><div class="avatar-en earth">Mother Earth</div><div class="avatar-jp">nurturing ground</div></div>
+      <div class="avatar" onclick="showAvatar(3,this)"><div class="avatar-num wood">3</div><div class="avatar-en wood">Sunrise Sound</div><div class="avatar-jp">morning thunder</div></div>
+      <div class="avatar" onclick="showAvatar(4,this)"><div class="avatar-num wood">4</div><div class="avatar-en wood">Harmonic Breeze</div><div class="avatar-jp">connecting wind</div></div>
+      <div class="avatar" onclick="showAvatar(5,this)"><div class="avatar-num center">5</div><div class="avatar-en center">Center Core</div><div class="avatar-jp">regeneration</div></div>
+      <div class="avatar" onclick="showAvatar(6,this)"><div class="avatar-num metal">6</div><div class="avatar-en metal">Royal Sky</div><div class="avatar-jp">noble heaven</div></div>
+      <div class="avatar" onclick="showAvatar(7,this)"><div class="avatar-num joy">7</div><div class="avatar-en joy">Joyful Harvest</div><div class="avatar-jp">joy and harvest</div></div>
+      <div class="avatar" onclick="showAvatar(8,this)"><div class="avatar-num mountain">8</div><div class="avatar-en mountain">Evolution Mountain</div><div class="avatar-jp">turning point</div></div>
+      <div class="avatar" onclick="showAvatar(9,this)"><div class="avatar-num fire">9</div><div class="avatar-en fire">Brilliant Fire</div><div class="avatar-jp">clear light</div></div>
+    </div>
+    <div class="avatar-detail" id="avatarDetail"></div>
+  </section>
+
+  <section class="section">
+    <div class="label">AI PROMPT SAMPLE</div>
+    <div class="title">A better question creates a better answer</div>
+    <p class="text">Copy this first question into your favorite AI. Later, KITOKU will generate this with your personal star data.</p>
+    <div class="prompt-box" id="samplePrompt">You are a KITOKU guide.
+Please help me understand myself with warmth and honesty.
+
+Do not flatter me. Do not decide my fate.
+Use this as a mirror for self-understanding.
+
+Tell me:
+1. What kind of strength I may already have
+2. Where I may be pushing myself too hard
+3. One small action I can take today
+4. One sentence I can keep as my compass
+
+Please write in clear, gentle English.</div>
+    <button class="secondary" onclick="copySamplePrompt()">Copy AI prompt</button>
+  </section>
+
+  <section class="section support">
+    <div class="label">SUPPORT</div>
+    <div class="title">Support KITOKU</div>
+    <p class="text">If this Japanese life compass helped you understand yourself a little better, you will be able to support the project with a small tip. The support link will be added later.</p>
+  </section>
+</main>
+
+<footer>
+  KITOKU OS — Japanese Life Compass<br>
+  Ancient wisdom, modern AI, and your own inner compass.
+</footer>
+
+<script>
+function todayIso(){
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function init(){
+  document.getElementById('target').value=todayIso();
+  const b=localStorage.getItem('kitoku_en_birth');
+  const t=localStorage.getItem('kitoku_en_time');
+  const g=localStorage.getItem('kitoku_en_gender');
+  if(b)document.getElementById('birth').value=b;
+  if(t)document.getElementById('time').value=t;
+  if(g)document.getElementById('gender').value=g;
+  if(b)renderMyAvatar(b);
+}
+const AVATAR_NAMES={
+  1:{name:'Crystal Water',sub:'clear water / wisdom in stillness'},
+  2:{name:'Mother Earth',sub:'nurturing ground / steady care'},
+  3:{name:'Sunrise Sound',sub:'morning thunder / new beginning'},
+  4:{name:'Harmonic Breeze',sub:'connecting wind / gentle harmony'},
+  5:{name:'Center Core',sub:'regeneration / power at the center'},
+  6:{name:'Royal Sky',sub:'noble heaven / high ideal'},
+  7:{name:'Joyful Harvest',sub:'joy and harvest / shared delight'},
+  8:{name:'Evolution Mountain',sub:'turning point / sacred pause'},
+  9:{name:'Brilliant Fire',sub:'clear light / truth and beauty'}
+};
+const SEKKI_DB={2020:{1:6,2:4,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2021:{1:5,2:3,3:5,4:5,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2022:{1:5,2:4,3:6,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2023:{1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:8,9:8,10:8,11:8,12:7},2024:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:8,11:7,12:7},2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}};
+function sekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};return A[m];}
+function digitRoot9(n){while(n>9){let s=0;while(n>0){s+=n%10;n=Math.floor(n/10)}n=s}return n}
+function mod9(x){const r=((x%9)+9)%9;return r===0?9:r}
+function lifeStarFromBirth(dateStr){
+  const [y,m,d]=dateStr.split('-').map(Number);
+  if(!y||!m||!d)return null;
+  const kYear=(m===1 || (m===2 && d<sekkiDay(y,2))) ? y-1 : y;
+  return mod9(11-digitRoot9(kYear));
+}
+function renderMyAvatar(dateStr){
+  const star=lifeStarFromBirth(dateStr);
+  if(!star)return;
+  const info=AVATAR_NAMES[star];
+  document.getElementById('myAvatar').classList.add('show');
+  document.getElementById('myAvatarNum').textContent=star;
+  document.getElementById('myAvatarName').textContent=`Your 9 Avatar: ${info.name}`;
+  document.getElementById('myAvatarSub').textContent=`${info.sub}. This is a simple preview. Deeper readings are available in the Japanese version.`;
+}
+function saveBirth(){
+  const b=document.getElementById('birth').value;
+  const t=document.getElementById('time').value || '12:00';
+  const g=document.getElementById('gender').value;
+  if(!b){
+    document.getElementById('saveNote').textContent='Please enter your birth date first.';
+    return;
+  }
+  localStorage.setItem('kitoku_en_birth',b);
+  localStorage.setItem('kitoku_en_time',t);
+  localStorage.setItem('kitoku_en_gender',g);
+  renderMyAvatar(b);
+  document.getElementById('saveNote').textContent='Saved on this device. The English preview can use this birth data later.';
+}
+function copySamplePrompt(){
+  const text=document.getElementById('samplePrompt').textContent;
+  navigator.clipboard.writeText(text).then(()=>alert('Prompt copied.'));
+}
+const AVATARS={
+  1:{name:'Crystal Water',sub:'Clear water / wisdom in stillness',text:'You sense what is beneath the surface. Your strength grows when you slow down, listen deeply, and let your inner water become clear again.',tags:['intuition','depth','quiet wisdom'],prompt:'I may be a Crystal Water type. Help me understand how to trust my sensitivity without being overwhelmed.'},
+  2:{name:'Mother Earth',sub:'Nurturing ground / steady care',text:'You build trust through patience, care, and steady presence. Your gift is not loud. It is the reliable warmth that helps life grow.',tags:['care','patience','support'],prompt:'I may be a Mother Earth type. Help me care for others without forgetting to care for myself.'},
+  3:{name:'Sunrise Sound',sub:'Morning thunder / new beginning',text:'You bring movement where things are stuck. Your gift is the first sound of morning: fresh, bright, and brave enough to begin.',tags:['action','freshness','awakening'],prompt:'I may be a Sunrise Sound type. Help me use my energy without rushing or scattering it.'},
+  4:{name:'Harmonic Breeze',sub:'Connecting wind / gentle harmony',text:'You connect people, ideas, and places. Your gift is creating flow, trust, and gentle harmony without forcing anything.',tags:['connection','communication','harmony'],prompt:'I may be a Harmonic Breeze type. Help me stay kind without losing my own center.'},
+  5:{name:'Center Core',sub:'Regeneration / power at the center',text:'You carry strong transformational energy. Your gift is not avoiding chaos, but turning what has broken into something alive again.',tags:['power','reset','regeneration'],prompt:'I may be a Center Core type. Help me use my strong energy with kindness and responsibility.'},
+  6:{name:'Royal Sky',sub:'Noble heaven / high ideal',text:'You see from above and aim for completion. Your gift is leadership with dignity, responsibility, and a quiet commitment to what is right.',tags:['leadership','dignity','completion'],prompt:'I may be a Royal Sky type. Help me lead without becoming too hard on myself.'},
+  7:{name:'Joyful Harvest',sub:'Joy and harvest / shared delight',text:'You remind people that life is not only duty. Your gift is joy, conversation, beauty, and the ability to make a moment feel alive.',tags:['joy','beauty','social grace'],prompt:'I may be a Joyful Harvest type. Help me honor joy without using it to hide my deeper feelings.'},
+  8:{name:'Evolution Mountain',sub:'Turning point / sacred pause',text:'You understand thresholds. Your gift is knowing when to stop, protect what matters, and move to the next mountain with patience.',tags:['transition','patience','legacy'],prompt:'I may be an Evolution Mountain type. Help me know what to keep, what to end, and when to move.'},
+  9:{name:'Brilliant Fire',sub:'Clear light / truth and beauty',text:'You illuminate what was hidden. Your gift is clarity, beauty, intelligence, and the courage to let truth become visible.',tags:['clarity','beauty','truth'],prompt:'I may be a Brilliant Fire type. Help me express what I see with warmth, not sharpness.'}
+};
+function showAvatar(n,el){
+  document.querySelectorAll('.avatar').forEach(a=>a.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const a=AVATARS[n];
+  const box=document.getElementById('avatarDetail');
+  box.classList.add('show');
+  box.innerHTML=`
+    <div class="avatar-detail-kicker">AVATAR ${n}</div>
+    <div class="avatar-detail-title">${a.name}</div>
+    <div class="avatar-detail-sub">${a.sub}</div>
+    <div class="avatar-detail-text">${a.text}</div>
+    <div class="avatar-detail-tags">${a.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+    <div class="mini-prompt">${a.prompt}</div>
+    <button class="secondary" onclick="copyAvatarPrompt(${n})">Copy this AI question</button>
+  `;
+}
+function copyAvatarPrompt(n){
+  const text=AVATARS[n]?.prompt||'';
+  if(!text)return;
+  navigator.clipboard.writeText(text).then(()=>alert('Avatar question copied.'));
+}
+init();
+</script>
+</body>
+</html>
