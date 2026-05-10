@@ -40,6 +40,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-text{font-size:.68rem;color:var(--mist);line-height:1.9;}
 .report-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .report-tag{font-size:.6rem;color:var(--goldlt);background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.25);border-radius:999px;padding:3px 8px;font-weight:700;}
+.report-next{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
+.report-next-card{display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,.5);border:1px solid rgba(100,80,40,.12);border-radius:10px;padding:10px;color:inherit;}
+.report-next-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.14);color:var(--goldlt);font-size:.95rem;flex-shrink:0;}
+.report-next-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
+.report-next-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
+.report-next-badge{font-size:.52rem;color:var(--gold);letter-spacing:.08em;margin-left:auto;white-space:nowrap;}
 
 /* 納音 */
 .nouin-row{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;cursor:pointer;}
@@ -212,6 +218,24 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
           <div class="report-block-title">自分を扱うヒント</div>
           <div class="report-text" id="reportAction">—</div>
           <div class="report-tags" id="reportTags"></div>
+        </div>
+        <div class="report-next">
+          <a class="report-next-card" href="ai.html">
+            <div class="report-next-icon">AI</div>
+            <div>
+              <div class="report-next-title">気学 × AIで深く聞く</div>
+              <div class="report-next-text">この星情報を相談文にして、ChatGPT・Claude・Geminiなどに貼れます。</div>
+            </div>
+            <div class="report-next-badge">おすすめ</div>
+          </a>
+          <a class="report-next-card" href="astro64.html">
+            <div class="report-next-icon">星</div>
+            <div>
+              <div class="report-next-title">星読みクロスチェック BY KITOKU</div>
+              <div class="report-next-text">西洋星読みのような入口から、KITOKU解釈で自分を見つめる実験版です。</div>
+            </div>
+            <div class="report-next-badge">別エンジン</div>
+          </a>
         </div>
       </div>
     </div>
