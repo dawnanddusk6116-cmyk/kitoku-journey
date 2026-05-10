@@ -99,14 +99,14 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 <section class="section">
   <div class="label">BIRTH DATA</div>
   <div class="grid">
-    <div class="field"><label>年</label><input id="year" type="number" value="1967"></div>
-    <div class="field"><label>月</label><input id="month" type="number" value="6"></div>
-    <div class="field"><label>日</label><input id="day" type="number" value="14"></div>
-    <div class="field"><label>時</label><input id="hour" type="number" value="12"></div>
+    <div class="field"><label>年</label><input id="year" type="number" placeholder="例：1990"></div>
+    <div class="field"><label>月</label><input id="month" type="number" placeholder="例：4"></div>
+    <div class="field"><label>日</label><input id="day" type="number" placeholder="例：10"></div>
+    <div class="field"><label>時</label><input id="hour" type="number" placeholder="不明なら12"></div>
     <div class="field"><label>分</label><input id="minute" type="number" value="0"></div>
     <div class="field"><label>UTC差</label><input id="timezone" type="number" value="9"></div>
   </div>
-  <div class="field"><label>出生地メモ</label><input id="place" type="text" value="東京"></div>
+  <div class="field"><label>出生地メモ</label><input id="place" type="text" placeholder="例：東京"></div>
   <div class="field">
     <label>64分割オフセット</label>
     <input id="offset" type="number" value="0" step="0.1">
@@ -164,6 +164,17 @@ function getInput(){
 
 function runAstro64(){
   const input=getInput();
+  if(!input.year || !input.month || !input.day){
+    document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「64象意を計算する」を押すと、ここに天体ごとの64象意が表示されます。</div>';
+    document.getElementById('prompt').value='生年月日を入力して計算すると、AIに渡す相談文がここに表示されます。';
+    return;
+  }
+  if(!document.getElementById('hour').value){
+    input.hour=12;
+  }
+  if(!input.place){
+    input.place='出生地未入力';
+  }
   const rows=computeAstro64(input);
   const html=rows.map((r)=>`
     <div class="row">
@@ -182,6 +193,25 @@ function runAstro64(){
   `).join('');
   document.getElementById('results').innerHTML=html;
   document.getElementById('prompt').value=buildAstroPrompt(input, rows);
+}
+
+function loadSavedBirthData(){
+  const birth=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+  if(!birth)return false;
+  const parts=birth.split('-').map(Number);
+  const [year,month,day]=parts;
+  if(!year||!month||!day)return false;
+  document.getElementById('year').value=year;
+  document.getElementById('month').value=month;
+  document.getElementById('day').value=day;
+
+  const savedTime=localStorage.getItem('kitoku-birth-time')||'';
+  if(savedTime){
+    const [hour,minute]=savedTime.split(':').map(Number);
+    if(Number.isFinite(hour))document.getElementById('hour').value=hour;
+    if(Number.isFinite(minute))document.getElementById('minute').value=minute;
+  }
+  return true;
 }
 
 function copyPrompt(){
@@ -228,7 +258,13 @@ function setFontSize(s){
   });
 })();
 
-runAstro64();
+const hasSavedBirth=loadSavedBirthData();
+if(hasSavedBirth){
+  runAstro64();
+}else{
+  document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「64象意を計算する」を押すと、ここに天体ごとの64象意が表示されます。</div>';
+  document.getElementById('prompt').value='生年月日を入力して計算すると、AIに渡す相談文がここに表示されます。';
+}
 </script>
 </body>
 </html>
