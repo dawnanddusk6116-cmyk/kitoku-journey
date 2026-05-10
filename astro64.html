@@ -4,12 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>星読みクロスチェック | KITOKU</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="astro64_words.js"></script>
 <script src="astro64_engine.js"></script>
 <style>
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.16);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--accent:#b16b78;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--snow);font-family:serif;max-width:520px;margin:0 auto;line-height:1.8;padding-bottom:40px;}
+html{background:var(--bg);min-height:100dvh;}
+body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;max-width:520px;margin:0 auto;line-height:1.8;padding-bottom:40px;min-height:100dvh;}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.brand-logo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);white-space:nowrap;}
+.header-reset{width:auto;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;margin:0;}
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
+.tb-btn{width:auto;background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;margin:0;font-weight:400;}
+.tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
 header{padding:20px 18px 14px;border-bottom:1px solid var(--rim);}
 .logo{font-size:.72rem;letter-spacing:.24em;color:var(--gold);font-weight:700;}
 h1{font-size:1.4rem;color:var(--goldlt);font-weight:500;margin-top:8px;letter-spacing:.08em;}
@@ -45,9 +54,32 @@ textarea{width:100%;min-height:300px;border:1px dashed rgba(138,104,32,.35);bord
 .prompt-guide{background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:12px;margin-bottom:10px;font-size:.7rem;color:var(--mist);line-height:1.85;}
 .prompt-guide-title{font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;}
 footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-top:22px;}
+[data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
+[data-theme="dark"] .app-header{background:var(--bg);border-bottom-color:var(--rim);}
+[data-theme="dark"] .toolbar{background:var(--card);border-bottom-color:var(--rim);}
+[data-theme="dark"] .tb-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:var(--mist);}
+[data-theme="dark"] .tb-btn.active{background:rgba(196,160,67,.25);border-color:rgba(196,160,67,.6);color:var(--goldlt);}
+[data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
+[data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
+[data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
 </style>
 </head>
 <body>
+<div class="app-header">
+  <div class="brand-logo">✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY</div>
+  <button class="header-reset" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+</div>
+
+<div class="toolbar">
+  <span class="tb-label">表示</span>
+  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <span class="tb-label" style="margin-left:8px;">文字</span>
+  <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
+  <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
+  <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
+</div>
+
 <header>
   <div class="logo">KITOKU STAR READING</div>
   <h1>星読みクロスチェック</h1>
@@ -156,6 +188,45 @@ function copyPrompt(){
   const text=document.getElementById('prompt').value;
   navigator.clipboard.writeText(text).then(()=>alert('コピーしました'));
 }
+
+function setTheme(t){
+  document.body.setAttribute('data-theme',t);
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===t);
+  });
+}
+
+function setFontSize(s){
+  const m={s:'15px',m:'17px',l:'19px'};
+  document.documentElement.style.fontSize=m[s]||'15px';
+  try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
+  ['s','m','l'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===s);
+  });
+}
+
+(function(){
+  const t=localStorage.getItem('kitoku-theme')||'light';
+  const fs=localStorage.getItem('kitoku-fontsize')||'s';
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.setAttribute('data-theme',t);
+    document.documentElement.setAttribute('data-theme',t);
+    ['dark','light'].forEach(x=>{
+      const b=document.getElementById('tb-'+x);
+      if(b)b.classList.toggle('active',x===t);
+    });
+    const fm={s:'15px',m:'17px',l:'19px'};
+    document.documentElement.style.fontSize=fm[fs]||'15px';
+    ['s','m','l'].forEach(x=>{
+      const b=document.getElementById('tb-'+x);
+      if(b)b.classList.toggle('active',x===fs);
+    });
+  });
+})();
 
 runAstro64();
 </script>
