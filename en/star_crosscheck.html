@@ -25,7 +25,7 @@
   </section>
   <section class="section">
     <div class="label">AI CROSS-CHECK</div>
-    <div class="field"><label>Birth data or astrology notes</label><textarea id="notes" placeholder="Example: Sun in Gemini, Moon in Pisces, Venus in Leo... or paste any star-reading result here."></textarea></div>
+    <div class="field"><label>Birth data or astrology notes</label><textarea id="notes" placeholder="Paste astrology notes here, or write your birth date, time, and place. Example: June 14, 1967, 12:00, Tokyo."></textarea></div>
     <div class="field"><label>KITOKU avatar or keywords</label><input id="kitoku" placeholder="Example: Royal Sky / Crystal Water / I value calm and dignity"></div>
     <button class="primary" onclick="buildPrompt()">Create cross-check prompt</button>
     <div class="prompt" id="prompt">Your cross-check prompt will appear here.</div>
@@ -43,6 +43,10 @@ function savedKitokuText(){
 function init(){
  const saved=savedKitokuText();
  if(saved)document.getElementById('kitoku').value=saved;
+ ['notes','kitoku'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',buildPrompt);
+  document.getElementById(id).addEventListener('change',buildPrompt);
+ });
  buildPrompt();
 }
 function buildPrompt(){

@@ -38,8 +38,14 @@ function savedAvatarText(){
  if(star&&name)return `${name} (${star}) - ${sub||'my KITOKU avatar'}`;
  return 'my KITOKU avatar is not saved yet';
 }
-function init(){buildPrompt()}
-function setMode(m){document.getElementById('mode').value=m}
+function init(){
+ ['mode','state','situation'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',buildPrompt);
+  document.getElementById(id).addEventListener('change',buildPrompt);
+ });
+ buildPrompt();
+}
+function setMode(m){document.getElementById('mode').value=m;buildPrompt()}
 function buildPrompt(){
  const mode=document.getElementById('mode').value.trim()||'Color';
  const state=document.getElementById('state').value.trim()||'more centered';

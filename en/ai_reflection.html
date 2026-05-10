@@ -40,6 +40,10 @@ function savedAvatarText(){
 function init(){
   const saved=savedAvatarText();
   if(saved)document.getElementById('avatar').value=saved;
+  ['avatar','concern','tone'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',buildPrompt);
+    document.getElementById(id).addEventListener('change',buildPrompt);
+  });
   buildPrompt();
 }
 function buildPrompt(){
