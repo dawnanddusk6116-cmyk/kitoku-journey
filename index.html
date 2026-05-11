@@ -1473,11 +1473,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div style="font-size:.58rem;letter-spacing:.18em;color:var(--goldlt);font-weight:800;margin-bottom:7px;">TODAY'S QUESTION</div>
     <div style="font-size:.95rem;color:var(--goldlt);font-weight:800;font-family:'Noto Serif JP',serif;margin-bottom:6px;">今日の問い</div>
     <div id="dailyQuestionText" style="font-size:.72rem;color:var(--mist);line-height:1.9;">生年月日を登録すると、今日のあなたに合わせた問いが表示されます。</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px;">
-      <button id="dailyQuestionCopyBtn" onclick="copyDailyQuestion(event)" style="width:100%;background:rgba(92,64,16,.92);color:#fff;border:none;border-radius:9px;padding:10px 9px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.04em;">📋 AIに聞く</button>
-      <button onclick="window.location.href='today.html'" style="width:100%;background:rgba(255,255,255,.72);color:var(--goldlt);border:1px solid rgba(138,104,32,.28);border-radius:9px;padding:10px 9px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.04em;">🌸 整え方を見る</button>
+    <div style="margin-top:11px;background:rgba(255,255,255,.62);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:10px 11px;font-size:.66rem;color:var(--goldlt);line-height:1.8;">
+      下のボタンで相談文をコピーできます。コピーしたら、ChatGPT・Claude・Gemini・Gensparkなどに貼り付けて「今日の過ごし方」を聞いてください。
     </div>
-    <button onclick="window.location.href='scent.html'" style="width:100%;margin-top:8px;background:linear-gradient(135deg,rgba(220,140,160,.14),rgba(255,255,255,.72));color:#b14a68;border:1px solid rgba(220,140,160,.34);border-radius:9px;padding:10px 12px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.04em;">🧴 香りAI先生で今日の香りを相談する</button>
+    <button id="dailyQuestionCopyBtn" onclick="copyDailyQuestion(event)" style="width:100%;margin-top:10px;background:rgba(92,64,16,.92);color:#fff;border:none;border-radius:9px;padding:12px 12px;font-size:.76rem;font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.06em;">📋 今日の問いをコピーしてAIに貼る</button>
+    <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.64rem;line-height:1.7;">
+      <a href="today.html" style="color:#b14a68;text-decoration:none;font-weight:700;">🌸 色・香り・食を見る</a>
+      <a href="scent.html" style="color:#b14a68;text-decoration:none;font-weight:700;">🧴 香りAI先生へ</a>
+    </div>
   </div>
 
   <!-- ② 6つのボタン -->
