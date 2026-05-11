@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>九星を知る | KITOKU@JOURNEY</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;}
@@ -119,6 +126,20 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .modal-overlay{background:rgba(0,0,0,.7);}
 [data-theme="dark"] .modal-close{background:rgba(255,255,255,.08);}
 [data-theme="dark"] .modal-tag{background:rgba(196,160,67,.1);border-color:rgba(196,160,67,.25);color:var(--goldlt);}
+[data-theme="dark"] .kitoku-report{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));border-color:rgba(196,160,67,.32);}
+[data-theme="dark"] .report-block{background:rgba(255,255,255,.055);border-color:rgba(212,175,55,.18);}
+[data-theme="dark"] .report-text{color:rgba(232,238,255,.76);}
+[data-theme="dark"] .report-next-card{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.24);box-shadow:none;}
+[data-theme="dark"] .report-next-card.ai{background:linear-gradient(135deg,rgba(112,156,210,.12),rgba(18,21,42,.95));border-color:rgba(112,156,210,.32);}
+[data-theme="dark"] .report-next-card.astro{background:linear-gradient(135deg,rgba(126,98,180,.14),rgba(18,21,42,.95));border-color:rgba(126,98,180,.34);}
+[data-theme="dark"] .report-next-card.scent{background:linear-gradient(135deg,rgba(220,116,150,.14),rgba(18,21,42,.95));border-color:rgba(220,116,150,.34);}
+[data-theme="dark"] .report-next-card.ai .report-next-title,
+[data-theme="dark"] .report-next-card.ai .report-next-icon{color:#9fc3f4;}
+[data-theme="dark"] .report-next-card.astro .report-next-title,
+[data-theme="dark"] .report-next-card.astro .report-next-icon{color:#c4a7f5;}
+[data-theme="dark"] .report-next-card.scent .report-next-title,
+[data-theme="dark"] .report-next-card.scent .report-next-icon{color:#f2a1c0;}
+[data-theme="dark"] .report-next-text{color:rgba(232,238,255,.72);}
 
 /* ── app-header ── */
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}

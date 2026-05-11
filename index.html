@@ -476,6 +476,57 @@ footer .footer-mail{
 [data-theme="light"] footer{color:rgba(50,34,10,.78)!important;}
 [data-theme="light"] footer .disclaimer{color:rgba(50,34,10,.72)!important;}
 [data-theme="light"] footer .footer-contact{color:rgba(50,34,10,.82)!important;}
+
+/* ダークモード：後から追加した案内カードの視認性を調整 */
+[data-theme="dark"] .trial-card,
+[data-theme="dark"] .guide-card{
+  background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96))!important;
+  border-color:rgba(196,160,67,.34)!important;
+  box-shadow:none;
+}
+[data-theme="dark"] .trial-title,
+[data-theme="dark"] .guide-card-title{
+  color:var(--goldlt)!important;
+}
+[data-theme="dark"] .trial-text,
+[data-theme="dark"] .trial-step-text,
+[data-theme="dark"] .trial-note,
+[data-theme="dark"] .guide-card-text{
+  color:rgba(232,238,255,.78)!important;
+}
+[data-theme="dark"] .trial-step,
+[data-theme="dark"] .trial-note{
+  background:rgba(255,255,255,.055)!important;
+  border-color:rgba(196,160,67,.2)!important;
+}
+[data-theme="dark"] .en-card{
+  background:linear-gradient(135deg,rgba(61,100,145,.18),rgba(18,21,42,.96))!important;
+  border-color:rgba(112,156,210,.38)!important;
+}
+[data-theme="dark"] .en-card .guide-card-icon{
+  background:rgba(112,156,210,.18)!important;
+  color:#9fc3ef!important;
+}
+[data-theme="dark"] .en-card .guide-card-kicker,
+[data-theme="dark"] .en-card .guide-card-title{
+  color:#9fc3ef!important;
+}
+[data-theme="dark"] .guide-card-icon{
+  background:rgba(196,160,67,.14)!important;
+  color:var(--goldlt)!important;
+}
+[data-theme="dark"] #dailyQuestionCard{
+  background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96))!important;
+  border-color:rgba(196,160,67,.34)!important;
+}
+[data-theme="dark"] #dailyQuestionText{
+  color:rgba(232,238,255,.8)!important;
+}
+[data-theme="dark"] #dailyQuestionCard [style*="rgba(255,255,255,.62)"]{
+  background:rgba(255,255,255,.06)!important;
+  border-color:rgba(196,160,67,.28)!important;
+  color:rgba(232,238,255,.78)!important;
+}
 [data-theme="light"] .ryuha-note{color:#3a2a10!important;}
 [data-theme="light"] .kyo-header{color:rgba(50,50,70,.75)!important;}
 [data-theme="light"] .kyo-dir{color:rgba(50,50,70,.7)!important;}
