@@ -402,6 +402,10 @@ footer .footer-contact{
   display:block;margin-top:10px;font-size:.58rem;letter-spacing:.08em;line-height:1.8;
 }
 footer .footer-contact a{color:inherit;text-decoration:none;}
+footer .footer-mail{
+  border:none;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;
+  padding:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer;
+}
 [data-theme="light"] footer .disclaimer{
   color:rgba(50,34,10,.72);
 }
@@ -1572,7 +1576,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div class="launch-sub">天地統合コンシェルジュ</div>
   </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="footer-contact">© KITOKU @ JOURNEY<br><a href="mailto:kitoku@journey6112.jp">kitoku@journey6112.jp</a></span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="footer-contact">© KITOKU @ JOURNEY<br><button class="footer-mail" onclick="copyContactEmail(event)" type="button">kitoku@journey6112.jp</button></span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
 </div>
 
 <!-- ══ 結果画面 ══ -->
@@ -1983,7 +1987,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <button class="deepen-btn" onclick="switchMainTab('vessel')">✦ 命の器タブへ</button>
   </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="footer-contact">© KITOKU @ JOURNEY<br><a href="mailto:kitoku@journey6112.jp">kitoku@journey6112.jp</a></span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="footer-contact">© KITOKU @ JOURNEY<br><button class="footer-mail" onclick="copyContactEmail(event)" type="button">kitoku@journey6112.jp</button></span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
   </div><!-- /tab-compass-content -->
 
   <!-- 命の器タブ -->
@@ -2065,7 +2069,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </div>
 
-  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="footer-contact">© KITOKU @ JOURNEY<br><a href="mailto:kitoku@journey6112.jp">kitoku@journey6112.jp</a></span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
+  <footer>KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<span class="footer-contact">© KITOKU @ JOURNEY<br><button class="footer-mail" onclick="copyContactEmail(event)" type="button">kitoku@journey6112.jp</button></span><span class="disclaimer">本アプリの情報はあくまで参考です。利用によって生じたいかなる損害についても当方は責任を負いかねます。最終的な判断はご自身でお願いします。本アプリをご利用いただいた時点で上記をご承諾いただいたものとします。</span></footer>
   </div><!-- /tab-vessel-content -->
 
 </div><!-- /screenResult -->
@@ -3836,6 +3840,19 @@ ${text}
     const old=btn.textContent;
     btn.textContent='✅ コピーしました';
     setTimeout(()=>btn.textContent=old,1600);
+  });
+}
+function copyContactEmail(event){
+  if(event)event.preventDefault();
+  const email='kitoku@journey6112.jp';
+  navigator.clipboard.writeText(email).then(()=>{
+    if(!event||!event.currentTarget)return;
+    const btn=event.currentTarget;
+    const old=btn.textContent;
+    btn.textContent='メールアドレスをコピーしました';
+    setTimeout(()=>{btn.textContent=old;},1600);
+  }).catch(()=>{
+    window.prompt('メールアドレスをコピーしてください',email);
   });
 }
 renderDailyQuestion();
