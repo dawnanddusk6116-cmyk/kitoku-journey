@@ -94,6 +94,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .tb-btn.active{background:rgba(196,160,67,.25);border-color:rgba(196,160,67,.6);color:var(--goldlt);}
 [data-theme="dark"] .app-header,[data-theme="dark"] .hdr{background:var(--bg);border-bottom-color:var(--rim);}
 [data-theme="dark"] .card{background:var(--card);border-color:var(--rim);}
+[data-theme="dark"] .color-swatch{border:1px solid rgba(212,175,55,.22);}
 [data-theme="dark"] .scent-use-card{background:rgba(255,255,255,.055);border-color:rgba(212,175,55,.18);}
 [data-theme="dark"] .scent-use-text{color:rgba(232,238,255,.76);}
 [data-theme="dark"] .scent-how{background:rgba(255,255,255,.04);color:rgba(232,238,255,.72);}
@@ -417,8 +418,13 @@ function drawColor(honmei){
   // スウォッチ（グラデーション）
   const grad=`linear-gradient(135deg, ${cols.join(', ')})`;
   const sw=document.getElementById('colorSwatch');
+  const isDark=document.documentElement.dataset.theme==='dark';
   sw.style.background=grad;
-  sw.style.color='rgba(255,255,255,0.9)';
+  sw.style.color=isDark?'rgba(255,255,255,.92)':'#5c4010';
+  sw.style.textShadow=isDark?'0 1px 8px rgba(0,0,0,.45)':'0 1px 0 rgba(255,255,255,.35)';
+  sw.style.boxShadow=isDark
+    ? 'inset 0 0 0 999px rgba(10,12,24,.28)'
+    : 'inset 0 0 0 999px rgba(255,255,255,.16)';
   sw.textContent=s.colorName||'—';
   document.getElementById('colorFashion').textContent=s.fashion||'—';
   document.getElementById('colorItem').textContent=s.items||'—';
@@ -574,6 +580,7 @@ function setTheme(t){
   document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);
   try{localStorage.setItem('kitoku-theme',t);}catch(e){}
   ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+  if(document.getElementById('colorSwatch'))drawColor(gStar.honmei);
 }
 function setFontSize(s){
   const m={s:'15px',m:'17px',l:'19px'};
