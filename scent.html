@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>香りAI先生 | KITOKU</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--rose:#c75d7a;--green:#2f8a60;--r:14px;}
@@ -59,9 +66,11 @@ textarea{min-height:86px;resize:vertical;}
 .btn.secondary{background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);}
 .link-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
 .link-row.resources{grid-template-columns:1fr 1fr 1fr;margin-top:8px;}
+.link-row.single{grid-template-columns:1fr;margin-top:8px;}
 .link-btn{display:block;text-align:center;text-decoration:none;border-radius:9px;padding:10px 8px;font-size:.68rem;font-weight:800;line-height:1.5;border:1px solid;}
 .link-btn.revenue{background:rgba(220,140,160,.08);border-color:rgba(220,140,160,.35);color:#b14a68;}
 .link-btn.ref{background:rgba(196,160,67,.08);border-color:rgba(196,160,67,.3);color:var(--goldlt);}
+.link-btn.coen{background:rgba(92,64,16,.06);border-color:rgba(92,64,16,.24);color:var(--goldlt);}
 .link-btn.resource{background:rgba(120,96,60,.045);border-color:rgba(120,96,60,.18);color:var(--snow);font-size:.62rem;}
 .note{font-size:.6rem;color:var(--mist);line-height:1.8;text-align:center;margin-top:8px;}
 .field textarea[id$="Text"],#freeText{background:linear-gradient(135deg,rgba(255,226,140,.2),rgba(255,255,255,.72));border-color:rgba(184,128,20,.42);}
@@ -221,6 +230,9 @@ textarea{min-height:86px;resize:vertical;}
     <div class="link-row">
       <a class="link-btn revenue" href="https://px.a8.net/svt/ejp?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" target="_blank" rel="nofollow sponsored noopener">カラリアで探す<br><span style="font-size:.58rem;opacity:.75;">香りを試す</span></a>
       <a class="link-btn ref" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<br><span style="font-size:.58rem;opacity:.75;">参考リンク</span></a>
+    </div>
+    <div class="link-row single">
+      <a class="link-btn coen" href="https://coen-fragrance.com?afid=kitokujourney&token=OLflEHlAOlo" target="_blank" rel="nofollow sponsored noopener">Coénで王道ブランドを少量から探す<br><span style="font-size:.58rem;opacity:.75;">参考リンク</span></a>
     </div>
     <div class="link-row resources">
       <a class="link-btn resource" href="https://www.aoyamaflowermarket.com/item/510112.html" target="_blank" rel="noopener">青山フラワー<br><span style="font-size:.54rem;opacity:.72;">花の香り</span></a>
@@ -389,6 +401,7 @@ ${free||'（苦手な香り、予算、使いたい場面、Celesで少量から
 【参考にしてよい香りの入口】
 ・カラリア：香りを試しながら探す
 ・Celes：少量から試せる香水を探す
+・Coén：王道ブランドを少量から試す
 ・青山フラワーマーケット：花の香り、手頃なオードトワレ
 ・From COCORO：和の香り、浄化や空間の香り
 ・NOSE SHOP：個性的な香り、ストーリー性のある香水
