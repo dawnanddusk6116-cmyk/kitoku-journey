@@ -48,10 +48,12 @@ textarea{min-height:86px;resize:vertical;}
 .howto-title{font-size:.82rem;color:var(--goldlt);font-weight:800;letter-spacing:.06em;margin-bottom:8px;}
 .howto-steps{display:grid;gap:7px;}
 .howto-step{display:flex;gap:9px;align-items:flex-start;font-size:.68rem;color:var(--mist);line-height:1.7;}
-.howto-num{width:20px;height:20px;border-radius:50%;background:rgba(196,160,67,.16);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;}
+.howto-num{width:24px;height:24px;border-radius:50%;background:rgba(196,160,67,.22);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;flex-shrink:0;border:1px solid rgba(196,160,67,.36);}
 .prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;margin-bottom:12px;}
 .prompt-title{font-size:.82rem;color:var(--goldlt);font-weight:800;margin-bottom:8px;}
 .prompt-box{background:rgba(100,80,40,.04);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;white-space:pre-wrap;max-height:360px;overflow:auto;}
+.write-zone{display:block;background:linear-gradient(135deg,rgba(255,226,140,.35),rgba(255,255,255,.58));border:1px dashed rgba(184,128,20,.55);border-radius:9px;padding:9px 10px;margin:6px 0;color:var(--goldlt);font-weight:800;}
+.write-zone::before{content:'ここを書き足す欄';display:block;font-size:.58rem;letter-spacing:.12em;color:#a06d12;margin-bottom:4px;}
 .btn{width:100%;border:none;border-radius:9px;padding:11px 12px;font-family:'Noto Serif JP',serif;font-size:.76rem;letter-spacing:.06em;cursor:pointer;margin-top:9px;}
 .btn.primary{background:var(--goldlt);color:#fff;}
 .btn.secondary{background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);}
@@ -62,6 +64,7 @@ textarea{min-height:86px;resize:vertical;}
 .link-btn.ref{background:rgba(196,160,67,.08);border-color:rgba(196,160,67,.3);color:var(--goldlt);}
 .link-btn.resource{background:rgba(120,96,60,.045);border-color:rgba(120,96,60,.18);color:var(--snow);font-size:.62rem;}
 .note{font-size:.6rem;color:var(--mist);line-height:1.8;text-align:center;margin-top:8px;}
+.field textarea[id$="Text"],#freeText{background:linear-gradient(135deg,rgba(255,226,140,.2),rgba(255,255,255,.72));border-color:rgba(184,128,20,.42);}
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:22px 16px 38px;opacity:.72;line-height:1.8;}
 [data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
 [data-theme="dark"] .hdr{background:var(--bg);}
@@ -107,9 +110,9 @@ textarea{min-height:86px;resize:vertical;}
 <div class="howto-card">
   <div class="howto-title">この画面の使い方</div>
   <div class="howto-steps">
-    <div class="howto-step"><div class="howto-num">1</div><div>相談モードを選びます。自分用・手持ち香水・会う人・贈り物から選べます。</div></div>
-    <div class="howto-step"><div class="howto-num">2</div><div>シーン、気分、香りの出方、相手の九星を選びます。わからないところは空欄で大丈夫です。</div></div>
-    <div class="howto-step"><div class="howto-num">3</div><div>できた相談文をコピーして、ChatGPT・Claude・Gemini・NotebookLMなどに貼り付けます。</div></div>
+    <div class="howto-step"><div class="howto-num">1</div><div><strong>相談モードを選ぶ</strong><br>自分用・手持ち香水・会う人・贈り物から選べます。</div></div>
+    <div class="howto-step"><div class="howto-num">2</div><div><strong>条件を選ぶ・書き足す</strong><br>シーン、気分、香りの出方を選び、黄色い欄に補足を書きます。</div></div>
+    <div class="howto-step"><div class="howto-num">3</div><div><strong>AIに渡す相談文を使う</strong><br>できた相談文をコピーして、ChatGPT・Claude・Gemini・NotebookLMなどに貼り付けます。</div></div>
   </div>
 </div>
 
@@ -405,7 +408,15 @@ ${free||'（苦手な香り、予算、使いたい場面、Celesで少量から
 商品名・価格・在庫・発売日は変わるため、断定しすぎず、購入前に公式ページで確認する前提で提案してください。
 高いものだけを良いとせず、100円から始められるLowの選択肢も必ず入れてください。`;
 
-  document.getElementById('promptBox').textContent=body;
+  setPromptBox(body);
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function setPromptBox(text){
+  const html=escapeHtml(text).replace(/（ここに[^）]+）/g,m=>`<span class="write-zone">${m}</span>`);
+  document.getElementById('promptBox').innerHTML=html;
 }
 
 function copyPrompt(){

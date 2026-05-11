@@ -1469,6 +1469,17 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
   </div>
 
+  <div id="dailyQuestionCard" style="margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.16),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.38);border-radius:14px;padding:15px 16px;">
+    <div style="font-size:.58rem;letter-spacing:.18em;color:var(--goldlt);font-weight:800;margin-bottom:7px;">TODAY'S QUESTION</div>
+    <div style="font-size:.95rem;color:var(--goldlt);font-weight:800;font-family:'Noto Serif JP',serif;margin-bottom:6px;">今日の問い</div>
+    <div id="dailyQuestionText" style="font-size:.72rem;color:var(--mist);line-height:1.9;">生年月日を登録すると、今日のあなたに合わせた問いが表示されます。</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px;">
+      <button id="dailyQuestionCopyBtn" onclick="copyDailyQuestion(event)" style="width:100%;background:rgba(92,64,16,.92);color:#fff;border:none;border-radius:9px;padding:10px 9px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.04em;">📋 AIに聞く</button>
+      <button onclick="window.location.href='today.html'" style="width:100%;background:rgba(255,255,255,.72);color:var(--goldlt);border:1px solid rgba(138,104,32,.28);border-radius:9px;padding:10px 9px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.04em;">🌸 整え方を見る</button>
+    </div>
+    <button onclick="window.location.href='scent.html'" style="width:100%;margin-top:8px;background:linear-gradient(135deg,rgba(220,140,160,.14),rgba(255,255,255,.72));color:#b14a68;border:1px solid rgba(220,140,160,.34);border-radius:9px;padding:10px 12px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.04em;">🧴 香りAI先生で今日の香りを相談する</button>
+  </div>
+
   <!-- ② 6つのボタン -->
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
 
@@ -3722,6 +3733,88 @@ const TODAY_WORDS=[
   const dayIdx=(today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate())%TODAY_WORDS.length;
   el.textContent=TODAY_WORDS[dayIdx];
 })();
+
+const DAILY_QUESTIONS={
+  1:{color:'黒・紺・白',food:'温かい汁物、海藻、発酵食品',scent:'透明感のある水・石けん・白檀',q:'今日は、ひとりで静かに考える時間をどこに作りますか？'},
+  2:{color:'黄・茶・赤',food:'根菜、米、味噌、甘みのあるもの',scent:'土・木・ミルク感のある穏やかな香り',q:'今日は、誰かを支える前に、自分の土台をどう整えますか？'},
+  3:{color:'青・水色・紺',food:'柑橘、青菜、酸味のあるもの',scent:'ミント、柑橘、若葉の香り',q:'今日は、小さくてもよいので何を一つ始めますか？'},
+  4:{color:'緑・淡い青・花の色',food:'ハーブ、葉物、軽い麺類',scent:'花、風、グリーンティーのような香り',q:'今日は、誰との言葉をやわらかく整えますか？'},
+  5:{color:'黄・金・深い茶',food:'土鍋料理、発酵食品、中心を温めるもの',scent:'スパイス、樹脂、重心のある香り',q:'今日は、不要なものを一つ手放すなら何ですか？'},
+  6:{color:'白・金・銀',food:'辛味、白い食材、上質な一品',scent:'シトラス、アイリス、清潔感のある香り',q:'今日は、完璧を目指す前に、何を一つ軽くできますか？'},
+  7:{color:'ピンク・金・白',food:'鶏肉、卵、甘み、楽しい食事',scent:'果実、ローズ、やわらかい甘さ',q:'今日は、どんな小さな喜びを人と分かち合いますか？'},
+  8:{color:'白・ベージュ・山の色',food:'豆、芋、保存食、温かいもの',scent:'木、石、落ち着いたウッディ',q:'今日は、止めること・続けることを一つずつ選ぶなら何ですか？'},
+  9:{color:'赤・紫・緑',food:'彩りのあるもの、苦味、香味野菜',scent:'花、スパイス、明るい火の香り',q:'今日は、曖昧にしていた本音をどんな言葉で照らしますか？'}
+};
+function getSeasonHint(d){
+  const m=d.getMonth()+1, day=d.getDate();
+  if((m===5&&day>=5)||(m===6&&day<5))return '立夏の頃。夏の気が立ち上がる時期です。無理に急がず、光を浴びて体を少し起こしましょう。';
+  if((m===6&&day>=5)||(m===7&&day<7))return '芒種の頃。種をまき、育てる準備の時期です。小さな習慣を始めるのに向いています。';
+  if((m===7&&day>=7)||(m===8&&day<7))return '小暑から大暑の頃。熱が強まる時期です。水分と休息を意識してください。';
+  if((m===8&&day>=7)||(m===9&&day<7))return '立秋の頃。少しずつ整え直す時期です。余白を作ることが次の流れを呼びます。';
+  if((m===9&&day>=7)||(m===10&&day<8))return '白露から秋分の頃。実りを確かめる時期です。大切なものを選び直しましょう。';
+  if((m===10&&day>=8)||(m===11&&day<7))return '寒露から霜降の頃。内側を静かに整える時期です。温かい言葉と食を選びましょう。';
+  if((m===11&&day>=7)||(m===12&&day<7))return '立冬の頃。守りを固める時期です。無理に広げず、足元を温めてください。';
+  if((m===12&&day>=7)||(m===1&&day<6))return '大雪から冬至の頃。静けさの中で力を蓄える時期です。休むことも前進です。';
+  if((m===1&&day>=6)||(m===2&&day<4))return '小寒から大寒の頃。深く整える時期です。焦らず、芯を温めましょう。';
+  if((m===2&&day>=4)||(m===3&&day<5))return '立春の頃。新しい気が始まる時期です。小さな一歩を丁寧に選びましょう。';
+  if((m===3&&day>=5)||(m===4&&day<5))return '啓蟄から春分の頃。動き出す力が増える時期です。言葉にすることで流れが生まれます。';
+  return '清明から穀雨の頃。育つものを大切にする時期です。焦らず、日々の水やりを続けましょう。';
+}
+function getSavedHonmei(){
+  const b=localStorage.getItem('kitoku-birth');
+  if(!b)return null;
+  const [y,m,d]=b.split('-').map(Number);
+  if(!y||!m||!d)return null;
+  const kd=getKD(y,m,d);
+  return calcHonmei(kd.kY);
+}
+function renderDailyQuestion(){
+  const el=document.getElementById('dailyQuestionText');
+  if(!el)return;
+  const h=getSavedHonmei();
+  const today=new Date();
+  const info=h?DAILY_QUESTIONS[h]:null;
+  if(!info){
+    el.textContent='生年月日を登録すると、今日のあなたに合わせた問い・色・香り・食のヒントが表示されます。';
+    return;
+  }
+  const star=STARS[h]?.j||'あなたの星';
+  const text=`${getSeasonHint(today)}
+
+${star}の今日の問い：
+${info.q}
+
+今日の整え方：
+色：${info.color}
+香り：${info.scent}
+食：${info.food}
+
+この問いをAIに貼ると、今日の過ごし方をあなた向けに深掘りできます。`;
+  el.textContent=text;
+}
+function copyDailyQuestion(e){
+  e&&e.stopPropagation();
+  const text=document.getElementById('dailyQuestionText')?.textContent||'';
+  const prompt=`あなたはKITOKUのAI相談相手です。
+以下の「今日の問い」をもとに、私が今日をどう過ごすと整いやすいかを、押し付けず、やさしく具体的に教えてください。
+
+${text}
+
+次の形で答えてください。
+1. 今日の私にとって大切なテーマ
+2. 今日やるとよい小さな一手
+3. 避けた方がよいこと
+4. 色・香り・食の取り入れ方
+5. 最後に、今日の合言葉を一言`;
+  navigator.clipboard.writeText(prompt).then(()=>{
+    const btn=document.getElementById('dailyQuestionCopyBtn');
+    if(!btn)return;
+    const old=btn.textContent;
+    btn.textContent='✅ コピーしました';
+    setTimeout(()=>btn.textContent=old,1600);
+  });
+}
+renderDailyQuestion();
 function switchMainTab(tab){
   const isCompass=tab==='compass';
   document.getElementById('tab-compass-content').style.display=isCompass?'block':'none';

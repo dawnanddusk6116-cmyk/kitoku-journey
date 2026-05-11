@@ -71,6 +71,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .prompt-body{display:none;padding:0 14px 14px;}
 .prompt-body.open{display:block;}
 .prompt-text{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;margin-bottom:10px;white-space:pre-wrap;}
+.replace-zone{display:block;background:linear-gradient(135deg,rgba(255,226,140,.36),rgba(255,255,255,.56));border:1px dashed rgba(184,128,20,.58);border-radius:10px;padding:10px 11px;margin:8px 0;color:var(--goldlt);font-weight:800;}
+.replace-zone::before{content:'ここを自分の言葉に書き換える';display:block;font-size:.58rem;letter-spacing:.12em;color:#a06d12;margin-bottom:5px;}
 .write-guide{background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.42);border-radius:10px;padding:11px 12px;margin-bottom:10px;}
 .write-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:5px;}
 .write-guide-text{font-size:.66rem;color:var(--mist);line-height:1.85;}
@@ -501,6 +503,15 @@ function updateTargetInfo(){
   if(gInfo&&gInfo.honmei)buildPrompts(gInfo);
 }
 
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function renderPromptText(id,text){
+  const html=escapeHtml(text)
+    .replace(/＝＝＝＝ここを書き換えてください＝＝＝＝\n([\s\S]*?)\n＝＝＝＝ここまで＝＝＝＝/g,(m,inner)=>`<span class="replace-zone">${inner}</span>`);
+  document.getElementById(id).innerHTML=html;
+}
+
 function buildPrompts(info){
   const base=buildStarText(info);
   const target=targetPromptText();
@@ -516,7 +527,7 @@ function buildPrompts(info){
 
 温かく、しかし正直に答えてください。`;
 
-  document.getElementById('qt2').textContent=
+  renderPromptText('qt2',
 `${base}
 ${target}
 
@@ -532,9 +543,9 @@ ${target}
 ・どちらの方向に動くべきか
 ・今動くべきか、待つべきか
 
-率直に教えてください。`;
+率直に教えてください。`);
 
-  document.getElementById('qt11').textContent=
+  renderPromptText('qt11',
 `${base}
 ${target}
 
@@ -579,7 +590,7 @@ ${target}
 
 【大切な姿勢】
 不安を煽らず、でも甘やかしすぎず、琥珀色の言葉で正直に導いてください。
-最後は「自分で選ぶための判断材料」としてまとめてください。`;
+最後は「自分で選ぶための判断材料」としてまとめてください。`);
 
   document.getElementById('qt3').textContent=
 `${base}
@@ -613,7 +624,7 @@ ${target}
 ・この納音を持つ人が才能を開花させる方法
 ・歴史上で同じ納音を持つ有名人がいれば教えてください`;
 
-  document.getElementById('qt6').textContent=
+  renderPromptText('qt6',
 `${base}
 ${target}
 
@@ -629,7 +640,7 @@ ${target}
 ・相手との関係を改善するための具体的な言葉・行動
 ・「手放した方がいい」か「もう少し続けるべき」か
 
-優しく、しかし的確に教えてください。`;
+優しく、しかし的確に教えてください。`);
 
   document.getElementById('qt7').textContent=
 `${base}
