@@ -50,6 +50,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .star-info-box{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;margin-bottom:8px;}
 .star-info-label{font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;}
 .star-info-text{font-size:.78rem;color:var(--snow);line-height:2.1;font-weight:500;}
+.star-mini-note{font-size:.62rem;color:var(--mist);line-height:1.8;margin-top:7px;}
 .copy-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:8px;padding:11px;font-size:.75rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;display:flex;align-items:center;justify-content:center;gap:6px;}
 .copy-btn:active{background:rgba(100,80,40,.16);}
 .target-box{background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.58));border:1px solid rgba(196,160,67,.25);border-radius:var(--r);padding:13px;margin-top:10px;}
@@ -59,6 +60,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .target-box label{display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:5px;}
 .target-box input,.target-box select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.62);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:9px;}
 .target-preview{font-size:.68rem;color:var(--snow);line-height:1.8;background:rgba(255,255,255,.44);border:1px dashed rgba(138,104,32,.3);border-radius:9px;padding:9px;margin-top:8px;}
+.link-map{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:13px;margin-top:10px;}
+.link-map-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:7px;}
+.link-map-text{font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:9px;}
+.link-map-grid{display:grid;gap:7px;}
+.link-map-item{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;background:rgba(100,80,40,.035);border:1px solid rgba(138,104,32,.16);border-radius:9px;padding:8px 9px;text-decoration:none;color:inherit;}
+.link-map-num{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(196,160,67,.15);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);font-size:.68rem;font-weight:900;}
+.link-map-name{font-size:.68rem;color:var(--snow);font-weight:800;margin-bottom:2px;}
+.link-map-desc{font-size:.58rem;color:var(--mist);line-height:1.55;}
+.link-map-arrow{font-size:.72rem;color:var(--goldlt);}
 
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
@@ -127,6 +137,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .lead-point,
 [data-theme="dark"] .cat-label,
 [data-theme="dark"] .target-box,
+[data-theme="dark"] .link-map,
 [data-theme="dark"] .write-guide,
 [data-theme="dark"] .value-guide{
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.045));
@@ -135,6 +146,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .lead-step,
 [data-theme="dark"] .write-guide-example,
 [data-theme="dark"] .value-guide-item,
+[data-theme="dark"] .link-map-item,
 [data-theme="dark"] .target-preview{
   background:rgba(255,255,255,.055);
   border-color:rgba(196,160,67,.22);
@@ -149,6 +161,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .write-guide-text,
 [data-theme="dark"] .value-guide-text,
 [data-theme="dark"] .value-guide-item,
+[data-theme="dark"] .star-mini-note,
+[data-theme="dark"] .link-map-text,
+[data-theme="dark"] .link-map-desc,
 [data-theme="dark"] .prompt-desc,
 [data-theme="dark"] .prompt-use-note,
 [data-theme="dark"] .target-desc{
@@ -244,13 +259,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="star-info-box">
     <div class="star-info-label">① あなたの星情報（自動生成）</div>
     <div class="star-info-text" id="starInfoText">生年月日を登録すると自動で表示されます</div>
+    <div class="star-mini-note">この星情報が、AIに聞くための基本データです。自分の強み・迷い・相性・仕事の相談文に自動で入ります。</div>
   </div>
   <button class="copy-btn" onclick="copyStarInfo()">
     <span>📋</span> 星情報だけをコピー（単体使用）
   </button>
   <div class="target-box">
-    <div class="target-title">相手の星も入れる（この画面だけ）</div>
-    <div class="target-desc">関係性・仕事・相談内容に相手の生年月日を一時的に加えます。保存はしません。</div>
+    <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
+    <div class="target-desc">相手の生年月日を入れると、人間関係・仕事・面談などの相談文に相手の星情報を一時的に加えられます。保存はしません。</div>
     <div class="target-grid">
       <div>
         <label>相手の名前・メモ</label>
@@ -269,6 +285,36 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <input id="targetBirth" type="date" onchange="updateTargetInfo()">
     </div>
     <div class="target-preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+  </div>
+  <div class="link-map">
+    <div class="link-map-title">③ ほかの画面とのつながり</div>
+    <div class="link-map-text">もっと詳しく見たい時は、目的に合わせて下の画面も使えます。AIに聞く画面は、それらの結果を相談文に変える入口です。</div>
+    <div class="link-map-grid">
+      <a class="link-map-item" href="kyusei_v2.html">
+        <span class="link-map-num">星</span>
+        <span>
+          <span class="link-map-name">九星を知る</span>
+          <span class="link-map-desc">本命星・月命・傾斜・同会・納音と、西洋星読みクロスチェック</span>
+        </span>
+        <span class="link-map-arrow">›</span>
+      </a>
+      <a class="link-map-item" href="relations.html">
+        <span class="link-map-num">縁</span>
+        <span>
+          <span class="link-map-name">KITOKU @ RELATIONS</span>
+          <span class="link-map-desc">家族・友人・恋愛・職場など、人間関係を深く見る</span>
+        </span>
+        <span class="link-map-arrow">›</span>
+      </a>
+      <a class="link-map-item" href="business.html">
+        <span class="link-map-num">仕</span>
+        <span>
+          <span class="link-map-name">KITOKU for BUSINESS</span>
+          <span class="link-map-desc">採用・面談・育成・候補者理解を仕事用に整理する</span>
+        </span>
+        <span class="link-map-arrow">›</span>
+      </a>
+    </div>
   </div>
 </div>
 
