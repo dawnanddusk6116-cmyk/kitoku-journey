@@ -1384,9 +1384,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <div style="display:grid;gap:10px;font-size:.74rem;color:var(--mist);line-height:1.8;">
           <div><strong style="color:var(--goldlt);">九星を知る</strong><br>本命星・月命星・傾斜・同会・納音から、自分の性質と人生の舞台を知ります。</div>
           <div><strong style="color:var(--goldlt);">吉方位を知る</strong><br>今日・今月の方位盤を見て、行く方向や注意する方向を判断材料にします。</div>
-          <div><strong style="color:var(--goldlt);">香り・色・食を知る</strong><br>今日の星に合わせて、香り・色・食で自分と場を整える小さな行動を選びます。</div>
-          <div><strong style="color:var(--goldlt);">香りAI先生</strong><br>手持ち香水・会う人・場面から、香りの使い分けをAIに相談します。</div>
-          <div><strong style="color:var(--goldlt);">気学 × AI</strong><br>星の情報をAIに渡せる形に整え、悩みや問いを深く整理します。</div>
+          <div><strong style="color:var(--goldlt);">今日を整える</strong><br>今日の星に合わせて、色・香り・小さな行動で一日を整えます。</div>
+          <div><strong style="color:var(--goldlt);">香り × AI</strong><br>香りについて、気学とAIで深く掘り下げます。手持ち香水・会う人・場面にも対応します。</div>
+          <div><strong style="color:var(--goldlt);">気学 × AI</strong><br>気学とAIを使って、悩みを整理し、自分の人生を創造する相談文を作ります。</div>
           <div><strong style="color:var(--goldlt);">KITOKU @ RELATIONS</strong><br>大切な人との違いを責めず、相性・納音・関係の調律として読み解きます。</div>
           <div><strong style="color:var(--goldlt);">KITOKU for BUSINESS</strong><br>候補者を理解し、面談の質を上げ、育成の視点を持つための補助資料を作ります。</div>
         </div>
@@ -1554,8 +1554,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <button id="dailyQuestionCopyBtn" onclick="copyDailyQuestion(event)" style="width:100%;margin-top:10px;background:rgba(92,64,16,.92);color:#fff;border:none;border-radius:9px;padding:12px 12px;font-size:.76rem;font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.06em;">📋 今日の問いをコピーしてAIに貼る</button>
     <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.64rem;line-height:1.7;">
-      <a href="today.html" style="color:#b14a68;text-decoration:none;font-weight:700;">🌸 色・香り・食を見る</a>
-      <a href="scent.html" style="color:#b14a68;text-decoration:none;font-weight:700;">🧴 香りAI先生へ</a>
+      <a href="today.html" style="color:#b14a68;text-decoration:none;font-weight:700;">🌸 今日を整える</a>
+      <a href="scent.html" style="color:#b14a68;text-decoration:none;font-weight:700;">🧴 香り × AIへ</a>
     </div>
   </div>
 
@@ -1574,17 +1574,17 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
     <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.6rem;width:40px;text-align:center;">🌸</div>
-      <div><div style="font-size:.9rem;color:#d4667a;font-weight:700;font-family:'Noto Serif JP',serif;">香り・色・食を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">今日の星に合った香り・色・食を表示<br>五感で運気を整える処方箋がもらえる</div></div>
+      <div><div style="font-size:.9rem;color:#d4667a;font-weight:700;font-family:'Noto Serif JP',serif;">今日を整える</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">今日の星に合った色・香り・小さな行動<br>一日を整えるヒントがわかる</div></div>
     </button>
 
     <button onclick="window.location.href='scent.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.2),rgba(196,160,67,.06));border:1px solid rgba(220,140,160,.42);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.6rem;width:40px;text-align:center;">🧴</div>
-      <div><div style="font-size:.9rem;color:#c75d7a;font-weight:700;font-family:'Noto Serif JP',serif;">香りAI先生</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">手持ち香水・会う人・場面から<br>香りの使い分けをAIに相談できる</div></div>
+      <div><div style="font-size:.9rem;color:#c75d7a;font-weight:700;font-family:'Noto Serif JP',serif;">香り × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">香りについて気学とAIで深掘り<br>手持ち香水・会う人・場面から相談できる</div></div>
     </button>
 
     <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.6rem;width:40px;text-align:center;">🤖</div>
-      <div><div style="font-size:.9rem;color:#2a8a60;font-weight:700;font-family:'Noto Serif JP',serif;">気学 × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">星データをAIプロンプトに変換<br>ChatGPT・Claude等で深掘り相談できる</div></div>
+      <div><div style="font-size:.9rem;color:#2a8a60;font-weight:700;font-family:'Noto Serif JP',serif;">気学 × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">気学とAIで人生を創造する<br>悩みを整理し、次の一手を見つける</div></div>
     </button>
 
     <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
@@ -1660,21 +1660,21 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
     </button>
 
-    <!-- 🌸 香り・色・食を知る -->
+    <!-- 🌸 今日を整える -->
     <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.8rem;width:44px;text-align:center;">🌸</div>
       <div>
-        <div style="font-size:.95rem;color:#d4667a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香り・色・食を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日の星に合った香り・色・食を表示<br>五感で運気を整える処方箋がもらえる</div>
+        <div style="font-size:.95rem;color:#d4667a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">今日を整える</div>
+        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日の星に合った色・香り・小さな行動<br>一日を整えるヒントがわかる</div>
       </div>
     </button>
 
-    <!-- 🧴 香りAI先生 -->
+    <!-- 🧴 香り × AI -->
     <button onclick="window.location.href='scent.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.2),rgba(196,160,67,.06));border:1px solid rgba(220,140,160,.42);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.8rem;width:44px;text-align:center;">🧴</div>
       <div>
-        <div style="font-size:.95rem;color:#c75d7a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香りAI先生</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">手持ち香水・会う人・場面から<br>香りの使い分けをAIに相談できる</div>
+        <div style="font-size:.95rem;color:#c75d7a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香り × AI</div>
+        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">香りについて気学とAIで深掘り<br>手持ち香水・会う人・場面から相談できる</div>
       </div>
     </button>
 
@@ -1683,7 +1683,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <div style="font-size:1.8rem;width:44px;text-align:center;">🤖</div>
       <div>
         <div style="font-size:.95rem;color:#2a8a60;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">気学 × AI</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">星データをAIプロンプトに変換<br>ChatGPT・Claude等で深掘り相談できる</div>
+        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">気学とAIで人生を創造する<br>悩みを整理し、次の一手を見つける</div>
       </div>
     </button>
 
