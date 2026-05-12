@@ -32,6 +32,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-step{background:rgba(100,80,40,.05);border:1px solid var(--rim);border-radius:8px;padding:8px 6px;text-align:center;}
 .lead-step-num{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1rem;line-height:1;}
 .lead-step-text{font-size:.58rem;color:var(--mist);line-height:1.5;margin-top:3px;}
+.lead-step-note{margin-top:10px;background:linear-gradient(135deg,rgba(255,226,140,.28),rgba(255,255,255,.55));border:1px dashed rgba(184,128,20,.42);border-radius:9px;padding:9px 10px;font-size:.66rem;color:var(--goldlt);line-height:1.85;font-weight:700;}
 
 /* AI使い分けガイド */
 .guide{margin:14px 0;background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;}
@@ -61,8 +62,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
-.cat-label{font-size:.6rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.cat-label{font-size:.6rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 .cat-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.cat-label-main{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.cat-title{font-size:.66rem;letter-spacing:.14em;color:var(--gold);font-weight:900;}
+.cat-hint{font-size:.58rem;letter-spacing:0;color:var(--mist);font-weight:500;line-height:1.55;}
 
 /* プロンプトカード */
 .prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:all .15s;}
@@ -123,6 +127,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .target-preview{
   background:rgba(255,255,255,.055);
   border-color:rgba(196,160,67,.22);
+}
+[data-theme="dark"] .lead-step-note{
+  background:linear-gradient(135deg,rgba(196,160,67,.16),rgba(255,255,255,.055));
+  border-color:rgba(196,160,67,.42);
+  color:var(--goldlt);
 }
 [data-theme="dark"] .lead-text,
 [data-theme="dark"] .lead-point-text,
@@ -185,12 +194,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
     <div class="lead-point">
       <div class="lead-point-title">使い方は3ステップ</div>
-      <div class="lead-point-text">気になるテーマを開き、相談したいことを書き足して、いつも使っているAIに送ってください。</div>
+      <div class="lead-point-text">この画面は「AIに聞くための相談文」を作る場所です。答えはこの画面ではなく、ChatGPT・Claude・Gemini・NotebookLMなどに貼り付けて聞きます。</div>
       <div class="lead-steps">
-        <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">テーマを選ぶ</div></div>
-        <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">悩みを書く</div></div>
-        <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">AIと話す</div></div>
+        <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">下からテーマを開く</div></div>
+        <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">黄色い欄を書き換える</div></div>
+        <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">コピーしてAIへ貼る</div></div>
       </div>
+      <div class="lead-step-note">最後に「コピーして貼り付ける」ボタンを押す → いつも使っているAIアプリを開く → 入力欄に貼り付ける → 送信する、という流れです。</div>
     </div>
 
     <!-- AI使い分けガイド -->
@@ -251,7 +261,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 <!-- カテゴリ：今日・今この瞬間 -->
 <div class="cat">
-  <div class="cat-label">🌅 今日・今この瞬間</div>
+  <div class="cat-label">
+    <div class="cat-label-main">
+      <div class="cat-title">🌅 今日・今この瞬間</div>
+      <div class="cat-hint">今日の過ごし方・迷っている決断・今すぐ整理したいこと</div>
+    </div>
+  </div>
 
   <div class="prompt-card" onclick="togglePrompt(this,'q1')">
     <div class="prompt-head">
@@ -312,7 +327,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 <!-- カテゴリ：自分を知る -->
 <div class="cat">
-  <div class="cat-label">🪞 自分を知る</div>
+  <div class="cat-label">
+    <div class="cat-label-main">
+      <div class="cat-title">🪞 自分を知る</div>
+      <div class="cat-hint">強み・才能・うまくいかない理由・魂の音色を知る</div>
+    </div>
+  </div>
 
   <div class="prompt-card" onclick="togglePrompt(this,'q3')">
     <div class="prompt-head">
@@ -363,7 +383,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 <!-- カテゴリ：人間関係・仕事 -->
 <div class="cat">
-  <div class="cat-label">🤝 人間関係・仕事</div>
+  <div class="cat-label">
+    <div class="cat-label-main">
+      <div class="cat-title">🤝 人間関係・仕事</div>
+      <div class="cat-hint">家族・職場・友人・仕事やキャリアの悩みを整理する</div>
+    </div>
+  </div>
 
   <div class="prompt-card" onclick="togglePrompt(this,'q6')">
     <div class="prompt-head">
@@ -404,7 +429,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 <!-- カテゴリ：健康・お金・未来 -->
 <div class="cat">
-  <div class="cat-label">🌱 健康・お金・未来</div>
+  <div class="cat-label">
+    <div class="cat-label-main">
+      <div class="cat-title">🌱 健康・お金・未来</div>
+      <div class="cat-hint">体調・金運・これから5年の流れを相談する</div>
+    </div>
+  </div>
 
   <div class="prompt-card" onclick="togglePrompt(this,'q8')">
     <div class="prompt-head">
