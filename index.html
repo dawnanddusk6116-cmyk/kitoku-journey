@@ -1473,23 +1473,24 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
   <div class="trial-card">
     <div class="trial-kicker">FIRST 3 MINUTES</div>
-    <div class="trial-title">まずは3分、体験してください</div>
-    <div class="trial-text">生年月日を入れるだけで、あなたの星・吉方位・AIに聞ける相談文が開きます。難しい知識はあとからで大丈夫です。</div>
+    <div class="trial-title">初めての方は、まず九星を見てください</div>
+    <div class="trial-text">生年月日を入れるだけで、あなたの九星・納音・KITOKUレポートが開きます。そこからAI相談、香り、関係性、仕事の読み解きへ進めます。</div>
     <div class="trial-steps">
       <div class="trial-step">
         <div class="trial-step-num">1</div>
-        <div class="trial-step-text">星を知る</div>
+        <div class="trial-step-text">九星を見る</div>
       </div>
       <div class="trial-step">
         <div class="trial-step-num">2</div>
-        <div class="trial-step-text">吉方位を見る</div>
+        <div class="trial-step-text">レポートを読む</div>
       </div>
       <div class="trial-step">
         <div class="trial-step-num">3</div>
-        <div class="trial-step-text">AIに聞く</div>
+        <div class="trial-step-text">AIで深める</div>
       </div>
     </div>
-    <div class="trial-note">下のボタンから、まずは「九星を知る」「吉方位を知る」「気学 × AI」のどれか一つを開いてみてください。</div>
+    <button class="trial-btn" onclick="goToKyusei()">まず「九星を知る」から始める</button>
+    <div class="trial-note">九星のページには、あなた専用のKITOKUレポートと「次にできること」があります。迷ったら、まずここだけ開けば大丈夫です。</div>
   </div>
 
   <div class="trust-card">
@@ -1564,7 +1565,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
     <button onclick="goToKyusei()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.6rem;width:40px;text-align:center;">⭐</div>
-      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">九星を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">本命星・月命星・傾斜・同会・納音<br>あなたの宿命的な才能と人生の舞台がわかる</div></div>
+      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">九星を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">まずはここ。あなた専用レポートを読む<br>本命星・月命星・傾斜・同会・納音がわかる</div></div>
     </button>
 
     <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
