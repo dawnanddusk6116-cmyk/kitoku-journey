@@ -36,6 +36,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .mystar-cell-sub{font-size:.6rem;color:var(--mist);}
 .mystar-guide{font-size:.68rem;color:var(--mist);line-height:1.9;margin:-4px 0 14px;padding:10px 12px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;}
 .mystar-cell-tap{display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--goldlt);margin-top:7px;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);border-radius:999px;padding:3px 9px;font-weight:700;}
+.life-structure-btn{width:100%;display:flex;align-items:center;gap:12px;margin:-2px 0 14px;padding:12px;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.3);border-radius:12px;color:inherit;text-align:left;cursor:pointer;font-family:inherit;}
+.life-structure-btn:active{transform:scale(.99);}
+.life-structure-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.16);color:var(--goldlt);font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;flex-shrink:0;}
+.life-structure-title{font-size:.74rem;color:var(--goldlt);font-weight:800;margin-bottom:3px;letter-spacing:.04em;}
+.life-structure-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
+.life-structure-arrow{margin-left:auto;color:var(--gold);font-weight:800;font-size:.9rem;}
 .avatar-name{font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.04em;font-weight:700;}
 .avatar-jp{font-size:.58rem;color:var(--mist);margin-top:1px;}
 .kitoku-report{margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.7));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:14px;}
@@ -107,6 +113,23 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .modal-text{font-size:.8rem;color:var(--mist);line-height:2.1;}
 .modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
 .modal-tag{background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.2);border-radius:20px;padding:4px 12px;font-size:.65rem;color:var(--goldlt);}
+
+.life-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;padding:22px 14px;overflow-y:auto;}
+.life-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
+.life-sheet{width:100%;max-width:440px;background:var(--bg);border:1px solid var(--rim);border-radius:18px;padding:18px 16px 20px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;}
+.life-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid var(--rim);background:var(--card);color:var(--mist);font-size:1rem;cursor:pointer;}
+.life-kicker{font-size:.56rem;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.life-title{font-size:1rem;color:var(--goldlt);font-weight:800;line-height:1.5;margin-bottom:10px;}
+.life-img{width:100%;display:block;border-radius:12px;border:1px solid rgba(196,160,67,.22);background:#fff;margin-bottom:12px;}
+.life-lead{font-size:.68rem;color:var(--mist);line-height:1.9;margin-bottom:12px;}
+.life-layers{display:grid;gap:7px;margin-bottom:12px;}
+.life-layer{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:9px 10px;}
+.life-layer-title{font-size:.66rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
+.life-layer-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
+.life-note{font-size:.62rem;line-height:1.75;color:var(--goldlt);background:rgba(196,160,67,.1);border:1px dashed rgba(196,160,67,.34);border-radius:10px;padding:10px;}
+[data-theme="dark"] .life-structure-btn{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.035));border-color:rgba(196,160,67,.3);}
+[data-theme="dark"] .life-sheet{background:#12152a;border-color:rgba(212,175,55,.24);}
+[data-theme="dark"] .life-close,[data-theme="dark"] .life-layer{background:rgba(255,255,255,.045);border-color:rgba(212,175,55,.18);}
 
 /* noData */
 .no-data{text-align:center;padding:60px 20px;color:var(--mist);}
@@ -199,6 +222,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="mystar-guide">
         本命星・月命星・傾斜・同会・納音は、自分を理解するための入口です。気になるカードやバッジをタップすると詳しい説明が開きます。
       </div>
+      <button class="life-structure-btn" type="button" onclick="openLifeStructureModal()">
+        <span class="life-structure-icon">5</span>
+        <span>
+          <span class="life-structure-title">5層の人生構造を見る</span>
+          <span class="life-structure-text">本命星・月命星・同会・傾斜・納音の関係が一枚でわかります。</span>
+        </span>
+        <span class="life-structure-arrow">›</span>
+      </button>
       <div class="mystar-grid">
         <div class="mystar-cell" id="cell-h" onclick="openModal('honmei')">
           <div class="mystar-cell-lbl">本命星 👆</div>
@@ -302,6 +333,25 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+
+<!-- 5層の人生構造モーダル -->
+<div class="life-overlay" id="lifeStructureOverlay" onclick="closeLifeStructureModal(event)">
+  <div class="life-sheet" onclick="event.stopPropagation()">
+    <button class="life-close" type="button" onclick="closeLifeStructureModal()">✕</button>
+    <div class="life-kicker">KITOKU MAP</div>
+    <div class="life-title">あなたを縛らず、理解するための「5層の人生構造」</div>
+    <img class="life-img" src="https://drive.google.com/thumbnail?id=1sGz1X0-5TT6YJ2y_fpNXQrdEGPnkblX0&sz=w900" alt="5層の人生構造">
+    <div class="life-lead">九星と納音は、性格を決めつけるものではありません。どの層が何を見ているのかを知ると、あなたの星情報がぐっと読みやすくなります。</div>
+    <div class="life-layers">
+      <div class="life-layer"><div class="life-layer-title">第1層：本命星</div><div class="life-layer-text">人生を動かす中心のエンジン。社会で出やすい核の力です。</div></div>
+      <div class="life-layer"><div class="life-layer-title">第2層：月命星</div><div class="life-layer-text">身体や幼少期の感覚。安心感や内側の反応を見ます。</div></div>
+      <div class="life-layer"><div class="life-layer-title">第3層：同会</div><div class="life-layer-text">人生の舞台。社会から求められやすい役割や縁の広がりです。</div></div>
+      <div class="life-layer"><div class="life-layer-title">第4層：傾斜</div><div class="life-layer-text">水面下の才能。自分では当たり前すぎて気づきにくい力です。</div></div>
+      <div class="life-layer"><div class="life-layer-title">第5層：納音</div><div class="life-layer-text">魂の音色。同じ九星でも、その人らしい響きや質感が変わります。</div></div>
+    </div>
+    <div class="life-note">これは「こう生きなさい」という命令ではなく、自分を知り、自分を愛し、自分で動くための地図です。</div>
+  </div>
+</div>
 
 <!-- モーダル -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
@@ -673,6 +723,22 @@ function openModal(type, n){
 function closeModal(e){
   if(!e||e.target===document.getElementById('modalOverlay')){
     document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+
+function openLifeStructureModal(){
+  const overlay = document.getElementById('lifeStructureOverlay');
+  if(!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeLifeStructureModal(e){
+  const overlay = document.getElementById('lifeStructureOverlay');
+  if(!overlay) return;
+  if(!e || e.target === overlay || e.currentTarget?.classList?.contains('life-close')){
+    overlay.classList.remove('open');
     document.body.style.overflow='';
   }
 }
