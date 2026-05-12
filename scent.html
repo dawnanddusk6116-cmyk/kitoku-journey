@@ -33,7 +33,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .star-label{font-size:.56rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:6px;}
 .star-text{font-size:.75rem;color:var(--snow);line-height:2;}
 .section{padding:4px 16px 0;}
-.sec-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin:8px 0 10px;}
+.sec-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin:8px 0 10px;display:flex;align-items:center;gap:7px;}
+.sec-num{width:24px;height:24px;border-radius:50%;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.36);color:var(--goldlt);display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;letter-spacing:0;flex-shrink:0;}
+.sec-label-text{letter-spacing:.16em;}
 .mode-grid{display:grid;gap:9px;}
 .mode-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:13px;display:flex;gap:11px;align-items:flex-start;cursor:pointer;transition:.15s;}
 .mode-card.active{border-color:rgba(220,140,160,.55);background:linear-gradient(135deg,rgba(220,140,160,.13),rgba(255,255,255,.72));box-shadow:0 8px 22px rgba(100,80,40,.06);}
@@ -171,7 +173,7 @@ textarea{min-height:86px;resize:vertical;}
 </div>
 
 <div class="section">
-  <div class="sec-label">✦ 相談モード</div>
+  <div class="sec-label"><span class="sec-num">1</span><span class="sec-label-text">相談モード</span></div>
   <div class="mode-grid">
     <div class="mode-card active" data-mode="self" onclick="selectMode('self')">
       <div class="mode-icon">🌸</div><div><div class="mode-title">自分の香りを選ぶ</div><div class="mode-desc">九星・気分・シーンから、High/Mid/Lowで香りを提案</div></div>
@@ -189,7 +191,7 @@ textarea{min-height:86px;resize:vertical;}
 </div>
 
 <div class="section">
-  <div class="sec-label">✦ 条件を選ぶ</div>
+  <div class="sec-label"><span class="sec-num">2</span><span class="sec-label-text">条件を選ぶ</span></div>
   <div class="form-card">
     <div class="field">
       <label>シーン</label>
@@ -266,7 +268,7 @@ textarea{min-height:86px;resize:vertical;}
 </div>
 
 <div class="section">
-  <div class="sec-label">✦ AIに渡す相談文</div>
+  <div class="sec-label"><span class="sec-num">3</span><span class="sec-label-text">AIに渡す相談文</span></div>
   <div class="prompt-card">
     <div class="prompt-title" id="promptTitle">香りAI先生への相談</div>
     <div class="prompt-box" id="promptBox">—</div>
