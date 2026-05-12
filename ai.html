@@ -62,10 +62,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
-.cat-label{font-size:.6rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.cat-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.cat-label{font-size:.6rem;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.42));border:1px solid rgba(196,160,67,.28);border-radius:12px;padding:11px 12px;}
+.cat-label::after{content:none;}
+.cat-number{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:900;line-height:1;}
 .cat-label-main{display:flex;flex-direction:column;gap:2px;min-width:0;}
-.cat-title{font-size:.66rem;letter-spacing:.14em;color:var(--gold);font-weight:900;}
+.cat-title{font-size:.78rem;letter-spacing:.06em;color:var(--goldlt);font-weight:900;line-height:1.45;}
 .cat-hint{font-size:.58rem;letter-spacing:0;color:var(--mist);font-weight:500;line-height:1.55;}
 
 /* プロンプトカード */
@@ -76,7 +77,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .prompt-head{display:flex;align-items:center;gap:10px;padding:14px;}
 .prompt-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;}
 .prompt-info{flex:1;}
-.prompt-title{font-size:.82rem;font-weight:700;margin-bottom:2px;}
+.prompt-title{font-size:.82rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.prompt-badge{display:inline-flex;align-items:center;border:1px solid rgba(196,160,67,.42);background:rgba(196,160,67,.13);color:var(--goldlt);border-radius:999px;padding:2px 7px;font-size:.55rem;font-weight:800;line-height:1.4;letter-spacing:.04em;}
 .prompt-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
 .prompt-arrow{font-size:.7rem;color:rgba(100,80,40,.3);}
 .prompt-body{display:none;padding:0 14px 14px;}
@@ -123,6 +125,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   border-color:rgba(196,160,67,.34);
 }
 [data-theme="dark"] .lead-point,
+[data-theme="dark"] .cat-label,
 [data-theme="dark"] .target-box,
 [data-theme="dark"] .write-guide,
 [data-theme="dark"] .value-guide{
@@ -272,8 +275,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- カテゴリ：今日・今この瞬間 -->
 <div class="cat">
   <div class="cat-label">
+    <div class="cat-number">1</div>
     <div class="cat-label-main">
-      <div class="cat-title">🌅 今日・今この瞬間</div>
+      <div class="cat-title">今日のことを相談する</div>
       <div class="cat-hint">今日の過ごし方・迷っている決断・今すぐ整理したいこと</div>
     </div>
   </div>
@@ -317,7 +321,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="prompt-head">
       <div class="prompt-icon">🧩</div>
       <div class="prompt-info">
-        <div class="prompt-title">AI軍師セッション</div>
+        <div class="prompt-title">AI軍師セッション <span class="prompt-badge">迷ったらここ</span></div>
         <div class="prompt-desc">ここに悩みを書き足すだけで、問い → 現状 → 理想 → 次の一手まで整理する</div>
       </div>
       <div class="prompt-arrow">›</div>
@@ -347,8 +351,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- カテゴリ：自分を知る -->
 <div class="cat">
   <div class="cat-label">
+    <div class="cat-number">2</div>
     <div class="cat-label-main">
-      <div class="cat-title">🪞 自分を知る</div>
+      <div class="cat-title">自分を知る</div>
       <div class="cat-hint">強み・才能・うまくいかない理由・魂の音色を知る</div>
     </div>
   </div>
@@ -403,8 +408,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- カテゴリ：人間関係・仕事 -->
 <div class="cat">
   <div class="cat-label">
+    <div class="cat-number">3</div>
     <div class="cat-label-main">
-      <div class="cat-title">🤝 人間関係・仕事</div>
+      <div class="cat-title">人間関係・仕事を整える</div>
       <div class="cat-hint">家族・職場・友人・仕事やキャリアの悩みを整理する</div>
     </div>
   </div>
@@ -449,8 +455,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- カテゴリ：健康・お金・未来 -->
 <div class="cat">
   <div class="cat-label">
+    <div class="cat-number">4</div>
     <div class="cat-label-main">
-      <div class="cat-title">🌱 健康・お金・未来</div>
+      <div class="cat-title">健康・お金・未来を見る</div>
       <div class="cat-hint">体調・金運・これから5年の流れを相談する</div>
     </div>
   </div>
