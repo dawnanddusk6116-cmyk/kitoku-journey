@@ -188,26 +188,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         <div class="scent-loading">シーンを選ぶと香りの提案が届きます</div>
       </div>
 
-      <!-- アフィリエイト枠（設計済み・公開準備中） -->
-      <div class="affiliate-row" id="affiliateRow" style="display:none;">
-        <div class="affiliate-btn celes" id="celesBtn">
-          <div class="affiliate-badge">準備中</div>
-          🌸 Celesで試せる<br>
-          <span style="font-size:.6rem;opacity:.7;">近日公開予定</span>
-        </div>
-        <div class="affiliate-btn amazon" id="amazonBtn">
-          <div class="affiliate-badge">準備中</div>
-          📦 Amazonで探す<br>
-          <span style="font-size:.6rem;opacity:.7;">近日公開予定</span>
-        </div>
-      </div>
-
-      <button class="retry-btn" id="retryBtn" style="display:none;" onclick="fetchScent()">
-        🔄 もう一度提案してもらう
-      </button>
       <button class="retry-btn" onclick="window.location.href='scent.html'">
         🧴 香りAI先生で深く相談する
       </button>
+      <div style="font-size:.58rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;">
+        今日の提案をもとに、シーン・相手・手持ちの香りまで相談できます。
+      </div>
     </div>
   </div>
 
@@ -540,12 +526,6 @@ function renderScent(d){
       ${d.brand||'—'}
     </div>`;
 
-  // アフィリエイト枠を表示（準備中状態）
-  const celesBtn=document.getElementById('celesBtn');
-  const amazonBtn=document.getElementById('amazonBtn');
-  // 将来の実装用パラメータ（設計済み）
-  // celesBtn.href=`https://celes.cloud/search?q=${encodeURIComponent(d.celes||d.name)}`;
-  // amazonBtn.href=`https://amazon.co.jp/s?k=${encodeURIComponent(d.brand)}`;
   window._scentData={
     starName:STAR_DATA[gStar.honmei]?.j||'',
     nachinName:gStar.honmeiNachin,
@@ -554,8 +534,6 @@ function renderScent(d){
     celesKeyword:d.celes||'',
     brandName:d.brand||''
   };
-  document.getElementById('affiliateRow').style.display='grid';
-  document.getElementById('retryBtn').style.display='block';
 }
 
 // ④ キーワード
