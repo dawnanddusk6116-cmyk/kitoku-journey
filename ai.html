@@ -88,6 +88,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .write-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:5px;}
 .write-guide-text{font-size:.66rem;color:var(--mist);line-height:1.85;}
 .write-guide-example{margin-top:8px;background:rgba(255,255,255,.5);border:1px dashed rgba(138,104,32,.45);border-radius:8px;padding:8px 9px;font-size:.66rem;color:var(--goldlt);line-height:1.8;}
+.value-guide{margin-bottom:10px;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.38));border:1px solid rgba(196,160,67,.34);border-radius:10px;padding:11px 12px;}
+.value-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:900;margin-bottom:6px;}
+.value-guide-text{font-size:.66rem;color:var(--mist);line-height:1.9;}
+.value-guide-list{display:grid;gap:6px;margin-top:9px;}
+.value-guide-item{display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.38);border:1px solid rgba(138,104,32,.18);border-radius:8px;padding:8px 9px;font-size:.64rem;color:var(--mist);line-height:1.7;}
+.value-guide-num{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.38);color:var(--goldlt);font-size:.68rem;font-weight:900;}
 .prompt-copy-btn{width:100%;background:var(--goldlt);color:#fff;border:none;border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;}
 .prompt-copy-btn:active{opacity:.85;}
 .prompt-share-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;margin-top:8px;}
@@ -118,12 +124,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 }
 [data-theme="dark"] .lead-point,
 [data-theme="dark"] .target-box,
-[data-theme="dark"] .write-guide{
+[data-theme="dark"] .write-guide,
+[data-theme="dark"] .value-guide{
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.045));
   border-color:rgba(196,160,67,.34);
 }
 [data-theme="dark"] .lead-step,
 [data-theme="dark"] .write-guide-example,
+[data-theme="dark"] .value-guide-item,
 [data-theme="dark"] .target-preview{
   background:rgba(255,255,255,.055);
   border-color:rgba(196,160,67,.22);
@@ -136,6 +144,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .lead-text,
 [data-theme="dark"] .lead-point-text,
 [data-theme="dark"] .write-guide-text,
+[data-theme="dark"] .value-guide-text,
+[data-theme="dark"] .value-guide-item,
 [data-theme="dark"] .prompt-desc,
 [data-theme="dark"] .prompt-use-note,
 [data-theme="dark"] .target-desc{
@@ -313,6 +323,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="prompt-arrow">›</div>
     </div>
     <div class="prompt-body" id="q11">
+      <div class="value-guide">
+        <div class="value-guide-title">AI軍師セッションでできること</div>
+        <div class="value-guide-text">頭の中で混ざっている悩みを、AIに整理してもらうための高度な相談文です。答えを決めつけるのではなく、自分で選ぶための判断材料を作ります。</div>
+        <div class="value-guide-list">
+          <div class="value-guide-item"><span class="value-guide-num">1</span><span>あなたの悩みを、まず「本当の問い」に戻します。</span></div>
+          <div class="value-guide-item"><span class="value-guide-num">2</span><span>現状・理想・止めている思い込みを分けて整理します。</span></div>
+          <div class="value-guide-item"><span class="value-guide-num">3</span><span>最後に、24時間以内にできる小さな一手まで落とし込みます。</span></div>
+        </div>
+      </div>
       <div class="write-guide">
         <div class="write-guide-title">ここが一番大切です</div>
         <div class="write-guide-text">コピーしたあと、AIアプリ側で「相談したいこと」の部分だけをあなたの言葉に書き換えてください。短くても大丈夫です。</div>
