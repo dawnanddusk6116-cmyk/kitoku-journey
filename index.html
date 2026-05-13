@@ -1560,56 +1560,85 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
   </div>
 
-  <div class="guide-card" onclick="window.location.href='astro64.html'" style="background:linear-gradient(135deg,rgba(116,86,170,.12),rgba(255,255,255,.72));border-color:rgba(116,86,170,.3);">
-    <div class="guide-card-row">
-      <div class="guide-card-icon" style="background:rgba(116,86,170,.12);color:#7456aa;font-family:'Cormorant Garamond',serif;font-size:.78rem;font-weight:700;">Astro</div>
+  <!-- 入口グループ -->
+  <div style="margin-top:16px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 9px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(196,160,67,.16);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">1</div>
       <div>
-        <div class="guide-card-kicker" style="color:#7456aa;">別角度から自分を見る</div>
-        <div class="guide-card-title" style="color:#5b3f8f;">西洋星読みクロスチェック</div>
-        <div class="guide-card-text">太陽・月・金星・火星などの言葉を入口に、KITOKU解釈で自分を責めずに見つめ直します。</div>
+        <div style="font-size:.82rem;color:var(--goldlt);font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">まずはここ</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">九星を知り、吉方位を見て、今日の整え方まで進む基本ルートです。</div>
       </div>
-      <div class="guide-card-arrow" style="color:#7456aa;">›</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="goToKyusei()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.6rem;width:40px;text-align:center;">⭐</div>
+        <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">九星を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">まずはここ。あなた専用レポートを読む<br>本命星・月命星・傾斜・同会・納音がわかる</div></div>
+      </button>
+
+      <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.6rem;width:40px;text-align:center;">🧭</div>
+        <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">吉方位を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">気学の基本。今日・今月の方位盤を見る<br>行く方向・避ける方向の判断材料になる</div></div>
+      </button>
+
+      <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.6rem;width:40px;text-align:center;">🌸</div>
+        <div><div style="font-size:.9rem;color:#d4667a;font-weight:700;font-family:'Noto Serif JP',serif;">今日を整える</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">今日の星に合った色・香り・小さな行動<br>一日を整えるヒントがわかる</div></div>
+      </button>
+
+      <button onclick="window.location.href='scent.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.2),rgba(196,160,67,.06));border:1px solid rgba(220,140,160,.42);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.6rem;width:40px;text-align:center;">🧴</div>
+        <div><div style="font-size:.9rem;color:#c75d7a;font-weight:700;font-family:'Noto Serif JP',serif;">香り × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">香りについて、気学とAIで深く相談する<br>手持ち香水・会う人・場面から選べる</div></div>
+      </button>
     </div>
   </div>
 
-  <!-- ② 6つのボタン -->
-  <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+  <div style="margin-top:18px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 9px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(80,160,120,.14);border:1px solid rgba(80,160,120,.35);color:#2a8a60;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">2</div>
+      <div>
+        <div style="font-size:.82rem;color:#2a8a60;font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">自分を深く知る</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">星情報をAIに渡し、自分の悩み・才能・次の一手を言葉にします。</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.6rem;width:40px;text-align:center;">🤖</div>
+        <div><div style="font-size:.9rem;color:#2a8a60;font-weight:700;font-family:'Noto Serif JP',serif;">気学 × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">気学とAIで人生を創造する<br>悩みを整理し、次の一手を見つける</div></div>
+      </button>
 
-    <button onclick="goToKyusei()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">⭐</div>
-      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">九星を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">まずはここ。あなた専用レポートを読む<br>本命星・月命星・傾斜・同会・納音がわかる</div></div>
-    </button>
+      <button onclick="window.location.href='astro64.html'" style="width:100%;background:linear-gradient(135deg,rgba(116,86,170,.12),rgba(255,255,255,.72));border:1px solid rgba(116,86,170,.3);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:.82rem;width:40px;height:40px;border-radius:50%;background:rgba(116,86,170,.12);color:#7456aa;font-family:'Cormorant Garamond',serif;font-weight:700;display:flex;align-items:center;justify-content:center;">Astro</div>
+        <div><div style="font-size:.9rem;color:#5b3f8f;font-weight:700;font-family:'Noto Serif JP',serif;">西洋星読みクロスチェック</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">太陽・月・金星・火星などの言葉を入口に<br>KITOKU解釈で自分を別角度から見る</div></div>
+      </button>
+    </div>
+  </div>
 
-    <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🧭</div>
-      <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">吉方位を知る</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">今日・今月の方位盤を表示<br>行くべき方向・避けるべき方向がわかる</div></div>
-    </button>
-
-    <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🌸</div>
-      <div><div style="font-size:.9rem;color:#d4667a;font-weight:700;font-family:'Noto Serif JP',serif;">今日を整える</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">今日の星に合った色・香り・小さな行動<br>一日を整えるヒントがわかる</div></div>
-    </button>
-
-    <button onclick="window.location.href='scent.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.2),rgba(196,160,67,.06));border:1px solid rgba(220,140,160,.42);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🧴</div>
-      <div><div style="font-size:.9rem;color:#c75d7a;font-weight:700;font-family:'Noto Serif JP',serif;">香り × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">香りについて気学とAIで深掘り<br>手持ち香水・会う人・場面から相談できる</div></div>
-    </button>
-
-    <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.6rem;width:40px;text-align:center;">🤖</div>
-      <div><div style="font-size:.9rem;color:#2a8a60;font-weight:700;font-family:'Noto Serif JP',serif;">気学 × AI</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">気学とAIで人生を創造する<br>悩みを整理し、次の一手を見つける</div></div>
-    </button>
-
+  <div style="margin-top:18px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 9px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">3</div>
+      <div>
+        <div style="font-size:.82rem;color:var(--goldlt);font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">人との関係を整える</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">相性を決めつけず、違いをどう活かすかを見ます。</div>
+      </div>
+    </div>
     <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.6rem;width:40px;text-align:center;">💫</div>
       <div><div style="font-size:.9rem;color:var(--goldlt);font-weight:700;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">大切な人との相性を読み解く<br>AI深掘りレポート・8人の賢者が語る</div></div>
     </button>
+  </div>
 
+  <div style="margin-top:18px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 9px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(42,60,100,.14);border:1px solid rgba(42,60,100,.35);color:#6080c0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">4</div>
+      <div>
+        <div style="font-size:.82rem;color:#6080c0;font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">仕事に活かす</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">採用・面談・育成の視点を、参考資料として整えます。</div>
+      </div>
+    </div>
     <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
       <div style="font-size:1.6rem;width:40px;text-align:center;">💼</div>
       <div><div style="font-size:.9rem;color:#6080c0;font-weight:700;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div><div style="font-size:.65rem;color:var(--mist);margin-top:3px;line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div></div>
     </button>
-
   </div>
 
   <div class="launch-hero">
@@ -1653,70 +1682,106 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div style="font-size:.62rem;color:var(--mist);margin-bottom:20px;" id="menuStarSub">何を知りたいですか？</div>
   </div>
 
-  <div style="padding:0 16px 40px;display:flex;flex-direction:column;gap:10px;">
-
-    <!-- ⭐ 九星を知る -->
-    <button onclick="goToKyusei()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">⭐</div>
+  <div style="padding:0 16px 40px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(196,160,67,.16);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">1</div>
       <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">九星を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">本命星・月命星・傾斜・同会・納音<br>あなたの宿命的な才能と人生の舞台がわかる</div>
+        <div style="font-size:.82rem;color:var(--goldlt);font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">まずはここ</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">九星・吉方位・今日の整え方は、毎日使う基本の入口です。</div>
       </div>
-    </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+      <button onclick="goToKyusei()" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">⭐</div>
+        <div>
+          <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">九星を知る</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">本命星・月命星・傾斜・同会・納音<br>あなたの宿命的な才能と人生の舞台がわかる</div>
+        </div>
+      </button>
 
-    <!-- 🧭 吉方位を知る -->
-    <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🧭</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">吉方位を知る</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日・今月の方位盤を表示<br>行くべき方向・避けるべき方向がわかる</div>
-      </div>
-    </button>
+      <button onclick="window.location.href='direction_v2.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">🧭</div>
+        <div>
+          <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">吉方位を知る</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">気学の基本。今日・今月の方位盤を表示<br>行く方向・避ける方向の判断材料になる</div>
+        </div>
+      </button>
 
-    <!-- 🌸 今日を整える -->
-    <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🌸</div>
-      <div>
-        <div style="font-size:.95rem;color:#d4667a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">今日を整える</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日の星に合った色・香り・小さな行動<br>一日を整えるヒントがわかる</div>
-      </div>
-    </button>
+      <button onclick="window.location.href='today.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.18),rgba(200,110,140,.06));border:1px solid rgba(220,140,160,.4);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">🌸</div>
+        <div>
+          <div style="font-size:.95rem;color:#d4667a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">今日を整える</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">今日の星に合った色・香り・小さな行動<br>一日を整えるヒントがわかる</div>
+        </div>
+      </button>
 
-    <!-- 🧴 香り × AI -->
-    <button onclick="window.location.href='scent.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.2),rgba(196,160,67,.06));border:1px solid rgba(220,140,160,.42);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🧴</div>
-      <div>
-        <div style="font-size:.95rem;color:#c75d7a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香り × AI</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">香りについて気学とAIで深掘り<br>手持ち香水・会う人・場面から相談できる</div>
-      </div>
-    </button>
+      <button onclick="window.location.href='scent.html'" style="width:100%;background:linear-gradient(135deg,rgba(220,140,160,.2),rgba(196,160,67,.06));border:1px solid rgba(220,140,160,.42);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">🧴</div>
+        <div>
+          <div style="font-size:.95rem;color:#c75d7a;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">香り × AI</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">香りについて、気学とAIで深く相談する<br>手持ち香水・会う人・場面から相談できる</div>
+        </div>
+      </button>
+    </div>
 
-    <!-- 🤖 気学 × AI -->
-    <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">🤖</div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(80,160,120,.14);border:1px solid rgba(80,160,120,.35);color:#2a8a60;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">2</div>
       <div>
-        <div style="font-size:.95rem;color:#2a8a60;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">気学 × AI</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">気学とAIで人生を創造する<br>悩みを整理し、次の一手を見つける</div>
+        <div style="font-size:.82rem;color:#2a8a60;font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">自分を深く知る</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">AIや星読みを入口に、自分の言葉で理解を深めます。</div>
       </div>
-    </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+      <button onclick="window.location.href='ai.html'" style="width:100%;background:linear-gradient(135deg,rgba(80,160,120,.15),rgba(80,160,120,.05));border:1px solid rgba(80,160,120,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">🤖</div>
+        <div>
+          <div style="font-size:.95rem;color:#2a8a60;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">気学 × AI</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">気学とAIで人生を創造する<br>悩みを整理し、次の一手を見つける</div>
+        </div>
+      </button>
 
-    <!-- 💫 KITOKU @ RELATIONS -->
-    <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">💫</div>
-      <div>
-        <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">大切な人との相性を読み解く<br>AI深掘りレポート・8人の賢者が語る</div>
-      </div>
-    </button>
+      <button onclick="window.location.href='astro64.html'" style="width:100%;background:linear-gradient(135deg,rgba(116,86,170,.12),rgba(255,255,255,.72));border:1px solid rgba(116,86,170,.3);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:.82rem;width:44px;height:44px;border-radius:50%;background:rgba(116,86,170,.12);color:#7456aa;font-family:'Cormorant Garamond',serif;font-weight:700;display:flex;align-items:center;justify-content:center;">Astro</div>
+        <div>
+          <div style="font-size:.95rem;color:#5b3f8f;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">西洋星読みクロスチェック</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">太陽・月・金星・火星を入口に<br>KITOKU解釈で自分を別角度から見る</div>
+        </div>
+      </button>
+    </div>
 
-    <!-- 💼 KITOKU for BUSINESS -->
-    <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
-      <div style="font-size:1.8rem;width:44px;text-align:center;">💼</div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">3</div>
       <div>
-        <div style="font-size:.95rem;color:#6080c0;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div>
-        <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div>
+        <div style="font-size:.82rem;color:var(--goldlt);font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">人との関係を整える</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">家族・恋愛・仕事相手との違いを調律します。</div>
       </div>
-    </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+      <button onclick="window.location.href='relations.html'" style="width:100%;background:linear-gradient(135deg,rgba(196,160,67,.15),rgba(196,160,67,.06));border:1px solid rgba(196,160,67,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">💫</div>
+        <div>
+          <div style="font-size:.95rem;color:var(--goldlt);font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU @ RELATIONS</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">大切な人との相性を読み解く<br>AI深掘りレポート・8人の賢者が語る</div>
+        </div>
+      </button>
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(42,60,100,.14);border:1px solid rgba(42,60,100,.35);color:#6080c0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;flex-shrink:0;">4</div>
+      <div>
+        <div style="font-size:.82rem;color:#6080c0;font-weight:800;font-family:'Noto Serif JP',serif;letter-spacing:.08em;">仕事に活かす</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.7;margin-top:2px;">採用・面談・育成を、参考資料として整えます。</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:10px;">
+      <button onclick="window.location.href='business.html'" style="width:100%;background:linear-gradient(135deg,rgba(42,60,100,.18),rgba(42,60,100,.06));border:1px solid rgba(42,60,100,.35);border-radius:14px;padding:18px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:1.8rem;width:44px;text-align:center;">💼</div>
+        <div>
+          <div style="font-size:.95rem;color:#6080c0;font-weight:700;letter-spacing:.06em;margin-bottom:4px;font-family:'Noto Serif JP',serif;">KITOKU for BUSINESS</div>
+          <div style="font-size:.68rem;color:var(--mist);line-height:1.7;">採用・人材判断に5000年の知恵を<br>候補者の特性・相性・面談質問を生成</div>
+        </div>
+      </button>
+    </div>
 
     <!-- 生年月日を変更 -->
     <button onclick="backToInput()" style="width:100%;background:none;border:1px solid var(--rim);border-radius:10px;padding:12px;cursor:pointer;font-size:.75rem;color:var(--mist);font-family:'Noto Serif JP',serif;margin-top:4px;">
