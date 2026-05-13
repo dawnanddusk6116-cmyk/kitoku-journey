@@ -72,7 +72,17 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
-.cat-label{font-size:.6rem;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.42));border:1px solid rgba(196,160,67,.28);border-radius:12px;padding:11px 12px;}
+.cat-label{font-size:.6rem;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;background:var(--cat-bg,linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.42)));border:1px solid var(--cat-border,rgba(196,160,67,.28));border-radius:12px;padding:11px 12px;position:relative;overflow:hidden;box-shadow:0 8px 22px var(--cat-shadow,rgba(100,80,40,.035));}
+.cat-label::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cat-accent,var(--gold));}
+.cat[data-tone="daily"]{--cat-accent:#b78318;--cat-bg:linear-gradient(135deg,rgba(255,221,139,.36),rgba(255,255,255,.62));--cat-border:rgba(183,131,24,.38);--cat-shadow:rgba(183,131,24,.08);--cat-soft:rgba(183,131,24,.16);}
+.cat[data-tone="self"]{--cat-accent:#3f78a8;--cat-bg:linear-gradient(135deg,rgba(110,168,214,.22),rgba(255,255,255,.66));--cat-border:rgba(63,120,168,.3);--cat-shadow:rgba(63,120,168,.08);--cat-soft:rgba(63,120,168,.13);}
+.cat[data-tone="relation"]{--cat-accent:#b46a37;--cat-bg:linear-gradient(135deg,rgba(229,152,91,.22),rgba(255,255,255,.66));--cat-border:rgba(180,106,55,.32);--cat-shadow:rgba(180,106,55,.08);--cat-soft:rgba(180,106,55,.13);}
+.cat[data-tone="future"]{--cat-accent:#4f8b5d;--cat-bg:linear-gradient(135deg,rgba(114,176,126,.22),rgba(255,255,255,.66));--cat-border:rgba(79,139,93,.32);--cat-shadow:rgba(79,139,93,.08);--cat-soft:rgba(79,139,93,.13);}
+.cat[data-tone] .cat-number{background:var(--cat-soft);border-color:var(--cat-border);color:var(--cat-accent);}
+.cat[data-tone] .cat-title{color:var(--cat-accent);}
+.cat[data-tone] .prompt-card{border-color:rgba(100,80,40,.12);}
+.cat[data-tone] .prompt-card.featured{border-color:var(--cat-border);}
+.cat[data-tone] .prompt-card.featured .prompt-head{background:linear-gradient(135deg,var(--cat-soft),rgba(255,255,255,.45));}
 .cat-label::after{content:none;}
 .cat-number{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:900;line-height:1;}
 .cat-label-main{display:flex;flex-direction:column;gap:2px;min-width:0;}
@@ -135,7 +145,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   border-color:rgba(196,160,67,.34);
 }
 [data-theme="dark"] .lead-point,
-[data-theme="dark"] .cat-label,
 [data-theme="dark"] .target-box,
 [data-theme="dark"] .link-map,
 [data-theme="dark"] .write-guide,
@@ -143,6 +152,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.045));
   border-color:rgba(196,160,67,.34);
 }
+[data-theme="dark"] .cat[data-tone="daily"]{--cat-accent:#f0cb66;--cat-bg:linear-gradient(135deg,rgba(196,160,67,.2),rgba(18,21,42,.96));--cat-border:rgba(240,203,102,.42);--cat-shadow:rgba(196,160,67,.12);--cat-soft:rgba(240,203,102,.16);}
+[data-theme="dark"] .cat[data-tone="self"]{--cat-accent:#83b7e6;--cat-bg:linear-gradient(135deg,rgba(83,145,198,.2),rgba(18,21,42,.96));--cat-border:rgba(131,183,230,.38);--cat-shadow:rgba(83,145,198,.12);--cat-soft:rgba(131,183,230,.14);}
+[data-theme="dark"] .cat[data-tone="relation"]{--cat-accent:#e5a46e;--cat-bg:linear-gradient(135deg,rgba(202,124,70,.2),rgba(18,21,42,.96));--cat-border:rgba(229,164,110,.38);--cat-shadow:rgba(202,124,70,.12);--cat-soft:rgba(229,164,110,.14);}
+[data-theme="dark"] .cat[data-tone="future"]{--cat-accent:#91cf9a;--cat-bg:linear-gradient(135deg,rgba(93,160,106,.2),rgba(18,21,42,.96));--cat-border:rgba(145,207,154,.38);--cat-shadow:rgba(93,160,106,.12);--cat-soft:rgba(145,207,154,.14);}
+[data-theme="dark"] .cat[data-tone] .prompt-card{border-color:rgba(212,175,55,.16);}
+[data-theme="dark"] .cat[data-tone] .prompt-card.featured{border-color:var(--cat-border);}
+[data-theme="dark"] .cat[data-tone] .prompt-card.featured .prompt-head{background:linear-gradient(135deg,var(--cat-soft),rgba(255,255,255,.035));}
 [data-theme="dark"] .lead-step,
 [data-theme="dark"] .write-guide-example,
 [data-theme="dark"] .value-guide-item,
@@ -320,7 +336,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：今日・今この瞬間 -->
-<div class="cat">
+<div class="cat" data-tone="daily">
   <div class="cat-label">
     <div class="cat-number">1</div>
     <div class="cat-label-main">
@@ -396,7 +412,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：自分を知る -->
-<div class="cat">
+<div class="cat" data-tone="self">
   <div class="cat-label">
     <div class="cat-number">2</div>
     <div class="cat-label-main">
@@ -453,7 +469,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：人間関係・仕事 -->
-<div class="cat">
+<div class="cat" data-tone="relation">
   <div class="cat-label">
     <div class="cat-number">3</div>
     <div class="cat-label-main">
@@ -500,7 +516,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：健康・お金・未来 -->
-<div class="cat">
+<div class="cat" data-tone="future">
   <div class="cat-label">
     <div class="cat-number">4</div>
     <div class="cat-label-main">
