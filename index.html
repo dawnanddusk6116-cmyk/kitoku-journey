@@ -125,31 +125,51 @@ html,body{
 .selector-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
 .selector-arrow{font-size:.9rem;color:rgba(100,80,40,.3);flex-shrink:0;}
 
-/* ── 目次バー ── */
+/* ── 画面内の目次バー ── */
 .nav-bar{
-  display:flex;gap:6px;overflow-x:auto;
-  padding:10px 16px;
-  background:rgba(247,244,239,.96);
-  border-bottom:1px solid var(--rim);
-  position:sticky;top:57px;z-index:90;
-  backdrop-filter:blur(8px);
+  display:flex;gap:8px;overflow-x:auto;
+  padding:9px 14px 10px;
+  margin:0;
+  background:linear-gradient(180deg,rgba(247,244,239,.98),rgba(247,244,239,.92));
+  border-top:1px solid rgba(138,104,32,.18);
+  border-bottom:1px solid rgba(138,104,32,.22);
+  position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px);z-index:95;
+  backdrop-filter:blur(14px);
+  box-shadow:0 8px 18px rgba(80,54,20,.08);
   scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+.nav-bar::before{
+  content:'目次';
+  flex-shrink:0;
+  align-self:center;
+  font-size:.56rem;
+  letter-spacing:.14em;
+  color:var(--gold);
+  font-weight:700;
+  padding:0 2px 0 0;
 }
 .nav-bar::-webkit-scrollbar{display:none;}
 .nav-btn{
   flex-shrink:0;
-  background:rgba(100,80,40,.06);
-  border:1px solid rgba(100,80,40,.15);
-  border-radius:20px;padding:6px 12px;
-  font-size:.65rem;color:var(--mist);
+  min-height:34px;
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(100,80,40,.18);
+  border-radius:999px;padding:7px 12px;
+  font-size:.66rem;color:var(--goldlt);
   cursor:pointer;font-family:'Noto Serif JP',serif;
   letter-spacing:.04em;white-space:nowrap;
   transition:all .18s;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
 }
+.nav-btn:nth-child(2){border-color:var(--c-daily-border);color:var(--c-daily);}
+.nav-btn:nth-child(3){border-color:var(--c-self-border);color:var(--c-self);}
+.nav-btn:nth-child(4){border-color:var(--c-relation-border);color:var(--c-relation);}
+.nav-btn:nth-child(5){border-color:var(--c-work-border);color:var(--c-work);}
+.nav-btn:nth-child(6){border-color:var(--c-travel-border);color:var(--c-travel);}
 .nav-btn:active{
-  background:rgba(138,104,32,.15);
-  border-color:rgba(138,104,32,.4);
-  color:var(--goldlt);
+  background:rgba(138,104,32,.14);
+  transform:translateY(1px);
 }
 
 /* ── 戻るリンク ── */
@@ -330,6 +350,7 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
   border-radius:var(--radius);
   padding:14px 12px;
   overflow:hidden;
+  scroll-margin-top:132px;
 }
 .section-block.tone-daily{
   background:linear-gradient(160deg,rgba(183,131,24,.08),rgba(255,255,255,.6));
@@ -694,13 +715,13 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
     ← TOPへ戻る
   </button>
 
-  <!-- 目次バー -->
-  <div class="nav-bar">
-    <button class="nav-btn" onclick="scrollToSection('sec1')">① 九星・整える</button>
-    <button class="nav-btn" onclick="scrollToSection('sec2')">② 自分を知る</button>
-    <button class="nav-btn" onclick="scrollToSection('sec3')">③ 人との縁</button>
-    <button class="nav-btn" onclick="scrollToSection('sec4')">④ 仕事</button>
-    <button class="nav-btn" onclick="scrollToSection('sec5')">⑤ 旅</button>
+  <!-- 画面内の目次バー -->
+  <div class="nav-bar" aria-label="画面内の目次">
+    <button class="nav-btn" type="button" onclick="scrollToSection('sec1')">① 九星・整える</button>
+    <button class="nav-btn" type="button" onclick="scrollToSection('sec2')">② 自分を知る</button>
+    <button class="nav-btn" type="button" onclick="scrollToSection('sec3')">③ 人との縁</button>
+    <button class="nav-btn" type="button" onclick="scrollToSection('sec4')">④ 仕事</button>
+    <button class="nav-btn" type="button" onclick="scrollToSection('sec5')">⑤ 旅</button>
   </div>
 
   <!-- 挨拶エリア -->
