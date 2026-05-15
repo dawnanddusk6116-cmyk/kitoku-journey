@@ -605,6 +605,178 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
   line-height:1.9;opacity:.75;
   padding:0 2px;
 }
+
+/* ── INDEX: 表示切替と夜色 ── */
+.mode-switch{
+  display:flex;align-items:center;gap:4px;
+  padding:3px;border:1px solid var(--rim);
+  border-radius:999px;background:rgba(100,80,40,.05);
+}
+.mode-btn,
+.font-btn{
+  min-width:34px;border:0;border-radius:999px;
+  background:transparent;color:var(--mist);
+  font-family:'Noto Serif JP',serif;font-size:.66rem;
+  padding:5px 8px;cursor:pointer;letter-spacing:.08em;
+}
+.font-switch{
+  display:flex;align-items:center;gap:4px;
+  padding:3px;border:1px solid var(--rim);
+  border-radius:999px;background:rgba(100,80,40,.05);
+}
+.mode-btn.active,
+.font-btn.active{
+  background:rgba(138,104,32,.16);
+  color:var(--goldlt);font-weight:700;
+  box-shadow:0 1px 0 rgba(255,255,255,.75) inset;
+}
+html.font-small{font-size:14px;}
+html.font-large{font-size:18px;}
+.selector-settings-wrap{
+  margin:16px 16px 0;text-align:center;
+}
+.selector-settings-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:34px;padding:8px 16px;border-radius:999px;
+  background:rgba(138,104,32,.1);
+  border:1px solid rgba(138,104,32,.28);
+  color:var(--goldlt);cursor:pointer;
+  font-family:'Noto Serif JP',serif;font-size:.72rem;
+  font-weight:700;letter-spacing:.08em;
+}
+
+body.theme-night{
+  --bg:#070b16;
+  --card:#12182b;
+  --rim:rgba(229,190,85,.24);
+  --gold:#e0b84b;
+  --goldlt:#f0cf68;
+  --snow:#f6efd9;
+  --mist:#d5ccb1;
+}
+body.theme-night .app-header{
+  background:rgba(7,11,22,.96);
+  border-bottom-color:rgba(229,190,85,.22);
+}
+body.theme-night .setting-btn,
+body.theme-night .back-to-selector,
+body.theme-night .selector-settings-btn{
+  background:rgba(229,190,85,.12);
+  border-color:rgba(229,190,85,.34);
+  color:var(--goldlt);
+  box-shadow:none;
+}
+body.theme-night .mode-switch,
+body.theme-night .font-switch{
+  background:rgba(229,190,85,.08);
+  border-color:rgba(229,190,85,.26);
+}
+body.theme-night .mode-btn.active,
+body.theme-night .font-btn.active{
+  background:rgba(229,190,85,.2);
+  color:var(--goldlt);
+  box-shadow:none;
+}
+body.theme-night .selector-card,
+body.theme-night .input-card,
+body.theme-night .today-bar,
+body.theme-night .app-card,
+body.theme-night .app-card-wide,
+body.theme-night .kitoku-about,
+body.theme-night .pwa-banner{
+  background:var(--card);
+  border-color:rgba(229,190,85,.24);
+}
+body.theme-night .selector-card.s-journey{background:linear-gradient(135deg,rgba(224,184,75,.14),var(--card));}
+body.theme-night .selector-card.s-relations{background:linear-gradient(135deg,rgba(211,111,66,.14),var(--card));}
+body.theme-night .selector-card.s-business{background:linear-gradient(135deg,rgba(70,139,218,.14),var(--card));}
+body.theme-night .selector-card.s-pilgrimage{background:linear-gradient(135deg,rgba(149,113,210,.14),var(--card));}
+body.theme-night .selector-card.s-english{background:linear-gradient(135deg,rgba(95,139,184,.14),var(--card));}
+body.theme-night .selector-card .selector-title,
+body.theme-night .selector-card.s-pilgrimage .selector-title,
+body.theme-night .selector-card.s-business .selector-title,
+body.theme-night .selector-card.s-relations .selector-title,
+body.theme-night .selector-card.s-english .selector-title{
+  color:var(--snow);
+}
+body.theme-night .selector-desc,
+body.theme-night .home-tagline,
+body.theme-night .card-desc,
+body.theme-night .app-card-wide .card-desc,
+body.theme-night .pwa-text,
+body.theme-night .disclaimer-small,
+body.theme-night .footer,
+body.theme-night .today-date{
+  color:var(--mist);opacity:.95;
+}
+body.theme-night .nav-bar{
+  background:linear-gradient(180deg,rgba(7,11,22,.98),rgba(7,11,22,.92));
+  border-color:rgba(229,190,85,.22);
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+body.theme-night .nav-btn{
+  background:rgba(18,24,43,.92);
+  border-color:rgba(229,190,85,.24);
+  box-shadow:none;
+}
+body.theme-night .home-hero{
+  background:linear-gradient(160deg,rgba(224,184,75,.09),transparent 60%);
+  border-bottom-color:rgba(229,190,85,.2);
+}
+body.theme-night .today-question,
+body.theme-night .first-guide{
+  background:linear-gradient(135deg,rgba(224,184,75,.12),rgba(18,24,43,.82));
+  border-color:rgba(229,190,85,.3);
+}
+body.theme-night .section-block.tone-daily{background:linear-gradient(160deg,rgba(183,131,24,.14),rgba(18,24,43,.9));}
+body.theme-night .section-block.tone-self{background:linear-gradient(160deg,rgba(63,120,168,.14),rgba(18,24,43,.9));}
+body.theme-night .section-block.tone-relation{background:linear-gradient(160deg,rgba(180,106,55,.14),rgba(18,24,43,.9));}
+body.theme-night .section-block.tone-work{background:linear-gradient(160deg,rgba(79,139,93,.14),rgba(18,24,43,.9));}
+body.theme-night .section-block.tone-travel{background:linear-gradient(160deg,rgba(123,94,167,.14),rgba(18,24,43,.9));}
+body.theme-night .section-block .app-card-wide.tone-self,
+body.theme-night .section-block .app-card-wide.tone-relation,
+body.theme-night .section-block .app-card-wide.tone-work,
+body.theme-night .section-block .app-card-wide.tone-travel{
+  background:rgba(18,24,43,.78);
+}
+body.theme-night .app-card.tone-daily{background:linear-gradient(160deg,rgba(183,131,24,.14),var(--card));}
+body.theme-night .app-card-wide.tone-self{background:linear-gradient(135deg,rgba(63,120,168,.16),var(--card));}
+body.theme-night .app-card-wide.tone-relation{background:linear-gradient(135deg,rgba(180,106,55,.16),var(--card));}
+body.theme-night .app-card-wide.tone-work{background:linear-gradient(135deg,rgba(79,139,93,.16),var(--card));}
+body.theme-night .app-card-wide.tone-travel{background:linear-gradient(135deg,rgba(123,94,167,.16),var(--card));}
+body.theme-night .card-title,
+body.theme-night .app-card-wide .card-title,
+body.theme-night .app-card-wide.tone-self .card-title,
+body.theme-night .app-card-wide.tone-relation .card-title,
+body.theme-night .app-card-wide.tone-work .card-title,
+body.theme-night .app-card-wide.tone-travel .card-title{
+  color:var(--snow);
+}
+body.theme-night .cards-label-num,
+body.theme-night .first-guide-step{
+  background:rgba(18,24,43,.82);
+}
+body.theme-night input[type="date"]{
+  background:rgba(255,255,255,.06);
+  color:var(--snow);
+}
+body.theme-night .gender-btn{
+  background:rgba(255,255,255,.05);
+  color:var(--mist);
+}
+body.theme-night .gender-btn.active{
+  background:rgba(229,190,85,.16);
+  color:var(--goldlt);
+}
+body.theme-night #settingPanel > div{
+  background:#12182b!important;
+  border-color:rgba(229,190,85,.26)!important;
+}
+body.theme-night .tq-copy-btn,
+body.theme-night .start-btn{
+  background:linear-gradient(135deg,rgba(168,123,31,.95),rgba(224,184,75,.78));
+}
+
 </style>
 </head>
 <body>
@@ -613,6 +785,15 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 <div class="app-header">
   <div class="header-logo">✦ KITOKU</div>
   <div class="header-right">
+    <div class="mode-switch" aria-label="表示切替">
+      <button class="mode-btn" id="modeNightBtn" type="button" onclick="setDisplayMode('night')">夜</button>
+      <button class="mode-btn" id="modeDayBtn" type="button" onclick="setDisplayMode('day')">昼</button>
+    </div>
+    <div class="font-switch" aria-label="文字サイズ">
+      <button class="font-btn" id="fontSmallBtn" type="button" onclick="setFontSize('small')">小</button>
+      <button class="font-btn" id="fontMediumBtn" type="button" onclick="setFontSize('medium')">中</button>
+      <button class="font-btn" id="fontLargeBtn" type="button" onclick="setFontSize('large')">大</button>
+    </div>
     <button class="setting-btn" onclick="openSettings()">⚙ 設定</button>
   </div>
 </div>
@@ -685,12 +866,8 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 
   </div>
 
-  <div style="margin:16px 16px 0;text-align:center;">
-    <button onclick="openSettings()" style="
-      background:none;border:none;font-size:.62rem;
-      color:var(--mist);cursor:pointer;letter-spacing:.08em;
-      font-family:'Noto Serif JP',serif;padding:8px;
-    ">⚙ 設定・生年月日の変更</button>
+  <div class="selector-settings-wrap">
+    <button class="selector-settings-btn" onclick="openSettings()">⚙ 設定・生年月日の変更</button>
   </div>
 
   <div class="disclaimer-small" style="margin-top:20px;">
@@ -806,8 +983,7 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
       📋 今日の問いをコピーしてAIに貼る
     </button>
     <div class="tq-sub-links">
-      <button class="tq-sub-link" onclick="location.href='today.html'">今日を整える</button>
-      <button class="tq-sub-link" onclick="location.href='scent.html'">香り × AI</button>
+      <button class="tq-sub-link" onclick="location.href='scent.html'">香り × AIへ</button>
     </div>
   </div>
 
@@ -1000,9 +1176,57 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 
 <script>
 // ============================================================
+// 表示切替
+// ============================================================
+function getDisplayMode() {
+  return localStorage.getItem('kitoku-index-display') || 'day';
+}
+
+function applyDisplayMode(mode) {
+  const normalized = mode === 'night' ? 'night' : 'day';
+  document.body.classList.toggle('theme-night', normalized === 'night');
+  const nightBtn = document.getElementById('modeNightBtn');
+  const dayBtn = document.getElementById('modeDayBtn');
+  if (nightBtn) nightBtn.classList.toggle('active', normalized === 'night');
+  if (dayBtn) dayBtn.classList.toggle('active', normalized === 'day');
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.setAttribute('content', normalized === 'night' ? '#070b16' : '#f7f4ef');
+}
+
+function setDisplayMode(mode) {
+  const normalized = mode === 'night' ? 'night' : 'day';
+  localStorage.setItem('kitoku-index-display', normalized);
+  applyDisplayMode(normalized);
+}
+
+function getFontSize() {
+  return localStorage.getItem('kitoku-index-font') || 'medium';
+}
+
+function applyFontSize(size) {
+  const normalized = ['small', 'medium', 'large'].includes(size) ? size : 'medium';
+  document.documentElement.classList.toggle('font-small', normalized === 'small');
+  document.documentElement.classList.toggle('font-large', normalized === 'large');
+  const smallBtn = document.getElementById('fontSmallBtn');
+  const mediumBtn = document.getElementById('fontMediumBtn');
+  const largeBtn = document.getElementById('fontLargeBtn');
+  if (smallBtn) smallBtn.classList.toggle('active', normalized === 'small');
+  if (mediumBtn) mediumBtn.classList.toggle('active', normalized === 'medium');
+  if (largeBtn) largeBtn.classList.toggle('active', normalized === 'large');
+}
+
+function setFontSize(size) {
+  const normalized = ['small', 'medium', 'large'].includes(size) ? size : 'medium';
+  localStorage.setItem('kitoku-index-font', normalized);
+  applyFontSize(normalized);
+}
+
+// ============================================================
 // 初期化
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  applyDisplayMode(getDisplayMode());
+  applyFontSize(getFontSize());
   const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (birth) {
     showSelector();
