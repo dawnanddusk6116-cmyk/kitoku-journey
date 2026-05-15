@@ -107,6 +107,16 @@ html,body{
   background:linear-gradient(135deg,rgba(42,106,176,.07),var(--card));
 }
 .selector-card.s-business::before{background:#2a6ab0;}
+.selector-card.s-relations{
+  border-color:rgba(196,91,47,.3);
+  background:linear-gradient(135deg,rgba(196,91,47,.07),var(--card));
+}
+.selector-card.s-relations::before{background:#c45b2f;}
+.selector-card.s-english{
+  border-color:rgba(72,105,140,.3);
+  background:linear-gradient(135deg,rgba(72,105,140,.07),var(--card));
+}
+.selector-card.s-english::before{background:#48698c;}
 .selector-icon{font-size:2rem;flex-shrink:0;width:44px;text-align:center;}
 .selector-info{flex:1;}
 .selector-en{
@@ -116,12 +126,16 @@ html,body{
 .selector-card.s-journey .selector-en{color:var(--gold);}
 .selector-card.s-pilgrimage .selector-en{color:#7b5ea7;}
 .selector-card.s-business .selector-en{color:#2a6ab0;}
+.selector-card.s-relations .selector-en{color:#c45b2f;}
+.selector-card.s-english .selector-en{color:#48698c;}
 .selector-title{
   font-size:1rem;font-weight:700;color:var(--goldlt);
   margin-bottom:4px;letter-spacing:.04em;
 }
 .selector-card.s-pilgrimage .selector-title{color:#4a2a78;}
 .selector-card.s-business .selector-title{color:#1a3c70;}
+.selector-card.s-relations .selector-title{color:#7a321b;}
+.selector-card.s-english .selector-title{color:#244b72;}
 .selector-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
 .selector-arrow{font-size:.9rem;color:rgba(100,80,40,.3);flex-shrink:0;}
 
@@ -174,14 +188,19 @@ html,body{
 
 /* ── 戻るリンク ── */
 .back-to-selector{
-  display:flex;align-items:center;gap:6px;
-  font-size:.62rem;color:var(--mist);
-  cursor:pointer;padding:10px 16px 0;
-  background:none;border:none;
+  display:inline-flex;align-items:center;gap:7px;
+  margin:10px 16px 8px;
+  min-height:36px;
+  font-size:.72rem;color:var(--goldlt);font-weight:700;
+  cursor:pointer;padding:8px 14px;
+  background:rgba(138,104,32,.08);
+  border:1px solid rgba(138,104,32,.28);
+  border-radius:999px;
   font-family:'Noto Serif JP',serif;
   letter-spacing:.06em;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
 }
-.back-to-selector:active{opacity:.7;}
+.back-to-selector:active{opacity:.78;transform:translateY(1px);}
 
 /* ════════════════════
    初回画面
@@ -620,13 +639,13 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
       <div class="selector-arrow">›</div>
     </div>
 
-    <!-- 聖地巡礼 -->
-    <a class="selector-card s-pilgrimage" href="pilgrimage.html">
-      <div class="selector-icon">🗾</div>
+    <!-- RELATIONS -->
+    <a class="selector-card s-relations" href="relations.html">
+      <div class="selector-icon">🔗</div>
       <div class="selector-info">
-        <div class="selector-en">KITOKU PILGRIMAGE</div>
-        <div class="selector-title">聖地巡礼 吉方位ナビ</div>
-        <div class="selector-desc">お遍路・伊勢・出雲・熊野。吉方位×線路の日で最良の日程を選ぶ。</div>
+        <div class="selector-en">KITOKU @ RELATIONS</div>
+        <div class="selector-title">相性・人間関係を整える</div>
+        <div class="selector-desc">家族・恋人・友人・仕事相手。違いを知り、関係の活かし方を見る。</div>
       </div>
       <div class="selector-arrow">›</div>
     </a>
@@ -638,6 +657,28 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
         <div class="selector-en">KITOKU for BUSINESS</div>
         <div class="selector-title">採用・面談・チーム編成</div>
         <div class="selector-desc">候補者理解・相性診断・面談シート。5000年の知恵を仕事に。</div>
+      </div>
+      <div class="selector-arrow">›</div>
+    </a>
+
+    <!-- PILGRIMAGE -->
+    <a class="selector-card s-pilgrimage" href="pilgrimage.html">
+      <div class="selector-icon">🗾</div>
+      <div class="selector-info">
+        <div class="selector-en">KITOKU PILGRIMAGE</div>
+        <div class="selector-title">聖地巡礼 吉方位ナビ</div>
+        <div class="selector-desc">お遍路・伊勢・出雲・熊野。吉方位×線路の日で最良の日程を選ぶ。</div>
+      </div>
+      <div class="selector-arrow">›</div>
+    </a>
+
+    <!-- ENGLISH -->
+    <a class="selector-card s-english" href="en/index.html">
+      <div class="selector-icon">EN</div>
+      <div class="selector-info">
+        <div class="selector-en">JAPAN OS</div>
+        <div class="selector-title">English Preview</div>
+        <div class="selector-desc">海外の方へ。9 Avatars・AI Reflection・Daily Tuningを英語で体験。</div>
       </div>
       <div class="selector-arrow">›</div>
     </a>
@@ -712,7 +753,7 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 
   <!-- 戻るリンク -->
   <button class="back-to-selector" onclick="showSelector()">
-    ← TOPへ戻る
+    ← 5つの入口へ戻る
   </button>
 
   <!-- 画面内の目次バー -->
