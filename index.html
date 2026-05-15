@@ -971,14 +971,6 @@ function showSelector() {
   document.getElementById('screenHome').classList.remove('active');
 }
 
-function showHome() {
-  document.getElementById('screenFirst').classList.remove('active');
-  document.getElementById('screenSelector').classList.remove('active');
-  document.getElementById('screenHome').classList.add('active');
-
-  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
-  if (birth) buildHomeScreen(birth);
-}
 
 function scrollToSection(id) {
   const el = document.getElementById(id);
@@ -1004,8 +996,11 @@ function showFirst(clearData) {
 
 function showHome(birth) {
   document.getElementById('screenFirst').classList.remove('active');
+  document.getElementById('screenSelector').classList.remove('active');
   document.getElementById('screenHome').classList.add('active');
-  buildHomeScreen(birth);
+
+  const savedBirth = birth || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
+  if (savedBirth) buildHomeScreen(savedBirth);
 }
 
 // ============================================================
@@ -1045,8 +1040,8 @@ const STAR_TAGLINES = {
   8:'不屈の継承者。一歩一歩が山を動かす。',
   9:'真実の炎。照らし、浄化し、未来を開く。'
 };
-const KAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
-const SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const LOCAL_KAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const LOCAL_SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 
 function buildHomeScreen(birth) {
   const [by, bm, bd] = birth.split('-').map(Number);
@@ -1066,7 +1061,7 @@ function buildHomeScreen(birth) {
   const dayCenter = getDayCenter(y, m, d);
   const branch = getDayBranch(y, m, d);
   const stem = getDayStem(y, m, d);
-  const kanshi = KAN[stem] + SHI[branch];
+  const kanshi = LOCAL_KAN[stem] + LOCAL_SHI[branch];
   const months = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
   document.getElementById('todayKanshi').textContent = kanshi + 'の日';
