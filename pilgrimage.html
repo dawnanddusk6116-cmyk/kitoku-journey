@@ -278,7 +278,7 @@ body{
 }
 .cal-cell{
   aspect-ratio:1;border-radius:8px;
-  background:rgba(100,80,40,.04);
+  background:#fff;
   border:1px solid rgba(100,80,40,.1);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
@@ -288,24 +288,51 @@ body{
 }
 .cal-cell:active{transform:scale(.96);}
 .cal-cell.empty{background:transparent;border-color:transparent;cursor:default;}
-.cal-cell.today{border-color:rgba(196,160,67,.5);background:rgba(196,160,67,.08);}
-.cal-cell.railway{background:rgba(196,160,67,.13);border-color:rgba(196,160,67,.4);}
-.cal-cell.kichi-day{border-color:rgba(232,116,138,.5);}
-.cal-cell.best{
-  background:rgba(232,116,138,.18);
-  border-color:rgba(232,116,138,.65);
-  box-shadow:0 0 10px rgba(232,116,138,.2);
+
+/* 今日 */
+.cal-cell.today{
+  border:2px solid rgba(138,104,32,.6);
+  background:rgba(138,104,32,.06);
 }
-.cal-cell.kyo-day{opacity:.45;}
+/* 線路の日のみ（吉方なし） */
+.cal-cell.railway{
+  background:rgba(138,104,32,.09);
+  border:2px solid rgba(138,104,32,.5);
+}
+.cal-cell.railway .cal-num{
+  color:var(--goldlt);font-weight:700;
+}
+/* 月盤吉方のみ（線路の日でない） */
+.cal-cell.kichi-day{
+  background:rgba(58,125,78,.07);
+  border:2px solid rgba(58,125,78,.45);
+}
+.cal-cell.kichi-day .cal-num{color:#2a6038;font-weight:600;}
+/* ★ベスト（吉方位×線路の日） */
+.cal-cell.best{
+  background:rgba(177,107,120,.18);
+  border:2px solid rgba(177,107,120,.7);
+  box-shadow:0 2px 8px rgba(177,107,120,.2);
+}
+.cal-cell.best .cal-num{color:#8a2840;font-weight:800;font-size:.8rem;}
+/* 要注意日 */
+.cal-cell.kyo-day{
+  background:rgba(100,80,40,.04);
+  border-color:rgba(100,80,40,.1);
+  opacity:.5;
+}
 .cal-num{font-size:.72rem;color:var(--snow);line-height:1;}
-.cal-cell.railway .cal-num{color:var(--goldlt);font-weight:600;}
-.cal-cell.best .cal-num{color:#e8748a;font-weight:700;}
-.cal-cell.today .cal-num{color:var(--goldlt);}
-.cal-dot-row{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;justify-content:center;}
-.cal-dot{width:5px;height:5px;border-radius:50%;}
+.cal-cell.today .cal-num{color:var(--goldlt);font-weight:700;}
+/* ラベル（線路の日マーク） */
+.cal-label{
+  font-size:.48rem;line-height:1;margin-top:2px;
+  font-weight:600;
+}
+.cal-cell.railway .cal-label{color:rgba(92,64,16,.7);}
+.cal-cell.best .cal-label{color:rgba(138,40,64,.8);}
 .cal-badge{
-  position:absolute;top:2px;right:2px;
-  font-size:.45rem;line-height:1;
+  position:absolute;top:1px;right:2px;
+  font-size:.5rem;line-height:1;
 }
 
 /* ── ベスト候補 ── */
@@ -372,6 +399,42 @@ body{
   border-radius:10px;padding:10px 12px;
   font-size:.62rem;color:var(--mist);line-height:1.9;
 }
+
+
+/* ── 文字サイズ切替 ── */
+html.font-small body{font-size:14px;}
+html.font-large body{font-size:17px;}
+.display-toolbar{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.92);
+  position:sticky;top:61px;z-index:90;
+  backdrop-filter:blur(12px);
+}
+.display-toolbar-label{
+  font-size:.64rem;color:var(--mist);letter-spacing:.08em;
+}
+.font-btn{
+  min-width:38px;height:28px;border-radius:999px;
+  border:1px solid var(--rim);
+  background:rgba(255,255,255,.72);
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.72rem;font-weight:600;
+  cursor:pointer;
+}
+.font-btn.active{
+  border-color:rgba(138,104,32,.55);
+  background:rgba(196,160,67,.16);
+  box-shadow:inset 0 0 0 1px rgba(138,104,32,.14);
+}
+html.font-large .font-btn{font-size:.8rem;}
+@media (max-width:380px){
+  .display-toolbar{top:58px;padding:7px 14px;}
+  .font-btn{min-width:34px;height:27px;}
+}
+
 </style>
 </head>
 <body>
@@ -384,6 +447,15 @@ body{
   </div>
   <button class="back-btn" onclick="window.location.href='index.html'">← TOPへ戻る</button>
 </div>
+
+<!-- 表示設定 -->
+<div class="display-toolbar pilgrimage-font-toolbar" aria-label="文字サイズ">
+  <span class="display-toolbar-label">文字</span>
+  <button class="font-btn" type="button" data-pilgrimage-font="small" onclick="setPilgrimageFontSize('small')">小</button>
+  <button class="font-btn" type="button" data-pilgrimage-font="medium" onclick="setPilgrimageFontSize('medium')">中</button>
+  <button class="font-btn" type="button" data-pilgrimage-font="large" onclick="setPilgrimageFontSize('large')">大</button>
+</div>
+
 
 <!-- 星情報バー -->
 <div class="star-bar">
@@ -542,27 +614,29 @@ body{
   <div class="sec-title">吉日カレンダー</div>
 
   <div class="cal-header">
-    <button class="cal-nav" onclick="changeMonth(-1)">◀</button>
+    <button class="cal-nav" onclick="changeYear(-1)" style="font-size:.6rem;padding:6px 8px;">◀◀年</button>
+    <button class="cal-nav" onclick="changeMonth(-1)">◀月</button>
     <div class="cal-month" id="calMonthLabel"></div>
-    <button class="cal-nav" onclick="changeMonth(1)">▶</button>
+    <button class="cal-nav" onclick="changeMonth(1)">月▶</button>
+    <button class="cal-nav" onclick="changeYear(1)" style="font-size:.6rem;padding:6px 8px;">年▶▶</button>
   </div>
 
   <div class="cal-legend">
     <div class="legend-item">
-      <div class="legend-dot" style="background:rgba(196,160,67,.6);"></div>
-      <span>線路の日</span>
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(177,107,120,.85);"></div>
+      <span>★ 吉方位×線路の日（最優先）</span>
     </div>
     <div class="legend-item">
-      <div class="legend-dot" style="background:#e8748a;"></div>
-      <span>吉方位×線路の日</span>
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(138,104,32,.15);border:2px solid rgba(138,104,32,.6);"></div>
+      <span>◆ 線路の日</span>
     </div>
     <div class="legend-item">
-      <div class="legend-dot" style="background:var(--green);"></div>
-      <span>月盤吉方</span>
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(58,125,78,.12);border:2px solid rgba(58,125,78,.5);"></div>
+      <span>○ 月盤吉方</span>
     </div>
     <div class="legend-item">
-      <div class="legend-dot" style="background:rgba(100,110,140,.5);"></div>
-      <span>要注意日</span>
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.15);"></div>
+      <span>△ 要注意日</span>
     </div>
   </div>
 
@@ -615,7 +689,20 @@ body{
     <strong style="color:var(--goldlt);">格さんからひとこと</strong><br>
     完璧な吉日を探すより、「行くと決めた日を少しでも整える」ことが大切です。5000年の知恵は、あなたを縛るのではなく、背中を押すために使うものです。
   </div>
-  <div id="todayNichibanInfo" style="margin-top:10px;"></div>
+  <a href="direction_v2.html" style="
+    display:block;margin-top:10px;
+    background:rgba(138,104,32,.08);
+    border:1px solid rgba(138,104,32,.3);
+    border-radius:9px;padding:12px 14px;
+    text-decoration:none;
+    display:flex;align-items:center;justify-content:space-between;
+  ">
+    <div>
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:3px;">🧭 今日の日盤吉方位を確認する</div>
+      <div style="font-size:.62rem;color:var(--mist);">吉方位ナビ（方位盤）で正確な方位を確認できます</div>
+    </div>
+    <div style="color:rgba(138,104,32,.5);font-size:.8rem;">›</div>
+  </a>
 </div>
 
 <!-- 注意書き -->
@@ -1295,10 +1382,26 @@ function calcAndShowDir() {
     <div class="dir-result">
       <div class="dir-result-header">
         <div class="dir-compass">${DIR_EMOJI[dir] || '?'}</div>
-        <div>
+        <div style="flex:1;">
           <div class="dir-dest-name">${gState.destName}</div>
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
         </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;">
+        <a href="https://maps.google.com/?q=${gState.destLat},${gState.destLon}" target="_blank" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);
+          border-radius:8px;padding:9px 8px;text-decoration:none;
+          font-size:.68rem;color:#1a56a8;font-family:'Noto Serif JP',serif;
+          font-weight:600;
+        ">📍 目的地を地図で確認</a>
+        <a href="https://maps.google.com/dir/${gState.homeLat},${gState.homeLon}/${gState.destLat},${gState.destLon}" target="_blank" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);
+          border-radius:8px;padding:9px 8px;text-decoration:none;
+          font-size:.68rem;color:#1a6e30;font-family:'Noto Serif JP',serif;
+          font-weight:600;
+        ">🚗 ルートを調べる</a>
       </div>
       <div class="dir-panels">
         <div class="dir-panel">
@@ -1337,7 +1440,7 @@ function calcAndShowDir() {
   document.getElementById('calSection').style.display = 'block';
   document.getElementById('nichibanSection').style.display = 'block';
   renderCalendar();
-  renderTodayNichiban(todayY, todayM, todayD);
+  // 日盤取り候補は表示せず、方位盤へのリンクだけを案内します。
 }
 
 function rankLabel(rank) {
@@ -1356,6 +1459,15 @@ function calcDistance(lat1, lon1, lat2, lon2) {
 // ============================================================
 // カレンダー描画
 // ============================================================
+function changeYear(dir) {
+  gState.calYear += dir;
+  if (gState.homeLat && gState.destLat && gState.honmei) {
+    calcAndShowDir();
+  } else {
+    renderCalendar();
+  }
+}
+
 function changeMonth(dir) {
   gState.calMonth += dir;
   if (gState.calMonth > 12) { gState.calMonth = 1; gState.calYear++; }
@@ -1434,16 +1546,18 @@ function renderCalendar() {
     if (isKyoDay) classes += ' kyo-day';
 
     const dow = new Date(y, m - 1, d).getDay();
-    const numColor = dow === 0 ? 'color:rgba(232,116,138,.8)' : dow === 6 ? 'color:rgba(100,150,220,.8)' : '';
+    const numColor = dow === 0 ? 'color:rgba(180,60,60,.8)' : dow === 6 ? 'color:rgba(60,80,160,.8)' : '';
 
-    const dots = [];
-    if (isRailway) dots.push(`<div class="cal-dot" style="background:rgba(196,160,67,.7);"></div>`);
-    if (isKichi) dots.push(`<div class="cal-dot" style="background:var(--kichi);"></div>`);
+    let cellLabel = '';
+    if (isBest) cellLabel = '★線路';
+    else if (isRailway) cellLabel = '◆線路';
+    else if (isKichi) cellLabel = '○吉方';
+    else if (isKyoDay) cellLabel = '△要注意';
 
     html += `
       <div class="${classes}" onclick="showDayDetail(${y},${m},${d})">
         <div class="cal-num" style="${numColor}">${d}</div>
-        ${dots.length ? `<div class="cal-dot-row">${dots.join('')}</div>` : ''}
+        ${cellLabel ? `<div class="cal-label">${cellLabel}</div>` : ''}
         ${isBest ? `<div class="cal-badge">★</div>` : ''}
       </div>
     `;
@@ -1474,12 +1588,21 @@ function renderCalendar() {
     if (item.rank >= 4) tags.push(`<span class="best-tag tag-kichi">✦ 本命・月命 吉</span>`);
     else if (item.rank >= 2) tags.push(`<span class="best-tag tag-kichi">吉方</span>`);
     tags.push(`<span class="best-tag tag-month">月盤 ${getMonthCenter(y,m,item.d)}（${STARS[getMonthCenter(y,m,item.d)].j}）</span>`);
+    const routeUrl = gState.homeLat && gState.destLat
+      ? `https://maps.google.com/dir/${gState.homeLat},${gState.homeLon}/${gState.destLat},${gState.destLon}`
+      : `https://maps.google.com/?q=${gState.destLat},${gState.destLon}`;
     return `
       <div class="best-item">
         <div class="best-rank ${idx===0?'r1':''}">${idx+1}</div>
         <div class="best-info">
           <div class="best-date">${y}年 ${monthNames[m]} ${item.d}日（${dowStr}）</div>
           <div class="best-tags">${tags.join('')}</div>
+          <a href="${routeUrl}" target="_blank" style="
+            display:inline-flex;align-items:center;gap:4px;margin-top:7px;
+            background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.3);
+            border-radius:6px;padding:5px 10px;text-decoration:none;
+            font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;
+          ">🗺 この日のルートを地図で確認</a>
         </div>
       </div>
     `;
@@ -1519,6 +1642,7 @@ function renderTodayNichiban(y, m, d) {
 
   // 今日の吉方位を探す
   const nichibanEl = document.getElementById('todayNichibanInfo');
+  if (!nichibanEl) return;
   const kichiDirs = [];
   for (const dir of ['N','NE','E','SE','S','SW','W','NW']) {
     const starN = board[dir] || 5;
