@@ -1149,14 +1149,31 @@ function renderPresetGrid(id, places) {
 function selectPreset(btn, lat, lon, name, area) {
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  document.getElementById('customDest').value = '';
-  document.getElementById('destStatus').textContent = '';
+
+  const customDest = document.getElementById('customDest');
+  if (customDest) customDest.value = '';
+  const destStatus = document.getElementById('destStatus');
+  if (destStatus) destStatus.textContent = '';
+
   gState.destLat = lat;
   gState.destLon = lon;
   gState.destName = name;
   gState.destArea = area;
-  if (gState.homeLat) calcAndShowDir();
-  else showHomePrompt();
+
+  if (gState.homeLat && gState.honmei) {
+    calcAndShowDir();
+  } else if (!gState.homeLat) {
+    showHomePrompt();
+  } else {
+    document.getElementById('dirResultSection').style.display = 'block';
+    document.getElementById('dirResultContent').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⭐</div>
+        生年月日を登録すると、方位と日程を計算できます。<br>
+        TOPへ戻って生年月日を登録してください。
+      </div>
+    `;
+  }
 }
 
 async function searchCustomDest() {
