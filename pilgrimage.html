@@ -1240,12 +1240,17 @@ function calcAndShowDir() {
   gState.destDir = dir;
 
   const now = new Date();
-  const y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate();
+  const todayY = now.getFullYear();
+  const todayM = now.getMonth() + 1;
+  const todayD = now.getDate();
+  const viewY = gState.calYear || todayY;
+  const viewM = gState.calMonth || todayM;
+  const viewD = 15;
 
-  // 月盤・日盤・年盤でのランク計算
-  const monthCenter = getMonthCenter(y, m, d);
-  const dayCenter = getDayCenter(y, m, d);
-  const yearCenterN = yearCenter(y);
+  // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
+  const monthCenter = getMonthCenter(viewY, viewM, viewD);
+  const dayCenter = getDayCenter(todayY, todayM, todayD);
+  const yearCenterN = yearCenter(viewY);
 
   const monthBoard = buildBoardFromCenter(monthCenter);
   const dayBoard = buildBoardFromCenter(dayCenter);
@@ -1256,9 +1261,9 @@ function calcAndShowDir() {
   const yearStarN = yearBoard[dir] || 5;
 
   // 三合
-  const yearBranch = getZodiac(y);
-  const monthBranch = BRANCH_NAME[getMonthBranch(y, m, d)];
-  const dayBranchIdx = getDayBranch(y, m, d);
+  const yearBranch = getZodiac(viewY);
+  const monthBranch = BRANCH_NAME[getMonthBranch(viewY, viewM, viewD)];
+  const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];
 
   const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [] };
@@ -1268,7 +1273,7 @@ function calcAndShowDir() {
   const mSangoSet = new Set(mSangoInfo.dirs);
   const dSangoSet = new Set(dSangoInfo.dirs);
 
-  const tendo = getTendoDir(y, m, d);
+  const tendo = getTendoDir(viewY, viewM, viewD);
 
   // 年盤の破れ方位
   const yearBreakDir = BRANCH_DIR[((yearBranch.k ? BRANCH_NAME.indexOf(yearBranch.k) : 0) + 6) % 12];
@@ -1297,12 +1302,12 @@ function calcAndShowDir() {
       </div>
       <div class="dir-panels">
         <div class="dir-panel">
-          <div class="dir-panel-label">年盤</div>
+          <div class="dir-panel-label">年盤（${viewY}年）</div>
           <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank)}</div>
           <div class="dir-panel-badges">${yearRank.badges.join('<br>') || '—'}</div>
         </div>
         <div class="dir-panel">
-          <div class="dir-panel-label">月盤（今月）</div>
+          <div class="dir-panel-label">月盤（${viewY}年${viewM}月）</div>
           <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank)}</div>
           <div class="dir-panel-badges">${monthRank.badges.join('<br>') || '—'}</div>
         </div>
@@ -1314,7 +1319,7 @@ function calcAndShowDir() {
       </div>
       ${isKyo ? `
       <div class="kyo-warn">
-        ⚠ 今月の月盤では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
+        ⚠ 表示中の月盤（${viewY}年${viewM}月）では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
         他の月・日程を確認するか、日盤取りをご検討ください。
       </div>` : ''}
       ${!isKyo && monthRank.rank >= 2 ? `
@@ -1332,7 +1337,7 @@ function calcAndShowDir() {
   document.getElementById('calSection').style.display = 'block';
   document.getElementById('nichibanSection').style.display = 'block';
   renderCalendar();
-  renderTodayNichiban(y, m, d);
+  renderTodayNichiban(todayY, todayM, todayD);
 }
 
 function rankLabel(rank) {
@@ -1355,7 +1360,11 @@ function changeMonth(dir) {
   gState.calMonth += dir;
   if (gState.calMonth > 12) { gState.calMonth = 1; gState.calYear++; }
   if (gState.calMonth < 1) { gState.calMonth = 12; gState.calYear--; }
-  renderCalendar();
+  if (gState.homeLat && gState.destLat && gState.honmei) {
+    calcAndShowDir();
+  } else {
+    renderCalendar();
+  }
 }
 
 function renderCalendar() {
