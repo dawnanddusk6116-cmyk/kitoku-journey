@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>聖地巡礼 吉方位ナビ | KITOKU</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KITOKU巡礼">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="kitoku-engine.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   KITOKU 聖地巡礼 吉方位ナビ
+   ═══════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;
+  --card:#ffffff;
+  --card2:#f2efe8;
+  --rim:rgba(100,80,40,.15);
+  --gold:#8a6820;
+  --goldlt:#5c4010;
+  --snow:#1c1208;
+  --mist:#5e503d;
+  --kichi:#b16b78;
+  --kichi-bg:rgba(177,107,120,.1);
+  --kyo:rgba(100,80,40,.4);
+  --kyo-bg:rgba(100,80,40,.06);
+  --green:#3a7d4e;
+  --green-bg:rgba(58,125,78,.1);
+  --radius:12px;
+  --safe-top:env(safe-area-inset-top,0px);
+}
+html{background:var(--bg);min-height:100dvh;}
+body{
+  background:var(--bg);color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  min-height:100dvh;max-width:480px;margin:0 auto;
+  font-size:15px;padding-bottom:60px;
+}
+
+/* ── ヘッダー ── */
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(var(--safe-top) + 12px) 18px 12px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.95);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem;letter-spacing:.25em;color:var(--gold);
+}
+.header-sub{
+  font-size:.6rem;letter-spacing:.18em;color:var(--mist);margin-top:2px;
+}
+.back-btn{
+  background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.35);
+  color:var(--goldlt);font-size:.75rem;padding:8px 14px;
+  border-radius:6px;cursor:pointer;letter-spacing:.08em;
+  font-family:'Noto Serif JP',serif;
+}
+
+/* ── セクション共通 ── */
+.section{
+  margin:14px 16px 0;
+  background:var(--card);
+  border:1px solid var(--rim);
+  border-radius:var(--radius);
+  padding:16px;
+}
+.sec-label{
+  font-size:.58rem;letter-spacing:.2em;color:var(--gold);
+  font-weight:600;margin-bottom:10px;
+}
+.sec-title{
+  font-size:.95rem;color:var(--goldlt);font-weight:600;
+  margin-bottom:6px;letter-spacing:.06em;
+}
+
+/* ── 星情報バー ── */
+.star-bar{
+  margin:14px 16px 0;
+  background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));
+  border:1px solid rgba(196,160,67,.28);
+  border-radius:var(--radius);
+  padding:12px 14px;
+}
+.star-bar-text{
+  font-size:.75rem;color:var(--snow);line-height:1.9;
+}
+.star-bar-note{
+  font-size:.6rem;color:var(--mist);margin-top:5px;line-height:1.7;
+}
+
+/* ── 自宅登録 ── */
+.home-reg{padding:0;}
+.input-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;}
+.input-field{
+  width:100%;background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:8px;
+  color:var(--snow);font-family:'Noto Serif JP',serif;
+  font-size:.78rem;padding:10px 12px;
+}
+.input-field::placeholder{color:rgba(100,80,40,.35);}
+.btn-primary{
+  background:linear-gradient(135deg,rgba(196,160,67,.9),rgba(196,160,67,.65));
+  border:1px solid rgba(196,160,67,.5);color:#fff;
+  font-size:.72rem;padding:10px 14px;border-radius:8px;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;white-space:nowrap;
+}
+.btn-secondary{
+  width:100%;background:rgba(100,80,40,.06);
+  border:1px solid var(--rim);color:var(--goldlt);
+  font-size:.72rem;padding:10px;border-radius:8px;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;margin-top:6px;
+}
+.registered-badge{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(94,200,138,.1);border:1px solid rgba(94,200,138,.3);
+  border-radius:8px;padding:10px 12px;
+}
+.registered-text{font-size:.78rem;color:var(--green);}
+.change-btn{
+  font-size:.65rem;color:var(--mist);background:none;
+  border:1px solid var(--rim);border-radius:6px;
+  padding:5px 10px;cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+
+/* ── 目的地 ── */
+.preset-group{margin-bottom:12px;}
+.preset-group-label{
+  font-size:.6rem;letter-spacing:.14em;color:var(--gold);
+  margin-bottom:7px;
+}
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.preset-btn{
+  background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:9px;
+  padding:9px 8px;cursor:pointer;text-align:left;
+  transition:all .18s;
+}
+.preset-btn:active{transform:scale(.98);}
+.preset-btn.selected{
+  background:rgba(196,160,67,.16);
+  border-color:rgba(196,160,67,.55);
+}
+.preset-name{font-size:.72rem;color:var(--snow);font-weight:600;line-height:1.3;}
+.preset-area{font-size:.58rem;color:var(--mist);margin-top:2px;}
+.divider{
+  text-align:center;font-size:.6rem;color:var(--mist);
+  margin:10px 0;letter-spacing:.12em;
+}
+.input-full{
+  width:100%;background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:8px;
+  color:var(--snow);font-family:'Noto Serif JP',serif;
+  font-size:.78rem;padding:10px 12px;
+}
+.input-full::placeholder{color:rgba(100,80,40,.35);}
+
+/* ── 方位結果 ── */
+.dir-result{
+  background:var(--card2);border:1px solid var(--rim);
+  border-radius:var(--radius);padding:14px;margin-top:10px;
+}
+.dir-result-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.dir-compass{
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(196,160,67,.12);
+  border:2px solid rgba(196,160,67,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;font-family:'Cormorant Garamond',serif;
+  color:var(--goldlt);font-weight:500;flex-shrink:0;
+}
+.dir-dest-name{font-size:.9rem;color:var(--snow);font-weight:600;}
+.dir-dest-area{font-size:.62rem;color:var(--mist);margin-top:2px;}
+.dir-panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px;}
+.dir-panel{
+  background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:9px;
+  padding:9px 7px;text-align:center;
+}
+.dir-panel-label{font-size:.55rem;letter-spacing:.1em;color:var(--mist);margin-bottom:4px;}
+.dir-panel-rank{font-size:.7rem;font-weight:600;margin-bottom:3px;}
+.dir-panel-badges{font-size:.58rem;color:var(--mist);line-height:1.5;}
+.rank-5{color:#8a4c00;}
+.rank-4{color:#b16b78;}
+.rank-3{color:#8a6820;}
+.rank-2{color:#3a7d4e;}
+.rank-1{color:#4a7a8a;}
+.rank-0{color:rgba(100,80,40,.35);}
+.kyo-warn{
+  margin-top:8px;background:rgba(200,80,80,.1);
+  border:1px solid rgba(200,80,80,.3);border-radius:8px;
+  padding:9px 11px;font-size:.68rem;color:rgba(255,150,150,.85);
+  line-height:1.8;
+}
+.nichiban-guide{
+  margin-top:8px;
+  background:rgba(196,160,67,.08);
+  border:1px solid rgba(196,160,67,.25);
+  border-radius:8px;padding:10px 12px;
+}
+.nichiban-guide-title{
+  font-size:.68rem;color:var(--goldlt);font-weight:600;margin-bottom:5px;
+}
+.nichiban-guide-text{
+  font-size:.64rem;color:var(--mist);line-height:1.85;
+}
+
+/* ── カレンダー ── */
+.cal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.cal-month{font-size:.88rem;color:var(--goldlt);font-weight:600;letter-spacing:.1em;}
+.cal-nav{
+  background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);
+  color:var(--goldlt);font-size:.72rem;padding:6px 12px;
+  border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;
+}
+.cal-legend{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;
+}
+.legend-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:.58rem;color:var(--mist);
+}
+.legend-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dow{
+  text-align:center;font-size:.6rem;color:var(--mist);
+  padding:5px 0;letter-spacing:.04em;
+}
+.cal-cell{
+  aspect-ratio:1;border-radius:8px;
+  background:rgba(100,80,40,.04);
+  border:1px solid rgba(100,80,40,.1);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;
+  position:relative;overflow:hidden;
+  padding:2px;
+}
+.cal-cell:active{transform:scale(.96);}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default;}
+.cal-cell.today{border-color:rgba(196,160,67,.5);background:rgba(196,160,67,.08);}
+.cal-cell.railway{background:rgba(196,160,67,.13);border-color:rgba(196,160,67,.4);}
+.cal-cell.kichi-day{border-color:rgba(232,116,138,.5);}
+.cal-cell.best{
+  background:rgba(232,116,138,.18);
+  border-color:rgba(232,116,138,.65);
+  box-shadow:0 0 10px rgba(232,116,138,.2);
+}
+.cal-cell.kyo-day{opacity:.45;}
+.cal-num{font-size:.72rem;color:var(--snow);line-height:1;}
+.cal-cell.railway .cal-num{color:var(--goldlt);font-weight:600;}
+.cal-cell.best .cal-num{color:#e8748a;font-weight:700;}
+.cal-cell.today .cal-num{color:var(--goldlt);}
+.cal-dot-row{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;justify-content:center;}
+.cal-dot{width:5px;height:5px;border-radius:50%;}
+.cal-badge{
+  position:absolute;top:2px;right:2px;
+  font-size:.45rem;line-height:1;
+}
+
+/* ── ベスト候補 ── */
+.best-list{display:grid;gap:8px;margin-top:10px;}
+.best-item{
+  background:var(--card);border:1px solid var(--rim);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+}
+.best-rank{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(196,160,67,.16);border:1px solid rgba(196,160,67,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;color:var(--goldlt);font-weight:700;flex-shrink:0;
+}
+.best-rank.r1{background:rgba(255,215,0,.18);border-color:rgba(255,215,0,.5);color:#ffd700;}
+.best-info{flex:1;}
+.best-date{font-size:.85rem;color:var(--snow);font-weight:600;margin-bottom:3px;}
+.best-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.best-tag{
+  font-size:.58rem;padding:2px 7px;border-radius:999px;
+  border:1px solid;
+}
+.tag-railway{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.4);color:var(--goldlt);}
+.tag-kichi{background:rgba(232,116,138,.15);border-color:rgba(232,116,138,.4);color:#e8748a;}
+.tag-month{background:rgba(94,200,138,.1);border-color:rgba(94,200,138,.3);color:var(--green);}
+
+/* ── 日盤取りガイド ── */
+.nichiban-section{
+  background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.03));
+  border:1px solid rgba(196,160,67,.28);
+}
+.nichiban-steps{display:grid;gap:8px;margin-top:10px;}
+.nichiban-step{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(100,80,40,.04);border:1px solid rgba(100,80,40,.1);
+  border-radius:9px;padding:10px 11px;
+}
+.step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.38);
+  color:var(--goldlt);font-size:.72rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.step-text{font-size:.68rem;color:var(--mist);line-height:1.8;}
+.step-text strong{color:var(--snow);}
+
+/* ── 空状態 ── */
+.empty-state{
+  text-align:center;padding:20px;
+  font-size:.72rem;color:var(--mist);line-height:2;
+}
+.empty-icon{font-size:2rem;margin-bottom:8px;opacity:.5;}
+
+/* ── フッター ── */
+.footer{
+  text-align:center;color:var(--mist);
+  font-size:.58rem;opacity:.6;margin-top:24px;
+  padding:0 16px 20px;line-height:2;
+}
+.disclaimer{
+  margin:14px 16px 0;
+  background:rgba(100,80,40,.05);border:1px solid rgba(100,80,40,.12);
+  border-radius:10px;padding:10px 12px;
+  font-size:.62rem;color:var(--mist);line-height:1.9;
+}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="app-header">
+  <div>
+    <div class="header-logo">✦ KITOKU<span style="opacity:.5;margin:0 2px;">@</span>JOURNEY</div>
+    <div class="header-sub">聖地巡礼 吉方位ナビ</div>
+  </div>
+  <button class="back-btn" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+</div>
+
+<!-- 星情報バー -->
+<div class="star-bar">
+  <div class="star-bar-text" id="starInfoText">生年月日を登録すると、あなたの星情報が表示されます</div>
+  <div class="star-bar-note">この星情報をもとに、あなた専用の吉方位・線路の日を計算します。</div>
+</div>
+
+<!-- STEP 1: 自宅登録 -->
+<div class="section">
+  <div class="sec-label">STEP 1 — 自宅の場所</div>
+  <div class="sec-title">出発地点を登録する</div>
+  <div id="homeRegArea">
+    <div class="input-row">
+      <input class="input-field" id="homeInput" type="text" placeholder="住所または郵便番号（例：愛媛県松山市）">
+      <button class="btn-primary" onclick="searchHome()">登録</button>
+    </div>
+    <button class="btn-secondary" onclick="getGeoLocation()">📍 現在地を使う</button>
+    <div id="homeStatus" style="font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;"></div>
+  </div>
+  <div id="homeRegistered" style="display:none;">
+    <div class="registered-badge">
+      <span class="registered-text">📍 自宅登録済み ✓　<span id="homeLabel" style="font-size:.68rem;color:var(--mist);"></span></span>
+      <button class="change-btn" onclick="changeHome()">変更する</button>
+    </div>
+  </div>
+  <div style="font-size:.6rem;color:var(--mist);margin-top:8px;line-height:1.7;">
+    ※ 位置情報はこの端末のみに保存されます。サーバーには送信しません。
+  </div>
+</div>
+
+<!-- STEP 2: 目的地設定 -->
+<div class="section">
+  <div class="sec-label">STEP 2 — 目的地</div>
+  <div class="sec-title">行きたい聖地を選ぶ</div>
+
+  <div class="preset-group">
+    <div class="preset-group-label">✦ 四国・お遍路</div>
+    <div class="preset-grid" id="grid-henro"></div>
+  </div>
+
+  <div class="preset-group">
+    <div class="preset-group-label">✦ 三大聖地</div>
+    <div class="preset-grid" id="grid-major"></div>
+  </div>
+
+  <div class="preset-group">
+    <div class="preset-group-label">✦ 全国の主要神社・寺院</div>
+    <div class="preset-grid" id="grid-national"></div>
+  </div>
+
+  <div class="divider">── または自由入力 ──</div>
+  <div class="input-row">
+    <input class="input-full" id="customDest" type="text" placeholder="聖地の名前・住所を入力">
+    <button class="btn-primary" onclick="searchCustomDest()">検索</button>
+  </div>
+  <div id="destStatus" style="font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;"></div>
+</div>
+
+<!-- STEP 3: 方位チェック結果 -->
+<div class="section" id="dirResultSection" style="display:none;">
+  <div class="sec-label">STEP 3 — 方位チェック</div>
+  <div id="dirResultContent"></div>
+</div>
+
+<!-- STEP 4: 日程カレンダー -->
+<div class="section" id="calSection" style="display:none;">
+  <div class="sec-label">STEP 4 — 日程を選ぶ</div>
+  <div class="sec-title">吉日カレンダー</div>
+
+  <div class="cal-header">
+    <button class="cal-nav" onclick="changeMonth(-1)">◀</button>
+    <div class="cal-month" id="calMonthLabel"></div>
+    <button class="cal-nav" onclick="changeMonth(1)">▶</button>
+  </div>
+
+  <div class="cal-legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:rgba(196,160,67,.6);"></div>
+      <span>線路の日</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#e8748a;"></div>
+      <span>吉方位×線路の日</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--green);"></div>
+      <span>月盤吉方</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:rgba(100,110,140,.5);"></div>
+      <span>要注意日</span>
+    </div>
+  </div>
+
+  <div class="cal-grid" id="calDows"></div>
+  <div class="cal-grid" style="margin-top:4px;" id="calCells"></div>
+
+  <!-- ベスト候補 -->
+  <div style="margin-top:16px;">
+    <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:8px;">
+      ✦ おすすめ日程 TOP3
+    </div>
+    <div class="best-list" id="bestList"></div>
+  </div>
+</div>
+
+<!-- 日盤取りガイド -->
+<div class="section nichiban-section" id="nichibanSection" style="display:none;">
+  <div class="sec-label">どうしても行く日が決まっている場合</div>
+  <div class="sec-title">日盤取りで解決する</div>
+  <div style="font-size:.72rem;color:var(--mist);line-height:1.9;margin-bottom:4px;">
+    日程が固定で動かせない時も、出発前に吉方位の場所へ立ち寄ることで、その日の日盤の吉エネルギーを取ることができます。
+  </div>
+  <div class="nichiban-steps">
+    <div class="nichiban-step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>目的地へ向かう前日or当日の朝</strong>、今日の日盤で吉方位にある場所へ立ち寄ります。
+      </div>
+    </div>
+    <div class="nichiban-step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>コンビニ・カフェ・神社・公園</strong>でも十分です。遠出しなくてよく、短時間でも有効です。
+      </div>
+    </div>
+    <div class="nichiban-step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        日盤取りをしてから聖地へ向かうことで、<strong>「行く」という意志を吉エネルギーで包む</strong>ことができます。
+      </div>
+    </div>
+  </div>
+  <div style="
+    margin-top:10px;
+    background:rgba(196,160,67,.08);
+    border:1px solid rgba(196,160,67,.2);
+    border-radius:8px;padding:10px 12px;
+    font-size:.64rem;color:var(--mist);line-height:1.85;
+  ">
+    <strong style="color:var(--goldlt);">格さんからひとこと</strong><br>
+    完璧な吉日を探すより、「行くと決めた日を少しでも整える」ことが大切です。5000年の知恵は、あなたを縛るのではなく、背中を押すために使うものです。
+  </div>
+  <div id="todayNichibanInfo" style="margin-top:10px;"></div>
+</div>
+
+<!-- 注意書き -->
+<div class="disclaimer">
+  ⚠ 気学には流派により計算方法・吉凶の優先順位が異なります。他のアプリと比較しながら、根拠をご自身で判断する材料としてご使用ください。<br>
+  KITOKU OSは東洋の叡智とY理論に基づく独自解釈です。結果は判断材料であり、最終的な決定はご自身でお願いします。
+</div>
+
+<div class="footer">
+  KITOKU ENGINE — 天地統合コンシェルジュ<br>
+  Inspired by 5000 Years of Eastern Celestial Wisdom<br>
+  <span style="margin-top:4px;display:block;">© KITOKU @ JOURNEY</span>
+</div>
+
+<script>
+// ============================================================
+// 聖地データ
+// ============================================================
+const SACRED_PLACES = {
+  henro: [
+    { name:'1番 霊山寺', area:'徳島県鳴門市', lat:34.1533, lon:134.5469 },
+    { name:'51番 石手寺', area:'愛媛県松山市', lat:33.8484, lon:132.7917 },
+    { name:'75番 善通寺', area:'香川県善通寺市', lat:34.0733, lon:133.7757 },
+    { name:'88番 大窪寺', area:'香川県さぬき市', lat:34.1475, lon:134.2647 },
+    { name:'高知・足摺岬', area:'高知県土佐清水市', lat:32.7194, lon:133.0049 },
+    { name:'高知・室戸岬', area:'高知県室戸市', lat:33.2502, lon:134.1695 },
+  ],
+  major: [
+    { name:'伊勢神宮（内宮）', area:'三重県伊勢市', lat:34.4551, lon:136.7252 },
+    { name:'出雲大社', area:'島根県出雲市', lat:35.4015, lon:132.6850 },
+    { name:'高野山 奥の院', area:'和歌山県高野町', lat:34.2131, lon:135.5823 },
+  ],
+  national: [
+    { name:'熊野本宮大社', area:'和歌山県田辺市', lat:33.8375, lon:135.7876 },
+    { name:'熊野那智大社', area:'和歌山県那智勝浦', lat:33.6655, lon:135.9028 },
+    { name:'熊野速玉大社', area:'和歌山県新宮市', lat:33.7282, lon:135.9833 },
+    { name:'伏見稲荷大社', area:'京都府京都市', lat:34.9671, lon:135.7727 },
+    { name:'春日大社', area:'奈良県奈良市', lat:34.6810, lon:135.8448 },
+    { name:'東大寺', area:'奈良県奈良市', lat:34.6886, lon:135.8398 },
+    { name:'厳島神社', area:'広島県廿日市市', lat:34.2962, lon:132.3194 },
+    { name:'太宰府天満宮', area:'福岡県太宰府市', lat:33.5218, lon:130.5352 },
+    { name:'浅草寺', area:'東京都台東区', lat:35.7148, lon:139.7967 },
+    { name:'日光東照宮', area:'栃木県日光市', lat:36.7575, lon:139.5986 },
+  ]
+};
+
+// ============================================================
+// 状態管理
+// ============================================================
+let gState = {
+  homeLat: null,
+  homeLon: null,
+  homeLabel: '',
+  destLat: null,
+  destLon: null,
+  destName: '',
+  destArea: '',
+  destDir: null,
+  honmei: null,
+  tsukimei: null,
+  calYear: null,
+  calMonth: null,
+  railwayBranches: null, // 線路の日の支インデックス
+};
+
+// ============================================================
+// 初期化
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 自宅情報の復元
+  const savedHome = localStorage.getItem('kitoku-home');
+  if (savedHome) {
+    try {
+      const h = JSON.parse(savedHome);
+      gState.homeLat = h.lat;
+      gState.homeLon = h.lon;
+      gState.homeLabel = h.label || '';
+      showHomeRegistered();
+    } catch(e) {}
+  }
+
+  // 星情報の復元
+  loadStarInfo();
+
+  // プリセットボタン描画
+  renderPresets();
+
+  // 今月のカレンダー初期化
+  const now = new Date();
+  gState.calYear = now.getFullYear();
+  gState.calMonth = now.getMonth() + 1;
+
+  // 線路の日の設定（将軍のデフォルト：丑=1・辰=4・未=7・戌=10）
+  const savedRailway = localStorage.getItem('kitoku-railway-branches');
+  if (savedRailway) {
+    try {
+      gState.railwayBranches = JSON.parse(savedRailway);
+    } catch(e) {
+      gState.railwayBranches = [1, 4, 7, 10]; // 丑・辰・未・戌
+    }
+  } else {
+    gState.railwayBranches = [1, 4, 7, 10];
+  }
+});
+
+function loadStarInfo() {
+  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
+  if (!birth) return;
+  const [by, bm, bd] = birth.split('-').map(Number);
+  if (!by || !bm || !bd) return;
+
+  // kitoku-engineの関数を使用
+  const { kY, kM } = getKD(by, bm, bd);
+  const h = calcHonmei(kY);
+  let t = calcTsukimei(h, kM);
+  const tFK = getTsukimeiForKeisha(h, t);
+  const k = calcKeisha(h, tFK);
+  const dstar = calcDokai(h, tFK);
+
+  gState.honmei = h;
+  gState.tsukimei = t;
+
+  const yn = calcNayin(kY);
+  const mn = calcMonthNayin(by, bm, bd);
+
+  document.getElementById('starInfoText').textContent =
+    `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。`;
+}
+
+// ============================================================
+// 自宅登録
+// ============================================================
+async function searchHome() {
+  const val = document.getElementById('homeInput').value.trim();
+  if (!val) return;
+
+  const status = document.getElementById('homeStatus');
+  status.textContent = '検索中...';
+
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&accept-language=ja`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
+    const data = await res.json();
+    if (!data.length) { status.textContent = '場所が見つかりませんでした。別の住所で試してください。'; return; }
+    const r = data[0];
+    gState.homeLat = parseFloat(r.lat);
+    gState.homeLon = parseFloat(r.lon);
+    gState.homeLabel = r.display_name.split(',').slice(0, 2).join(' ');
+    saveHome();
+    showHomeRegistered();
+    status.textContent = '';
+    if (gState.destLat) calcAndShowDir();
+  } catch(e) {
+    status.textContent = 'ネットワークエラーが発生しました。';
+  }
+}
+
+function getGeoLocation() {
+  if (!navigator.geolocation) {
+    document.getElementById('homeStatus').textContent = 'このブラウザでは位置情報が使えません。';
+    return;
+  }
+  document.getElementById('homeStatus').textContent = '現在地を取得中...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    gState.homeLat = pos.coords.latitude;
+    gState.homeLon = pos.coords.longitude;
+    gState.homeLabel = '現在地';
+    saveHome();
+    showHomeRegistered();
+    document.getElementById('homeStatus').textContent = '';
+    if (gState.destLat) calcAndShowDir();
+  }, err => {
+    document.getElementById('homeStatus').textContent = '現在地の取得に失敗しました。住所で入力してください。';
+  });
+}
+
+function saveHome() {
+  localStorage.setItem('kitoku-home', JSON.stringify({
+    lat: gState.homeLat,
+    lon: gState.homeLon,
+    label: gState.homeLabel
+  }));
+}
+
+function showHomeRegistered() {
+  document.getElementById('homeRegArea').style.display = 'none';
+  document.getElementById('homeRegistered').style.display = 'block';
+  document.getElementById('homeLabel').textContent = gState.homeLabel;
+}
+
+function changeHome() {
+  document.getElementById('homeRegArea').style.display = 'block';
+  document.getElementById('homeRegistered').style.display = 'none';
+  document.getElementById('homeInput').value = '';
+  document.getElementById('homeStatus').textContent = '';
+  gState.homeLat = null;
+  gState.homeLon = null;
+  localStorage.removeItem('kitoku-home');
+}
+
+// ============================================================
+// 目的地プリセット描画
+// ============================================================
+function renderPresets() {
+  renderPresetGrid('grid-henro', SACRED_PLACES.henro);
+  renderPresetGrid('grid-major', SACRED_PLACES.major);
+  renderPresetGrid('grid-national', SACRED_PLACES.national);
+}
+
+function renderPresetGrid(id, places) {
+  const grid = document.getElementById(id);
+  grid.innerHTML = places.map(p => `
+    <button class="preset-btn" onclick="selectPreset(this, ${p.lat}, ${p.lon}, '${p.name}', '${p.area}')">
+      <div class="preset-name">${p.name}</div>
+      <div class="preset-area">${p.area}</div>
+    </button>
+  `).join('');
+}
+
+function selectPreset(btn, lat, lon, name, area) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('customDest').value = '';
+  document.getElementById('destStatus').textContent = '';
+  gState.destLat = lat;
+  gState.destLon = lon;
+  gState.destName = name;
+  gState.destArea = area;
+  if (gState.homeLat) calcAndShowDir();
+  else showHomePrompt();
+}
+
+async function searchCustomDest() {
+  const val = document.getElementById('customDest').value.trim();
+  if (!val) return;
+  const status = document.getElementById('destStatus');
+  status.textContent = '検索中...';
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val + ' 日本')}&format=json&limit=1&accept-language=ja`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
+    const data = await res.json();
+    if (!data.length) { status.textContent = '場所が見つかりませんでした。'; return; }
+    const r = data[0];
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+    gState.destLat = parseFloat(r.lat);
+    gState.destLon = parseFloat(r.lon);
+    gState.destName = val;
+    gState.destArea = r.display_name.split(',').slice(1, 3).join(' ');
+    status.textContent = `📍 ${r.display_name.split(',').slice(0, 2).join(' ')}`;
+    if (gState.homeLat) calcAndShowDir();
+    else showHomePrompt();
+  } catch(e) {
+    status.textContent = 'ネットワークエラーが発生しました。';
+  }
+}
+
+function showHomePrompt() {
+  document.getElementById('dirResultSection').style.display = 'block';
+  document.getElementById('dirResultContent').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">🏠</div>
+      STEP 1 で自宅を登録してください。<br>
+      自宅の場所をもとに方位を計算します。
+    </div>
+  `;
+}
+
+// ============================================================
+// 方位計算
+// ============================================================
+function calcBearing(lat1, lon1, lat2, lon2) {
+  const φ1 = lat1 * Math.PI / 180;
+  const φ2 = lat2 * Math.PI / 180;
+  const Δλ = (lon2 - lon1) * Math.PI / 180;
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  const θ = Math.atan2(y, x);
+  return (θ * 180 / Math.PI + 360) % 360;
+}
+
+function bearingToDir(bearing) {
+  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  return dirs[Math.floor((bearing + 22.5) / 45) % 8];
+}
+
+const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
+const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
+
+function calcAndShowDir() {
+  if (!gState.homeLat || !gState.destLat || !gState.honmei) return;
+
+  const bearing = calcBearing(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
+  const dir = bearingToDir(bearing);
+  gState.destDir = dir;
+
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate();
+
+  // 月盤・日盤・年盤でのランク計算
+  const monthCenter = getMonthCenter(y, m, d);
+  const dayCenter = getDayCenter(y, m, d);
+  const yearCenterN = yearCenter(y);
+
+  const monthBoard = buildBoardFromCenter(monthCenter);
+  const dayBoard = buildBoardFromCenter(dayCenter);
+  const yearBoard = buildBoardFromCenter(yearCenterN);
+
+  const monthStarN = monthBoard[dir] || 5;
+  const dayStarN = dayBoard[dir] || 5;
+  const yearStarN = yearBoard[dir] || 5;
+
+  // 三合
+  const yearBranch = getZodiac(y);
+  const monthBranch = BRANCH_NAME[getMonthBranch(y, m, d)];
+  const dayBranchIdx = getDayBranch(y, m, d);
+  const dayBranchName = BRANCH_NAME[dayBranchIdx];
+
+  const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [] };
+  const dSangoInfo = SANGO_MAP[dayBranchName] || { dirs: [] };
+
+  const ySangoSet = new Set(SANGO_MAP[yearBranch.k]?.dirs || []);
+  const mSangoSet = new Set(mSangoInfo.dirs);
+  const dSangoSet = new Set(dSangoInfo.dirs);
+
+  const tendo = getTendoDir(y, m, d);
+
+  // 年盤の破れ方位
+  const yearBreakDir = BRANCH_DIR[((yearBranch.k ? BRANCH_NAME.indexOf(yearBranch.k) : 0) + 6) % 12];
+
+  const yearRank = rankDir(dir, yearStarN, gState.honmei, gState.tsukimei, ySangoSet, tendo);
+  const monthRank = rankDir(dir, monthStarN, gState.honmei, gState.tsukimei, mSangoSet, tendo);
+  const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+
+  // 凶方位チェック（月盤）
+  const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranch) + 6) % 12)];
+  const { items: mKyoItems, kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
+  const isKyo = mKyouSet.has(dir);
+
+  const dist = calcDistance(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
+
+  // 表示
+  document.getElementById('dirResultSection').style.display = 'block';
+  document.getElementById('dirResultContent').innerHTML = `
+    <div class="dir-result">
+      <div class="dir-result-header">
+        <div class="dir-compass">${DIR_EMOJI[dir] || '?'}</div>
+        <div>
+          <div class="dir-dest-name">${gState.destName}</div>
+          <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
+        </div>
+      </div>
+      <div class="dir-panels">
+        <div class="dir-panel">
+          <div class="dir-panel-label">年盤</div>
+          <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank)}</div>
+          <div class="dir-panel-badges">${yearRank.badges.join('<br>') || '—'}</div>
+        </div>
+        <div class="dir-panel">
+          <div class="dir-panel-label">月盤（今月）</div>
+          <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank)}</div>
+          <div class="dir-panel-badges">${monthRank.badges.join('<br>') || '—'}</div>
+        </div>
+        <div class="dir-panel">
+          <div class="dir-panel-label">日盤（今日）</div>
+          <div class="dir-panel-rank rank-${dayRank.rank}">${rankLabel(dayRank.rank)}</div>
+          <div class="dir-panel-badges">${dayRank.badges.join('<br>') || '—'}</div>
+        </div>
+      </div>
+      ${isKyo ? `
+      <div class="kyo-warn">
+        ⚠ 今月の月盤では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
+        他の月・日程を確認するか、日盤取りをご検討ください。
+      </div>` : ''}
+      ${!isKyo && monthRank.rank >= 2 ? `
+      <div class="nichiban-guide">
+        <div class="nichiban-guide-title">✦ この方向は取れます</div>
+        <div class="nichiban-guide-text">
+          月盤・日盤で吉方位が確認できました。あとは日程を選ぶだけです。
+          下のカレンダーで線路の日と重なる日を探してください。
+        </div>
+      </div>` : ''}
+    </div>
+  `;
+
+  // カレンダーと日盤取りガイドを表示
+  document.getElementById('calSection').style.display = 'block';
+  document.getElementById('nichibanSection').style.display = 'block';
+  renderCalendar();
+  renderTodayNichiban(y, m, d);
+}
+
+function rankLabel(rank) {
+  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 最高吉'];
+  return labels[rank] || '—';
+}
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+// ============================================================
+// カレンダー描画
+// ============================================================
+function changeMonth(dir) {
+  gState.calMonth += dir;
+  if (gState.calMonth > 12) { gState.calMonth = 1; gState.calYear++; }
+  if (gState.calMonth < 1) { gState.calMonth = 12; gState.calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  if (!gState.destDir || !gState.honmei) return;
+
+  const y = gState.calYear, m = gState.calMonth;
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+
+  document.getElementById('calMonthLabel').textContent = `${y}年 ${m}月`;
+
+  // 曜日ヘッダー
+  const dows = document.getElementById('calDows');
+  const dowLabels = ['日','月','火','水','木','金','土'];
+  dows.innerHTML = dowLabels.map((d,i) => `
+    <div class="cal-dow" style="color:${i===0?'rgba(232,116,138,.7)':i===6?'rgba(100,150,220,.7)':'var(--mist)'}">${d}</div>
+  `).join('');
+
+  const firstDay = new Date(y, m - 1, 1).getDay();
+  const lastDate = new Date(y, m, 0).getDate();
+
+  const cells = document.getElementById('calCells');
+  let html = '';
+  let bestDays = [];
+
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-cell empty"></div>`;
+
+  for (let d = 1; d <= lastDate; d++) {
+    const branch = getDayBranch(y, m, d);
+    const dayCenter = getDayCenter(y, m, d);
+    const monthCenter = getMonthCenter(y, m, d);
+    const dayBoard = buildBoardFromCenter(dayCenter);
+    const monthBoard = buildBoardFromCenter(monthCenter);
+    const dir = gState.destDir;
+    const dayStarN = dayBoard[dir] || 5;
+    const monthStarN = monthBoard[dir] || 5;
+
+    const branchName = BRANCH_NAME[branch];
+    const dSangoInfo = SANGO_MAP[branchName] || { dirs: [] };
+    const dSangoSet = new Set(dSangoInfo.dirs);
+    const tendo = getTendoDir(y, m, d);
+
+    const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+
+    // 月盤の凶確認
+    const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(branchName) + 6) % 12)];
+    const { kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
+    const isKyoDay = mKyouSet.has(dir) && dayRank.rank === 0;
+
+    const isRailway = gState.railwayBranches.includes(branch);
+    const isKichi = dayRank.rank >= 2;
+    const isBest = isRailway && isKichi;
+    const isToday = `${y}-${m}-${d}` === todayStr;
+
+    if (isBest) {
+      bestDays.push({ d, branch, rank: dayRank.rank, badges: dayRank.badges, isRailway });
+    } else if (isKichi && !isRailway) {
+      bestDays.push({ d, branch, rank: dayRank.rank, badges: dayRank.badges, isRailway });
+    }
+
+    let classes = 'cal-cell';
+    if (isToday) classes += ' today';
+    if (isRailway && !isBest) classes += ' railway';
+    if (isBest) classes += ' best';
+    else if (isKichi && !isRailway) classes += ' kichi-day';
+    if (isKyoDay) classes += ' kyo-day';
+
+    const dow = new Date(y, m - 1, d).getDay();
+    const numColor = dow === 0 ? 'color:rgba(232,116,138,.8)' : dow === 6 ? 'color:rgba(100,150,220,.8)' : '';
+
+    const dots = [];
+    if (isRailway) dots.push(`<div class="cal-dot" style="background:rgba(196,160,67,.7);"></div>`);
+    if (isKichi) dots.push(`<div class="cal-dot" style="background:var(--kichi);"></div>`);
+
+    html += `
+      <div class="${classes}" onclick="showDayDetail(${y},${m},${d})">
+        <div class="cal-num" style="${numColor}">${d}</div>
+        ${dots.length ? `<div class="cal-dot-row">${dots.join('')}</div>` : ''}
+        ${isBest ? `<div class="cal-badge">★</div>` : ''}
+      </div>
+    `;
+  }
+
+  cells.innerHTML = html;
+
+  // ベスト3
+  bestDays.sort((a, b) => {
+    const scoreA = (a.isRailway ? 10 : 0) + a.rank;
+    const scoreB = (b.isRailway ? 10 : 0) + b.rank;
+    return scoreB - scoreA;
+  });
+
+  const top3 = bestDays.slice(0, 3);
+  const bestList = document.getElementById('bestList');
+  if (!top3.length) {
+    bestList.innerHTML = `<div class="empty-state" style="padding:10px;">今月はベスト候補が見つかりませんでした。来月も確認してみてください。</div>`;
+    return;
+  }
+
+  const monthNames = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  bestList.innerHTML = top3.map((item, idx) => {
+    const date = new Date(y, m - 1, item.d);
+    const dowStr = ['日','月','火','水','木','金','土'][date.getDay()];
+    const tags = [];
+    if (item.isRailway) tags.push(`<span class="best-tag tag-railway">線路の日 ${BRANCH_NAME[getDayBranch(y,m,item.d)]}</span>`);
+    if (item.rank >= 4) tags.push(`<span class="best-tag tag-kichi">✦ 本命・月命 吉</span>`);
+    else if (item.rank >= 2) tags.push(`<span class="best-tag tag-kichi">吉方</span>`);
+    tags.push(`<span class="best-tag tag-month">月盤 ${getMonthCenter(y,m,item.d)}（${STARS[getMonthCenter(y,m,item.d)].j}）</span>`);
+    return `
+      <div class="best-item">
+        <div class="best-rank ${idx===0?'r1':''}">${idx+1}</div>
+        <div class="best-info">
+          <div class="best-date">${y}年 ${monthNames[m]} ${item.d}日（${dowStr}）</div>
+          <div class="best-tags">${tags.join('')}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showDayDetail(y, m, d) {
+  const branch = getDayBranch(y, m, d);
+  const dayCenter = getDayCenter(y, m, d);
+  const dir = gState.destDir;
+  if (!dir) return;
+  const dayBoard = buildBoardFromCenter(dayCenter);
+  const dayStarN = dayBoard[dir] || 5;
+  const branchName = BRANCH_NAME[branch];
+  const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
+  const tendo = getTendoDir(y, m, d);
+  const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+  const isRailway = gState.railwayBranches.includes(branch);
+  const dow = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
+
+  let msg = `${y}年${m}月${d}日（${dow}）\n`;
+  msg += `日盤中宮：${STARS[dayCenter].j}\n`;
+  msg += `${gState.destName}方向（${DIR_JP[dir]}）：${rankLabel(dayRank.rank)}\n`;
+  if (isRailway) msg += `✦ 線路の日（${branchName}）\n`;
+  if (dayRank.badges.length) msg += dayRank.badges.join(' ');
+  alert(msg);
+}
+
+// ============================================================
+// 今日の日盤取り情報
+// ============================================================
+function renderTodayNichiban(y, m, d) {
+  const dayCenter = getDayCenter(y, m, d);
+  const board = buildBoardFromCenter(dayCenter);
+
+  if (!gState.honmei) return;
+
+  // 今日の吉方位を探す
+  const nichibanEl = document.getElementById('todayNichibanInfo');
+  const kichiDirs = [];
+  for (const dir of ['N','NE','E','SE','S','SW','W','NW']) {
+    const starN = board[dir] || 5;
+    const branch = getDayBranch(y, m, d);
+    const branchName = BRANCH_NAME[branch];
+    const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
+    const tendo = getTendoDir(y, m, d);
+    const rank = rankDir(dir, starN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+    if (rank.rank >= 2) kichiDirs.push({ dir, rank });
+  }
+
+  if (!kichiDirs.length) {
+    nichibanEl.innerHTML = '';
+    return;
+  }
+
+  nichibanEl.innerHTML = `
+    <div style="
+      background:rgba(94,200,138,.08);border:1px solid rgba(94,200,138,.25);
+      border-radius:9px;padding:10px 12px;margin-top:8px;
+    ">
+      <div style="font-size:.68rem;color:var(--green);font-weight:600;margin-bottom:6px;">
+        今日の日盤取り候補
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        ${kichiDirs.map(({dir, rank}) => `
+          <span style="
+            background:rgba(94,200,138,.12);border:1px solid rgba(94,200,138,.3);
+            border-radius:7px;padding:4px 9px;font-size:.68rem;color:var(--green);
+          ">${DIR_JP[dir]} ${DIR_EMOJI[dir]}（${STARS[board[dir]].j}）</span>
+        `).join('')}
+      </div>
+      <div style="font-size:.6rem;color:var(--mist);margin-top:6px;line-height:1.7;">
+        出発前にこの方向へ少し足を向けるだけでも、日盤のエネルギーを取れます。
+      </div>
+    </div>
+  `;
+}
+
+</script>
+</body>
+</html>
