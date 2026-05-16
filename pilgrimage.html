@@ -264,6 +264,27 @@ body{
 .cal-legend{
   display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;
 }
+.calendar-guide{
+  margin:8px 0 12px;
+  background:linear-gradient(135deg,rgba(196,160,67,.11),rgba(255,255,255,.62));
+  border:1px solid rgba(196,160,67,.28);
+  border-radius:10px;
+  padding:11px 12px;
+  color:var(--snow);
+  line-height:1.75;
+}
+.calendar-guide-title{
+  font-size:.7rem;
+  color:var(--goldlt);
+  font-weight:700;
+  margin-bottom:5px;
+  letter-spacing:.04em;
+}
+.calendar-guide-text{
+  font-size:.64rem;
+  color:var(--mist);
+}
+.calendar-guide-text strong{color:var(--goldlt);font-weight:700;}
 .legend-item{
   display:flex;align-items:center;gap:5px;
   font-size:.58rem;color:var(--mist);
@@ -325,8 +346,10 @@ body{
 .cal-cell.today .cal-num{color:var(--goldlt);font-weight:700;}
 /* ラベル（線路の日マーク） */
 .cal-label{
-  font-size:.48rem;line-height:1;margin-top:2px;
-  font-weight:600;
+  font-size:.46rem;line-height:1.25;margin-top:2px;
+  font-weight:700;
+  text-align:center;
+  white-space:pre-line;
 }
 .cal-cell.railway .cal-label{color:rgba(92,64,16,.7);}
 .cal-cell.best .cal-label{color:rgba(138,40,64,.8);}
@@ -402,8 +425,9 @@ body{
 
 
 /* ── 文字サイズ切替 ── */
-html.font-small body{font-size:14px;}
-html.font-large body{font-size:17px;}
+html.font-small{font-size:14px;}
+html.font-medium{font-size:15px;}
+html.font-large{font-size:17px;}
 .display-toolbar{
   display:flex;align-items:center;gap:8px;
   padding:8px 18px;
@@ -637,6 +661,15 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="legend-item">
       <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.15);"></div>
       <span>△ 要注意日</span>
+    </div>
+  </div>
+
+  <div class="calendar-guide">
+    <div class="calendar-guide-title">年盤・月盤・日盤とカレンダーの見方</div>
+    <div class="calendar-guide-text">
+      <strong>STEP3</strong> は、選んだ目的地の方位が「年・月・今日」でどう見えるかの確認です。<br>
+      <strong>STEP4</strong> は、その月の中で「線路の日」「吉方位」「要注意」を重ねて日程を探す場所です。<br>
+      線路の日に要注意が重なる場合は、線路の力はありますが、方位上の注意もある日として併記します。
     </div>
   </div>
 
@@ -1039,6 +1072,26 @@ const SACRED_PLACES = {
 };
 
 // ============================================================
+// 文字サイズ切替
+// ============================================================
+const PILGRIMAGE_FONT_KEY = 'kitoku-pilgrimage-font-size';
+
+function applyPilgrimageFontSize(size) {
+  const safe = ['small', 'medium', 'large'].includes(size) ? size : 'medium';
+  document.documentElement.classList.remove('font-small', 'font-medium', 'font-large');
+  document.documentElement.classList.add('font-' + safe);
+  document.querySelectorAll('[data-pilgrimage-font]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.pilgrimageFont === safe);
+  });
+}
+
+function setPilgrimageFontSize(size) {
+  const safe = ['small', 'medium', 'large'].includes(size) ? size : 'medium';
+  localStorage.setItem(PILGRIMAGE_FONT_KEY, safe);
+  applyPilgrimageFontSize(safe);
+}
+
+// ============================================================
 // 状態管理
 // ============================================================
 let gState = {
@@ -1061,6 +1114,8 @@ let gState = {
 // 初期化
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  applyPilgrimageFontSize(localStorage.getItem(PILGRIMAGE_FONT_KEY) || 'medium');
+
   // 自宅情報の復元
   const savedHome = localStorage.getItem('kitoku-home');
   if (savedHome) {
@@ -1316,6 +1371,19 @@ function bearingToDir(bearing) {
   return dirs[Math.floor((bearing + 22.5) / 45) % 8];
 }
 
+function mapSearchUrl(lat, lon) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat + ',' + lon)}`;
+}
+
+function mapRouteUrl(originLat, originLon, destLat, destLon) {
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originLat + ',' + originLon)}&destination=${encodeURIComponent(destLat + ',' + destLon)}&travelmode=driving`;
+}
+
+function openExternalMap(url) {
+  const opened = window.open(url, '_blank', 'noopener');
+  if (!opened) window.location.href = url;
+}
+
 const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
 const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
 
@@ -1388,14 +1456,14 @@ function calcAndShowDir() {
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;">
-        <a href="https://maps.google.com/?q=${gState.destLat},${gState.destLon}" target="_blank" style="
+        <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="
           display:flex;align-items:center;justify-content:center;gap:5px;
           background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);
           border-radius:8px;padding:9px 8px;text-decoration:none;
           font-size:.68rem;color:#1a56a8;font-family:'Noto Serif JP',serif;
           font-weight:600;
         ">📍 目的地を地図で確認</a>
-        <a href="https://maps.google.com/dir/${gState.homeLat},${gState.homeLon}/${gState.destLat},${gState.destLon}" target="_blank" style="
+        <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="
           display:flex;align-items:center;justify-content:center;gap:5px;
           background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);
           border-radius:8px;padding:9px 8px;text-decoration:none;
@@ -1548,11 +1616,14 @@ function renderCalendar() {
     const dow = new Date(y, m - 1, d).getDay();
     const numColor = dow === 0 ? 'color:rgba(180,60,60,.8)' : dow === 6 ? 'color:rgba(60,80,160,.8)' : '';
 
-    let cellLabel = '';
-    if (isBest) cellLabel = '★線路';
-    else if (isRailway) cellLabel = '◆線路';
-    else if (isKichi) cellLabel = '○吉方';
-    else if (isKyoDay) cellLabel = '△要注意';
+    const cellLabels = [];
+    if (isBest) cellLabels.push('★線路');
+    else {
+      if (isRailway) cellLabels.push('◆線路');
+      if (isKichi) cellLabels.push('○吉方');
+    }
+    if (isKyoDay) cellLabels.push('△要注意');
+    const cellLabel = cellLabels.join('\n');
 
     html += `
       <div class="${classes}" onclick="showDayDetail(${y},${m},${d})">
@@ -1589,15 +1660,15 @@ function renderCalendar() {
     else if (item.rank >= 2) tags.push(`<span class="best-tag tag-kichi">吉方</span>`);
     tags.push(`<span class="best-tag tag-month">月盤 ${getMonthCenter(y,m,item.d)}（${STARS[getMonthCenter(y,m,item.d)].j}）</span>`);
     const routeUrl = gState.homeLat && gState.destLat
-      ? `https://maps.google.com/dir/${gState.homeLat},${gState.homeLon}/${gState.destLat},${gState.destLon}`
-      : `https://maps.google.com/?q=${gState.destLat},${gState.destLon}`;
+      ? mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)
+      : mapSearchUrl(gState.destLat, gState.destLon);
     return `
       <div class="best-item">
         <div class="best-rank ${idx===0?'r1':''}">${idx+1}</div>
         <div class="best-info">
           <div class="best-date">${y}年 ${monthNames[m]} ${item.d}日（${dowStr}）</div>
           <div class="best-tags">${tags.join('')}</div>
-          <a href="${routeUrl}" target="_blank" style="
+          <a href="${routeUrl}" onclick="openExternalMap(this.href); return false;" style="
             display:inline-flex;align-items:center;gap:4px;margin-top:7px;
             background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.3);
             border-radius:6px;padding:5px 10px;text-decoration:none;
