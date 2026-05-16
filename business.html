@@ -129,7 +129,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
-  <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+  <div style="display:flex;gap:8px;">
+    <button class="header-reset" id="headerBackBtn" onclick="headerGoBack()" style="display:none;">← 戻る</button>
+    <button class="header-reset" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+  </div>
 </div>
 
 <!-- ツールバー -->
@@ -441,7 +444,16 @@ function updateCount(){var r=Math.max(0,FREE_LIMIT-getCount());var el=document.g
 var rData={};
 function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function sc(id,c){var e=document.getElementById(id);if(e)e.className=c;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  var btn=document.getElementById('headerBackBtn');
+  if(btn)btn.style.display=(id==='s0')?'none':'block';
+}
+function headerGoBack(){
+  if(document.getElementById('s2').classList.contains('on')){showScreen('s1');}
+  else{showScreen('s0');}
+}
 function tog(head){var body=head.nextElementSibling;var arr=head.querySelector('.accord-arr');body.classList.toggle('open');arr.classList.toggle('open');}
 
 function analyze(){
