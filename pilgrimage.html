@@ -452,6 +452,9 @@ body{
 }
 .tag-kichi{background:rgba(232,116,138,.15);border-color:rgba(232,116,138,.4);color:#e8748a;}
 .tag-month{background:rgba(94,200,138,.1);border-color:rgba(94,200,138,.3);color:var(--green);}
+.tag-railway{background:rgba(138,104,32,.1);border-color:rgba(138,104,32,.35);color:var(--goldlt);}
+.tag-best{background:rgba(177,107,120,.18);border-color:rgba(177,107,120,.5);color:#8a2840;font-weight:700;}
+.best-item-star{background:rgba(177,107,120,.05);border-color:rgba(177,107,120,.35);}
 
 /* ── 日盤取りガイド ── */
 .nichiban-section{
@@ -754,7 +757,7 @@ html.font-large .font-btn{font-size:.8rem;}
   <!-- ベスト候補 -->
   <div style="margin-top:16px;">
     <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:8px;">
-      ✦ おすすめ日程 TOP3
+      ✦ おすすめ日程（最大6日）
     </div>
     <div class="best-list" id="bestList"></div>
   </div>
@@ -1658,23 +1661,51 @@ function renderCalendar() {
       }
     }
 
-    bestDays.sort(function(a, b) { return b.score - a.score || a.d - b.d; });
-    const top3 = bestDays.slice(0, 3);
+    // ── おすすめ日程 最大6件 ──
+    // 線路×吉方を最優先、次に線路のみ、次に吉方のみ
+    const allDays = {};
+
+    // 吉方の日を登録
+    bestDays.forEach(function(item) {
+      if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
+      allDays[item.d].isKichi = true;
+      allDays[item.d].rank = item.rank;
+      allDays[item.d].badges = item.badges;
+      allDays[item.d].score += item.rank;
+    });
+
+    // 線路の日を登録・スコア加算
+    railwayDays.forEach(function(item) {
+      if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
+      allDays[item.d].isRailway = true;
+      allDays[item.d].branch = item.branch;
+      // 線路×吉方は大幅スコアアップ
+      allDays[item.d].score += allDays[item.d].isKichi ? 20 : 5;
+    });
+
+    const top6 = Object.values(allDays)
+      .sort(function(a, b) { return b.score - a.score || a.d - b.d; })
+      .slice(0, 6);
+
     if (!bestList) return;
 
-    if (!top3.length) {
-      bestList.innerHTML = '<div class="muted-box" style="text-align:center;">この月はおすすめTOP3に出せる候補が少なめです。<br>カレンダーの日付ごとの表示も確認してください。</div>';
+    if (!top6.length) {
+      bestList.innerHTML = '<div class="muted-box" style="text-align:center;">この月はおすすめ候補が少なめです。<br>カレンダーの日付ごとの表示も確認してください。</div>';
       return;
     }
 
-    bestList.innerHTML = top3.map(function(item, idx) {
+    bestList.innerHTML = top6.map(function(item, idx) {
       const date = new Date(y, m - 1, item.d);
       const dow = dowLabels[date.getDay()];
       const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
       const tags = [];
 
-      // 線路タグ
-      if (item.isRailway) tags.push('<span class="best-tag tag-railway">◆ 線路の日（' + branchLabel + '）</span>');
+      // 線路×吉方 or 線路のみ
+      if (item.isRailway && item.isKichi) {
+        tags.push('<span class="best-tag tag-best">★ 線路×吉方</span>');
+      } else if (item.isRailway) {
+        tags.push('<span class="best-tag tag-railway">◆ 線路の日（' + branchLabel + '）</span>');
+      }
 
       // 吉方タグ
       if (item.isKichi) {
@@ -1687,7 +1718,17 @@ function renderCalendar() {
         if (STARS[monthCenter]) tags.push('<span class="best-tag tag-month">月盤 ' + monthCenter + '（' + STARS[monthCenter].j + '）</span>');
       } catch(e) {}
 
-      return '<div class="best-item">' +
+      // 区切り線（吉方のみが始まる前）
+      const isBestBoth = item.isRailway && item.isKichi;
+      const isRailwayOnly = item.isRailway && !item.isKichi;
+      const isKichiOnly = item.isKichi && !item.isRailway;
+      const prevItem = idx > 0 ? top6[idx - 1] : null;
+      const prevIsKichiOnly = prevItem && prevItem.isKichi && !prevItem.isRailway;
+      const divider = (!prevIsKichiOnly && isKichiOnly)
+        ? '<div style="font-size:.6rem;color:var(--mist);padding:6px 0 2px;letter-spacing:.08em;">── 吉方位おすすめ ──</div>'
+        : '';
+
+      return divider + '<div class="best-item' + (isBestBoth ? ' best-item-star' : '') + '">' +
         '<div class="best-rank ' + (idx === 0 ? 'r1' : '') + '">' + (idx + 1) + '</div>' +
         '<div class="best-info">' +
           '<div class="best-date">' + y + '年 ' + m + '月 ' + item.d + '日（' + dow + '）</div>' +
