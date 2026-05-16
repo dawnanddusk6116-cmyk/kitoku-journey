@@ -1339,10 +1339,31 @@ function calcAndShowDir() {
   const monthRank = rankDir(dir, monthStarN, gState.honmei, gState.tsukimei, mSangoSet, tendo);
   const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
 
-  // 凶方位チェック（月盤）
+  // ── 凶方位チェック（年盤）
+  const { kyouSet: yKyouSet, items: yKyoItems } = getKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year');
+  const isYearKyo = yKyouSet.has(dir);
+  if (isYearKyo) {
+    yearRank.rank = 0;
+    yearRank.badges = yKyoItems.filter(i => i.dir === dir).map(i => '⚠ ' + i.name);
+  }
+
+  // ── 凶方位チェック（月盤）
   const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranch) + 6) % 12)];
   const { items: mKyoItems, kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
   const isKyo = mKyouSet.has(dir);
+  if (isKyo) {
+    monthRank.rank = 0;
+    monthRank.badges = mKyoItems.filter(i => i.dir === dir).map(i => '⚠ ' + i.name);
+  }
+
+  // ── 凶方位チェック（日盤）
+  const dayBreakDir2 = BRANCH_DIR[((dayBranchIdx + 6) % 12)];
+  const { kyouSet: dKyouSet } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir2, gState.tsukimei, 'day');
+  const isDayKyo = dKyouSet.has(dir);
+  if (isDayKyo) {
+    dayRank.rank = 0;
+    dayRank.badges = ['⚠ 日盤凶方位'];
+  }
 
   const dist = calcDistance(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
 
@@ -1450,6 +1471,35 @@ function calcAndShowDir() {
           月盤で吉方位が確認できました。下のカレンダーで日程を選んでください。
         </div>
       </div>` : ''}
+
+      <!-- 判定基準の説明（折りたたみ） -->
+      <div style="margin-top:10px;">
+        <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'; this.textContent=this.textContent.includes('▶')?'▼ KITOKUの判定基準について':'▶ KITOKUの判定基準について';" style="
+          background:none;border:none;
+          font-size:.62rem;color:var(--mist);
+          cursor:pointer;padding:0;
+          font-family:'Noto Serif JP',serif;
+          letter-spacing:.06em;
+          display:flex;align-items:center;gap:4px;
+        ">▶ KITOKUの判定基準について</button>
+        <div style="display:none;margin-top:8px;
+          background:rgba(100,80,40,.04);
+          border:1px solid var(--rim);
+          border-radius:8px;padding:12px 14px;
+          font-size:.63rem;color:var(--mist);line-height:1.9;
+        ">
+          <strong style="color:var(--goldlt);display:block;margin-bottom:6px;">⚙ KITOKUの吉凶判定について</strong>
+          KITOKUは東洋の叡智とY理論に基づく独自の判定基準です。
+          他の気学アプリや鑑定士と結果が異なる場合があります。<br><br>
+          <strong style="color:var(--snow);">主な特徴</strong><br>
+          ・五大凶殺のみを凶と判定<br>
+          ・月命殺は10歳以下の子のみ対象<br>
+          ・吉凶の優先順位はKITOKU独自の解釈<br><br>
+          お使いの羅針盤や鑑定士の先生と
+          結果を比較しながら、ご自身で判断する
+          材料としてお使いください。
+        </div>
+      </div>
     </div>
   `;
 
@@ -1475,13 +1525,18 @@ function rankLabel(rank) {
 }
 
 function rankDesc(rank, badges) {
-  if (rank === 0) return '吉方位ではありません';
+  if (rank === 0) {
+    if (badges && badges.some(b => b.includes('⚠'))) {
+      return badges.join('・').replace(/⚠ /g, '');
+    }
+    return '吉方位ではありません';
+  }
   if (rank === 1) return '天道の方位です。吉凶は中程度です';
   const parts = [];
   if (badges && badges.length) {
     badges.forEach(b => {
-      if (b.includes('本命')) parts.push('あなたの本命星の吉方');
-      if (b.includes('月命')) parts.push('あなたの月命星の吉方');
+      if (b.includes('本命')) parts.push('本命星の吉方');
+      if (b.includes('月命')) parts.push('月命星の吉方');
       if (b.includes('三合')) parts.push('三合の吉方（後押しの力）');
       if (b.includes('天道')) parts.push('天道の方位');
     });
@@ -1590,6 +1645,17 @@ function renderCalendar() {
     let railwayDays = [];
     const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
 
+    // 月盤の凶方位を事前計算（カレンダー全日に適用）
+    let mKyouSet = new Set();
+    try {
+      const viewD = 15;
+      const mc = getMonthCenter(y, m, viewD);
+      const mb = BRANCH_NAME[getMonthBranch(y, m, viewD)];
+      const mbDir = BRANCH_DIR[((BRANCH_NAME.indexOf(mb) + 6) % 12)];
+      const { kyouSet } = getKyouDirs(mc, gState.honmei, mbDir, gState.tsukimei, 'month');
+      mKyouSet = kyouSet;
+    } catch(e) {}
+
     for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
 
     for (let d = 1; d <= lastDate; d++) {
@@ -1597,28 +1663,33 @@ function renderCalendar() {
       let dayRank = { rank: 0, badges: [] };
       let isKyoDay = false;
 
-      try {
-        branch = getDayBranch(y, m, d);
-      } catch(e) {
-        console.warn('getDayBranch failed:', y, m, d, e);
-      }
+      try { branch = getDayBranch(y, m, d); } catch(e) {}
 
       try {
-        const rankResult = getDayDirectionRank(y, m, d, gState.destDir);
-        if (rankResult && typeof rankResult.rank === 'number') {
-          dayRank = rankResult;
-          if (!Array.isArray(dayRank.badges)) dayRank.badges = [];
+        const dc = getDayCenter(y, m, d);
+        const db = buildBoardFromCenter(dc);
+        const dStar = db[gState.destDir] || 5;
+        const dBranchName = BRANCH_NAME[branch] || '';
+        const dSango = new Set(SANGO_MAP[dBranchName]?.dirs || []);
+        const dayBreakDirD = BRANCH_DIR[((branch + 6) % 12)];
+        const tnd = getTendoDir(y, m, d);
+        dayRank = rankDir(gState.destDir, dStar, gState.honmei, gState.tsukimei, dSango, tnd);
+
+        // 日盤の凶方位チェック → 凶なら rank=0
+        const { kyouSet: dKyouSetD } = getKyouDirs(dc, gState.honmei, dayBreakDirD, gState.tsukimei, 'day');
+        if (dKyouSetD.has(gState.destDir)) {
+          isKyoDay = true;
+          dayRank.rank = 0;
         }
-      } catch(e) {
-        console.warn('getDayDirectionRank failed:', y, m, d, e);
-      }
-
-      // 要注意日のロジックは流派差が大きいため、ここでは未確定表示にしない。
-      // 方位の吉方判定はSTEP3と同じ getDayDirectionRank() に統一する。
-      isKyoDay = false;
+        // 月盤の凶方位も反映
+        if (mKyouSet && mKyouSet.has(gState.destDir)) {
+          isKyoDay = true;
+          dayRank.rank = 0;
+        }
+      } catch(e) { console.warn('day calc failed:', e); }
 
       const isRailway = branch !== null && railwayBranches.includes(branch);
-      const isKichi = dayRank.rank >= 2;
+      const isKichi = !isKyoDay && dayRank.rank >= 2;
       const isToday = (y + '-' + m + '-' + d) === todayStr;
 
       if (isRailway) railwayDays.push({ d: d, branch: branch });
