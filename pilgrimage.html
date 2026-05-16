@@ -400,20 +400,20 @@ body{
 
 /* 今日 */
 .cal-cell.today{
-  border:2px solid rgba(138,104,32,.6);
+  border:1.5px solid rgba(138,104,32,.5);
   background:rgba(138,104,32,.06);
 }
 /* 月盤吉方 */
 .cal-cell.kichi-day{
   background:rgba(58,125,78,.07);
-  border:2px solid rgba(58,125,78,.45);
+  border:1.5px solid rgba(58,125,78,.35);
 }
 .cal-cell.kichi-day .cal-num{color:#2a6038;font-weight:600;}
 /* 要注意日 */
 .cal-cell.kyo-day{
-  background:rgba(100,80,40,.04);
-  border-color:rgba(100,80,40,.1);
-  opacity:.5;
+  background:rgba(100,80,40,.03);
+  border-color:rgba(100,80,40,.08);
+  opacity:.45;
 }
 .cal-num{font-size:.72rem;color:var(--snow);line-height:1;}
 .cal-cell.today .cal-num{color:var(--goldlt);font-weight:700;}
@@ -739,16 +739,17 @@ html.font-large .font-btn{font-size:.8rem;}
     </div>
   </div>
 
-  <div class="railway-panel">
+  <div class="cal-grid" id="calDows"></div>
+  <div class="cal-grid" style="margin-top:4px;" id="calCells"></div>
+
+  <!-- 線路の日（カレンダー下） -->
+  <div class="railway-panel" style="margin-top:14px;">
     <div class="railway-title">線路の日（始める力を見る日）</div>
     <div class="railway-text">
       契約・出発・開始など、長く続けたいことを始める目安です。方位の吉凶とは別枠で確認します。
     </div>
     <div class="railway-days" id="railwayDays"></div>
   </div>
-
-  <div class="cal-grid" id="calDows"></div>
-  <div class="cal-grid" style="margin-top:4px;" id="calCells"></div>
 
   <!-- ベスト候補 -->
   <div style="margin-top:16px;">
@@ -850,7 +851,7 @@ const SACRED_PLACES = {
     { name:'18番 恩山寺', area:'徳島県小松島市', q:'恩山寺 徳島県小松島市田野町' },
     { name:'19番 立江寺', area:'徳島県小松島市', q:'立江寺 徳島県小松島市立江町' },
     { name:'20番 鶴林寺', area:'徳島県勝浦郡勝浦町', q:'鶴林寺 徳島県勝浦郡勝浦町生名' },
-    { name:'21番 太龍寺', area:'徳島県阿南市', q:'太龍寺 徳島県阿南市加茂町龍山' },
+    { name:'21番 太龍寺', area:'徳島県阿南市', q:'徳島県阿南市加茂町龍山2' },
     { name:'22番 平等寺', area:'徳島県阿南市', q:'平等寺 徳島県阿南市新野町秋山' },
     { name:'23番 薬王寺', area:'徳島県海部郡美波町', q:'薬王寺 徳島県海部郡美波町奥河内' },
   ],
@@ -877,53 +878,53 @@ const SACRED_PLACES = {
     { name:'41番 龍光寺', area:'愛媛県宇和島市', q:'龍光寺 愛媛県宇和島市三間町戸雁' },
     { name:'42番 仏木寺', area:'愛媛県宇和島市', q:'仏木寺 愛媛県宇和島市三間町' },
     { name:'43番 明石寺', area:'愛媛県西予市', q:'明石寺 愛媛県西予市宇和町明石' },
-    { name:'44番 大寶寺', area:'愛媛県上浮穴郡久万高原町', q:'大寶寺 愛媛県久万高原町菅生' },
-    { name:'45番 岩屋寺', area:'愛媛県上浮穴郡久万高原町', q:'岩屋寺 愛媛県久万高原町七鳥' },
+    { name:'44番 大寶寺', area:'愛媛県上浮穴郡久万高原町', q:'愛媛県上浮穴郡久万高原町菅生1173' },
+    { name:'45番 岩屋寺', area:'愛媛県上浮穴郡久万高原町', q:'愛媛県上浮穴郡久万高原町七鳥1468' },
     { name:'46番 浄瑠璃寺', area:'愛媛県松山市', q:'浄瑠璃寺 愛媛県松山市浄瑠璃町' },
-    { name:'47番 八坂寺', area:'愛媛県松山市', q:'八坂寺 愛媛県松山市浄瑠璃町八坂' },
+    { name:'47番 八坂寺', area:'愛媛県松山市', q:'愛媛県松山市浄瑠璃町八坂773' },
     { name:'48番 西林寺', area:'愛媛県松山市', q:'西林寺 愛媛県松山市高井町' },
     { name:'49番 浄土寺', area:'愛媛県松山市', q:'浄土寺 愛媛県松山市鷹子町' },
     { name:'50番 繁多寺', area:'愛媛県松山市', q:'繁多寺 愛媛県松山市畑寺町' },
     { name:'51番 石手寺', area:'愛媛県松山市', q:'石手寺 愛媛県松山市石手' },
     { name:'52番 太山寺', area:'愛媛県松山市', q:'太山寺 愛媛県松山市太山寺町' },
     { name:'53番 円明寺', area:'愛媛県松山市', q:'円明寺 愛媛県松山市和気町' },
-    { name:'54番 延命寺', area:'愛媛県今治市', q:'延命寺 愛媛県今治市阿方' },
+    { name:'54番 延命寺', area:'愛媛県今治市', q:'愛媛県今治市阿方甲636' },
     { name:'55番 南光坊', area:'愛媛県今治市', q:'南光坊 愛媛県今治市別宮町' },
-    { name:'56番 泰山寺', area:'愛媛県今治市', q:'泰山寺 愛媛県今治市小泉' },
+    { name:'56番 泰山寺', area:'愛媛県今治市', q:'愛媛県今治市小泉1-9-18' },
     { name:'57番 栄福寺', area:'愛媛県今治市', q:'栄福寺 愛媛県今治市玉川町八幡' },
-    { name:'58番 仙遊寺', area:'愛媛県今治市', q:'仙遊寺 愛媛県今治市玉川町別所' },
+    { name:'58番 仙遊寺', area:'愛媛県今治市', q:'愛媛県今治市玉川町別所甲483' },
     { name:'59番 国分寺', area:'愛媛県今治市', q:'国分寺 愛媛県今治市国分' },
-    { name:'60番 横峰寺', area:'愛媛県西条市', q:'横峰寺 愛媛県西条市小松町石鎚' },
+    { name:'60番 横峰寺', area:'愛媛県西条市', q:'愛媛県西条市小松町石鎚2253' },
     { name:'61番 香園寺', area:'愛媛県西条市', q:'香園寺 愛媛県西条市小松町南川' },
     { name:'62番 宝寿寺', area:'愛媛県西条市', q:'宝寿寺 愛媛県西条市小松町新屋敷' },
     { name:'63番 吉祥寺', area:'愛媛県西条市', q:'吉祥寺 愛媛県西条市氷見' },
     { name:'64番 前神寺', area:'愛媛県西条市', q:'前神寺 愛媛県西条市洲之内' },
-    { name:'65番 三角寺', area:'愛媛県四国中央市', q:'三角寺 愛媛県四国中央市金田町' },
+    { name:'65番 三角寺', area:'愛媛県四国中央市', q:'愛媛県四国中央市金田町三角寺甲75' },
   ],
   henro_sanuki: [
-    { name:'66番 雲辺寺', area:'徳島県三好市', q:'雲辺寺 徳島県三好市池田町白地' },
-    { name:'67番 大興寺', area:'香川県三豊市', q:'大興寺 香川県三豊市山本町辻' },
+    { name:'66番 雲辺寺', area:'徳島県三好市', q:'徳島県三好市池田町白地ノロウチ763-2' },
+    { name:'67番 大興寺', area:'香川県三豊市', q:'香川県三豊市山本町辻4209' },
     { name:'68番 神恵院', area:'香川県観音寺市', q:'神恵院 香川県観音寺市八幡町' },
     { name:'69番 観音寺', area:'香川県観音寺市', q:'観音寺 香川県観音寺市八幡町' },
-    { name:'70番 本山寺', area:'香川県三豊市', q:'本山寺 香川県三豊市豊中町本山' },
-    { name:'71番 弥谷寺', area:'香川県三豊市', q:'弥谷寺 香川県三豊市三野町見乙' },
-    { name:'72番 曼荼羅寺', area:'香川県善通寺市', q:'曼荼羅寺 香川県善通寺市吉原町' },
-    { name:'73番 出釈迦寺', area:'香川県善通寺市', q:'出釈迦寺 香川県善通寺市吉原町' },
+    { name:'70番 本山寺', area:'香川県三豊市', q:'香川県三豊市豊中町本山甲1445' },
+    { name:'71番 弥谷寺', area:'香川県三豊市', q:'香川県三豊市三野町大見乙70' },
+    { name:'72番 曼荼羅寺', area:'香川県善通寺市', q:'曼荼羅寺 香川県善通寺市' },
+    { name:'73番 出釈迦寺', area:'香川県善通寺市', q:'香川県善通寺市吉原町1091' },
     { name:'74番 甲山寺', area:'香川県善通寺市', q:'甲山寺 香川県善通寺市弘田町' },
     { name:'75番 善通寺', area:'香川県善通寺市', q:'善通寺 香川県善通寺市善通寺町' },
     { name:'76番 金倉寺', area:'香川県善通寺市', q:'金倉寺 香川県善通寺市金蔵寺町' },
-    { name:'77番 道隆寺', area:'香川県仲多度郡多度津町', q:'道隆寺 香川県仲多度郡多度津町北鴨' },
-    { name:'78番 郷照寺', area:'香川県綾歌郡宇多津町', q:'郷照寺 香川県綾歌郡宇多津町' },
-    { name:'79番 天皇寺', area:'香川県坂出市', q:'天皇寺 香川県坂出市西庄町' },
+    { name:'77番 道隆寺', area:'香川県仲多度郡多度津町', q:'香川県仲多度郡多度津町北鴨1-3-30' },
+    { name:'78番 郷照寺', area:'香川県綾歌郡宇多津町', q:'郷照寺 香川県宇多津町' },
+    { name:'79番 天皇寺', area:'香川県坂出市', q:'香川県坂出市西庄町天皇1713-2' },
     { name:'80番 国分寺', area:'香川県高松市', q:'国分寺 香川県高松市国分寺町' },
     { name:'81番 白峯寺', area:'香川県坂出市', q:'白峯寺 香川県坂出市青海町' },
     { name:'82番 根香寺', area:'香川県高松市', q:'根香寺 香川県高松市中山町' },
     { name:'83番 一宮寺', area:'香川県高松市', q:'一宮寺 香川県高松市一宮町' },
     { name:'84番 屋島寺', area:'香川県高松市', q:'屋島寺 香川県高松市屋島東町' },
     { name:'85番 八栗寺', area:'香川県高松市', q:'八栗寺 香川県高松市牟礼町牟礼' },
-    { name:'86番 志度寺', area:'香川県さぬき市', q:'志度寺 香川県さぬき市志度' },
-    { name:'87番 長尾寺', area:'香川県さぬき市', q:'長尾寺 香川県さぬき市長尾西' },
-    { name:'88番 大窪寺', area:'香川県さぬき市', q:'大窪寺 香川県さぬき市多和兼割' },
+    { name:'86番 志度寺', area:'香川県さぬき市', q:'香川県さぬき市志度1102' },
+    { name:'87番 長尾寺', area:'香川県さぬき市', q:'香川県さぬき市長尾西653' },
+    { name:'88番 大窪寺', area:'香川県さぬき市', q:'香川県さぬき市多和兼割96' },
   ],
   major: [
     { name:'伊勢神宮（内宮）', area:'三重県伊勢市', q:'伊勢神宮内宮 三重県伊勢市宇治館町' },
@@ -1631,7 +1632,7 @@ function renderCalendar() {
           const date = new Date(y, m - 1, item.d);
           const dow = dowLabels[date.getDay()];
           const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
-          return '<span class="railway-chip"><strong>' + m + '/' + item.d + '（' + dow + '）</strong>' + branchLabel + 'の日</span>';
+          return '<span class="railway-chip"><strong>' + y + '/' + m + '/' + item.d + '（' + dow + '）</strong> ' + branchLabel + 'の日</span>';
         }).join('');
       }
     }
