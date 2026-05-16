@@ -353,27 +353,12 @@ body{
   border:2px solid rgba(138,104,32,.6);
   background:rgba(138,104,32,.06);
 }
-/* 線路の日のみ（吉方なし） */
-.cal-cell.railway{
-  background:rgba(138,104,32,.09);
-  border:2px solid rgba(138,104,32,.5);
-}
-.cal-cell.railway .cal-num{
-  color:var(--goldlt);font-weight:700;
-}
-/* 月盤吉方のみ（線路の日でない） */
+/* 月盤吉方 */
 .cal-cell.kichi-day{
   background:rgba(58,125,78,.07);
   border:2px solid rgba(58,125,78,.45);
 }
 .cal-cell.kichi-day .cal-num{color:#2a6038;font-weight:600;}
-/* ★ベスト（吉方位×線路の日） */
-.cal-cell.best{
-  background:rgba(177,107,120,.18);
-  border:2px solid rgba(177,107,120,.7);
-  box-shadow:0 2px 8px rgba(177,107,120,.2);
-}
-.cal-cell.best .cal-num{color:#8a2840;font-weight:800;font-size:.8rem;}
 /* 要注意日 */
 .cal-cell.kyo-day{
   background:rgba(100,80,40,.04);
@@ -382,15 +367,13 @@ body{
 }
 .cal-num{font-size:.72rem;color:var(--snow);line-height:1;}
 .cal-cell.today .cal-num{color:var(--goldlt);font-weight:700;}
-/* ラベル（線路の日マーク） */
+/* ラベル */
 .cal-label{
   font-size:.46rem;line-height:1.25;margin-top:2px;
   font-weight:700;
   text-align:center;
   white-space:pre-line;
 }
-.cal-cell.railway .cal-label{color:rgba(92,64,16,.7);}
-.cal-cell.best .cal-label{color:rgba(138,40,64,.8);}
 .cal-badge{
   position:absolute;top:1px;right:2px;
   font-size:.5rem;line-height:1;
@@ -417,7 +400,6 @@ body{
   font-size:.58rem;padding:2px 7px;border-radius:999px;
   border:1px solid;
 }
-.tag-railway{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.4);color:var(--goldlt);}
 .tag-kichi{background:rgba(232,116,138,.15);border-color:rgba(232,116,138,.4);color:#e8748a;}
 .tag-month{background:rgba(94,200,138,.1);border-color:rgba(94,200,138,.3);color:var(--green);}
 
@@ -1620,6 +1602,7 @@ function renderCalendar() {
     const dayStar = getDayCenter(y, m, d);
     const kyo = getKyoDirections(dayStar, gState.honmei);
     const isKyoDay = kyo.includes(gState.destDir) || gState.destDir === getHakaiDirection(y, m, d, 'day');
+    const isRailway = gState.railwayBranches.includes(branch);
     const isKichi = dayRank.rank >= 2;
     const isToday = `${y}-${m}-${d}` === todayStr;
 
@@ -1710,7 +1693,6 @@ function showDayDetail(y, m, d) {
   const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
   const tendo = getTendoDir(y, m, d);
   const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
-  const isRailway = gState.railwayBranches.includes(branch);
   const dow = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
 
   let msg = `${y}年${m}月${d}日（${dow}）\n`;
