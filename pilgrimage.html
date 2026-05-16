@@ -1571,6 +1571,21 @@ function changeMonth(dir) {
   }
 }
 
+function getDayDirectionRank(y, m, d, dir) {
+  if (!dir || !gState.honmei) return { rank: 0, badges: [] };
+  const dayCenter = getDayCenter(y, m, d);
+  const dayBoard = buildBoardFromCenter(dayCenter);
+  const dayStarN = dayBoard[dir] || 5;
+  const branch = getDayBranch(y, m, d);
+  const branchName = BRANCH_NAME[branch];
+  const dSangoSet = new Set((SANGO_MAP[branchName] && SANGO_MAP[branchName].dirs) || []);
+  const tendo = getTendoDir(y, m, d);
+  const result = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+  if (!result || typeof result.rank !== 'number') return { rank: 0, badges: [] };
+  if (!Array.isArray(result.badges)) result.badges = [];
+  return result;
+}
+
 function renderCalendar() {
   if (!gState.destDir || !gState.honmei) return;
 
@@ -1649,14 +1664,9 @@ function renderCalendar() {
         console.warn('getDayDirectionRank failed:', y, m, d, e);
       }
 
-      try {
-        const dayStar = getDayCenter(y, m, d);
-        const kyo = getKyoDirections(dayStar, gState.honmei) || [];
-        const hakai = getHakaiDirection(y, m, d, 'day');
-        isKyoDay = Array.isArray(kyo) && (kyo.includes(gState.destDir) || gState.destDir === hakai);
-      } catch(e) {
-        console.warn('day kyo check failed:', y, m, d, e);
-      }
+      // 要注意日のロジックは流派差が大きいため、ここでは未確定表示にしない。
+      // 方位の吉方判定はSTEP3と同じ getDayDirectionRank() に統一する。
+      isKyoDay = false;
 
       const isRailway = branch !== null && railwayBranches.includes(branch);
       const isKichi = dayRank.rank >= 2;
