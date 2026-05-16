@@ -1618,7 +1618,14 @@ function renderCalendar() {
       const isToday = (y + '-' + m + '-' + d) === todayStr;
 
       if (isRailway) railwayDays.push({ d: d, branch: branch });
-      if (isKichi) bestDays.push({ d: d, branch: branch, rank: dayRank.rank, badges: dayRank.badges || [] });
+
+      // おすすめTOP3用スコア：線路×吉方を最優先
+      if (isKichi || isRailway) {
+        let score = dayRank.rank;
+        if (isRailway && isKichi) score += 10; // 線路×吉方：最優先
+        else if (isRailway) score += 3;         // 線路のみ：次点
+        bestDays.push({ d: d, branch: branch, rank: dayRank.rank, score: score, isRailway: isRailway, isKichi: isKichi, badges: dayRank.badges || [] });
+      }
 
       let classes = 'cal-cell';
       if (isToday) classes += ' today';
@@ -1651,7 +1658,7 @@ function renderCalendar() {
       }
     }
 
-    bestDays.sort(function(a, b) { return b.rank - a.rank || a.d - b.d; });
+    bestDays.sort(function(a, b) { return b.score - a.score || a.d - b.d; });
     const top3 = bestDays.slice(0, 3);
     if (!bestList) return;
 
@@ -1663,27 +1670,28 @@ function renderCalendar() {
     bestList.innerHTML = top3.map(function(item, idx) {
       const date = new Date(y, m - 1, item.d);
       const dow = dowLabels[date.getDay()];
+      const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
       const tags = [];
-      if (item.rank >= 4) tags.push('<span class="best-tag tag-kichi">✦ 本命・月命 吉</span>');
-      else if (item.rank >= 2) tags.push('<span class="best-tag tag-kichi">吉方</span>');
+
+      // 線路タグ
+      if (item.isRailway) tags.push('<span class="best-tag tag-railway">◆ 線路の日（' + branchLabel + '）</span>');
+
+      // 吉方タグ
+      if (item.isKichi) {
+        if (item.rank >= 4) tags.push('<span class="best-tag tag-kichi">✦ 本命・月命 吉</span>');
+        else tags.push('<span class="best-tag tag-kichi">○ 吉方</span>');
+      }
 
       try {
         const monthCenter = getMonthCenter(y, m, item.d);
         if (STARS[monthCenter]) tags.push('<span class="best-tag tag-month">月盤 ' + monthCenter + '（' + STARS[monthCenter].j + '）</span>');
-      } catch(e) {
-        console.warn('month tag failed:', y, m, item.d, e);
-      }
-
-      const routeUrl = (gState.homeLat && gState.homeLon && gState.destLat && gState.destLon)
-        ? mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)
-        : '';
+      } catch(e) {}
 
       return '<div class="best-item">' +
         '<div class="best-rank ' + (idx === 0 ? 'r1' : '') + '">' + (idx + 1) + '</div>' +
         '<div class="best-info">' +
           '<div class="best-date">' + y + '年 ' + m + '月 ' + item.d + '日（' + dow + '）</div>' +
           '<div class="best-tags">' + tags.join('') + '</div>' +
-          (routeUrl ? '<button class="mini-map-btn" onclick="event.stopPropagation(); window.open(\'' + routeUrl + '\', \'_blank\')">🗺 この日のルートを地図で確認</button>' : '') +
         '</div>' +
       '</div>';
     }).join('');
