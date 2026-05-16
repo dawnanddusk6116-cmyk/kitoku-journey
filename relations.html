@@ -4,9 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>KITOKU @ RELATIONS</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;--biz:#2a6ab0;--love:#b04060;--fam:#3a8a4a;}
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--r:14px;--biz:#2a6ab0;--love:#b04060;--friend:#8a5a9a;--fam:#3a8a4a;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
@@ -19,6 +26,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .pc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:16px;margin-bottom:12px;}
 .pc.biz{border-left:3px solid var(--biz);}
 .pc.love{border-left:3px solid var(--love);}
+.pc.friend{border-left:3px solid var(--friend);}
 .pc.fam{border-left:3px solid var(--fam);}
 .pi{font-size:1.8rem;width:44px;text-align:center;}
 .pn{font-size:.95rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;}
@@ -26,6 +34,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .badge{display:inline-block;font-size:.62rem;letter-spacing:.12em;padding:4px 12px;border-radius:20px;font-weight:700;margin-bottom:10px;}
 .badge.biz{background:rgba(42,106,176,.1);color:var(--biz);border:1px solid rgba(42,106,176,.25);}
 .badge.love{background:rgba(176,64,96,.1);color:var(--love);border:1px solid rgba(176,64,96,.25);}
+.badge.friend{background:rgba(138,90,154,.1);color:var(--friend);border:1px solid rgba(138,90,154,.25);}
 .badge.fam{background:rgba(58,138,74,.1);color:var(--fam);border:1px solid rgba(58,138,74,.25);}
 .fc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px;margin-bottom:12px;}
 .fl{font-size:.72rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
@@ -139,8 +148,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="big-t">大切な人との縁を知る</div>
   <div class="big-s">KITOKU @ RELATIONS</div>
   <div style="font-size:.68rem;color:var(--mist);margin-bottom:12px;">何のための鑑定ですか？</div>
-  <div class="pc biz" onclick="selP('biz')"><div class="pi">💼</div><div><div class="pn">ビジネス</div><div class="pd">取引先・同僚との付き合い方<br>採用・配属判断</div></div></div>
-  <div class="pc love" onclick="selP('love')"><div class="pi">💕</div><div><div class="pn">恋愛・友人</div><div class="pd">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
+  <div class="pc love" onclick="selP('love')"><div class="pi">💕</div><div><div class="pn">恋愛・パートナー</div><div class="pd">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
+  <div class="pc friend" onclick="selP('friend')"><div class="pi">🤝</div><div><div class="pn">友人・知人</div><div class="pd">友人関係を整える<br>距離感・摩擦の活かし方</div></div></div>
   <div class="pc fam" onclick="selP('fam')"><div class="pi">👨‍👩‍👧</div><div><div class="pn">家族</div><div class="pd">家族との関係を整える<br>親の介護・カルマの修復・二生の縁</div></div></div>
 </div>
 
@@ -214,11 +223,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div style="margin-top:24px;border-top:1px solid rgba(100,80,40,.15);padding-top:20px;"><div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.2em;color:#5c4010;font-weight:600;margin-bottom:12px;">🎯 どんな場面で使いますか？</div>
     <div class="g2">
       <div class="sc2 on" id="t-basic" onclick="selT('basic',this)"><div class="si">🤝</div><div class="sn3">基本の相性</div><div class="sd2">二人の縁を読み解く</div></div>
-      <div class="sc2" id="t-hire" onclick="selT('hire',this)"><div class="si">👤</div><div class="sn3">採用判断</div><div class="sd2">この人材を採るべきか</div></div>
-      <div class="sc2" id="t-team" onclick="selT('team',this)"><div class="si">👥</div><div class="sn3">チーム編成</div><div class="sd2">上司・部下の相性</div></div>
-      <div class="sc2" id="t-partner" onclick="selT('partner',this)"><div class="si">🤜</div><div class="sn3">パートナー選定</div><div class="sd2">長期で組めるか判断</div></div>
-      <div class="sc2" id="t-deal" onclick="selT('deal',this)"><div class="si">💬</div><div class="sn3">商談・提案</div><div class="sd2">最適なアプローチ</div></div>
-      <div class="sc2" id="t-project" onclick="selT('project',this)"><div class="si">🚀</div><div class="sn3">プロジェクト</div><div class="sd2">チームの強みと注意点</div></div>
+      <div class="sc2" id="t-heart" onclick="selT('heart',this)"><div class="si">💗</div><div class="sn3">気持ちを伝える</div><div class="sd2">今日伝えるべき一言</div></div>
+      <div class="sc2" id="t-distance" onclick="selT('distance',this)"><div class="si">🌿</div><div class="sn3">距離感を整える</div><div class="sd2">心地よい関係の保ち方</div></div>
+      <div class="sc2" id="t-repair" onclick="selT('repair',this)"><div class="si">🔧</div><div class="sn3">関係を修復する</div><div class="sd2">摩擦・すれ違いを整える</div></div>
       <div class="sc2 sf" id="t-kaigo" onclick="selT('kaigo',this)"><div class="si">🌸</div><div class="sn3">親の介護・家族の絆</div><div class="sd2">大切な親との残りの時間を最善に</div></div>
     </div>
     <button class="ai-btn" id="aiBtn" onclick="genReport()" style="margin-top:12px;">✦ AI深掘りレポートを生成する</button>
@@ -312,8 +319,8 @@ function getCount(){return parseInt(localStorage.getItem(todayKey())||'0');}
 function addCount(){var k=todayKey();localStorage.setItem(k,getCount()+1);}
 function updateHint(){var el=document.getElementById('cntHint');if(!el)return;var r=Math.max(0,FREE-getCount());if(r>0){el.textContent='本日あと'+r+'回（無料：1日'+FREE+'回）';el.style.color='var(--gold)';}else{el.textContent='本日の無料回数（'+FREE+'回）を使い切りました';el.style.color='#b04040';}}
 
-var curP='biz',curC='kitoku',curT='basic';
-var PL={biz:'💼 ビジネス',love:'💕 恋愛・友人',fam:'👨‍👩‍👧 家族'};
+var curP='love',curC='kitoku',curT='basic';
+var PL={love:'💕 恋愛・パートナー',friend:'🤝 友人・知人',fam:'👨‍👩‍👧 家族'};
 var RD={};
 
 function pal(n,C){return((n-C+4)%9+9)%9+1;}
@@ -332,7 +339,7 @@ function tog(h){var b=h.nextElementSibling;var a=h.querySelector('.aa');b.classL
 function resetRpt(){document.getElementById('rptArea').style.display='none';document.getElementById('rptText').style.display='none';document.getElementById('rptText').textContent='';var btn=document.getElementById('aiBtn');if(btn){btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';}}
 
 function selC(id,el){curC=id;document.querySelectorAll('#c-kitoku,#c-confucius,#c-sunzi,#c-musashi,#c-saikon,#c-shibusawa,#c-jitsugokyo,#c-dojikyo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
-function selT(id,el){curT=id;document.querySelectorAll('#t-basic,#t-hire,#t-team,#t-partner,#t-deal,#t-project,#t-kaigo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
+function selT(id,el){curT=id;document.querySelectorAll('#t-basic,#t-heart,#t-distance,#t-repair,#t-kaigo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
 function selP(p){curP=p;document.getElementById('pBadge').textContent=PL[p];document.getElementById('pBadge').className='badge '+p;loadSaved();showScr('s1');}
 
 function loadSaved(){
@@ -412,10 +419,10 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   st('niseiD',niseiText(myN,pN));
 
   var d2=new Date();var seed=d2.getFullYear()*10000+(d2.getMonth()+1)*100+d2.getDate();
-  var acts=curP==='biz'?TBZ:curP==='fam'?TFM:TLV;
+  var acts=curP==='fam'?TFM:TLV;
   st('todayA',acts[seed%acts.length]);
   st('todayC','今日は'+pS.e+'のエネルギーを意識して、'+(EC[pS.e]||'')+'の小物を一つ身につけましょう。');
-  st('todayH',curP==='biz'?'今日は結論から先に伝えると伝わりやすい日です。':curP==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
+  st('todayH',curP==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':curP==='friend'?'相手のペースに合わせながら、自分らしさも大切に。無理のない距離感が長い縁を育てます。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
 
   RD={purpose:curP,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myNa:myNa.name,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,pNa:pNa.name,compat:hC.l,bridge:bridgeText(myS.e,pS.e),nisei:niseiText(myN,pN)};
 

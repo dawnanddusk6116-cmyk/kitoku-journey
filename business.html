@@ -4,9 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>KITOKU for BUSINESS</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a3c64;}
+:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a3c64;--hire:#2a6ab0;--boss:#4a7a3a;--founder:#8a4a10;}
+/* カテゴリカード */
+.menu-card.hire{border-left:4px solid var(--hire);}
+.menu-card.boss{border-left:4px solid var(--boss);}
+.menu-card.founder{border-left:4px solid var(--founder);}
+.cat-badge{display:inline-block;border-radius:20px;padding:3px 12px;font-size:.62rem;font-weight:700;margin-bottom:8px;}
+.cat-badge.hire{background:rgba(42,106,176,.1);color:var(--hire);border:1px solid rgba(42,106,176,.25);}
+.cat-badge.boss{background:rgba(74,122,58,.1);color:var(--boss);border:1px solid rgba(74,122,58,.25);}
+.cat-badge.founder{background:rgba(138,74,16,.1);color:var(--founder);border:1px solid rgba(138,74,16,.25);}
+/* 賢者・場面グリッド */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.sc2{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;transition:all .18s;}
+.sc2.on{background:rgba(100,80,40,.08);border-color:rgba(100,80,40,.5);}
+.sc2:active{transform:scale(.97);}
+.si{font-size:1.2rem;margin-bottom:4px;}
+.sn3{font-size:.68rem;color:var(--snow);font-weight:700;margin-bottom:2px;}
+.sd2{font-size:.58rem;color:var(--mist);line-height:1.4;}
+.section-head{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--goldlt);font-weight:600;margin-bottom:10px;margin-top:20px;border-top:1px solid var(--rim);padding-top:16px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;}
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:10;}
@@ -124,13 +148,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="hero">
     <div class="hero-en">KITOKU for BUSINESS</div>
     <div class="hero-title">ビジネスに<br>5000年の知恵を</div>
-    <div class="hero-sub">人事・採用・チーム編成に<br>東洋の気の学問という視点を添える</div>
+    <div class="hero-sub">採用・チーム・経営判断に<br>東洋の気の学問という視点を添える</div>
   </div>
 
-  <div class="menu-card hire" onclick="showScreen('s1')">
+  <div class="menu-card hire" onclick="selCat('hire')">
     <div class="menu-icon">👤</div>
     <div>
-      <div class="menu-name">候補者理解</div>
+      <div class="menu-name">採用判断</div>
       <div class="menu-desc">
         候補者の特性・才能を読み解く<br>
         面談の質を上げる問いを整える<br>
@@ -139,15 +163,44 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="free-badge">🎁 1日1回無料</div>
     </div>
   </div>
+
+  <div class="menu-card boss" onclick="selCat('boss')">
+    <div class="menu-icon">👥</div>
+    <div>
+      <div class="menu-name">上司×部下 関係を整える</div>
+      <div class="menu-desc">
+        上司・部下の相性を読み解く<br>
+        摩擦の原因と活かし方を知る<br>
+        育成・配属の判断材料にする
+      </div>
+      <div class="free-badge">🎁 1日1回無料</div>
+    </div>
+  </div>
+
+  <div class="menu-card founder" onclick="selCat('founder')">
+    <div class="menu-icon">🤝</div>
+    <div>
+      <div class="menu-name">経営者×右腕 補完関係</div>
+      <div class="menu-desc">
+        経営者とNo.2の相性を読む<br>
+        死角ゼロのチームが作れるか<br>
+        共同創業者・パートナー選定に
+      </div>
+      <div class="free-badge">🎁 1日1回無料</div>
+    </div>
+  </div>
 </div>
 
-<!-- 候補者理解：入力画面 -->
+<!-- 入力画面 -->
 <div class="screen" id="s1">
-  <div class="sec-title">候補者理解</div>
+  <div style="margin-bottom:12px;">
+    <span class="cat-badge" id="catBadge">👤 採用判断</span>
+    <div class="sec-title" id="s1Title">採用判断</div>
+  </div>
 
-  <!-- あなた（社長・採用担当）-->
+  <!-- あなた（採用担当・経営者）-->
   <div class="form-card">
-    <div class="form-label">✦ あなたの生年月日</div>
+    <div class="form-label" id="myLabel">✦ あなたの生年月日</div>
     <div class="date-row">
       <div><input class="form-input" type="number" id="myYear" placeholder="1967"><div class="date-unit">年</div></div>
       <div><input class="form-input" type="number" id="myMonth" placeholder="6"><div class="date-unit">月</div></div>
@@ -155,25 +208,46 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
-  <!-- 候補者 -->
+  <!-- 相手 -->
   <div class="form-card">
-    <div class="form-label">✦ 候補者のお名前</div>
+    <div class="form-label" id="partnerNameLabel">✦ 候補者のお名前</div>
     <input class="form-input" type="text" id="candidateName" placeholder="例：田中太郎" style="margin-bottom:16px;">
-    <div class="form-label">✦ 候補者の生年月日</div>
+    <div class="form-label" id="partnerBirthLabel">✦ 候補者の生年月日</div>
     <div class="date-row">
       <div><input class="form-input" type="number" id="cYear" placeholder="1990"><div class="date-unit">年</div></div>
       <div><input class="form-input" type="number" id="cMonth" placeholder="4"><div class="date-unit">月</div></div>
       <div><input class="form-input" type="number" id="cDay" placeholder="1"><div class="date-unit">日</div></div>
     </div>
     <div class="form-note">※ 生年月日はこの端末内にのみ保存されます</div>
-    <button class="main-btn" onclick="analyze()">✦ 候補者理解レポートを作る</button>
   </div>
+
+  <!-- 賢者選択 -->
+  <div class="form-card">
+    <div class="section-head" style="margin-top:0;border-top:none;padding-top:0;">✦ 誰の言葉で語りますか？</div>
+    <div class="g2">
+      <div class="sc2 on" id="c-kitoku" onclick="selC('kitoku',this)"><div class="si">🏯</div><div class="sn3">格さん</div><div class="sd2">KITOKUオリジナル</div></div>
+      <div class="sc2" id="c-sunzi" onclick="selC('sunzi',this)"><div class="si">⚔️</div><div class="sn3">孫子</div><div class="sd2">兵法の言葉で</div></div>
+      <div class="sc2" id="c-confucius" onclick="selC('confucius',this)"><div class="si">📜</div><div class="sn3">孔子</div><div class="sd2">論語の言葉で</div></div>
+      <div class="sc2" id="c-shibusawa" onclick="selC('shibusawa',this)"><div class="si">💴</div><div class="sn3">渋沢栄一</div><div class="sd2">論語と算盤で</div></div>
+      <div class="sc2" id="c-musashi" onclick="selC('musashi',this)"><div class="si">🗡️</div><div class="sn3">宮本武蔵</div><div class="sd2">五輪書の言葉で</div></div>
+      <div class="sc2" id="c-saikon" onclick="selC('saikon',this)"><div class="si">🌿</div><div class="sn3">菜根譚</div><div class="sd2">処世の極意で</div></div>
+    </div>
+  </div>
+
+  <!-- 場面選択 -->
+  <div class="form-card">
+    <div class="section-head" style="margin-top:0;border-top:none;padding-top:0;">🎯 どんな場面で使いますか？</div>
+    <div class="g2" id="sceneGrid"></div>
+  </div>
+
+  <button class="main-btn" onclick="analyze()">✦ レポートを作る</button>
   <button class="back-btn" onclick="showScreen('s0')">← 戻る</button>
 </div>
 
-<!-- 候補者理解：結果画面 -->
+<!-- 結果画面 -->
 <div class="screen" id="s2">
   <div class="result-header">
+    <span class="cat-badge" id="resCatBadge" style="margin-bottom:8px;display:inline-block;">👤 採用判断</span>
     <div class="result-name" id="resName">—</div>
     <div class="result-star" id="resStar">—</div>
   </div>
@@ -207,6 +281,87 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <script>
+/* ===== カテゴリ・賢者・場面 ===== */
+var curCat='hire', curC='kitoku', curT='basic';
+
+var CAT_LABELS={
+  hire:{badge:'👤 採用判断',title:'採用判断',myLabel:'✦ あなたの生年月日（採用担当・経営者）',partnerName:'✦ 候補者のお名前',partnerBirth:'✦ 候補者の生年月日'},
+  boss:{badge:'👥 上司×部下',title:'上司×部下 関係を整える',myLabel:'✦ 上司の生年月日（あなた または 上司）',partnerName:'✦ 部下のお名前',partnerBirth:'✦ 部下の生年月日'},
+  founder:{badge:'🤝 経営者×右腕',title:'経営者×右腕 補完関係',myLabel:'✦ 経営者の生年月日',partnerName:'✦ 右腕・パートナーのお名前',partnerBirth:'✦ 右腕・パートナーの生年月日'}
+};
+
+var SCENES={
+  hire:[
+    {id:'basic',icon:'🤝',name:'基本の相性',desc:'二人の縁を読み解く'},
+    {id:'hire',icon:'👤',name:'採用面談前',desc:'この人材を採るべきか'},
+    {id:'grow',icon:'🌱',name:'育成・配属',desc:'どう育て配属するか'},
+    {id:'team_fit',icon:'🏢',name:'チームへの適合',desc:'既存メンバーとの相性'}
+  ],
+  boss:[
+    {id:'basic',icon:'🤝',name:'基本の相性',desc:'二人の縁を読み解く'},
+    {id:'friction',icon:'⚡',name:'摩擦の原因',desc:'なぜぶつかるのかを知る'},
+    {id:'coach',icon:'🎯',name:'育成方針',desc:'どう伸ばすかを整える'},
+    {id:'role',icon:'🔧',name:'役割分担',desc:'最適な仕事の割り方'}
+  ],
+  founder:[
+    {id:'basic',icon:'🤝',name:'基本の相性',desc:'二人の縁を読み解く'},
+    {id:'complement',icon:'🔑',name:'補完関係',desc:'死角ゼロのチームへ'},
+    {id:'longterm',icon:'🚀',name:'長期の見立て',desc:'5年後も組めるか'},
+    {id:'conflict',icon:'⚖️',name:'意見対立の整理',desc:'衝突の活かし方'}
+  ]
+};
+
+function selCat(cat){
+  curCat=cat;
+  var cl=CAT_LABELS[cat];
+  // バッジ・タイトル更新
+  var badge=document.getElementById('catBadge');
+  if(badge){badge.textContent=cl.badge;badge.className='cat-badge '+cat;}
+  var title=document.getElementById('s1Title');
+  if(title)title.textContent=cl.title;
+  document.getElementById('myLabel').textContent=cl.myLabel;
+  document.getElementById('partnerNameLabel').textContent=cl.partnerName;
+  document.getElementById('partnerBirthLabel').textContent=cl.partnerBirth;
+  document.getElementById('candidateName').placeholder=cat==='hire'?'例：田中太郎':cat==='boss'?'例：鈴木一郎（部下）':'例：山田花子（右腕候補）';
+  // 場面グリッド更新
+  renderScenes(cat);
+  curT='basic';
+  curC='kitoku';
+  document.querySelectorAll('.sc2').forEach(function(c){c.classList.remove('on');});
+  var kc=document.getElementById('c-kitoku');if(kc)kc.classList.add('on');
+  showScreen('s1');
+}
+
+function renderScenes(cat){
+  var grid=document.getElementById('sceneGrid');
+  if(!grid)return;
+  var scenes=SCENES[cat]||SCENES.hire;
+  grid.innerHTML=scenes.map(function(s){
+    return '<div class="sc2'+(s.id==='basic'?' on':'')+'" id="t-'+s.id+'" onclick="selT(\''+s.id+'\',this)"><div class="si">'+s.icon+'</div><div class="sn3">'+s.name+'</div><div class="sd2">'+s.desc+'</div></div>';
+  }).join('');
+}
+
+function selC(id,el){
+  curC=id;
+  document.querySelectorAll('#c-kitoku,#c-sunzi,#c-confucius,#c-shibusawa,#c-musashi,#c-saikon').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');
+}
+
+function selT(id,el){
+  curT=id;
+  document.querySelectorAll('#sceneGrid .sc2').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');
+}
+
+var SAGE_LABEL={
+  kitoku:'格さん（KITOKUオリジナル）',
+  sunzi:'孫子（兵法）',
+  confucius:'孔子（論語）',
+  shibusawa:'渋沢栄一（論語と算盤）',
+  musashi:'宮本武蔵（五輪書）',
+  saikon:'菜根譚（処世の極意）'
+};
+
 /* ===== データ ===== */
 var STARS={1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
 
@@ -322,8 +477,16 @@ function analyze(){
   st('compatDesc',COMPAT_DESC[compat.t]||'');
   st('growthDesc',GROWTH_ADVICE[cN]||'');
 
+  // 結果バッジ更新
+  var resBadge=document.getElementById('resCatBadge');
+  if(resBadge){
+    var cl=CAT_LABELS[curCat];
+    resBadge.textContent=cl?cl.badge:'👤 採用判断';
+    resBadge.className='cat-badge '+curCat;
+  }
+
   // AIレポート用データ保存
-  rData={nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,cH:cS.k,cE:cS.e,cT:cTS.k,compat:compat.l,compatType:compat.t};
+  rData={cat:curCat,sage:curC,scene:curT,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,cH:cS.k,cE:cS.e,cT:cTS.k,compat:compat.l,compatType:compat.t};
   updateCount();
   document.getElementById('aiArea').style.display='none';
   document.getElementById('aiReport').style.display='none';
@@ -359,7 +522,31 @@ function genReport(){
       ? '比和の共鳴を活かし、似ている強みと盲点を整理する関係作り'
       : '相剋を否定せず、死角ゼロの補完関係に変える関係作り';
 
-  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、面談の質を上げ、育成の視点を持つための補助資料に翻訳してください。\n\n以下の確定済みデータだけを使い、星の計算は行わないでください。\n\n【面談担当者（あなた）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【候補者：'+d.nm+'】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n\nレポートタイトルは「KITOKU for BUSINESS｜候補者理解レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た候補者のエネルギー状態、面談担当者との関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n本命星・月命星から見た本質、才能、内側の動機、安心して力を発揮しやすい環境を琥珀色の言葉で伝える。\n\n【軍略的助言（指揮）】\n面談でどう引き出すか、入社後にどう伸ばすか、2〜3年後の成長展望、明日から使える関わり方を具体的に示す。\n\n必ず最後に「面談で確認すべき3つの質問」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは採否を決めるものではなく、面談で候補者の可能性を見つけるための補助資料です。\n\n【制約】\n・四柱推命・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採用可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・面談担当者がそのまま使える具体的な内容にする\n・候補者への敬意を失わない\n・900〜1200文字程度';
+  // カテゴリ別の視点
+  var catGuide={
+    hire:'採用判断の補助資料として。候補者の可能性・面談での引き出し方・育成視点を整理する。',
+    boss:'上司と部下の関係を整えるために。摩擦の原因・育成方針・最適な役割分担を示す。',
+    founder:'経営者と右腕の補完関係を読む。死角ゼロのチームを作るために何が必要かを整理する。'
+  }[d.cat||'hire'];
+
+  // 場面別の追加指示
+  var sceneGuide={
+    basic:'二人の縁の全体像を中心に読み解く。',
+    hire:'面談前に使える情報として整理する。採用後の育成視点も加える。',
+    grow:'入社後の育成・配属計画に焦点を当てる。',
+    team_fit:'既存チームへの適合・チームへの貢献を中心に読む。',
+    friction:'摩擦の原因を特定し、活かし方を示す。批判ではなく理解のための情報として。',
+    coach:'育成・指導方針に特化して整理する。',
+    role:'最適な役割分担を提示する。',
+    complement:'補完関係の全体像を読む。お互いの死角を埋め合う構造を示す。',
+    longterm:'5年後も一緒に走れるかの視点で整理する。',
+    conflict:'意見対立が起きやすい場面と、その活かし方を整理する。'
+  }[d.scene||'basic'];
+
+  var sageName=SAGE_LABEL[d.sage||'kitoku'];
+  var catLabel=CAT_LABELS[d.cat||'hire'];
+
+  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
 
   fetch('/api/claude',{
     method:'POST',
@@ -385,6 +572,7 @@ function genReport(){
 // 初期化
 (function(){
   updateCount();
+  renderScenes('hire');
   try{var b=localStorage.getItem('kitoku-birth');if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('myYear').value=a[0];if(a[1])document.getElementById('myMonth').value=a[1];if(a[2])document.getElementById('myDay').value=a[2];}}catch(e){}
 })();
 
