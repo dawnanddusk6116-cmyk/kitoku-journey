@@ -930,17 +930,22 @@ const SACRED_PLACES = {
     { name:'出雲大社', area:'島根県出雲市', q:'出雲大社 島根県出雲市大社町杵築東' },
     { name:'高野山 奥の院', area:'和歌山県高野町', q:'高野山奥の院 和歌山県高野町高野山' },
   ],
-  national: [
+  kumano: [
     { name:'熊野本宮大社', area:'和歌山県田辺市', q:'熊野本宮大社 和歌山県田辺市本宮町本宮' },
     { name:'熊野那智大社', area:'和歌山県那智勝浦町', q:'熊野那智大社 和歌山県那智勝浦町那智山' },
     { name:'熊野速玉大社', area:'和歌山県新宮市', q:'熊野速玉大社 和歌山県新宮市新宮' },
-    { name:'伏見稲荷大社', area:'京都府京都市伏見区', q:'伏見稲荷大社 京都府京都市伏見区深草薮之内町' },
+  ],
+  shrines: [
+    { name:'伏見稲荷大社', area:'京都府京都市', q:'伏見稲荷大社 京都府京都市伏見区深草薮之内町' },
     { name:'春日大社', area:'奈良県奈良市', q:'春日大社 奈良県奈良市春日野町' },
     { name:'東大寺', area:'奈良県奈良市', q:'東大寺 奈良県奈良市雑司町' },
     { name:'厳島神社', area:'広島県廿日市市', q:'厳島神社 広島県廿日市市宮島町' },
     { name:'太宰府天満宮', area:'福岡県太宰府市', q:'太宰府天満宮 福岡県太宰府市宰府' },
     { name:'浅草寺', area:'東京都台東区', q:'浅草寺 東京都台東区浅草' },
     { name:'日光東照宮', area:'栃木県日光市', q:'日光東照宮 栃木県日光市山内' },
+    { name:'鶴岡八幡宮', area:'神奈川県鎌倉市', q:'鶴岡八幡宮 神奈川県鎌倉市雪ノ下' },
+    { name:'出羽三山神社', area:'山形県鶴岡市', q:'出羽三山神社 山形県鶴岡市羽黒町' },
+    { name:'諏訪大社', area:'長野県諏訪市', q:'諏訪大社上社本宮 長野県諏訪市中洲' },
   ]
 };
 
@@ -1137,11 +1142,12 @@ function renderPresets() {
   renderPresetGrid('grid-henro-iyo',    SACRED_PLACES.henro_iyo);
   renderPresetGrid('grid-henro-sanuki', SACRED_PLACES.henro_sanuki);
   renderPresetGrid('grid-major',        SACRED_PLACES.major);
-  renderPresetGrid('grid-national',     SACRED_PLACES.national);
-  // 既存グリッドを空にする
-  ['grid-kumano','grid-saigoku','grid-bando','grid-chichibu',
-   'grid-shrines','grid-mountains','grid-kyushu','grid-betsugaku','grid-tokai'
-  ].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML=''; });
+  renderPresetGrid('grid-kumano',       SACRED_PLACES.kumano);
+  renderPresetGrid('grid-shrines',      SACRED_PLACES.shrines);
+  // 空のグリッドをクリア
+  ['grid-saigoku','grid-bando','grid-chichibu',
+   'grid-mountains','grid-kyushu','grid-betsugaku','grid-tokai'
+  ].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML='<div style=\"font-size:.62rem;color:var(--mist);padding:8px;\">準備中です</div>'; });
 }
 
 function renderPresetGrid(id, places) {
@@ -1392,20 +1398,26 @@ function calcAndShowDir() {
       <!-- 吉凶サマリー -->
       <div class="dir-panels" style="margin-top:10px;">
         <div class="dir-panel">
-          <div class="dir-panel-label">年盤</div>
+          <div class="dir-panel-label">年盤（${viewY}年）</div>
           <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank)}</div>
-          <div class="dir-panel-badges">${yearRank.badges.join('<br>') || '—'}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(yearRank.rank, yearRank.badges)}</div>
         </div>
         <div class="dir-panel">
-          <div class="dir-panel-label">月盤</div>
+          <div class="dir-panel-label">月盤（${viewM}月）</div>
           <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank)}</div>
-          <div class="dir-panel-badges">${monthRank.badges.join('<br>') || '—'}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
         <div class="dir-panel">
           <div class="dir-panel-label">日盤（今日）</div>
           <div class="dir-panel-rank rank-${dayRank.rank}">${rankLabel(dayRank.rank)}</div>
-          <div class="dir-panel-badges">${dayRank.badges.join('<br>') || '—'}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(dayRank.rank, dayRank.badges)}</div>
         </div>
+      </div>
+      <div style="margin-top:8px;padding:8px 10px;background:rgba(100,80,40,.05);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.8;">
+        <strong style="color:var(--goldlt);">見方：</strong>
+        本命星（${STARS[gState.honmei]?.k||''}）・月命星（${STARS[gState.tsukimei]?.k||''}）の吉方位かどうかを判定しています。
+        「✦ 本命・月命 吉」が最も取りやすい方位です。
+        年盤は大きな流れ、月盤は月単位の流れ、日盤はその日の状態を示します。
       </div>
       ${isKyo ? `
       <div class="kyo-warn">
@@ -1441,6 +1453,21 @@ function switchBan(type) {
 function rankLabel(rank) {
   const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 最高吉'];
   return labels[rank] || '—';
+}
+
+function rankDesc(rank, badges) {
+  if (rank === 0) return '吉方位ではありません';
+  if (rank === 1) return '天道の方位です。吉凶は中程度です';
+  const parts = [];
+  if (badges && badges.length) {
+    badges.forEach(b => {
+      if (b.includes('本命')) parts.push('あなたの本命星の吉方');
+      if (b.includes('月命')) parts.push('あなたの月命星の吉方');
+      if (b.includes('三合')) parts.push('三合の吉方（後押しの力）');
+      if (b.includes('天道')) parts.push('天道の方位');
+    });
+  }
+  return parts.length ? parts.join('・') : '吉方位です';
 }
 
 function calcDistance(lat1, lon1, lat2, lon2) {
