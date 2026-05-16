@@ -1593,6 +1593,7 @@ function renderCalendar() {
   let html = '';
   let bestDays = [];
   let railwayDays = [];
+  const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
 
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-cell empty"></div>`;
 
@@ -1602,7 +1603,7 @@ function renderCalendar() {
     const dayStar = getDayCenter(y, m, d);
     const kyo = getKyoDirections(dayStar, gState.honmei);
     const isKyoDay = kyo.includes(gState.destDir) || gState.destDir === getHakaiDirection(y, m, d, 'day');
-    const isRailway = gState.railwayBranches.includes(branch);
+    const isRailway = railwayBranches.includes(branch);
     const isKichi = dayRank.rank >= 2;
     const isToday = `${y}-${m}-${d}` === todayStr;
 
@@ -1666,8 +1667,8 @@ function renderCalendar() {
     else if (item.rank >= 2) tags.push(`<span class="best-tag tag-kichi">吉方</span>`);
     tags.push(`<span class="best-tag tag-month">月盤 ${getMonthCenter(y,m,item.d)}（${STARS[getMonthCenter(y,m,item.d)].j}）</span>`);
 
-    const routeUrl = home && selectedDestination
-      ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(home.lat + ',' + home.lng)}&destination=${encodeURIComponent(selectedDestination.lat + ',' + selectedDestination.lng)}&travelmode=driving`
+    const routeUrl = (gState.homeLat && gState.homeLon && gState.destLat && gState.destLon)
+      ? mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)
       : '';
 
     return `
