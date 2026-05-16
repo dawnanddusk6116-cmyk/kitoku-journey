@@ -779,7 +779,120 @@ html.font-large .font-btn{font-size:.8rem;}
 // 聖地データ
 // ============================================================
 const SACRED_PLACES = {
-  henro: [
+  henro_awa: [
+    { name:'1番 霊山寺', area:'徳島県鳴門市', q:'霊山寺 徳島県鳴門市大麻町板東' },
+    { name:'2番 極楽寺', area:'徳島県鳴門市', q:'極楽寺 徳島県鳴門市大麻町檜' },
+    { name:'3番 金泉寺', area:'徳島県板野郡板野町', q:'金泉寺 徳島県板野郡板野町亀山' },
+    { name:'4番 大日寺', area:'徳島県板野郡板野町', q:'大日寺 徳島県板野郡板野町黒谷' },
+    { name:'5番 地蔵寺', area:'徳島県板野郡板野町', q:'地蔵寺 徳島県板野郡板野町羅漢' },
+    { name:'6番 安楽寺', area:'徳島県板野郡上板町', q:'安楽寺 徳島県板野郡上板町引野' },
+    { name:'7番 十楽寺', area:'徳島県阿波市', q:'十楽寺 徳島県阿波市高尾' },
+    { name:'8番 熊谷寺', area:'徳島県阿波市', q:'熊谷寺 徳島県阿波市土成町' },
+    { name:'9番 法輪寺', area:'徳島県阿波市', q:'法輪寺 徳島県阿波市土成町' },
+    { name:'10番 切幡寺', area:'徳島県阿波市', q:'切幡寺 徳島県阿波市市場町切幡' },
+    { name:'11番 藤井寺', area:'徳島県吉野川市', q:'藤井寺 徳島県吉野川市鴨島町飯尾' },
+    { name:'12番 焼山寺', area:'徳島県名西郡神山町', q:'焼山寺 徳島県名西郡神山町下分' },
+    { name:'13番 大日寺', area:'徳島県徳島市一宮町', q:'大日寺 徳島県徳島市一宮町西丁' },
+    { name:'14番 常楽寺', area:'徳島県徳島市国府町', q:'常楽寺 徳島県徳島市国府町延命' },
+    { name:'15番 國分寺', area:'徳島県徳島市国府町', q:'國分寺 徳島県徳島市国府町矢野' },
+    { name:'16番 観音寺', area:'徳島県徳島市国府町', q:'観音寺 徳島県徳島市国府町観音寺' },
+    { name:'17番 井戸寺', area:'徳島県徳島市国府町', q:'井戸寺 徳島県徳島市国府町井戸' },
+    { name:'18番 恩山寺', area:'徳島県小松島市', q:'恩山寺 徳島県小松島市田野町' },
+    { name:'19番 立江寺', area:'徳島県小松島市', q:'立江寺 徳島県小松島市立江町' },
+    { name:'20番 鶴林寺', area:'徳島県勝浦郡勝浦町', q:'鶴林寺 徳島県勝浦郡勝浦町生名' },
+    { name:'21番 太龍寺', area:'徳島県阿南市', q:'太龍寺 徳島県阿南市加茂町龍山' },
+    { name:'22番 平等寺', area:'徳島県阿南市', q:'平等寺 徳島県阿南市新野町秋山' },
+    { name:'23番 薬王寺', area:'徳島県海部郡美波町', q:'薬王寺 徳島県海部郡美波町奥河内' },
+  ],
+  henro_tosa: [
+    { name:'24番 最御崎寺', area:'高知県室戸市', q:'最御崎寺 高知県室戸市室戸岬町' },
+    { name:'25番 津照寺', area:'高知県室戸市', q:'津照寺 高知県室戸市室津' },
+    { name:'26番 金剛頂寺', area:'高知県室戸市', q:'金剛頂寺 高知県室戸市室戸町' },
+    { name:'27番 神峯寺', area:'高知県安芸郡安田町', q:'神峯寺 高知県安芸郡安田町唐浜' },
+    { name:'28番 大日寺', area:'高知県香南市', q:'大日寺 高知県香南市野市町母代寺' },
+    { name:'29番 国分寺', area:'高知県南国市', q:'国分寺 高知県南国市国分' },
+    { name:'30番 善楽寺', area:'高知県高知市', q:'善楽寺 高知県高知市一宮' },
+    { name:'31番 竹林寺', area:'高知県高知市', q:'竹林寺 高知県高知市五台山' },
+    { name:'32番 禅師峰寺', area:'高知県南国市', q:'禅師峰寺 高知県南国市十市' },
+    { name:'33番 雪蹊寺', area:'高知県高知市', q:'雪蹊寺 高知県高知市長浜' },
+    { name:'34番 種間寺', area:'高知県高知市春野町', q:'種間寺 高知県高知市春野町秋山' },
+    { name:'35番 清滝寺', area:'高知県土佐市', q:'清滝寺 高知県土佐市高岡町' },
+    { name:'36番 青龍寺', area:'高知県土佐市', q:'青龍寺 高知県土佐市宇佐町' },
+    { name:'37番 岩本寺', area:'高知県高岡郡四万十町', q:'岩本寺 高知県高岡郡四万十町茂串' },
+    { name:'38番 金剛福寺', area:'高知県土佐清水市', q:'金剛福寺 高知県土佐清水市足摺岬' },
+    { name:'39番 延光寺', area:'高知県宿毛市', q:'延光寺 高知県宿毛市平田町中山' },
+  ],
+  henro_iyo: [
+    { name:'40番 観自在寺', area:'愛媛県宇和郡愛南町', q:'観自在寺 愛媛県宇和郡愛南町御荘平城' },
+    { name:'41番 龍光寺', area:'愛媛県宇和島市', q:'龍光寺 愛媛県宇和島市三間町戸雁' },
+    { name:'42番 仏木寺', area:'愛媛県宇和島市', q:'仏木寺 愛媛県宇和島市三間町' },
+    { name:'43番 明石寺', area:'愛媛県西予市', q:'明石寺 愛媛県西予市宇和町明石' },
+    { name:'44番 大寶寺', area:'愛媛県上浮穴郡久万高原町', q:'大寶寺 愛媛県久万高原町菅生' },
+    { name:'45番 岩屋寺', area:'愛媛県上浮穴郡久万高原町', q:'岩屋寺 愛媛県久万高原町七鳥' },
+    { name:'46番 浄瑠璃寺', area:'愛媛県松山市', q:'浄瑠璃寺 愛媛県松山市浄瑠璃町' },
+    { name:'47番 八坂寺', area:'愛媛県松山市', q:'八坂寺 愛媛県松山市浄瑠璃町八坂' },
+    { name:'48番 西林寺', area:'愛媛県松山市', q:'西林寺 愛媛県松山市高井町' },
+    { name:'49番 浄土寺', area:'愛媛県松山市', q:'浄土寺 愛媛県松山市鷹子町' },
+    { name:'50番 繁多寺', area:'愛媛県松山市', q:'繁多寺 愛媛県松山市畑寺町' },
+    { name:'51番 石手寺', area:'愛媛県松山市', q:'石手寺 愛媛県松山市石手' },
+    { name:'52番 太山寺', area:'愛媛県松山市', q:'太山寺 愛媛県松山市太山寺町' },
+    { name:'53番 円明寺', area:'愛媛県松山市', q:'円明寺 愛媛県松山市和気町' },
+    { name:'54番 延命寺', area:'愛媛県今治市', q:'延命寺 愛媛県今治市阿方' },
+    { name:'55番 南光坊', area:'愛媛県今治市', q:'南光坊 愛媛県今治市別宮町' },
+    { name:'56番 泰山寺', area:'愛媛県今治市', q:'泰山寺 愛媛県今治市小泉' },
+    { name:'57番 栄福寺', area:'愛媛県今治市', q:'栄福寺 愛媛県今治市玉川町八幡' },
+    { name:'58番 仙遊寺', area:'愛媛県今治市', q:'仙遊寺 愛媛県今治市玉川町別所' },
+    { name:'59番 国分寺', area:'愛媛県今治市', q:'国分寺 愛媛県今治市国分' },
+    { name:'60番 横峰寺', area:'愛媛県西条市', q:'横峰寺 愛媛県西条市小松町石鎚' },
+    { name:'61番 香園寺', area:'愛媛県西条市', q:'香園寺 愛媛県西条市小松町南川' },
+    { name:'62番 宝寿寺', area:'愛媛県西条市', q:'宝寿寺 愛媛県西条市小松町新屋敷' },
+    { name:'63番 吉祥寺', area:'愛媛県西条市', q:'吉祥寺 愛媛県西条市氷見' },
+    { name:'64番 前神寺', area:'愛媛県西条市', q:'前神寺 愛媛県西条市洲之内' },
+    { name:'65番 三角寺', area:'愛媛県四国中央市', q:'三角寺 愛媛県四国中央市金田町' },
+  ],
+  henro_sanuki: [
+    { name:'66番 雲辺寺', area:'徳島県三好市', q:'雲辺寺 徳島県三好市池田町白地' },
+    { name:'67番 大興寺', area:'香川県三豊市', q:'大興寺 香川県三豊市山本町辻' },
+    { name:'68番 神恵院', area:'香川県観音寺市', q:'神恵院 香川県観音寺市八幡町' },
+    { name:'69番 観音寺', area:'香川県観音寺市', q:'観音寺 香川県観音寺市八幡町' },
+    { name:'70番 本山寺', area:'香川県三豊市', q:'本山寺 香川県三豊市豊中町本山' },
+    { name:'71番 弥谷寺', area:'香川県三豊市', q:'弥谷寺 香川県三豊市三野町見乙' },
+    { name:'72番 曼荼羅寺', area:'香川県善通寺市', q:'曼荼羅寺 香川県善通寺市吉原町' },
+    { name:'73番 出釈迦寺', area:'香川県善通寺市', q:'出釈迦寺 香川県善通寺市吉原町' },
+    { name:'74番 甲山寺', area:'香川県善通寺市', q:'甲山寺 香川県善通寺市弘田町' },
+    { name:'75番 善通寺', area:'香川県善通寺市', q:'善通寺 香川県善通寺市善通寺町' },
+    { name:'76番 金倉寺', area:'香川県善通寺市', q:'金倉寺 香川県善通寺市金蔵寺町' },
+    { name:'77番 道隆寺', area:'香川県仲多度郡多度津町', q:'道隆寺 香川県仲多度郡多度津町北鴨' },
+    { name:'78番 郷照寺', area:'香川県綾歌郡宇多津町', q:'郷照寺 香川県綾歌郡宇多津町' },
+    { name:'79番 天皇寺', area:'香川県坂出市', q:'天皇寺 香川県坂出市西庄町' },
+    { name:'80番 国分寺', area:'香川県高松市', q:'国分寺 香川県高松市国分寺町' },
+    { name:'81番 白峯寺', area:'香川県坂出市', q:'白峯寺 香川県坂出市青海町' },
+    { name:'82番 根香寺', area:'香川県高松市', q:'根香寺 香川県高松市中山町' },
+    { name:'83番 一宮寺', area:'香川県高松市', q:'一宮寺 香川県高松市一宮町' },
+    { name:'84番 屋島寺', area:'香川県高松市', q:'屋島寺 香川県高松市屋島東町' },
+    { name:'85番 八栗寺', area:'香川県高松市', q:'八栗寺 香川県高松市牟礼町牟礼' },
+    { name:'86番 志度寺', area:'香川県さぬき市', q:'志度寺 香川県さぬき市志度' },
+    { name:'87番 長尾寺', area:'香川県さぬき市', q:'長尾寺 香川県さぬき市長尾西' },
+    { name:'88番 大窪寺', area:'香川県さぬき市', q:'大窪寺 香川県さぬき市多和兼割' },
+  ],
+  major: [
+    { name:'伊勢神宮（内宮）', area:'三重県伊勢市', q:'伊勢神宮内宮 三重県伊勢市' },
+    { name:'出雲大社', area:'島根県出雲市', q:'出雲大社 島根県出雲市大社町' },
+    { name:'高野山 奥の院', area:'和歌山県高野町', q:'高野山奥の院 和歌山県高野町' },
+  ],
+  national: [
+    { name:'熊野本宮大社', area:'和歌山県田辺市', q:'熊野本宮大社 和歌山県田辺市' },
+    { name:'熊野那智大社', area:'和歌山県那智勝浦', q:'熊野那智大社 和歌山県那智勝浦' },
+    { name:'熊野速玉大社', area:'和歌山県新宮市', q:'熊野速玉大社 和歌山県新宮市' },
+    { name:'伏見稲荷大社', area:'京都府京都市', q:'伏見稲荷大社 京都府京都市伏見区' },
+    { name:'春日大社', area:'奈良県奈良市', q:'春日大社 奈良県奈良市春日野町' },
+    { name:'東大寺', area:'奈良県奈良市', q:'東大寺 奈良県奈良市雑司町' },
+    { name:'厳島神社', area:'広島県廿日市市', q:'厳島神社 広島県廿日市市宮島町' },
+    { name:'太宰府天満宮', area:'福岡県太宰府市', q:'太宰府天満宮 福岡県太宰府市' },
+    { name:'浅草寺', area:'東京都台東区', q:'浅草寺 東京都台東区浅草' },
+    { name:'日光東照宮', area:'栃木県日光市', q:'日光東照宮 栃木県日光市山内' },
+  ]
+};
     // 阿波（徳島）発心の道場
     { name:'1番 霊山寺', area:'徳島県鳴門市', lat:34.1533, lon:134.5469 },
     { name:'2番 極楽寺', area:'徳島県鳴門市', lat:34.1438, lon:134.5392 },
@@ -1282,54 +1395,75 @@ function toggleGroup(label, gridId) {
 }
 
 function renderPresets() {
-  const awa    = SACRED_PLACES.henro.slice(0, 23);
-  const tosa   = SACRED_PLACES.henro.slice(23, 39);
-  const iyo    = SACRED_PLACES.henro.slice(39, 65);
-  const sanuki = SACRED_PLACES.henro.slice(65);
-  renderPresetGrid('grid-henro-awa', awa);
-  renderPresetGrid('grid-henro-tosa', tosa);
-  renderPresetGrid('grid-henro-iyo', iyo);
-  renderPresetGrid('grid-henro-sanuki', sanuki);
+  renderPresetGrid('grid-henro-awa', SACRED_PLACES.henro_awa);
+  renderPresetGrid('grid-henro-tosa', SACRED_PLACES.henro_tosa);
+  renderPresetGrid('grid-henro-iyo', SACRED_PLACES.henro_iyo);
+  renderPresetGrid('grid-henro-sanuki', SACRED_PLACES.henro_sanuki);
   renderPresetGrid('grid-major', SACRED_PLACES.major);
-  renderPresetGrid('grid-kumano', SACRED_PLACES.kumano);
-  renderPresetGrid('grid-saigoku', SACRED_PLACES.saigoku);
-  renderPresetGrid('grid-bando', SACRED_PLACES.bando);
-  renderPresetGrid('grid-chichibu', SACRED_PLACES.chichibu);
-  renderPresetGrid('grid-shrines', SACRED_PLACES.shrines);
-  renderPresetGrid('grid-mountains', SACRED_PLACES.mountains);
-  renderPresetGrid('grid-kyushu', SACRED_PLACES.kyushu);
-  renderPresetGrid('grid-betsugaku', SACRED_PLACES.betsugaku);
-  renderPresetGrid('grid-tokai', SACRED_PLACES.tokai);
+  renderPresetGrid('grid-national', SACRED_PLACES.national);
+  // 他グリッドは存在すれば空にする
+  ['grid-kumano','grid-saigoku','grid-bando','grid-chichibu','grid-shrines','grid-mountains','grid-kyushu','grid-betsugaku','grid-tokai'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
 }
 
 function renderPresetGrid(id, places) {
   const grid = document.getElementById(id);
+  if (!grid || !places) return;
   grid.innerHTML = places.map(p => `
-    <button class="preset-btn" onclick="selectPreset(this, ${p.lat}, ${p.lon}, '${p.name}', '${p.area}')">
+    <button class="preset-btn" onclick="selectPresetByQuery(this, '${p.q}', '${p.name}', '${p.area}')">
       <div class="preset-name">${p.name}</div>
       <div class="preset-area">${p.area}</div>
     </button>
   `).join('');
 }
 
-function selectPreset(btn, lat, lon, name, area) {
+async function selectPresetByQuery(btn, query, name, area) {
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-
   const customDest = document.getElementById('customDest');
   if (customDest) customDest.value = '';
   const destStatus = document.getElementById('destStatus');
-  if (destStatus) destStatus.textContent = '';
+  if (destStatus) destStatus.textContent = '📍 座標を取得中...';
 
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&accept-language=ja`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
+    const data = await res.json();
+    if (!data.length) {
+      if (destStatus) destStatus.textContent = '⚠ 座標が見つかりませんでした。住所で検索してください。';
+      return;
+    }
+    gState.destLat = parseFloat(data[0].lat);
+    gState.destLon = parseFloat(data[0].lon);
+    gState.destName = name;
+    gState.destArea = area;
+    if (destStatus) destStatus.textContent = '';
+    if (gState.homeLat && gState.honmei) {
+      calcAndShowDir();
+    } else if (!gState.homeLat) {
+      showHomePrompt();
+    }
+  } catch(e) {
+    if (destStatus) destStatus.textContent = '⚠ 取得に失敗しました。住所で手動検索してください。';
+  }
+}
+
+function selectPreset(btn, lat, lon, name, area) {
+  // 後方互換性のため残す
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
   gState.destLat = lat;
   gState.destLon = lon;
   gState.destName = name;
   gState.destArea = area;
-
   if (gState.homeLat && gState.honmei) {
     calcAndShowDir();
   } else if (!gState.homeLat) {
     showHomePrompt();
+  }
+}
   } else {
     document.getElementById('dirResultSection').style.display = 'block';
     document.getElementById('dirResultContent').innerHTML = `
@@ -1599,10 +1733,24 @@ function renderCalendar() {
 
   for (let d = 1; d <= lastDate; d++) {
     const branch = getDayBranch(y, m, d);
-    const dayRank = getDayDirectionRank(y, m, d, gState.destDir);
-    const dayStar = getDayCenter(y, m, d);
-    const kyo = getKyoDirections(dayStar, gState.honmei);
-    const isKyoDay = kyo.includes(gState.destDir) || gState.destDir === getHakaiDirection(y, m, d, 'day');
+    const dayCenter = getDayCenter(y, m, d);
+    const monthCenter = getMonthCenter(y, m, d);
+    const dayBoard = buildBoardFromCenter(dayCenter);
+    const monthBoard = buildBoardFromCenter(monthCenter);
+    const dir = gState.destDir;
+    const dayStarN = dayBoard[dir] || 5;
+
+    const branchName = BRANCH_NAME[branch];
+    const dSangoInfo = SANGO_MAP[branchName] || { dirs: [] };
+    const dSangoSet = new Set(dSangoInfo.dirs);
+    const tendo = getTendoDir(y, m, d);
+
+    const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+
+    const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(branchName) + 6) % 12)];
+    const { kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
+    const isKyoDay = mKyouSet.has(dir) && dayRank.rank === 0;
+
     const isRailway = railwayBranches.includes(branch);
     const isKichi = dayRank.rank >= 2;
     const isToday = `${y}-${m}-${d}` === todayStr;
