@@ -285,6 +285,44 @@ body{
   color:var(--mist);
 }
 .calendar-guide-text strong{color:var(--goldlt);font-weight:700;}
+.railway-panel{
+  margin:10px 0 12px;
+  background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.52));
+  border:1px solid rgba(196,160,67,.25);
+  border-radius:10px;
+  padding:11px 12px;
+}
+.railway-title{
+  font-size:.7rem;
+  color:var(--goldlt);
+  font-weight:700;
+  margin-bottom:5px;
+  letter-spacing:.04em;
+}
+.railway-text{
+  font-size:.64rem;
+  color:var(--mist);
+  line-height:1.75;
+}
+.railway-days{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:9px;
+}
+.railway-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 8px;
+  border-radius:999px;
+  border:1px solid rgba(196,160,67,.35);
+  background:rgba(255,255,255,.45);
+  color:var(--snow);
+  font-size:.6rem;
+  line-height:1.2;
+}
+.railway-chip strong{color:var(--goldlt);}
 .legend-item{
   display:flex;align-items:center;gap:5px;
   font-size:.58rem;color:var(--mist);
@@ -647,20 +685,16 @@ html.font-large .font-btn{font-size:.8rem;}
 
   <div class="cal-legend">
     <div class="legend-item">
-      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(177,107,120,.85);"></div>
-      <span>★ 吉方位×線路の日（最優先）</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(138,104,32,.15);border:2px solid rgba(138,104,32,.6);"></div>
-      <span>◆ 線路の日</span>
-    </div>
-    <div class="legend-item">
       <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(58,125,78,.12);border:2px solid rgba(58,125,78,.5);"></div>
-      <span>○ 月盤吉方</span>
+      <span>○ 吉方</span>
     </div>
     <div class="legend-item">
       <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.15);"></div>
-      <span>△ 要注意日</span>
+      <span>△ 要注意</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:#fff;border:1px solid rgba(100,80,40,.12);"></div>
+      <span>通常日</span>
     </div>
   </div>
 
@@ -668,9 +702,17 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="calendar-guide-title">年盤・月盤・日盤とカレンダーの見方</div>
     <div class="calendar-guide-text">
       <strong>STEP3</strong> は、選んだ目的地の方位が「年・月・今日」でどう見えるかの確認です。<br>
-      <strong>STEP4</strong> は、その月の中で「線路の日」「吉方位」「要注意」を重ねて日程を探す場所です。<br>
-      線路の日に要注意が重なる場合は、線路の力はありますが、方位上の注意もある日として併記します。
+      <strong>STEP4</strong> は、その月の中で「吉方」「要注意」を見て日程を探す場所です。<br>
+      線路の日は下の別枠で確認できます。契約・出発・開始の目安として、方位の吉凶とは分けて使います。
     </div>
+  </div>
+
+  <div class="railway-panel">
+    <div class="railway-title">線路の日（始める力を見る日）</div>
+    <div class="railway-text">
+      契約・出発・開始など、長く続けたいことを始める目安です。方位の吉凶とは別枠で確認します。
+    </div>
+    <div class="railway-days" id="railwayDays"></div>
   </div>
 
   <div class="cal-grid" id="calDows"></div>
@@ -1498,7 +1540,7 @@ function calcAndShowDir() {
         <div class="nichiban-guide-title">✦ この方向は取れます</div>
         <div class="nichiban-guide-text">
           月盤・日盤で吉方位が確認できました。あとは日程を選ぶだけです。
-          下のカレンダーで線路の日と重なる日を探してください。
+          下のカレンダーで吉方・要注意を確認し、線路の日は別枠で開始日の目安として見てください。
         </div>
       </div>` : ''}
     </div>
@@ -1556,7 +1598,6 @@ function renderCalendar() {
 
   document.getElementById('calMonthLabel').textContent = `${y}年 ${m}月`;
 
-  // 曜日ヘッダー
   const dows = document.getElementById('calDows');
   const dowLabels = ['日','月','火','水','木','金','土'];
   dows.innerHTML = dowLabels.map((d,i) => `
@@ -1569,59 +1610,34 @@ function renderCalendar() {
   const cells = document.getElementById('calCells');
   let html = '';
   let bestDays = [];
+  let railwayDays = [];
 
-  // 空白セル
   for (let i = 0; i < firstDay; i++) html += `<div class="cal-cell empty"></div>`;
 
   for (let d = 1; d <= lastDate; d++) {
     const branch = getDayBranch(y, m, d);
-    const dayCenter = getDayCenter(y, m, d);
-    const monthCenter = getMonthCenter(y, m, d);
-    const dayBoard = buildBoardFromCenter(dayCenter);
-    const monthBoard = buildBoardFromCenter(monthCenter);
-    const dir = gState.destDir;
-    const dayStarN = dayBoard[dir] || 5;
-    const monthStarN = monthBoard[dir] || 5;
-
-    const branchName = BRANCH_NAME[branch];
-    const dSangoInfo = SANGO_MAP[branchName] || { dirs: [] };
-    const dSangoSet = new Set(dSangoInfo.dirs);
-    const tendo = getTendoDir(y, m, d);
-
-    const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
-
-    // 月盤の凶確認
-    const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(branchName) + 6) % 12)];
-    const { kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
-    const isKyoDay = mKyouSet.has(dir) && dayRank.rank === 0;
-
-    const isRailway = gState.railwayBranches.includes(branch);
+    const dayRank = getDayDirectionRank(y, m, d, gState.destDir);
+    const dayStar = getDayCenter(y, m, d);
+    const kyo = getKyoDirections(dayStar, gState.honmei);
+    const isKyoDay = kyo.includes(gState.destDir) || gState.destDir === getHakaiDirection(y, m, d, 'day');
     const isKichi = dayRank.rank >= 2;
-    const isBest = isRailway && isKichi;
     const isToday = `${y}-${m}-${d}` === todayStr;
 
-    if (isBest) {
-      bestDays.push({ d, branch, rank: dayRank.rank, badges: dayRank.badges, isRailway });
-    } else if (isKichi && !isRailway) {
-      bestDays.push({ d, branch, rank: dayRank.rank, badges: dayRank.badges, isRailway });
-    }
+    if (isRailway) railwayDays.push({ d, branch });
+    if (isKichi) bestDays.push({ d, branch, rank: dayRank.rank, badges: dayRank.badges });
 
     let classes = 'cal-cell';
     if (isToday) classes += ' today';
-    if (isRailway && !isBest) classes += ' railway';
-    if (isBest) classes += ' best';
-    else if (isKichi && !isRailway) classes += ' kichi-day';
+    if (isKichi) classes += ' kichi-day';
     if (isKyoDay) classes += ' kyo-day';
 
+    let numColor = '';
     const dow = new Date(y, m - 1, d).getDay();
-    const numColor = dow === 0 ? 'color:rgba(180,60,60,.8)' : dow === 6 ? 'color:rgba(60,80,160,.8)' : '';
+    if (dow === 0) numColor = 'color:rgba(232,116,138,.75);';
+    if (dow === 6) numColor = 'color:rgba(100,150,220,.75);';
 
     const cellLabels = [];
-    if (isBest) cellLabels.push('★線路');
-    else {
-      if (isRailway) cellLabels.push('◆線路');
-      if (isKichi) cellLabels.push('○吉方');
-    }
+    if (isKichi) cellLabels.push('○吉方');
     if (isKyoDay) cellLabels.push('△要注意');
     const cellLabel = cellLabels.join('\n');
 
@@ -1629,57 +1645,60 @@ function renderCalendar() {
       <div class="${classes}" onclick="showDayDetail(${y},${m},${d})">
         <div class="cal-num" style="${numColor}">${d}</div>
         ${cellLabel ? `<div class="cal-label">${cellLabel}</div>` : ''}
-        ${isBest ? `<div class="cal-badge">★</div>` : ''}
       </div>
     `;
   }
 
   cells.innerHTML = html;
 
-  // ベスト3
-  bestDays.sort((a, b) => {
-    const scoreA = (a.isRailway ? 10 : 0) + a.rank;
-    const scoreB = (b.isRailway ? 10 : 0) + b.rank;
-    return scoreB - scoreA;
-  });
+  const railwayEl = document.getElementById('railwayDays');
+  if (railwayEl) {
+    if (!railwayDays.length) {
+      railwayEl.innerHTML = '<span class="railway-chip">この月の線路日はありません</span>';
+    } else {
+      railwayEl.innerHTML = railwayDays.map(item => {
+        const date = new Date(y, m - 1, item.d);
+        const dow = ['日','月','火','水','木','金','土'][date.getDay()];
+        return `<span class="railway-chip"><strong>${m}/${item.d}（${dow}）</strong>${BRANCH_NAME[item.branch]}の日</span>`;
+      }).join('');
+    }
+  }
+
+  bestDays.sort((a, b) => b.rank - a.rank || a.d - b.d);
 
   const top3 = bestDays.slice(0, 3);
   const bestList = document.getElementById('bestList');
   if (!top3.length) {
-    bestList.innerHTML = `<div class="empty-state" style="padding:10px;">今月はベスト候補が見つかりませんでした。来月も確認してみてください。</div>`;
+    bestList.innerHTML = `<div class="muted-box" style="text-align:center;">この月は明確な吉方候補が少なめです。<br>日盤取りも検討してください。</div>`;
     return;
   }
 
-  const monthNames = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const monthNames = ['日','月','火','水','木','金','土'];
   bestList.innerHTML = top3.map((item, idx) => {
     const date = new Date(y, m - 1, item.d);
-    const dowStr = ['日','月','火','水','木','金','土'][date.getDay()];
+    const dow = monthNames[date.getDay()];
+
     const tags = [];
-    if (item.isRailway) tags.push(`<span class="best-tag tag-railway">線路の日 ${BRANCH_NAME[getDayBranch(y,m,item.d)]}</span>`);
     if (item.rank >= 4) tags.push(`<span class="best-tag tag-kichi">✦ 本命・月命 吉</span>`);
     else if (item.rank >= 2) tags.push(`<span class="best-tag tag-kichi">吉方</span>`);
     tags.push(`<span class="best-tag tag-month">月盤 ${getMonthCenter(y,m,item.d)}（${STARS[getMonthCenter(y,m,item.d)].j}）</span>`);
-    const routeUrl = gState.homeLat && gState.destLat
-      ? mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)
-      : mapSearchUrl(gState.destLat, gState.destLon);
+
+    const routeUrl = home && selectedDestination
+      ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(home.lat + ',' + home.lng)}&destination=${encodeURIComponent(selectedDestination.lat + ',' + selectedDestination.lng)}&travelmode=driving`
+      : '';
+
     return `
       <div class="best-item">
         <div class="best-rank ${idx===0?'r1':''}">${idx+1}</div>
         <div class="best-info">
-          <div class="best-date">${y}年 ${monthNames[m]} ${item.d}日（${dowStr}）</div>
+          <div class="best-date">${y}年 ${m}月 ${item.d}日（${dow}）</div>
           <div class="best-tags">${tags.join('')}</div>
-          <a href="${routeUrl}" onclick="openExternalMap(this.href); return false;" style="
-            display:inline-flex;align-items:center;gap:4px;margin-top:7px;
-            background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.3);
-            border-radius:6px;padding:5px 10px;text-decoration:none;
-            font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;
-          ">🗺 この日のルートを地図で確認</a>
+          ${routeUrl ? `<button class="mini-map-btn" onclick="event.stopPropagation(); window.open('${routeUrl}', '_blank')">🗺 この日のルートを地図で確認</button>` : ''}
         </div>
       </div>
     `;
   }).join('');
 }
-
 function showDayDetail(y, m, d) {
   const branch = getDayBranch(y, m, d);
   const dayCenter = getDayCenter(y, m, d);
@@ -1697,7 +1716,6 @@ function showDayDetail(y, m, d) {
   let msg = `${y}年${m}月${d}日（${dow}）\n`;
   msg += `日盤中宮：${STARS[dayCenter].j}\n`;
   msg += `${gState.destName}方向（${DIR_JP[dir]}）：${rankLabel(dayRank.rank)}\n`;
-  if (isRailway) msg += `✦ 線路の日（${branchName}）\n`;
   if (dayRank.badges.length) msg += dayRank.badges.join(' ');
   alert(msg);
 }
