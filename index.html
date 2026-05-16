@@ -25,11 +25,23 @@
   --mist:#5e503d;
   --radius:14px;
 }
-html,body{
+html{
+  background:var(--bg);
+  min-height:100dvh;
+}
+body{
   background:var(--bg);color:var(--snow);
   font-family:'Noto Serif JP',serif;
   min-height:100dvh;max-width:480px;margin:0 auto;
   padding-bottom:40px;
+}
+html.theme-night-root{
+  background:#070b16;
+}
+@media (min-width:760px){
+  html.theme-night-root body.theme-night{
+    box-shadow:0 0 0 1px rgba(220,178,74,.16),0 22px 90px rgba(0,0,0,.42);
+  }
 }
 
 /* ── ヘッダー ── */
@@ -1185,6 +1197,7 @@ function getDisplayMode() {
 function applyDisplayMode(mode) {
   const normalized = mode === 'night' ? 'night' : 'day';
   document.body.classList.toggle('theme-night', normalized === 'night');
+  document.documentElement.classList.toggle('theme-night-root', normalized === 'night');
   const nightBtn = document.getElementById('modeNightBtn');
   const dayBtn = document.getElementById('modeDayBtn');
   if (nightBtn) nightBtn.classList.toggle('active', normalized === 'night');
