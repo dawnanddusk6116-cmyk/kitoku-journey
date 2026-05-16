@@ -1150,18 +1150,6 @@ function selectPreset(btn, lat, lon, name, area) {
     showHomePrompt();
   }
 }
-  } else {
-    document.getElementById('dirResultSection').style.display = 'block';
-    document.getElementById('dirResultContent').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">⭐</div>
-        生年月日を登録すると、方位と日程を計算できます。<br>
-        TOPへ戻って生年月日を登録してください。
-      </div>
-    `;
-  }
-}
-
 async function searchCustomDest() {
   const val = document.getElementById('customDest').value.trim();
   if (!val) return;
