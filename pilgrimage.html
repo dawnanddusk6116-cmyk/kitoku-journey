@@ -1441,20 +1441,19 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     // 方位名の色
     const dirColor = isKyo ? '#b04060' : rank>=2 ? '#5a3e08' : 'rgba(60,50,40,.5)';
 
-    // バッジ
+    // バッジ（凶殺名・吉方）
     let badge = '';
     if (isKyo && kyoNames) {
-      badge = `<div style="font-size:.48rem;color:#b04060;line-height:1.3;margin-top:1px;font-weight:600;">${kyoNames}</div>`;
+      badge = `<div style="font-size:.6rem;color:#b04060;line-height:1.3;margin-top:2px;font-weight:700;text-align:center;">${kyoNames}</div>`;
     } else if (rank >= 4) {
-      badge = `<div style="font-size:.48rem;color:#5a3e08;line-height:1.3;margin-top:1px;">本命・月命</div>`;
+      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:700;">本命・月命</div>`;
     } else if (rank >= 2) {
-      badge = `<div style="font-size:.48rem;color:#5a3e08;line-height:1.3;margin-top:1px;">吉方</div>`;
+      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:600;">吉方</div>`;
     }
 
     return `<div class="${cls}">
       <div class="p-cell-num">${starN}</div>
-      <div class="p-cell-name">${STARS[starN]?.k||''}</div>
-      <div style="font-size:.55rem;font-weight:700;color:${dirColor};margin-top:2px;">${dirJP[d]}</div>
+      <div style="font-size:.62rem;font-weight:700;color:${dirColor};margin-top:3px;">${dirJP[d]}</div>
       ${badge}
       ${isDest ? '<div class="p-dest-mark">▲目的</div>' : ''}
     </div>`;
