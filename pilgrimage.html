@@ -796,38 +796,6 @@ html.font-large .font-btn{font-size:.8rem;}
     </div>
   </div>
 
-  <!-- 行くべき日の選び方 -->
-  <div style="
-    background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
-    border:1px solid rgba(138,104,32,.25);border-radius:10px;
-    padding:13px 14px;margin-bottom:12px;
-  ">
-    <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">
-      ✦ 行くべき日の決め方
-    </div>
-    <div style="font-size:.65rem;color:var(--mist);line-height:2.1;">
-      <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
-        <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 1</span>
-        <span>STEP3で<strong style="color:var(--snow);">凶方位の月を外す</strong>（五黄殺・暗剣殺・本命殺など）</span>
-      </div>
-      <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
-        <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 2</span>
-        <span>カレンダーの<strong style="color:var(--snow);">○吉方の日</strong>を候補にする</span>
-      </div>
-      <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
-        <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 3</span>
-        <span><strong style="color:var(--snow);">線路の日</strong>と重なれば最優先（下の別枠で確認）</span>
-      </div>
-      <div style="display:flex;gap:8px;align-items:baseline;">
-        <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 4</span>
-        <span>気になる日をタップ → <strong style="color:var(--snow);">日盤をSTEP3で確認</strong>してから決める</span>
-      </div>
-    </div>
-    <div style="margin-top:9px;padding:7px 10px;background:rgba(100,80,40,.06);border-radius:6px;font-size:.6rem;color:var(--mist);line-height:1.8;">
-      完璧な日より「凶を避けて動く」が実践的です。月盤で凶の場合は来月以降を検討するか、日盤取りで整えてから向かいましょう。
-    </div>
-  </div>
-
   <!-- 日タップ後フィードバック -->
   <div id="dayDetailFeedback" style="
     display:none;
@@ -1090,7 +1058,8 @@ let gState = {
   tsukimei: null,
   calYear: null,
   calMonth: null,
-  railwayBranches: null, // 線路の日の支インデックス
+  railwayBranches: null,
+  activeBanTab: 'year', // 現在選択中のタブ（year/month/day）
 };
 
 // ============================================================
@@ -1652,6 +1621,38 @@ function calcAndShowDir() {
           材料としてお使いください。
         </div>
       </div>
+
+      <!-- 行くべき日の決め方 -->
+      <div style="
+        background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
+        border:1px solid rgba(138,104,32,.25);border-radius:10px;
+        padding:13px 14px;margin-top:10px;
+      ">
+        <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">
+          ✦ 行くべき日の決め方
+        </div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:2.1;">
+          <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
+            <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 1</span>
+            <span>この画面で<strong style="color:var(--snow);">凶方位の月を外す</strong>（五黄殺・暗剣殺・本命殺など）</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
+            <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 2</span>
+            <span>下のカレンダーの<strong style="color:var(--snow);">○吉方の日</strong>を候補にする</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
+            <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 3</span>
+            <span><strong style="color:var(--snow);">線路の日</strong>と重なれば最優先（カレンダー下の別枠で確認）</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 4</span>
+            <span>気になる日をタップ → <strong style="color:var(--snow);">日盤タブで確認</strong>してから決める</span>
+          </div>
+        </div>
+        <div style="margin-top:9px;padding:7px 10px;background:rgba(100,80,40,.06);border-radius:6px;font-size:.6rem;color:var(--mist);line-height:1.8;">
+          完璧な日より「凶を避けて動く」が実践的です。月盤で凶の場合は来月以降を検討するか、日盤取りで整えてから向かいましょう。
+        </div>
+      </div>
     </div>
   `;
 
@@ -1659,10 +1660,13 @@ function calcAndShowDir() {
   document.getElementById('calSection').style.display = 'block';
   document.getElementById('nichibanSection').style.display = 'block';
   renderCalendar();
-  // 日盤取り候補は表示せず、方位盤へのリンクだけを案内します。
+
+  // タブ選択状態を復元（月を変えても選択中のタブを維持）
+  setTimeout(() => switchBan(gState.activeBanTab || 'year'), 0);
 }
 
 function switchBan(type) {
+  gState.activeBanTab = type; // 選択状態を保存
   ['year','month','day'].forEach(t => {
     const tab  = document.getElementById('banTab'  + t.charAt(0).toUpperCase() + t.slice(1));
     const grid = document.getElementById('banGrid' + t.charAt(0).toUpperCase() + t.slice(1));
