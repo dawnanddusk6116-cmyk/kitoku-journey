@@ -233,6 +233,7 @@ body{
   background:rgba(100,80,40,.04);border:1px solid rgba(100,80,40,.1);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-family:'Noto Serif JP',serif;position:relative;
+  padding:4px 2px;overflow:hidden;
 }
 .p-cell.p-center{background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.3);border-radius:50%;}
 .p-cell.p-kichi{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);}
@@ -269,8 +270,8 @@ body{
   color:var(--goldlt);font-weight:700;
 }
 .ban-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:4px;margin-top:4px;
+  display:block;
+  margin-top:4px;
 }
 .ban-cell{
   aspect-ratio:1;border-radius:8px;
@@ -1443,7 +1444,13 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     </div>`;
   }
 
-  return `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;">
+  return `<div style="
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:4px;
+    max-width:280px;
+    margin:0 auto;
+  ">
     ${LAYOUT.flat().map(makeCell).join('')}
   </div>`;
 }
