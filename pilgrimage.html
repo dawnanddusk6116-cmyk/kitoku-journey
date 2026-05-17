@@ -1400,81 +1400,54 @@ function calcRankMap(boardCenter, kyouSetX) {
 
 function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
   const LAYOUT = [['SE','S','SW'],['E','C','W'],['NE','N','NW']];
-  const topRow = ['SE','S','SW'];
-  const bottomRow = ['NE','N','NW'];
-  const leftDir = 'E';
-  const rightDir = 'W';
   const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
 
-  // 外枠ラベル（上下）
-  function makeDirLabel(dir) {
-    const isKyo = kyouSet && kyouSet.has(dir);
-    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===dir).map(i=>i.name).join('・') : '';
-    const rank = rankMap ? (rankMap[dir]||0) : 0;
-    const isDest = dir === destDir;
-    let labelCls = isKyo ? 'kyo' : rank >= 2 ? 'kichi' : 'normal';
-    let badge = '';
-    if (isKyo && kyoNames) badge = `<div class="p-dir-badge kyo">${kyoNames}</div>`;
-    else if (rank >= 4) badge = `<div class="p-dir-badge kichi">本命・月命 吉</div>`;
-    else if (rank >= 2) badge = `<div class="p-dir-badge kichi">吉方</div>`;
-    if (isDest) badge += `<div style="font-size:.45rem;color:#e8748a;font-weight:700;">▲目的</div>`;
-    return `<div class="p-dir-label ${labelCls}"><div class="p-dir-name">${dirJP[dir]}</div>${badge}</div>`;
-  }
-
-  // 東西縦ラベル
-  function makeSideLabel(dir) {
-    const isKyo = kyouSet && kyouSet.has(dir);
-    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===dir).map(i=>i.name).join('・') : '';
-    const rank = rankMap ? (rankMap[dir]||0) : 0;
-    const isDest = dir === destDir;
-    const labelColor = isKyo ? '#b04060' : rank>=2 ? '#5a3e08' : 'var(--mist)';
-    let badge = '';
-    if (isKyo && kyoNames) badge = `<div class="p-side-badge" style="background:rgba(176,64,96,.1);color:#b04060;border:1px solid rgba(176,64,96,.25);">${kyoNames}</div>`;
-    else if (rank>=4) badge = `<div class="p-side-badge" style="background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);">本命吉</div>`;
-    else if (rank>=2) badge = `<div class="p-side-badge" style="background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);">吉方</div>`;
-    if (isDest) badge += `<div style="font-size:.42rem;color:#e8748a;font-weight:700;writing-mode:vertical-rl;">▲目的</div>`;
-    return `<div class="p-side-label">
-      <div class="p-side-name" style="color:${labelColor};">${dirJP[dir]}</div>
-      ${badge}
-    </div>`;
-  }
-
-  // グリッドセル
-  function makeCell(dir) {
-    if (dir === 'C') {
+  function makeCell(d) {
+    if (d === 'C') {
       const starN = board['C'] || 5;
-      return `<div class="p-cell p-center"><div class="p-cell-num">${starN}</div></div>`;
+      return `<div class="p-cell p-center">
+        <div class="p-cell-num">${starN}</div>
+      </div>`;
     }
-    const starN = board[dir] || 5;
-    const isKyo = kyouSet && kyouSet.has(dir);
-    const rank = rankMap ? (rankMap[dir]||0) : 0;
-    const isDest = dir === destDir;
+    const starN = board[d] || 5;
+    const isKyo = kyouSet && kyouSet.has(d);
+    const rank = rankMap ? (rankMap[d]||0) : 0;
+    const isDest = d === destDir;
+    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name).join('・') : '';
+
     let cls = 'p-cell';
     if (isDest) cls += ' p-dest';
     else if (isKyo) cls += ' p-kyo';
     else if (rank >= 4) cls += ' p-daikichi';
     else if (rank >= 2) cls += ' p-kichi';
+
+    // 方位名の色
+    const dirColor = isKyo ? '#b04060' : rank>=2 ? '#5a3e08' : 'rgba(60,50,40,.5)';
+
+    // バッジ
+    let badge = '';
+    if (isKyo && kyoNames) {
+      badge = `<div style="font-size:.48rem;color:#b04060;line-height:1.3;margin-top:1px;font-weight:600;">${kyoNames}</div>`;
+    } else if (rank >= 4) {
+      badge = `<div style="font-size:.48rem;color:#5a3e08;line-height:1.3;margin-top:1px;">本命・月命</div>`;
+    } else if (rank >= 2) {
+      badge = `<div style="font-size:.48rem;color:#5a3e08;line-height:1.3;margin-top:1px;">吉方</div>`;
+    }
+
     return `<div class="${cls}">
       <div class="p-cell-num">${starN}</div>
       <div class="p-cell-name">${STARS[starN]?.k||''}</div>
+      <div style="font-size:.55rem;font-weight:700;color:${dirColor};margin-top:2px;">${dirJP[d]}</div>
+      ${badge}
       ${isDest ? '<div class="p-dest-mark">▲目的</div>' : ''}
     </div>`;
   }
 
-  const topLabels = topRow.map(d=>makeDirLabel(d)).join('');
-  const bottomLabels = bottomRow.map(d=>makeDirLabel(d)).join('');
-  const gridCells = LAYOUT.flat().map(d=>makeCell(d)).join('');
-
-  return `
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:4px;">${topLabels}</div>
-    <div style="display:flex;align-items:center;gap:4px;">
-      ${makeSideLabel(leftDir)}
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex:1;">${gridCells}</div>
-      ${makeSideLabel(rightDir)}
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:4px;">${bottomLabels}</div>
-  `;
+  return `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;">
+    ${LAYOUT.flat().map(makeCell).join('')}
+  </div>`;
 }
+
 
 
 
