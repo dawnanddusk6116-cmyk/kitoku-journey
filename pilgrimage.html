@@ -253,7 +253,7 @@ body{
 .p-dir-badge{font-size:.47rem;margin-top:2px;padding:1px 3px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;}
 .p-dir-badge.kyo{background:rgba(176,64,96,.1);color:#b04060;border:1px solid rgba(176,64,96,.25);}
 .p-dir-badge.kichi{background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);}
-.p-side-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2px;flex-shrink:0;width:26px;}
+.p-side-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 3px;flex-shrink:0;min-width:36px;max-width:44px;}
 .p-side-name{font-size:.65rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;}
 .p-side-badge{font-size:.42rem;margin-top:4px;padding:2px 3px;border-radius:3px;display:inline-block;writing-mode:vertical-rl;white-space:nowrap;}
 
@@ -1387,6 +1387,17 @@ function openExternalMap(url) {
 const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
 const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
 
+function calcRankMap(boardCenter, kyouSetX) {
+  const board = buildBoardFromCenter(boardCenter);
+  const map = {};
+  ['SE','S','SW','E','W','NE','N','NW'].forEach(d => {
+    const starN = board[d] || 5;
+    const r = rankDir(d, starN, gState.honmei, gState.tsukimei, new Set(), null);
+    map[d] = kyouSetX && kyouSetX.has(d) ? 0 : r.rank;
+  });
+  return map;
+}
+
 function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
   const LAYOUT = [['SE','S','SW'],['E','C','W'],['NE','N','NW']];
   const topRow = ['SE','S','SW'];
@@ -1550,18 +1561,6 @@ function calcAndShowDir() {
 
   // 方位盤生成（direction_v2.htmlと同じ表示方式）
   // makeBanGrid: グローバル関数として定義済み（calcAndShowDir外）
-  // 年盤・月盤・日盤のrankMapを計算
-  const calcRankMap = (boardCenter, kyouSetX) => {
-    const board = buildBoardFromCenter(boardCenter);
-    const map = {};
-    ['SE','S','SW','E','W','NE','N','NW'].forEach(d => {
-      const starN = board[d] || 5;
-      const r = rankDir(d, starN, gState.honmei, gState.tsukimei, new Set(), null);
-      map[d] = kyouSetX && kyouSetX.has(d) ? 0 : r.rank;
-    });
-    return map;
-  };
-
   const yearRankMap  = calcRankMap(yearCenterN, yKyouSet);
   const monthRankMap = calcRankMap(monthCenter,  mKyouSet);
   const dayRankMap   = calcRankMap(dayCenter,    dKyouSet);
