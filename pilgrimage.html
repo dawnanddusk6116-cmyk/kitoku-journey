@@ -1599,10 +1599,10 @@ function calcAndShowDir() {
           <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
-        <div class="dir-panel">
-          <div class="dir-panel-label">日盤（今日）</div>
-          <div class="dir-panel-rank rank-${dayRank.rank}">${rankLabel(dayRank.rank)}</div>
-          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(dayRank.rank, dayRank.badges)}</div>
+        <div class="dir-panel" id="dayRankPanel">
+          <div class="dir-panel-label" id="dayRankLabel">日盤（今日）</div>
+          <div class="dir-panel-rank rank-${dayRank.rank}" id="dayRankValue">${rankLabel(dayRank.rank)}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;" id="dayRankDesc">${rankDesc(dayRank.rank, dayRank.badges)}</div>
         </div>
       </div>
       <div style="margin-top:8px;padding:8px 10px;background:rgba(100,80,40,.05);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.8;">
@@ -1992,6 +1992,17 @@ function showDayDetail(y, m, d) {
     const dayRankMapD = calcRankMap(dayCenter, dKyouSetDD);
     const { items: dKyoItemsDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
     const html = makeBanGrid(dayBoardD, dir, dKyoItemsDD, dKyouSetDD, dayRankMapD);
+
+    // 日盤サマリーパネルも更新
+    const labelEl = document.getElementById('dayRankLabel');
+    const valueEl = document.getElementById('dayRankValue');
+    const descEl  = document.getElementById('dayRankDesc');
+    if (labelEl) labelEl.textContent = `日盤（${m}/${d}）`;
+    if (valueEl) {
+      valueEl.textContent = rankLabel(finalRank);
+      valueEl.className = `dir-panel-rank rank-${finalRank}`;
+    }
+    if (descEl) descEl.textContent = rankDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
 
     // ── グリッドを直接更新（getElementById不要）
     const allGrids = document.querySelectorAll('.ban-grid');
