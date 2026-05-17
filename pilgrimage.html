@@ -227,6 +227,36 @@ body{
 .dir-panel-badges{font-size:.58rem;color:var(--mist);line-height:1.5;}
 
 /* 方位盤グリッド */
+/* ── direction_v2.html 移植：方位盤セルスタイル ── */
+.p-cell{
+  aspect-ratio:1;border-radius:8px;
+  background:rgba(100,80,40,.04);border:1px solid rgba(100,80,40,.1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;position:relative;
+}
+.p-cell.p-center{background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.3);border-radius:50%;}
+.p-cell.p-kichi{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);}
+.p-cell.p-daikichi{background:rgba(120,90,20,.18);border-color:rgba(120,90,20,.55);}
+.p-cell.p-kyo{background:rgba(100,80,40,.03);border-color:rgba(100,80,40,.08);opacity:.65;}
+.p-cell.p-dest{background:rgba(177,107,120,.18);border:2px solid rgba(177,107,120,.7);box-shadow:0 2px 8px rgba(177,107,120,.2);}
+.p-cell-num{font-family:'Cormorant Garamond',serif;font-size:1.15rem;line-height:1;color:var(--goldlt);}
+.p-cell.p-kichi .p-cell-num,.p-cell.p-daikichi .p-cell-num{color:#5a3e08;}
+.p-cell.p-kyo .p-cell-num{color:rgba(60,50,40,.4);}
+.p-cell.p-dest .p-cell-num{color:#8a2840;font-weight:700;}
+.p-cell-name{font-size:.52rem;color:var(--mist);margin-top:2px;}
+.p-dest-mark{font-size:.48rem;color:#e8748a;font-weight:700;margin-top:1px;}
+.p-dir-label{text-align:center;padding:2px 1px;line-height:1.35;overflow:hidden;}
+.p-dir-label.kyo .p-dir-name{color:#b04060;font-weight:700;}
+.p-dir-label.kichi .p-dir-name{color:#5a3e08;font-weight:600;}
+.p-dir-label.normal .p-dir-name{color:var(--mist);}
+.p-dir-name{font-size:.65rem;}
+.p-dir-badge{font-size:.47rem;margin-top:2px;padding:1px 3px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;}
+.p-dir-badge.kyo{background:rgba(176,64,96,.1);color:#b04060;border:1px solid rgba(176,64,96,.25);}
+.p-dir-badge.kichi{background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);}
+.p-side-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2px;flex-shrink:0;width:26px;}
+.p-side-name{font-size:.65rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;}
+.p-side-badge{font-size:.42rem;margin-top:4px;padding:2px 3px;border-radius:3px;display:inline-block;writing-mode:vertical-rl;white-space:nowrap;}
+
 .ban-tabs{display:flex;gap:6px;margin:12px 0 8px;}
 .ban-tab{
   flex:1;padding:7px 4px;border-radius:7px;
@@ -1357,6 +1387,86 @@ function openExternalMap(url) {
 const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
 const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
 
+function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
+  const LAYOUT = [['SE','S','SW'],['E','C','W'],['NE','N','NW']];
+  const topRow = ['SE','S','SW'];
+  const bottomRow = ['NE','N','NW'];
+  const leftDir = 'E';
+  const rightDir = 'W';
+  const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
+
+  // 外枠ラベル（上下）
+  function makeDirLabel(dir) {
+    const isKyo = kyouSet && kyouSet.has(dir);
+    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===dir).map(i=>i.name).join('・') : '';
+    const rank = rankMap ? (rankMap[dir]||0) : 0;
+    const isDest = dir === destDir;
+    let labelCls = isKyo ? 'kyo' : rank >= 2 ? 'kichi' : 'normal';
+    let badge = '';
+    if (isKyo && kyoNames) badge = `<div class="p-dir-badge kyo">${kyoNames}</div>`;
+    else if (rank >= 4) badge = `<div class="p-dir-badge kichi">本命・月命 吉</div>`;
+    else if (rank >= 2) badge = `<div class="p-dir-badge kichi">吉方</div>`;
+    if (isDest) badge += `<div style="font-size:.45rem;color:#e8748a;font-weight:700;">▲目的</div>`;
+    return `<div class="p-dir-label ${labelCls}"><div class="p-dir-name">${dirJP[dir]}</div>${badge}</div>`;
+  }
+
+  // 東西縦ラベル
+  function makeSideLabel(dir) {
+    const isKyo = kyouSet && kyouSet.has(dir);
+    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===dir).map(i=>i.name).join('・') : '';
+    const rank = rankMap ? (rankMap[dir]||0) : 0;
+    const isDest = dir === destDir;
+    const labelColor = isKyo ? '#b04060' : rank>=2 ? '#5a3e08' : 'var(--mist)';
+    let badge = '';
+    if (isKyo && kyoNames) badge = `<div class="p-side-badge" style="background:rgba(176,64,96,.1);color:#b04060;border:1px solid rgba(176,64,96,.25);">${kyoNames}</div>`;
+    else if (rank>=4) badge = `<div class="p-side-badge" style="background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);">本命吉</div>`;
+    else if (rank>=2) badge = `<div class="p-side-badge" style="background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);">吉方</div>`;
+    if (isDest) badge += `<div style="font-size:.42rem;color:#e8748a;font-weight:700;writing-mode:vertical-rl;">▲目的</div>`;
+    return `<div class="p-side-label">
+      <div class="p-side-name" style="color:${labelColor};">${dirJP[dir]}</div>
+      ${badge}
+    </div>`;
+  }
+
+  // グリッドセル
+  function makeCell(dir) {
+    if (dir === 'C') {
+      const starN = board['C'] || 5;
+      return `<div class="p-cell p-center"><div class="p-cell-num">${starN}</div></div>`;
+    }
+    const starN = board[dir] || 5;
+    const isKyo = kyouSet && kyouSet.has(dir);
+    const rank = rankMap ? (rankMap[dir]||0) : 0;
+    const isDest = dir === destDir;
+    let cls = 'p-cell';
+    if (isDest) cls += ' p-dest';
+    else if (isKyo) cls += ' p-kyo';
+    else if (rank >= 4) cls += ' p-daikichi';
+    else if (rank >= 2) cls += ' p-kichi';
+    return `<div class="${cls}">
+      <div class="p-cell-num">${starN}</div>
+      <div class="p-cell-name">${STARS[starN]?.k||''}</div>
+      ${isDest ? '<div class="p-dest-mark">▲目的</div>' : ''}
+    </div>`;
+  }
+
+  const topLabels = topRow.map(d=>makeDirLabel(d)).join('');
+  const bottomLabels = bottomRow.map(d=>makeDirLabel(d)).join('');
+  const gridCells = LAYOUT.flat().map(d=>makeCell(d)).join('');
+
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:4px;">${topLabels}</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      ${makeSideLabel(leftDir)}
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex:1;">${gridCells}</div>
+      ${makeSideLabel(rightDir)}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:4px;">${bottomLabels}</div>
+  `;
+}
+
+
+
 function calcAndShowDir() {
   if (!gState.homeLat || !gState.destLat || !gState.honmei) return;
 
@@ -1438,33 +1548,29 @@ function calcAndShowDir() {
   // 表示
   document.getElementById('dirResultSection').style.display = 'block';
 
-  // 方位盤グリッドを生成する関数
-  function makeBanGrid(board, destDir, kyouSet) {
-    // 南上（気学式）レイアウト
-    const layout = ['SE','S','SW','E','C','W','NE','N','NW'];
-    const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
-    return layout.map(d => {
-      const starN = board[d] || (d==='C' ? (board['C']||5) : 5);
-      const isCenter = d === 'C';
-      const isDest = d === destDir;
-      const isKyo = kyouSet && kyouSet.has(d);
-      let cls = 'ban-cell';
-      if (isCenter) cls += ' center';
-      else if (isDest) cls += ' dest-dir';
-      else if (isKyo) cls += ' kyo';
-      return `
-        <div class="${cls}">
-          <div class="ban-star-num">${starN}</div>
-          <div class="ban-star-name">${STARS[starN]?.k||''}</div>
-          ${!isCenter?`<div class="ban-dir-label">${dirJP[d]||d}</div>`:''}
-          ${isDest?`<div class="ban-dest-mark">▲目的</div>`:''}
-        </div>`;
-    }).join('');
-  }
+  // 方位盤生成（direction_v2.htmlと同じ表示方式）
+  // makeBanGrid: グローバル関数として定義済み（calcAndShowDir外）
+  // 年盤・月盤・日盤のrankMapを計算
+  const calcRankMap = (boardCenter, kyouSetX) => {
+    const board = buildBoardFromCenter(boardCenter);
+    const map = {};
+    ['SE','S','SW','E','W','NE','N','NW'].forEach(d => {
+      const starN = board[d] || 5;
+      const r = rankDir(d, starN, gState.honmei, gState.tsukimei, new Set(), null);
+      map[d] = kyouSetX && kyouSetX.has(d) ? 0 : r.rank;
+    });
+    return map;
+  };
 
-  const yearBoardHtml  = makeBanGrid(yearBoard,  dir, null);
-  const monthBoardHtml = makeBanGrid(monthBoard, dir, mKyouSet);
-  const dayBoardHtml   = makeBanGrid(dayBoard,   dir, null);
+  const yearRankMap  = calcRankMap(yearCenterN, yKyouSet);
+  const monthRankMap = calcRankMap(monthCenter,  mKyouSet);
+  const dayRankMap   = calcRankMap(dayCenter,    dKyouSet);
+
+  const yKyoItemsForGrid = getKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year').items;
+
+  const yearBoardHtml  = makeBanGrid(yearBoard,  dir, yKyoItemsForGrid, yKyouSet,  yearRankMap);
+  const monthBoardHtml = makeBanGrid(monthBoard, dir, mKyoItems,        mKyouSet,  monthRankMap);
+  const dayBoardHtml   = makeBanGrid(dayBoard,   dir, [],               dKyouSet,  dayRankMap);
 
   document.getElementById('dirResultContent').innerHTML = `
     <div class="dir-result">
@@ -1903,25 +2009,11 @@ function showDayDetail(y, m, d) {
     const isDayKyo = dKyouSetDD.has(dir);
     const finalRank = isDayKyo ? 0 : dayRank.rank;
 
-    // 日盤グリッドHTML生成
-    const layout = ['SE','S','SW','E','C','W','NE','N','NW'];
-    const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
-    const html = layout.map(dd => {
-      const starN = dayBoard[dd] || 5;
-      const isCenter = dd === 'C';
-      const isDest = dd === dir;
-      const isCellKyo = dKyouSetDD.has(dd);
-      let cls = 'ban-cell';
-      if (isCenter) cls += ' center';
-      else if (isDest) cls += ' dest-dir';
-      else if (isCellKyo) cls += ' kyo';
-      return `<div class="${cls}">
-        <div class="ban-star-num">${starN}</div>
-        <div class="ban-star-name">${STARS[starN]?.k||''}</div>
-        ${!isCenter?`<div class="ban-dir-label">${dirJP[dd]||dd}</div>`:''}
-        ${isDest?`<div class="ban-dest-mark">▲目的</div>`:''}
-      </div>`;
-    }).join('');
+    // 日盤グリッドをmakeBanGrid（グローバル）で生成
+    const dayBoardD = buildBoardFromCenter(dayCenter);
+    const dayRankMapD = calcRankMap(dayCenter, dKyouSetDD);
+    const { items: dKyoItemsDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
+    const html = makeBanGrid(dayBoardD, dir, dKyoItemsDD, dKyouSetDD, dayRankMapD);
 
     // ── グリッドを直接更新（getElementById不要）
     const allGrids = document.querySelectorAll('.ban-grid');
