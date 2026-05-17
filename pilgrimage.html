@@ -1865,8 +1865,8 @@ function renderCalendar() {
 
       if (isRailway) railwayDays.push({ d: d, branch: branch });
 
-      // おすすめTOP3用スコア：線路×吉方を最優先
-      if (isKichi || isRailway) {
+      // おすすめ計算：日盤凶は完全除外
+      if (!isKyoDay && (isKichi || isRailway)) {
         let score = dayRank.rank;
         if (isRailway && isKichi) score += 10; // 線路×吉方：最優先
         else if (isRailway) score += 3;         // 線路のみ：次点
