@@ -1448,8 +1448,7 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:4px;
-    max-width:280px;
-    margin:0 auto;
+    width:100%;
   ">
     ${LAYOUT.flat().map(makeCell).join('')}
   </div>`;
