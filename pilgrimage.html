@@ -560,6 +560,38 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="star-bar-note">この星情報をもとに、あなた専用の吉方位・線路の日を計算します。</div>
 </div>
 
+<!-- 使い方の解説 -->
+<div style="
+  background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));
+  border:1px solid rgba(138,104,32,.3);border-radius:12px;
+  padding:14px 16px;margin-bottom:16px;
+">
+  <div style="font-size:.75rem;color:var(--goldlt);font-weight:700;margin-bottom:10px;">
+    ✦ 聖地巡礼ナビの使い方
+  </div>
+  <div style="display:grid;gap:8px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">自宅を登録</strong>する（住所または郵便番号）</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">行きたい聖地を選ぶ</strong>（お遍路・伊勢・熊野など）</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">方位チェック</strong>で年盤・月盤・日盤を確認<br>凶の月は避け、吉の月を選ぶ</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">吉日カレンダー</strong>で日程を決める<br>カレンダーの日付をタップ→日盤確認→出発日確定</div>
+    </div>
+  </div>
+  <div style="margin-top:10px;padding:8px 10px;background:rgba(100,80,40,.05);border-radius:7px;font-size:.6rem;color:var(--mist);line-height:1.8;">
+    💡 線路の日（契約・出発・開始の目安）は方位の吉凶とは別枠で確認できます。両方重なる日が最優先です。
+  </div>
+</div>
+
 <!-- STEP 1: 自宅登録 -->
 <div class="section">
   <div class="sec-label">STEP 1 — 自宅の場所</div>
@@ -789,8 +821,11 @@ html.font-large .font-btn{font-size:.8rem;}
 
   <!-- ベスト候補 -->
   <div style="margin-top:16px;">
-    <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:8px;">
+    <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">
       ✦ おすすめ日程（最大6日）
+    </div>
+    <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
+      スコア順に表示：<span style="color:#8a2840;font-weight:700;">★線路×吉方</span>（最優先）→ <span style="color:var(--goldlt);font-weight:600;">◆線路の日</span> → <span style="color:#2a6038;font-weight:600;">○吉方のみ</span>
     </div>
     <div class="best-list" id="bestList"></div>
   </div>
@@ -1849,63 +1884,94 @@ function renderCalendar() {
   }
 }
 function showDayDetail(y, m, d) {
-  const branch = getDayBranch(y, m, d);
-  const dayCenter = getDayCenter(y, m, d);
-  const dir = gState.destDir;
-  if (!dir) return;
-  const dayBoard = buildBoardFromCenter(dayCenter);
-  const dayStarN = dayBoard[dir] || 5;
-  const branchName = BRANCH_NAME[branch];
-  const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
-  const tendo = getTendoDir(y, m, d);
-  const dayBreakDir = BRANCH_DIR[((branch + 6) % 12)];
-  const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
-  const dow = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
+  try {
+    const branch = getDayBranch(y, m, d);
+    const dayCenter = getDayCenter(y, m, d);
+    const dir = gState.destDir;
+    if (!dir) return;
+    const dayBoard = buildBoardFromCenter(dayCenter);
+    const dayStarN = dayBoard[dir] || 5;
+    const branchName = BRANCH_NAME[branch];
+    const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
+    const tendo = getTendoDir(y, m, d);
+    const dayBreakDir = BRANCH_DIR[((branch + 6) % 12)];
+    const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+    const dow = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
 
-  // 日盤の凶方位チェック
-  const { kyouSet: dKyouSetDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
-  const isDayKyo = dKyouSetDD.has(dir);
-  const finalRank = isDayKyo ? 0 : dayRank.rank;
+    // 日盤の凶方位チェック
+    const { kyouSet: dKyouSetDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
+    const isDayKyo = dKyouSetDD.has(dir);
+    const finalRank = isDayKyo ? 0 : dayRank.rank;
 
-  // 日盤グリッドをSTEP3に反映
-  const layout = ['SE','S','SW','E','C','W','NE','N','NW'];
-  const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
-  const html = layout.map(dd => {
-    const starN = dayBoard[dd] || 5;
-    const isCenter = dd === 'C';
-    const isDest = dd === dir;
-    const isCellKyo = dKyouSetDD.has(dd);
-    let cls = 'ban-cell';
-    if (isCenter) cls += ' center';
-    else if (isDest) cls += ' dest-dir';
-    else if (isCellKyo) cls += ' kyo';
-    return `<div class="${cls}">
-      <div class="ban-star-num">${starN}</div>
-      <div class="ban-star-name">${STARS[starN]?.k||''}</div>
-      ${!isCenter?`<div class="ban-dir-label">${dirJP[dd]||dd}</div>`:''}
-      ${isDest?`<div class="ban-dest-mark">▲目的</div>`:''}
-    </div>`;
-  }).join('');
+    // 日盤グリッドHTML生成
+    const layout = ['SE','S','SW','E','C','W','NE','N','NW'];
+    const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
+    const html = layout.map(dd => {
+      const starN = dayBoard[dd] || 5;
+      const isCenter = dd === 'C';
+      const isDest = dd === dir;
+      const isCellKyo = dKyouSetDD.has(dd);
+      let cls = 'ban-cell';
+      if (isCenter) cls += ' center';
+      else if (isDest) cls += ' dest-dir';
+      else if (isCellKyo) cls += ' kyo';
+      return `<div class="${cls}">
+        <div class="ban-star-num">${starN}</div>
+        <div class="ban-star-name">${STARS[starN]?.k||''}</div>
+        ${!isCenter?`<div class="ban-dir-label">${dirJP[dd]||dd}</div>`:''}
+        ${isDest?`<div class="ban-dest-mark">▲目的</div>`:''}
+      </div>`;
+    }).join('');
 
-  const dayGrid = document.getElementById('banGridDay');
-  if (dayGrid) { dayGrid.innerHTML = html; switchBan('day'); }
-  const dayTab = document.getElementById('banTabDay');
-  if (dayTab) dayTab.textContent = `日盤（${m}/${d}）`;
+    // ── グリッドを直接更新（getElementById不要）
+    const allGrids = document.querySelectorAll('.ban-grid');
+    allGrids.forEach(g => { g.style.display = 'none'; });
 
-  // STEP3へスクロール
-  const step3 = document.getElementById('dirResultSection');
-  if (step3) {
-    const top = step3.getBoundingClientRect().top + window.scrollY - 70;
-    window.scrollTo({ top, behavior: 'smooth' });
-  }
+    // banGridDayを更新
+    let dayGrid = document.getElementById('banGridDay');
+    if (dayGrid) {
+      dayGrid.innerHTML = html;
+      dayGrid.style.display = 'grid';
+    }
 
-  // カレンダー内にフィードバック表示
-  const rankStr = finalRank >= 4 ? '✦ 本命・月命 吉' : finalRank >= 2 ? '○ 吉方' : isDayKyo ? '⚠ 凶方位' : '— 吉凶なし';
-  const fb = document.getElementById('dayDetailFeedback');
-  if (fb) {
-    fb.innerHTML = `<span style="color:var(--goldlt);font-weight:600;">${y}/${m}/${d}（${dow}）の日盤</span>
-      → ${rankStr}　<span style="font-size:.6rem;color:var(--mist);">↑ STEP3の日盤タブを確認</span>`;
-    fb.style.display = 'block';
+    // タブのactive状態を更新
+    document.querySelectorAll('.ban-tab').forEach(t => t.classList.remove('active'));
+    const dayTab = document.getElementById('banTabDay');
+    if (dayTab) {
+      dayTab.classList.add('active');
+      dayTab.textContent = `日盤（${m}/${d}）`;
+    }
+
+    // STEP3へスクロール
+    const step3 = document.getElementById('dirResultSection');
+    if (step3) {
+      const top = step3.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+
+    // フィードバック表示（大きく・明確に）
+    const rankColor = finalRank >= 4 ? '#8a2840' : finalRank >= 2 ? '#2a6038' : isDayKyo ? '#b04060' : 'var(--mist)';
+    const rankStr  = finalRank >= 4 ? '✦ 本命・月命 吉'
+                   : finalRank >= 2 ? '○ 吉方'
+                   : isDayKyo      ? '⚠ 凶方位'
+                   : '— 吉凶なし';
+    const fb = document.getElementById('dayDetailFeedback');
+    if (fb) {
+      fb.innerHTML = `
+        <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
+          ${y}/${m}/${d}（${dow}）の日盤
+        </div>
+        <div style="font-size:1rem;font-weight:800;color:${rankColor};margin-bottom:3px;">
+          ${rankStr}
+        </div>
+        <div style="font-size:.6rem;color:var(--mist);">
+          ↑ 上のSTEP3「日盤タブ」で方位盤を確認できます
+        </div>`;
+      fb.style.display = 'block';
+    }
+
+  } catch(e) {
+    console.warn('showDayDetail error:', e);
   }
 }
 
