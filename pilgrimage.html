@@ -1668,7 +1668,7 @@ function switchBan(type) {
     const tab  = document.getElementById('banTab'  + t.charAt(0).toUpperCase() + t.slice(1));
     const grid = document.getElementById('banGrid' + t.charAt(0).toUpperCase() + t.slice(1));
     if (tab)  tab.classList.toggle('active', t === type);
-    if (grid) grid.style.display = (t === type) ? 'grid' : 'none';
+    if (grid) grid.style.display = (t === type) ? 'block' : 'none';
   });
 }
 
