@@ -1330,7 +1330,8 @@ const SACRED_PLACES = {
     { name:'壱岐島', area:'長崎県壱岐市', lat:33.7522, lon:129.6923 },
     { name:'対馬', area:'長崎県対馬市', lat:34.2038, lon:129.2892 },
     { name:'江の島', area:'神奈川県藤沢市', lat:35.2996, lon:139.4826 },
-
+  ],
+};
 
 
 
@@ -1417,7 +1418,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadStarInfo() {
-  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
+  const birth = getStoredBirth();
   if (!birth) return;
   const [by, bm, bd] = birth.split('-').map(Number);
   if (!by || !bm || !bd) return;
@@ -1438,6 +1439,22 @@ function loadStarInfo() {
 
   document.getElementById('starInfoText').textContent =
     `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。`;
+}
+
+function getStoredBirth() {
+  let birth = '';
+  try {
+    birth = localStorage.getItem('kitoku-birth') ||
+      localStorage.getItem('kitoku_birth') ||
+      sessionStorage.getItem('kitoku-birth') ||
+      '';
+  } catch(e) {}
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(birth)) {
+    try { localStorage.setItem('kitoku-birth', birth); } catch(e) {}
+    return birth;
+  }
+  return '';
 }
 
 // ============================================================

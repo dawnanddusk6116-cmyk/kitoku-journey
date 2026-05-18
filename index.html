@@ -871,7 +871,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- TRAVEL -->
-    <a class="selector-card s-pilgrimage" href="travel.html">
+    <a class="selector-card s-pilgrimage" href="travel.html" onclick="openTravel(event)">
       <div class="selector-icon">✈️</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU TRAVEL</div>
@@ -1128,7 +1128,7 @@ body.theme-night .start-btn{
       </div>
       <div class="app-card-wide-arrow">›</div>
     </a>
-    <a class="app-card-wide tone-travel" href="travel.html">
+    <a class="app-card-wide tone-travel" href="travel.html" onclick="openTravel(event)">
       <div class="card-icon">✈️</div>
       <div class="card-info">
         <div class="card-num">⑩ 国内旅行 吉方位ナビ</div>
@@ -1310,6 +1310,18 @@ function showHome(birth) {
 
   const savedBirth = birth || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (savedBirth) buildHomeScreen(savedBirth);
+}
+
+function openTravel(event) {
+  if (event) event.preventDefault();
+  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+  if (birth) {
+    try {
+      sessionStorage.setItem('kitoku-birth', birth);
+      localStorage.setItem('kitoku-birth', birth);
+    } catch(e) {}
+  }
+  window.location.href = 'travel.html';
 }
 
 // ============================================================
