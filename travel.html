@@ -706,6 +706,30 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="sec-label">STEP 2 — 目的地</div>
   <div class="sec-title">行きたい旅先を選ぶ</div>
 
+  <!-- 国内/海外タブ -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="
+      flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;
+      font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;
+      background:var(--goldlt);color:#fff;border:none;
+    ">🗾 国内</button>
+    <button id="tabOverseas" onclick="switchTravelTab('overseas')" style="
+      flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;
+      font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;
+      background:rgba(138,104,32,.1);color:var(--goldlt);
+      border:1px solid rgba(138,104,32,.3);
+    ">🌏 海外</button>
+  </div>
+
+  <!-- 国内グループ -->
+  <div id="presetsDomestic">
+  <!-- 国内/海外タブ -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">🗾 国内</button>
+    <button id="tabOverseas" onclick="switchTravelTab('overseas')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);">🌏 海外</button>
+  </div>
+
+  <div id="presetsDomestic">
   <!-- 都道府県別 -->
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-hokkaido')">
@@ -773,6 +797,71 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="preset-grid" id="grid-shima"></div>
   </div>
 
+  </div><!-- /presetsDomestic -->
+
+  <!-- 海外グループ -->
+  <div id="presetsOverseas" style="display:none;">
+    <div class="preset-group">
+      <div class="preset-group-label" onclick="toggleGroup(this,'grid-sea')">
+        <span>🌴 東南アジア<span class="preset-group-count">28ヶ所</span></span>
+        <span class="preset-group-arrow">›</span>
+      </div>
+      <div class="preset-grid" id="grid-sea"></div>
+    </div>
+    <div class="preset-group">
+      <div class="preset-group-label" onclick="toggleGroup(this,'grid-europe')">
+        <span>🏰 ヨーロッパ<span class="preset-group-count">30ヶ所</span></span>
+        <span class="preset-group-arrow">›</span>
+      </div>
+      <div class="preset-grid" id="grid-europe"></div>
+    </div>
+    <div class="preset-group">
+      <div class="preset-group-label" onclick="toggleGroup(this,'grid-eastasia')">
+        <span>🏯 東アジア<span class="preset-group-count">20ヶ所</span></span>
+        <span class="preset-group-arrow">›</span>
+      </div>
+      <div class="preset-grid" id="grid-eastasia"></div>
+    </div>
+    <div style="margin:8px 0 4px;padding:8px 12px;font-size:.6rem;color:var(--mist);background:rgba(100,80,40,.05);border-radius:8px;line-height:1.8;">
+      ✦ 南アジア・中東・アメリカ・オセアニアなど他の地域は順次追加予定です
+    </div>
+  </div><!-- /presetsOverseas --><!-- /preset-group shima -->
+
+  </div><!-- /presetsDomestic -->
+
+  <!-- 海外グループ -->
+  <div id="presetsOverseas" style="display:none;">
+
+    <div class="preset-group">
+      <div class="preset-group-label" onclick="toggleGroup(this,'grid-sea')">
+        <span>🌴 東南アジア<span class="preset-group-count">28ヶ所</span></span>
+        <span class="preset-group-arrow">›</span>
+      </div>
+      <div class="preset-grid" id="grid-sea"></div>
+    </div>
+
+    <div class="preset-group">
+      <div class="preset-group-label" onclick="toggleGroup(this,'grid-europe')">
+        <span>🏰 ヨーロッパ<span class="preset-group-count">30ヶ所</span></span>
+        <span class="preset-group-arrow">›</span>
+      </div>
+      <div class="preset-grid" id="grid-europe"></div>
+    </div>
+
+    <div class="preset-group">
+      <div class="preset-group-label" onclick="toggleGroup(this,'grid-eastasia')">
+        <span>🏯 東アジア<span class="preset-group-count">20ヶ所</span></span>
+        <span class="preset-group-arrow">›</span>
+      </div>
+      <div class="preset-grid" id="grid-eastasia"></div>
+    </div>
+
+    <div style="margin:8px 0 4px;padding:8px 12px;font-size:.6rem;color:var(--mist);background:rgba(100,80,40,.05);border-radius:8px;line-height:1.8;">
+      ✦ 他の地域（南アジア・中東・アメリカ・オセアニアなど）は順次追加予定です
+    </div>
+
+  </div><!-- /presetsOverseas -->
+
   <div style="
     margin-top:10px;
     background:rgba(100,80,40,.05);border:1px solid rgba(100,80,40,.12);
@@ -781,6 +870,7 @@ html.font-large .font-btn{font-size:.8rem;}
     text-align:center;
   ">
     ✦ 掲載していない旅先は順次追加予定です<br>
+    <span style="color:rgba(138,104,32,.6);">📍 座標は代表地点を使用しています。方位計算の参考値としてご利用いただき、正確な位置はGoogle マップ等でご確認ください。</span>
     <span style="font-size:.6rem;opacity:.8;">リクエストは kitoku@journey6112.jp まで</span>
   </div>
 </div>
@@ -1548,6 +1638,120 @@ function renderPresets() {
   renderPresetGrid('grid-onsen',    SACRED_PLACES.onsen);
   renderPresetGrid('grid-yama',     SACRED_PLACES.yama);
   renderPresetGrid('grid-shima',    SACRED_PLACES.shima);
+}
+
+// ── 海外旅先データ ──
+const OVERSEAS_PLACES = {
+  sea: [
+    { name:'バンコク 王宮・ワット・プラケオ', area:'タイ・バンコク', lat:13.7516, lon:100.4920 },
+    { name:'チェンマイ ドイステープ寺院', area:'タイ・チェンマイ', lat:18.8048, lon:98.9217 },
+    { name:'プーケット パトンビーチ', area:'タイ・プーケット', lat:7.8939, lon:98.2970 },
+    { name:'アユタヤ 歴史公園', area:'タイ・アユタヤ', lat:14.3553, lon:100.5694 },
+    { name:'コ・サムイ チャウエンビーチ', area:'タイ・コサムイ', lat:9.5318, lon:100.0619 },
+    { name:'チェンライ ワット・ロンクン', area:'タイ・チェンライ', lat:19.8270, lon:99.7633 },
+    { name:'バリ島 ウブド', area:'インドネシア・バリ', lat:-8.5069, lon:115.2625 },
+    { name:'バリ島 タナロット寺院', area:'インドネシア・バリ', lat:-8.6215, lon:115.0867 },
+    { name:'バリ島 クタビーチ', area:'インドネシア・バリ', lat:-8.7183, lon:115.1685 },
+    { name:'バリ島 ヌサドゥア', area:'インドネシア・バリ', lat:-8.8010, lon:115.2307 },
+    { name:'ジョグジャカルタ ボロブドゥール', area:'インドネシア・ジャワ', lat:-7.6079, lon:110.2038 },
+    { name:'ハノイ ホアンキエム湖', area:'ベトナム・ハノイ', lat:21.0285, lon:105.8542 },
+    { name:'ホーチミン 統一会堂', area:'ベトナム・ホーチミン', lat:10.7769, lon:106.6953 },
+    { name:'ホイアン 旧市街', area:'ベトナム・ホイアン', lat:15.8801, lon:108.3380 },
+    { name:'ハロン湾', area:'ベトナム・クアンニン省', lat:20.9101, lon:107.1839 },
+    { name:'ダナン ミーケービーチ', area:'ベトナム・ダナン', lat:16.0544, lon:108.2022 },
+    { name:'シンガポール マリーナベイサンズ', area:'シンガポール', lat:1.2834, lon:103.8607 },
+    { name:'シンガポール ガーデンズバイザベイ', area:'シンガポール', lat:1.2816, lon:103.8636 },
+    { name:'アンコールワット', area:'カンボジア・シェムリアップ', lat:13.4125, lon:103.8670 },
+    { name:'アンコールトム バイヨン', area:'カンボジア・シェムリアップ', lat:13.4413, lon:103.8587 },
+    { name:'クアラルンプール ペトロナスタワー', area:'マレーシア・KL', lat:3.1579, lon:101.7116 },
+    { name:'ペナン島 ジョージタウン', area:'マレーシア・ペナン', lat:5.4164, lon:100.3327 },
+    { name:'バガン 仏塔群', area:'ミャンマー・バガン', lat:21.1717, lon:94.8585 },
+    { name:'セブ島 マクタン', area:'フィリピン・セブ', lat:10.3157, lon:123.8854 },
+    { name:'マニラ イントラムロス', area:'フィリピン・マニラ', lat:14.5890, lon:120.9749 },
+    { name:'ルアンパバーン 旧市街', area:'ラオス', lat:19.8831, lon:102.1347 },
+    { name:'ルアンパバーン クアンシーの滝', area:'ラオス', lat:19.7258, lon:101.9857 },
+    { name:'ホーチミン メコン川クルーズ', area:'ベトナム・ミトー', lat:10.3617, lon:106.3565 },
+  ],
+  europe: [
+    { name:'パリ エッフェル塔', area:'フランス・パリ', lat:48.8584, lon:2.2945 },
+    { name:'パリ ルーヴル美術館', area:'フランス・パリ', lat:48.8606, lon:2.3376 },
+    { name:'モン・サン＝ミッシェル', area:'フランス・ノルマンディー', lat:48.6361, lon:-1.5115 },
+    { name:'ヴェルサイユ宮殿', area:'フランス・イル＝ド＝フランス', lat:48.8049, lon:2.1204 },
+    { name:'ニース コート・ダジュール', area:'フランス・ニース', lat:43.7102, lon:7.2620 },
+    { name:'ローマ コロッセオ', area:'イタリア・ローマ', lat:41.8902, lon:12.4922 },
+    { name:'バチカン サン・ピエトロ大聖堂', area:'バチカン市国', lat:41.9022, lon:12.4539 },
+    { name:'フィレンツェ ドゥオーモ', area:'イタリア・フィレンツェ', lat:43.7731, lon:11.2560 },
+    { name:'ヴェネツィア サン・マルコ広場', area:'イタリア・ヴェネツィア', lat:45.4341, lon:12.3388 },
+    { name:'アマルフィ海岸', area:'イタリア・カンパニア', lat:40.6340, lon:14.6027 },
+    { name:'バルセロナ サグラダ・ファミリア', area:'スペイン・バルセロナ', lat:41.4036, lon:2.1744 },
+    { name:'マドリード プラド美術館', area:'スペイン・マドリード', lat:40.4138, lon:-3.6922 },
+    { name:'グラナダ アルハンブラ宮殿', area:'スペイン・グラナダ', lat:37.1760, lon:-3.5881 },
+    { name:'サンティアゴ・デ・コンポステーラ', area:'スペイン・ガリシア', lat:42.8805, lon:-8.5458 },
+    { name:'ロンドン 大英博物館', area:'イギリス・ロンドン', lat:51.5194, lon:-0.1270 },
+    { name:'ロンドン バッキンガム宮殿', area:'イギリス・ロンドン', lat:51.5014, lon:-0.1419 },
+    { name:'ストーンヘンジ', area:'イギリス・ウィルトシャー', lat:51.1789, lon:-1.8262 },
+    { name:'ノイシュヴァンシュタイン城', area:'ドイツ・バイエルン', lat:47.5576, lon:10.7498 },
+    { name:'ベルリン ブランデンブルク門', area:'ドイツ・ベルリン', lat:52.5163, lon:13.3777 },
+    { name:'ローテンブルク 旧市街', area:'ドイツ・バイエルン', lat:49.3774, lon:10.1800 },
+    { name:'アテネ アクロポリス', area:'ギリシャ・アテネ', lat:37.9715, lon:23.7267 },
+    { name:'サントリーニ島 イア', area:'ギリシャ・キクラデス', lat:36.4618, lon:25.3765 },
+    { name:'ウィーン シェーンブルン宮殿', area:'オーストリア・ウィーン', lat:48.1845, lon:16.3122 },
+    { name:'ザルツブルク 旧市街', area:'オーストリア・ザルツブルク', lat:47.7981, lon:13.0469 },
+    { name:'インターラーケン ユングフラウ', area:'スイス・ベルン州', lat:46.5500, lon:7.9000 },
+    { name:'ルツェルン カペル橋', area:'スイス・ルツェルン', lat:47.0502, lon:8.3093 },
+    { name:'リスボン アルファマ地区', area:'ポルトガル・リスボン', lat:38.7139, lon:-9.1334 },
+    { name:'シントラ ペーナ宮殿', area:'ポルトガル・シントラ', lat:38.7876, lon:-9.3903 },
+    { name:'プラハ 旧市街広場', area:'チェコ・プラハ', lat:50.0875, lon:14.4213 },
+    { name:'アムステルダム 運河地区', area:'オランダ・アムステルダム', lat:52.3702, lon:4.8952 },
+  ],
+  eastasia: [
+    { name:'ソウル 景福宮', area:'韓国・ソウル', lat:37.5796, lon:126.9770 },
+    { name:'ソウル 明洞', area:'韓国・ソウル', lat:37.5636, lon:126.9869 },
+    { name:'釜山 海雲台ビーチ', area:'韓国・釜山', lat:35.1587, lon:129.1604 },
+    { name:'慶州 仏国寺', area:'韓国・慶州', lat:35.7898, lon:129.3316 },
+    { name:'済州島 城山日出峰', area:'韓国・済州', lat:33.4581, lon:126.9425 },
+    { name:'台北 故宮博物院', area:'台湾・台北', lat:25.1022, lon:121.5485 },
+    { name:'台北 龍山寺', area:'台湾・台北', lat:25.0370, lon:121.4999 },
+    { name:'台南 赤崁楼', area:'台湾・台南', lat:22.9979, lon:120.2005 },
+    { name:'花蓮 太魯閣渓谷', area:'台湾・花蓮', lat:24.1569, lon:121.6211 },
+    { name:'九份 老街', area:'台湾・新北市', lat:25.1091, lon:121.8442 },
+    { name:'北京 故宮（紫禁城）', area:'中国・北京', lat:39.9163, lon:116.3972 },
+    { name:'北京 万里の長城（八達嶺）', area:'中国・北京近郊', lat:40.3592, lon:116.0200 },
+    { name:'上海 外灘', area:'中国・上海', lat:31.2400, lon:121.4900 },
+    { name:'西安 兵馬俑', area:'中国・陝西省', lat:34.3843, lon:109.2783 },
+    { name:'桂林 漓江', area:'中国・広西省', lat:25.2736, lon:110.2990 },
+    { name:'香港 ヴィクトリアピーク', area:'香港', lat:22.2759, lon:114.1455 },
+    { name:'香港 尖沙咀 プロムナード', area:'香港', lat:22.2949, lon:114.1722 },
+    { name:'マカオ 聖ポール天主堂跡', area:'マカオ', lat:22.1978, lon:113.5394 },
+    { name:'ウランバートル ゲル体験', area:'モンゴル', lat:47.8864, lon:106.9057 },
+    { name:'アグラ タージマハル', area:'インド・ウッタル・プラデーシュ', lat:27.1751, lon:78.0421 },
+  ],
+};
+
+function renderOverseasPresets() {
+  renderPresetGrid('grid-sea',      OVERSEAS_PLACES.sea);
+  renderPresetGrid('grid-europe',   OVERSEAS_PLACES.europe);
+  renderPresetGrid('grid-eastasia', OVERSEAS_PLACES.eastasia);
+}
+
+function switchTravelTab(tab) {
+  const domestic = document.getElementById('presetsDomestic');
+  const overseas = document.getElementById('presetsOverseas');
+  const btnD = document.getElementById('tabDomestic');
+  const btnO = document.getElementById('tabOverseas');
+  if (tab === 'domestic') {
+    domestic.style.display = '';
+    overseas.style.display  = 'none';
+    btnD.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;';
+    btnO.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
+  } else {
+    domestic.style.display = 'none';
+    overseas.style.display  = '';
+    btnO.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;';
+    btnD.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
+    renderOverseasPresets();
+  }
+}
 }
 
 function renderPresetGrid(id, places) {
