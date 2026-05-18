@@ -708,27 +708,11 @@ html.font-large .font-btn{font-size:.8rem;}
 
   <!-- 国内/海外タブ -->
   <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="
-      flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;
-      font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;
-      background:var(--goldlt);color:#fff;border:none;
-    ">🗾 国内</button>
-    <button id="tabOverseas" onclick="switchTravelTab('overseas')" style="
-      flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;
-      font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;
-      background:rgba(138,104,32,.1);color:var(--goldlt);
-      border:1px solid rgba(138,104,32,.3);
-    ">🌏 海外</button>
-  </div>
-
-  <!-- 国内グループ -->
-  <div id="presetsDomestic">
-  <!-- 国内/海外タブ -->
-  <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">🗾 国内</button>
     <button id="tabOverseas" onclick="switchTravelTab('overseas')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);">🌏 海外</button>
   </div>
 
+  <!-- 国内グループ -->
   <div id="presetsDomestic">
   <!-- 都道府県別 -->
   <div class="preset-group">
@@ -825,41 +809,6 @@ html.font-large .font-btn{font-size:.8rem;}
     <div style="margin:8px 0 4px;padding:8px 12px;font-size:.6rem;color:var(--mist);background:rgba(100,80,40,.05);border-radius:8px;line-height:1.8;">
       ✦ 南アジア・中東・アメリカ・オセアニアなど他の地域は順次追加予定です
     </div>
-  </div><!-- /presetsOverseas --><!-- /preset-group shima -->
-
-  </div><!-- /presetsDomestic -->
-
-  <!-- 海外グループ -->
-  <div id="presetsOverseas" style="display:none;">
-
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-sea')">
-        <span>🌴 東南アジア<span class="preset-group-count">28ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-sea"></div>
-    </div>
-
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-europe')">
-        <span>🏰 ヨーロッパ<span class="preset-group-count">30ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-europe"></div>
-    </div>
-
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-eastasia')">
-        <span>🏯 東アジア<span class="preset-group-count">20ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-eastasia"></div>
-    </div>
-
-    <div style="margin:8px 0 4px;padding:8px 12px;font-size:.6rem;color:var(--mist);background:rgba(100,80,40,.05);border-radius:8px;line-height:1.8;">
-      ✦ 他の地域（南アジア・中東・アメリカ・オセアニアなど）は順次追加予定です
-    </div>
-
   </div><!-- /presetsOverseas -->
 
   <div style="
