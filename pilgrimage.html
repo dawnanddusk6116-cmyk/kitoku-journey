@@ -563,6 +563,61 @@ html.font-large .font-btn{font-size:.8rem;}
   .font-btn{min-width:34px;height:27px;}
 }
 
+
+/* ── 方位盤ガイドモーダル ── */
+.guide-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:flex-end;justify-content:center;
+}
+.guide-modal-overlay.open{display:flex;}
+.guide-modal{
+  background:var(--bg,#f7f4ef);
+  border-radius:18px 18px 0 0;
+  width:100%;max-width:480px;
+  max-height:88dvh;overflow-y:auto;
+  padding:20px 18px 40px;
+  box-shadow:0 -4px 32px rgba(0,0,0,.18);
+}
+.guide-modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  border-bottom:1px solid rgba(138,104,32,.2);
+  padding-bottom:10px;
+}
+.guide-modal-title{
+  font-size:.9rem;font-weight:700;color:var(--goldlt,#5c4010);
+  letter-spacing:.08em;
+}
+.guide-modal-close{
+  background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.2);
+  border-radius:50%;width:30px;height:30px;
+  font-size:1rem;color:var(--goldlt,#5c4010);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;
+}
+.guide-modal-section{
+  margin-bottom:14px;
+  background:#fff;border:1px solid rgba(138,104,32,.15);
+  border-radius:10px;padding:12px 14px;
+}
+.guide-modal-sec-title{
+  font-size:.75rem;font-weight:700;color:var(--goldlt,#5c4010);
+  margin-bottom:6px;display:flex;align-items:center;gap:6px;
+}
+.guide-modal-sec-body{
+  font-size:.68rem;color:var(--mist,#5e503d);line-height:1.9;
+}
+.guide-modal-sec-body strong{color:var(--snow,#1c1208);}
+.guide-open-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(138,104,32,.08);
+  border:1px solid rgba(138,104,32,.28);
+  border-radius:999px;padding:7px 14px;
+  font-size:.68rem;color:var(--goldlt,#5c4010);font-weight:700;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;margin-bottom:10px;
+}
 </style>
 </head>
 <body>
@@ -762,6 +817,10 @@ html.font-large .font-btn{font-size:.8rem;}
   </div>
 </div>
 
+  <!-- 方位盤ガイドボタン -->
+  <div style="margin:0 16px 0;display:flex;justify-content:flex-end;">
+    <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
+  </div>
 <!-- STEP 3: 方位チェック結果 -->
 <div class="section" id="dirResultSection" style="display:none;">
   <div class="sec-label">STEP 3 — 方位チェック</div>
@@ -2126,6 +2185,69 @@ function renderTodayNichiban(y, m, d) {
   `;
 }
 
+
+function openGuideModal(){
+  document.getElementById('guideModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeGuideModal(){
+  document.getElementById('guideModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
 </script>
+
+<!-- 方位盤ガイドモーダル -->
+<div class="guide-modal-overlay" id="guideModalOverlay" onclick="if(event.target===this)closeGuideModal()">
+  <div class="guide-modal">
+    <div class="guide-modal-header">
+      <div class="guide-modal-title">🧭 方位盤の読み方</div>
+      <button class="guide-modal-close" onclick="closeGuideModal()">✕</button>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">📅 3つのギア — 年盤・月盤・日盤</div>
+      <div class="guide-modal-sec-body">
+        <strong>年盤（大きなギア）</strong><br>
+        1年間の大きな流れ。引越し・転職・結婚など人生の重大な決断に使います。遠距離移動（100km以上）にも。<br><br>
+        <strong>月盤（中くらいのギア）</strong><br>
+        月ごとの流れ。出張・旅行・月単位の行動計画に使います。年盤と重ねて確認するのが基本。<br><br>
+        <strong>日盤（小さなギア）</strong><br>
+        毎日の行動。カフェ・コンビニ・散歩など日常の小さな吉方取りに。750m以上が目安。
+      </div>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">🗺️ 南上 vs 北上について</div>
+      <div class="guide-modal-sec-body">
+        気学では<strong>南が上</strong>が正式。太陽が南中する方角を上とする東洋の伝統から。地図に慣れた方は北上でも確認できます。どちらも計算結果は同じです。
+      </div>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">📐 方位の角度（30度/60度）について</div>
+      <div class="guide-modal-sec-body">
+        KITOKUは<strong>30度/60度方式</strong>（東洋の伝統的な分割）を採用しています。<br>
+        東西南北（N・E・S・W）＝各30度　／　四隅（NE・SE・SW・NW）＝各60度<br><br>
+        他アプリや市販の暦では45度均等方式が多く、境界付近では吉凶の判定が変わることがあります。「アプリによって結果が違う」と感じた時はこの違いが原因のほとんどです。
+      </div>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">📏 吉の大きさは距離×時間</div>
+      <div class="guide-modal-sec-body">
+        <strong>日盤取り</strong>：750m以上・数時間 → 今日の気を整える<br>
+        <strong>月盤取り</strong>：数十km以上・数日〜 → 仕事・人間関係の波を整える<br>
+        <strong>年盤取り</strong>：100km以上・長期 → 人生の根幹を書き換える<br><br>
+        <strong>仮吉方（75日ルール）</strong><br>
+        引越しが難しい場合は吉方位に<strong>75日間寝泊まり</strong>するだけで引越しと同じ効果が得られます。まず75日、その方向に通うことから始めましょう。
+      </div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist,#5e503d);line-height:1.8;padding:4px 2px;">
+      ※ 気学には流派により計算方法・優先順位が異なります。KITOKUは東洋の叡智とY理論に基づく独自解釈です。他のアプリと比較しながらご自身で判断する材料としてご使用ください。
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
