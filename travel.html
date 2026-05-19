@@ -2123,6 +2123,7 @@ function calcAndShowDir() {
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
         </div>
       </div>
+      \${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
         <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
         <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
@@ -2846,6 +2847,56 @@ function confirmMapPicker() {
   if (hint2el) hint2el.style.display = 'block';
   if (gState.homeLat && gState.honmei) calcAndShowDir();
 }
+
+
+// ── 旅行・巡礼用 凶方処方箋 ──
+const TRAVEL_KYO_PRESCRIPTION = {
+  '五黄殺': { icon:'🔸', title:'五黄殺への心がけ', text:'イライラや他責の感情が出やすい時です。自分から「ありがとう」を先に言い、自己主張を手放してみてください。笑顔でいることが最大の盾になります。' },
+  '暗剣殺': { icon:'🔸', title:'暗剣殺への心がけ', text:'予期せぬトラブルが外からもたらされやすい時です。いつも以上に準備・確認を念入りに。トラブルが起きても「これで膿が出た」と感謝で受け止めれば被害は最小限に。' },
+  '歳破':   { icon:'🔸', title:'歳破への心がけ', text:'予定通りに進まないことがある方位です。こだわりを一度手放し、笑顔で柔軟に対応すれば、それがかえって未来の大きなご縁へ繋がります。' },
+  '月破':   { icon:'🔸', title:'月破への心がけ', text:'今月は計画が変わりやすい時期です。詰め込まず余白を持ったスケジュールで動きましょう。予想外の変化を楽しむ心の余裕が最大の防御です。' },
+  '本命殺': { icon:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、休息をたっぷり取って自分を労りましょう。常備薬を持参するとさらに安心です。' },
+  '月命殺': { icon:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
+  '定位対冲': { icon:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、同行者や足元の人間関係をいつも以上に大切にしてください。' },
+};
+
+function generateTravelKyoAlert(yearBadges, monthBadges, isPilgrimage) {
+  const allBadges = [...(yearBadges||[]), ...(monthBadges||[])];
+  const matched = Object.keys(TRAVEL_KYO_PRESCRIPTION).filter(k =>
+    allBadges.some(b => b.includes(k))
+  );
+  if (!matched.length) return '';
+
+  const yearKyo  = (yearBadges||[]).some(b => Object.keys(TRAVEL_KYO_PRESCRIPTION).some(k => b.includes(k)));
+  const monthKyo = (monthBadges||[]).some(b => Object.keys(TRAVEL_KYO_PRESCRIPTION).some(k => b.includes(k)));
+  const kyoNames = [...new Set(matched)].join('・');
+
+  const intro = isPilgrimage
+    ? `この方角の<strong style="color:#8b5500;">${kyoNames}</strong>が確認されました。巡礼は魂の旅です。知った上で出発しましょう。`
+    : `この方角の<strong style="color:#8b5500;">${kyoNames}</strong>が確認されました。行くのはOKです。心がけを持って出発しましょう。`;
+
+  const items = matched.map(k => {
+    const p = TRAVEL_KYO_PRESCRIPTION[k];
+    return `<div style="margin-bottom:8px;padding:9px 11px;background:rgba(255,255,255,.7);border-radius:8px;border:1px solid rgba(180,120,0,.15);">
+      <div style="font-size:.67rem;font-weight:700;color:#7a4800;margin-bottom:3px;">${p.icon} ${p.title}</div>
+      <div style="font-size:.64rem;color:var(--mist);line-height:1.85;">${p.text}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div style="margin-top:10px;background:rgba(200,140,0,.07);border:1.5px solid rgba(200,140,0,.35);border-radius:10px;padding:12px 14px;">
+    <div style="font-size:.72rem;font-weight:700;color:#7a4800;margin-bottom:8px;">⚠ 注意 — ${yearKyo ? '年盤' : ''}${yearKyo && monthKyo ? '・' : ''}${monthKyo ? '月盤' : ''}にハザードがあります</div>
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:10px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
+      ${intro}<br>
+      <span style="color:var(--goldlt);font-weight:700;">✦ 行くのはOK。これを知って出発するだけで全然違います。</span>
+    </div>
+    ${items}
+    <div style="font-size:.6rem;color:var(--mist);margin-top:6px;opacity:.8;">
+      ✦ 出発前に近所の吉方カフェでひと息つくと、日盤の吉エネルギーが盾になります。
+    </div>
+  </div>`;
+}
+
 </script>
 
 <!-- 方位盤ガイドモーダル -->
