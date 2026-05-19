@@ -2014,7 +2014,7 @@ function calcAndShowDir() {
         <div style="flex:1;">
           <div class="dir-dest-name">${gState.destName}</div>
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
-          ${gState.destLat ? `<div style="font-size:.58rem;color:rgba(138,104,32,.6);margin-top:3px;">📐 座標：${gState.destLat.toFixed(4)}, ${gState.destLon.toFixed(4)}　<span style="color:#c07020;">住所は参考表示・方位計算は座標を使用</span></div>` : ''}
+          ${gState.destLat ? `<div style="font-size:.58rem;color:rgba(138,104,32,.6);margin-top:3px;">📐 座標：${gState.destLat.toFixed(4)}, ${gState.destLon.toFixed(4)}　<span style="color:#c07020;">※ 住所表記は参考です。座標で計算しているため方位は正確です。</span></div>` : ''}
         </div>
       </div>
       ${gState.isYearKyo ? `
@@ -2733,7 +2733,7 @@ function openMapPicker() {
             `<div>${addr}</div>
              <div style="font-size:.58rem;color:#888;margin-top:3px;">
                📐 座標：${lat.toFixed(5)}, ${lng.toFixed(5)}<br>
-               <span style="color:#c07020;">※ 住所は参考表示です。方位計算には座標を使用します。</span>
+               <span style="color:#c07020;font-weight:700;">※ 住所表記は参考です。座標で計算しているため方位は正確です。</span>
              </div>`;
         } catch {
           mapPickerTemp = { lat, lon: lng, name: `${lat.toFixed(5)}, ${lng.toFixed(5)}`, area: '地図で選択した場所' };

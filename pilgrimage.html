@@ -2432,7 +2432,7 @@ function openMapPicker() {
             `<div>${addr}</div>
              <div style="font-size:.58rem;color:#888;margin-top:3px;">
                📐 座標：${lat.toFixed(5)}, ${lng.toFixed(5)}<br>
-               <span style="color:#c07020;">※ 住所は参考表示です。方位計算には座標を使用します。</span>
+               <span style="color:#c07020;font-weight:700;">※ 住所表記は参考です。座標で計算しているため方位は正確です。</span>
              </div>`;
         } catch {
           mapPickerTemp = { lat, lon: lng, name: `${lat.toFixed(5)}, ${lng.toFixed(5)}`, area: '地図で選択した場所' };
