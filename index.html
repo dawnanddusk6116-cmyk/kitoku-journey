@@ -907,6 +907,22 @@ body.theme-night .start-btn{
       <div style="font-size:.8rem;color:rgba(138,104,32,.4);">›</div>
     </a>
 
+    <!-- WORLD GALLERY（コンパクトバナー） -->
+    <button type="button" onclick="openImgGallery()" style="
+      display:flex;align-items:center;gap:10px;width:100%;
+      background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.55));
+      border:1px solid rgba(138,104,32,.24);border-radius:10px;
+      padding:11px 14px;margin:4px 0 0;text-align:left;cursor:pointer;
+      font-family:'Noto Serif JP',serif;
+    ">
+      <div style="font-size:1.1rem;">🖼</div>
+      <div style="flex:1;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);">KITOKUの世界 — 図解ギャラリー</div>
+        <div style="font-size:.6rem;color:var(--mist);line-height:1.7;">九星・納音・5000年の知恵を、絵で見る。</div>
+      </div>
+      <div style="font-size:.8rem;color:rgba(138,104,32,.4);">›</div>
+    </button>
+
     <!-- ENGLISH（コンパクトバナー） -->
     <a href="en/index.html" class="en-banner" style="margin:4px 0 0;">
       <div class="en-badge">EN</div>
@@ -1252,6 +1268,33 @@ body.theme-night .start-btn{
   </div>
 </div>
 
+<!-- 図解ギャラリー -->
+<div id="imgGalleryPanel" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.92);overflow-y:auto;">
+  <div style="max-width:480px;margin:0 auto;padding:16px 16px env(safe-area-inset-bottom,20px);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0 20px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#f0d878;letter-spacing:.15em;font-weight:700;">✦ KITOKUの世界</div>
+      <button type="button" onclick="closeImgGallery()" style="background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.4);border-radius:8px;color:#ffffff;font-size:.82rem;padding:7px 18px;cursor:pointer;font-weight:600;font-family:'Noto Serif JP',serif;">閉じる</button>
+    </div>
+
+    <div style="font-size:.72rem;letter-spacing:.14em;color:#f0d878;margin-bottom:10px;font-weight:700;">九星の設計図</div>
+    <div id="gallery-kyusei" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:24px;"></div>
+
+    <div style="font-size:.72rem;letter-spacing:.14em;color:#f0d878;margin-bottom:10px;font-weight:700;">5000年の知恵</div>
+    <div id="gallery-concept" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:24px;"></div>
+
+    <div style="font-size:.72rem;letter-spacing:.14em;color:#f0d878;margin-bottom:10px;font-weight:700;">納音の音色</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px;" id="gallery-nouin-tabs"></div>
+    <div id="gallery-nouin" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:20px;"></div>
+  </div>
+</div>
+
+<!-- 図解拡大表示 -->
+<div id="imgFullPanel" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.95);align-items:center;justify-content:center;flex-direction:column;" onclick="closeImgFull()">
+  <img id="imgFullImg" src="" alt="" style="max-width:95%;max-height:85dvh;object-fit:contain;border-radius:8px;">
+  <div id="imgFullTitle" style="font-size:.75rem;color:rgba(212,175,55,.8);margin-top:12px;letter-spacing:.1em;"></div>
+  <div style="font-size:.65rem;color:rgba(255,255,255,.4);margin-top:6px;">タップで閉じる</div>
+</div>
+
 <script>
 // ============================================================
 // 表示切替
@@ -1378,6 +1421,114 @@ function openTravel(event) {
     } catch(e) {}
   }
   window.location.href = 'travel.html';
+}
+
+// ============================================================
+// 図解ギャラリー
+// ============================================================
+const NOUIN_GROUPS = {
+  '水':['井泉水','澗下水','大渓水','長流水','天河水','大海水'],
+  '木':['桑柘木','大林木','松柏木','石榴木','平地木','楊柳木'],
+  '火':['山下火','山頭火','天上火','覆燈火','霹靂火','炉中火'],
+  '土':['屋上土','沙中土','城頭土','大駅土','壁上土','路傍土'],
+  '金':['海中金','金箔金','剣鋒金','沙中金','白蝋金','釵釧金'],
+};
+let currentNouinGroup = '水';
+
+function openImgGallery() {
+  const panel = document.getElementById('imgGalleryPanel');
+  if (!panel) return;
+  panel.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  renderGalleryKyusei();
+  renderGalleryConcept();
+  renderGalleryNouinTabs();
+  renderGalleryNouin(currentNouinGroup);
+}
+
+function closeImgGallery() {
+  const panel = document.getElementById('imgGalleryPanel');
+  if (panel) panel.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function openImgFull(url, title) {
+  const panel = document.getElementById('imgFullPanel');
+  const img = document.getElementById('imgFullImg');
+  const label = document.getElementById('imgFullTitle');
+  if (!panel || !img || !label) return;
+  img.src = url;
+  img.alt = title;
+  label.textContent = title;
+  panel.style.display = 'flex';
+}
+
+function closeImgFull() {
+  const panel = document.getElementById('imgFullPanel');
+  if (panel) panel.style.display = 'none';
+}
+
+function makeGalleryThumb(url, title) {
+  const item = document.createElement('button');
+  item.type = 'button';
+  item.style.cssText = 'border-radius:8px;overflow:hidden;border:1px solid rgba(196,160,67,.22);cursor:pointer;position:relative;aspect-ratio:1;background:rgba(255,255,255,.04);padding:0;';
+  item.onclick = () => openImgFull(url, title);
+  item.innerHTML = `
+    <img src="${url}" alt="${title}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.style.opacity='.35'">
+    <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:4px 5px;">
+      <div style="font-size:.52rem;color:rgba(212,175,55,.92);line-height:1.3;letter-spacing:.03em;">${title}</div>
+    </div>`;
+  return item;
+}
+
+function renderGalleryKyusei() {
+  const el = document.getElementById('gallery-kyusei');
+  if (!el || el.children.length || typeof KITOKU_IMAGES === 'undefined' || !KITOKU_IMAGES.kyusei) return;
+  Object.entries(KITOKU_IMAGES.kyusei).forEach(([name, url]) => {
+    el.appendChild(makeGalleryThumb(url, name));
+  });
+}
+
+function renderGalleryConcept() {
+  const el = document.getElementById('gallery-concept');
+  if (!el || el.children.length || typeof KITOKU_IMAGES === 'undefined' || !KITOKU_IMAGES.concept) return;
+  Object.entries(KITOKU_IMAGES.concept).forEach(([name, url]) => {
+    el.appendChild(makeGalleryThumb(url, name));
+  });
+}
+
+function renderGalleryNouinTabs() {
+  const el = document.getElementById('gallery-nouin-tabs');
+  if (!el || el.children.length) return;
+  Object.keys(NOUIN_GROUPS).forEach(group => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = group + '行';
+    btn.id = 'nouin-tab-' + group;
+    btn.style.cssText = galleryNouinTabStyle(group === currentNouinGroup);
+    btn.onclick = () => {
+      currentNouinGroup = group;
+      document.querySelectorAll('[id^="nouin-tab-"]').forEach(tab => {
+        tab.style.cssText = galleryNouinTabStyle(tab.id === 'nouin-tab-' + group);
+      });
+      renderGalleryNouin(group);
+    };
+    el.appendChild(btn);
+  });
+}
+
+function galleryNouinTabStyle(active) {
+  return `padding:8px 4px;border-radius:6px;font-size:.68rem;cursor:pointer;letter-spacing:.06em;transition:all .2s;border:1px solid rgba(196,160,67,.5);background:${active ? 'rgba(196,160,67,.4)' : 'rgba(255,255,255,.08)'};color:${active ? '#f0e0a0' : 'rgba(220,200,160,.8)'};font-weight:${active ? '700' : '400'};font-family:'Noto Serif JP',serif;`;
+}
+
+function renderGalleryNouin(group) {
+  const el = document.getElementById('gallery-nouin');
+  if (!el || typeof KITOKU_IMAGES === 'undefined' || !KITOKU_IMAGES.nacchin) return;
+  el.innerHTML = '';
+  (NOUIN_GROUPS[group] || []).forEach(name => {
+    const url = KITOKU_IMAGES.nacchin[name];
+    if (url) el.appendChild(makeGalleryThumb(url, name));
+  });
 }
 
 // ============================================================
