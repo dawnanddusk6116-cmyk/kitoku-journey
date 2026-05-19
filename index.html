@@ -600,11 +600,13 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 
 /* KITOKUとは？ */
 .kitoku-about{
-  margin:16px 16px 0;
+  margin:10px 16px 0;
   background:rgba(100,80,40,.04);border:1px solid rgba(100,80,40,.1);
   border-radius:10px;padding:12px 14px;
   display:flex;align-items:center;justify-content:space-between;
   cursor:pointer;
+  width:calc(100% - 32px);
+  font-family:'Noto Serif JP',serif;
 }
 .kitoku-about-text{font-size:.68rem;color:var(--gold);letter-spacing:.1em;}
 .kitoku-about-sub{font-size:.6rem;color:var(--mist);margin-top:2px;}
@@ -1220,6 +1222,15 @@ body.theme-night .start-btn{
     </div>
     <div style="color:rgba(61,100,145,.4);font-size:.8rem;">›</div>
   </div>
+
+  <!-- 図解ギャラリー -->
+  <button type="button" class="kitoku-about" onclick="openImgGallery()">
+    <div>
+      <div class="kitoku-about-text">🖼 KITOKUの世界</div>
+      <div class="kitoku-about-sub">九星・納音・5000年の知恵を、絵で見る</div>
+    </div>
+    <div class="kitoku-about-arrow">›</div>
+  </button>
 
   <!-- PWAバナー -->
   <div class="pwa-banner">
