@@ -2699,7 +2699,7 @@ function openMapPicker() {
         center: [centerLat, centerLon], zoom: 13,
         zoomControl: false
       });
-      L.control.zoom({ position: 'bottomright' }).addTo(mapPickerInstance);
+      L.control.zoom({ position: 'bottomleft' }).addTo(mapPickerInstance);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19
