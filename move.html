@@ -1261,42 +1261,34 @@ html.font-large .font-btn{font-size:.8rem;}
 </div>
 
 <!-- 地図ピッカーモーダル -->
-<div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);">
-  <div style="position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;">
-  <div style="background:var(--bg,#f7f4ef);width:100%;max-width:480px;height:100dvh;overflow:hidden;position:relative;">
-
+<div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.6);overflow:hidden;">
+  <div id="mapPickerInner" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg,#f7f4ef);width:min(480px,100vw);border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4);">
     <!-- ヘッダー -->
-    <div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg,#f7f4ef);">
+    <div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.2);display:flex;align-items:center;justify-content:space-between;background:var(--bg,#f7f4ef);">
       <div>
         <div style="font-size:.8rem;font-weight:700;color:var(--goldlt,#5c4010);">🗺 地図で場所を指定する</div>
         <div style="font-size:.6rem;color:var(--mist,#5e503d);margin-top:2px;">タップした場所にピンが立ちます</div>
       </div>
-      <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.2);border-radius:50%;width:32px;height:32px;font-size:1rem;color:var(--goldlt,#5c4010);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
+      <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.2);border-radius:50%;width:32px;height:32px;font-size:1rem;color:var(--goldlt,#5c4010);cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
-
-    <!-- 操作ガイド -->
-    <div style="padding:8px 16px;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border-bottom:1px solid rgba(138,104,32,.15);font-size:.62rem;color:var(--mist,#5e503d);line-height:1.6;flex-shrink:0;">
-      📍 引越し先の正確な場所をタップしてピンを立ててください
+    <!-- ガイド -->
+    <div style="padding:7px 16px;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border-bottom:1px solid rgba(138,104,32,.15);font-size:.62rem;color:var(--mist,#5e503d);">
+      📍 引越し先をタップしてピンを立ててください
     </div>
-
-    <!-- 地図（CSS calc()で高さ固定） -->
-    <div id="mapPickerContainer" style="width:100%;height:calc(100dvh - 160px);min-height:300px;max-height:calc(100dvh - 160px);"></div>
-
+    <!-- 地図コンテナ（高さはJSで設定） -->
+    <div id="mapPickerContainer" style="width:100%;height:400px;"></div>
     <!-- ピン情報 -->
-    <div id="mapPickerInfo" style="display:none;padding:12px 16px;background:#fff;border-top:1px solid rgba(138,104,32,.15);flex-shrink:0;">
+    <div id="mapPickerInfo" style="display:none;padding:12px 16px;background:#fff;border-top:1px solid rgba(138,104,32,.15);">
       <div style="font-size:.62rem;color:var(--mist,#5e503d);margin-bottom:4px;">選択した場所</div>
       <div id="mapPickerAddress" style="font-size:.7rem;font-weight:700;color:var(--snow,#1c1208);margin-bottom:10px;line-height:1.6;"></div>
-      <button onclick="confirmMapPicker()" style="width:100%;padding:12px;background:var(--goldlt,#5c4010);color:#fff;border:none;border-radius:10px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.08em;">
+      <button onclick="confirmMapPicker()" style="width:100%;padding:12px;background:var(--goldlt,#5c4010);color:#fff;border:none;border-radius:10px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;">
         ✓ この場所で方位を計算する
       </button>
     </div>
-
     <!-- 初期状態 -->
-    <div id="mapPickerEmpty" style="padding:10px 16px;background:#fff;border-top:1px solid rgba(138,104,32,.15);flex-shrink:0;text-align:center;">
+    <div id="mapPickerEmpty" style="padding:10px 16px;background:#fff;border-top:1px solid rgba(138,104,32,.15);text-align:center;">
       <div style="font-size:.63rem;color:var(--mist,#5e503d);">地図上をタップすると場所が選択されます</div>
     </div>
-
-  </div>
   </div>
 </div>
 
@@ -2683,7 +2675,9 @@ function openMapPicker() {
   }
 
   function initMap() {
-    setMapHeight();
+    // 地図の高さ = 画面高さ - ヘッダー・ガイド・フッター分を引く
+    const mapH = Math.min(Math.max(window.innerHeight - 220, 300), 600);
+    document.getElementById('mapPickerContainer').style.height = mapH + 'px';
     mapPickerInstance = L.map('mapPickerContainer', {
       center: [centerLat, centerLon],
       zoom: 14,
@@ -2727,7 +2721,7 @@ function openMapPicker() {
     setTimeout(initMap, 80);
   } else {
     mapPickerInstance.setView([centerLat, centerLon], 14);
-    setTimeout(() => { setMapHeight(); mapPickerInstance.invalidateSize(); }, 100);
+    setTimeout(() => mapPickerInstance.invalidateSize(), 100);
   }
 }
 
