@@ -1282,17 +1282,19 @@ html.font-large .font-btn{font-size:.8rem;}
     <div id="mapPickerMap" style="width:100%;height:100%;"></div>
   </div>
 
-  <!-- 確定パネル -->
-  <div id="mapPickerInfo" style="display:none;padding:14px 16px;background:#f7f4ef;border-top:2px solid rgba(138,104,32,.3);flex-shrink:0;">
-    <div style="font-size:.62rem;color:#5e503d;margin-bottom:4px;">📍 選択した場所</div>
-    <div id="mapPickerAddress" style="font-size:.75rem;font-weight:700;color:#1c1208;margin-bottom:12px;line-height:1.6;"></div>
-    <button onclick="confirmMapPicker()" style="width:100%;padding:14px;background:#5c4010;color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.06em;">
-      ✓ この場所で方位を計算する
-    </button>
+  <!-- 確定パネル（画面下部に固定） -->
+  <div id="mapPickerInfo" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9300;padding:12px 16px 24px;background:rgba(247,244,239,.97);border-top:2px solid rgba(138,104,32,.3);backdrop-filter:blur(8px);">
+    <div style="max-width:480px;margin:0 auto;">
+      <div style="font-size:.6rem;color:#5e503d;margin-bottom:3px;">📍 選択した場所</div>
+      <div id="mapPickerAddress" style="font-size:.72rem;font-weight:700;color:#1c1208;margin-bottom:10px;line-height:1.5;"></div>
+      <button onclick="confirmMapPicker()" style="width:100%;padding:13px;background:#5c4010;color:#fff;border:none;border-radius:10px;font-size:.78rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.06em;">
+        ✓ この場所で方位を計算する
+      </button>
+    </div>
   </div>
 
-  <!-- 初期状態 -->
-  <div id="mapPickerEmpty" style="padding:12px 16px;background:#f7f4ef;border-top:1px solid rgba(138,104,32,.15);text-align:center;flex-shrink:0;">
+  <!-- 初期状態（固定表示） -->
+  <div id="mapPickerEmpty" style="position:fixed;bottom:0;left:0;right:0;z-index:9300;padding:10px 16px 20px;background:rgba(247,244,239,.9);border-top:1px solid rgba(138,104,32,.15);text-align:center;">
     <div style="font-size:.65rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
   </div>
 
