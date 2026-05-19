@@ -1261,49 +1261,44 @@ html.font-large .font-btn{font-size:.8rem;}
 </div>
 
 <!-- 地図ピッカーモーダル -->
-<div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.7);">
+<div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:#f7f4ef;flex-direction:column;">
 
-  <!-- PC用：中央カード -->
-  <div id="mapPickerCard" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:460px;border-radius:14px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.5);display:none;">
-    <div style="padding:11px 16px;background:#f7f4ef;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(138,104,32,.2);">
-      <div style="font-size:.78rem;font-weight:700;color:#5c4010;">🗺 地図で場所を指定する</div>
-      <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.22);border-radius:50%;width:30px;height:30px;font-size:.9rem;color:#5c4010;cursor:pointer;">✕</button>
+  <!-- ヘッダー -->
+  <div style="padding:12px 16px;background:#f7f4ef;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(138,104,32,.2);flex-shrink:0;">
+    <div>
+      <div style="font-size:.82rem;font-weight:700;color:#5c4010;">🗺 地図で場所を指定する</div>
+      <div style="font-size:.62rem;color:#5e503d;margin-top:2px;">タップした場所にピンが立ちます</div>
     </div>
-    <div id="mapContainerPC" style="width:100%;height:480px;position:relative;">
-      <div id="mapPickerMapPC" style="width:100%;height:100%;"></div>
-      <div id="mapGuidePC" style="position:absolute;top:0;left:0;right:0;z-index:10;padding:6px 12px;background:rgba(247,244,239,.9);font-size:.62rem;color:#5e503d;">📍 引越し先をタップしてピンを立ててください</div>
-      <div id="mapInfoPC" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:10;padding:12px 14px;background:rgba(247,244,239,.96);backdrop-filter:blur(4px);border-top:1px solid rgba(138,104,32,.2);">
-        <div style="font-size:.6rem;color:#5e503d;margin-bottom:3px;">選択した場所</div>
-        <div id="mapAddrPC" style="font-size:.7rem;font-weight:700;color:#1c1208;margin-bottom:9px;line-height:1.5;"></div>
-        <button onclick="confirmMapPicker('pc')" style="width:100%;padding:11px;background:#5c4010;color:#fff;border:none;border-radius:9px;font-size:.73rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;">✓ この場所で方位を計算する</button>
-      </div>
-      <div id="mapEmptyPC" style="position:absolute;bottom:0;left:0;right:0;z-index:10;padding:8px;background:rgba(247,244,239,.85);text-align:center;font-size:.62rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
-    </div>
+    <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.22);border-radius:50%;width:36px;height:36px;font-size:1.1rem;color:#5c4010;cursor:pointer;flex-shrink:0;">✕</button>
   </div>
 
-  <!-- スマホ用：全画面 -->
-  <div id="mapPickerFull" style="position:absolute;inset:0;background:#f7f4ef;display:none;">
-    <div style="padding:11px 16px;background:#f7f4ef;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(138,104,32,.2);">
-      <div style="font-size:.78rem;font-weight:700;color:#5c4010;">🗺 地図で場所を指定する</div>
-      <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.22);border-radius:50%;width:30px;height:30px;font-size:.9rem;color:#5c4010;cursor:pointer;">✕</button>
-    </div>
-    <div style="padding:6px 14px;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border-bottom:1px solid rgba(138,104,32,.15);font-size:.62rem;color:#5e503d;" id="mapGuideSP">
-      📍 引越し先をタップしてピンを立ててください
-    </div>
-    <div style="position:relative;">
-      <div id="mapPickerMapSP" style="width:100%;"></div>
-      <div id="mapInfoSP" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:10;padding:12px 14px;background:rgba(247,244,239,.96);backdrop-filter:blur(4px);border-top:1px solid rgba(138,104,32,.2);">
-        <div style="font-size:.6rem;color:#5e503d;margin-bottom:3px;">選択した場所</div>
-        <div id="mapAddrSP" style="font-size:.7rem;font-weight:700;color:#1c1208;margin-bottom:9px;line-height:1.5;"></div>
-        <button onclick="confirmMapPicker('sp')" style="width:100%;padding:11px;background:#5c4010;color:#fff;border:none;border-radius:9px;font-size:.73rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;">✓ この場所で方位を計算する</button>
-      </div>
-      <div id="mapEmptySP" style="position:absolute;bottom:0;left:0;right:0;z-index:10;padding:8px;background:rgba(247,244,239,.85);text-align:center;font-size:.62rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
-    </div>
+  <!-- ガイド -->
+  <div style="padding:7px 16px;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border-bottom:1px solid rgba(138,104,32,.15);font-size:.65rem;color:#5e503d;flex-shrink:0;">
+    📍 引越し先の正確な場所をタップしてください。ピンが立ったら下の「計算する」ボタンを押してください。
+  </div>
+
+  <!-- 地図（高さはJSで設定） -->
+  <div id="mapPickerContainer" style="flex:1;position:relative;">
+    <div id="mapPickerMap" style="width:100%;height:100%;"></div>
+  </div>
+
+  <!-- 確定パネル -->
+  <div id="mapPickerInfo" style="display:none;padding:14px 16px;background:#f7f4ef;border-top:2px solid rgba(138,104,32,.3);flex-shrink:0;">
+    <div style="font-size:.62rem;color:#5e503d;margin-bottom:4px;">📍 選択した場所</div>
+    <div id="mapPickerAddress" style="font-size:.75rem;font-weight:700;color:#1c1208;margin-bottom:12px;line-height:1.6;"></div>
+    <button onclick="confirmMapPicker()" style="width:100%;padding:14px;background:#5c4010;color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.06em;">
+      ✓ この場所で方位を計算する
+    </button>
+  </div>
+
+  <!-- 初期状態 -->
+  <div id="mapPickerEmpty" style="padding:12px 16px;background:#f7f4ef;border-top:1px solid rgba(138,104,32,.15);text-align:center;flex-shrink:0;">
+    <div style="font-size:.65rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
   </div>
 
 </div>
 
-<!-- 注意書き -->
+<!-- 注意書き --><!-- 注意書き -->
 <div class="disclaimer">
   ⚠ 気学には流派により計算方法・吉凶の優先順位が異なります。他のアプリと比較しながら、根拠をご自身で判断する材料としてご使用ください。<br>
   KITOKU OSは東洋の叡智とY理論に基づく独自解釈です。結果は判断材料であり、最終的な決定はご自身でお願いします。
@@ -2670,81 +2665,69 @@ let mapPickerTemp = {};
 
 function openMapPicker() {
   const overlay = document.getElementById('mapPickerOverlay');
-  overlay.style.display = 'block';
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
   document.body.style.overflow = 'hidden';
 
-  const isMobile = window.innerWidth <= 520;
+  // 地図コンテナの高さをウィンドウに合わせて設定
+  function setH() {
+    const hdr  = 58;  // ヘッダー
+    const guide = 36; // ガイド
+    const footer = document.getElementById('mapPickerInfo').style.display !== 'none'
+      ? document.getElementById('mapPickerInfo').offsetHeight
+      : document.getElementById('mapPickerEmpty').offsetHeight;
+    const h = window.innerHeight - hdr - guide - footer;
+    document.getElementById('mapPickerContainer').style.height = Math.max(h, 200) + 'px';
+    document.getElementById('mapPickerMap').style.height = Math.max(h, 200) + 'px';
+  }
+
   const centerLat = gState.homeLat || 33.8416;
   const centerLon = gState.homeLon || 132.7657;
 
-  if (isMobile) {
-    // スマホ：全画面
-    document.getElementById('mapPickerCard').style.display = 'none';
-    document.getElementById('mapPickerFull').style.display = 'block';
+  if (!mapPickerInstance) {
+    setTimeout(() => {
+      setH();
+      mapPickerInstance = L.map('mapPickerMap', {
+        center: [centerLat, centerLon], zoom: 13
+      });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19
+      }).addTo(mapPickerInstance);
 
-    const mapH = window.innerHeight - 110; // ヘッダー+ガイド分を引く
-    const mapEl = document.getElementById('mapPickerMapSP');
-    mapEl.style.height = mapH + 'px';
+      mapPickerInstance.on('click', async (e) => {
+        const { lat, lng } = e.latlng;
+        if (mapPickerMarker) {
+          mapPickerMarker.setLatLng([lat, lng]);
+        } else {
+          mapPickerMarker = L.marker([lat, lng]).addTo(mapPickerInstance);
+        }
+        document.getElementById('mapPickerEmpty').style.display = 'none';
+        document.getElementById('mapPickerInfo').style.display  = 'block';
+        document.getElementById('mapPickerAddress').textContent = '住所を取得中...';
+        setH();
+        mapPickerInstance.invalidateSize();
 
-    if (!mapPickerInstance) {
-      setTimeout(() => {
-        mapPickerInstance = L.map('mapPickerMapSP', { center:[centerLat,centerLon], zoom:13 });
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19
-        }).addTo(mapPickerInstance);
-        addMapClick(mapPickerInstance, 'sp');
-      }, 60);
-    } else {
-      mapPickerInstance.setView([centerLat,centerLon], 13);
-      setTimeout(() => mapPickerInstance.invalidateSize(), 100);
-    }
+        try {
+          const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja`;
+          const res  = await fetch(url, { headers: { 'User-Agent': 'KITOKU-move/1.0' } });
+          const data = await res.json();
+          const parts = data.display_name ? data.display_name.split(',') : [];
+          const addr  = parts.length > 2
+            ? parts.slice(0, 4).reverse().join(' ').trim()
+            : `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+          mapPickerTemp = { lat, lon: lng, name: addr, area: addr };
+          document.getElementById('mapPickerAddress').textContent = addr;
+        } catch {
+          mapPickerTemp = { lat, lon: lng, name: `${lat.toFixed(5)}, ${lng.toFixed(5)}`, area: '地図で選択した場所' };
+          document.getElementById('mapPickerAddress').textContent = mapPickerTemp.name;
+        }
+      });
+    }, 60);
   } else {
-    // PC：カード
-    document.getElementById('mapPickerFull').style.display = 'none';
-    document.getElementById('mapPickerCard').style.display = 'block';
-
-    if (!mapPickerInstance) {
-      setTimeout(() => {
-        mapPickerInstance = L.map('mapPickerMapPC', { center:[centerLat,centerLon], zoom:13 });
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19
-        }).addTo(mapPickerInstance);
-        addMapClick(mapPickerInstance, 'pc');
-      }, 60);
-    } else {
-      mapPickerInstance.setView([centerLat,centerLon], 13);
-      setTimeout(() => mapPickerInstance.invalidateSize(), 100);
-    }
+    mapPickerInstance.setView([centerLat, centerLon], 13);
+    setTimeout(() => { setH(); mapPickerInstance.invalidateSize(); }, 100);
   }
-}
-
-function addMapClick(map, mode) {
-  map.on('click', async (e) => {
-    const { lat, lng } = e.latlng;
-    if (mapPickerMarker) {
-      mapPickerMarker.setLatLng([lat, lng]);
-    } else {
-      mapPickerMarker = L.marker([lat, lng]).addTo(map);
-    }
-    const infoEl  = document.getElementById(mode==='sp' ? 'mapInfoSP'  : 'mapInfoPC');
-    const emptyEl = document.getElementById(mode==='sp' ? 'mapEmptySP' : 'mapEmptyPC');
-    const addrEl  = document.getElementById(mode==='sp' ? 'mapAddrSP'  : 'mapAddrPC');
-    emptyEl.style.display = 'none';
-    infoEl.style.display  = 'block';
-    addrEl.textContent = '住所を取得中...';
-    try {
-      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja`;
-      const res = await fetch(url, { headers:{'User-Agent':'KITOKU-move/1.0'} });
-      const data = await res.json();
-      const parts = data.display_name ? data.display_name.split(',') : [];
-      const addr = parts.length > 2 ? parts.slice(0,4).reverse().join(' ').trim() : `${lat.toFixed(5)},${lng.toFixed(5)}`;
-      mapPickerTemp = { lat, lon:lng, name:addr, area:addr };
-      addrEl.textContent = addr;
-    } catch {
-      mapPickerTemp = { lat, lon:lng, name:`${lat.toFixed(5)},${lng.toFixed(5)}`, area:'地図で選択した場所' };
-      addrEl.textContent = mapPickerTemp.name;
-    }
-  });
 }
 
 function closeMapPicker() {
@@ -2752,7 +2735,7 @@ function closeMapPicker() {
   document.body.style.overflow = '';
 }
 
-function confirmMapPicker(mode) {
+function confirmMapPicker() {
   if (!mapPickerTemp.lat) return;
   gState.destLat  = mapPickerTemp.lat;
   gState.destLon  = mapPickerTemp.lon;
