@@ -618,6 +618,99 @@ html.font-large .font-btn{font-size:.8rem;}
   cursor:pointer;font-family:'Noto Serif JP',serif;
   letter-spacing:.06em;margin-bottom:10px;
 }
+
+/* ── ナビ使い方モーダル ── */
+.nav-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9100;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:flex-end;justify-content:center;
+}
+.nav-modal-overlay.open{display:flex;}
+.nav-modal{
+  background:var(--bg,#f7f4ef);
+  border-radius:18px 18px 0 0;
+  width:100%;max-width:480px;
+  max-height:92dvh;overflow-y:auto;
+  padding:20px 18px 48px;
+  box-shadow:0 -4px 32px rgba(0,0,0,.18);
+}
+.nav-modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  border-bottom:1px solid rgba(138,104,32,.2);
+  padding-bottom:10px;
+}
+.nav-modal-title{
+  font-size:.88rem;font-weight:700;color:var(--goldlt,#5c4010);
+  letter-spacing:.08em;line-height:1.4;
+}
+.nav-modal-close{
+  background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.2);
+  border-radius:50%;width:30px;height:30px;min-width:30px;
+  font-size:1rem;color:var(--goldlt,#5c4010);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.nav-modal-philosophy{
+  background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(138,104,32,.04));
+  border:1px solid rgba(138,104,32,.3);border-radius:10px;
+  padding:12px 14px;margin-bottom:14px;
+  font-size:.72rem;color:var(--goldlt,#5c4010);
+  font-weight:700;text-align:center;letter-spacing:.1em;line-height:1.8;
+}
+.nav-modal-sec{
+  margin-bottom:12px;
+  background:#fff;border:1px solid rgba(138,104,32,.12);
+  border-radius:10px;padding:12px 14px;
+}
+.nav-modal-sec-title{
+  font-size:.72rem;font-weight:700;color:var(--goldlt,#5c4010);
+  margin-bottom:7px;display:flex;align-items:center;gap:5px;
+}
+.nav-modal-sec-body{
+  font-size:.67rem;color:var(--mist,#5e503d);line-height:1.95;
+}
+.nav-modal-sec-body strong{color:var(--snow,#1c1208);}
+.nav-modal-sec-body .rule-item{
+  display:flex;gap:8px;margin-bottom:5px;align-items:flex-start;
+}
+.nav-modal-sec-body .rule-num{
+  min-width:18px;height:18px;border-radius:50%;
+  background:rgba(138,104,32,.15);color:var(--goldlt,#5c4010);
+  font-size:.6rem;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px;
+}
+.nav-modal-warning{
+  background:rgba(180,60,40,.04);border:1px solid rgba(180,60,40,.15);
+  border-radius:10px;padding:12px 14px;margin-bottom:12px;
+}
+.nav-modal-warning-title{
+  font-size:.72rem;font-weight:700;color:#8b3a2a;margin-bottom:7px;
+}
+.nav-modal-warning-body{
+  font-size:.67rem;color:var(--mist,#5e503d);line-height:1.95;
+}
+.nav-open-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(138,104,32,.08);
+  border:1px solid rgba(138,104,32,.28);
+  border-radius:999px;padding:7px 14px;
+  font-size:.68rem;color:var(--goldlt,#5c4010);font-weight:700;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;
+}
+
+/* ── STEPヒント ── */
+.step-hint {
+  margin: 6px 0 2px;
+  padding: 9px 13px;
+  background: linear-gradient(135deg,rgba(138,104,32,.07),rgba(138,104,32,.03));
+  border-left: 3px solid rgba(138,104,32,.4);
+  border-radius: 0 8px 8px 0;
+  font-size: .65rem;
+  color: var(--goldlt, #5c4010);
+  line-height: 1.8;
+  font-weight: 600;
+}
 </style>
 </head>
 <body>
@@ -700,6 +793,12 @@ html.font-large .font-btn{font-size:.8rem;}
     ※ 位置情報はこの端末のみに保存されます。サーバーには送信しません。
   </div>
 </div>
+
+
+  <!-- STEP1→2 ガイダンス -->
+  <div class="step-hint" id="hint1">
+    ✦ 自宅を登録したら、行きたい聖地を選んでください。方位は「自宅から見た方角」で計算します。
+  </div>
 
 <!-- STEP 2: 目的地設定 -->
 <div class="section">
@@ -821,8 +920,15 @@ html.font-large .font-btn{font-size:.8rem;}
 
   <!-- 方位盤ガイドボタン -->
   <div style="margin:0 16px 0;display:flex;justify-content:flex-end;">
-    <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
+      <button class="nav-open-btn" onclick="openNavModal()">📋 ナビの使い方</button>
+  <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
   </div>
+
+  <!-- STEP2→3 ガイダンス -->
+  <div class="step-hint" id="hint2" style="display:none;">
+    ✦ 目的地を選びました。年盤・月盤・日盤の3つのギアで方位を確認します。まず「年盤」から見てください。
+  </div>
+
 <!-- STEP 3: 方位チェック結果 -->
 <div class="section" id="dirResultSection" style="display:none;">
   <div class="sec-label">STEP 3 — 方位チェック</div>
@@ -1422,6 +1528,8 @@ async function searchCustomDest() {
 
 function showHomePrompt() {
   document.getElementById('dirResultSection').style.display = 'block';
+  const hint2 = document.getElementById('hint2');
+  if (hint2) hint2.style.display = 'block';
   document.getElementById('dirResultContent').innerHTML = `
     <div class="empty-state">
       <div class="empty-icon">🏠</div>
@@ -1692,6 +1800,7 @@ function calcAndShowDir() {
         ⚠ 表示中の月盤（${viewY}年${viewM}月）では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
         他の月・日程を確認するか、日盤取りをご検討ください。
       </div>` : ''}
+      ${generateKyoPrescription(monthRank.badges, monthRank.rank)}
       ${!isKyo && monthRank.rank >= 2 ? `
       <div class="nichiban-guide">
         <div class="nichiban-guide-title">✦ この方向は取れます</div>
@@ -2196,6 +2305,66 @@ function closeGuideModal(){
   document.getElementById('guideModalOverlay').classList.remove('open');
   document.body.style.overflow='';
 }
+
+function openNavModal(){
+  document.getElementById('navModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeNavModal(){
+  document.getElementById('navModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// 初回訪問時にナビ使い方を自動表示
+(function(){
+  const KEY = 'kitoku_pilgrimage_guide_v1';
+  if (!localStorage.getItem(KEY)) {
+    setTimeout(function(){
+      openNavModal();
+      localStorage.setItem(KEY, '1');
+    }, 800);
+  }
+})();
+
+// 凶方位の処方箋テキスト
+const KYO_PRESCRIPTION = {
+  '五黄殺': { emoji:'🔸', title:'五黄殺への心がけ', text:'イライラや他責の感情が出やすい時です。自分から「ありがとう」を先に言い、自己主張を手放してみてください。その一言が五黄の毒を消し去ります。' },
+  '暗剣殺': { emoji:'🔸', title:'暗剣殺への心がけ', text:'予期せぬトラブルが外からもたらされやすい時です。いつも以上に準備・確認を念入りに行いましょう。トラブルが起きても「これで膿が出た」と感謝で受け止めれば被害は最小限に。' },
+  '歳破':   { emoji:'🔸', title:'歳破への心がけ', text:'予定通りに進まないことがある方位です。こだわりやエゴを一度手放すリセットのタイミング。笑顔で柔軟に対応すれば、それがかえって未来の大きなご縁へ繋がります。' },
+  '月破':   { emoji:'🔸', title:'月破への心がけ', text:'今月は計画が変わりやすい時期です。詰め込まず、余白を持ったスケジュールで動きましょう。予想外の変化を楽しむ心の余裕が最大の防御になります。' },
+  '本命殺': { emoji:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、意識して休息と睡眠の時間をたっぷりと取り、自分を優しく労りましょう。' },
+  '月命殺': { emoji:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず、心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
+  '定位対冲': { emoji:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、一緒にいる家族や同行者、足元の人間関係をいつも以上に大切にしてください。' },
+};
+
+function generateKyoPrescription(badges, rank) {
+  if (rank >= 2) return ''; // 吉方なら不要
+  const matched = Object.keys(KYO_PRESCRIPTION).filter(k => badges.some(b => b.includes(k)));
+  if (matched.length === 0) return '';
+  
+  const items = matched.map(k => {
+    const p = KYO_PRESCRIPTION[k];
+    return `<div style="margin-bottom:10px;padding:10px 12px;background:rgba(255,255,255,.7);border-radius:8px;border:1px solid rgba(180,60,40,.12);">
+      <div style="font-size:.68rem;font-weight:700;color:#8b3a2a;margin-bottom:4px;">${p.emoji} ${p.title}</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">${p.text}</div>
+    </div>`;
+  }).join('');
+  
+  return `
+  <div style="margin-top:10px;background:rgba(180,60,40,.04);border:1px solid rgba(180,60,40,.15);border-radius:10px;padding:12px 14px;">
+    <div style="font-size:.7rem;font-weight:700;color:#8b3a2a;margin-bottom:10px;">
+      💡 琥珀色の処方箋 — どうしても行く場合の心がけ
+    </div>
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.8;margin-bottom:10px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
+      凶方は罰ではありません。<strong style="color:var(--goldlt);">「魂の器を広げるための砥石」</strong>です。<br>
+      何を優先するかはあなた自身が決めてください。
+    </div>
+    ${items}
+    <div style="font-size:.6rem;color:var(--mist);margin-top:6px;line-height:1.7;opacity:.8;">
+      ✦ 出発前から近所の吉方カフェに立ち寄るなど、日常の小さな日盤吉方取りも免疫力になります。
+    </div>
+  </div>`;
+}
 </script>
 
 <!-- 方位盤ガイドモーダル -->
@@ -2247,6 +2416,55 @@ function closeGuideModal(){
 
     <div style="font-size:.6rem;color:var(--mist,#5e503d);line-height:1.8;padding:4px 2px;">
       ※ 気学には流派により計算方法・優先順位が異なります。KITOKUは東洋の叡智とY理論に基づく独自解釈です。他のアプリと比較しながらご自身で判断する材料としてご使用ください。
+    </div>
+  </div>
+</div>
+
+
+<!-- 聖地巡礼ナビ使い方モーダル -->
+<div class="nav-modal-overlay" id="navModalOverlay" onclick="if(event.target===this)closeNavModal()">
+  <div class="nav-modal">
+    <div class="nav-modal-header">
+      <div class="nav-modal-title">📿 聖地巡礼ナビ の使い方</div>
+      <button class="nav-modal-close" onclick="closeNavModal()">✕</button>
+    </div>
+
+    <div class="nav-modal-philosophy">
+      ルールは地図。歩くのはあなた。<br>
+      <span style="font-size:.62rem;font-weight:400;opacity:.8;">このナビはあなたを吉凶で縛るものではありません。<br>何を優先するかは、あなた自身が決めてください。</span>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">🧭 聖地巡礼の絶対ルール</div>
+      <div class="nav-modal-sec-body">
+        <div class="rule-item"><div class="rule-num">①</div><div><strong>日帰りでも「年盤」を最優先</strong><br>聖地巡礼は観光旅行とは異なる「魂の旅」です。期間が短くても年盤のハザード（五黄殺・暗剣殺など）の確認を最優先に行います。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>全行程のルートをチェック</strong><br>出発地から最初のお寺だけでなく、寺→寺のすべての移動区間の方角を確認します。道中に凶方位が含まれる場合は事前にお知らせします。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>スタートは「線路の日」が最高</strong><br>長く真っ直ぐに発展する旅の着火スイッチです。<br>天の系列（3・6・9星）：丑・辰・未・戌の日<br>人の系列（1・4・7星）：子・卯・午・酉の日<br>地の系列（2・5・8星）：寅・巳・申・亥の日</div></div>
+        <div class="rule-item"><div class="rule-num">④</div><div><strong>順番にこだわらず「パズル型」で回る</strong><br>必ずしも1番から順番に回る必要はありません。今年の自分にとって安全で吉となるエリアから、パズルのようにピースを埋めていくのが最高の軍略です。</div></div>
+        <div class="rule-item"><div class="rule-num">⑤</div><div><strong>帰着日の日盤の凶はスルーでOK</strong><br>年盤・月盤という大きなレールが吉方で揃っていれば、帰る日の日盤凶は完全に無視して構いません。</div></div>
+      </div>
+    </div>
+
+    <div class="nav-modal-warning">
+      <div class="nav-modal-warning-title">💡 どうしてもその方角へ行かなければならない時</div>
+      <div class="nav-modal-warning-body">
+        気学は「だから行ってはダメ」と縛るものではありません。<strong>凶方とは「魂の器を広げるための砥石」</strong>です。<br><br>
+        ほとんどの人が方位を気にせずお遍路を歩いています。それはそれで尊い旅です。だからこそ、この羅針盤を手にしたあなたが「何を優先するか」を自分で決めることに意味があります。<br><br>
+        <strong>盾１：日常の日盤吉方で免疫力を高める</strong><br>
+        出発前から近所の吉方カフェなどで小さな運の貯金を作っておく。<br><br>
+        <strong>盾２：心が先、行動が後</strong><br>
+        「悪いことが起きるかも」と怯えるのではなく「この逆風は魂の砥石だ」と覚悟を決めて進む。<br><br>
+        <strong>各凶方の心がけ：</strong><br>
+        🔸 五黄殺 → 自分から「ありがとう」を先に言う。自己主張を手放す<br>
+        🔸 暗剣殺 → 言葉を選び準備を念入りに。感謝の言葉を意識する<br>
+        🔸 破壊殺 → 予定通りにこだわらず笑顔で柔軟に対応する<br>
+        🔸 本命殺 → スケジュールを詰め込まず休息をたっぷり取る<br>
+        🔸 定位対冲 → 慢心を手放し同行者・足元の縁を大切にする
+      </div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.8;padding:4px 2px;">
+      ※ 気学には流派により計算方法・優先順位が異なります。KITOKUは東洋の叡智とY理論に基づく独自解釈です。最終判断はご自身でお決めください。
     </div>
   </div>
 </div>
