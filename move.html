@@ -1,0 +1,2835 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>引越し 吉方位ナビ | KITOKU</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KITOKU巡礼">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="kitoku-engine.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   KITOKU 引越し 吉方位ナビ
+   ═══════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;
+  --card:#ffffff;
+  --card2:#f2efe8;
+  --rim:rgba(100,80,40,.15);
+  --gold:#8a6820;
+  --goldlt:#5c4010;
+  --snow:#1c1208;
+  --mist:#5e503d;
+  --kichi:#b16b78;
+  --kichi-bg:rgba(177,107,120,.1);
+  --kyo:rgba(100,80,40,.4);
+  --kyo-bg:rgba(100,80,40,.06);
+  --green:#3a7d4e;
+  --green-bg:rgba(58,125,78,.1);
+  --radius:12px;
+  --safe-top:env(safe-area-inset-top,0px);
+}
+html{background:var(--bg);min-height:100dvh;}
+body{
+  background:var(--bg);color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  min-height:100dvh;max-width:480px;margin:0 auto;
+  font-size:15px;padding-bottom:60px;
+}
+
+/* ── ヘッダー ── */
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(var(--safe-top) + 12px) 18px 12px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.95);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem;letter-spacing:.25em;color:var(--gold);
+}
+.header-sub{
+  font-size:.6rem;letter-spacing:.18em;color:var(--mist);margin-top:2px;
+}
+.back-btn{
+  background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.35);
+  color:var(--goldlt);font-size:.75rem;padding:8px 14px;
+  border-radius:6px;cursor:pointer;letter-spacing:.08em;
+  font-family:'Noto Serif JP',serif;
+}
+
+/* ── セクション共通 ── */
+.section{
+  margin:14px 16px 0;
+  background:var(--card);
+  border:1px solid var(--rim);
+  border-radius:var(--radius);
+  padding:16px;
+}
+.sec-label{
+  font-size:.58rem;letter-spacing:.2em;color:var(--gold);
+  font-weight:600;margin-bottom:10px;
+}
+.sec-title{
+  font-size:.95rem;color:var(--goldlt);font-weight:600;
+  margin-bottom:6px;letter-spacing:.06em;
+}
+
+/* ── 星情報バー ── */
+.star-bar{
+  margin:14px 16px 0;
+  background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));
+  border:1px solid rgba(196,160,67,.28);
+  border-radius:var(--radius);
+  padding:12px 14px;
+}
+.star-bar-text{
+  font-size:.75rem;color:var(--snow);line-height:1.9;
+}
+.star-bar-note{
+  font-size:.6rem;color:var(--mist);margin-top:5px;line-height:1.7;
+}
+
+/* ── 自宅登録 ── */
+.home-reg{padding:0;}
+.input-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;}
+.input-field{
+  width:100%;background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:8px;
+  color:var(--snow);font-family:'Noto Serif JP',serif;
+  font-size:.78rem;padding:10px 12px;
+}
+.input-field::placeholder{color:rgba(100,80,40,.35);}
+.btn-primary{
+  background:linear-gradient(135deg,rgba(196,160,67,.9),rgba(196,160,67,.65));
+  border:1px solid rgba(196,160,67,.5);color:#fff;
+  font-size:.72rem;padding:10px 14px;border-radius:8px;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;white-space:nowrap;
+}
+.btn-secondary{
+  width:100%;background:rgba(100,80,40,.06);
+  border:1px solid var(--rim);color:var(--goldlt);
+  font-size:.72rem;padding:10px;border-radius:8px;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;margin-top:6px;
+}
+.registered-badge{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(94,200,138,.1);border:1px solid rgba(94,200,138,.3);
+  border-radius:8px;padding:10px 12px;
+}
+.registered-text{font-size:.78rem;color:var(--green);}
+.change-btn{
+  font-size:.65rem;color:var(--mist);background:none;
+  border:1px solid var(--rim);border-radius:6px;
+  padding:5px 10px;cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+
+/* ── 目的地 ── */
+.preset-group{margin-bottom:6px;}
+.preset-group-label{
+  font-size:.72rem;letter-spacing:.08em;color:var(--goldlt);
+  font-weight:700;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(100,80,40,.06);
+  border:1px solid var(--rim);
+  border-radius:9px;
+  padding:11px 13px;
+  cursor:pointer;
+  transition:all .18s;
+  user-select:none;
+}
+.preset-group-label.open{
+  background:rgba(138,104,32,.1);
+  border-color:rgba(138,104,32,.4);
+  border-radius:9px 9px 0 0;
+}
+.preset-group-arrow{
+  font-size:.75rem;color:var(--gold);
+  transition:transform .22s;flex-shrink:0;margin-left:8px;
+}
+.preset-group-label.open .preset-group-arrow{transform:rotate(90deg);}
+.preset-group-count{
+  font-size:.58rem;color:var(--mist);font-weight:400;margin-left:5px;
+}
+.preset-grid{
+  display:none;
+  grid-template-columns:1fr 1fr;gap:6px;
+  background:rgba(138,104,32,.03);
+  border:1px solid rgba(138,104,32,.25);
+  border-top:none;
+  border-radius:0 0 9px 9px;
+  padding:10px;
+}
+.preset-grid.open{display:grid;}
+.preset-btn{
+  background:var(--card);
+  border:1px solid var(--rim);border-radius:9px;
+  padding:9px 8px;cursor:pointer;text-align:left;
+  transition:all .18s;
+}
+.preset-btn:active{transform:scale(.98);}
+.preset-btn.selected{
+  background:rgba(196,160,67,.16);
+  border-color:rgba(196,160,67,.55);
+}
+.preset-name{font-size:.72rem;color:var(--snow);font-weight:600;line-height:1.3;}
+.preset-area{font-size:.58rem;color:var(--mist);margin-top:2px;}
+.divider{
+  text-align:center;font-size:.6rem;color:var(--mist);
+  margin:10px 0;letter-spacing:.12em;
+}
+.input-full{
+  width:100%;background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:8px;
+  color:var(--snow);font-family:'Noto Serif JP',serif;
+  font-size:.78rem;padding:10px 12px;
+}
+.input-full::placeholder{color:rgba(100,80,40,.35);}
+
+/* ── 方位結果 ── */
+.dir-result{
+  background:var(--card2);border:1px solid var(--rim);
+  border-radius:var(--radius);padding:14px;margin-top:10px;
+}
+.dir-result-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.dir-compass{
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(196,160,67,.12);
+  border:2px solid rgba(196,160,67,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;font-family:'Cormorant Garamond',serif;
+  color:var(--goldlt);font-weight:500;flex-shrink:0;
+}
+.dir-dest-name{font-size:.9rem;color:var(--snow);font-weight:600;}
+.dir-dest-area{font-size:.62rem;color:var(--mist);margin-top:2px;}
+.dir-panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px;}
+.dir-panel{
+  background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);border-radius:9px;
+  padding:9px 7px;text-align:center;
+}
+.dir-panel-label{font-size:.55rem;letter-spacing:.1em;color:var(--mist);margin-bottom:4px;}
+.dir-panel-rank{font-size:.7rem;font-weight:600;margin-bottom:3px;}
+.dir-panel-badges{font-size:.58rem;color:var(--mist);line-height:1.5;}
+
+/* 方位盤グリッド */
+/* ── direction_v2.html 移植：方位盤セルスタイル ── */
+.p-cell{
+  aspect-ratio:1;border-radius:8px;
+  background:rgba(100,80,40,.04);border:1px solid rgba(100,80,40,.1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;position:relative;
+  padding:4px 2px;overflow:hidden;
+}
+.p-cell.p-center{background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.3);border-radius:50%;}
+.p-cell.p-kichi{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);}
+.p-cell.p-daikichi{background:rgba(120,90,20,.18);border-color:rgba(120,90,20,.55);}
+.p-cell.p-kyo{background:rgba(100,80,40,.03);border-color:rgba(100,80,40,.08);opacity:.65;}
+.p-cell.p-dest{background:rgba(177,107,120,.18);border:2px solid rgba(177,107,120,.7);box-shadow:0 2px 8px rgba(177,107,120,.2);}
+.p-cell-num{font-family:'Cormorant Garamond',serif;font-size:1.25rem;line-height:1;color:var(--goldlt);}
+.p-cell.p-kichi .p-cell-num,.p-cell.p-daikichi .p-cell-num{color:#5a3e08;}
+.p-cell.p-kyo .p-cell-num{color:rgba(60,50,40,.4);}
+.p-cell.p-dest .p-cell-num{color:#8a2840;font-weight:700;}
+.p-cell-name{font-size:.58rem;color:var(--mist);margin-top:2px;}
+.p-dest-mark{font-size:.55rem;color:#e8748a;font-weight:700;margin-top:1px;}
+.p-dir-label{text-align:center;padding:3px 2px;line-height:1.4;overflow:hidden;}
+.p-dir-label.kyo .p-dir-name{color:#b04060;font-weight:700;}
+.p-dir-label.kichi .p-dir-name{color:#5a3e08;font-weight:600;}
+.p-dir-label.normal .p-dir-name{color:var(--mist);}
+.p-dir-name{font-size:.72rem;font-weight:600;}
+.p-dir-badge{font-size:.55rem;margin-top:2px;padding:2px 4px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;}
+.p-dir-badge.kyo{background:rgba(176,64,96,.1);color:#b04060;border:1px solid rgba(176,64,96,.25);}
+.p-dir-badge.kichi{background:rgba(120,90,20,.1);color:#5a3e08;border:1px solid rgba(120,90,20,.2);}
+.p-side-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 3px;flex-shrink:0;min-width:40px;max-width:48px;}
+.p-side-name{font-size:.72rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.12em;}
+.p-side-badge{font-size:.52rem;margin-top:4px;padding:2px 4px;border-radius:3px;display:inline-block;writing-mode:vertical-rl;white-space:nowrap;}
+
+.ban-tabs{display:flex;gap:6px;margin:12px 0 8px;}
+.ban-tab{
+  flex:1;padding:7px 4px;border-radius:7px;
+  background:rgba(100,80,40,.05);border:1px solid var(--rim);
+  font-size:.65rem;color:var(--mist);cursor:pointer;text-align:center;
+  font-family:'Noto Serif JP',serif;transition:all .18s;
+}
+.ban-tab.active{
+  background:rgba(138,104,32,.12);border-color:rgba(138,104,32,.5);
+  color:var(--goldlt);font-weight:700;
+}
+.ban-grid{
+  display:block;
+  margin-top:4px;
+}
+.ban-cell{
+  aspect-ratio:1;border-radius:8px;
+  background:rgba(100,80,40,.04);
+  border:1px solid rgba(100,80,40,.1);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;
+}
+.ban-cell.center{
+  background:rgba(138,104,32,.08);
+  border-color:rgba(138,104,32,.3);
+}
+.ban-cell.dest-dir{
+  background:rgba(232,116,138,.18);
+  border:2px solid rgba(232,116,138,.7);
+  box-shadow:0 2px 8px rgba(232,116,138,.2);
+}
+.ban-cell.kichi{
+  background:rgba(94,200,138,.1);
+  border-color:rgba(94,200,138,.5);
+}
+.ban-cell.kyo{
+  background:rgba(180,60,60,.07);
+  border-color:rgba(180,60,60,.25);
+  opacity:.65;
+}
+.ban-star-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;color:var(--goldlt);line-height:1;
+}
+.ban-star-name{font-size:.52rem;color:var(--mist);margin-top:2px;}
+.ban-dir-label{font-size:.5rem;color:var(--mist);opacity:.7;}
+.ban-dest-mark{font-size:.6rem;color:#e8748a;font-weight:700;}
+.rank-5{color:#8a4c00;}
+.rank-4{color:#b16b78;}
+.rank-3{color:#8a6820;}
+.rank-2{color:#3a7d4e;}
+.rank-1{color:#4a7a8a;}
+.rank-0{color:rgba(100,80,40,.35);}
+.kyo-warn{
+  margin-top:8px;background:rgba(200,80,80,.1);
+  border:1px solid rgba(200,80,80,.3);border-radius:8px;
+  padding:9px 11px;font-size:.68rem;color:rgba(255,150,150,.85);
+  line-height:1.8;
+}
+.nichiban-guide{
+  margin-top:8px;
+  background:rgba(196,160,67,.08);
+  border:1px solid rgba(196,160,67,.25);
+  border-radius:8px;padding:10px 12px;
+}
+.nichiban-guide-title{
+  font-size:.68rem;color:var(--goldlt);font-weight:600;margin-bottom:5px;
+}
+.nichiban-guide-text{
+  font-size:.64rem;color:var(--mist);line-height:1.85;
+}
+
+/* ── カレンダー ── */
+.cal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.cal-month{font-size:.88rem;color:var(--goldlt);font-weight:600;letter-spacing:.1em;}
+.cal-nav{
+  background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);
+  color:var(--goldlt);font-size:.72rem;padding:6px 12px;
+  border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;
+}
+.cal-legend{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;
+}
+.calendar-guide{
+  margin:8px 0 12px;
+  background:linear-gradient(135deg,rgba(196,160,67,.11),rgba(255,255,255,.62));
+  border:1px solid rgba(196,160,67,.28);
+  border-radius:10px;
+  padding:11px 12px;
+  color:var(--snow);
+  line-height:1.75;
+}
+.calendar-guide-title{
+  font-size:.7rem;
+  color:var(--goldlt);
+  font-weight:700;
+  margin-bottom:5px;
+  letter-spacing:.04em;
+}
+.calendar-guide-text{
+  font-size:.64rem;
+  color:var(--mist);
+}
+.calendar-guide-text strong{color:var(--goldlt);font-weight:700;}
+.railway-panel{
+  margin:10px 0 12px;
+  background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.52));
+  border:1px solid rgba(196,160,67,.25);
+  border-radius:10px;
+  padding:11px 12px;
+}
+.railway-title{
+  font-size:.7rem;
+  color:var(--goldlt);
+  font-weight:700;
+  margin-bottom:5px;
+  letter-spacing:.04em;
+}
+.railway-text{
+  font-size:.64rem;
+  color:var(--mist);
+  line-height:1.75;
+}
+.railway-days{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:9px;
+}
+.railway-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 8px;
+  border-radius:999px;
+  border:1px solid rgba(196,160,67,.35);
+  background:rgba(255,255,255,.45);
+  color:var(--snow);
+  font-size:.6rem;
+  line-height:1.2;
+}
+.railway-chip strong{color:var(--goldlt);}
+.legend-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:.58rem;color:var(--mist);
+}
+.legend-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dow{
+  text-align:center;font-size:.6rem;color:var(--mist);
+  padding:5px 0;letter-spacing:.04em;
+}
+.cal-cell{
+  aspect-ratio:1;border-radius:8px;
+  background:#fff;
+  border:1px solid rgba(100,80,40,.1);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;
+  position:relative;overflow:hidden;
+  padding:2px;
+}
+.cal-cell:active{transform:scale(.96);}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default;}
+
+/* 今日 */
+.cal-cell.today{
+  border:1.5px solid rgba(138,104,32,.5);
+  background:rgba(138,104,32,.06);
+}
+/* 月盤吉方 */
+.cal-cell.kichi-day{
+  background:rgba(58,125,78,.07);
+  border:1.5px solid rgba(58,125,78,.35);
+}
+.cal-cell.kichi-day .cal-num{color:#2a6038;font-weight:600;}
+/* 要注意日 */
+.cal-cell.kyo-day{
+  background:rgba(100,80,40,.03);
+  border-color:rgba(100,80,40,.08);
+  opacity:.45;
+}
+.cal-num{font-size:.72rem;color:var(--snow);line-height:1;}
+.cal-cell.today .cal-num{color:var(--goldlt);font-weight:700;}
+/* ラベル */
+.cal-label{
+  font-size:.46rem;line-height:1.25;margin-top:2px;
+  font-weight:700;
+  text-align:center;
+  white-space:pre-line;
+}
+.cal-badge{
+  position:absolute;top:1px;right:2px;
+  font-size:.5rem;line-height:1;
+}
+
+/* ── ベスト候補 ── */
+.best-list{display:grid;gap:8px;margin-top:10px;}
+.best-item{
+  background:var(--card);border:1px solid var(--rim);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+}
+.best-rank{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(196,160,67,.16);border:1px solid rgba(196,160,67,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;color:var(--goldlt);font-weight:700;flex-shrink:0;
+}
+.best-rank.r1{background:rgba(255,215,0,.18);border-color:rgba(255,215,0,.5);color:#ffd700;}
+.best-info{flex:1;}
+.best-date{font-size:.85rem;color:var(--snow);font-weight:600;margin-bottom:3px;}
+.best-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.best-tag{
+  font-size:.58rem;padding:2px 7px;border-radius:999px;
+  border:1px solid;
+}
+.tag-kichi{background:rgba(232,116,138,.15);border-color:rgba(232,116,138,.4);color:#e8748a;}
+.tag-month{background:rgba(94,200,138,.1);border-color:rgba(94,200,138,.3);color:var(--green);}
+.tag-railway{background:rgba(138,104,32,.1);border-color:rgba(138,104,32,.35);color:var(--goldlt);}
+.tag-best{background:rgba(177,107,120,.18);border-color:rgba(177,107,120,.5);color:#8a2840;font-weight:700;}
+.best-item-star{background:rgba(177,107,120,.05);border-color:rgba(177,107,120,.35);}
+
+/* ── 日盤取りガイド ── */
+.nichiban-section{
+  background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.03));
+  border:1px solid rgba(196,160,67,.28);
+}
+.nichiban-steps{display:grid;gap:8px;margin-top:10px;}
+.nichiban-step{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(100,80,40,.04);border:1px solid rgba(100,80,40,.1);
+  border-radius:9px;padding:10px 11px;
+}
+.step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.38);
+  color:var(--goldlt);font-size:.72rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.step-text{font-size:.68rem;color:var(--mist);line-height:1.8;}
+.step-text strong{color:var(--snow);}
+
+/* ── 空状態 ── */
+.empty-state{
+  text-align:center;padding:20px;
+  font-size:.72rem;color:var(--mist);line-height:2;
+}
+.empty-icon{font-size:2rem;margin-bottom:8px;opacity:.5;}
+
+/* ── フッター ── */
+.footer{
+  text-align:center;color:var(--mist);
+  font-size:.58rem;opacity:.6;margin-top:24px;
+  padding:0 16px 20px;line-height:2;
+}
+.disclaimer{
+  margin:14px 16px 0;
+  background:rgba(100,80,40,.05);border:1px solid rgba(100,80,40,.12);
+  border-radius:10px;padding:10px 12px;
+  font-size:.62rem;color:var(--mist);line-height:1.9;
+}
+
+
+/* ── 文字サイズ切替 ── */
+html.font-small{font-size:14px;}
+html.font-medium{font-size:15px;}
+html.font-large{font-size:17px;}
+.display-toolbar{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.92);
+  position:sticky;top:61px;z-index:90;
+  backdrop-filter:blur(12px);
+}
+.display-toolbar-label{
+  font-size:.64rem;color:var(--mist);letter-spacing:.08em;
+}
+.font-btn{
+  min-width:38px;height:28px;border-radius:999px;
+  border:1px solid var(--rim);
+  background:rgba(255,255,255,.72);
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.72rem;font-weight:600;
+  cursor:pointer;
+}
+.font-btn.active{
+  border-color:rgba(138,104,32,.55);
+  background:rgba(196,160,67,.16);
+  box-shadow:inset 0 0 0 1px rgba(138,104,32,.14);
+}
+html.font-large .font-btn{font-size:.8rem;}
+@media (max-width:380px){
+  .display-toolbar{top:58px;padding:7px 14px;}
+  .font-btn{min-width:34px;height:27px;}
+}
+
+
+/* ── 空間調律 ── */
+.space-dir-btn {
+  padding:10px 0;border-radius:8px;font-size:.72rem;font-weight:700;
+  font-family:'Noto Serif JP',serif;cursor:pointer;
+  background:rgba(138,104,32,.08);color:var(--goldlt);
+  border:2px solid rgba(138,104,32,.2);transition:all .15s;
+}
+.space-dir-btn.active {
+  background:var(--goldlt);color:#fff;border-color:var(--goldlt);
+}
+.space-prescription-card {
+  background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.6));
+  border:1px solid rgba(138,104,32,.25);border-radius:12px;padding:14px;
+}
+
+.guide-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:flex-end;justify-content:center;
+}
+.guide-modal-overlay.open{display:flex;}
+.guide-modal{
+  background:var(--bg,#f7f4ef);
+  border-radius:18px 18px 0 0;
+  width:100%;max-width:480px;
+  max-height:88dvh;overflow-y:auto;
+  padding:20px 18px 40px;
+  box-shadow:0 -4px 32px rgba(0,0,0,.18);
+}
+.guide-modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  border-bottom:1px solid rgba(138,104,32,.2);
+  padding-bottom:10px;
+}
+.guide-modal-title{
+  font-size:.9rem;font-weight:700;color:var(--goldlt,#5c4010);
+  letter-spacing:.08em;
+}
+.guide-modal-close{
+  background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.2);
+  border-radius:50%;width:30px;height:30px;
+  font-size:1rem;color:var(--goldlt,#5c4010);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;
+}
+.guide-modal-section{
+  margin-bottom:14px;
+  background:#fff;border:1px solid rgba(138,104,32,.15);
+  border-radius:10px;padding:12px 14px;
+}
+.guide-modal-sec-title{
+  font-size:.75rem;font-weight:700;color:var(--goldlt,#5c4010);
+  margin-bottom:6px;display:flex;align-items:center;gap:6px;
+}
+.guide-modal-sec-body{
+  font-size:.68rem;color:var(--mist,#5e503d);line-height:1.9;
+}
+.guide-modal-sec-body strong{color:var(--snow,#1c1208);}
+.guide-open-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(138,104,32,.08);
+  border:1px solid rgba(138,104,32,.28);
+  border-radius:999px;padding:7px 14px;
+  font-size:.68rem;color:var(--goldlt,#5c4010);font-weight:700;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;margin-bottom:10px;
+}
+
+/* ── ナビ使い方モーダル ── */
+.nav-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9100;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:flex-end;justify-content:center;
+}
+.nav-modal-overlay.open{display:flex;}
+.nav-modal{
+  background:var(--bg,#f7f4ef);
+  border-radius:18px 18px 0 0;
+  width:100%;max-width:480px;
+  max-height:92dvh;overflow-y:auto;
+  padding:20px 18px 48px;
+  box-shadow:0 -4px 32px rgba(0,0,0,.18);
+}
+.nav-modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  border-bottom:1px solid rgba(138,104,32,.2);
+  padding-bottom:10px;
+}
+.nav-modal-title{
+  font-size:.88rem;font-weight:700;color:var(--goldlt,#5c4010);
+  letter-spacing:.08em;line-height:1.4;
+}
+.nav-modal-close{
+  background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.2);
+  border-radius:50%;width:30px;height:30px;min-width:30px;
+  font-size:1rem;color:var(--goldlt,#5c4010);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.nav-modal-philosophy{
+  background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(138,104,32,.04));
+  border:1px solid rgba(138,104,32,.3);border-radius:10px;
+  padding:12px 14px;margin-bottom:14px;
+  font-size:.72rem;color:var(--goldlt,#5c4010);
+  font-weight:700;text-align:center;letter-spacing:.1em;line-height:1.8;
+}
+.nav-modal-sec{
+  margin-bottom:12px;
+  background:#fff;border:1px solid rgba(138,104,32,.12);
+  border-radius:10px;padding:12px 14px;
+}
+.nav-modal-sec-title{
+  font-size:.72rem;font-weight:700;color:var(--goldlt,#5c4010);
+  margin-bottom:7px;display:flex;align-items:center;gap:5px;
+}
+.nav-modal-sec-body{
+  font-size:.67rem;color:var(--mist,#5e503d);line-height:1.95;
+}
+.nav-modal-sec-body strong{color:var(--snow,#1c1208);}
+.nav-modal-sec-body .rule-item{
+  display:flex;gap:8px;margin-bottom:5px;align-items:flex-start;
+}
+.nav-modal-sec-body .rule-num{
+  min-width:18px;height:18px;border-radius:50%;
+  background:rgba(138,104,32,.15);color:var(--goldlt,#5c4010);
+  font-size:.6rem;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px;
+}
+.nav-modal-warning{
+  background:rgba(180,60,40,.04);border:1px solid rgba(180,60,40,.15);
+  border-radius:10px;padding:12px 14px;margin-bottom:12px;
+}
+.nav-modal-warning-title{
+  font-size:.72rem;font-weight:700;color:#8b3a2a;margin-bottom:7px;
+}
+.nav-modal-warning-body{
+  font-size:.67rem;color:var(--mist,#5e503d);line-height:1.95;
+}
+.nav-open-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(138,104,32,.08);
+  border:1px solid rgba(138,104,32,.28);
+  border-radius:999px;padding:7px 14px;
+  font-size:.68rem;color:var(--goldlt,#5c4010);font-weight:700;
+  cursor:pointer;font-family:'Noto Serif JP',serif;
+  letter-spacing:.06em;
+}
+
+/* ── STEPヒント ── */
+.step-hint {
+  margin: 6px 0 2px;
+  padding: 9px 13px;
+  background: linear-gradient(135deg,rgba(138,104,32,.07),rgba(138,104,32,.03));
+  border-left: 3px solid rgba(138,104,32,.4);
+  border-radius: 0 8px 8px 0;
+  font-size: .65rem;
+  color: var(--goldlt, #5c4010);
+  line-height: 1.8;
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="app-header">
+  <div>
+    <div class="header-logo">✦ KITOKU<span style="opacity:.5;margin:0 2px;">@</span>JOURNEY</div>
+    <div class="header-sub">引越し 吉方位ナビ</div>
+  </div>
+  <button class="back-btn" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+</div>
+
+<!-- 表示設定 -->
+<div class="display-toolbar pilgrimage-font-toolbar" aria-label="文字サイズ">
+  <span class="display-toolbar-label">文字</span>
+  <button class="font-btn" type="button" data-pilgrimage-font="small" onclick="setPilgrimageFontSize('small')">小</button>
+  <button class="font-btn" type="button" data-pilgrimage-font="medium" onclick="setPilgrimageFontSize('medium')">中</button>
+  <button class="font-btn" type="button" data-pilgrimage-font="large" onclick="setPilgrimageFontSize('large')">大</button>
+</div>
+
+
+<!-- 星情報バー -->
+<div class="star-bar">
+  <div class="star-bar-text" id="starInfoText">生年月日を登録すると、あなたの星情報が表示されます</div>
+  <div class="star-bar-note">この星情報をもとに、あなた専用の吉方位・線路の日を計算します。</div>
+</div>
+
+<!-- 使い方の解説 -->
+<div style="
+  background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));
+  border:1px solid rgba(138,104,32,.3);border-radius:12px;
+  padding:14px 16px;margin-bottom:16px;
+">
+  <div style="font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">🏡 引越し吉方位ナビ</div>
+  <div style="font-size:.67rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">
+    引越しは、あなたが新しく根を張る「人生の土壌」を選ぶ行為です。<br>
+    <strong style="color:var(--snow);">年盤と月盤が両方吉の方角・月</strong>を選ぶことが、運勢のOSを書き換える唯一の条件です。
+  </div>
+  <div style="display:grid;gap:8px;">
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">現在地（旧居）を登録</strong><br>住所または郵便番号を入力してください</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">引越し先を選ぶ</strong><br>同一市内・仮吉方の場合は<strong style="color:var(--goldlt);">番地まで住所入力</strong>してください<br>大まかな方角確認はリストから選べます</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">年盤・月盤を確認</strong><br>年盤が赤→その方角は今年NG。年盤が吉なら月盤が吉の月を選ぶ<br><span style="color:rgba(138,104,32,.7);">✦ 引越しに日盤は関係しません（完全無視でOK）</span></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">引越し日を決める</strong><br>年盤・月盤が吉の月の中から<strong style="color:var(--goldlt);">線路の日</strong>を選ぶと吉が長く続く<br><span style="color:rgba(138,104,32,.7);">✦ 当日の日盤の凶は気にしなくて大丈夫</span></div>
+    </div>
+  </div>
+  <div style="margin-top:12px;padding:10px 12px;background:rgba(60,100,60,.05);border:1px solid rgba(60,100,60,.2);border-radius:8px;font-size:.62rem;color:var(--mist);line-height:1.9;">
+    <strong style="color:#3a6e3a;">🌿 希望の場所が凶方だったら？</strong><br>
+    諦めなくて大丈夫です。「仮吉方（75日ルール）」という方法があります。<br>
+    吉方位の場所で75日間寝泊まりしてから新居に入ることで、引越しと同じ効果が得られます。<br>
+    <button onclick="openKariModal()" style="margin-top:6px;display:inline-flex;align-items:center;gap:4px;
+      background:rgba(60,100,60,.1);border:1px solid rgba(60,100,60,.3);border-radius:999px;
+      padding:5px 12px;font-size:.62rem;color:#3a6e3a;font-weight:700;cursor:pointer;
+      font-family:'Noto Serif JP',serif;">🌿 仮吉方の詳しいルールを見る</button>
+  </div>
+</div>
+
+<!-- STEP 1: 自宅登録 -->
+<div class="section">
+  <div class="sec-label">STEP 1 — 現在地（旧居）</div>
+  <div class="sec-title">今住んでいる場所を登録する</div>
+  <div id="homeRegArea">
+    <div class="input-row">
+      <input class="input-field" id="homeInput" type="text" placeholder="住所または郵便番号（例：愛媛県松山市二番町4-7）">
+      <button class="btn-primary" onclick="searchHome()">登録</button>
+    </div>
+    <button class="btn-secondary" onclick="getGeoLocation()">📍 現在地を使う</button>
+    <div id="homeStatus" style="font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.7;"></div>
+  </div>
+  <div id="homeRegistered" style="display:none;">
+    <div class="registered-badge">
+      <span class="registered-text">📍 自宅登録済み ✓　<span id="homeLabel" style="font-size:.68rem;color:var(--mist);"></span></span>
+      <button class="change-btn" onclick="changeHome()">変更する</button>
+    </div>
+  </div>
+  <div style="font-size:.6rem;color:var(--mist);margin-top:8px;line-height:1.7;">
+    ※ 位置情報はこの端末のみに保存されます。サーバーには送信しません。
+  </div>
+</div>
+
+
+  <!-- STEP1→2 ガイダンス -->
+  <div class="step-hint" id="hint1">
+    ✦ 旧居を登録しました。次に引越し先を選びます。同一市内の引越しや仮吉方の検討には、番地まで入力すると正確に計算できます。
+  </div>
+
+<!-- STEP 2: 目的地設定 -->
+<div class="section">
+  <div class="sec-label">STEP 2 — 引越し先</div>
+  <div class="sec-title">引越し先を選ぶ</div>
+
+  <!-- 住所直接入力（精密計算用） -->
+  <div style="margin-bottom:16px;background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(138,104,32,.02));border:1px solid rgba(138,104,32,.2);border-radius:12px;padding:14px;">
+    <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
+      📍 住所で精密計算（同一市内・仮吉方向けに推奨）
+    </div>
+    <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
+      同じ市内の引越しや仮吉方の計算には、<strong style="color:var(--snow);">番地まで</strong>入力してください。<br>郵便番号だけでは範囲が広く、方位が変わる場合があります。
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <input id="destAddrInput" type="text"
+        placeholder="例：愛媛県松山市二番町4-7-2"
+        style="flex:1;padding:10px 12px;border:1px solid rgba(138,104,32,.3);
+        border-radius:8px;font-size:.72rem;background:rgba(255,255,255,.85);
+        font-family:'Noto Serif JP',serif;color:var(--snow);outline:none;"
+        onkeydown="if(event.key==='Enter')searchDestAddr()">
+      <button onclick="searchDestAddr()" style="
+        padding:10px 14px;background:var(--goldlt);color:#fff;border:none;
+        border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;
+        font-family:'Noto Serif JP',serif;white-space:nowrap;">検索</button>
+    </div>
+    <div id="destAddrStatus" style="font-size:.62rem;color:var(--mist);min-height:16px;"></div>
+
+    <!-- 確認カード（検索後に表示） -->
+    <div id="destAddrConfirm" style="display:none;margin-top:10px;background:#fff;border:1px solid rgba(138,104,32,.2);border-radius:8px;padding:12px;">
+      <div style="font-size:.65rem;color:var(--mist);margin-bottom:6px;">見つかった場所を確認してください</div>
+      <div id="destAddrFound" style="font-size:.72rem;font-weight:700;color:var(--snow);margin-bottom:8px;line-height:1.6;"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a id="destAddrMapLink" href="#" target="_blank" onclick="return openExternalMap(this.href)" style="
+          display:inline-flex;align-items:center;gap:4px;
+          background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);
+          border-radius:8px;padding:7px 12px;text-decoration:none;
+          font-size:.65rem;color:#1a56a8;font-weight:600;font-family:'Noto Serif JP',serif;">
+          📍 Googleマップで確認する
+        </a>
+        <button id="destAddrConfirmBtn" onclick="confirmDestAddr()" style="
+          display:inline-flex;align-items:center;gap:4px;
+          background:rgba(40,130,60,.12);border:1px solid rgba(40,130,60,.35);
+          border-radius:8px;padding:7px 12px;
+          font-size:.65rem;color:#1a5c2a;font-weight:700;cursor:pointer;
+          font-family:'Noto Serif JP',serif;">
+          ✓ この場所で方位を計算する
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;text-align:center;opacity:.7;">
+    ── または下のリストから大まかな方位を確認する ──
+  </div>
+
+  <!-- 国内 -->
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-hokkaido_tohoku')">
+      <span>🏔 北海道・東北<span class="preset-group-count">7都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-hokkaido_tohoku"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kanto')">
+      <span>🏙 関東<span class="preset-group-count">7都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-kanto"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chubu')">
+      <span>🗻 中部・北陸<span class="preset-group-count">9都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-chubu"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kinki')">
+      <span>⛩ 近畿<span class="preset-group-count">7都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-kinki"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chugoku_shikoku')">
+      <span>🌊 中国・四国<span class="preset-group-count">9都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-chugoku_shikoku"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kyushu_okinawa')">
+      <span>🌺 九州・沖縄<span class="preset-group-count">8都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-kyushu_okinawa"></div>
+  </div>
+
+  <!-- 海外 -->
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-overseas_asia')">
+      <span>🌏 海外・アジア<span class="preset-group-count">9都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-overseas_asia"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-overseas_far')">
+      <span>✈️ 海外・欧米・オセアニア<span class="preset-group-count">9都市</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-overseas_far"></div>
+  </div>
+
+  <div style="
+    margin-top:10px;
+    background:rgba(100,80,40,.05);border:1px solid rgba(100,80,40,.12);
+    border-radius:10px;padding:11px 13px;
+    font-size:.65rem;color:var(--mist);line-height:1.9;
+    text-align:center;
+  ">
+    ✦ 掲載していない都市は順次追加予定です<br>
+    <span style="color:rgba(138,104,32,.6);">📍 座標は代表地点を使用しています。正確な位置はGoogle マップ等でご確認ください。</span>
+    <span style="font-size:.6rem;opacity:.8;">リクエストは kitoku@journey6112.jp まで</span>
+    <span style="font-size:.6rem;opacity:.8;">リクエストは kitoku@journey6112.jp まで</span>
+  </div>
+</div>
+
+  <!-- 方位盤ガイドボタン -->
+  <div style="margin:0 16px 0;display:flex;justify-content:flex-end;">
+      <button class="nav-open-btn" onclick="openNavModal()">📋 ナビの使い方</button>
+  <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
+  <button class="guide-open-btn" onclick="openKariModal()" style="background:rgba(60,120,60,.08);border-color:rgba(60,120,60,.3);color:#3a6e3a;">🌿 仮吉方とは？</button>
+  </div>
+
+  <!-- STEP2→3 ガイダンス -->
+  <div class="step-hint" id="hint2" style="display:none;">
+    ✦ 引越し先が決まりました。まず「年盤タブ」を確認してください。年盤が赤（凶）なら今年はNG。年盤が吉なら「月盤タブ」で引越しに最適な月を選びます。
+  </div>
+
+<!-- STEP 3: 方位チェック結果 -->
+<div class="section" id="dirResultSection" style="display:none;">
+  <div class="sec-label">STEP 3 — 方位チェック（年盤・月盤）</div>
+  <div id="dirResultContent"></div>
+</div>
+
+<!-- 行くべき日の決め方（STEP3とSTEP4の間・折りたたみ） -->
+<div id="howToSection" style="display:none;margin-bottom:8px;">
+  <div style="
+    background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
+    border:1px solid rgba(138,104,32,.25);border-radius:10px;
+    overflow:hidden;
+  ">
+    <button onclick="
+      const body = document.getElementById('howToBody');
+      const arrow = document.getElementById('howToArrow');
+      const open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : 'block';
+      arrow.textContent = open ? '▶' : '▼';
+    " style="
+      width:100%;display:flex;align-items:center;justify-content:space-between;
+      padding:12px 14px;background:none;border:none;cursor:pointer;
+      font-family:'Noto Serif JP',serif;
+    ">
+      <span style="font-size:.72rem;color:var(--goldlt);font-weight:700;">✦ 引越し月・引越し日の決め方</span>
+      <span id="howToArrow" style="font-size:.6rem;color:var(--mist);">▶</span>
+    </button>
+    <div id="howToBody" style="display:none;padding:0 14px 13px;">
+      <div style="font-size:.65rem;color:var(--mist);line-height:2.1;">
+        <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
+          <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 1</span>
+          <span>年盤で<strong style="color:var(--snow);">凶方位でないことを確認</strong>（最優先）</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
+          <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 2</span>
+          <span>月盤タブで<strong style="color:var(--snow);">月盤が吉の月</strong>を引越し実行月として選ぶ</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
+          <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 3</span>
+          <span><strong style="color:var(--snow);">線路の日</strong>と重なれば最優先（カレンダー下の別枠で確認）</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:baseline;">
+          <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 4</span>
+          <span>気になる日をタップ → <strong style="color:var(--snow);">日盤タブで確認</strong>してから決める</span>
+        </div>
+      </div>
+      <div style="margin-top:9px;padding:7px 10px;background:rgba(100,80,40,.06);border-radius:6px;font-size:.6rem;color:var(--mist);line-height:1.8;">
+        年盤・月盤が揃った月に、線路の日を引越し実行日として設定。日盤の凶は完全無視で大丈夫です。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 4: 日程カレンダー -->
+<div class="section" id="calSection" style="display:none;">
+  <div class="sec-label">STEP 4 — 引越し日を決める</div>
+  <div class="sec-title">引越し月カレンダー</div>
+  <div style="margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.65rem;color:var(--mist);line-height:1.9;">
+    <strong style="color:var(--goldlt);">カレンダーの見方：</strong><br>
+    ★ 赤字（線路×吉方）= 最優先の引越し日<br>
+    ◆ 金字（線路の日のみ）= 吉が長続きする日<br>
+    ○ 緑字（吉方のみ）= 良い日<br><br>
+    <strong style="color:var(--snow);">引越し当日の日盤が凶でも全く問題ありません。</strong><br>
+    年盤・月盤が揃っていれば、日盤の凶はただのノイズです。安心して日程を決めてください。
+  </div>
+
+  <div class="cal-header">
+    <button class="cal-nav" onclick="changeYear(-1)" style="font-size:.6rem;padding:6px 8px;">◀◀年</button>
+    <button class="cal-nav" onclick="changeMonth(-1)">◀月</button>
+    <div class="cal-month" id="calMonthLabel"></div>
+    <button class="cal-nav" onclick="changeMonth(1)">月▶</button>
+    <button class="cal-nav" onclick="changeYear(1)" style="font-size:.6rem;padding:6px 8px;">年▶▶</button>
+  </div>
+
+  <div class="cal-legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(58,125,78,.12);border:2px solid rgba(58,125,78,.5);"></div>
+      <span>○ 吉方</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.15);"></div>
+      <span>△ 要注意</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="width:14px;height:14px;border-radius:4px;background:#fff;border:1px solid rgba(100,80,40,.12);"></div>
+      <span>通常日</span>
+    </div>
+  </div>
+
+  <!-- 日タップ後フィードバック -->
+  <div id="dayDetailFeedback" style="
+    display:none;
+    background:rgba(138,104,32,.08);
+    border:1px solid rgba(138,104,32,.3);
+    border-radius:8px;padding:9px 12px;
+    font-size:.65rem;color:var(--mist);
+    margin-bottom:8px;line-height:1.7;
+  "></div>
+
+  <div class="cal-grid" id="calDows"></div>
+  <div class="cal-grid" style="margin-top:4px;" id="calCells"></div>
+
+  <!-- 線路の日（カレンダー下） -->
+  <div class="railway-panel" style="margin-top:14px;">
+    <div class="railway-title">線路の日（始める力を見る日）</div>
+    <div class="railway-text">
+      年盤・月盤が吉の月が決まったら、その月の中から線路の日を引越し実行日に選びましょう。吉方位で得た幸運が長く続く着火スイッチになります。
+    </div>
+    <div class="railway-days" id="railwayDays"></div>
+  </div>
+
+  <!-- ベスト候補 -->
+  <div style="margin-top:16px;">
+    <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:4px;">
+      ✦ おすすめ日程（最大6日）
+    </div>
+    <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
+      スコア順に表示：<span style="color:#8a2840;font-weight:700;">★線路×吉方</span>（最優先）→ <span style="color:var(--goldlt);font-weight:600;">◆線路の日</span> → <span style="color:#2a6038;font-weight:600;">○吉方のみ</span>
+    </div>
+    <div class="best-list" id="bestList"></div>
+  </div>
+</div>
+
+<!-- 日盤取りガイド -->
+<div class="section nichiban-section" id="nichibanSection" style="display:none;">
+  <div class="sec-label">引越し月が確定したら</div>
+  <div class="sec-title">線路の日に引越しを実行する</div>
+  <div style="font-size:.72rem;color:var(--mist);line-height:1.9;margin-bottom:4px;">
+    年盤・月盤が揃ったら、引越し実行日は「線路の日」を選ぶことで、吉方位で得た幸運が長く続きます。日盤の凶は引越しに関係しません。
+  </div>
+  <div class="nichiban-steps">
+    <div class="nichiban-step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>線路の日</strong>とは、あなたの星にとって「物事が長く真っ直ぐ発展する」着火スイッチの日です。
+      </div>
+    </div>
+    <div class="nichiban-step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>コンビニ・カフェ・神社・公園</strong>でも十分です。遠出しなくてよく、短時間でも有効です。
+      </div>
+    </div>
+    <div class="nichiban-step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        日盤取りをしてから聖地へ向かうことで、<strong>「行く」という意志を吉エネルギーで包む</strong>ことができます。
+      </div>
+    </div>
+  </div>
+  <div style="
+    margin-top:10px;
+    background:rgba(196,160,67,.08);
+    border:1px solid rgba(196,160,67,.2);
+    border-radius:8px;padding:10px 12px;
+    font-size:.64rem;color:var(--mist);line-height:1.85;
+  ">
+    <strong style="color:var(--goldlt);">格さんからひとこと</strong><br>
+    年盤・月盤が揃えば、あとは自由に動いて大丈夫です。5000年の知恵は、あなたを縛るのではなく、最高のスタートを後押しするために使うものです。
+  </div>
+  <a href="direction_v2.html" style="
+    display:block;margin-top:10px;
+    background:rgba(138,104,32,.08);
+    border:1px solid rgba(138,104,32,.3);
+    border-radius:9px;padding:12px 14px;
+    text-decoration:none;
+    display:flex;align-items:center;justify-content:space-between;
+  ">
+    <div>
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:3px;">🧭 方位盤（年盤・月盤）を確認する</div>
+      <div style="font-size:.62rem;color:var(--mist);">方位盤アプリで年盤・月盤を詳しく確認できます</div>
+    </div>
+    <div style="color:rgba(138,104,32,.5);font-size:.8rem;">›</div>
+  </a>
+</div>
+
+<!-- 家相調律セクション -->
+<div class="section" style="margin-top:12px;">
+  <div class="sec-label">BONUS — 今の家を整える</div>
+  <div class="sec-title">🏡 空間の調律</div>
+  <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:14px;">
+    引越しできない時も、今の家をパワースポットに変えられます。<br>
+    家相は「怖いもの」ではなく、<strong style="color:var(--snow);">「足りないエネルギーを補う地図」</strong>です。<br>
+    まず自分の家を観察して、当てはまるものを選んでください。
+  </div>
+
+  <!-- タブ -->
+  <div style="display:flex;gap:6px;margin-bottom:14px;">
+    <button id="spaceTab1" onclick="switchSpaceTab(1)" style="flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">張り・欠け診断</button>
+    <button id="spaceTab2" onclick="switchSpaceTab(2)" style="flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);">日常の調律</button>
+  </div>
+
+  <!-- タブ1：張り・欠け診断 -->
+  <div id="spaceTabContent1">
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:12px;padding:10px 12px;background:rgba(138,104,32,.05);border-radius:8px;">
+      <strong style="color:var(--goldlt);">判断の目安：</strong><br>
+      <strong>張り</strong> = 家の外壁が出っ張っている方向（L字・コの字の凸部分）<br>
+      <strong>欠け</strong> = 家の外壁が凹んでいる方向（L字・コの字の凹部分）<br>
+      正確でなくて大丈夫です。「だいたいこの方向が出っ張ってる気がする」程度で選んでください。<br>
+      詳しく知りたい場合は、気学鑑定士に間取り図を見てもらうことをお勧めします。
+    </div>
+
+    <!-- 張り/欠けトグル -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button id="btnHari" onclick="selectHariKake('hari')" style="flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(60,120,60,.15);color:#3a6e3a;border:2px solid rgba(60,120,60,.4);">↑ 張り（出っ張り）</button>
+      <button id="btnKake" onclick="selectHariKake('kake')" style="flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:2px solid rgba(138,104,32,.2);">↓ 欠け（凹み）</button>
+    </div>
+
+    <!-- 方位選択 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;" id="dirBtnGrid">
+      <button onclick="selectSpaceDir('NW')" class="space-dir-btn">北西</button>
+      <button onclick="selectSpaceDir('N')"  class="space-dir-btn">北</button>
+      <button onclick="selectSpaceDir('NE')" class="space-dir-btn">北東</button>
+      <button onclick="selectSpaceDir('W')"  class="space-dir-btn">西</button>
+      <button style="background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;padding:10px 0;font-size:.65rem;color:var(--mist);font-family:'Noto Serif JP',serif;">中心</button>
+      <button onclick="selectSpaceDir('E')"  class="space-dir-btn">東</button>
+      <button onclick="selectSpaceDir('SW')" class="space-dir-btn">南西</button>
+      <button onclick="selectSpaceDir('S')"  class="space-dir-btn">南</button>
+      <button onclick="selectSpaceDir('SE')" class="space-dir-btn">東南</button>
+    </div>
+
+    <!-- 処方箋結果 -->
+    <div id="spacePrescription" style="display:none;"></div>
+  </div>
+
+  <!-- タブ2：日常の調律 -->
+  <div id="spaceTabContent2" style="display:none;">
+    <div style="display:grid;gap:10px;">
+
+      <div style="background:#fff;border:1px solid rgba(138,104,32,.15);border-radius:10px;padding:14px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">💧 水回りのデトックス</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+          トイレ・洗面・浴室は「1日の疲れとモヤモヤを浄化するデトックスルーム」です。<br><br>
+          <strong style="color:var(--snow);">今日からできること：</strong><br>
+          ✦ 換気扇を常時回して「気の流れ」を作る<br>
+          ✦ 照明を明るくする（暗いと気が滞る）<br>
+          ✦ 清潔なタオルを置く（使い古しはNG）<br>
+          ✦ 水垢・カビを定期的に除去する<br><br>
+          <span style="font-size:.6rem;color:rgba(138,104,32,.7);">水回りが暗く湿っていると、金運と健康運が同時に滞ります。清潔にするだけで運の浄化が始まります。</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid rgba(138,104,32,.15);border-radius:10px;padding:14px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">💡 光と温度の調律</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+          家の中の「明暗の差」と「温度差」は、そのまま家族の感情の温度差になります。<br><br>
+          <strong style="color:var(--snow);">今日からできること：</strong><br>
+          ✦ 廊下・玄関・トイレを明るくする（フットライト1つでも可）<br>
+          ✦ リビングと個室の温度差を5度以内に保つ<br>
+          ✦ 玄関を常に清潔・明るく保つ（最初に気が入る場所）<br>
+          ✦ 寝室のカーテンを遮光しすぎない（朝の光を取り込む）<br><br>
+          <span style="font-size:.6rem;color:rgba(138,104,32,.7);">「廊下に小さなフットライトを置くだけで家族の会話が増えた」という声は、光が感情の温度差を埋める証拠です。</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid rgba(138,104,32,.15);border-radius:10px;padding:14px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">🌿 玄関の気の入口を整える</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+          玄関は外の気が家に入る「唯一の門」です。ここを整えるだけで家全体の気が変わります。<br><br>
+          <strong style="color:var(--snow);">今日からできること：</strong><br>
+          ✦ 靴は出しっぱなしにしない（履く分だけ出す）<br>
+          ✦ 傘立ての古い傘・壊れた傘を捨てる<br>
+          ✦ 観葉植物や生花を1つ置く<br>
+          ✦ 鏡がある場合は常に磨く<br><br>
+          <span style="font-size:.6rem;color:rgba(138,104,32,.7);">玄関が暗く散らかっていると、良いご縁や良い機会が家に入ってくる前に引き返してしまいます。</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(60,100,60,.04);border:1px solid rgba(60,100,60,.2);border-radius:10px;padding:14px;">
+        <div style="font-size:.7rem;font-weight:700;color:#3a6e3a;margin-bottom:6px;">💬 もっと詳しく知りたい場合</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;">
+          家相は間取り・方角・建物の形によって個別性が高く、このナビでは判断基準のみをお伝えしています。<br>
+          詳しい診断が必要な場合は、気学鑑定士に間取り図を見てもらうことをお勧めします。<br>
+          KITOKUの判断基準は東洋の叡智とY理論に基づく独自解釈です。
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 注意書き -->
+<div class="disclaimer">
+  ⚠ 気学には流派により計算方法・吉凶の優先順位が異なります。他のアプリと比較しながら、根拠をご自身で判断する材料としてご使用ください。<br>
+  KITOKU OSは東洋の叡智とY理論に基づく独自解釈です。結果は判断材料であり、最終的な決定はご自身でお願いします。
+</div>
+
+<div class="footer">
+  KITOKU ENGINE — 天地統合コンシェルジュ<br>
+  Inspired by 5000 Years of Eastern Celestial Wisdom<br>
+  <span style="margin-top:4px;display:block;">© KITOKU @ JOURNEY</span>
+</div>
+
+<script>
+// ============================================================
+// 聖地データ
+// ============================================================
+const SACRED_PLACES = {
+  hokkaido_tohoku: [
+    { name:'札幌市', area:'北海道', lat:43.0642, lon:141.3469 },
+    { name:'青森市', area:'青森県', lat:40.8224, lon:140.7474 },
+    { name:'盛岡市', area:'岩手県', lat:39.7036, lon:141.1527 },
+    { name:'仙台市', area:'宮城県', lat:38.2688, lon:140.8721 },
+    { name:'秋田市', area:'秋田県', lat:39.7186, lon:140.1023 },
+    { name:'山形市', area:'山形県', lat:38.2404, lon:140.3633 },
+    { name:'福島市', area:'福島県', lat:37.7608, lon:140.4748 },
+  ],
+  kanto: [
+    { name:'水戸市', area:'茨城県', lat:36.3418, lon:140.4468 },
+    { name:'宇都宮市', area:'栃木県', lat:36.5658, lon:139.8836 },
+    { name:'前橋市', area:'群馬県', lat:36.3895, lon:139.0634 },
+    { name:'さいたま市', area:'埼玉県', lat:35.8617, lon:139.6455 },
+    { name:'千葉市', area:'千葉県', lat:35.6074, lon:140.1065 },
+    { name:'東京都心', area:'東京都', lat:35.6895, lon:139.6917 },
+    { name:'横浜市', area:'神奈川県', lat:35.4478, lon:139.6425 },
+  ],
+  chubu: [
+    { name:'新潟市', area:'新潟県', lat:37.9026, lon:139.0232 },
+    { name:'富山市', area:'富山県', lat:36.6953, lon:137.2113 },
+    { name:'金沢市', area:'石川県', lat:36.5944, lon:136.6256 },
+    { name:'福井市', area:'福井県', lat:36.0652, lon:136.2216 },
+    { name:'甲府市', area:'山梨県', lat:35.6635, lon:138.5685 },
+    { name:'長野市', area:'長野県', lat:36.6486, lon:138.1947 },
+    { name:'岐阜市', area:'岐阜県', lat:35.4232, lon:136.7608 },
+    { name:'静岡市', area:'静岡県', lat:34.9769, lon:138.3831 },
+    { name:'名古屋市', area:'愛知県', lat:35.1815, lon:136.9066 },
+  ],
+  kinki: [
+    { name:'津市', area:'三重県', lat:34.7303, lon:136.5086 },
+    { name:'大津市', area:'滋賀県', lat:35.0045, lon:135.8686 },
+    { name:'京都市', area:'京都府', lat:35.0211, lon:135.7556 },
+    { name:'大阪市', area:'大阪府', lat:34.6937, lon:135.5023 },
+    { name:'神戸市', area:'兵庫県', lat:34.6913, lon:135.1830 },
+    { name:'奈良市', area:'奈良県', lat:34.6851, lon:135.8048 },
+    { name:'和歌山市', area:'和歌山県', lat:34.2261, lon:135.1675 },
+  ],
+  chugoku_shikoku: [
+    { name:'鳥取市', area:'鳥取県', lat:35.5011, lon:134.2351 },
+    { name:'松江市', area:'島根県', lat:35.4723, lon:133.0505 },
+    { name:'岡山市', area:'岡山県', lat:34.6618, lon:133.9350 },
+    { name:'広島市', area:'広島県', lat:34.3853, lon:132.4553 },
+    { name:'山口市', area:'山口県', lat:34.1860, lon:131.4706 },
+    { name:'徳島市', area:'徳島県', lat:34.0657, lon:134.5593 },
+    { name:'高松市', area:'香川県', lat:34.3401, lon:134.0434 },
+    { name:'松山市', area:'愛媛県', lat:33.8416, lon:132.7657 },
+    { name:'高知市', area:'高知県', lat:33.5597, lon:133.5311 },
+  ],
+  kyushu_okinawa: [
+    { name:'福岡市', area:'福岡県', lat:33.5902, lon:130.4017 },
+    { name:'佐賀市', area:'佐賀県', lat:33.2494, lon:130.2989 },
+    { name:'長崎市', area:'長崎県', lat:32.7503, lon:129.8779 },
+    { name:'熊本市', area:'熊本県', lat:32.8031, lon:130.7079 },
+    { name:'大分市', area:'大分県', lat:33.2382, lon:131.6126 },
+    { name:'宮崎市', area:'宮崎県', lat:31.9077, lon:131.4202 },
+    { name:'鹿児島市', area:'鹿児島県', lat:31.5966, lon:130.5571 },
+    { name:'那覇市', area:'沖縄県', lat:26.2124, lon:127.6809 },
+  ],
+  overseas_asia: [
+    { name:'ソウル', area:'韓国', lat:37.5665, lon:126.9780 },
+    { name:'台北', area:'台湾', lat:25.0330, lon:121.5654 },
+    { name:'上海', area:'中国', lat:31.2304, lon:121.4737 },
+    { name:'北京', area:'中国', lat:39.9042, lon:116.4074 },
+    { name:'香港', area:'香港', lat:22.3193, lon:114.1694 },
+    { name:'バンコク', area:'タイ', lat:13.7563, lon:100.5018 },
+    { name:'シンガポール', area:'シンガポール', lat:1.3521, lon:103.8198 },
+    { name:'クアラルンプール', area:'マレーシア', lat:3.1390, lon:101.6869 },
+    { name:'ジャカルタ', area:'インドネシア', lat:-6.2088, lon:106.8456 },
+  ],
+  overseas_far: [
+    { name:'シドニー', area:'オーストラリア', lat:-33.8688, lon:151.2093 },
+    { name:'ロンドン', area:'イギリス', lat:51.5074, lon:-0.1278 },
+    { name:'パリ', area:'フランス', lat:48.8566, lon:2.3522 },
+    { name:'フランクフルト', area:'ドイツ', lat:50.1109, lon:8.6821 },
+    { name:'ニューヨーク', area:'アメリカ東海岸', lat:40.7128, lon:-74.0060 },
+    { name:'ロサンゼルス', area:'アメリカ西海岸', lat:34.0522, lon:-118.2437 },
+    { name:'バンクーバー', area:'カナダ', lat:49.2827, lon:-123.1207 },
+    { name:'ホノルル（ハワイ）', area:'アメリカ・ハワイ', lat:21.3069, lon:-157.8583 },
+    { name:'ドバイ', area:'UAE', lat:25.2048, lon:55.2708 },
+  ],
+};
+
+
+
+// ============================================================
+// 家相調律ロジック
+// ============================================================
+const SPACE_DATA = {
+  N:  { star:'一白水星', theme:'財運・人脈・縁', color:'#1a5c8a',
+    hari: '北側に張りがある家は、財運と人脈が自然と集まりやすい構造です。ここに静かに過ごせる椅子や、水をイメージするアイテム（小さな水鉢・青い置物）を置くと、良い縁と財の流れが加速します。',
+    kake: '北側に欠けがある場合、財運と人脈のアンテナが少し弱まりやすい構造です。欠けた方向に向かって丈の高い観葉植物（フィカス・ポトスなど）を1鉢置くだけで、エネルギーを補完できます。また、その場所を常に明るく保つことが大切です。' },
+  NE: { star:'八白土星', theme:'蓄財・変化・不動産', color:'#6b4f1a',
+    hari: '北東側に張りがある家は、蓄財力と変化対応力が高い構造です。ここは「鬼門」と呼ばれますが、張りがある場合は吉として働きます。常に清潔を保ち、白や黄色のアイテムを置くと、資産形成のエネルギーが高まります。',
+    kake: '北東側の欠けは「鬼門欠け」と呼ばれ、変化への抵抗や蓄財の難しさとして出やすい構造です。この方向を清潔に保ち、盛り塩や白い石（水晶など）を置くことで、気の補完ができます。定期的な掃除がここでは特に重要です。' },
+  E:  { star:'三碧木星', theme:'発展・活動・チャレンジ', color:'#2a6038',
+    hari: '東側に張りがある家は、発展と行動力のエネルギーが満ちた構造です。新しいことを始める力、若々しいバイタリティが育ちやすい環境です。ここに朝日が入る窓があれば最高で、緑の植物や木製のアイテムを置くとさらに発展が加速します。',
+    kake: '東側に欠けがある場合、行動力とチャレンジ精神が少し出にくくなりやすい構造です。東向きの窓に朝日を取り込む工夫をしてください。また、背の高い観葉植物を置き、その場所を活動的に使う（朝のルーティンをここで行うなど）ことで、エネルギーを補えます。' },
+  SE: { star:'四緑木星', theme:'縁・信用・コミュニケーション', color:'#3a6e3a',
+    hari: '東南側に張りがある家は、人間関係とご縁が豊かに広がりやすい構造です。ビジネスパートナー、良い友人、素晴らしい出会いが自然と舞い込んでくる環境です。ここに心地よい香りのアイテムやお気に入りの椅子を置いてリラックスすると、最高のご縁がさらに加速します。',
+    kake: '東南側に欠けがある場合、縁とコミュニケーションのエネルギーが少し弱まりやすい構造です。ここに香りの良いアイテム（アロマ・ポプリ・生花）を置いてください。風通しを良くすることも重要で、窓を定期的に開けて気の流れを作りましょう。' },
+  S:  { star:'九紫火星', theme:'名誉・直感・美・情熱', color:'#8b2020',
+    hari: '南側に張りがある家は、名誉と直感力、そして美的センスが育ちやすい構造です。人前で輝く力、インスピレーションが湧きやすい環境です。ここに明るい照明と、赤や紫のアクセントカラーを取り入れると、名誉と直感のアンテナがさらに研ぎ澄まされます。',
+    kake: '南側に欠けがある場合、直感力や情熱が少し電池切れになりやすい構造です。背の高い観葉植物を置くか、間接照明で明るく照らすだけで直感センサーが再びクリアに働き始めます。この方向だけは特に「暗くしない」ことが最重要です。' },
+  SW: { star:'二黒土星', theme:'家庭・健康・土台・母', color:'#5c3d1a',
+    hari: '南西側に張りがある家は、家庭の安定と健康、そして地に足のついた生活の土台が育ちやすい構造です。家族の絆が自然と深まる環境です。ここを家族が集まる場所（ダイニング・リビング）として使うと、安定したエネルギーがさらに高まります。',
+    kake: '南西側の欠けは「裏鬼門欠け」と呼ばれ、家庭基盤や健康面で注意が必要な構造です。黄色や茶色のアイテムを置き、この場所を常に整理整頓してください。料理をする機会を増やすなど、「土のエネルギー（育てる・養う）」を意識した行動が補完になります。' },
+  W:  { star:'七赤金星', theme:'金運・楽しみ・話術・収穫', color:'#6b5000',
+    hari: '西側に張りがある家は、金運と楽しみ、そして豊かさの収穫力が育ちやすい構造です。収入が安定し、生活に余裕が生まれやすい環境です。ここに金色や白のアイテム、観葉植物を置くと金運のエネルギーがさらに高まります。西日が入る場合はレースのカーテンで柔らかく取り込んでください。',
+    kake: '西側に欠けがある場合、金運と収穫のエネルギーが少し弱まりやすい構造です。金属製のアイテム（鈴・風鈴・金属の置物）を置くか、白・金色のファブリックをこの方向に取り入れてください。また、「夕方に西の窓を開けて外気を取り込む」ルーティンが効果的です。' },
+  NW: { star:'六白金星', theme:'リーダーシップ・権威・天・父', color:'#1a3a6e',
+    hari: '北西側に張りがある家は、リーダーシップと権威、そして大局を見渡す判断力が育ちやすい構造です。仕事での出世や信頼獲得に強い環境です。ここを書斎・仕事部屋として使うか、北西向きの椅子に座って仕事をすると、決断力が自然と高まります。',
+    kake: '北西側に欠けがある場合、権威とリーダーシップのエネルギーが出にくくなりやすい構造です。金属製・白・グレーのアイテムを置き、この場所を清潔でシンプルに保ってください。仕事に関するものをここに置く（資格証・仕事道具など）ことで、リーダーのエネルギーを呼び込めます。' },
+};
+
+let spaceMode = 'hari';
+let spaceDir = null;
+
+function selectHariKake(mode) {
+  spaceMode = mode;
+  document.getElementById('btnHari').style.cssText = mode === 'hari'
+    ? 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(60,120,60,.25);color:#2a5e2a;border:2px solid rgba(60,120,60,.6);'
+    : 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:2px solid rgba(138,104,32,.2);';
+  document.getElementById('btnKake').style.cssText = mode === 'kake'
+    ? 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(180,100,20,.2);color:#8b4a10;border:2px solid rgba(180,100,20,.5);'
+    : 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:2px solid rgba(138,104,32,.2);';
+  if (spaceDir) showSpacePrescription();
+}
+
+function selectSpaceDir(dir) {
+  spaceDir = dir;
+  document.querySelectorAll('.space-dir-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  showSpacePrescription();
+}
+
+function showSpacePrescription() {
+  if (!spaceDir) return;
+  const data = SPACE_DATA[spaceDir];
+  if (!data) return;
+  const text = spaceMode === 'hari' ? data.hari : data.kake;
+  const modeLabel = spaceMode === 'hari' ? '↑ 張り（出っ張り）' : '↓ 欠け（凹み）';
+  const modeColor = spaceMode === 'hari' ? '#2a5e2a' : '#8b4a10';
+  const modeBg = spaceMode === 'hari' ? 'rgba(60,120,60,.08)' : 'rgba(180,100,20,.08)';
+  const dirJP = { N:'北', NE:'北東', E:'東', SE:'東南', S:'南', SW:'南西', W:'西', NW:'北西' };
+  const el = document.getElementById('spacePrescription');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="space-prescription-card">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="background:${modeBg};border:1px solid ${modeColor};border-radius:999px;padding:3px 10px;font-size:.62rem;font-weight:700;color:${modeColor};">${modeLabel}</span>
+        <span style="font-size:.75rem;font-weight:700;color:var(--snow);">${dirJP[spaceDir]}（${data.star}）</span>
+        <span style="font-size:.62rem;color:var(--mist);">${data.theme}</span>
+      </div>
+      <div style="font-size:.67rem;color:var(--mist);line-height:1.95;">${text}</div>
+      <div style="margin-top:10px;padding:8px 10px;background:rgba(100,80,40,.04);border-radius:7px;font-size:.6rem;color:var(--mist);line-height:1.7;">
+        ✦ これは判断の目安です。詳しい診断は気学鑑定士に間取り図を見てもらうことをお勧めします。
+      </div>
+    </div>
+  `;
+}
+
+function switchSpaceTab(tab) {
+  document.getElementById('spaceTabContent1').style.display = tab === 1 ? 'block' : 'none';
+  document.getElementById('spaceTabContent2').style.display = tab === 2 ? 'block' : 'none';
+  const btn1 = document.getElementById('spaceTab1');
+  const btn2 = document.getElementById('spaceTab2');
+  btn1.style.cssText = tab === 1
+    ? 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;'
+    : 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
+  btn2.style.cssText = tab === 2
+    ? 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;'
+    : 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
+}
+
+const PILGRIMAGE_FONT_KEY = 'kitoku-pilgrimage-font-size';
+
+function applyPilgrimageFontSize(size) {
+  const safe = ['small', 'medium', 'large'].includes(size) ? size : 'medium';
+  document.documentElement.classList.remove('font-small', 'font-medium', 'font-large');
+  document.documentElement.classList.add('font-' + safe);
+  document.querySelectorAll('[data-pilgrimage-font]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.pilgrimageFont === safe);
+  });
+}
+
+function setPilgrimageFontSize(size) {
+  const safe = ['small', 'medium', 'large'].includes(size) ? size : 'medium';
+  localStorage.setItem(PILGRIMAGE_FONT_KEY, safe);
+  applyPilgrimageFontSize(safe);
+}
+
+// ============================================================
+// 状態管理
+// ============================================================
+let gState = {
+  homeLat: null,
+  homeLon: null,
+  homeLabel: '',
+  destLat: null,
+  destLon: null,
+  destName: '',
+  destArea: '',
+  destDir: null,
+  honmei: null,
+  tsukimei: null,
+  calYear: null,
+  calMonth: null,
+  railwayBranches: null,
+  activeBanTab: 'year', // 現在選択中のタブ（year/month/day）
+};
+
+// ============================================================
+// 初期化
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  applyPilgrimageFontSize(localStorage.getItem(PILGRIMAGE_FONT_KEY) || 'medium');
+
+  // 自宅情報の復元
+  const savedHome = localStorage.getItem('kitoku-home');
+  if (savedHome) {
+    try {
+      const h = JSON.parse(savedHome);
+      gState.homeLat = h.lat;
+      gState.homeLon = h.lon;
+      gState.homeLabel = h.label || '';
+      showHomeRegistered();
+    } catch(e) {}
+  }
+
+  // 星情報の復元（エンジンが読み込めない場合もクラッシュしない）
+  try { loadStarInfo(); } catch(e) { console.warn('kitoku-engine not loaded:', e); }
+
+  // プリセットボタン描画（常に実行）
+  try { renderPresets(); } catch(e) { console.warn('renderPresets error:', e); }
+
+  // 今月のカレンダー初期化
+  const now = new Date();
+  gState.calYear = now.getFullYear();
+  gState.calMonth = now.getMonth() + 1;
+
+  // 線路の日の設定（将軍のデフォルト：丑=1・辰=4・未=7・戌=10）
+  const savedRailway = localStorage.getItem('kitoku-railway-branches');
+  if (savedRailway) {
+    try {
+      gState.railwayBranches = JSON.parse(savedRailway);
+    } catch(e) {
+      gState.railwayBranches = [1, 4, 7, 10];
+    }
+  } else {
+    gState.railwayBranches = [1, 4, 7, 10];
+  }
+});
+
+function loadStarInfo() {
+  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
+  if (!birth) return;
+  const [by, bm, bd] = birth.split('-').map(Number);
+  if (!by || !bm || !bd) return;
+
+  // kitoku-engineの関数を使用
+  const { kY, kM } = getKD(by, bm, bd);
+  const h = calcHonmei(kY);
+  let t = calcTsukimei(h, kM);
+  const tFK = getTsukimeiForKeisha(h, t);
+  const k = calcKeisha(h, tFK);
+  const dstar = calcDokai(h, tFK);
+
+  gState.honmei = h;
+  gState.tsukimei = t;
+
+  const yn = calcNayin(kY);
+  const mn = calcMonthNayin(by, bm, bd);
+
+  document.getElementById('starInfoText').textContent =
+    `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。`;
+}
+
+// ============================================================
+// 自宅登録
+// ============================================================
+async function searchHome() {
+  const val = document.getElementById('homeInput').value.trim();
+  if (!val) return;
+
+  const status = document.getElementById('homeStatus');
+  status.textContent = '検索中...';
+
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&accept-language=ja`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
+    const data = await res.json();
+    if (!data.length) { status.textContent = '場所が見つかりませんでした。別の住所で試してください。'; return; }
+    const r = data[0];
+    gState.homeLat = parseFloat(r.lat);
+    gState.homeLon = parseFloat(r.lon);
+    gState.homeLabel = r.display_name.split(',').slice(0, 2).join(' ');
+    saveHome();
+    showHomeRegistered();
+    status.textContent = '';
+    if (gState.destLat) calcAndShowDir();
+  } catch(e) {
+    status.textContent = 'ネットワークエラーが発生しました。';
+  }
+}
+
+function getGeoLocation() {
+  if (!navigator.geolocation) {
+    document.getElementById('homeStatus').textContent = 'このブラウザでは位置情報が使えません。';
+    return;
+  }
+  document.getElementById('homeStatus').textContent = '現在地を取得中...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    gState.homeLat = pos.coords.latitude;
+    gState.homeLon = pos.coords.longitude;
+    gState.homeLabel = '現在地';
+    saveHome();
+    showHomeRegistered();
+    document.getElementById('homeStatus').textContent = '';
+    if (gState.destLat) calcAndShowDir();
+  }, err => {
+    document.getElementById('homeStatus').textContent = '現在地の取得に失敗しました。住所で入力してください。';
+  });
+}
+
+function saveHome() {
+  localStorage.setItem('kitoku-home', JSON.stringify({
+    lat: gState.homeLat,
+    lon: gState.homeLon,
+    label: gState.homeLabel
+  }));
+}
+
+function showHomeRegistered() {
+  document.getElementById('homeRegArea').style.display = 'none';
+  document.getElementById('homeRegistered').style.display = 'block';
+  document.getElementById('homeLabel').textContent = gState.homeLabel;
+}
+
+function changeHome() {
+  document.getElementById('homeRegArea').style.display = 'block';
+  document.getElementById('homeRegistered').style.display = 'none';
+  document.getElementById('homeInput').value = '';
+  document.getElementById('homeStatus').textContent = '';
+  gState.homeLat = null;
+  gState.homeLon = null;
+  localStorage.removeItem('kitoku-home');
+}
+
+// ============================================================
+// 目的地プリセット描画
+// ============================================================
+function toggleGroup(label, gridId) {
+  const grid = document.getElementById(gridId);
+  const isOpen = grid.classList.contains('open');
+  grid.classList.toggle('open', !isOpen);
+  label.classList.toggle('open', !isOpen);
+}
+
+function renderPresets() {
+  renderPresetGrid('grid-hokkaido_tohoku', SACRED_PLACES.hokkaido_tohoku);
+  renderPresetGrid('grid-kanto',           SACRED_PLACES.kanto);
+  renderPresetGrid('grid-chubu',           SACRED_PLACES.chubu);
+  renderPresetGrid('grid-kinki',           SACRED_PLACES.kinki);
+  renderPresetGrid('grid-chugoku_shikoku', SACRED_PLACES.chugoku_shikoku);
+  renderPresetGrid('grid-kyushu_okinawa',  SACRED_PLACES.kyushu_okinawa);
+  renderPresetGrid('grid-overseas_asia',   SACRED_PLACES.overseas_asia);
+  renderPresetGrid('grid-overseas_far',    SACRED_PLACES.overseas_far);
+}
+
+function renderPresetGrid(id, places) {
+  const grid = document.getElementById(id);
+  if (!grid || !places) return;
+  grid.innerHTML = places.map(p => {
+    const safeName = p.name.replace(/'/g, "\\'");
+    const safeArea = p.area.replace(/'/g, "\\'");
+    if (p.lat && p.lon) {
+      // 座標ハードコード → 即座に使用
+      return `
+        <button class="preset-btn" onclick="selectPreset(this,${p.lat},${p.lon},'${safeName}','${safeArea}')">
+          <div class="preset-name">${p.name}</div>
+          <div class="preset-area">${p.area}</div>
+        </button>`;
+    } else {
+      // 住所クエリ → API検索
+      const safeQ = (p.q||'').replace(/'/g, "\\'");
+      return `
+        <button class="preset-btn" onclick="selectPresetByQuery(this,'${safeQ}','${safeName}','${safeArea}')">
+          <div class="preset-name">${p.name}</div>
+          <div class="preset-area">${p.area}</div>
+        </button>`;
+    }
+  }).join('');
+}
+
+async function selectPresetByQuery(btn, query, name, area) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const customDest = document.getElementById('customDest');
+  if (customDest) customDest.value = '';
+  const status = document.getElementById('destStatus');
+  if (status) status.textContent = '📍 座標を取得中...';
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&accept-language=ja`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
+    const data = await res.json();
+    if (!data.length) {
+      if (status) status.textContent = '⚠ 座標が見つかりませんでした。住所で手動検索してください。';
+      return;
+    }
+    gState.destLat = parseFloat(data[0].lat);
+    gState.destLon = parseFloat(data[0].lon);
+    gState.destName = name;
+    gState.destArea = area;
+    if (status) status.textContent = '';
+    if (gState.homeLat && gState.honmei) {
+      calcAndShowDir();
+    } else if (!gState.homeLat) {
+      showHomePrompt();
+    }
+  } catch(e) {
+    if (status) status.textContent = '⚠ 取得失敗。住所で手動検索してください。';
+  }
+}
+
+function selectPreset(btn, lat, lon, name, area) {
+  // 後方互換用（自由入力・旧データ対応）
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  gState.destLat = lat; gState.destLon = lon;
+  gState.destName = name; gState.destArea = area;
+  if (gState.homeLat && gState.honmei) calcAndShowDir();
+  else if (!gState.homeLat) showHomePrompt();
+}
+
+async function searchCustomDest() {
+  const val = document.getElementById('customDest').value.trim();
+  if (!val) return;
+  const status = document.getElementById('destStatus');
+  status.textContent = '検索中...';
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val + ' 日本')}&format=json&limit=1&accept-language=ja`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
+    const data = await res.json();
+    if (!data.length) { status.textContent = '場所が見つかりませんでした。'; return; }
+    const r = data[0];
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+    gState.destLat = parseFloat(r.lat);
+    gState.destLon = parseFloat(r.lon);
+    gState.destName = val;
+    gState.destArea = r.display_name.split(',').slice(1, 3).join(' ');
+    status.textContent = `📍 ${r.display_name.split(',').slice(0, 2).join(' ')}`;
+    if (gState.homeLat) calcAndShowDir();
+    else showHomePrompt();
+  } catch(e) {
+    status.textContent = 'ネットワークエラーが発生しました。';
+  }
+}
+
+function showHomePrompt() {
+  document.getElementById('dirResultSection').style.display = 'block';
+  const hint2 = document.getElementById('hint2');
+  if (hint2) hint2.style.display = 'block';
+  document.getElementById('dirResultContent').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">🏠</div>
+      STEP 1 で自宅を登録してください。<br>
+      自宅の場所をもとに方位を計算します。
+    </div>
+  `;
+}
+
+// ============================================================
+// 方位計算
+// ============================================================
+function calcBearing(lat1, lon1, lat2, lon2) {
+  const φ1 = lat1 * Math.PI / 180;
+  const φ2 = lat2 * Math.PI / 180;
+  const Δλ = (lon2 - lon1) * Math.PI / 180;
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  const θ = Math.atan2(y, x);
+  return (θ * 180 / Math.PI + 360) % 360;
+}
+
+function bearingToDir(bearing) {
+  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  return dirs[Math.floor((bearing + 22.5) / 45) % 8];
+}
+
+function mapSearchUrl(lat, lon) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat + ',' + lon)}`;
+}
+
+function mapRouteUrl(originLat, originLon, destLat, destLon) {
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originLat + ',' + originLon)}&destination=${encodeURIComponent(destLat + ',' + destLon)}&travelmode=driving`;
+}
+
+function openExternalMap(url) {
+  const opened = window.open(url, '_blank', 'noopener');
+  if (!opened) window.location.href = url;
+}
+
+const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
+const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
+
+function calcRankMap(boardCenter, kyouSetX) {
+  const board = buildBoardFromCenter(boardCenter);
+  const map = {};
+  ['SE','S','SW','E','W','NE','N','NW'].forEach(d => {
+    const starN = board[d] || 5;
+    const r = rankDir(d, starN, gState.honmei, gState.tsukimei, new Set(), null);
+    map[d] = kyouSetX && kyouSetX.has(d) ? 0 : r.rank;
+  });
+  return map;
+}
+
+function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
+  const LAYOUT = [['SE','S','SW'],['E','C','W'],['NE','N','NW']];
+  const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
+
+  function makeCell(d) {
+    if (d === 'C') {
+      const starN = board['C'] || 5;
+      return `<div class="p-cell p-center">
+        <div class="p-cell-num">${starN}</div>
+      </div>`;
+    }
+    const starN = board[d] || 5;
+    const isKyo = kyouSet && kyouSet.has(d);
+    const rank = rankMap ? (rankMap[d]||0) : 0;
+    const isDest = d === destDir;
+    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name).join('・') : '';
+
+    let cls = 'p-cell';
+    if (isDest) cls += ' p-dest';
+    else if (isKyo) cls += ' p-kyo';
+    else if (rank >= 4) cls += ' p-daikichi';
+    else if (rank >= 2) cls += ' p-kichi';
+
+    // 方位名の色
+    const dirColor = isKyo ? '#b04060' : rank>=2 ? '#5a3e08' : 'rgba(60,50,40,.5)';
+
+    // バッジ（凶殺名・吉方）
+    let badge = '';
+    if (isKyo && kyoNames) {
+      badge = `<div style="font-size:.6rem;color:#b04060;line-height:1.3;margin-top:2px;font-weight:700;text-align:center;">${kyoNames}</div>`;
+    } else if (rank >= 4) {
+      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:700;">本命・月命</div>`;
+    } else if (rank >= 2) {
+      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:600;">吉方</div>`;
+    }
+
+    return `<div class="${cls}">
+      <div class="p-cell-num">${starN}</div>
+      <div style="font-size:.62rem;font-weight:700;color:${dirColor};margin-top:3px;">${dirJP[d]}</div>
+      ${badge}
+      ${isDest ? '<div class="p-dest-mark">▲目的</div>' : ''}
+    </div>`;
+  }
+
+  return `<div style="
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:4px;
+    width:100%;
+  ">
+    ${LAYOUT.flat().map(makeCell).join('')}
+  </div>`;
+}
+
+
+
+
+function calcAndShowDir() {
+  if (!gState.homeLat || !gState.destLat || !gState.honmei) return;
+
+  // ── 750m未満チェック（引越し方位は750m以上から有効）──
+  const distCheck = calcDistance(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
+  if (distCheck < 0.75) {
+    document.getElementById('dirResultSection').style.display = 'block';
+    const hint2el = document.getElementById('hint2');
+    if (hint2el) hint2el.style.display = 'block';
+    document.getElementById('dirResultContent').innerHTML = `
+      <div style="background:rgba(180,140,40,.08);border:1px solid rgba(180,140,40,.3);border-radius:12px;padding:18px 16px;text-align:center;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📏</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">750m未満 — 方位の作用は出ない距離です</div>
+        <div style="font-size:.68rem;color:var(--mist);line-height:1.9;">
+          引越しの方位作用が発生するのは<strong style="color:var(--snow);">現在地から750m以上</strong>離れた場合のみです。<br>
+          750m未満の近距離移動は「方位」ではなく<strong style="color:var(--snow);">「家相（風水）」</strong>の領域となります。<br><br>
+          新しい家の玄関の向き・間取り・張り欠けなど、<br>家相の観点から新居を選んでください。
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const bearing = calcBearing(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
+  const dir = bearingToDir(bearing);
+  gState.destDir = dir;
+
+  const now = new Date();
+  const todayY = now.getFullYear();
+  const todayM = now.getMonth() + 1;
+  const todayD = now.getDate();
+  const viewY = gState.calYear || todayY;
+  const viewM = gState.calMonth || todayM;
+  const viewD = 15;
+
+  // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
+  const monthCenter = getMonthCenter(viewY, viewM, viewD);
+  const dayCenter = getDayCenter(todayY, todayM, todayD);
+  const yearCenterN = yearCenter(viewY);
+
+  const monthBoard = buildBoardFromCenter(monthCenter);
+  const dayBoard = buildBoardFromCenter(dayCenter);
+  const yearBoard = buildBoardFromCenter(yearCenterN);
+
+  const monthStarN = monthBoard[dir] || 5;
+  const dayStarN = dayBoard[dir] || 5;
+  const yearStarN = yearBoard[dir] || 5;
+
+  // 三合
+  const yearBranch = getZodiac(viewY);
+  const monthBranch = BRANCH_NAME[getMonthBranch(viewY, viewM, viewD)];
+  const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
+  const dayBranchName = BRANCH_NAME[dayBranchIdx];
+
+  const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [] };
+  const dSangoInfo = SANGO_MAP[dayBranchName] || { dirs: [] };
+
+  const ySangoSet = new Set(SANGO_MAP[yearBranch.k]?.dirs || []);
+  const mSangoSet = new Set(mSangoInfo.dirs);
+  const dSangoSet = new Set(dSangoInfo.dirs);
+
+  const tendo = getTendoDir(viewY, viewM, viewD);
+
+  // 年盤の破れ方位
+  const yearBreakDir = BRANCH_DIR[((yearBranch.k ? BRANCH_NAME.indexOf(yearBranch.k) : 0) + 6) % 12];
+
+  const yearRank = rankDir(dir, yearStarN, gState.honmei, gState.tsukimei, ySangoSet, tendo);
+  const monthRank = rankDir(dir, monthStarN, gState.honmei, gState.tsukimei, mSangoSet, tendo);
+  const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+
+  // ── 凶方位チェック（年盤）
+  const { kyouSet: yKyouSet, items: yKyoItems } = getKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year');
+  const isYearKyo = yKyouSet.has(dir);
+  if (isYearKyo) {
+    yearRank.rank = 0;
+    yearRank.badges = yKyoItems.filter(i => i.dir === dir).map(i => '⚠ ' + i.name);
+  }
+  // ─── 引越し専用：年盤凶フラグ（最重要警告用）
+  gState.isYearKyo = isYearKyo;
+  gState.yearKyoNames = isYearKyo ? yKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・') : '';
+
+  // ── 凶方位チェック（月盤）
+  const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranch) + 6) % 12)];
+  const { items: mKyoItems, kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
+  const isKyo = mKyouSet.has(dir);
+  if (isKyo) {
+    monthRank.rank = 0;
+    monthRank.badges = mKyoItems.filter(i => i.dir === dir).map(i => '⚠ ' + i.name);
+  }
+
+  // ── 凶方位チェック（日盤）
+  const dayBreakDir2 = BRANCH_DIR[((dayBranchIdx + 6) % 12)];
+  const { kyouSet: dKyouSet } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir2, gState.tsukimei, 'day');
+  const isDayKyo = dKyouSet.has(dir);
+  if (isDayKyo) {
+    dayRank.rank = 0;
+    dayRank.badges = ['⚠ 日盤凶方位'];
+  }
+
+  const dist = calcDistance(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
+
+  // 表示
+  document.getElementById('dirResultSection').style.display = 'block';
+
+  // 方位盤生成（direction_v2.htmlと同じ表示方式）
+  // makeBanGrid: グローバル関数として定義済み（calcAndShowDir外）
+  const yearRankMap  = calcRankMap(yearCenterN, yKyouSet);
+  const monthRankMap = calcRankMap(monthCenter,  mKyouSet);
+  const dayRankMap   = calcRankMap(dayCenter,    dKyouSet);
+
+  const yKyoItemsForGrid = getKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year').items;
+
+  const yearBoardHtml  = makeBanGrid(yearBoard,  dir, yKyoItemsForGrid, yKyouSet,  yearRankMap);
+  const monthBoardHtml = makeBanGrid(monthBoard, dir, mKyoItems,        mKyouSet,  monthRankMap);
+  const dayBoardHtml   = makeBanGrid(dayBoard,   dir, [],               dKyouSet,  dayRankMap);
+
+  document.getElementById('dirResultContent').innerHTML = `
+    <div class="dir-result">
+      <div class="dir-result-header">
+        <div class="dir-compass">${DIR_EMOJI[dir] || '?'}</div>
+        <div style="flex:1;">
+          <div class="dir-dest-name">${gState.destName}</div>
+          <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
+        </div>
+      </div>
+      ${gState.isYearKyo ? `
+      <div style="background:rgba(160,30,30,.08);border:2px solid rgba(160,30,30,.4);border-radius:10px;padding:12px 14px;margin-top:10px;">
+        <div style="font-size:.75rem;font-weight:700;color:#8b2020;margin-bottom:6px;">🚫 年盤 — 引越し要注意の方角です</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">
+          ${viewY}年の年盤で<strong style="color:#8b2020;">${gState.yearKyoNames}</strong>に当たります。<br>
+          引越しは年盤が最優先のため、この方角への引越しは避けるか、年盤が変わる来年以降を検討してください。<br><br>
+          <strong style="color:var(--goldlt);">✦ 仮吉方という選択肢</strong><br>
+          どうしてもこの方角に引越す必要がある場合は、まず吉方位で75日間の仮吉方を実行してから新居へ入ることで、
+          エネルギーを書き換えることができます。
+          <button onclick="openKariModal()" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+            background:rgba(138,104,32,.12);border:1px solid rgba(138,104,32,.3);border-radius:999px;
+            padding:6px 12px;font-size:.65rem;color:var(--goldlt);font-weight:700;cursor:pointer;
+            font-family:'Noto Serif JP',serif;">🌿 仮吉方（75日ルール）とは？</button>
+        </div>
+      </div>` : ''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;">
+        <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);
+          border-radius:8px;padding:9px 8px;text-decoration:none;
+          font-size:.68rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;
+        ">📍 目的地を地図で確認</a>
+        <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);
+          border-radius:8px;padding:9px 8px;text-decoration:none;
+          font-size:.68rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;
+        ">🚗 ルートを調べる</a>
+      </div>
+
+      <!-- 方位盤タブ -->
+      <div class="ban-tabs">
+        <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${viewY}年）</div>
+        <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${viewM}月）</div>
+        <div class="ban-tab" id="banTabDay" style="display:none;" onclick="switchBan('day')">日盤（今日）</div>
+      </div>
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;text-align:center;">
+        ▲ = 目的地の方向　南上（気学式）表示
+      </div>
+      <div class="ban-grid" id="banGridYear" >${yearBoardHtml}</div>
+      <div class="ban-grid" id="banGridMonth" style="display:none;">${monthBoardHtml}</div>
+      <div class="ban-grid" id="banGridDay"   style="display:none;">${dayBoardHtml}</div>
+
+      <!-- 吉凶サマリー -->
+      <div class="dir-panels" style="margin-top:10px;">
+        <div class="dir-panel">
+          <div class="dir-panel-label">年盤（${viewY}年）</div>
+          <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank)}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(yearRank.rank, yearRank.badges)}</div>
+        </div>
+        <div class="dir-panel">
+          <div class="dir-panel-label">月盤（${viewM}月）</div>
+          <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank)}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
+        </div>
+        <div class="dir-panel" id="dayRankPanel" style="background:rgba(100,80,40,.04);border-style:dashed;">
+          <div class="dir-panel-label" style="color:var(--mist);">日盤</div>
+          <div style="font-size:.65rem;font-weight:700;color:var(--mist);margin:4px 0;">参照しない</div>
+          <div style="font-size:.58rem;color:var(--mist);line-height:1.6;">引越しに日盤は<br>関係しません</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;padding:8px 10px;background:rgba(100,80,40,.05);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.8;">
+        <strong style="color:var(--goldlt);">見方：</strong>
+        本命星（${STARS[gState.honmei]?.k||''}）・月命星（${STARS[gState.tsukimei]?.k||''}）の吉方位かどうかを判定しています。
+        「✦ 本命・月命 吉」が最も取りやすい方位です。
+        年盤は人生の根幹（最優先）、月盤は実行月の状態を示します。<strong style="color:var(--goldlt);">引越しに日盤は関係しません。</strong>
+      </div>
+      ${isKyo ? `
+      <div class="kyo-warn">
+        ⚠ ${viewY}年${viewM}月の月盤で<strong>${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}</strong>に当たります。
+        この月は引越しを避けてください。月盤が吉となる月を選んでください。
+        <button onclick="openKariModal()" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+          background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;
+          padding:5px 10px;font-size:.62rem;color:var(--goldlt);font-weight:700;cursor:pointer;
+          font-family:'Noto Serif JP',serif;">🌿 仮吉方とは？</button>
+      </div>` : ''}
+      ${generateKyoPrescription(monthRank.badges, monthRank.rank)}
+      ${!isKyo && monthRank.rank >= 2 ? `
+      <div class="nichiban-guide">
+        <div class="nichiban-guide-title">✦ この方向は取れます</div>
+        <div class="nichiban-guide-text">
+          年盤・月盤ともに吉方位が確認できました。引越し月が確定したら、線路の日に引越しを実行してください。
+        </div>
+      </div>` : ''}
+
+      <!-- 判定基準の説明（折りたたみ） -->
+      <div style="margin-top:10px;">
+        <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'; this.textContent=this.textContent.includes('▶')?'▼ KITOKUの判定基準について':'▶ KITOKUの判定基準について';" style="
+          background:none;border:none;
+          font-size:.62rem;color:var(--mist);
+          cursor:pointer;padding:0;
+          font-family:'Noto Serif JP',serif;
+          letter-spacing:.06em;
+          display:flex;align-items:center;gap:4px;
+        ">▶ KITOKUの判定基準について</button>
+        <div style="display:none;margin-top:8px;
+          background:rgba(100,80,40,.04);
+          border:1px solid var(--rim);
+          border-radius:8px;padding:12px 14px;
+          font-size:.63rem;color:var(--mist);line-height:1.9;
+        ">
+          <strong style="color:var(--goldlt);display:block;margin-bottom:6px;">⚙ KITOKUの吉凶判定について</strong>
+          KITOKUは東洋の叡智とY理論に基づく独自の判定基準です。
+          他の気学アプリや鑑定士と結果が異なる場合があります。<br><br>
+          <strong style="color:var(--snow);">主な特徴</strong><br>
+          ・五大凶殺のみを凶と判定<br>
+          ・月命殺は10歳以下の子のみ対象<br>
+          ・吉凶の優先順位はKITOKU独自の解釈<br><br>
+          お使いの羅針盤や鑑定士の先生と
+          結果を比較しながら、ご自身で判断する
+          材料としてお使いください。
+        </div>
+      </div>
+    </div>
+  `;
+
+  // カレンダーと日盤取りガイドを表示
+  document.getElementById('calSection').style.display = 'block';
+  document.getElementById('nichibanSection').style.display = 'block';
+  document.getElementById('howToSection').style.display = 'block';
+  renderCalendar();
+
+  // タブ選択状態を復元（月を変えても選択中のタブを維持）
+  setTimeout(() => switchBan(gState.activeBanTab || 'year'), 0);
+}
+
+function switchBan(type) {
+  gState.activeBanTab = type; // 選択状態を保存
+  ['year','month','day'].forEach(t => {
+    const tab  = document.getElementById('banTab'  + t.charAt(0).toUpperCase() + t.slice(1));
+    const grid = document.getElementById('banGrid' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (tab)  tab.classList.toggle('active', t === type);
+    if (grid) grid.style.display = (t === type) ? 'block' : 'none';
+  });
+}
+
+function rankLabel(rank) {
+  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 最高吉'];
+  return labels[rank] || '—';
+}
+
+function rankDesc(rank, badges) {
+  if (rank === 0) {
+    if (badges && badges.some(b => b.includes('⚠'))) {
+      return badges.join('・').replace(/⚠ /g, '');
+    }
+    return '吉方位ではありません';
+  }
+  if (rank === 1) return '天道の方位です。吉凶は中程度です';
+  const parts = [];
+  if (badges && badges.length) {
+    badges.forEach(b => {
+      if (b.includes('本命')) parts.push('本命星の吉方');
+      if (b.includes('月命')) parts.push('月命星の吉方');
+      if (b.includes('三合')) parts.push('三合の吉方（後押しの力）');
+      if (b.includes('天道')) parts.push('天道の方位');
+    });
+  }
+  return parts.length ? parts.join('・') : '吉方位です';
+}
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+// ============================================================
+// カレンダー描画
+// ============================================================
+function changeYear(dir) {
+  gState.calYear += dir;
+  if (gState.homeLat && gState.destLat && gState.honmei) {
+    calcAndShowDir();
+  } else {
+    renderCalendar();
+  }
+}
+
+function changeMonth(dir) {
+  gState.calMonth += dir;
+  if (gState.calMonth > 12) { gState.calMonth = 1; gState.calYear++; }
+  if (gState.calMonth < 1) { gState.calMonth = 12; gState.calYear--; }
+  if (gState.homeLat && gState.destLat && gState.honmei) {
+    calcAndShowDir();
+  } else {
+    renderCalendar();
+  }
+}
+
+function getDayDirectionRank(y, m, d, dir) {
+  if (!dir || !gState.honmei) return { rank: 0, badges: [] };
+  const dayCenter = getDayCenter(y, m, d);
+  const dayBoard = buildBoardFromCenter(dayCenter);
+  const dayStarN = dayBoard[dir] || 5;
+  const branch = getDayBranch(y, m, d);
+  const branchName = BRANCH_NAME[branch];
+  const dSangoSet = new Set((SANGO_MAP[branchName] && SANGO_MAP[branchName].dirs) || []);
+  const tendo = getTendoDir(y, m, d);
+  const result = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+  if (!result || typeof result.rank !== 'number') return { rank: 0, badges: [] };
+  if (!Array.isArray(result.badges)) result.badges = [];
+  return result;
+}
+
+function renderCalendar() {
+  if (!gState.destDir || !gState.honmei) return;
+
+  const y = Number(gState.calYear);
+  const m = Number(gState.calMonth);
+  if (!y || !m) return;
+
+  const monthLabel = document.getElementById('calMonthLabel');
+  if (monthLabel) monthLabel.textContent = y + '年 ' + m + '月';
+
+  const dows = document.getElementById('calDows');
+  const dowLabels = ['日', '月', '火', '水', '木', '金', '土'];
+  if (dows) {
+    dows.innerHTML = dowLabels.map(function(label, i) {
+      const color = i === 0 ? 'rgba(232,116,138,.7)' : i === 6 ? 'rgba(100,150,220,.7)' : 'var(--mist)';
+      return '<div class="cal-dow" style="color:' + color + '">' + label + '</div>';
+    }).join('');
+  }
+
+  const firstDay = new Date(y, m - 1, 1).getDay();
+  const lastDate = new Date(y, m, 0).getDate();
+  const cells = document.getElementById('calCells');
+  if (!cells) return;
+
+  function numColor(day) {
+    const dow = new Date(y, m - 1, day).getDay();
+    if (dow === 0) return 'color:rgba(232,116,138,.75);';
+    if (dow === 6) return 'color:rgba(100,150,220,.75);';
+    return '';
+  }
+
+  // 先に最低限の日付だけ描画する。後続の吉方計算が止まっても空白にしないため。
+  let baseHtml = '';
+  for (let i = 0; i < firstDay; i++) baseHtml += '<div class="cal-cell empty"></div>';
+  for (let d = 1; d <= lastDate; d++) {
+    baseHtml += '<div class="cal-cell" onclick="showDayDetail(' + y + ',' + m + ',' + d + ')">' +
+      '<div class="cal-num" style="' + numColor(d) + '">' + d + '</div>' +
+      '</div>';
+  }
+  cells.innerHTML = baseHtml;
+
+  const bestList = document.getElementById('bestList');
+  const railwayEl = document.getElementById('railwayDays');
+  if (bestList) {
+    bestList.innerHTML = '<div class="muted-box" style="text-align:center;">日付を表示しました。吉方候補を計算しています。</div>';
+  }
+
+  try {
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    let html = '';
+    let bestDays = [];
+    let railwayDays = [];
+    const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
+
+    // 月盤の凶方位を事前計算（カレンダー全日に適用）
+    let mKyouSet = new Set();
+    try {
+      const viewD = 15;
+      const mc = getMonthCenter(y, m, viewD);
+      const mb = BRANCH_NAME[getMonthBranch(y, m, viewD)];
+      const mbDir = BRANCH_DIR[((BRANCH_NAME.indexOf(mb) + 6) % 12)];
+      const { kyouSet } = getKyouDirs(mc, gState.honmei, mbDir, gState.tsukimei, 'month');
+      mKyouSet = kyouSet;
+    } catch(e) {}
+
+    for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
+
+    for (let d = 1; d <= lastDate; d++) {
+      let branch = null;
+      let dayRank = { rank: 0, badges: [] };
+      let isKyoDay = false;
+
+      try { branch = getDayBranch(y, m, d); } catch(e) {}
+
+      try {
+        const dc = getDayCenter(y, m, d);
+        const db = buildBoardFromCenter(dc);
+        const dStar = db[gState.destDir] || 5;
+        const dBranchName = BRANCH_NAME[branch] || '';
+        const dSango = new Set(SANGO_MAP[dBranchName]?.dirs || []);
+        const dayBreakDirD = BRANCH_DIR[((branch + 6) % 12)];
+        const tnd = getTendoDir(y, m, d);
+        dayRank = rankDir(gState.destDir, dStar, gState.honmei, gState.tsukimei, dSango, tnd);
+
+        // 日盤の凶方位チェック → 凶なら rank=0
+        const { kyouSet: dKyouSetD } = getKyouDirs(dc, gState.honmei, dayBreakDirD, gState.tsukimei, 'day');
+        if (dKyouSetD.has(gState.destDir)) {
+          isKyoDay = true;
+          dayRank.rank = 0;
+        }
+        // 月盤の凶方位も反映
+        if (mKyouSet && mKyouSet.has(gState.destDir)) {
+          isKyoDay = true;
+          dayRank.rank = 0;
+        }
+      } catch(e) { console.warn('day calc failed:', e); }
+
+      const isRailway = branch !== null && railwayBranches.includes(branch);
+      const isKichi = !isKyoDay && dayRank.rank >= 2;
+      const isToday = (y + '-' + m + '-' + d) === todayStr;
+
+      if (isRailway) railwayDays.push({ d: d, branch: branch });
+
+      // おすすめ計算：日盤凶は完全除外
+      if (!isKyoDay && (isKichi || isRailway)) {
+        let score = dayRank.rank;
+        if (isRailway && isKichi) score += 10; // 線路×吉方：最優先
+        else if (isRailway) score += 3;         // 線路のみ：次点
+        bestDays.push({ d: d, branch: branch, rank: dayRank.rank, score: score, isRailway: isRailway, isKichi: isKichi, badges: dayRank.badges || [] });
+      }
+
+      let classes = 'cal-cell';
+      if (isToday) classes += ' today';
+      if (isKichi) classes += ' kichi-day';
+      if (isKyoDay) classes += ' kyo-day';
+
+      const cellLabels = [];
+      if (isKichi) cellLabels.push('○吉方');
+      if (isKyoDay) cellLabels.push('△要注意');
+      const cellLabel = cellLabels.join('<br>');
+
+      html += '<div class="' + classes + '" onclick="showDayDetail(' + y + ',' + m + ',' + d + ')">' +
+        '<div class="cal-num" style="' + numColor(d) + '">' + d + '</div>' +
+        (cellLabel ? '<div class="cal-label">' + cellLabel + '</div>' : '') +
+        '</div>';
+    }
+
+    cells.innerHTML = html;
+
+    if (railwayEl) {
+      if (!railwayDays.length) {
+        railwayEl.innerHTML = '<span class="railway-chip">この月の線路日はありません</span>';
+      } else {
+        railwayEl.innerHTML = railwayDays.map(function(item) {
+          const date = new Date(y, m - 1, item.d);
+          const dow = dowLabels[date.getDay()];
+          const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
+          return '<span class="railway-chip"><strong>' + y + '/' + m + '/' + item.d + '（' + dow + '）</strong> ' + branchLabel + 'の日</span>';
+        }).join('');
+      }
+    }
+
+    // ── おすすめ日程 最大6件 ──
+    // 線路×吉方を最優先、次に線路のみ、次に吉方のみ
+    const allDays = {};
+
+    // 吉方の日を登録
+    bestDays.forEach(function(item) {
+      if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
+      allDays[item.d].isKichi = true;
+      allDays[item.d].rank = item.rank;
+      allDays[item.d].badges = item.badges;
+      allDays[item.d].score += item.rank;
+    });
+
+    // 線路の日を登録・スコア加算
+    railwayDays.forEach(function(item) {
+      if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
+      allDays[item.d].isRailway = true;
+      allDays[item.d].branch = item.branch;
+      // 線路×吉方は大幅スコアアップ
+      allDays[item.d].score += allDays[item.d].isKichi ? 20 : 5;
+    });
+
+    const top6 = Object.values(allDays)
+      .sort(function(a, b) { return b.score - a.score || a.d - b.d; })
+      .slice(0, 6);
+
+    if (!bestList) return;
+
+    if (!top6.length) {
+      bestList.innerHTML = '<div class="muted-box" style="text-align:center;">この月はおすすめ候補が少なめです。<br>カレンダーの日付ごとの表示も確認してください。</div>';
+      return;
+    }
+
+    bestList.innerHTML = top6.map(function(item, idx) {
+      const date = new Date(y, m - 1, item.d);
+      const dow = dowLabels[date.getDay()];
+      const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
+      const tags = [];
+
+      // 線路×吉方 or 線路のみ
+      if (item.isRailway && item.isKichi) {
+        tags.push('<span class="best-tag tag-best">★ 線路×吉方</span>');
+      } else if (item.isRailway) {
+        tags.push('<span class="best-tag tag-railway">◆ 線路の日（' + branchLabel + '）</span>');
+      }
+
+      // 吉方タグ
+      if (item.isKichi) {
+        if (item.rank >= 4) tags.push('<span class="best-tag tag-kichi">✦ 本命・月命 吉</span>');
+        else tags.push('<span class="best-tag tag-kichi">○ 吉方</span>');
+      }
+
+      try {
+        const monthCenter = getMonthCenter(y, m, item.d);
+        if (STARS[monthCenter]) tags.push('<span class="best-tag tag-month">月盤 ' + monthCenter + '（' + STARS[monthCenter].j + '）</span>');
+      } catch(e) {}
+
+      // 区切り線（吉方のみが始まる前）
+      const isBestBoth = item.isRailway && item.isKichi;
+      const isRailwayOnly = item.isRailway && !item.isKichi;
+      const isKichiOnly = item.isKichi && !item.isRailway;
+      const prevItem = idx > 0 ? top6[idx - 1] : null;
+      const prevIsKichiOnly = prevItem && prevItem.isKichi && !prevItem.isRailway;
+      const divider = (!prevIsKichiOnly && isKichiOnly)
+        ? '<div style="font-size:.6rem;color:var(--mist);padding:6px 0 2px;letter-spacing:.08em;">── 吉方位おすすめ ──</div>'
+        : '';
+
+      return divider + '<div class="best-item' + (isBestBoth ? ' best-item-star' : '') + '">' +
+        '<div class="best-rank ' + (idx === 0 ? 'r1' : '') + '">' + (idx + 1) + '</div>' +
+        '<div class="best-info">' +
+          '<div class="best-date">' + y + '年 ' + m + '月 ' + item.d + '日（' + dow + '）</div>' +
+          '<div class="best-tags">' + tags.join('') + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch (e) {
+    console.warn('renderCalendar rich calculation failed:', e);
+    if (bestList) {
+      bestList.innerHTML = '<div class="muted-box" style="text-align:center;">日付は表示しています。吉方の詳細計算だけ止まったため、目的地や生年月日を確認してください。</div>';
+    }
+  }
+}
+function showDayDetail(y, m, d) {
+  try {
+    const branch = getDayBranch(y, m, d);
+    const dayCenter = getDayCenter(y, m, d);
+    const dir = gState.destDir;
+    if (!dir) return;
+    const dayBoard = buildBoardFromCenter(dayCenter);
+    const dayStarN = dayBoard[dir] || 5;
+    const branchName = BRANCH_NAME[branch];
+    const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
+    const tendo = getTendoDir(y, m, d);
+    const dayBreakDir = BRANCH_DIR[((branch + 6) % 12)];
+    const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+    const dow = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
+
+    // 日盤の凶方位チェック
+    const { kyouSet: dKyouSetDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
+    const isDayKyo = dKyouSetDD.has(dir);
+    const finalRank = isDayKyo ? 0 : dayRank.rank;
+
+    // 日盤グリッドをmakeBanGrid（グローバル）で生成
+    const dayBoardD = buildBoardFromCenter(dayCenter);
+    const dayRankMapD = calcRankMap(dayCenter, dKyouSetDD);
+    const { items: dKyoItemsDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
+    const html = makeBanGrid(dayBoardD, dir, dKyoItemsDD, dKyouSetDD, dayRankMapD);
+
+    // 日盤サマリーパネルも更新
+    const labelEl = document.getElementById('dayRankLabel');
+    const valueEl = document.getElementById('dayRankValue');
+    const descEl  = document.getElementById('dayRankDesc');
+    if (labelEl) labelEl.textContent = `日盤（${m}/${d}）`;
+    if (valueEl) {
+      valueEl.textContent = rankLabel(finalRank);
+      valueEl.className = `dir-panel-rank rank-${finalRank}`;
+    }
+    if (descEl) descEl.textContent = rankDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
+
+    // ── グリッドを直接更新（getElementById不要）
+    const allGrids = document.querySelectorAll('.ban-grid');
+    allGrids.forEach(g => { g.style.display = 'none'; });
+
+    // banGridDayを更新
+    let dayGrid = document.getElementById('banGridDay');
+    if (dayGrid) {
+      dayGrid.innerHTML = html;
+      dayGrid.style.display = 'grid';
+    }
+
+    // タブのactive状態を更新
+    document.querySelectorAll('.ban-tab').forEach(t => t.classList.remove('active'));
+    const dayTab = document.getElementById('banTabDay');
+    if (dayTab) {
+      dayTab.classList.add('active');
+      dayTab.textContent = `日盤（${m}/${d}）`;
+    }
+
+    // STEP3へスクロール
+    const step3 = document.getElementById('dirResultSection');
+    if (step3) {
+      const top = step3.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+
+    // フィードバック表示（大きく・明確に）
+    const rankColor = finalRank >= 4 ? '#8a2840' : finalRank >= 2 ? '#2a6038' : isDayKyo ? '#b04060' : 'var(--mist)';
+    const rankStr  = finalRank >= 4 ? '✦ 本命・月命 吉'
+                   : finalRank >= 2 ? '○ 吉方'
+                   : isDayKyo      ? '⚠ 凶方位'
+                   : '— 吉凶なし';
+    const fb = document.getElementById('dayDetailFeedback');
+    if (fb) {
+      fb.innerHTML = `
+        <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
+          ${y}/${m}/${d}（${dow}）の日盤
+        </div>
+        <div style="font-size:1rem;font-weight:800;color:${rankColor};margin-bottom:3px;">
+          ${rankStr}
+        </div>
+        <div style="font-size:.6rem;color:var(--mist);">
+          ↑ 上のSTEP3「日盤タブ」で方位盤を確認できます
+        </div>`;
+      fb.style.display = 'block';
+    }
+
+  } catch(e) {
+    console.warn('showDayDetail error:', e);
+  }
+}
+
+// ============================================================
+// 今日の日盤取り情報
+// ============================================================
+function renderTodayNichiban(y, m, d) {
+  const dayCenter = getDayCenter(y, m, d);
+  const board = buildBoardFromCenter(dayCenter);
+
+  if (!gState.honmei) return;
+
+  // 今日の吉方位を探す
+  const nichibanEl = document.getElementById('todayNichibanInfo');
+  if (!nichibanEl) return;
+  const kichiDirs = [];
+  for (const dir of ['N','NE','E','SE','S','SW','W','NW']) {
+    const starN = board[dir] || 5;
+    const branch = getDayBranch(y, m, d);
+    const branchName = BRANCH_NAME[branch];
+    const dSangoSet = new Set(SANGO_MAP[branchName]?.dirs || []);
+    const tendo = getTendoDir(y, m, d);
+    const rank = rankDir(dir, starN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
+    if (rank.rank >= 2) kichiDirs.push({ dir, rank });
+  }
+
+  if (!kichiDirs.length) {
+    nichibanEl.innerHTML = '';
+    return;
+  }
+
+  nichibanEl.innerHTML = `
+    <div style="
+      background:rgba(94,200,138,.08);border:1px solid rgba(94,200,138,.25);
+      border-radius:9px;padding:10px 12px;margin-top:8px;
+    ">
+      <div style="font-size:.68rem;color:var(--green);font-weight:600;margin-bottom:6px;">
+        今日の日盤取り候補
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        ${kichiDirs.map(({dir, rank}) => `
+          <span style="
+            background:rgba(94,200,138,.12);border:1px solid rgba(94,200,138,.3);
+            border-radius:7px;padding:4px 9px;font-size:.68rem;color:var(--green);
+          ">${DIR_JP[dir]} ${DIR_EMOJI[dir]}（${STARS[board[dir]].j}）</span>
+        `).join('')}
+      </div>
+      <div style="font-size:.6rem;color:var(--mist);margin-top:6px;line-height:1.7;">
+        出発前にこの方向へ少し足を向けるだけでも、日盤のエネルギーを取れます。
+      </div>
+    </div>
+  `;
+}
+
+
+function openGuideModal(){
+  document.getElementById('guideModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeGuideModal(){
+  document.getElementById('guideModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function openNavModal(){
+  document.getElementById('navModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeNavModal(){
+  document.getElementById('navModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// 初回訪問時にナビ使い方を自動表示
+(function(){
+  const KEY = 'kitoku_move_guide_v1';
+  if (!localStorage.getItem(KEY)) {
+    setTimeout(function(){
+      openNavModal();
+      localStorage.setItem(KEY, '1');
+    }, 800);
+  }
+})();
+
+// 凶方位の処方箋テキスト
+const KYO_PRESCRIPTION = {
+  '五黄殺': { emoji:'🔸', title:'五黄殺への心がけ', text:'イライラや他責の感情が出やすい時です。自分から「ありがとう」を先に言い、自己主張を手放してみてください。その一言が五黄の毒を消し去ります。' },
+  '暗剣殺': { emoji:'🔸', title:'暗剣殺への心がけ', text:'予期せぬトラブルが外からもたらされやすい時です。いつも以上に準備・確認を念入りに行いましょう。トラブルが起きても「これで膿が出た」と感謝で受け止めれば被害は最小限に。' },
+  '歳破':   { emoji:'🔸', title:'歳破への心がけ', text:'予定通りに進まないことがある方位です。こだわりやエゴを一度手放すリセットのタイミング。笑顔で柔軟に対応すれば、それがかえって未来の大きなご縁へ繋がります。' },
+  '月破':   { emoji:'🔸', title:'月破への心がけ', text:'今月は計画が変わりやすい時期です。詰め込まず、余白を持ったスケジュールで動きましょう。予想外の変化を楽しむ心の余裕が最大の防御になります。' },
+  '本命殺': { emoji:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、意識して休息と睡眠の時間をたっぷりと取り、自分を優しく労りましょう。' },
+  '月命殺': { emoji:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず、心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
+  '定位対冲': { emoji:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、一緒にいる家族や同行者、足元の人間関係をいつも以上に大切にしてください。' },
+};
+
+function generateKyoPrescription(badges, rank) {
+  if (rank >= 2) return ''; // 吉方なら不要
+  const matched = Object.keys(KYO_PRESCRIPTION).filter(k => badges.some(b => b.includes(k)));
+  if (matched.length === 0) return '';
+  
+  const items = matched.map(k => {
+    const p = KYO_PRESCRIPTION[k];
+    return `<div style="margin-bottom:10px;padding:10px 12px;background:rgba(255,255,255,.7);border-radius:8px;border:1px solid rgba(180,60,40,.12);">
+      <div style="font-size:.68rem;font-weight:700;color:#8b3a2a;margin-bottom:4px;">${p.emoji} ${p.title}</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">${p.text}</div>
+    </div>`;
+  }).join('');
+  
+  return `
+  <div style="margin-top:10px;background:rgba(180,60,40,.04);border:1px solid rgba(180,60,40,.15);border-radius:10px;padding:12px 14px;">
+    <div style="font-size:.7rem;font-weight:700;color:#8b3a2a;margin-bottom:10px;">
+      💡 琥珀色の処方箋 — どうしても行く場合の心がけ
+    </div>
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.8;margin-bottom:10px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
+      凶方は罰ではありません。<strong style="color:var(--goldlt);">「魂の器を広げるための砥石」</strong>です。<br>
+      何を優先するかはあなた自身が決めてください。
+    </div>
+    ${items}
+    <div style="font-size:.6rem;color:var(--mist);margin-top:6px;line-height:1.7;opacity:.8;">
+      ✦ 出発前から近所の吉方カフェに立ち寄るなど、日常の小さな日盤吉方取りも免疫力になります。
+    </div>
+  </div>`;
+}
+
+function openKariModal(){
+  document.getElementById('kariModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeKariModal(){
+  document.getElementById('kariModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// 引越し先の住所検索（精密版）
+let destAddrTemp = {}; // 確定前の一時保存
+
+async function searchDestAddr() {
+  const input = document.getElementById('destAddrInput');
+  const status = document.getElementById('destAddrStatus');
+  const confirm = document.getElementById('destAddrConfirm');
+  const val = input.value.trim();
+  if (!val) return;
+
+  status.textContent = '検索中...';
+  confirm.style.display = 'none';
+
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&accept-language=ja&countrycodes=jp`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-move/1.0' } });
+    const data = await res.json();
+
+    if (!data.length) {
+      status.textContent = '場所が見つかりませんでした。都道府県から番地まで入力してみてください。';
+      return;
+    }
+
+    const place = data[0];
+    const lat = parseFloat(place.lat);
+    const lon = parseFloat(place.lon);
+    const displayName = place.display_name;
+    const shortName = displayName.split(',').slice(0, 4).join(' ').trim();
+
+    // 一時保存
+    destAddrTemp = { lat, lon, name: val, area: shortName, displayName };
+
+    // 確認カードを表示
+    document.getElementById('destAddrFound').textContent = shortName;
+    document.getElementById('destAddrMapLink').href =
+      `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+    confirm.style.display = 'block';
+    status.textContent = '';
+
+  } catch(e) {
+    status.textContent = 'エラーが発生しました。通信環境をご確認ください。';
+  }
+}
+
+function confirmDestAddr() {
+  if (!destAddrTemp.lat) return;
+  gState.destLat  = destAddrTemp.lat;
+  gState.destLon  = destAddrTemp.lon;
+  gState.destName = destAddrTemp.name;
+  gState.destArea = destAddrTemp.area;
+
+  // 確認カードを「確定済み」表示に変更
+  document.getElementById('destAddrConfirmBtn').textContent = '✓ 確定済み';
+  document.getElementById('destAddrConfirmBtn').style.background = 'rgba(40,130,60,.2)';
+  document.getElementById('destAddrStatus').innerHTML =
+    `<span style="color:var(--goldlt);font-weight:700;">✓ ${destAddrTemp.area} で計算します</span>`;
+
+  const hint2el = document.getElementById('hint2');
+  if (hint2el) hint2el.style.display = 'block';
+  if (gState.homeLat) calcAndShowDir();
+}
+</script>
+
+<!-- 方位盤ガイドモーダル -->
+<div class="guide-modal-overlay" id="guideModalOverlay" onclick="if(event.target===this)closeGuideModal()">
+  <div class="guide-modal">
+    <div class="guide-modal-header">
+      <div class="guide-modal-title">🧭 方位盤の読み方</div>
+      <button class="guide-modal-close" onclick="closeGuideModal()">✕</button>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">📅 3つのギア — 年盤・月盤・日盤</div>
+      <div class="guide-modal-sec-body">
+        <strong>年盤（大きなギア）</strong><br>
+        1年間の大きな流れ。引越し・転職・結婚など人生の重大な決断に使います。遠距離移動（100km以上）にも。<br><br>
+        <strong>月盤（中くらいのギア）</strong><br>
+        月ごとの流れ。出張・旅行・月単位の行動計画に使います。年盤と重ねて確認するのが基本。<br><br>
+        <strong>日盤（小さなギア）</strong><br>
+        毎日の行動。カフェ・コンビニ・散歩など日常の小さな吉方取りに。750m以上が目安。
+      </div>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">🗺️ 南上 vs 北上について</div>
+      <div class="guide-modal-sec-body">
+        気学では<strong>南が上</strong>が正式。太陽が南中する方角を上とする東洋の伝統から。地図に慣れた方は北上でも確認できます。どちらも計算結果は同じです。
+      </div>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">📐 方位の角度（30度/60度）について</div>
+      <div class="guide-modal-sec-body">
+        KITOKUは<strong>30度/60度方式</strong>（東洋の伝統的な分割）を採用しています。<br>
+        東西南北（N・E・S・W）＝各30度　／　四隅（NE・SE・SW・NW）＝各60度<br><br>
+        他アプリや市販の暦では45度均等方式が多く、境界付近では吉凶の判定が変わることがあります。「アプリによって結果が違う」と感じた時はこの違いが原因のほとんどです。
+      </div>
+    </div>
+
+    <div class="guide-modal-section">
+      <div class="guide-modal-sec-title">📏 吉の大きさは距離×時間</div>
+      <div class="guide-modal-sec-body">
+        <strong>日盤取り</strong>：750m以上・数時間 → 今日の気を整える<br>
+        <strong>月盤取り</strong>：数十km以上・数日〜 → 仕事・人間関係の波を整える<br>
+        <strong>年盤取り</strong>：100km以上・長期 → 人生の根幹を書き換える<br><br>
+        <strong>仮吉方（75日ルール）</strong><br>
+        引越しが難しい場合は吉方位に<strong>75日間寝泊まり</strong>するだけで引越しと同じ効果が得られます。まず75日、その方向に通うことから始めましょう。
+      </div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist,#5e503d);line-height:1.8;padding:4px 2px;">
+      ※ 気学には流派により計算方法・優先順位が異なります。KITOKUは東洋の叡智とY理論に基づく独自解釈です。他のアプリと比較しながらご自身で判断する材料としてご使用ください。
+    </div>
+  </div>
+</div>
+
+
+<!-- 聖地巡礼ナビ使い方モーダル -->
+<div class="nav-modal-overlay" id="navModalOverlay" onclick="if(event.target===this)closeNavModal()">
+  <div class="nav-modal">
+    <div class="nav-modal-header">
+      <div class="nav-modal-title">🏡 引越し吉方位ナビ の使い方</div>
+      <button class="nav-modal-close" onclick="closeNavModal()">✕</button>
+    </div>
+
+    <div class="nav-modal-philosophy">
+      引越しは、人生のOSを書き換える最高の前進アクション。<br>
+      <span style="font-size:.62rem;font-weight:400;opacity:.8;">年盤と月盤さえ揃えば、あとは何日に引越しても大丈夫。<br>あなたが根を張る土壌を、自分で選んでください。</span>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">🧭 引越し方位選びの絶対ルール</div>
+      <div class="nav-modal-sec-body">
+        <div class="rule-item"><div class="rule-num">①</div><div><strong>年盤と月盤の両方が吉であること</strong><br>引越しは人生の根幹を変える行為のため、最も重い「年盤」と実行月の「月盤」が両方吉の方位・月を選ぶのが大原則です。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>日盤の凶は完全スルーでOK</strong><br>年盤・月盤が揃っていれば、引越し当日の日盤に凶がついていても全く影響しません。日盤はただのノイズです。安心して日程を決めてください。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>土用殺は引越しに関係なし</strong><br>旅行では凶となる土用殺ですが、引越し（定住）では完全に無害です。土用期間中でも吉方位への引越しは問題ありません。</div></div>
+        <div class="rule-item"><div class="rule-num">④</div><div><strong>吉のエネルギーは「距離×住んだ時間」</strong><br>遠くへ引越すほど、長く住むほど吉の力は大きくなります。大吉・小吉のランク付けはありません。</div></div>
+        <div class="rule-item"><div class="rule-num">⑤</div><div><strong>引越し日は「線路の日」を選ぶ</strong><br>年盤・月盤が揃ったら、日盤で「線路の日」に引越しを実行すると吉が長く続きます。カレンダーで確認できます。</div></div>
+        <div class="rule-item"><div class="rule-num">⑥</div><div><strong>750m未満は方位の作用なし</strong><br>現在地から750m未満の引越しは方位の吉凶が発生しません。住所入力で正確な距離を確認できます。家相（間取り・方角）を優先してください。</div></div>
+      </div>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">🌿 希望の場所が凶方位だった場合</div>
+      <div class="nav-modal-sec-body">
+        諦める必要はありません。「仮吉方（75日ルール）」という最強の抜け道があります。<br><br>
+        まず吉方位の場所で75日間寝泊まりしてから新居へ引越すことで、引越しと同じ「運勢のOS書き換え」が得られます。<br><br>
+        詳しくは「🌿 仮吉方（75日ルール）とは？」ボタンをご覧ください。
+      </div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.8;padding:4px 2px;">
+      ※ 気学には流派により計算方法・優先順位が異なります。KITOKUは東洋の叡智とY理論に基づく独自解釈です。最終判断はご自身でお決めください。
+    </div>
+  </div>
+</div>
+
+
+<!-- 仮吉方モーダル -->
+<div class="nav-modal-overlay" id="kariModalOverlay" onclick="if(event.target===this)closeKariModal()">
+  <div class="nav-modal">
+    <div class="nav-modal-header">
+      <div class="nav-modal-title">🌿 仮吉方（75日ルール）とは？</div>
+      <button class="nav-modal-close" onclick="closeKariModal()">✕</button>
+    </div>
+
+    <div class="nav-modal-philosophy">
+      引越しが難しい方への、宇宙の抜け道。<br>
+      <span style="font-size:.62rem;font-weight:400;opacity:.8;">75日間だけ吉方位に滞在することで、<br>引越しと同じ「運勢のOS書き換え」が得られます。</span>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">🌙 なぜ「75日」なのか</div>
+      <div class="nav-modal-sec-body">
+        新月から満月のサイクル（約15日）×五行（5つ）＝75日。<br>
+        この期間、同じ場所で寝泊まりすることで「気（根）」が完全に定着します。<br>
+        村山流では60日では不十分とし、<strong>実質75泊</strong>を必須としています。
+      </div>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">📋 実行のルール</div>
+      <div class="nav-modal-sec-body">
+        <div class="rule-item"><div class="rule-num">①</div><div><strong>実質75泊</strong>すること<br>出張・旅行で外泊した日数は除外。7日外泊したら合計82日滞在が必要。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>現在地から2km以上</strong>離すこと<br>できれば市区町村を変え、水道局の水を変えるのが理想。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>場所を固定</strong>すること<br>ホテルを転々と移動するのはNG。同じ部屋・同じ場所で75泊。</div></div>
+      </div>
+    </div>
+
+    <div class="nav-modal-warning">
+      <div class="nav-modal-warning-title">🚫 旧居（元の家）でやってはいけないこと</div>
+      <div class="nav-modal-warning-body">
+        <strong>絶対NG（リセットになる）：</strong><br>
+        🔸 旧居で寝泊まりする（うっかり居眠りも含む）<br>
+        🔸 旧居の水・火を使って調理したものを食べる<br>
+        🔸 調理中の味見を飲み込む（口に含んで吐き出せばセーフ）<br>
+        🔸 旧居周辺の飲食店で食事する<br>
+        🔸 旧居に75日以上置いてあった食材を持ち込んで食べる<br><br>
+        <strong>OK（問題ない）：</strong><br>
+        ✅ お風呂・シャワー・歯磨き（飲み込まなければ）<br>
+        ✅ 掃除・洗濯・家族の世話<br>
+        ✅ 日用品・衣類の持ち出し<br>
+        ✅ 家族が仮住まいに遊びに来ること
+      </div>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">💡 家族がいる場合の特例</div>
+      <div class="nav-modal-sec-body">
+        凶方位になる人だけが仮住まいへ出て、残りの家族は新居へ直接引越すことができます。<br><br>
+        全員で仮住まいへ移る場合、<strong>吉方位にならない家族は週1回旧居に泊まる</strong>ことで、その家族だけ気を定着させないようにすることができます。
+      </div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.8;padding:4px 2px;">
+      ✦ 仮吉方は精神的修行でもあります。不自由な期間を笑って乗り越えられた時、新しい家には最高の幸運が定着します。
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

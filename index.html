@@ -881,6 +881,32 @@ body.theme-night .start-btn{
       <div class="selector-arrow">›</div>
     </a>
 
+    <!-- MOVE -->
+    <a class="selector-card s-pilgrimage" href="move.html">
+      <div class="selector-icon">🏡</div>
+      <div class="selector-info">
+        <div class="selector-en">KITOKU for MOVE</div>
+        <div class="selector-title">引越し 吉方位ナビ</div>
+        <div class="selector-desc">年盤・月盤で引越し先を選ぶ。仮吉方・同一市内の精密計算対応。</div>
+      </div>
+      <div class="selector-arrow">›</div>
+    </a>
+
+    <!-- JOURNAL（コンパクトバナー） -->
+    <a href="journal.html" style="
+      display:flex;align-items:center;gap:10px;
+      background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
+      border:1px solid rgba(138,104,32,.22);border-radius:10px;
+      padding:11px 14px;margin:4px 0 0;text-decoration:none;
+    ">
+      <div style="font-size:1.1rem;">✍</div>
+      <div style="flex:1;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);">魂の記帳 — 今日の問いに答える</div>
+        <div style="font-size:.6rem;color:var(--mist);">毎日届く禅問答。答えを書き、感謝を記録する。</div>
+      </div>
+      <div style="font-size:.8rem;color:rgba(138,104,32,.4);">›</div>
+    </a>
+
     <!-- ENGLISH（コンパクトバナー） -->
     <a href="en/index.html" class="en-banner" style="margin:4px 0 0;">
       <div class="en-badge">EN</div>
@@ -1000,6 +1026,18 @@ body.theme-night .start-btn{
     </div>
   </div>
 
+  <!-- 今日の問い -->
+  <div class="today-question">
+    <div class="tq-label">✦ TODAY'S QUESTION</div>
+    <div class="tq-text" id="todayQuestionText">読み込み中...</div>
+    <button class="tq-copy-btn" onclick="copyTodayQuestion()">
+      この問いをAIにコピーして相談する
+    </button>
+    <div class="tq-sub-links">
+      <button class="tq-sub-link" onclick="location.href='journal.html'">✍ 記帳する（答えを書く）</button>
+    </div>
+  </div>
+
   <!-- まずはここ（ゴールド） -->
   <div class="section-block tone-daily" id="sec1">
     <div class="cards-label tone-daily" style="margin-top:0;">
@@ -1065,6 +1103,15 @@ body.theme-night .start-btn{
         <div class="card-num">⑥ 西洋星読みクロスチェック</div>
         <div class="card-title">64象意 × KITOKU解釈</div>
         <div class="card-desc">太陽・月・金星などをKITOKU解釈で自己理解を深める。</div>
+      </div>
+      <div class="app-card-wide-arrow">›</div>
+    </a>
+    <a class="app-card-wide tone-self" href="journal.html">
+      <div class="card-icon">✍</div>
+      <div class="card-info">
+        <div class="card-num">⑦ 魂の記帳</div>
+        <div class="card-title">今日の問いに答える</div>
+        <div class="card-desc">毎日届く禅問答に答えを書き、感謝を記録する。自分だけの魂の通帳。</div>
       </div>
       <div class="app-card-wide-arrow">›</div>
     </a>
@@ -1134,6 +1181,15 @@ body.theme-night .start-btn{
         <div class="card-num">⑩ 旅行 吉方位ナビ</div>
         <div class="card-title">旅行日程ナビ</div>
         <div class="card-desc">目的地への方位と吉日を確認し、旅に出る日を選ぶ。</div>
+      </div>
+      <div class="app-card-wide-arrow">›</div>
+    </a>
+    <a class="app-card-wide tone-travel" href="move.html">
+      <div class="card-icon">🏡</div>
+      <div class="card-info">
+        <div class="card-num">⑪ 引越し 吉方位ナビ</div>
+        <div class="card-title">引越し・仮吉方ナビ</div>
+        <div class="card-desc">年盤・月盤で引越し先を選ぶ。同一市内の精密計算・仮吉方対応。</div>
       </div>
       <div class="app-card-wide-arrow">›</div>
     </a>

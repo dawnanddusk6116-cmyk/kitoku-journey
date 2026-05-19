@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>魂の記帳 | KITOKU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f7f4ef;--snow:#1c1208;--goldlt:#5c4010;--gold:#8a6820;
+  --mist:#5e503d;--rim:rgba(138,104,32,.18);
+  --card:#fff;--amber:rgba(138,104,32,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Noto Serif JP',serif;
+  background:var(--bg);color:var(--snow);
+  min-height:100dvh;padding-bottom:40px;
+}
+.header{
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--rim);
+  background:var(--bg);
+  position:sticky;top:0;z-index:100;
+}
+.header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
+.header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
+.back-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.65rem;color:var(--mist);text-decoration:none;
+  margin-bottom:10px;padding:4px 0;
+}
+.container{padding:0 16px;max-width:480px;margin:0 auto;}
+
+/* 星バー */
+.star-bar{
+  background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.5));
+  border:1px solid var(--rim);border-radius:10px;
+  padding:10px 14px;margin:14px 0 16px;
+  font-size:.68rem;color:var(--mist);line-height:1.7;
+  text-align:center;
+}
+.star-bar strong{color:var(--goldlt);}
+
+/* 今日の問い */
+.question-card{
+  background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.7));
+  border:1px solid rgba(138,104,32,.3);border-radius:14px;
+  padding:18px 16px;margin-bottom:16px;
+}
+.question-date{font-size:.6rem;color:var(--mist);margin-bottom:8px;letter-spacing:.06em;}
+.question-label{font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:8px;letter-spacing:.1em;}
+.question-text{
+  font-size:.88rem;font-weight:700;color:var(--snow);
+  line-height:1.7;letter-spacing:.04em;
+}
+.question-sub{font-size:.62rem;color:var(--mist);margin-top:8px;line-height:1.7;opacity:.8;}
+
+/* 入力エリア */
+.write-section{margin-bottom:16px;}
+.write-label{font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;}
+.write-textarea{
+  width:100%;min-height:120px;padding:12px 14px;
+  border:1px solid rgba(138,104,32,.25);border-radius:10px;
+  font-family:'Noto Serif JP',serif;font-size:.75rem;
+  color:var(--snow);background:rgba(255,255,255,.85);
+  line-height:1.8;resize:vertical;outline:none;
+}
+.write-textarea:focus{border-color:rgba(138,104,32,.5);}
+.write-textarea::placeholder{color:rgba(94,80,61,.4);}
+
+/* 感謝エリア */
+.thanks-section{
+  background:rgba(60,100,60,.04);border:1px solid rgba(60,100,60,.2);
+  border-radius:10px;padding:12px 14px;margin-bottom:16px;
+}
+.thanks-label{font-size:.68rem;color:#3a6e3a;font-weight:700;margin-bottom:8px;}
+.thanks-input{
+  width:100%;padding:10px 12px;
+  border:1px solid rgba(60,100,60,.2);border-radius:8px;
+  font-family:'Noto Serif JP',serif;font-size:.75rem;
+  color:var(--snow);background:rgba(255,255,255,.85);
+  outline:none;
+}
+.thanks-input:focus{border-color:rgba(60,100,60,.4);}
+.thanks-input::placeholder{color:rgba(94,80,61,.4);}
+
+/* 保存ボタン */
+.save-btn{
+  width:100%;padding:13px;background:var(--goldlt);color:#fff;
+  border:none;border-radius:10px;font-size:.78rem;font-weight:700;
+  font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.08em;
+  margin-bottom:20px;
+}
+.save-btn:active{opacity:.85;}
+.save-feedback{
+  text-align:center;font-size:.65rem;color:var(--goldlt);
+  font-weight:700;margin-top:-14px;margin-bottom:16px;
+  min-height:18px;
+}
+
+/* 過去の記録 */
+.history-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;cursor:pointer;padding:4px 0;
+}
+.history-title{font-size:.72rem;font-weight:700;color:var(--goldlt);}
+.history-arrow{font-size:.65rem;color:var(--mist);transition:transform .2s;}
+.history-arrow.open{transform:rotate(90deg);}
+.history-list{display:none;}
+.history-list.open{display:block;}
+.history-item{
+  background:var(--card);border:1px solid var(--rim);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.history-item-date{font-size:.58rem;color:var(--mist);margin-bottom:4px;}
+.history-item-q{font-size:.63rem;font-weight:700;color:var(--goldlt);margin-bottom:5px;line-height:1.5;}
+.history-item-a{font-size:.68rem;color:var(--snow);line-height:1.8;}
+.history-item-thanks{
+  font-size:.62rem;color:#3a6e3a;margin-top:6px;padding-top:6px;
+  border-top:1px solid rgba(60,100,60,.15);line-height:1.6;
+}
+.empty-history{font-size:.65rem;color:var(--mist);text-align:center;padding:20px 0;opacity:.6;}
+
+/* 削除ボタン */
+.delete-btn{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:.58rem;color:var(--mist);background:none;border:none;
+  cursor:pointer;float:right;opacity:.5;padding:2px 4px;
+  font-family:'Noto Serif JP',serif;
+}
+.delete-btn:hover{opacity:.8;}
+
+.footer{
+  text-align:center;font-size:.58rem;color:var(--mist);
+  padding:20px 16px;opacity:.6;line-height:1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">✦ KITOKU</div>
+  <div class="header-sub">魂の記帳</div>
+</div>
+
+<div class="container">
+  <a href="index.html" class="back-btn" onclick="history.back();return false;">← 戻る</a>
+
+  <!-- 星バー -->
+  <div class="star-bar" id="starBar">
+    生年月日を登録すると、あなたの星に合わせた問いが届きます
+  </div>
+
+  <!-- 今日の問い -->
+  <div class="question-card">
+    <div class="question-date" id="todayDate"></div>
+    <div class="question-label">✦ 今日の問い</div>
+    <div class="question-text" id="questionText">読み込み中...</div>
+    <div class="question-sub" id="questionSub"></div>
+  </div>
+
+  <!-- 答えを書く -->
+  <div class="write-section">
+    <div class="write-label">📝 あなたの答え</div>
+    <textarea class="write-textarea" id="answerInput"
+      placeholder="パッと浮かんだ言葉を、そのまま書いてください。正解はありません。"></textarea>
+  </div>
+
+  <!-- 感謝の記録 -->
+  <div class="thanks-section">
+    <div class="thanks-label">🌿 今日ひとつ、感謝を書く</div>
+    <input class="thanks-input" id="thanksInput" type="text"
+      placeholder="例：美味しいコーヒーが飲めた">
+  </div>
+
+  <!-- 保存 -->
+  <button class="save-btn" onclick="saveEntry()">✦ 今日の記録を保存する</button>
+  <div class="save-feedback" id="saveFeedback"></div>
+
+  <!-- 過去の記録 -->
+  <div class="history-header" onclick="toggleHistory()">
+    <span class="history-title">📚 過去の記録 <span id="historyCount" style="font-weight:400;color:var(--mist);font-size:.6rem;"></span></span>
+    <span class="history-arrow" id="historyArrow">›</span>
+  </div>
+  <div class="history-list" id="historyList"></div>
+
+</div>
+
+<div class="footer">
+  KITOKU ENGINE — 天地統合コンシェルジュ<br>
+  Inspired by 5000 Years of Eastern Celestial Wisdom
+</div>
+
+<script>
+// ============================================================
+// 禅問答プール（90問）
+// ============================================================
+const QUESTIONS_UNIVERSAL = [
+  { q:'今日、一番大切にしたいことは何ですか？', s:'答えは毎日変わっていい。今日の自分に正直に。' },
+  { q:'今、手放せたら楽になるものは何ですか？', s:'持ちすぎていませんか。一つでいいので、名前をつけてみてください。' },
+  { q:'最近、「ありがとう」を言い忘れている人は誰ですか？', s:'言葉にしなくても、心で伝えることから始めてみてください。' },
+  { q:'今の自分に「よくやっている」と声をかけるとしたら、何について？', s:'自分を責める前に、一度だけ自分を認める練習です。' },
+  { q:'10年後の自分は、今日の自分に何と言うと思いますか？', s:'未来の自分は、過去の自分より少し優しいはずです。' },
+  { q:'今、あなたの人生で「動き始めたいけど動けていない」ことは何ですか？', s:'動けない理由は「外」にありますか？それとも「内」にありますか？' },
+  { q:'最近、誰かのために「何かしてあげたい」と感じたことはありますか？', s:'その感情は、あなたの命の設計図の一部かもしれません。' },
+  { q:'今日、あなたが「本当は言いたかった言葉」は何ですか？', s:'言えなかったことを、ここに書いておいてください。' },
+  { q:'あなたが一番「自分らしい」と感じる瞬間はどんな時ですか？', s:'その場所・その状況が、あなたの吉方位かもしれません。' },
+  { q:'今、誰かに「ごめんなさい」と言える勇気はありますか？', s:'謝ることは、弱さではなく強さです。' },
+  { q:'あなたの「普通」は、誰かの「特別」かもしれません。それは何ですか？', s:'当たり前になっていることの中に、才能が眠っています。' },
+  { q:'今日、あなたの背中を押してくれた人・言葉・出来事は何ですか？', s:'小さなことでいいです。気づくことが大切です。' },
+  { q:'「お金のためではなく」やりたいことが一つあるとしたら？', s:'その答えに、あなたの本当の方向が隠れています。' },
+  { q:'今、あなたの人生で「もう十分だ」と思えることは何ですか？', s:'足りないものを探す前に、もう持っているものを数えてみてください。' },
+  { q:'最近、自分を「いい意味で裏切った」瞬間はありましたか？', s:'「こんなことができるとは思っていなかった」という発見です。' },
+  { q:'あなたが今、一番恐れていることは何ですか？', s:'恐れを言葉にすると、半分は消えます。' },
+  { q:'今日の自分に「点数」をつけるとしたら何点？その理由は？', s:'100点じゃなくていい。今日の正直な点数を出してみてください。' },
+  { q:'あなたが「これだけは妥協したくない」と思っていることは何ですか？', s:'その一線が、あなたの魂の核心を表しています。' },
+  { q:'今の生活で「なくなったら困る」ものを3つ挙げるとしたら？', s:'意外なものが出てくるかもしれません。それが本当の優先順位です。' },
+  { q:'もし明日、全てがリセットされるとしたら、今日何をしますか？', s:'今日を「最後の一日」として見ると、本当に大切なことが見えてきます。' },
+  { q:'最近、誰かの言葉で「傷ついた」ことはありますか？', s:'傷は弱さではなく、あなたが大切にしているものの証拠です。' },
+  { q:'今、あなたが「もっと時間をかけたい」と思っていることは何ですか？', s:'時間の使い方は、価値観の地図です。' },
+  { q:'「正しいこと」と「したいこと」が違う時、あなたはどちらを選びますか？', s:'どちらを選んでも、それがあなたの今の答えです。' },
+  { q:'あなたが今「誰かに頼りたい」と感じていることは何ですか？', s:'頼ることは、相手への信頼の表現です。' },
+  { q:'今日、あなたの「五感」が一番反応したのはどんな場面ですか？', s:'香り、音、温度、色、触感。体が覚えていることを書いてみてください。' },
+  { q:'あなたが「子どもの頃に好きだったこと」は今も好きですか？', s:'昔の自分と今の自分、何が変わって何が変わっていないか。' },
+  { q:'今、あなたの周りで「輝いている人」は誰ですか？', s:'その人の何があなたを惹きつけていますか？それはあなたの中にもあります。' },
+  { q:'「もっと早く始めればよかった」と思うことは何ですか？', s:'今日が、その「もっと早く」の日です。' },
+  { q:'あなたが今、誰かに「伝えたいこと」はありますか？', s:'言葉にならなくても、ここに書いておいてください。' },
+  { q:'今日、あなたの体は何を欲していますか？', s:'体の声は、魂の羅針盤です。無視していませんか？' },
+];
+
+const QUESTIONS_BY_STAR = {
+  1: [ // 一白水星
+    { q:'今、あなたの「縁の下の力持ち」ぶりは誰かに伝わっていますか？', s:'一白水星の才能は、静かな場所で最も輝きます。' },
+    { q:'今日、誰かのために「黙って動いた」ことはありましたか？', s:'その行動が、静かに世界を変えています。' },
+  ],
+  2: [ // 二黒土星
+    { q:'今日、誰かの「縁の下」で支えたことはありましたか？', s:'二黒の力は、育てることと受け取ることの両方にあります。' },
+    { q:'今、あなたが「育てているもの」は何ですか？人でも、仕事でも。', s:'種を蒔く人がいなければ、収穫はありません。' },
+  ],
+  3: [ // 三碧木星
+    { q:'今日、あなたの「直感」は何を告げていますか？', s:'三碧の直感は、論理より早く正解に辿り着きます。' },
+    { q:'今、あなたが「動き出したい」と感じているのはどんなことですか？', s:'その衝動に、三碧の星が宿っています。' },
+  ],
+  4: [ // 四緑木星
+    { q:'今日、あなたが「橋渡し」をした場面はありましたか？', s:'四緑の才能は、人と人をつなぐことにあります。' },
+    { q:'今、あなたの「信頼」を最も必要としている人は誰ですか？', s:'四緑の縁は、一度結ばれると長く続きます。' },
+  ],
+  5: [ // 五黄土星
+    { q:'今日、あなたが「中心にいる」と感じた瞬間はありましたか？', s:'五黄は常に中心。引き寄せる力と責任は表裏一体です。' },
+    { q:'今、あなたの「カリスマ性」が最も必要とされている場所はどこですか？', s:'五黄の力は、使わないと腐ります。恐れずに中心へ。' },
+  ],
+  6: [ // 六白金星
+    { q:'今日、あなたは「天の視点」で物事を見られましたか？', s:'六白は高い場所から見ることが使命です。足元だけ見ていませんか？' },
+    { q:'今、あなたが「理想」と感じているビジョンは何ですか？', s:'六白の理想は、必ず現実になります。諦めないでください。' },
+  ],
+  7: [ // 七赤金星
+    { q:'今日、あなたを「笑顔にしてくれたもの」は何ですか？', s:'七赤の喜びは、周りを幸せにする波紋です。' },
+    { q:'今、あなたが「収穫したい」と感じていることは何ですか？', s:'七赤の秋、実ってきているものに気づいていますか？' },
+  ],
+  8: [ // 八白土星
+    { q:'今日、あなたの「変化」に気づいた瞬間はありましたか？', s:'八白は変わり続けることが本質です。昨日と今日の違いを探してみてください。' },
+    { q:'今、あなたが「積み上げてきたもの」は何ですか？', s:'八白の蓄積は、必ず大きな変化として花開きます。' },
+  ],
+  9: [ // 九紫火星
+    { q:'今日、あなたの「直感」は正しかったですか？', s:'九紫の直感は、火のように瞬時に本質を見抜きます。' },
+    { q:'今、あなたが「情熱を持てる」ことは何ですか？', s:'九紫の火が消えていませんか？小さな火種を探してみてください。' },
+  ],
+};
+
+// ============================================================
+// 状態
+// ============================================================
+const JOURNAL_KEY = 'kitoku_journal_v1';
+const STAR_KEY    = 'kitoku_honmei';
+const NAME_KEY    = 'kitoku_userName';
+
+function loadJournal() {
+  try { return JSON.parse(localStorage.getItem(JOURNAL_KEY)) || []; }
+  catch { return []; }
+}
+function saveJournal(entries) {
+  localStorage.setItem(JOURNAL_KEY, JSON.stringify(entries));
+}
+
+// ============================================================
+// 今日の問いを決める
+// ============================================================
+function getTodayQuestion() {
+  const honmei = parseInt(localStorage.getItem(STAR_KEY)) || 0;
+  const now = new Date();
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+
+  // 星専用問いがある場合は確率30%で混ぜる
+  let pool = [...QUESTIONS_UNIVERSAL];
+  if (honmei >= 1 && honmei <= 9 && QUESTIONS_BY_STAR[honmei]) {
+    pool = [...QUESTIONS_UNIVERSAL, ...QUESTIONS_BY_STAR[honmei], ...QUESTIONS_BY_STAR[honmei]];
+  }
+  return pool[dayOfYear % pool.length];
+}
+
+// ============================================================
+// 初期化
+// ============================================================
+function init() {
+  // 日付表示
+  const now = new Date();
+  const days = ['日','月','火','水','木','金','土'];
+  document.getElementById('todayDate').textContent =
+    `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${days[now.getDay()]}）`;
+
+  // 星情報
+  const honmei = parseInt(localStorage.getItem(STAR_KEY)) || 0;
+  const STAR_NAMES = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+  const starBar = document.getElementById('starBar');
+  if (honmei >= 1 && honmei <= 9) {
+    const userName = localStorage.getItem(NAME_KEY) || '';
+    starBar.innerHTML = `<strong>${userName ? userName + 'さん' : ''} 本命星：${STAR_NAMES[honmei]}</strong>　あなたの星に合わせた問いをお届けします`;
+  }
+
+  // 今日の問い
+  const q = getTodayQuestion();
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('questionSub').textContent  = q.s;
+
+  // 今日すでに記録があれば読み込む
+  const todayStr = toDateStr(now);
+  const entries = loadJournal();
+  const todayEntry = entries.find(e => e.date === todayStr);
+  if (todayEntry) {
+    document.getElementById('answerInput').value = todayEntry.answer || '';
+    document.getElementById('thanksInput').value = todayEntry.thanks || '';
+    document.getElementById('saveFeedback').textContent = '✦ 今日の記録があります';
+  }
+
+  // 過去の記録カウント
+  document.getElementById('historyCount').textContent = entries.length > 0 ? `（${entries.length}件）` : '';
+  renderHistory();
+}
+
+function toDateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// ============================================================
+// 保存
+// ============================================================
+function saveEntry() {
+  const answer = document.getElementById('answerInput').value.trim();
+  const thanks = document.getElementById('thanksInput').value.trim();
+  if (!answer && !thanks) {
+    document.getElementById('saveFeedback').textContent = '何か書いてから保存してください';
+    return;
+  }
+
+  const q = getTodayQuestion();
+  const todayStr = toDateStr(new Date());
+  const entries = loadJournal().filter(e => e.date !== todayStr); // 今日分を上書き
+  entries.unshift({ date: todayStr, question: q.q, answer, thanks });
+
+  // 最大365件保持
+  if (entries.length > 365) entries.length = 365;
+  saveJournal(entries);
+
+  document.getElementById('saveFeedback').innerHTML = '✦ 保存しました　<span style="font-weight:400;opacity:.7;">— ' + todayStr + '</span>';
+  document.getElementById('historyCount').textContent = `（${entries.length}件）`;
+  renderHistory();
+
+  // フィードバックアニメーション
+  setTimeout(() => {
+    document.getElementById('saveFeedback').style.opacity = '0';
+    document.getElementById('saveFeedback').style.transition = 'opacity 1s';
+  }, 2000);
+  setTimeout(() => {
+    document.getElementById('saveFeedback').style.opacity = '1';
+    document.getElementById('saveFeedback').style.transition = '';
+  }, 3200);
+}
+
+// ============================================================
+// 過去の記録レンダリング
+// ============================================================
+function renderHistory() {
+  const entries = loadJournal();
+  const list = document.getElementById('historyList');
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty-history">まだ記録がありません。<br>今日の答えを書いて保存してみてください。</div>';
+    return;
+  }
+  list.innerHTML = entries.map((e, i) => `
+    <div class="history-item">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="history-item-date">${e.date}</div>
+        <button class="delete-btn" onclick="deleteEntry(${i})">✕ 削除</button>
+      </div>
+      <div class="history-item-q">「${e.question}」</div>
+      ${e.answer ? `<div class="history-item-a">${e.answer.replace(/\n/g,'<br>')}</div>` : ''}
+      ${e.thanks ? `<div class="history-item-thanks">🌿 ${e.thanks}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function deleteEntry(idx) {
+  const entries = loadJournal();
+  entries.splice(idx, 1);
+  saveJournal(entries);
+  document.getElementById('historyCount').textContent = entries.length > 0 ? `（${entries.length}件）` : '';
+  renderHistory();
+}
+
+function toggleHistory() {
+  const list = document.getElementById('historyList');
+  const arrow = document.getElementById('historyArrow');
+  const open = list.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+}
+
+// 起動
+init();
+</script>
+</body>
+</html>
