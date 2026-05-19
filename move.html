@@ -2689,8 +2689,8 @@ function openMapPicker() {
     document.getElementById('mapPickerMap').style.height = Math.max(h, 200) + 'px';
   }
 
-  const centerLat = gState.homeLat || 33.8416;
-  const centerLon = gState.homeLon || 132.7657;
+  const centerLat = mapPickerTemp.lat || gState.destLat || gState.homeLat || 33.8416;
+  const centerLon = mapPickerTemp.lon || gState.destLon || gState.homeLon || 132.7657;
 
   if (!mapPickerInstance) {
     setTimeout(() => {
@@ -2742,7 +2742,13 @@ function openMapPicker() {
       });
     }, 60);
   } else {
-    mapPickerInstance.setView([centerLat, centerLon], 13);
+    mapPickerInstance.setView([centerLat, centerLon], 15);
+    // 前回のピンを復元
+    if (mapPickerTemp.lat && !mapPickerMarker) {
+      mapPickerMarker = L.marker([mapPickerTemp.lat, mapPickerTemp.lon]).addTo(mapPickerInstance);
+    } else if (mapPickerTemp.lat && mapPickerMarker) {
+      mapPickerMarker.setLatLng([mapPickerTemp.lat, mapPickerTemp.lon]);
+    }
     setTimeout(() => { setH(); mapPickerInstance.invalidateSize(); }, 100);
   }
 }
