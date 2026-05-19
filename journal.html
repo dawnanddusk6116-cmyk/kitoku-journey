@@ -57,6 +57,13 @@ body{
   line-height:1.7;letter-spacing:.04em;
 }
 .question-sub{font-size:.62rem;color:var(--mist);margin-top:8px;line-height:1.7;opacity:.8;}
+.question-source{
+  display:inline-flex;align-items:center;
+  margin-top:10px;padding:5px 9px;
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:999px;background:rgba(138,104,32,.07);
+  color:var(--goldlt);font-size:.58rem;line-height:1.5;
+}
 
 /* 入力エリア */
 .write-section{margin-bottom:16px;}
@@ -160,6 +167,7 @@ body{
     <div class="question-label">✦ 今日の問い</div>
     <div class="question-text" id="questionText">読み込み中...</div>
     <div class="question-sub" id="questionSub"></div>
+    <div class="question-source" id="questionSource" style="display:none;"></div>
   </div>
 
   <!-- 答えを書く -->
@@ -270,12 +278,40 @@ const QUESTIONS_BY_STAR = {
   ],
 };
 
+const QUESTIONS_BY_LAYER = {
+  honmei: [
+    { q:'今日、あなたの本質が一番自然に出た場面はどこでしたか？', s:'本命星は、無理をしなくても出てしまうあなたの芯です。' },
+    { q:'今のあなたが、自分の星らしく動くなら何を選びますか？', s:'正解よりも、あなたの中心に戻る選択を探してみてください。' },
+  ],
+  tsukimei: [
+    { q:'今日、心が安心した瞬間はありましたか？', s:'月命星は、内側の安心感や感情のリズムを映します。' },
+    { q:'今のあなたが本当に欲しい「休み方」は何ですか？', s:'外側の成果より、内側の回復に目を向ける問いです。' },
+  ],
+  keisha: [
+    { q:'今日、無意識に避けていたことは何ですか？', s:'傾斜は、表には出にくい癖や本音をそっと教えてくれます。' },
+    { q:'今、同じ失敗を繰り返しているとしたら、どんな思い込みがありますか？', s:'責めるためではなく、ほどくために見つめてください。' },
+  ],
+  dokai: [
+    { q:'今日、周りから期待されていた役割は何でしたか？', s:'同会は、社会の中であなたが担いやすい役割を映します。' },
+    { q:'今、あなたが誰かのために使える力は何ですか？', s:'自分では普通でも、外から見ると大切な役割かもしれません。' },
+  ],
+  yearNayin: [
+    { q:'あなたの魂が、長い時間をかけて育てたいものは何ですか？', s:'年納音は、人生全体に流れる魂の音色を見ます。' },
+    { q:'今日の出来事の中に、あなたの人生テーマの小さな欠片はありましたか？', s:'大きなテーマは、日常の小さな反応に現れます。' },
+  ],
+  monthNayin: [
+    { q:'今日、心に一番響いた言葉・音・景色は何でしたか？', s:'月納音は、日々の感受性に近い魂の響きを見ます。' },
+    { q:'今のあなたが、静かに調律したい感情は何ですか？', s:'整えるべきものは、問題ではなく音のズレかもしれません。' },
+  ],
+};
+
 // ============================================================
 // 状態
 // ============================================================
 const JOURNAL_KEY = 'kitoku_journal_v1';
 const STAR_KEY    = 'kitoku_honmei';
 const NAME_KEY    = 'kitoku_userName';
+const STAR_NAMES = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
 
 function loadJournal() {
   try { return JSON.parse(localStorage.getItem(JOURNAL_KEY)) || []; }
@@ -285,22 +321,40 @@ function saveJournal(entries) {
   localStorage.setItem(JOURNAL_KEY, JSON.stringify(entries));
 }
 
+function getStoredBirth() {
+  return localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+}
+
+function getJournalProfile() {
+  const birth = getStoredBirth();
+  const parts = birth.split('-').map(Number);
+  if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return null;
+
+  try {
+    const [by, bm, bd] = parts;
+    const { kY, kM } = getKD(by, bm, bd);
+    const honmei = calcHonmei(kY);
+    const tsukimei = calcTsukimei(honmei, kM);
+    const tFK = getTsukimeiForKeisha(honmei, tsukimei);
+    const keisha = calcKeisha(honmei, tFK);
+    const dokai = calcDokai(honmei, tFK);
+    const yearNayin = calcNayin(kY);
+    const monthNayin = calcMonthNayin(by, bm, bd);
+    return { birth, honmei, tsukimei, keisha, dokai, yearNayin, monthNayin };
+  } catch(e) {
+    return null;
+  }
+}
+
 function getStoredHonmei() {
   const saved = parseInt(localStorage.getItem(STAR_KEY), 10);
   if (saved >= 1 && saved <= 9) return saved;
 
-  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
-  const parts = birth.split('-').map(Number);
-  if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return 0;
-
-  try {
-    const { kY } = getKD(parts[0], parts[1], parts[2]);
-    const honmei = calcHonmei(kY);
-    if (honmei >= 1 && honmei <= 9) {
-      localStorage.setItem(STAR_KEY, String(honmei));
-      return honmei;
-    }
-  } catch(e) {}
+  const profile = getJournalProfile();
+  if (profile && profile.honmei >= 1 && profile.honmei <= 9) {
+    localStorage.setItem(STAR_KEY, String(profile.honmei));
+    return profile.honmei;
+  }
   return 0;
 }
 
@@ -308,16 +362,29 @@ function getStoredHonmei() {
 // 今日の問いを決める
 // ============================================================
 function getTodayQuestion() {
-  const honmei = getStoredHonmei();
+  const profile = getJournalProfile();
   const now = new Date();
   const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
 
-  // 星専用問いがある場合は確率30%で混ぜる
-  let pool = [...QUESTIONS_UNIVERSAL];
-  if (honmei >= 1 && honmei <= 9 && QUESTIONS_BY_STAR[honmei]) {
-    pool = [...QUESTIONS_UNIVERSAL, ...QUESTIONS_BY_STAR[honmei], ...QUESTIONS_BY_STAR[honmei]];
+  if (profile) {
+    localStorage.setItem(STAR_KEY, String(profile.honmei));
+    const layers = [
+      { key:'honmei', label:`本命星 ${STAR_NAMES[profile.honmei]}` },
+      { key:'tsukimei', label:`月命星 ${STAR_NAMES[profile.tsukimei]}` },
+      { key:'keisha', label:`傾斜 ${STAR_NAMES[profile.keisha]}` },
+      { key:'dokai', label:`同会 ${STAR_NAMES[profile.dokai]}` },
+      { key:'yearNayin', label:`年納音 ${profile.yearNayin.n}` },
+      { key:'monthNayin', label:`月納音 ${profile.monthNayin.n}` },
+    ];
+    const layer = layers[dayOfYear % layers.length];
+    let pool = QUESTIONS_BY_LAYER[layer.key] || QUESTIONS_UNIVERSAL;
+    if (layer.key === 'honmei' && QUESTIONS_BY_STAR[profile.honmei]) {
+      pool = [...pool, ...QUESTIONS_BY_STAR[profile.honmei]];
+    }
+    const q = pool[Math.floor(dayOfYear / layers.length) % pool.length];
+    return { ...q, source: layer.label };
   }
-  return pool[dayOfYear % pool.length];
+  return { ...QUESTIONS_UNIVERSAL[dayOfYear % QUESTIONS_UNIVERSAL.length], source:'' };
 }
 
 // ============================================================
@@ -331,10 +398,13 @@ function init() {
     `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${days[now.getDay()]}）`;
 
   // 星情報
-  const honmei = getStoredHonmei();
-  const STAR_NAMES = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+  const profile = getJournalProfile();
+  const honmei = profile ? profile.honmei : getStoredHonmei();
   const starBar = document.getElementById('starBar');
-  if (honmei >= 1 && honmei <= 9) {
+  if (profile) {
+    const userName = localStorage.getItem(NAME_KEY) || '';
+    starBar.innerHTML = `<strong>${userName ? userName + 'さん' : ''} ${STAR_NAMES[profile.honmei]}・月命${STAR_NAMES[profile.tsukimei]}・傾斜${STAR_NAMES[profile.keisha]}・同会${STAR_NAMES[profile.dokai]}</strong><br>納音 ${profile.yearNayin.n}（年）・${profile.monthNayin.n}（月）から、今日の問いを選びます`;
+  } else if (honmei >= 1 && honmei <= 9) {
     const userName = localStorage.getItem(NAME_KEY) || '';
     starBar.innerHTML = `<strong>${userName ? userName + 'さん' : ''} 本命星：${STAR_NAMES[honmei]}</strong>　あなたの星に合わせた問いをお届けします`;
   }
@@ -343,6 +413,13 @@ function init() {
   const q = getTodayQuestion();
   document.getElementById('questionText').textContent = q.q;
   document.getElementById('questionSub').textContent  = q.s;
+  const sourceEl = document.getElementById('questionSource');
+  if (q.source) {
+    sourceEl.textContent = `由来：${q.source}`;
+    sourceEl.style.display = 'inline-flex';
+  } else {
+    sourceEl.style.display = 'none';
+  }
 
   // 今日すでに記録があれば読み込む
   const todayStr = toDateStr(now);
@@ -377,7 +454,7 @@ function saveEntry() {
   const q = getTodayQuestion();
   const todayStr = toDateStr(new Date());
   const entries = loadJournal().filter(e => e.date !== todayStr); // 今日分を上書き
-  entries.unshift({ date: todayStr, question: q.q, answer, thanks });
+  entries.unshift({ date: todayStr, question: q.q, source: q.source || '', answer, thanks });
 
   // 最大365件保持
   if (entries.length > 365) entries.length = 365;
@@ -414,7 +491,7 @@ function renderHistory() {
         <div class="history-item-date">${e.date}</div>
         <button class="delete-btn" onclick="deleteEntry(${i})">✕ 削除</button>
       </div>
-      <div class="history-item-q">「${e.question}」</div>
+      <div class="history-item-q">「${e.question}」${e.source ? `<br><span style="font-weight:400;color:var(--mist);font-size:.58rem;">由来：${e.source}</span>` : ''}</div>
       ${e.answer ? `<div class="history-item-a">${e.answer.replace(/\n/g,'<br>')}</div>` : ''}
       ${e.thanks ? `<div class="history-item-thanks">🌿 ${e.thanks}</div>` : ''}
     </div>
