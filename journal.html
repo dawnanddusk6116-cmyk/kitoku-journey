@@ -28,10 +28,15 @@ body{
 .header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
 .header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
 .back-btn{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:.65rem;color:var(--mist);text-decoration:none;
-  margin-bottom:10px;padding:4px 0;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:34px;
+  margin:14px 0 12px;padding:8px 14px;
+  border:1px solid rgba(138,104,32,.3);border-radius:999px;
+  background:rgba(138,104,32,.07);
+  color:var(--goldlt);font-size:.72rem;font-weight:700;
+  letter-spacing:.04em;text-decoration:none;
 }
+.back-btn:active{opacity:.78;transform:translateY(1px);}
 .container{padding:0 16px;max-width:480px;margin:0 auto;}
 
 /* 星バー */
@@ -154,7 +159,7 @@ body{
 </div>
 
 <div class="container">
-  <a href="index.html" class="back-btn" onclick="history.back();return false;">← 戻る</a>
+  <a href="index.html" class="back-btn">← 入口へ戻る</a>
 
   <!-- 星バー -->
   <div class="star-bar" id="starBar">
