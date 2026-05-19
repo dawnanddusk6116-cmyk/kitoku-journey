@@ -2724,10 +2724,19 @@ function openMapPicker() {
             ? parts.slice(0, 4).reverse().join(' ').trim()
             : `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
           mapPickerTemp = { lat, lon: lng, name: addr, area: addr };
-          document.getElementById('mapPickerAddress').textContent = addr;
+          document.getElementById('mapPickerAddress').innerHTML =
+            `<div>${addr}</div>
+             <div style="font-size:.58rem;color:#888;margin-top:3px;">
+               📐 座標：${lat.toFixed(5)}, ${lng.toFixed(5)}<br>
+               <span style="color:#c07020;">※ 住所は参考表示です。方位計算には座標を使用します。</span>
+             </div>`;
         } catch {
           mapPickerTemp = { lat, lon: lng, name: `${lat.toFixed(5)}, ${lng.toFixed(5)}`, area: '地図で選択した場所' };
-          document.getElementById('mapPickerAddress').textContent = mapPickerTemp.name;
+          document.getElementById('mapPickerAddress').innerHTML =
+            `<div>地図で選択した場所</div>
+             <div style="font-size:.58rem;color:#888;margin-top:3px;">
+               📐 座標：${lat.toFixed(5)}, ${lng.toFixed(5)}
+             </div>`;
         }
       });
     }, 60);
