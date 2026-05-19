@@ -2012,6 +2012,7 @@ function calcAndShowDir() {
         <div style="flex:1;">
           <div class="dir-dest-name">${gState.destName}</div>
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
+          ${gState.destLat ? `<div style="font-size:.58rem;color:rgba(138,104,32,.6);margin-top:3px;">📐 座標：${gState.destLat.toFixed(4)}, ${gState.destLon.toFixed(4)}　<span style="color:#c07020;">住所は参考表示・方位計算は座標を使用</span></div>` : ''}
         </div>
       </div>
       ${gState.isYearKyo ? `
