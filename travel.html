@@ -2839,18 +2839,12 @@ function confirmMapPicker() {
   gState.destName = mapPickerTemp.name;
   gState.destArea = mapPickerTemp.area;
 
-  document.getElementById('destAddrInput').value = mapPickerTemp.name;
-  document.getElementById('destAddrStatus').innerHTML =
-    `<span style="color:var(--goldlt);font-weight:700;">✓ 地図で選択した場所で計算します</span>`;
-  document.getElementById('destAddrFound').textContent = mapPickerTemp.area;
-  document.getElementById('destAddrConfirm').style.display = 'block';
-  document.getElementById('destAddrConfirmBtn').textContent = '✓ 確定済み（地図から選択）';
-  document.getElementById('destAddrConfirmBtn').style.background = 'rgba(40,130,60,.2)';
-
   closeMapPicker();
+
+  // 地図選択した場所をプリセット選択と同じ扱いで計算
   const hint2el = document.getElementById('hint2');
   if (hint2el) hint2el.style.display = 'block';
-  if (gState.homeLat) calcAndShowDir();
+  if (gState.homeLat && gState.honmei) calcAndShowDir();
 }
 </script>
 
