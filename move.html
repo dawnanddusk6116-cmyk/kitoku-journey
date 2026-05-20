@@ -87,16 +87,31 @@ body{
 /* ── 星情報バー ── */
 .star-bar{
   margin:14px 16px 0;
-  background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(196,160,67,.04));
-  border:1px solid rgba(196,160,67,.28);
+  background:linear-gradient(135deg,#fffdf8,#f6efe2);
+  border:1px solid rgba(138,104,32,.38);
   border-radius:var(--radius);
   padding:12px 14px;
+  box-shadow:0 2px 10px rgba(60,40,10,.04);
 }
 .star-bar-text{
   font-size:.75rem;color:var(--snow);line-height:1.9;
 }
 .star-bar-note{
-  font-size:.6rem;color:var(--mist);margin-top:5px;line-height:1.7;
+  font-size:.6rem;color:#4b3c29;margin-top:5px;line-height:1.7;
+}
+.usage-guide{
+  margin:12px 16px 16px;
+  background:linear-gradient(135deg,#fffdf9,#f7f1e6);
+  border:1px solid rgba(138,104,32,.36);
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow:0 2px 10px rgba(60,40,10,.04);
+}
+.usage-tip{
+  margin-top:12px;padding:10px 12px;
+  background:rgba(60,100,60,.08);
+  border:1px solid rgba(60,100,60,.26);
+  border-radius:8px;font-size:.62rem;color:#3f5136;line-height:1.9;
 }
 
 /* ── 自宅登録 ── */
@@ -756,11 +771,7 @@ html.font-large .font-btn{font-size:.8rem;}
 </div>
 
 <!-- 使い方の解説 -->
-<div style="
-  background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));
-  border:1px solid rgba(138,104,32,.3);border-radius:12px;
-  padding:14px 16px;margin-bottom:16px;
-">
+<div class="usage-guide">
   <div style="font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">🏡 引越し吉方位ナビ</div>
   <div style="font-size:.67rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">
     引越しは、あなたが新しく根を張る「人生の土壌」を選ぶ行為です。<br>
@@ -784,7 +795,7 @@ html.font-large .font-btn{font-size:.8rem;}
       <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">引越し日を決める</strong><br>年盤・月盤が吉の月の中から<strong style="color:var(--goldlt);">線路の日</strong>を選ぶと吉が長く続く<br><span style="color:rgba(138,104,32,.7);">✦ 当日の日盤の凶は気にしなくて大丈夫</span></div>
     </div>
   </div>
-  <div style="margin-top:12px;padding:10px 12px;background:rgba(60,100,60,.05);border:1px solid rgba(60,100,60,.2);border-radius:8px;font-size:.62rem;color:var(--mist);line-height:1.9;">
+  <div class="usage-tip">
     <strong style="color:#3a6e3a;">🌿 希望の場所が凶方だったら？</strong><br>
     諦めなくて大丈夫です。「仮吉方（75日ルール）」という方法があります。<br>
     吉方位の場所で75日間寝泊まりしてから新居に入ることで、引越しと同じ効果が得られます。<br>
