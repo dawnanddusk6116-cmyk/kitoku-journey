@@ -2124,6 +2124,7 @@ function calcAndShowDir() {
         </div>
       </div>
       ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
+      ${generateTravelYoshiAlert(yearRank, monthRank, false)}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
         <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
         <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
@@ -2896,6 +2897,61 @@ function generateTravelKyoAlert(yearBadges, monthBadges, isPilgrimage) {
     </div>
   </div>`;
 }
+
+
+
+
+// ── 旅行・巡礼用 吉方アラート ──
+function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
+  const yr = yearRank.rank || 0;
+  const mr = monthRank.rank || 0;
+  const yb = yearRank.badges || [];
+  const mb = monthRank.badges || [];
+
+  if (yr === 0 || mr === 0) return '';
+  if (yr <= 1 && mr <= 1) return '';
+
+  const isMax  = yr >= 5 || mr >= 5 ||
+    [...yb,...mb].some(b => b.includes('三合') || b.includes('最高'));
+  const isBoth = yr >= 4 && mr >= 2;
+  const badges = [...new Set([...yb,...mb])].filter(b=>!b.includes('⚠')).join('・');
+  const senroMsg = isPilgrimage
+    ? '<div style="font-size:.63rem;color:var(--goldlt);font-weight:600;margin-top:6px;">📿 線路の日に出発するとさらに吉が長く続きます。</div>'
+    : '<div style="font-size:.63rem;color:var(--goldlt);font-weight:600;margin-top:6px;">✈️ 出発日に線路の日を選ぶとさらに吉が長く続きます。</div>';
+
+  if (isMax) {
+    return `
+  <div style="margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.6));border:2px solid rgba(138,104,32,.4);border-radius:10px;padding:12px 14px;">
+    <div style="font-size:.75rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">★ 最高吉 — 最高のタイミングです</div>
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
+      ${badges ? badges + '<br>' : ''}
+      <strong style="color:var(--goldlt);">✦ ぜひこの方角・この時期に動いてください。</strong><br>
+      遠くへ行くほど・長く滞在するほど吉のエネルギーが大きくなります。
+    </div>
+    ${senroMsg}
+  </div>`;
+  } else if (isBoth) {
+    return `
+  <div style="margin-top:10px;background:rgba(40,130,60,.06);border:1.5px solid rgba(40,130,60,.3);border-radius:10px;padding:12px 14px;">
+    <div style="font-size:.72rem;font-weight:700;color:#2a6e3a;margin-bottom:8px;">✦ この方角は取れます</div>
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+      年盤・月盤ともに吉方位が確認できました。<br>
+      <strong style="color:#2a6e3a;">遠くへ行くほど・長く滞在するほど吉のエネルギーが大きくなります。</strong>
+    </div>
+    ${senroMsg}
+  </div>`;
+  } else {
+    const goodBoard = yr >= 2 ? '年盤' : '月盤';
+    return `
+  <div style="margin-top:10px;background:rgba(40,130,60,.04);border:1px solid rgba(40,130,60,.2);border-radius:10px;padding:11px 13px;">
+    <div style="font-size:.7rem;font-weight:700;color:#2a6e3a;margin-bottom:6px;">○ ${goodBoard}で吉方位です</div>
+    <div style="font-size:.64rem;color:var(--mist);line-height:1.85;">
+      ${goodBoard}が吉方位です。動いて大丈夫です。
+    </div>
+  </div>`;
+  }
+}
+
 
 </script>
 
