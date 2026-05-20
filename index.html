@@ -132,8 +132,9 @@ html.theme-night-root{
 .selector-icon{font-size:2rem;flex-shrink:0;width:44px;text-align:center;}
 .selector-info{flex:1;}
 .selector-en{
-  font-size:.55rem;letter-spacing:.16em;color:var(--mist);
-  margin-bottom:4px;font-weight:600;
+  display:inline-block;
+  font-size:.62rem;letter-spacing:.18em;color:var(--mist);
+  margin-bottom:6px;font-weight:800;line-height:1.35;
 }
 .selector-card.s-journey .selector-en{color:var(--gold);}
 .selector-card.s-pilgrimage .selector-en{color:#7b5ea7;}
@@ -560,7 +561,16 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 .app-card-wide:active{transform:scale(.98);}
 .app-card-wide .card-icon{margin:0;flex-shrink:0;font-size:1.3rem;}
 .app-card-wide .card-info{flex:1;}
-.app-card-wide .card-num{font-size:.58rem;font-weight:700;letter-spacing:.1em;margin-bottom:3px;opacity:.75;}
+.app-card-wide .card-num{
+  display:inline-flex;align-items:center;width:fit-content;
+  font-size:.62rem;font-weight:800;letter-spacing:.1em;
+  margin-bottom:5px;padding:2px 7px;border-radius:999px;
+  opacity:1;background:rgba(63,120,168,.08);
+  border:1px solid rgba(63,120,168,.2);
+}
+.app-card-wide.tone-relation .card-num{background:rgba(180,106,55,.09);border-color:rgba(180,106,55,.22);}
+.app-card-wide.tone-work .card-num{background:rgba(79,139,93,.09);border-color:rgba(79,139,93,.22);}
+.app-card-wide.tone-travel .card-num{background:rgba(123,94,167,.09);border-color:rgba(123,94,167,.22);}
 .app-card-wide .card-title{font-size:.85rem;font-weight:600;margin-bottom:3px;color:var(--goldlt);}
 .app-card-wide .card-desc{font-size:.62rem;color:var(--mist);line-height:1.65;margin:0;}
 .app-card-wide-arrow{font-size:.8rem;color:rgba(100,80,40,.35);flex-shrink:0;}
