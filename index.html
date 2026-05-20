@@ -219,13 +219,13 @@ html.theme-night-root{
 ════════════════════ */
 .first-hero{
   text-align:center;
-  padding:52px 24px 36px;
+  padding:36px 24px 26px;
   background:radial-gradient(ellipse at 50% 0%,rgba(138,104,32,.07),transparent 68%);
 }
 .first-symbol{
   font-family:'Cormorant Garamond',serif;
-  font-size:3rem;color:var(--gold);opacity:.7;
-  margin-bottom:16px;line-height:1;
+  font-size:2.55rem;color:var(--gold);opacity:.7;
+  margin-bottom:12px;line-height:1;
 }
 .first-title{
   font-family:'Cormorant Garamond',serif;
@@ -251,6 +251,10 @@ html.theme-night-root{
 .input-label{
   font-size:.72rem;letter-spacing:.18em;color:var(--gold);
   margin-bottom:10px;display:block;font-weight:600;
+}
+.input-help{
+  font-size:.64rem;color:var(--mist);line-height:1.8;
+  margin:-2px 0 12px;letter-spacing:.04em;
 }
 input[type="date"]{
   width:100%;background:rgba(100,80,40,.04);
@@ -974,6 +978,7 @@ body.theme-night .start-btn{
 
   <div class="input-card">
     <span class="input-label">生年月日を入力してください</span>
+    <div class="input-help">まずは生年月日を入力して、自分の九星を確認してください。</div>
     <input type="date" id="birthInput" max="2010-12-31">
     <div class="gender-row">
       <button class="gender-btn active" id="genderMale" onclick="setGender('male')">男性</button>
