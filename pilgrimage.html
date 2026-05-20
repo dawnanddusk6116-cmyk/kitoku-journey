@@ -1485,10 +1485,12 @@ function renderPresets() {
   renderPresetGrid('grid-kumano',       SACRED_PLACES.kumano);
   renderPresetGrid('grid-shrines',      SACRED_PLACES.shrines);
   renderPresetGrid('grid-saigoku',      SACRED_PLACES.saigoku);
-  // 空のグリッドをクリア
-  ['grid-bando','grid-chichibu',
-   'grid-mountains','grid-kyushu','grid-betsugaku','grid-tokai'
-  ].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML='<div style=\"font-size:.62rem;color:var(--mist);padding:8px;\">準備中です</div>'; });
+  renderPresetGrid('grid-bando',        SACRED_PLACES.bando);
+  renderPresetGrid('grid-chichibu',     SACRED_PLACES.chichibu);
+  renderPresetGrid('grid-mountains',    SACRED_PLACES.mountains);
+  renderPresetGrid('grid-kyushu',       SACRED_PLACES.kyushu);
+  renderPresetGrid('grid-betsugaku',    SACRED_PLACES.betsugaku);
+  renderPresetGrid('grid-tokai',        SACRED_PLACES.tokai);
 }
 
 function renderPresetGrid(id, places) {
