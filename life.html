@@ -418,6 +418,7 @@ footer{
     <div class="popup-gk-elem" id="popElem" style="display:none"></div>
     <div class="popup-body" id="popBody"></div>
     <div class="popup-narrative" id="popNarr" style="display:none"></div>
+    <div id="popCaution" style="display:none"></div>
   </div>
 </div>
 
@@ -972,10 +973,13 @@ function runReading(){
     const gg=gogyoOf(def.n);
     const color=GG_COLOR[gg]||'#ccc';
     const pct=Math.min(100,Math.round((def.n/60)*100));
+    const isCaution = !!CAUTION_NUMS[def.n];
     const cell=document.createElement('div');
     cell.className='gk-cell';
+    cell.style.position='relative';
     cell.onclick=()=>showGKPopup(def.key,def.n,gg);
     cell.innerHTML=`
+      ${isCaution ? '<div style="position:absolute;top:4px;right:4px;font-size:.55rem;color:#c07020;font-weight:700;opacity:.8;">⚠</div>' : ''}
       <div class="gk-label">${def.label}<br><span style="font-size:.4rem;opacity:.6">${def.role}</span></div>
       <div class="gk-num" style="color:${color}">${def.n}</div>
       <div class="gk-elem" style="color:${color}99;font-size:.44rem">${GG_EN[gg]}</div>
@@ -1065,6 +1069,21 @@ function showGKPopup(key,n,gg){
   const pn2=document.getElementById('popNarr');
   pn2.style.display='block';pn2.innerHTML=narr;
 
+  // 要注意数の場合は警告を追加
+  const caution = CAUTION_NUMS[n];
+  const cautionEl = document.getElementById('popCaution');
+  if(caution && cautionEl){
+    cautionEl.style.display='block';
+    cautionEl.innerHTML=`
+      <div style="margin-top:14px;background:rgba(192,112,32,.07);border:1px solid rgba(192,112,32,.3);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:.65rem;font-weight:700;color:#c07020;margin-bottom:7px;">⚠ この数について知っておくこと</div>
+        <div style="font-size:.67rem;color:var(--mist);line-height:1.9;margin-bottom:8px;">${caution.msg}</div>
+        <div style="font-size:.65rem;color:var(--goldlt);font-weight:700;padding:8px 10px;background:rgba(138,104,32,.08);border-radius:6px;">✦ ${caution.rx}</div>
+      </div>`;
+  } else if(cautionEl){
+    cautionEl.style.display='none';
+  }
+
   document.getElementById('popup').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -1078,6 +1097,24 @@ function closePopup(e){
 
 
 // ── 五行処方箋データ ──
+
+// 要注意数（強いエネルギーを持つ数）
+const CAUTION_NUMS = {
+  4:  { msg:'変化と試練を経て成長する数です。「止まらない」ことがこの数の本質。困難に見えることが実は最短ルートになります。', rx:'粘り強さを味方に。小さな達成を積み重ねることで器が育ちます。' },
+  9:  { msg:'完結と苦難が交差する数です。物事を最後まで「締める」エネルギーが強く、手放すことと執着することの間で揺れやすい。', rx:'手放す練習が人生を軽くします。終わりは次の始まりの準備です。' },
+  10: { msg:'完全であるがゆえの空虚さを抱えやすい数です。「もう十分だ」と思えない感覚と向き合う旅が始まります。', rx:'「足りている」と気づくことが最大の力。感謝の記帳が助けになります。' },
+  12: { msg:'繊細さと孤独感を内包する数です。深く感じる力がある反面、周囲との温度差を感じやすい。', rx:'繊細さは才能です。同じ感性を持つ人との縁を大切にしてください。' },
+  14: { msg:'波乱と変化が重なりやすい数です。安定を求めるほど揺れる、という逆説を生きる数。', rx:'変化を「成長の証拠」として受け取る視点が、この器を輝かせます。' },
+  19: { msg:'強い意志と障害が共存する数です。自分の信念を貫こうとするとき、壁が立ちはだかりやすい。', rx:'信念は正しい。ただし「迂回路」を恥と思わないことが鍵です。' },
+  20: { msg:'空虚感・方向感覚の喪失を感じやすい数です。「何のために」という問いが人生の伴走者になります。', rx:'目的を持つことが最大の処方箋。KITOKUのジャーナルで自己対話を続けてください。' },
+  22: { msg:'孤立と独立が紙一重の数です。人の輪の中にいても「ひとり」を感じやすい。', rx:'孤独を「自立」として昇華できたとき、この数の真の力が発動します。' },
+  26: { msg:'波乱と変転のエネルギーが強い数です。計画通りに進まない経験が多くなりやすい。', rx:'波は乗る人にとって推進力になります。柔軟さと諦めない心が武器です。' },
+  28: { msg:'苦労と孤独を抱えながらも最後に報われる数です。遅咲きの花のような力強さがあります。', rx:'「今が底」という感覚を信じてください。積み重ねた苦労は必ず実ります。' },
+  34: { msg:'才能はあるが報われにくいという苦さを経験しやすい数です。先を行きすぎることへの孤独。', rx:'時代に先んじることは孤独です。でも、あなたが開いた道を後の人が歩きます。' },
+  36: { msg:'波乱と義侠心が共存する数です。他者のために動くことで自分を削りやすい。', rx:'「自分を後回しにしない」ことが最初の一歩。自愛が他愛の土台になります。' },
+  44: { msg:'苦難が連続しやすい数ですが、その分だけ魂が磨かれます。試練の多い人生ほど深みがある。', rx:'「これも修行」という心構えがこの数の最強の盾になります。' },
+};
+
 const GYO_RX = {
   '木': {
     color: '#2a6e3a', bg: 'rgba(40,110,58,.07)', border: 'rgba(40,110,58,.25)',
