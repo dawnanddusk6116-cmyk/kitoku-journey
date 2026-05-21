@@ -27,8 +27,27 @@ body{
   background:var(--bg);
   position:sticky;top:0;z-index:100;
 }
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
 .header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
+.font-control{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(138,104,32,.05);
+  border:1px solid rgba(138,104,32,.18);
+  border-radius:999px;padding:3px;
+  flex-shrink:0;
+}
+.font-control button{
+  width:30px;min-height:28px;border:0;border-radius:999px;
+  background:transparent;color:var(--mist);
+  font-family:'Noto Serif JP',serif;font-size:.68rem;font-weight:700;
+  cursor:pointer;
+}
+.font-control button.active{
+  background:rgba(138,104,32,.15);
+  color:var(--goldlt);
+  box-shadow:0 1px 5px rgba(60,40,10,.06);
+}
 .back-btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   min-height:34px;
@@ -132,6 +151,19 @@ body{
   margin-top:10px;padding:8px 10px;
   background:var(--amber);border-radius:6px;
 }
+.name-save-row{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;
+}
+.mini-btn{
+  flex:1 1 130px;min-height:34px;
+  background:rgba(138,104,32,.07);
+  border:1px solid rgba(138,104,32,.24);
+  border-radius:999px;color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;font-size:.66rem;font-weight:700;
+  cursor:pointer;
+}
+.mini-btn.subtle{background:rgba(100,80,40,.035);color:var(--mist);}
+.save-msg{font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;}
 
 /* ── CTAボタン ── */
 .cta-wrap{text-align:center;margin:20px 0 8px;}
@@ -297,8 +329,17 @@ footer{
 <body>
 
 <div class="header">
-  <div class="header-logo">✦ KITOKU @ LIFE</div>
-  <div class="header-sub">命の器を読む</div>
+  <div class="header-row">
+    <div>
+      <div class="header-logo">✦ KITOKU @ LIFE</div>
+      <div class="header-sub">命の器を読む</div>
+    </div>
+    <div class="font-control" aria-label="文字サイズ">
+      <button id="tb-s" type="button" onclick="setFont('s')">小</button>
+      <button id="tb-m" type="button" onclick="setFont('m')">中</button>
+      <button id="tb-l" type="button" onclick="setFont('l')">大</button>
+    </div>
+  </div>
 </div>
 
 <!-- POPUP -->
@@ -366,6 +407,11 @@ footer{
           </div>
         </div>
       </div>
+      <div class="name-save-row">
+        <button class="mini-btn" type="button" onclick="saveLifeName()">この名前を保存</button>
+        <button class="mini-btn subtle" type="button" onclick="loadLifeName(true)">保存した名前を使う</button>
+      </div>
+      <div class="save-msg" id="lifeNameSaveMsg">保存した名前はこの端末内だけに残ります。別の名前を試しても、保存ボタンを押すまで上書きされません。</div>
     </div>
 
     <div class="card">
@@ -652,6 +698,66 @@ function onFuriInput(){}
 function onStrokeManual(which){
   if(which==='sei'){STATE.seiManual=true;document.getElementById('seiKSt').className='stroke-status manual';document.getElementById('seiKSt').textContent='手動確定';}
   else{STATE.meiManual=true;document.getElementById('meiKSt').className='stroke-status manual';document.getElementById('meiKSt').textContent='手動確定';}
+}
+
+// ── 自分の名前保存（端末内のみ） ──
+const LIFE_NAME_KEY = 'kitoku-life-name';
+function setSaveMsg(msg){
+  const el=document.getElementById('lifeNameSaveMsg');
+  if(el)el.textContent=msg;
+}
+function collectLifeName(){
+  return {
+    sei:document.getElementById('sei').value.trim(),
+    mei:document.getElementById('mei').value.trim(),
+    furiSei:document.getElementById('furiSei').value.trim(),
+    furiMei:document.getElementById('furiMei').value.trim(),
+    seiK:document.getElementById('seiK').value,
+    meiK:document.getElementById('meiK').value
+  };
+}
+function saveLifeName(){
+  const data=collectLifeName();
+  if(!data.sei||!data.mei){
+    setSaveMsg('姓と名を入力してから保存してください。');
+    return;
+  }
+  try{
+    localStorage.setItem(LIFE_NAME_KEY,JSON.stringify(data));
+    setSaveMsg('この名前を保存しました。次回から「保存した名前を使う」で呼び出せます。');
+  }catch(e){
+    setSaveMsg('保存できませんでした。ブラウザの保存設定を確認してください。');
+  }
+}
+function applyLifeName(data){
+  if(!data)return false;
+  ['sei','mei','furiSei','furiMei','seiK','meiK'].forEach(id=>{
+    if(data[id]!==undefined)document.getElementById(id).value=data[id]||'';
+  });
+  STATE.seiManual=!!data.seiK;
+  STATE.meiManual=!!data.meiK;
+  document.getElementById('seiKSt').className=STATE.seiManual?'stroke-status manual':'stroke-status auto';
+  document.getElementById('seiKSt').textContent=STATE.seiManual?'保存値':'自動';
+  document.getElementById('meiKSt').className=STATE.meiManual?'stroke-status manual':'stroke-status auto';
+  document.getElementById('meiKSt').textContent=STATE.meiManual?'保存値':'自動';
+  if(!data.seiK){STATE.seiManual=false;onSeiInput();}
+  if(!data.meiK){STATE.meiManual=false;onMeiInput();}
+  return true;
+}
+function loadLifeName(showMessage){
+  try{
+    const raw=localStorage.getItem(LIFE_NAME_KEY);
+    if(!raw){
+      if(showMessage)setSaveMsg('まだ保存した名前がありません。');
+      return false;
+    }
+    const ok=applyLifeName(JSON.parse(raw));
+    if(showMessage&&ok)setSaveMsg('保存した名前を読み込みました。');
+    return ok;
+  }catch(e){
+    if(showMessage)setSaveMsg('保存した名前を読み込めませんでした。');
+    return false;
+  }
 }
 
 // ── メイン鑑定 ──
@@ -1081,7 +1187,10 @@ function resetAll(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-document.addEventListener('DOMContentLoaded', loadStarInfo);
+document.addEventListener('DOMContentLoaded', function(){
+  loadStarInfo();
+  loadLifeName(false);
+});
 </script>
 </body>
 
