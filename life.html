@@ -6,7 +6,6 @@
 <title>KITOKU @ LIFE | 命の器を読む</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="kitoku-engine.js"></script>
 <style>
 :root{
   --bg:#f7f4ef;--snow:#1c1208;--goldlt:#5c4010;--gold:#8a6820;
@@ -30,16 +29,11 @@ body{
 .header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
 .header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
 .back-btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  min-height:34px;
-  margin:14px 16px 0;padding:8px 14px;
-  border:1px solid rgba(138,104,32,.3);border-radius:999px;
-  background:rgba(138,104,32,.07);
-  color:var(--goldlt);font-size:.72rem;font-weight:700;
-  letter-spacing:.04em;text-decoration:none;
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.65rem;color:var(--mist);text-decoration:none;
+  margin:10px 16px 0;padding:4px 0;background:none;border:none;cursor:pointer;
   font-family:'Noto Serif JP',serif;
 }
-.back-btn:active{opacity:.78;transform:translateY(1px);}
 
 /* ── コンテナ ── */
 .page{max-width:480px;margin:0 auto;padding:0 16px 48px;}
@@ -290,7 +284,7 @@ footer{
   </div>
 </div>
 
-<a class="back-btn" href="index.html">← 入口へ戻る</a>
+<button class="back-btn" onclick="history.back()">← 戻る</button>
 
 <div class="page">
 
@@ -738,13 +732,23 @@ function runReading(){
 
   // 命の設計図との関係
   const starInfo = loadStarInfo();
+  // 音の五行（furiより）
+  const ONKYO = {'ア':['水'],'イ':['土'],'ウ':['金'],'エ':['木'],'オ':['火'],
+    'カ':['金'],'キ':['金'],'ク':['金'],'ケ':['金'],'コ':['金'],
+    'サ':['水'],'シ':['水'],'ス':['水'],'セ':['水'],'ソ':['水'],
+    'タ':['火'],'チ':['火'],'ツ':['火'],'テ':['火'],'ト':['火'],
+    'ナ':['土'],'ニ':['土'],'ヌ':['土'],'ネ':['土'],'ノ':['土'],
+    'ハ':['木'],'ヒ':['木'],'フ':['木'],'ヘ':['木'],'ホ':['木'],
+    'マ':['土'],'ミ':['土'],'ム':['土'],'メ':['土'],'モ':['土'],
+    'ヤ':['金'],'ユ':['金'],'ヨ':['金'],
+    'ラ':['金'],'リ':['金'],'ル':['金'],'レ':['金'],'ロ':['金'],
+    'ワ':['水'],'ヲ':['水'],'ン':['水']
+  };
   const furi = ((document.getElementById('furiSei').value||'')+(document.getElementById('furiMei').value||'')).toUpperCase();
   const nameGyoArr = [];
-  for(const ch of furi){
-    const g = onGGof(ch);
-    if(g) nameGyoArr.push(g);
-  }
-  const gkGyoArr = [ten,jin,chi,gai,so].map(gogyoOf).filter(Boolean);
+  for(const ch of furi){ if(ONKYO[ch]) nameGyoArr.push(...ONKYO[ch]); }
+  // 格の五行
+  const gkGyoArr = [calcYY(te),calcYY(ji),calcYY(chi),calcYY(ga),calcYY(so)].map(y=>y.gyo).filter(Boolean);
   showSeimeiDesign(starInfo, nameGyoArr, gkGyoArr);
 
   // 表示切り替え
@@ -784,34 +788,106 @@ function closePopup(e){
   }
 }
 
+
+// ── 五行処方箋データ ──
+const GYO_RX = {
+  '木': {
+    color: '#2a6e3a', bg: 'rgba(40,110,58,.07)', border: 'rgba(40,110,58,.25)',
+    title: '木のエネルギーを補う', sub: '発展・行動力・新しい始まり',
+    daily: [
+      '朝起きたら窓を開けて外気を感じる',
+      '新しいことを一つ試みる（小さくていい）',
+      '緑のある場所を歩く・公園に立ち寄る',
+    ],
+    items: [
+      '色：緑・青緑・黄緑系の服やアクセサリー',
+      'アクセ：木製のブレスレット・翡翠・エメラルド',
+      '香り：ヒノキ・ユーカリ・グリーン系（方位盤の香りナビへ）',
+      '食：酸味のもの（梅・レモン・酢・柑橘類）',
+    ],
+    direction: '東・東南（三碧木星・四緑木星の吉方位）が木のエネルギーを補います。',
+    naming: 'ハ行の音（ハヒフヘホ）を名前に入れると木の気が補われます。画数では1・2画の文字が木の五行に対応します。',
+  },
+  '火': {
+    color: '#8b2020', bg: 'rgba(139,32,32,.07)', border: 'rgba(139,32,32,.25)',
+    title: '火のエネルギーを補う', sub: '情熱・名誉・直感・表現力',
+    daily: [
+      '朝日を浴びる（5分でも）',
+      '感謝の言葉を声に出して言う',
+      'キャンドルを灯して一日を締める',
+    ],
+    items: [
+      '色：赤・紫・オレンジ系',
+      'アクセ：ルビー・ガーネット・赤い石',
+      '香り：シナモン・フランキンセンス・スパイシー系',
+      '食：苦味のもの（コーヒー・ゴーヤ・ダークチョコ）',
+    ],
+    direction: '南（九紫火星の吉方位）が火のエネルギーを補います。',
+    naming: 'タ行の音（タチツテト）を名前に入れると火の気が補われます。画数では3・4画の文字が火の五行に対応します。',
+  },
+  '土': {
+    color: '#6b4f1a', bg: 'rgba(107,79,26,.07)', border: 'rgba(107,79,26,.25)',
+    title: '土のエネルギーを補う', sub: '安定・受容・信頼・家庭基盤',
+    daily: [
+      '土や植物に触れる時間を作る',
+      '食事を丁寧に・よく噛んで取る',
+      '「ありがとう」を先に言う習慣',
+    ],
+    items: [
+      '色：黄・茶・ベージュ・アースカラー',
+      'アクセ：タイガーアイ・水晶・土系の石',
+      '香り：サンダルウッド・パチュリ・ウッド系',
+      '食：甘味のもの（さつまいも・かぼちゃ・米・根菜）',
+    ],
+    direction: '北東・南西（八白土星・二黒土星の吉方位）が土のエネルギーを補います。',
+    naming: 'ア行・ナ行・マ行・ヤ行の音を名前に入れると土の気が補われます。画数では5・6画の文字が土の五行に対応します。',
+  },
+  '金': {
+    color: '#5c4010', bg: 'rgba(92,64,16,.07)', border: 'rgba(92,64,16,.25)',
+    title: '金のエネルギーを補う', sub: '決断・権威・収穫・洗練',
+    daily: [
+      '整理整頓・断捨離を一か所だけやる',
+      '腹式呼吸を10回（決断力が上がる）',
+      '期限を決めて行動する習慣',
+    ],
+    items: [
+      '色：白・シルバー・グレー・金色',
+      'アクセ：シルバー製品・水晶・ムーンストーン',
+      '香り：ミント・ペパーミント・クリアな香り',
+      '食：辛味のもの（わさび・生姜・唐辛子）',
+    ],
+    direction: '西・北西（七赤金星・六白金星の吉方位）が金のエネルギーを補います。',
+    naming: 'カ行・ラ行・ワ行の音を名前に入れると金の気が補われます。画数では7・8画の文字が金の五行に対応します。',
+  },
+  '水': {
+    color: '#1a3a6e', bg: 'rgba(26,58,110,.07)', border: 'rgba(26,58,110,.25)',
+    title: '水のエネルギーを補う', sub: '知恵・流れ・縁・柔軟性',
+    daily: [
+      '意識して水をゆっくり飲む（一日1.5L）',
+      '「流れに乗る」姿勢を持つ・こだわりを手放す',
+      '静かな時間を作る（瞑想・日記）',
+    ],
+    items: [
+      '色：黒・紺・深青色・ネイビー',
+      'アクセ：アクアマリン・ラピスラズリ・藍色の石',
+      '香り：ジャスミン・ムスク・海を感じる香り',
+      '食：塩辛いもの（海のもの・昆布・塩）',
+    ],
+    direction: '北（一白水星の吉方位）が水のエネルギーを補います。',
+    naming: 'サ行の音（サシスセソ）を名前に入れると水の気が補われます。画数では9・0画の文字が水の五行に対応します。',
+  },
+};
+
 // ── 星情報読み込み ──
 const STAR_NAMES = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
 const STAR_GYO   = ['','水','土','木','木','土','金','金','土','火'];
 const STAR_GYO_JP= ['','みず','つち','き','き','つち','かね','かね','つち','ひ'];
 
 function loadStarInfo() {
-  let honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
-  let tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
-  let nain    = localStorage.getItem('kitoku_nain') || '';
+  const honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
+  const tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
+  const nain    = localStorage.getItem('kitoku_nain') || '';
   const bar     = document.getElementById('starBar');
-
-  if ((!honmei || !tsukimei || !nain) && typeof getKD === 'function') {
-    const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
-    const parts = birth.split('-').map(Number);
-    if (parts.length === 3 && parts.every(Boolean)) {
-      const [by, bm, bd] = parts;
-      const kd = getKD(by, bm, bd);
-      honmei = calcHonmei(kd.kY);
-      tsukimei = calcTsukimei(honmei, kd.kM);
-      const yn = calcNayin(kd.kY);
-      nain = yn && yn.n ? yn.n : nain;
-      try {
-        localStorage.setItem('kitoku_honmei', String(honmei));
-        localStorage.setItem('kitoku_tsukimei', String(tsukimei));
-        if (nain) localStorage.setItem('kitoku_nain', nain);
-      } catch(e) {}
-    }
-  }
 
   if (!honmei) { bar.style.display = 'none'; return null; }
 
@@ -868,9 +944,9 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
   });
 
   // 補完されている五行
-  const complement = analysis.filter(a => !a.starHas && a.nameHas).map(a => a.g);
-  const resonance = analysis.filter(a => a.starHas && a.nameHas).map(a => a.g);
-  const missing = analysis.filter(a => !a.starHas && !a.nameHas).map(a => a.g);
+  const補完 = analysis.filter(a => !a.starHas && a.nameHas).map(a => a.g);
+  const共鳴 = analysis.filter(a => a.starHas && a.nameHas).map(a => a.g);
+  const未配置 = analysis.filter(a => !a.starHas && !a.nameHas).map(a => a.g);
 
   card.innerHTML = `
   <div style="background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border:1px solid rgba(138,104,32,.25);border-radius:12px;padding:16px;">
@@ -900,15 +976,57 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
       </div>`).join('')}
     </div>
 
-    ${complement.length ? `<div style="font-size:.68rem;color:#2a6e3a;font-weight:700;margin-bottom:6px;">🌿 名前が補完する五行：${complement.join('・')}</div>` : ''}
-    ${resonance.length ? `<div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ 星と名前が共鳴する五行：${resonance.join('・')}</div>` : ''}
-    ${missing.length ? `<div style="font-size:.65rem;color:var(--mist);margin-bottom:10px;">— 未配置の五行：${missing.join('・')}</div>` : ''}
+    ${補完.length ? `<div style="font-size:.68rem;color:#2a6e3a;font-weight:700;margin-bottom:6px;">🌿 名前が補完する五行：${補完.join('・')}</div>` : ''}
+    ${共鳴.length ? `<div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ 星と名前が共鳴する五行：${共鳴.join('・')}</div>` : ''}
+    ${未配置.length ? `<div style="font-size:.65rem;color:var(--mist);margin-bottom:10px;">— 未配置の五行：${未配置.join('・')}</div>` : ''}
 
-    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:10px;background:rgba(138,104,32,.04);border-radius:6px;">
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:10px;background:rgba(138,104,32,.04);border-radius:6px;margin-bottom:14px;">
       星が持つ五行はあなたの「生まれ持った命の気質」です。<br>
       名前が補完する五行は「名前がその人に与える気質の補助」です。<br>
       <strong style="color:var(--goldlt);">知ることで、意志を持って活かせる力になります。</strong>
     </div>
+
+    ${未配置.length ? `
+    <div style="font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:10px;letter-spacing:.06em;">
+      💊 足りない五行の処方箋
+    </div>
+    ${未配置.map(g => {
+      const rx = GYO_RX[g];
+      if (!rx) return '';
+      return `<div style="margin-bottom:12px;background:${rx.bg};border:1px solid ${rx.border};border-radius:10px;padding:14px;">
+        <div style="font-size:.7rem;font-weight:700;color:${rx.color};margin-bottom:3px;">${rx.title}</div>
+        <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;">${rx.sub}</div>
+        <div style="display:grid;gap:8px;">
+          <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
+            <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">① 日日できること</div>
+            <ul style="padding-left:14px;font-size:.64rem;color:var(--mist);line-height:1.9;">
+              ${rx.daily.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+            <a href="direction_v2.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🧭 今日の日盤吉方を確認する →</a>
+          </div>
+          <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
+            <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">② 身につけるもの</div>
+            <ul style="padding-left:14px;font-size:.64rem;color:var(--mist);line-height:1.9;">
+              ${rx.items.map(i => `<li>${i}</li>`).join('')}
+            </ul>
+            <a href="scent.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🌿 香りナビで探す →</a>
+          </div>
+          <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
+            <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">③ 方位で補う</div>
+            <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">${rx.direction}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <a href="travel.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">✈️ 旅行ナビで確認 →</a>
+              <a href="move.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🏡 引越しナビで確認 →</a>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
+            <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">④ 改名・命名するなら</div>
+            <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">${rx.naming}</div>
+            <a href="life.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🪬 別の名前で試す →</a>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}` : ''}
   </div>`;
 }
 
@@ -924,8 +1042,6 @@ function resetAll(){
   document.getElementById('formSection').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
-document.addEventListener('DOMContentLoaded', loadStarInfo);
 </script>
 </body>
 
