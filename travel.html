@@ -99,6 +99,15 @@ body{
 .star-bar-note{
   font-size:.6rem;color:#4b3c29;margin-top:5px;line-height:1.7;
 }
+.life-element-banner{
+  display:none;margin:12px 16px 0;
+  background:linear-gradient(135deg,#fffdf8,#f6efe2);
+  border:1px solid rgba(138,104,32,.34);
+  border-radius:12px;padding:11px 14px;
+  color:var(--goldlt);font-size:.68rem;line-height:1.8;
+  box-shadow:0 2px 10px rgba(60,40,10,.04);
+}
+.life-element-banner strong{font-size:.72rem;}
 .usage-guide{
   margin:12px 16px 16px;
   background:linear-gradient(135deg,#fffdf9,#f7f1e6);
@@ -755,6 +764,8 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="star-bar-text" id="starInfoText">生年月日を登録すると、あなたの星情報が表示されます</div>
   <div class="star-bar-note">この星情報をもとに、あなた専用の吉方位・線路の日を計算します。</div>
 </div>
+
+<div class="life-element-banner" id="lifeElementBanner"></div>
 
 <!-- 使い方の解説 -->
 <div class="usage-guide">
@@ -3105,6 +3116,27 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
     <div style="font-size:.65rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
   </div>
 
+<script>
+(function initLifeElementBanner(){
+  function show(){
+    var el=document.getElementById('lifeElementBanner');
+    if(!el)return;
+    var g=new URLSearchParams(location.search).get('element');
+    var data={
+      木:'旅で木の気を補うなら、森・庭園・朝の散歩など成長の気配がある場所を意識します。',
+      火:'旅で火の気を補うなら、南方・夕日・芸術・祭りなど明るさを感じる場所を意識します。',
+      土:'旅で土の気を補うなら、温泉・山・古い街並みなど安定感のある場所を意識します。',
+      金:'旅で金の気を補うなら、美術館・神社仏閣・整った空間など品格のある場所を意識します。',
+      水:'旅で水の気を補うなら、海・川・湖・静かな宿など流れを感じる場所を意識します。'
+    };
+    if(!data[g])return;
+    el.innerHTML='✈️ <strong>LIFEからの補いテーマ：'+g+'</strong><br>'+data[g];
+    el.style.display='block';
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);
+  else show();
+})();
+</script>
 </div>
 </body>
 </html>

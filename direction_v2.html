@@ -968,6 +968,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .dir-label-text.kyo{color:rgba(30,20,5,.55)!important;font-size:.88rem!important;}
 [data-theme="light"] .dir-label-text.kichi{color:#4a2e00!important;font-size:.95rem!important;}
 .dir-badge{font-size:.52rem!important;padding:2px 6px!important;}
+.life-element-banner{
+  display:none;margin:12px 16px 0;
+  background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.08));
+  border:1px solid rgba(196,160,67,.32);
+  border-radius:12px;padding:11px 14px;
+  color:var(--goldlt);font-size:.68rem;line-height:1.8;
+}
+.life-element-banner strong{font-size:.72rem;}
 
 </style>
 </head>
@@ -981,6 +989,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <button class="header-reset" onclick="history.back()" style="display:block;margin-right:6px;">← 戻る</button>
   <button class="header-reset" id="headerReset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
 </div>
+
+<div class="life-element-banner" id="lifeElementBanner"></div>
 
 <!-- ツールバー（テーマ・フォント・設定） -->
 <div class="toolbar">
@@ -4267,6 +4277,26 @@ function copyAIPrompt(){
   }else{
     runInit();
   }
+})();
+
+(function initLifeElementBanner(){
+  function show(){
+    var el=document.getElementById('lifeElementBanner');
+    if(!el)return;
+    var g=new URLSearchParams(location.search).get('element');
+    var data={
+      木:'日盤吉方で木の気を補うなら、成長・呼吸・はじまりを意識します。',
+      火:'日盤吉方で火の気を補うなら、表現・発信・明るさを意識します。',
+      土:'日盤吉方で土の気を補うなら、安定・休息・基盤づくりを意識します。',
+      金:'日盤吉方で金の気を補うなら、整理・決断・品格を意識します。',
+      水:'日盤吉方で水の気を補うなら、静けさ・学び・流れを意識します。'
+    };
+    if(!data[g])return;
+    el.innerHTML='🧭 <strong>LIFEからの補いテーマ：'+g+'</strong><br>'+data[g];
+    el.style.display='block';
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);
+  else show();
 })();
 </script>
 </body>

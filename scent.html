@@ -32,6 +32,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .star-card{margin:12px 16px;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:13px 14px;}
 .star-label{font-size:.56rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:6px;}
 .star-text{font-size:.75rem;color:var(--snow);line-height:2;}
+.life-element-banner{
+  display:none;margin:12px 16px 0;
+  background:linear-gradient(135deg,#fffdf8,#f7f1e6);
+  border:1px solid rgba(138,104,32,.32);
+  border-radius:12px;padding:11px 14px;
+  color:var(--goldlt);font-size:.68rem;line-height:1.8;
+}
+.life-element-banner strong{font-size:.72rem;}
 .section{padding:4px 16px 0;}
 .sec-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin:8px 0 10px;display:flex;align-items:center;gap:7px;}
 .sec-num{width:24px;height:24px;border-radius:50%;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.36);color:var(--goldlt);display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;letter-spacing:0;flex-shrink:0;}
@@ -147,6 +155,8 @@ textarea{min-height:86px;resize:vertical;}
   <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
 </div>
+
+<div class="life-element-banner" id="lifeElementBanner"></div>
 
 <div class="hero">
   <div class="hero-box">
@@ -508,8 +518,23 @@ function setFontSize(s){
 document.addEventListener('DOMContentLoaded',()=>{
   const t=localStorage.getItem('kitoku-theme')||'light';
   const fs=localStorage.getItem('kitoku-fontsize')||'s';
-  setTheme(t);setFontSize(fs);loadInfo();
+  setTheme(t);setFontSize(fs);showLifeElementBanner();loadInfo();
 });
+function showLifeElementBanner(){
+  const el=document.getElementById('lifeElementBanner');
+  if(!el)return;
+  const g=new URLSearchParams(location.search).get('element');
+  const data={
+    木:'成長・呼吸・はじまりを支える香りや色を選びます。',
+    火:'情熱・名誉・表現力を支える香りや色を選びます。',
+    土:'安定・受容・信頼感を支える香りや色を選びます。',
+    金:'明晰さ・品格・決断力を支える香りや色を選びます。',
+    水:'知恵・流れ・静けさを支える香りや色を選びます。'
+  };
+  if(!data[g])return;
+  el.innerHTML=`🌿 <strong>LIFEからの補いテーマ：${g}</strong><br>${data[g]}`;
+  el.style.display='block';
+}
 </script>
 </body>
 </html>

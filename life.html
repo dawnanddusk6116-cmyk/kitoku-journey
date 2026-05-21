@@ -1041,21 +1041,21 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
             <ul style="padding-left:14px;font-size:.64rem;color:var(--mist);line-height:1.9;">
               ${rx.daily.map(d => `<li>${d}</li>`).join('')}
             </ul>
-            <a href="direction_v2.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🧭 今日の日盤吉方を確認する →</a>
+            <a href="direction_v2.html?element=${encodeURIComponent(g)}" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🧭 今日の日盤吉方を確認する →</a>
           </div>
           <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
             <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">② 身につけるもの</div>
             <ul style="padding-left:14px;font-size:.64rem;color:var(--mist);line-height:1.9;">
               ${rx.items.map(i => `<li>${i}</li>`).join('')}
             </ul>
-            <a href="scent.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🌿 香りナビで探す →</a>
+            <a href="scent.html?element=${encodeURIComponent(g)}" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🌿 香りナビで探す →</a>
           </div>
           <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
             <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">③ 方位で補う</div>
             <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">${rx.direction}</div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <a href="travel.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">✈️ 旅行ナビで確認 →</a>
-              <a href="move.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🏡 引越しナビで確認 →</a>
+              <a href="travel.html?element=${encodeURIComponent(g)}" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">✈️ 旅行ナビで確認 →</a>
+              <a href="move.html?element=${encodeURIComponent(g)}" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🏡 引越しナビで確認 →</a>
             </div>
           </div>
           <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
