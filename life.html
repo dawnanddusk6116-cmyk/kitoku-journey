@@ -27,7 +27,10 @@ body{
   background:var(--bg);
   position:sticky;top:0;z-index:100;
 }
-.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.header-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;max-width:480px;margin:0 auto;
+}
 .header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
 .header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
 .font-control{
@@ -52,7 +55,7 @@ body{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   min-height:34px;
   font-size:.72rem;font-weight:700;color:var(--goldlt);text-decoration:none;
-  margin:14px 16px 0;padding:8px 14px;
+  margin-top:14px;margin-left:max(16px,calc((100vw - 480px) / 2 + 16px));padding:8px 14px;
   background:rgba(138,104,32,.07);border:1px solid rgba(138,104,32,.3);
   border-radius:999px;cursor:pointer;letter-spacing:.04em;
   font-family:'Noto Serif JP',serif;
@@ -499,7 +502,9 @@ function setTheme(t){
 }
 function setFont(f){
   const sz={s:'16px',m:'18px',l:'20px'};
-  document.body.style.fontSize=sz[f]||'16px';
+  const size=sz[f]||'16px';
+  document.body.style.fontSize=size;
+  document.documentElement.style.fontSize=size;
   try{localStorage.setItem('kitoku-font',f);}catch(e){}
   ['s','m','l'].forEach(x=>{
     const b=document.getElementById('tb-'+x);
