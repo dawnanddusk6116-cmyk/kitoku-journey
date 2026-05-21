@@ -55,10 +55,19 @@ body{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   min-height:34px;
   font-size:.72rem;font-weight:700;color:var(--goldlt);text-decoration:none;
-  margin-top:14px;margin-left:max(16px,calc((100vw - 480px) / 2 + 16px));padding:8px 14px;
+  padding:8px 14px;
   background:rgba(138,104,32,.07);border:1px solid rgba(138,104,32,.3);
   border-radius:999px;cursor:pointer;letter-spacing:.04em;
   font-family:'Noto Serif JP',serif;
+}
+.page-nav{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  max-width:480px;margin:14px auto 0;padding:0 16px;
+}
+.back-btn.secondary{
+  background:rgba(100,80,40,.04);
+  border-color:rgba(100,80,40,.18);
+  color:var(--mist);
 }
 .back-btn:active{opacity:.78;transform:translateY(1px);}
 
@@ -387,7 +396,10 @@ footer{
   </div>
 </div>
 
-<a class="back-btn" href="index.html">← 入口へ戻る</a>
+<div class="page-nav">
+  <button class="back-btn secondary" type="button" onclick="goLifeBack()">← 戻る</button>
+  <a class="back-btn" href="index.html">TOPへ</a>
+</div>
 
 <div class="page">
 
@@ -552,6 +564,15 @@ function setFont(f){
     const b=document.getElementById('tb-'+x);
     if(b)b.classList.toggle('active',x===f);
   });
+}
+function goLifeBack(){
+  const results=document.getElementById('results');
+  if(results && results.style.display==='block'){
+    resetAll();
+    return;
+  }
+  if(window.history.length>1)window.history.back();
+  else window.location.href='index.html';
 }
 (function(){
   try{
