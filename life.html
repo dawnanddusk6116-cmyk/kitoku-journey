@@ -311,6 +311,31 @@ body{
   font-size:.72rem;font-weight:700;color:var(--goldlt);
   font-family:'Noto Serif JP',serif;cursor:pointer;
 }
+.result-actions{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin-top:16px;
+}
+.result-actions .retry-btn{
+  margin-top:0;min-height:38px;
+}
+.retry-btn.subtle{
+  background:rgba(100,80,40,.035);
+  color:var(--mist);
+  border-color:rgba(100,80,40,.18);
+}
+.pro-note{
+  margin:16px auto 0;max-width:420px;
+  padding:12px 14px;border-radius:10px;
+  background:rgba(138,104,32,.055);
+  border:1px solid rgba(138,104,32,.18);
+  font-size:.64rem;color:var(--mist);line-height:1.9;
+  text-align:left;
+}
+.pro-note strong{color:var(--goldlt);}
+.result-action-msg{
+  min-height:18px;margin-top:10px;
+  font-size:.6rem;color:var(--mist);line-height:1.7;
+}
 
 /* ── ポップアップ ── */
 .popup-bg{
@@ -527,10 +552,16 @@ footer{
         吉凶を断じるものではありません。<br>
         どんな気質も、知ることで<em>「意志を持って活かせる力」</em>になります。
       </div>
-      <div class="close-sig">—— KITOKU @ JOURNEY</div>
-      <div style="margin-top:16px">
-        <button class="retry-btn" onclick="resetAll()">▸ 別の名前を読む</button>
+      <div class="pro-note">
+        命名・改名は、家族の想い、字の意味、読みやすさ、戸籍や日常での使いやすさも大切です。<br>
+        迷いが強い場合や正式な命名・改名を考える場合は、<strong>信頼できるプロの鑑定士や専門家に相談する</strong>こともおすすめします。
       </div>
+      <div class="close-sig">—— KITOKU @ JOURNEY</div>
+      <div class="result-actions">
+        <button class="retry-btn" onclick="resetAll()">▸ 候補名をもう一つ読む</button>
+        <button class="retry-btn subtle" onclick="saveResultName()">この名前を保存</button>
+      </div>
+      <div class="result-action-msg" id="resultActionMsg"></div>
     </div>
   </div>
 
@@ -853,6 +884,11 @@ function saveLifeName(){
   }catch(e){
     setSaveMsg('保存できませんでした。ブラウザの保存設定を確認してください。');
   }
+}
+function saveResultName(){
+  saveLifeName();
+  const msg=document.getElementById('resultActionMsg');
+  if(msg)msg.textContent='この名前を保存しました。次回から「保存した名前を使う」で呼び出せます。';
 }
 function applyLifeName(data){
   if(!data)return false;
