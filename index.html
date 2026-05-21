@@ -124,6 +124,11 @@ html.theme-night-root{
   background:linear-gradient(135deg,rgba(196,91,47,.07),var(--card));
 }
 .selector-card.s-relations::before{background:#c45b2f;}
+.selector-card.s-life{
+  border-color:rgba(79,139,93,.3);
+  background:linear-gradient(135deg,rgba(79,139,93,.08),var(--card));
+}
+.selector-card.s-life::before{background:#4f8b5d;}
 .selector-card.s-english{
   border-color:rgba(72,105,140,.3);
   background:linear-gradient(135deg,rgba(72,105,140,.07),var(--card));
@@ -137,6 +142,7 @@ html.theme-night-root{
   margin-bottom:7px;font-weight:800;line-height:1.35;
 }
 .selector-card.s-journey .selector-en,
+.selector-card.s-life .selector-en,
 .selector-card.s-pilgrimage .selector-en,
 .selector-card.s-business .selector-en,
 .selector-card.s-relations .selector-en{color:var(--snow);}
@@ -146,6 +152,7 @@ html.theme-night-root{
   margin-bottom:4px;letter-spacing:.04em;
 }
 .selector-card.s-pilgrimage .selector-title{color:#4a2a78;}
+.selector-card.s-life .selector-title{color:#2a5c38;}
 .selector-card.s-business .selector-title{color:#1a3c70;}
 .selector-card.s-relations .selector-title{color:#7a321b;}
 .selector-card.s-english .selector-title{color:#244b72;}
@@ -729,11 +736,13 @@ body.theme-night .pwa-banner{
   border-color:rgba(229,190,85,.24);
 }
 body.theme-night .selector-card.s-journey{background:linear-gradient(135deg,rgba(224,184,75,.14),var(--card));}
+body.theme-night .selector-card.s-life{background:linear-gradient(135deg,rgba(79,139,93,.14),var(--card));}
 body.theme-night .selector-card.s-relations{background:linear-gradient(135deg,rgba(211,111,66,.14),var(--card));}
 body.theme-night .selector-card.s-business{background:linear-gradient(135deg,rgba(70,139,218,.14),var(--card));}
 body.theme-night .selector-card.s-pilgrimage{background:linear-gradient(135deg,rgba(149,113,210,.14),var(--card));}
 body.theme-night .selector-card.s-english{background:linear-gradient(135deg,rgba(95,139,184,.14),var(--card));}
 body.theme-night .selector-card .selector-title,
+body.theme-night .selector-card.s-life .selector-title,
 body.theme-night .selector-card.s-pilgrimage .selector-title,
 body.theme-night .selector-card.s-business .selector-title,
 body.theme-night .selector-card.s-relations .selector-title,
@@ -865,6 +874,17 @@ body.theme-night .start-btn{
       </div>
       <div class="selector-arrow">›</div>
     </div>
+
+    <!-- LIFE -->
+    <a class="selector-card s-life" href="life.html">
+      <div class="selector-icon">🌱</div>
+      <div class="selector-info">
+        <div class="selector-en">KITOKU @ LIFE</div>
+        <div class="selector-title">名前と命の設計図を読む</div>
+        <div class="selector-desc">姓名の五行と、九星・月命・納音の関係を見る。</div>
+      </div>
+      <div class="selector-arrow">›</div>
+    </a>
 
     <!-- RELATIONS -->
     <a class="selector-card s-relations" href="relations.html">
@@ -1011,7 +1031,7 @@ body.theme-night .start-btn{
     <div class="first-guide-steps">
       <div class="first-guide-step">
         <div class="fgs-num">1</div>
-        <div class="fgs-text">九星・納音で<br>自分を知る</div>
+        <div class="fgs-text">九星・名前で<br>自分を知る</div>
       </div>
       <div class="first-guide-step">
         <div class="fgs-num">2</div>
@@ -1145,13 +1165,22 @@ body.theme-night .start-btn{
       <div class="cards-label-num">2</div>
       <div class="cards-label-text">
         <div class="cards-label-title">自分を深く知る</div>
-        <div class="cards-label-hint">星情報をAIに渡し、自分の悩み・才能・次の一手を言葉にする</div>
+        <div class="cards-label-hint">星・名前・AIから、自分の悩み・才能・次の一手を言葉にする</div>
       </div>
     </div>
+    <a class="app-card-wide tone-self" href="life.html">
+      <div class="card-icon">🌱</div>
+      <div class="card-info">
+        <div class="card-num">⑤ KITOKU @ LIFE</div>
+        <div class="card-title">名前と命の設計図を読む</div>
+        <div class="card-desc">姓名の五行と、本命星・月命星・納音の関係を見て自己理解を深める。</div>
+      </div>
+      <div class="app-card-wide-arrow">›</div>
+    </a>
     <a class="app-card-wide tone-self" href="ai.html">
       <div class="card-icon">🤖</div>
       <div class="card-info">
-        <div class="card-num">⑤ 気学 × AI相談</div>
+        <div class="card-num">⑥ 気学 × AI相談</div>
         <div class="card-title">AI軍師セッション</div>
         <div class="card-desc">悩みを整理し、次の一手を見つける。4カテゴリ＋軍師モード。</div>
       </div>
@@ -1160,7 +1189,7 @@ body.theme-night .start-btn{
     <a class="app-card-wide tone-self" href="astro64.html">
       <div class="card-icon">🔭</div>
       <div class="card-info">
-        <div class="card-num">⑥ 西洋星読みクロスチェック</div>
+        <div class="card-num">⑦ 西洋星読みクロスチェック</div>
         <div class="card-title">64象意 × KITOKU解釈</div>
         <div class="card-desc">太陽・月・金星などをKITOKU解釈で自己理解を深める。</div>
       </div>
@@ -1169,7 +1198,7 @@ body.theme-night .start-btn{
     <a class="app-card-wide tone-self" href="journal.html">
       <div class="card-icon">✍</div>
       <div class="card-info">
-        <div class="card-num">⑦ 魂の記帳</div>
+        <div class="card-num">⑧ 魂の記帳</div>
         <div class="card-title">今日の問いに答える</div>
         <div class="card-desc">毎日届く禅問答に答えを書き、感謝を記録する。自分だけの魂の通帳。</div>
       </div>

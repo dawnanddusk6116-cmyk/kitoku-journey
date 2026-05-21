@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU @ LIFE | 命の器を読む</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="kitoku-engine.js"></script>
+<style>
+:root{
+  --bg:#f7f4ef;--snow:#1c1208;--goldlt:#5c4010;--gold:#8a6820;
+  --mist:#5e503d;--rim:rgba(138,104,32,.18);--amber:rgba(138,104,32,.08);
+  --card:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Noto Serif JP',serif;
+  background:var(--bg);color:var(--snow);
+  min-height:100dvh;line-height:1.75;
+}
+
+/* ── ヘッダー ── */
+.header{
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--rim);
+  background:var(--bg);
+  position:sticky;top:0;z-index:100;
+}
+.header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
+.header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
+.back-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:34px;
+  margin:14px 16px 0;padding:8px 14px;
+  border:1px solid rgba(138,104,32,.3);border-radius:999px;
+  background:rgba(138,104,32,.07);
+  color:var(--goldlt);font-size:.72rem;font-weight:700;
+  letter-spacing:.04em;text-decoration:none;
+  font-family:'Noto Serif JP',serif;
+}
+.back-btn:active{opacity:.78;transform:translateY(1px);}
+
+/* ── コンテナ ── */
+.page{max-width:480px;margin:0 auto;padding:0 16px 48px;}
+
+/* ── ヒーロー ── */
+.hero{
+  padding:24px 0 20px;
+  border-bottom:1px solid var(--rim);
+  margin-bottom:20px;
+}
+.hero-eyebrow{
+  font-size:.62rem;color:var(--gold);letter-spacing:.2em;
+  margin-bottom:8px;
+}
+.hero-logo{
+  font-size:1.6rem;font-weight:700;color:var(--goldlt);
+  letter-spacing:.06em;margin-bottom:4px;line-height:1.3;
+}
+.hero-sub{font-size:.72rem;color:var(--mist);margin-bottom:14px;}
+.hero-bar{
+  width:40px;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  margin-bottom:16px;
+}
+.hero-desc{
+  font-size:.7rem;color:var(--mist);line-height:1.95;
+}
+.hero-desc em{color:var(--goldlt);font-style:normal;font-weight:700;}
+
+/* ── カード ── */
+.card{
+  background:var(--card);border:1px solid var(--rim);border-radius:12px;
+  padding:16px;margin-bottom:14px;
+}
+.card-title{
+  font-size:.72rem;font-weight:700;color:var(--goldlt);
+  margin-bottom:12px;letter-spacing:.06em;
+}
+
+/* ── フォーム ── */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field label{
+  display:block;font-size:.62rem;color:var(--mist);
+  margin-bottom:5px;letter-spacing:.06em;
+}
+.field input{
+  width:100%;padding:10px 12px;
+  border:1px solid rgba(138,104,32,.25);border-radius:8px;
+  font-family:'Noto Serif JP',serif;font-size:.8rem;
+  color:var(--snow);background:rgba(255,255,255,.85);outline:none;
+}
+.field input:focus{border-color:var(--gold);}
+.field input::placeholder{color:rgba(94,80,61,.35);}
+.furi-hint{
+  font-size:.55rem;color:rgba(138,104,32,.5);margin-left:6px;
+}
+
+/* ── 画数 ── */
+.stroke-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--rim);
+}
+.stroke-row:last-of-type{border-bottom:none;}
+.stroke-tag{
+  font-size:.7rem;font-weight:700;color:var(--goldlt);
+  width:24px;flex-shrink:0;
+}
+.stroke-input{
+  width:72px;padding:8px 10px;
+  border:1px solid rgba(138,104,32,.25);border-radius:8px;
+  font-family:'Noto Serif JP',serif;font-size:.85rem;
+  color:var(--snow);background:rgba(255,255,255,.85);
+  text-align:center;outline:none;
+}
+.stroke-input:focus{border-color:var(--gold);}
+.stroke-status{
+  font-size:.6rem;padding:3px 8px;border-radius:999px;font-weight:600;
+}
+.stroke-status.auto{
+  background:rgba(138,104,32,.1);color:var(--goldlt);
+  border:1px solid rgba(138,104,32,.25);
+}
+.stroke-status.manual{
+  background:rgba(40,130,60,.1);color:#2a6e3a;
+  border:1px solid rgba(40,130,60,.25);
+}
+.stroke-hint{
+  font-size:.6rem;color:var(--mist);line-height:1.8;
+  margin-top:10px;padding:8px 10px;
+  background:var(--amber);border-radius:6px;
+}
+
+/* ── CTAボタン ── */
+.cta-wrap{text-align:center;margin:20px 0 8px;}
+.cta{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--goldlt);color:#fff;border:none;
+  border-radius:10px;padding:14px 32px;
+  font-size:.82rem;font-weight:700;letter-spacing:.1em;
+  font-family:'Noto Serif JP',serif;cursor:pointer;
+}
+.cta:active{opacity:.85;}
+.err{
+  font-size:.65rem;color:#c0392b;text-align:center;
+  min-height:20px;margin-top:4px;
+}
+
+/* ── 結果 ── */
+#results{display:none;animation:fadeUp .8s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+/* ── 命の器タイトル ── */
+.vessel-header{
+  text-align:center;padding:24px 0 20px;
+  border-bottom:1px solid var(--rim);margin-bottom:16px;
+}
+.vessel-eyebrow{
+  font-size:.6rem;color:var(--gold);letter-spacing:.2em;margin-bottom:8px;
+}
+.vessel-name{
+  font-size:2rem;font-weight:700;color:var(--goldlt);
+  letter-spacing:.12em;margin-bottom:6px;
+}
+.vessel-subtitle{font-size:.72rem;color:var(--mist);}
+
+/* ── 五格グリッド ── */
+.gk-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:6px;margin-bottom:8px;
+}
+.gk-cell{
+  background:var(--amber);border:1px solid var(--rim);border-radius:8px;
+  padding:10px 4px;text-align:center;cursor:pointer;
+  transition:background .15s;
+}
+.gk-cell:active{background:rgba(138,104,32,.15);}
+.gk-cell-label{font-size:.55rem;color:var(--mist);margin-bottom:4px;}
+.gk-cell-num{font-size:1.1rem;font-weight:700;color:var(--goldlt);}
+.gk-cell-gg{font-size:.6rem;color:var(--mist);margin-top:2px;}
+.gk-cell-sym{font-size:.9rem;margin-top:2px;}
+
+/* ── 読み物カード ── */
+.reading-card{
+  background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
+  border:1px solid rgba(138,104,32,.2);border-radius:12px;
+  padding:16px;margin-bottom:14px;
+  font-size:.72rem;color:var(--mist);line-height:1.95;
+}
+.reading-card em{color:var(--goldlt);font-style:normal;font-weight:700;}
+.reading-card-title{
+  font-size:.65rem;color:var(--gold);font-weight:700;
+  letter-spacing:.12em;margin-bottom:10px;
+}
+
+/* ── 三才・陰陽・音 ── */
+.truth-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.truth-cell{
+  background:var(--amber);border:1px solid var(--rim);border-radius:8px;
+  padding:10px 8px;text-align:center;
+}
+.truth-cell-label{font-size:.55rem;color:var(--mist);margin-bottom:4px;}
+.truth-cell-val{font-size:.75rem;font-weight:700;color:var(--goldlt);}
+.truth-cell-desc{font-size:.58rem;color:var(--mist);margin-top:4px;line-height:1.6;}
+
+/* ── 結びメッセージ ── */
+.close-msg{
+  text-align:center;padding:24px 16px;
+  border-top:1px solid var(--rim);margin-top:8px;
+}
+.close-msg-body{
+  font-size:.72rem;color:var(--mist);line-height:2;margin-bottom:12px;
+}
+.close-msg-body em{color:var(--goldlt);font-style:normal;font-weight:700;}
+.close-sig{font-size:.62rem;color:var(--gold);letter-spacing:.12em;}
+.retry-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--amber);border:1px solid rgba(138,104,32,.3);
+  border-radius:8px;padding:10px 20px;margin-top:16px;
+  font-size:.72rem;font-weight:700;color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;cursor:pointer;
+}
+
+/* ── ポップアップ ── */
+.popup-bg{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+  align-items:flex-end;justify-content:center;
+}
+.popup-bg.open{display:flex;}
+.popup{
+  background:var(--bg);border-radius:18px 18px 0 0;
+  width:100%;max-width:480px;
+  max-height:85dvh;overflow-y:auto;
+  padding:20px 18px 48px;
+}
+.popup-close{
+  display:block;margin:0 0 14px auto;
+  background:var(--amber);border:1px solid var(--rim);
+  border-radius:999px;padding:5px 14px;
+  font-size:.65rem;color:var(--mist);cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.popup-kana{font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;}
+.popup-title{font-size:1.1rem;font-weight:700;color:var(--goldlt);margin-bottom:4px;}
+.popup-sub{font-size:.65rem;color:var(--mist);margin-bottom:12px;}
+.popup-gk-num{
+  font-size:2rem;font-weight:700;color:var(--goldlt);
+  margin-bottom:4px;
+}
+.popup-gk-elem{
+  display:inline-block;background:var(--amber);
+  border:1px solid var(--rim);border-radius:999px;
+  padding:3px 12px;font-size:.65rem;color:var(--goldlt);
+  margin-bottom:14px;
+}
+.popup-body{font-size:.72rem;color:var(--mist);line-height:1.95;margin-bottom:12px;}
+.popup-body em{color:var(--goldlt);font-style:normal;font-weight:700;}
+.popup-narrative{
+  font-size:.7rem;color:var(--mist);line-height:1.95;
+  padding:12px;background:var(--amber);border-radius:8px;
+}
+.popup-narrative em{color:var(--goldlt);font-style:normal;font-weight:700;}
+
+footer{
+  text-align:center;padding:24px 16px;
+  font-size:.58rem;color:var(--mist);letter-spacing:.08em;opacity:.6;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">✦ KITOKU @ LIFE</div>
+  <div class="header-sub">命の器を読む</div>
+</div>
+
+<!-- POPUP -->
+<div class="popup-bg" id="popup" onclick="closePopup(event)">
+  <div class="popup">
+    <button class="popup-close" onclick="closePopup({})">✕ 閉じる</button>
+    <div class="popup-kana" id="popKana"></div>
+    <div class="popup-title" id="popTitle"></div>
+    <div class="popup-sub" id="popSub"></div>
+    <div class="popup-gk-num" id="popNum" style="display:none"></div>
+    <div class="popup-gk-elem" id="popElem" style="display:none"></div>
+    <div class="popup-body" id="popBody"></div>
+    <div class="popup-narrative" id="popNarr" style="display:none"></div>
+  </div>
+</div>
+
+<a class="back-btn" href="index.html">← 入口へ戻る</a>
+
+<div class="page">
+
+  <!-- ヒーロー -->
+  <div class="hero">
+    <div class="hero-eyebrow">KITOKU @ LIFE — Vessel of Life</div>
+    <div class="hero-logo">命の器を読む</div>
+    <div class="hero-sub">姓名が宿す気質と流れの鑑定</div>
+    <div class="hero-bar"></div>
+    <div class="hero-desc">
+      「名はたいを表す」と言います。<br>
+      しかしそれは逆でもある。<br>
+      <em>体が変われば、名が新しい意味を帯びてくる。</em><br><br>
+      名前を変えるだけでは、何も変わりません。<br>
+      大切なのは、この鑑定を通じて<em>自分を知ること</em>。<br>
+      知った気質を、意志を持って生きること。<br>
+      心構えが変わり、行動が変わるとき、<br>
+      器はどんな名前でも、<em>育っていきます。</em><br><br>
+      <span style="font-size:.68rem;opacity:.75;">吉凶を断じる鑑定ではありません。<br>あなたの本質を照らす、<em>自己理解の道具</em>として使ってください。</span>
+    </div>
+  </div>
+
+  <!-- 星バー（localStorage から読み込み） -->
+  <div id="starBar" style="display:none;margin-bottom:20px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.25);border-radius:10px;padding:10px 14px;font-size:.68rem;color:var(--goldlt);font-weight:700;text-align:center;line-height:1.8;"></div>
+
+  <!-- 入力フォーム -->
+  <div id="formSection">
+    <div class="card">
+      <div class="card-title">① 姓名を入力する</div>
+      <div class="row2">
+        <div class="field">
+          <label>姓（Family Name）</label>
+          <input type="text" id="sei" placeholder="例：山田" oninput="onSeiInput()">
+        </div>
+        <div class="field">
+          <label>名（Given Name）</label>
+          <input type="text" id="mei" placeholder="例：花子" oninput="onMeiInput()">
+        </div>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label>フリガナ<span class="furi-hint">音の五行判定に使用</span></label>
+        <div class="row2">
+          <div>
+            <input type="text" id="furiSei" placeholder="セイ（例：ヤマダ）" oninput="onFuriInput()">
+          </div>
+          <div>
+            <input type="text" id="furiMei" placeholder="メイ（例：ハナコ）" oninput="onFuriInput()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">② 画数を確認する</div>
+      <div id="strokeSei" class="stroke-row">
+        <span class="stroke-tag">姓</span>
+        <input type="number" class="stroke-input" id="seiK" min="1" max="99" placeholder="—" oninput="onStrokeManual('sei')">
+        <span class="stroke-status auto" id="seiKSt">自動</span>
+      </div>
+      <div id="strokeMei" class="stroke-row">
+        <span class="stroke-tag">名</span>
+        <input type="number" class="stroke-input" id="meiK" min="1" max="99" placeholder="—" oninput="onStrokeManual('mei')">
+        <span class="stroke-status auto" id="meiKSt">自動</span>
+      </div>
+      <p class="stroke-hint">
+        ※ 気学では字体により画数が変わります（草冠=4、さんずい=3、しんにょう=4 など）。<br>
+        自動値を確認し、必要なら手動で修正してください。
+      </p>
+    </div>
+
+    <div class="cta-wrap">
+      <button class="cta" onclick="runReading()">✦ 命の器を読む</button>
+    </div>
+    <div class="err" id="err"></div>
+  </div>
+
+  <!-- 結果 -->
+  <div id="results">
+    <div class="vessel-header">
+      <div class="vessel-eyebrow">The Vessel of Life</div>
+      <div class="vessel-name" id="vesselName"></div>
+      <div class="vessel-subtitle" id="vesselSub"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">五格（Five Pillars）— 各格をタップして読む</div>
+      <div class="gk-grid" id="gkGrid"></div>
+      <p style="font-size:.58rem;color:var(--mist);text-align:center;margin-top:8px;">各格をタップすると詳しい解説が開きます</p>
+    </div>
+
+    <div class="reading-card" id="jinCard"></div>
+
+    <div class="card">
+      <div class="card-title">気質の構造 — The Five Laws</div>
+      <div class="truth-row" id="truthRow"></div>
+    </div>
+
+    <div class="reading-card" id="journeyCard"></div>
+
+    <!-- 命の設計図との関係 -->
+    <div id="seimeiCard" style="display:none;margin-bottom:14px;"></div>
+
+    <div class="close-msg">
+      <div class="close-msg-body">
+        この鑑定は、あなたの名前が持つ<em>「気質の地図」</em>を示すものです。<br>
+        吉凶を断じるものではありません。<br>
+        どんな気質も、知ることで<em>「意志を持って活かせる力」</em>になります。
+      </div>
+      <div class="close-sig">—— KITOKU @ JOURNEY</div>
+      <div style="margin-top:16px">
+        <button class="retry-btn" onclick="resetAll()">▸ 別の名前を読む</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>KITOKU @ LIFE — 命の器を読む · 5000 Years of Eastern Wisdom</footer>
+</div>
+
+
+<script>
+// ══════════════════════════════════════════════════════
+//  KITOKU 姓名鑑定 — 記述式 Y理論準拠
+//  スコアなし・吉凶なし・気質の物語として読む
+// ══════════════════════════════════════════════════════
+
+// ── テーマ・フォント ──
+function setTheme(t){
+  document.body.setAttribute('data-theme',t);
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===t);
+  });
+}
+function setFont(f){
+  const sz={s:'16px',m:'18px',l:'20px'};
+  document.body.style.fontSize=sz[f]||'16px';
+  try{localStorage.setItem('kitoku-font',f);}catch(e){}
+  ['s','m','l'].forEach(x=>{
+    const b=document.getElementById('tb-'+x);
+    if(b)b.classList.toggle('active',x===f);
+  });
+}
+(function(){
+  try{
+    const t=localStorage.getItem('kitoku-theme')||'light';
+    const f=localStorage.getItem('kitoku-font')||'s';
+    setTheme(t);setFont(f);
+  }catch(e){setTheme('light');setFont('s');}
+})();
+
+// ── 画数辞書 ──
+const STROKE={
+  '一':1,'乙':1,'二':2,'人':2,'八':2,'力':2,'三':3,'山':3,'川':3,'土':3,'大':3,'小':3,'子':3,'女':3,'工':3,'久':3,'千':3,'万':3,
+  '四':4,'中':4,'日':4,'月':4,'木':4,'水':4,'火':4,'心':4,'文':4,'元':4,'仁':4,'天':4,'夫':4,'太':4,'友':4,'手':4,'公':4,'内':4,'化':4,'午':4,
+  '五':5,'石':5,'白':5,'本':5,'正':5,'生':5,'田':5,'代':5,'玉':5,'古':5,'台':5,'外':5,'市':5,'平':5,'由':5,'甲':5,'申':5,'目':5,'以':5,'加':5,'右':5,'弘':5,
+  '六':6,'西':6,'年':6,'先':6,'光':6,'会':6,'名':6,'多':6,'安':6,'好':6,'地':6,'百':6,'色':6,'各':6,'合':6,'吉':6,'同':6,'有':6,'次':6,'竹':6,'米':6,'早':6,'旭':6,'江':6,'池':6,'守':6,'宅':6,
+  '七':7,'村':7,'花':7,'男':7,'来':7,'形':7,'作':7,'里':7,'見':7,'言':7,'足':7,'谷':7,'赤':7,'近':7,'局':7,'志':7,'位':7,'住':7,'佐':7,'克':7,'利':7,'君':7,'坂':7,'妙':7,'完':7,'宏':7,'寿':7,'尚':7,'岡':7,'希':7,'弟':7,
+  '八':8,'林':8,'和':8,'学':8,'長':8,'金':8,'青':8,'事':8,'京':8,'典':8,'依':8,'佳':8,'命':8,'固':8,'奈':8,'季':8,'宗':8,'実':8,'定':8,'岩':8,'幸':8,'念':8,'拓':8,'明':8,'昌':8,'昇':8,'松':8,'武':8,'河':8,'波':8,'注':8,'芽':8,'茂':8,'虎':8,'郁':8,
+  '九':9,'美':9,'春':9,'南':9,'星':9,'海':9,'風':9,'香':9,'保':9,'信':9,'勇':9,'亮':9,'俊':9,'咲':9,'哉':9,'城':9,'奏':9,'威':9,'姫':9,'宣':9,'建':9,'思':9,'映':9,'柳':9,'栄':9,'泰':9,'洋':9,'洞':9,'津':9,'科':9,'秋':9,'紀':9,'紅':9,'若':9,'茜':9,
+  '十':10,'高':10,'家':10,'真':10,'島':10,'原':10,'時':10,'桜':10,'根':10,'桂':10,'案':10,'格':10,'校':10,'梅':10,'流':10,'特':10,'益':10,'祥':10,'素':10,'航':10,'記':10,'透':10,'郎':10,'都':10,
+  '野':11,'望':11,'清':11,'笑':11,'陽':11,'健':11,'将':11,'崎':11,'康':11,'彩':11,'深':11,'梨':11,'梢':11,'球':11,'章':11,'紫':11,'萌':11,
+  '喜':12,'善':12,'創':12,'博':12,'惠':12,'晶':12,'景':12,'朝':12,'森':12,'智':12,'温':12,'湖':12,'琳':12,'絵':12,'葵':12,'隆':12,'雄':12,'雅':12,
+  '義':13,'新':13,'楓':13,'照':13,'福':13,'睦':13,'碧':13,'稔':13,'綾':13,'鈴':13,
+  '翠':14,'誠':14,'徳':14,'寧':14,'嘉':14,'精':14,
+  '慶':15,'賢':15,'蓮':15,'潤':15,'穂':15,'霞':15,'輝':15,
+  '優':17,'璃':17,'樹':16,'橘':16,'憲':16,'貴':12,'上':3,'下':3,
+};
+function getStroke(ch){return STROKE[ch]||null;}
+function sumStrokes(str){let t=0;for(const c of str){const s=getStroke(c);if(s===null)return null;t+=s;}return t;}
+
+// ── 五行 ──
+const GG_TABLE={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};
+const SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
+const SOKOKU={木:'土',火:'金',土:'水',金:'木',水:'火'};
+function gogyoOf(n){return GG_TABLE[n%10]||'土';}
+function isSojo(a,b){return SOJO[a]===b;}
+function isSokoku(a,b){return SOKOKU[a]===b||SOKOKU[b]===a;}
+const GG_COLOR={木:'#6dba6d',火:'#e07070',土:'#c8a44a',金:'#a0c8d8',水:'#6da0c8'};
+const GG_EN={木:'Wood 木',火:'Fire 火',土:'Earth 土',金:'Metal 金',水:'Water 水'};
+
+// ── 音の五行 ──
+const ON_GG={
+  'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土',
+  'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金',
+  'ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金',
+  'サ':'金','シ':'金','ス':'金','セ':'金','ソ':'金',
+  'ザ':'金','ジ':'金','ズ':'金','ゼ':'金','ゾ':'金',
+  'タ':'火','チ':'火','ツ':'火','テ':'火','ト':'火',
+  'ダ':'火','デ':'火','ド':'火',
+  'ナ':'火','ニ':'火','ヌ':'火','ネ':'火','ノ':'火',
+  'ラ':'火','リ':'火','ル':'火','レ':'火','ロ':'火',
+  'ハ':'水','ヒ':'水','フ':'水','ヘ':'水','ホ':'水',
+  'バ':'水','ビ':'水','ブ':'水','ベ':'水','ボ':'水',
+  'パ':'水','ピ':'水','プ':'水','ペ':'水','ポ':'水',
+  'マ':'水','ミ':'水','ム':'水','メ':'水','モ':'水',
+  'ワ':'水','ヲ':'水',
+  'ヤ':'木','ユ':'木','ヨ':'木',
+  'ン':'土','ッ':'土',
+  'あ':'土','い':'土','う':'土','え':'土','お':'土',
+  'か':'金','き':'金','く':'金','け':'金','こ':'金',
+  'が':'金','ぎ':'金','ぐ':'金','げ':'金','ご':'金',
+  'さ':'金','し':'金','す':'金','せ':'金','そ':'金',
+  'ざ':'金','じ':'金','ず':'金','ぜ':'金','ぞ':'金',
+  'た':'火','ち':'火','つ':'火','て':'火','と':'火',
+  'だ':'火','で':'火','ど':'火',
+  'な':'火','に':'火','ぬ':'火','ね':'火','の':'火',
+  'ら':'火','り':'火','る':'火','れ':'火','ろ':'火',
+  'は':'水','ひ':'水','ふ':'水','へ':'水','ほ':'水',
+  'ば':'水','び':'水','ぶ':'水','べ':'水','ぼ':'水',
+  'ぱ':'水','ぴ':'水','ぷ':'水','ぺ':'水','ぽ':'水',
+  'ま':'水','み':'水','む':'水','め':'水','も':'水',
+  'わ':'水','を':'水',
+  'や':'木','ゆ':'木','よ':'木',
+  'ん':'土','っ':'土',
+};
+function onGGof(ch){return ON_GG[ch]||null;}
+function getOnResult(meiKana){
+  if(!meiKana||meiKana.length<2)return null;
+  const ch=[...meiKana].filter(c=>ON_GG[c]);
+  if(ch.length<2)return null;
+  const g1=onGGof(ch[0]),g2=onGGof(ch[1]);
+  return{g1,g2,both:`${g1}+${g2}`};
+}
+
+// ── 陰陽 ──
+function calcYY(gk){
+  const v=[gk.ten,gk.jin,gk.chi,gk.gai,gk.so];
+  const yang=v.filter(x=>x%2!==0).length;
+  return{yin:5-yang,yang,balanced:Math.abs(yang-(5-yang))<=1};
+}
+
+// ── 気質テキスト辞書 ──
+const GG_KEYWORD={
+  木:{key:'成長と前進',en:'Growth',symbol:'🌿',desc:'芽吹く力。前進する意志。どんな逆境も突き破る生命力を持つ気質。'},
+  火:{key:'情熱と輝き',en:'Passion',symbol:'🔥',desc:'照らす存在。人を温め、インスピレーションを与える炎の気質。'},
+  土:{key:'包容と安定',en:'Earth',symbol:'🌏',desc:'大地のような深さ。すべてを受け入れ、育む母なる気質。'},
+  金:{key:'明晰と本質',en:'Clarity',symbol:'✦',desc:'本質を見抜く力。磨かれることで輝く、精錬された気質。'},
+  水:{key:'知恵と流動',en:'Wisdom',symbol:'🌊',desc:'深く考える力。岩をも穿つ知恵と、柔軟に流れる適応力の気質。'},
+};
+
+const JIN_NARRATIVE={
+  木:`人格の核心には<em>「木の気」</em>が宿っています。
+<br><br>木は春の大地を割って芽吹きます。どれだけ土が固くとも、時間をかけて根を張り、ついには大樹へと成長します。あなたの内なる意志は、これと同じ力を持っています。
+<br><br>「止まるくらいなら、遅くとも前へ」——それがあなたの本質的な動き方です。人と競うより、<em>昨日の自分を超えること</em>に最もエネルギーが燃えます。`,
+  火:`人格の核心には<em>「火の気」</em>が宿っています。
+<br><br>炎は見てもらうことで輝き、共にある者を温めます。あなたの存在は、周囲に光と熱を与える力を持っています。
+<br><br>情熱が言葉になるとき、行動になるとき、あなたは最もあなたらしくいられます。<em>感じたことを表現すること</em>——それがこの器の本来の使い方です。`,
+  土:`人格の核心には<em>「土の気」</em>が宿っています。
+<br><br>大地はどんな種も黙って受け入れます。あなたには人の痛みを深いところで理解し、ただそこにいるだけで人を安心させる力があります。
+<br><br>「支える」ことに喜びを感じる気質ですが、同時に<em>受け取ること</em>も土の豊かさの一部です。誰かの優しさを素直に受け取れるとき、器はさらに満ちていきます。`,
+  金:`人格の核心には<em>「金の気」</em>が宿っています。
+<br><br>金は磨かれることで初めて輝きます。あなたの眼は本質を見抜き、表面の賑やかさより深いところにある真実を求めます。
+<br><br>「丁寧に、完璧に」——この姿勢があなたの仕事と関係を磨きます。<em>質への誠実さ</em>こそが、この器が社会で輝く源です。`,
+  水:`人格の核心には<em>「水の気」</em>が宿っています。
+<br><br>水は争わず、低いところへ流れ、万物を潤します。あなたの思考は深く、静かな洞察力を持ちます。岩をも穿つのは激しい水ではなく、<em>止まない水</em>です。
+<br><br>情報を集め、内側で熟成させ、確信を持って動く——それがあなたの本来のリズムです。焦りは最大の敵。静かなことは弱さではなく、あなたの最大の強さです。`,
+};
+
+const SANSAI_TEXT={
+  sojo:(g)=>`天格・人格・地格の五行「${g.join('→')}」は<em>完全相生</em>の流れをなしています。天（家系）→社会→内面という三層が、川が海へと流れ込むように自然につながっています。この流れは、あなたが社会に出るほどに力が増すことを示しています。`,
+  sokoku:(g)=>`天格・人格・地格の五行「${g.join('→')}」には<em>張力の配列</em>があります。これは弱さではありません。弓は張力があるからこそ矢を遠くへ飛ばせます。内なる緊張感を創造のエネルギーに変えることが、この器の本来の使い方です。`,
+  neutral:(g)=>`天格・人格・地格の五行「${g.join('→')}」は、それぞれが<em>独立した気</em>を持っています。ひとつの色に染まらない、多面的な気質の持ち主です。`,
+};
+
+const YY_TEXT={
+  balanced:'陰と陽がほぼ均等に配置されています。天と地のバランスが取れた、安定したエネルギーの器です。',
+  yangHeavy:'陽の気が強い配列です。行動力・発信力・前進するエネルギーが強く働きます。',
+  yinHeavy:'陰の気が強い配列です。受け取る力・内省する力・深く考える力が強く働きます。',
+};
+
+const ON_NARRATIVE={
+  getDesc(g1,g2){
+    if(!g1||!g2)return null;
+    if(g1===g2){
+      const msgs={
+        水:'名の音に水の響きが重なります。知恵と流動のエネルギーが深く根付いた、内省力と洞察力の強い音の器です。',
+        火:'名の音に火の響きが重なります。情熱と表現力が二重に備わった、エネルギッシュな音の器です。',
+        木:'名の音に木の響きが重なります。成長と前進のエネルギーが強く、積極的に道を切り開く音の器です。',
+        金:'名の音に金の響きが重なります。明晰さと本質を見抜く力が際立つ、シャープな音の器です。',
+        土:'名の音に土の響きが重なります。包容力と安定感が備わった、温かみのある音の器です。',
+      };
+      return msgs[g1]||'名の音に同じ気質の響きが重なっています。';
+    }
+    if(isSojo(g1,g2))return`名の音は「${g1}」から「${g2}」へと相生する流れを持っています。音のエネルギーが自然に循環し、名前を呼ばれるたびにその気質が高まります。`;
+    if(isSojo(g2,g1))return`名の音は「${g1}」と「${g2}」が互いに補い合う関係にあります。異なる気質が共鳴し合う、奥行きのある音の器です。`;
+    return`名の音に「${g1}」と「${g2}」の気質が共存しています。対極的な力を内包することで、多様な状況に対応できる柔軟性を持ちます。`;
+  }
+};
+
+const GK_NARRATIVE={
+  ten:(n,gg)=>`家系・先祖から受け継がれた「天の気」。姓の合計画数 ${n} は、${GG_EN[gg]} の気を宿しています。<br><br>この格は変えることのできない「宿命の土壌」です。どんな土壌も、その質を知ることで最大限に活かせます。<em>${GG_KEYWORD[gg]?.desc||''}</em>`,
+  jin:(n,gg)=>`五格の中で最も社会運に影響を与える「人格」。${n} は ${GG_EN[gg]} の気。<br><br>仕事・対人・社会での輝き方の核心です。${JIN_NARRATIVE[gg]||''}`,
+  chi:(n,gg)=>`名前の画数から生まれる「地の格」。${n} は ${GG_EN[gg]} の気。<br><br>本来の性格・家庭内での素顔・行動の根源的なベースを示します。<em>「プライベートなあなた」の気質</em>がここに宿っています。${GG_KEYWORD[gg]?.desc||''}`,
+  gai:(n,gg)=>`外からあなたに流れ込む縁と環境の格。${n} は ${GG_EN[gg]} の気。<br><br>周囲の人があなたに感じる印象、思わぬ引き立て・良縁のパターンを示します。<em>追い風の質と強さ</em>がここに表れます。`,
+  so:(n,gg)=>`人生全体を統括する「総の格」。${n} は ${GG_EN[gg]} の気。<br><br>晩年に向かって積み重なるエネルギーの総量です。五格が調和するほど、この格の力が輝いていきます。<em>人生という大河の行き先</em>がここに示されます。`,
+};
+
+const JOURNEY_MSG={
+  木:`この名前は<em>「成長の旅」</em>を歩む器です。<br><br>木の気は急がない。でも止まらない。少しずつ根を張り、年輪を重ねるように、あなたの人生は積み重なるほど豊かになっていきます。焦ることなく、自分のペースで前に進む——それがこの器の最も美しい使い方です。`,
+  火:`この名前は<em>「照らす旅」</em>を歩む器です。<br><br>炎は暗闇の中でこそ価値を発揮します。あなたの存在が周囲を温め、道を示す。そのために、まず自分自身の炎を絶やさないことが大切です。内なる情熱を大切に育て、それを世界と分かち合う——それがこの器の本来の旅です。`,
+  土:`この名前は<em>「育む旅」</em>を歩む器です。<br><br>大地は見返りを求めません。ただそこにあるだけで、多くの命を支えます。あなたの人生には、知らないうちに誰かを助けている瞬間が数多くあります。その静かな力を、誇りを持って生きてください。`,
+  金:`この名前は<em>「磨かれる旅」</em>を歩む器です。<br><br>金は最初から輝いているわけではありません。磨かれることで、初めてその本来の輝きを放ちます。あなたの人生における「試練」は、この器を磨くための砥石です。丁寧に生きるほど、あなたはより深く輝いていきます。`,
+  水:`この名前は<em>「流れる旅」</em>を歩む器です。<br><br>水は最も低いところを選んで流れ、いつか大海に至ります。焦らず、争わず、しかし確実に。あなたの知恵と洞察は、時間をかけて熟成するほど深まります。静かに、でも止まることなく——それがこの器の最も美しい旅の形です。`,
+};
+
+// ── 状態 ──
+const STATE={seiManual:false,meiManual:false};
+let currentGK={};
+
+// ── 画数自動入力 ──
+function onSeiInput(){
+  if(!STATE.seiManual){
+    const v=document.getElementById('sei').value.trim();
+    const t=sumStrokes(v);
+    const el=document.getElementById('seiK');
+    const st=document.getElementById('seiKSt');
+    if(t!==null){el.value=t;st.className='stroke-status auto';st.textContent='自動';}
+    else{el.value='';el.placeholder='手動で入力';st.className='stroke-status missing';st.textContent='要確認';}
+  }
+}
+function onMeiInput(){
+  if(!STATE.meiManual){
+    const v=document.getElementById('mei').value.trim();
+    const t=sumStrokes(v);
+    const el=document.getElementById('meiK');
+    const st=document.getElementById('meiKSt');
+    if(t!==null){el.value=t;st.className='stroke-status auto';st.textContent='自動';}
+    else{el.value='';el.placeholder='手動で入力';st.className='stroke-status missing';st.textContent='要確認';}
+  }
+}
+function onFuriInput(){}
+function onStrokeManual(which){
+  if(which==='sei'){STATE.seiManual=true;document.getElementById('seiKSt').className='stroke-status manual';document.getElementById('seiKSt').textContent='手動確定';}
+  else{STATE.meiManual=true;document.getElementById('meiKSt').className='stroke-status manual';document.getElementById('meiKSt').textContent='手動確定';}
+}
+
+// ── メイン鑑定 ──
+function runReading(){
+  const seiStr=document.getElementById('sei').value.trim();
+  const meiStr=document.getElementById('mei').value.trim();
+  const seiK=parseInt(document.getElementById('seiK').value);
+  const meiK=parseInt(document.getElementById('meiK').value);
+  const furiSei=document.getElementById('furiSei').value.trim();
+  const furiMei=document.getElementById('furiMei').value.trim();
+  const er=document.getElementById('err');
+  er.style.display='none';
+
+  if(!seiStr||!meiStr){er.textContent='姓と名を入力してください。';er.style.display='block';return;}
+  if(!seiK||!meiK){er.textContent='画数を確認してください。自動取得できない場合は手動で入力してください。';er.style.display='block';return;}
+
+  const seiChars=[...seiStr],meiChars=[...meiStr];
+  const seiKs=seiChars.map(c=>getStroke(c)||Math.round(seiK/seiChars.length));
+  const meiKs=meiChars.map(c=>getStroke(c)||Math.round(meiK/meiChars.length));
+
+  const ten=seiK;
+  const chi=meiK;
+  const jin=(seiKs[seiKs.length-1]||0)+(meiKs[0]||0);
+  const so=ten+chi;
+  const gai=so-jin;
+  const gk={ten,jin,chi,gai,so};
+  currentGK={seiStr,meiStr,seiK,meiK,gk,furiMei,seiKs,meiKs};
+
+  const jinGG=gogyoOf(jin);
+  const tenGG=gogyoOf(ten);
+  const chiGG=gogyoOf(chi);
+  const sansaiG=[tenGG,jinGG,chiGG];
+  const yy=calcYY(gk);
+  const onResult=furiMei?getOnResult(furiMei):null;
+
+  // 命の器ヘッダー
+  document.getElementById('vesselName').textContent=`${seiStr} ${meiStr}`;
+  document.getElementById('vesselSub').textContent=`人格 ${GG_EN[jinGG]} · ${GG_KEYWORD[jinGG]?.key||''}`;
+
+  // 五格グリッド
+  const gkDefs=[
+    {key:'ten',label:'天 格',role:'家系の運',n:ten},
+    {key:'jin',label:'人 格',role:'本人の核心',n:jin},
+    {key:'chi',label:'地 格',role:'若年・環境',n:chi},
+    {key:'gai',label:'外 格',role:'社会・縁',n:gai},
+    {key:'so', label:'総 格',role:'一生の総運',n:so},
+  ];
+  const gkGrid=document.getElementById('gkGrid');
+  gkGrid.innerHTML='';
+  gkDefs.forEach(def=>{
+    const gg=gogyoOf(def.n);
+    const color=GG_COLOR[gg]||'#ccc';
+    const pct=Math.min(100,Math.round((def.n/60)*100));
+    const cell=document.createElement('div');
+    cell.className='gk-cell';
+    cell.onclick=()=>showGKPopup(def.key,def.n,gg);
+    cell.innerHTML=`
+      <div class="gk-label">${def.label}<br><span style="font-size:.4rem;opacity:.6">${def.role}</span></div>
+      <div class="gk-num" style="color:${color}">${def.n}</div>
+      <div class="gk-elem" style="color:${color}99;font-size:.44rem">${GG_EN[gg]}</div>
+      <div class="gk-key" style="color:${color}88">${GG_KEYWORD[gg]?.key||''}</div>
+      <div class="gk-bar"><div class="gk-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    `;
+    gkGrid.appendChild(cell);
+  });
+
+  // 人格カード
+  document.getElementById('jinCard').innerHTML=`
+    <div class="r-eyebrow">人格の核心 — The Core Energy</div>
+    <div class="r-title">${GG_KEYWORD[jinGG]?.symbol||''} ${GG_EN[jinGG]} — ${GG_KEYWORD[jinGG]?.key||''}</div>
+    <div class="tag-row">
+      <span class="tag">${GG_KEYWORD[jinGG]?.key||''}</span>
+      <span class="tag">${GG_KEYWORD[jinGG]?.en||''}</span>
+    </div>
+    <div class="r-body">${JIN_NARRATIVE[jinGG]||''}</div>
+  `;
+
+  // 気質の構造
+  const sansaiBothSojo=isSojo(sansaiG[0],sansaiG[1])&&isSojo(sansaiG[1],sansaiG[2]);
+  const sansaiHasSokoku=isSokoku(sansaiG[0],sansaiG[1])||isSokoku(sansaiG[1],sansaiG[2]);
+  const yyText=yy.balanced?YY_TEXT.balanced:yy.yang>yy.yin?YY_TEXT.yangHeavy:YY_TEXT.yinHeavy;
+  const onDesc=onResult?ON_NARRATIVE.getDesc(onResult.g1,onResult.g2):null;
+
+  const truthRow=document.getElementById('truthRow');
+  truthRow.innerHTML=`
+    <div class="truth-cell">
+      <div class="tc-name">三才の配置</div>
+      <div class="tc-val">${sansaiG.join('→')}</div>
+      <div class="tc-desc">${sansaiBothSojo?SANSAI_TEXT.sojo(sansaiG):sansaiHasSokoku?SANSAI_TEXT.sokoku(sansaiG):SANSAI_TEXT.neutral(sansaiG)}</div>
+    </div>
+    <div class="truth-cell">
+      <div class="tc-name">陰陽バランス</div>
+      <div class="tc-val">陰${yy.yin} / 陽${yy.yang}</div>
+      <div class="tc-desc">${yyText}</div>
+    </div>
+    ${onDesc?`<div class="truth-cell wide">
+      <div class="tc-name">音の五行 — ${furiMei}</div>
+      <div class="tc-val">${onResult?.g1} + ${onResult?.g2}</div>
+      <div class="tc-desc">${onDesc}</div>
+    </div>`:''}
+  `;
+
+  // 名前が示す旅路
+  document.getElementById('journeyCard').innerHTML=`
+    <div class="r-eyebrow">名前が示す旅路 — The Journey</div>
+    <div class="r-title">✦ ${seiStr}${meiStr}さんへ</div>
+    <div class="r-body">${JOURNEY_MSG[jinGG]||JOURNEY_MSG['水']}</div>
+  `;
+
+  // 命の設計図との関係
+  const starInfo = loadStarInfo();
+  const furi = ((document.getElementById('furiSei').value||'')+(document.getElementById('furiMei').value||'')).toUpperCase();
+  const nameGyoArr = [];
+  for(const ch of furi){
+    const g = onGGof(ch);
+    if(g) nameGyoArr.push(g);
+  }
+  const gkGyoArr = [ten,jin,chi,gai,so].map(gogyoOf).filter(Boolean);
+  showSeimeiDesign(starInfo, nameGyoArr, gkGyoArr);
+
+  // 表示切り替え
+  document.getElementById('formSection').style.display='none';
+  const res=document.getElementById('results');
+  res.style.display='block';
+  setTimeout(()=>{res.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
+// ── 五格ポップアップ ──
+function showGKPopup(key,n,gg){
+  const kana={ten:'てんかく',jin:'じんかく',chi:'ちかく',gai:'がいかく',so:'そうかく'};
+  const title={ten:'天 格',jin:'人 格',chi:'地 格',gai:'外 格',so:'総 格'};
+  const sub={ten:'家系から受け継ぐ土壌',jin:'社会での輝き方の核心',chi:'内なる性格の根源',gai:'縁と環境のパターン',so:'人生全体を統括する気'};
+  const color=GG_COLOR[gg]||'#ccc';
+  const narr=GK_NARRATIVE[key]?GK_NARRATIVE[key](n,gg):'';
+
+  document.getElementById('popKana').textContent=kana[key];
+  document.getElementById('popTitle').textContent=title[key];
+  document.getElementById('popSub').textContent=sub[key];
+  const pn=document.getElementById('popNum');
+  pn.style.display='block';pn.style.color=color;pn.textContent=n;
+  const pe=document.getElementById('popElem');
+  pe.style.display='block';pe.textContent=`${GG_EN[gg]} — ${GG_KEYWORD[gg]?.key||''}`;
+  document.getElementById('popBody').innerHTML='';
+  const pn2=document.getElementById('popNarr');
+  pn2.style.display='block';pn2.innerHTML=narr;
+
+  document.getElementById('popup').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closePopup(e){
+  if(!e||e.target===document.getElementById('popup')||e.target.classList.contains('popup-close')){
+    document.getElementById('popup').classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+
+// ── 星情報読み込み ──
+const STAR_NAMES = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+const STAR_GYO   = ['','水','土','木','木','土','金','金','土','火'];
+const STAR_GYO_JP= ['','みず','つち','き','き','つち','かね','かね','つち','ひ'];
+
+function loadStarInfo() {
+  let honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
+  let tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
+  let nain    = localStorage.getItem('kitoku_nain') || '';
+  const bar     = document.getElementById('starBar');
+
+  if ((!honmei || !tsukimei || !nain) && typeof getKD === 'function') {
+    const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+    const parts = birth.split('-').map(Number);
+    if (parts.length === 3 && parts.every(Boolean)) {
+      const [by, bm, bd] = parts;
+      const kd = getKD(by, bm, bd);
+      honmei = calcHonmei(kd.kY);
+      tsukimei = calcTsukimei(honmei, kd.kM);
+      const yn = calcNayin(kd.kY);
+      nain = yn && yn.n ? yn.n : nain;
+      try {
+        localStorage.setItem('kitoku_honmei', String(honmei));
+        localStorage.setItem('kitoku_tsukimei', String(tsukimei));
+        if (nain) localStorage.setItem('kitoku_nain', nain);
+      } catch(e) {}
+    }
+  }
+
+  if (!honmei) { bar.style.display = 'none'; return null; }
+
+  bar.style.display = 'block';
+  bar.innerHTML = `✦ 本命星：${STAR_NAMES[honmei]}（${STAR_GYO[honmei]}）　月命星：${STAR_NAMES[tsukimei]}（${STAR_GYO[tsukimei]}）　納音：${nain}<br>
+    <span style="font-size:.58rem;font-weight:400;opacity:.8;">九星の情報は生年月日登録ページから自動取得されます</span>`;
+
+  return { honmei, tsukimei, nain,
+    gyoH: STAR_GYO[honmei], gyoT: STAR_GYO[tsukimei] };
+}
+
+// 納音→五行マッピング（主要）
+function nainToGyo(nain) {
+  if (!nain) return '—';
+  if (nain.includes('水')) return '水';
+  if (nain.includes('木') || nain.includes('松') || nain.includes('桑')) return '木';
+  if (nain.includes('火') || nain.includes('炉') || nain.includes('山頭')) return '火';
+  if (nain.includes('金') || nain.includes('剣') || nain.includes('白')) return '金';
+  if (nain.includes('土') || nain.includes('城') || nain.includes('路')) return '土';
+  return '—';
+}
+
+// ── 命の設計図との関係を表示 ──
+function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
+  if (!starInfo || !starInfo.honmei) return;
+  const card = document.getElementById('seimeiCard');
+  card.style.display = 'block';
+
+  const nainGyo = nainToGyo(starInfo.nain);
+
+  // 星が持つ五行の強さ
+  const starGyos = [starInfo.gyoH, starInfo.gyoT, nainGyo].filter(g => g !== '—');
+  const gyoCount = {};
+  ['木','火','土','金','水'].forEach(g => gyoCount[g] = 0);
+  starGyos.forEach(g => { if(gyoCount[g] !== undefined) gyoCount[g]++; });
+
+  // 名前が持つ五行
+  const nameGyos = [...(nameGyo || []), ...(gkGyo || [])];
+  const nameCount = {};
+  ['木','火','土','金','水'].forEach(g => nameCount[g] = 0);
+  nameGyos.forEach(g => { if(nameCount[g] !== undefined) nameCount[g]++; });
+
+  // 補完分析
+  const ALL_GYO = ['木','火','土','金','水'];
+  const analysis = ALL_GYO.map(g => {
+    const starHas = gyoCount[g] > 0;
+    const nameHas = nameCount[g] > 0;
+    let role = '';
+    if (starHas && nameHas)  role = '✦ 星と名前が共鳴';
+    else if (!starHas && nameHas) role = '🌿 名前が補完';
+    else if (starHas && !nameHas) role = '◎ 星の核心';
+    else role = '— 未配置';
+    return { g, starHas, nameHas, role };
+  });
+
+  // 補完されている五行
+  const complement = analysis.filter(a => !a.starHas && a.nameHas).map(a => a.g);
+  const resonance = analysis.filter(a => a.starHas && a.nameHas).map(a => a.g);
+  const missing = analysis.filter(a => !a.starHas && !a.nameHas).map(a => a.g);
+
+  card.innerHTML = `
+  <div style="background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border:1px solid rgba(138,104,32,.25);border-radius:12px;padding:16px;">
+    <div style="font-size:.65rem;color:var(--gold);letter-spacing:.15em;margin-bottom:10px;">✦ 命の設計図との関係 — The Blueprint</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div style="background:#fff;border:1px solid var(--rim);border-radius:8px;padding:10px;">
+        <div style="font-size:.58rem;color:var(--mist);margin-bottom:6px;">星が持つ五行</div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);">
+          本命 ${starInfo.gyoH}　月命 ${starInfo.gyoT}<br>
+          <span style="font-size:.62rem;font-weight:400;">納音 ${nainGyo}（${starInfo.nain}）</span>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--rim);border-radius:8px;padding:10px;">
+        <div style="font-size:.58rem;color:var(--mist);margin-bottom:6px;">名前が持つ五行</div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);">
+          ${[...new Set(nameGyos)].join('　') || '—'}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:14px;">
+      ${analysis.map(a => `
+      <div style="text-align:center;background:${a.starHas && a.nameHas ? 'rgba(138,104,32,.12)' : a.nameHas ? 'rgba(40,130,60,.08)' : a.starHas ? 'rgba(138,104,32,.06)' : 'rgba(0,0,0,.03)'};border:1px solid ${a.starHas || a.nameHas ? 'rgba(138,104,32,.2)' : 'rgba(0,0,0,.08)'};border-radius:8px;padding:8px 4px;">
+        <div style="font-size:.85rem;font-weight:700;color:var(--goldlt);">${a.g}</div>
+        <div style="font-size:.48rem;color:var(--mist);margin-top:3px;line-height:1.5;">${a.starHas ? '星●' : ''}${a.nameHas ? '名●' : ''}</div>
+      </div>`).join('')}
+    </div>
+
+    ${complement.length ? `<div style="font-size:.68rem;color:#2a6e3a;font-weight:700;margin-bottom:6px;">🌿 名前が補完する五行：${complement.join('・')}</div>` : ''}
+    ${resonance.length ? `<div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ 星と名前が共鳴する五行：${resonance.join('・')}</div>` : ''}
+    ${missing.length ? `<div style="font-size:.65rem;color:var(--mist);margin-bottom:10px;">— 未配置の五行：${missing.join('・')}</div>` : ''}
+
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:10px;background:rgba(138,104,32,.04);border-radius:6px;">
+      星が持つ五行はあなたの「生まれ持った命の気質」です。<br>
+      名前が補完する五行は「名前がその人に与える気質の補助」です。<br>
+      <strong style="color:var(--goldlt);">知ることで、意志を持って活かせる力になります。</strong>
+    </div>
+  </div>`;
+}
+
+// ── リセット ──
+function resetAll(){
+  STATE.seiManual=false;STATE.meiManual=false;
+  ['sei','mei','furiSei','furiMei','seiK','meiK'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';if(el.placeholder==='手動で入力')el.placeholder='—';}
+  });
+  document.getElementById('seiKSt').className='stroke-status auto';document.getElementById('seiKSt').textContent='自動';
+  document.getElementById('meiKSt').className='stroke-status auto';document.getElementById('meiKSt').textContent='自動';
+  document.getElementById('results').style.display='none';
+  document.getElementById('formSection').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.addEventListener('DOMContentLoaded', loadStarInfo);
+</script>
+</body>
+
+</html>
