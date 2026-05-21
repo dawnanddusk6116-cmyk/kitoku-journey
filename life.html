@@ -167,6 +167,34 @@ body{
 }
 .mini-btn.subtle{background:rgba(100,80,40,.035);color:var(--mist);}
 .save-msg{font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;}
+.mode-card{
+  background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.55));
+  border:1px solid rgba(138,104,32,.24);border-radius:12px;
+  padding:14px 16px;margin-bottom:14px;
+}
+.mode-title{
+  font-size:.68rem;font-weight:700;color:var(--goldlt);
+  letter-spacing:.08em;margin-bottom:8px;
+}
+.mode-body{font-size:.65rem;color:var(--mist);line-height:1.9;margin-bottom:12px;}
+.mode-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.mode-tab{
+  min-height:38px;border:1px solid rgba(138,104,32,.24);
+  border-radius:999px;background:rgba(255,255,255,.55);
+  color:var(--mist);font-family:'Noto Serif JP',serif;
+  font-size:.62rem;font-weight:700;cursor:pointer;
+}
+.mode-tab.active{
+  background:rgba(138,104,32,.14);color:var(--goldlt);
+  border-color:rgba(138,104,32,.38);
+  box-shadow:0 1px 8px rgba(60,40,10,.06);
+}
+.intention-card{
+  background:linear-gradient(135deg,rgba(255,253,248,.92),rgba(246,239,226,.72));
+  border:1px solid rgba(138,104,32,.24);border-radius:12px;
+  padding:16px;margin-bottom:14px;
+}
+.intention-card .r-body{font-size:.7rem;}
 
 /* ── CTAボタン ── */
 .cta-wrap{text-align:center;margin:20px 0 8px;}
@@ -387,6 +415,18 @@ footer{
 
   <!-- 入力フォーム -->
   <div id="formSection">
+    <div class="mode-card">
+      <div class="mode-title">名前を、点数ではなく「器」として読む</div>
+      <div class="mode-body" id="lifeModeText">
+        自分の名前を、命の設計図と照らし合わせて読みます。名前は人生を自動で変えるものではありません。けれど、毎日名乗る言葉は、意識と行動を少しずつ整えます。
+      </div>
+      <div class="mode-tabs" aria-label="読み方">
+        <button class="mode-tab active" id="mode-self" type="button" onclick="setLifeMode('self')">自分</button>
+        <button class="mode-tab" id="mode-baby" type="button" onclick="setLifeMode('baby')">命名</button>
+        <button class="mode-tab" id="mode-rename" type="button" onclick="setLifeMode('rename')">改名</button>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-title">① 姓名を入力する</div>
       <div class="row2">
@@ -436,7 +476,7 @@ footer{
     </div>
 
     <div class="cta-wrap">
-      <button class="cta" onclick="runReading()">✦ 命の器を読む</button>
+      <button class="cta" id="lifeCta" onclick="runReading()">✦ 命の器を読む</button>
     </div>
     <div class="err" id="err"></div>
   </div>
@@ -463,6 +503,8 @@ footer{
     </div>
 
     <div class="reading-card" id="journeyCard"></div>
+
+    <div class="intention-card" id="intentionCard"></div>
 
     <!-- 命の設計図との関係 -->
     <div id="seimeiCard" style="display:none;margin-bottom:14px;"></div>
@@ -674,9 +716,66 @@ const JOURNEY_MSG={
   水:`この名前は<em>「流れる旅」</em>を歩む器です。<br><br>水は最も低いところを選んで流れ、いつか大海に至ります。焦らず、争わず、しかし確実に。あなたの知恵と洞察は、時間をかけて熟成するほど深まります。静かに、でも止まることなく——それがこの器の最も美しい旅の形です。`,
 };
 
+function renderIntentionCard(name, jinGG, mode){
+  const card=document.getElementById('intentionCard');
+  if(!card)return;
+  const modeLabel=LIFE_MODE_TEXT[mode]?.label||'名前';
+  const lead={
+    self:`${name}という名前は、あなたを縛るものではありません。けれど、毎日名乗り、呼ばれ、書くたびに、自分の意識を整える小さな羅針盤になります。`,
+    baby:`${name}という名前は、この子の人生を決めるものではありません。けれど、生まれ持った星にどんな響きと気質を添えるかを考える、最初の贈りものになります。`,
+    rename:`${name}という名前は、人生を自動で変える魔法ではありません。けれど、これからの自分が何を大切にして生きるかを、毎日思い出す器になります。`
+  };
+  card.innerHTML=`
+    <div class="r-eyebrow">${modeLabel}として読む — Intention</div>
+    <div class="r-title">名前は点数ではなく、意志を育てる器</div>
+    <div class="r-body">
+      ${lead[mode]||lead.self}<br><br>
+      人格の中心には<em>${GG_EN[jinGG]}</em>、つまり<em>${GG_KEYWORD[jinGG]?.key||''}</em>の気が宿ります。
+      大切なのは、この名前を「良い・悪い」で終わらせないことです。<br>
+      その気質を知り、どう使い、どう育てるか。そこから名前は、ただの記号ではなく<em>生き方の合図</em>になります。
+    </div>
+  `;
+}
+
 // ── 状態 ──
-const STATE={seiManual:false,meiManual:false};
+const STATE={seiManual:false,meiManual:false,lifeMode:'self'};
 let currentGK={};
+
+const LIFE_MODE_TEXT={
+  self:{
+    body:'自分の名前を、命の設計図と照らし合わせて読みます。名前は人生を自動で変えるものではありません。けれど、毎日名乗る言葉は、意識と行動を少しずつ整えます。',
+    cta:'✦ 命の器を読む',
+    label:'自分の名前'
+  },
+  baby:{
+    body:'生まれた子の本命星・月命星・納音を土台に、候補名がどんな気質を添えるかを読みます。良い悪いではなく、この子にどんな器を贈るかを見る命名モードです。',
+    cta:'✦ 命名候補を読む',
+    label:'命名候補'
+  },
+  rename:{
+    body:'改名候補を、今の自分がどう生きたいかという意志と照らして読みます。名前を変えるだけではなく、その名前をどう生きるかを見る改名モードです。',
+    cta:'✦ 改名候補を読む',
+    label:'改名候補'
+  }
+};
+
+function setLifeMode(mode){
+  STATE.lifeMode=LIFE_MODE_TEXT[mode]?mode:'self';
+  const data=LIFE_MODE_TEXT[STATE.lifeMode];
+  const msg=document.getElementById('lifeModeText');
+  const cta=document.getElementById('lifeCta');
+  if(msg)msg.textContent=data.body;
+  if(cta)cta.textContent=data.cta;
+  ['self','baby','rename'].forEach(k=>{
+    const b=document.getElementById('mode-'+k);
+    if(b)b.classList.toggle('active',k===STATE.lifeMode);
+  });
+  try{localStorage.setItem('kitoku-life-mode',STATE.lifeMode);}catch(e){}
+}
+
+function getLifeMode(){
+  return LIFE_MODE_TEXT[STATE.lifeMode] ? STATE.lifeMode : 'self';
+}
 
 // ── 画数自動入力 ──
 function onSeiInput(){
@@ -871,6 +970,7 @@ function runReading(){
     <div class="r-title">✦ ${seiStr}${meiStr}さんへ</div>
     <div class="r-body">${JOURNEY_MSG[jinGG]||JOURNEY_MSG['水']}</div>
   `;
+  renderIntentionCard(`${seiStr}${meiStr}`, jinGG, getLifeMode());
 
   // 命の設計図との関係
   const starInfo = loadStarInfo();
@@ -1193,6 +1293,8 @@ function resetAll(){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+  try{setLifeMode(localStorage.getItem('kitoku-life-mode')||'self');}
+  catch(e){setLifeMode('self');}
   loadStarInfo();
   loadLifeName(false);
 });
