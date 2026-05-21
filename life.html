@@ -6,6 +6,7 @@
 <title>KITOKU @ LIFE | 命の器を読む</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="kitoku-engine.js"></script>
 <style>
 :root{
   --bg:#f7f4ef;--snow:#1c1208;--goldlt:#5c4010;--gold:#8a6820;
@@ -29,20 +30,24 @@ body{
 .header-logo{font-size:.78rem;font-weight:700;color:var(--goldlt);letter-spacing:.12em;}
 .header-sub{font-size:.68rem;color:var(--mist);letter-spacing:.08em;margin-top:1px;}
 .back-btn{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:.65rem;color:var(--mist);text-decoration:none;
-  margin:10px 16px 0;padding:4px 0;background:none;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:34px;
+  font-size:.72rem;font-weight:700;color:var(--goldlt);text-decoration:none;
+  margin:14px 16px 0;padding:8px 14px;
+  background:rgba(138,104,32,.07);border:1px solid rgba(138,104,32,.3);
+  border-radius:999px;cursor:pointer;letter-spacing:.04em;
   font-family:'Noto Serif JP',serif;
 }
+.back-btn:active{opacity:.78;transform:translateY(1px);}
 
 /* ── コンテナ ── */
 .page{max-width:480px;margin:0 auto;padding:0 16px 48px;}
 
 /* ── ヒーロー ── */
 .hero{
-  padding:24px 0 20px;
+  padding:22px 0 18px;
   border-bottom:1px solid var(--rim);
-  margin-bottom:20px;
+  margin-bottom:16px;
 }
 .hero-eyebrow{
   font-size:.62rem;color:var(--gold);letter-spacing:.2em;
@@ -65,8 +70,10 @@ body{
 
 /* ── カード ── */
 .card{
-  background:var(--card);border:1px solid var(--rim);border-radius:12px;
+  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,253,248,.82));
+  border:1px solid rgba(138,104,32,.22);border-radius:12px;
   padding:16px;margin-bottom:14px;
+  box-shadow:0 2px 10px rgba(60,40,10,.035);
 }
 .card-title{
   font-size:.72rem;font-weight:700;color:var(--goldlt);
@@ -129,13 +136,16 @@ body{
 /* ── CTAボタン ── */
 .cta-wrap{text-align:center;margin:20px 0 8px;}
 .cta{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--goldlt);color:#fff;border:none;
-  border-radius:10px;padding:14px 32px;
-  font-size:.82rem;font-weight:700;letter-spacing:.1em;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;
+  background:linear-gradient(135deg,rgba(138,104,32,.92),rgba(196,160,67,.78));
+  color:#fff;border:1px solid rgba(138,104,32,.55);
+  border-radius:10px;padding:14px 18px;
+  font-size:.86rem;font-weight:700;letter-spacing:.12em;
   font-family:'Noto Serif JP',serif;cursor:pointer;
+  box-shadow:0 2px 8px rgba(90,60,10,.12);
 }
-.cta:active{opacity:.85;}
+.cta:active{opacity:.85;transform:translateY(1px);}
 .err{
   font-size:.65rem;color:#c0392b;text-align:center;
   min-height:20px;margin-top:4px;
@@ -174,6 +184,12 @@ body{
 .gk-cell-num{font-size:1.1rem;font-weight:700;color:var(--goldlt);}
 .gk-cell-gg{font-size:.6rem;color:var(--mist);margin-top:2px;}
 .gk-cell-sym{font-size:.9rem;margin-top:2px;}
+.gk-label{font-size:.55rem;color:var(--mist);line-height:1.45;margin-bottom:5px;}
+.gk-num{font-size:1.08rem;font-weight:800;line-height:1.1;margin-bottom:4px;}
+.gk-elem{font-size:.48rem;line-height:1.35;margin-bottom:3px;}
+.gk-key{font-size:.48rem;line-height:1.35;min-height:1.35em;}
+.gk-bar{height:3px;background:rgba(100,80,40,.1);border-radius:999px;margin-top:6px;overflow:hidden;}
+.gk-bar-fill{height:100%;border-radius:999px;}
 
 /* ── 読み物カード ── */
 .reading-card{
@@ -187,16 +203,24 @@ body{
   font-size:.65rem;color:var(--gold);font-weight:700;
   letter-spacing:.12em;margin-bottom:10px;
 }
+.r-eyebrow{font-size:.62rem;color:var(--gold);font-weight:700;letter-spacing:.14em;margin-bottom:8px;}
+.r-title{font-size:.9rem;color:var(--goldlt);font-weight:700;line-height:1.6;margin-bottom:8px;}
+.r-body{font-size:.72rem;color:var(--mist);line-height:1.95;}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px;}
+.tag{font-size:.58rem;color:var(--goldlt);background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:999px;padding:3px 8px;}
 
 /* ── 三才・陰陽・音 ── */
-.truth-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.truth-row{display:grid;grid-template-columns:1fr;gap:8px;}
 .truth-cell{
-  background:var(--amber);border:1px solid var(--rim);border-radius:8px;
-  padding:10px 8px;text-align:center;
+  background:rgba(138,104,32,.06);border:1px solid rgba(138,104,32,.18);border-radius:8px;
+  padding:11px 12px;text-align:left;
 }
 .truth-cell-label{font-size:.55rem;color:var(--mist);margin-bottom:4px;}
 .truth-cell-val{font-size:.75rem;font-weight:700;color:var(--goldlt);}
 .truth-cell-desc{font-size:.58rem;color:var(--mist);margin-top:4px;line-height:1.6;}
+.tc-name{font-size:.6rem;color:var(--gold);font-weight:700;letter-spacing:.12em;margin-bottom:5px;}
+.tc-val{font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:5px;}
+.tc-desc{font-size:.64rem;color:var(--mist);line-height:1.8;}
 
 /* ── 結びメッセージ ── */
 .close-msg{
@@ -211,7 +235,7 @@ body{
 .retry-btn{
   display:inline-flex;align-items:center;gap:6px;
   background:var(--amber);border:1px solid rgba(138,104,32,.3);
-  border-radius:8px;padding:10px 20px;margin-top:16px;
+  border-radius:999px;padding:10px 20px;margin-top:16px;
   font-size:.72rem;font-weight:700;color:var(--goldlt);
   font-family:'Noto Serif JP',serif;cursor:pointer;
 }
@@ -261,6 +285,13 @@ footer{
   text-align:center;padding:24px 16px;
   font-size:.58rem;color:var(--mist);letter-spacing:.08em;opacity:.6;
 }
+@media(max-width:380px){
+  .page{padding-left:14px;padding-right:14px;}
+  .gk-grid{gap:5px;}
+  .gk-cell{padding:9px 3px;}
+  .gk-label{font-size:.5rem;}
+  .gk-num{font-size:1rem;}
+}
 </style>
 </head>
 <body>
@@ -284,7 +315,7 @@ footer{
   </div>
 </div>
 
-<button class="back-btn" onclick="history.back()">← 戻る</button>
+<a class="back-btn" href="index.html">← 入口へ戻る</a>
 
 <div class="page">
 
@@ -308,7 +339,7 @@ footer{
   </div>
 
   <!-- 星バー（localStorage から読み込み） -->
-  <div id="starBar" style="display:none;margin-bottom:20px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.25);border-radius:10px;padding:10px 14px;font-size:.68rem;color:var(--goldlt);font-weight:700;text-align:center;line-height:1.8;"></div>
+  <div id="starBar" style="display:none;margin-bottom:16px;background:linear-gradient(135deg,#fffdf8,#f6efe2);border:1px solid rgba(138,104,32,.34);border-radius:10px;padding:11px 14px;font-size:.68rem;color:var(--goldlt);font-weight:700;text-align:center;line-height:1.8;box-shadow:0 2px 10px rgba(60,40,10,.04);"></div>
 
   <!-- 入力フォーム -->
   <div id="formSection">
@@ -732,23 +763,13 @@ function runReading(){
 
   // 命の設計図との関係
   const starInfo = loadStarInfo();
-  // 音の五行（furiより）
-  const ONKYO = {'ア':['水'],'イ':['土'],'ウ':['金'],'エ':['木'],'オ':['火'],
-    'カ':['金'],'キ':['金'],'ク':['金'],'ケ':['金'],'コ':['金'],
-    'サ':['水'],'シ':['水'],'ス':['水'],'セ':['水'],'ソ':['水'],
-    'タ':['火'],'チ':['火'],'ツ':['火'],'テ':['火'],'ト':['火'],
-    'ナ':['土'],'ニ':['土'],'ヌ':['土'],'ネ':['土'],'ノ':['土'],
-    'ハ':['木'],'ヒ':['木'],'フ':['木'],'ヘ':['木'],'ホ':['木'],
-    'マ':['土'],'ミ':['土'],'ム':['土'],'メ':['土'],'モ':['土'],
-    'ヤ':['金'],'ユ':['金'],'ヨ':['金'],
-    'ラ':['金'],'リ':['金'],'ル':['金'],'レ':['金'],'ロ':['金'],
-    'ワ':['水'],'ヲ':['水'],'ン':['水']
-  };
   const furi = ((document.getElementById('furiSei').value||'')+(document.getElementById('furiMei').value||'')).toUpperCase();
   const nameGyoArr = [];
-  for(const ch of furi){ if(ONKYO[ch]) nameGyoArr.push(...ONKYO[ch]); }
-  // 格の五行
-  const gkGyoArr = [calcYY(te),calcYY(ji),calcYY(chi),calcYY(ga),calcYY(so)].map(y=>y.gyo).filter(Boolean);
+  for(const ch of furi){
+    const g = onGGof(ch);
+    if(g) nameGyoArr.push(g);
+  }
+  const gkGyoArr = [ten,jin,chi,gai,so].map(gogyoOf).filter(Boolean);
   showSeimeiDesign(starInfo, nameGyoArr, gkGyoArr);
 
   // 表示切り替え
@@ -884,10 +905,28 @@ const STAR_GYO   = ['','水','土','木','木','土','金','金','土','火'];
 const STAR_GYO_JP= ['','みず','つち','き','き','つち','かね','かね','つち','ひ'];
 
 function loadStarInfo() {
-  const honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
-  const tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
-  const nain    = localStorage.getItem('kitoku_nain') || '';
+  let honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
+  let tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
+  let nain    = localStorage.getItem('kitoku_nain') || '';
   const bar     = document.getElementById('starBar');
+
+  if ((!honmei || !tsukimei || !nain) && typeof getKD === 'function') {
+    const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+    const parts = birth.split('-').map(Number);
+    if (parts.length === 3 && parts.every(Boolean)) {
+      const [by, bm, bd] = parts;
+      const kd = getKD(by, bm, bd);
+      honmei = calcHonmei(kd.kY);
+      tsukimei = calcTsukimei(honmei, kd.kM);
+      const yn = calcNayin(kd.kY);
+      nain = yn && yn.n ? yn.n : nain;
+      try {
+        localStorage.setItem('kitoku_honmei', String(honmei));
+        localStorage.setItem('kitoku_tsukimei', String(tsukimei));
+        if (nain) localStorage.setItem('kitoku_nain', nain);
+      } catch(e) {}
+    }
+  }
 
   if (!honmei) { bar.style.display = 'none'; return null; }
 
@@ -944,9 +983,9 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
   });
 
   // 補完されている五行
-  const補完 = analysis.filter(a => !a.starHas && a.nameHas).map(a => a.g);
-  const共鳴 = analysis.filter(a => a.starHas && a.nameHas).map(a => a.g);
-  const未配置 = analysis.filter(a => !a.starHas && !a.nameHas).map(a => a.g);
+  const complement = analysis.filter(a => !a.starHas && a.nameHas).map(a => a.g);
+  const resonance = analysis.filter(a => a.starHas && a.nameHas).map(a => a.g);
+  const missing = analysis.filter(a => !a.starHas && !a.nameHas).map(a => a.g);
 
   card.innerHTML = `
   <div style="background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border:1px solid rgba(138,104,32,.25);border-radius:12px;padding:16px;">
@@ -976,9 +1015,9 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
       </div>`).join('')}
     </div>
 
-    ${補完.length ? `<div style="font-size:.68rem;color:#2a6e3a;font-weight:700;margin-bottom:6px;">🌿 名前が補完する五行：${補完.join('・')}</div>` : ''}
-    ${共鳴.length ? `<div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ 星と名前が共鳴する五行：${共鳴.join('・')}</div>` : ''}
-    ${未配置.length ? `<div style="font-size:.65rem;color:var(--mist);margin-bottom:10px;">— 未配置の五行：${未配置.join('・')}</div>` : ''}
+    ${complement.length ? `<div style="font-size:.68rem;color:#2a6e3a;font-weight:700;margin-bottom:6px;">🌿 名前が補完する五行：${complement.join('・')}</div>` : ''}
+    ${resonance.length ? `<div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ 星と名前が共鳴する五行：${resonance.join('・')}</div>` : ''}
+    ${missing.length ? `<div style="font-size:.65rem;color:var(--mist);margin-bottom:10px;">— 未配置の五行：${missing.join('・')}</div>` : ''}
 
     <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:10px;background:rgba(138,104,32,.04);border-radius:6px;margin-bottom:14px;">
       星が持つ五行はあなたの「生まれ持った命の気質」です。<br>
@@ -986,11 +1025,11 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
       <strong style="color:var(--goldlt);">知ることで、意志を持って活かせる力になります。</strong>
     </div>
 
-    ${未配置.length ? `
+    ${missing.length ? `
     <div style="font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:10px;letter-spacing:.06em;">
       💊 足りない五行の処方箋
     </div>
-    ${未配置.map(g => {
+    ${missing.map(g => {
       const rx = GYO_RX[g];
       if (!rx) return '';
       return `<div style="margin-bottom:12px;background:${rx.bg};border:1px solid ${rx.border};border-radius:10px;padding:14px;">
@@ -998,7 +1037,7 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
         <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;">${rx.sub}</div>
         <div style="display:grid;gap:8px;">
           <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
-            <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">① 日日できること</div>
+            <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">① 日々できること</div>
             <ul style="padding-left:14px;font-size:.64rem;color:var(--mist);line-height:1.9;">
               ${rx.daily.map(d => `<li>${d}</li>`).join('')}
             </ul>
@@ -1022,7 +1061,7 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
           <div style="background:rgba(255,255,255,.7);border-radius:7px;padding:10px;">
             <div style="font-size:.6rem;font-weight:700;color:${rx.color};margin-bottom:5px;">④ 改名・命名するなら</div>
             <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">${rx.naming}</div>
-            <a href="life.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🪬 別の名前で試す →</a>
+            <a href="#formSection" onclick="resetAll();return false;" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;font-size:.6rem;color:var(--goldlt);text-decoration:none;font-weight:600;">🪬 別の名前で試す →</a>
           </div>
         </div>
       </div>`;
@@ -1042,6 +1081,8 @@ function resetAll(){
   document.getElementById('formSection').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+document.addEventListener('DOMContentLoaded', loadStarInfo);
 </script>
 </body>
 
