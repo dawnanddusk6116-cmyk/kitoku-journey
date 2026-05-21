@@ -857,10 +857,43 @@ body.theme-night .start-btn{
     <div class="selector-tagline">今日は何のためにKITOKUを開きますか？</div>
   </div>
 
+  <!-- 目的選択グリッド -->
+  <div style="padding:0 0 4px;">
+    <div style="font-size:.65rem;color:var(--mist);margin-bottom:10px;text-align:center;">今日、何のために開きましたか？</div>
+    <div class="purpose-grid">
+      <button class="purpose-btn" onclick="filterPurpose('daily',this)">
+        <div class="p-icon">📅</div>
+        <div class="p-label">今日を<br>整える</div>
+      </button>
+      <button class="purpose-btn" onclick="filterPurpose('self',this)">
+        <div class="p-icon">🔍</div>
+        <div class="p-label">自分を<br>知る</div>
+      </button>
+      <button class="purpose-btn" onclick="filterPurpose('relation',this)">
+        <div class="p-icon">👥</div>
+        <div class="p-label">人間<br>関係</div>
+      </button>
+      <button class="purpose-btn" onclick="filterPurpose('travel',this)">
+        <div class="p-icon">✈️</div>
+        <div class="p-label">旅・<br>移動</div>
+      </button>
+      <button class="purpose-btn" onclick="filterPurpose('home',this)">
+        <div class="p-icon">🏠</div>
+        <div class="p-label">住まいを<br>整える</div>
+      </button>
+      <button class="purpose-btn" onclick="filterPurpose('all',this)">
+        <div class="p-icon">✦</div>
+        <div class="p-label">すべて<br>見る</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="purpose-divider">── アプリを選ぶ ──</div>
+
   <div class="selector-cards">
 
     <!-- JOURNEY -->
-    <div class="selector-card s-journey" onclick="showHome()">
+    <div class="selector-card s-journey" data-purpose="daily self" onclick="showHome()">
       <div class="selector-icon">✦</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ JOURNEY</div>
@@ -876,7 +909,7 @@ body.theme-night .start-btn{
     </div>
 
     <!-- LIFE -->
-    <a class="selector-card s-life" href="life.html">
+    <a class="selector-card s-life" data-purpose="self" href="life.html">
       <div class="selector-icon">🌱</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ LIFE</div>
@@ -887,7 +920,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- RELATIONS -->
-    <a class="selector-card s-relations" href="relations.html">
+    <a class="selector-card s-relations" data-purpose="relation" href="relations.html">
       <div class="selector-icon">🔗</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ RELATIONS</div>
@@ -898,7 +931,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- BUSINESS -->
-    <a class="selector-card s-business" href="business.html">
+    <a class="selector-card s-business" data-purpose="relation" href="business.html">
       <div class="selector-icon">💼</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ BUSINESS</div>
@@ -909,7 +942,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- PILGRIMAGE -->
-    <a class="selector-card s-pilgrimage" href="pilgrimage.html">
+    <a class="selector-card s-pilgrimage" data-purpose="travel" href="pilgrimage.html">
       <div class="selector-icon">🗾</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ PILGRIMAGE</div>
@@ -920,7 +953,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- TRAVEL -->
-    <a class="selector-card s-pilgrimage" href="travel.html" onclick="openTravel(event)">
+    <a class="selector-card s-pilgrimage" data-purpose="travel" href="travel.html" onclick="openTravel(event)">
       <div class="selector-icon">✈️</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ TRAVEL</div>
@@ -931,7 +964,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- MOVE -->
-    <a class="selector-card s-pilgrimage" href="move.html">
+    <a class="selector-card s-pilgrimage" data-purpose="home" href="move.html">
       <div class="selector-icon">🏡</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ MOVE</div>
@@ -1757,6 +1790,29 @@ function showFirst(clearData) {
   showScreenFirst();
   document.getElementById('birthInput').value = '';
   setGender('male');
+}
+
+// ── 目的別フィルター ──
+let currentPurpose = 'all';
+function filterPurpose(purpose, btn) {
+  currentPurpose = purpose;
+  document.querySelectorAll('.purpose-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  // カードのフィルタリング
+  const cards = document.querySelectorAll('.selector-card[data-purpose]');
+  cards.forEach(card => {
+    if (purpose === 'all') {
+      card.classList.remove('dimmed');
+    } else {
+      const purposes = card.getAttribute('data-purpose') || '';
+      if (purposes.includes(purpose)) {
+        card.classList.remove('dimmed');
+      } else {
+        card.classList.add('dimmed');
+      }
+    }
+  });
 }
 </script>
 
