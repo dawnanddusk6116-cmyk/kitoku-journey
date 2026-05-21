@@ -763,13 +763,12 @@ function runReading(){
 
   // 命の設計図との関係
   const starInfo = loadStarInfo();
-  const furi = ((document.getElementById('furiSei').value||'')+(document.getElementById('furiMei').value||'')).toUpperCase();
   const nameGyoArr = [];
-  for(const ch of furi){
-    const g = onGGof(ch);
-    if(g) nameGyoArr.push(g);
+  if(onResult){
+    if(onResult.g1) nameGyoArr.push(onResult.g1);
+    if(onResult.g2) nameGyoArr.push(onResult.g2);
   }
-  const gkGyoArr = [ten,jin,chi,gai,so].map(gogyoOf).filter(Boolean);
+  const gkGyoArr = [jinGG].filter(Boolean);
   showSeimeiDesign(starInfo, nameGyoArr, gkGyoArr);
 
   // 表示切り替え
