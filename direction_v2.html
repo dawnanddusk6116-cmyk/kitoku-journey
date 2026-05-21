@@ -1840,6 +1840,19 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
       else items.push({name:'月命的殺',dir:tmTDir});
     }
   }
+  // 小児殺（月盤のみ・お子様モードON・10歳未満の場合）
+  const childEl=document.getElementById('sw-child');
+  const childOn=childEl&&childEl.checked;
+  const childAgeEl=document.getElementById('child-age');
+  const childAge=childAgeEl?parseInt(childAgeEl.value)||0:0;
+  if(childOn&&childAge<10&&banType==='month'){
+    const shoniDir=Object.keys(p2s).find(d=>p2s[d]===8)||null;
+    if(shoniDir&&shoniDir!=='C'){
+      const existing=items.find(i=>i.dir===shoniDir);
+      if(existing)existing.name+='・小児殺';
+      else items.push({name:'小児殺',dir:shoniDir});
+    }
+  }
   const kyouSet=new Set(items.map(i=>i.dir));
   return{items,kyouSet};
 }
