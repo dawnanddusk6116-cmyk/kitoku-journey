@@ -588,6 +588,9 @@ footer{
     <!-- 命名・改名の参考情報 -->
     <div id="namingRef" style="display:none;margin-bottom:14px;"></div>
 
+    <!-- 計算根拠と流派差 -->
+    <div id="evidencePanel" style="display:none;margin-bottom:14px;"></div>
+
     <div class="close-msg">
       <div class="close-msg-body">
         この鑑定は、あなたの名前が持つ<em>「気質の地図」</em>を示すものです。<br>
@@ -600,8 +603,8 @@ footer{
       </div>
       <div class="close-sig">—— KITOKU @ JOURNEY</div>
       <div class="result-actions">
-        <button class="retry-btn" onclick="resetAll()">▸ 候補名をもう一つ読む</button>
-        <button class="retry-btn subtle" onclick="saveResultName()">この名前を保存</button>
+        <button class="retry-btn" type="button" onclick="resetAll()">▸ 候補名をもう一つ読む</button>
+        <button class="retry-btn subtle" type="button" onclick="saveResultName()">この名前を保存</button>
       </div>
       <div class="result-action-msg" id="resultActionMsg"></div>
     </div>
@@ -640,8 +643,9 @@ function setFont(f){
 }
 function goLifeBack(){
   const results=document.getElementById('results');
-  if(results && results.style.display==='block'){
-    resetAll();
+  const form=document.getElementById('formSection');
+  if(results && form && results.style.display!=='none' && form.style.display==='none'){
+    showLifeForm(false);
     return;
   }
   if(window.history.length>1)window.history.back();
@@ -829,6 +833,73 @@ function renderIntentionCard(name, jinGG, mode){
       その気質を知り、どう使い、どう育てるか。そこから名前は、ただの記号ではなく<em>生き方の合図</em>になります。
     </div>
   `;
+}
+
+function renderEvidencePanel(ctx){
+  const card=document.getElementById('evidencePanel');
+  if(!card||!ctx)return;
+  const star=ctx.starInfo;
+  const nainGyo=star?nainToGyo(star.nain):'—';
+  const charRows=[...ctx.seiStr].map((ch,i)=>({part:'姓',ch,stroke:ctx.seiKs[i],gyo:gogyoOf(ctx.seiKs[i])}))
+    .concat([...ctx.meiStr].map((ch,i)=>({part:'名',ch,stroke:ctx.meiKs[i],gyo:gogyoOf(ctx.meiKs[i])})));
+  const gkRows=[
+    ['天格','姓の総画数',ctx.ten],
+    ['人格','姓の最後の文字＋名の最初の文字',ctx.jin],
+    ['地格','名の総画数',ctx.chi],
+    ['外格','天格＋地格－人格',ctx.gai],
+    ['総格','姓＋名の総画数',ctx.so]
+  ];
+  const onText=ctx.onResult
+    ? `${ctx.furiMei} → ${ctx.onResult.g1} + ${ctx.onResult.g2}`
+    : '名のフリガナが2音以上ある場合に表示';
+  card.style.display='block';
+  card.innerHTML=`
+    <div style="background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(255,255,255,.55));border:1px solid rgba(138,104,32,.24);border-radius:12px;padding:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);letter-spacing:.08em;">計算根拠・流派差・KITOKUでの扱い</div>
+          <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:3px;">この結果で実際に参照した数字と、流派差が出やすい部分です。</div>
+        </div>
+        <button type="button" onclick="toggleEvidenceBody()" style="font-size:.58rem;color:var(--goldlt);background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;padding:5px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;flex-shrink:0;">開閉</button>
+      </div>
+      <div id="evidenceBody" style="display:block;font-size:.62rem;color:var(--mist);line-height:1.9;">
+        <div style="display:grid;gap:10px;">
+          <div style="padding:10px;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.14);border-radius:8px;">
+            <strong style="color:var(--goldlt);">1. 画数入力</strong><br>
+            ${charRows.map(r=>`${r.part}「${r.ch}」=${r.stroke||'?'}画（${r.gyo||'—'}）`).join('　')}<br>
+            <span style="font-size:.58rem;">文字ごとの画数は画面上で修正可能です。旧字体・新字体・流派別画数で違いが出る場合があります。</span>
+          </div>
+          <div style="padding:10px;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.14);border-radius:8px;">
+            <strong style="color:var(--goldlt);">2. 五格計算（KITOKU標準）</strong><br>
+            ${gkRows.map(r=>`${r[0]}=${r[2]}画（${gogyoOf(r[2])} / ${r[1]}）`).join('<br>')}
+          </div>
+          <div style="padding:10px;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.14);border-radius:8px;">
+            <strong style="color:var(--goldlt);">3. 五行・陰陽の扱い</strong><br>
+            五行：画数の1の位で判定（1・2=木、3・4=火、5・6=土、7・8=金、9・0=水）<br>
+            陰陽：KITOKU標準では五格の奇偶で判定。参考として文字ごとの奇偶も表示します。
+          </div>
+          <div style="padding:10px;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.14);border-radius:8px;">
+            <strong style="color:var(--goldlt);">4. 音の五行</strong><br>
+            ${onText}<br>
+            <span style="font-size:.58rem;">KITOKUでは、名前の音が持つ補助的な気質として扱います。五格とは別軸です。</span>
+          </div>
+          <div style="padding:10px;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.14);border-radius:8px;">
+            <strong style="color:var(--goldlt);">5. 命の設計図との照合</strong><br>
+            ${star?`本命 ${star.gyoH} / 月命 ${star.gyoT} / 納音 ${nainGyo}（${star.nain||'—'}）`:'生年月日登録がある場合、本命星・月命星・納音を照合します。'}<br>
+            <span style="font-size:.58rem;">星が持つ五行を「生まれ持った命の気質」、名前が持つ五行を「名前が添える気質」として比較します。</span>
+          </div>
+          <div style="padding:10px;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.18);border-radius:8px;">
+            <strong style="color:var(--goldlt);">流派差について</strong><br>
+            姓名判断は、画数の取り方、霊数の扱い、陰陽の見方、五行の割り当て、音の五行の扱いが流派によって異なります。KITOKUでは吉凶を断定せず、計算根拠を明示したうえで、自己理解・命名・改名検討の参考資料として表示します。
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleEvidenceBody(){
+  const body=document.getElementById('evidenceBody');
+  if(body)body.style.display=body.style.display==='none'?'block':'none';
 }
 
 // ── 状態 ──
@@ -1025,16 +1096,22 @@ function saveResultName(){
 function applyLifeName(data){
   if(!data)return false;
   ['sei','mei','furiSei','furiMei','seiK','meiK'].forEach(id=>{
-    if(data[id]!==undefined)document.getElementById(id).value=data[id]||'';
+    const el=document.getElementById(id);
+    if(el && data[id]!==undefined)el.value=data[id]||'';
   });
   STATE.seiManual=!!data.seiK;
   STATE.meiManual=!!data.meiK;
-  document.getElementById('seiKSt').className=STATE.seiManual?'stroke-status manual':'stroke-status auto';
-  document.getElementById('seiKSt').textContent=STATE.seiManual?'保存値':'自動';
-  document.getElementById('meiKSt').className=STATE.meiManual?'stroke-status manual':'stroke-status auto';
-  document.getElementById('meiKSt').textContent=STATE.meiManual?'保存値':'自動';
-  if(!data.seiK){STATE.seiManual=false;onSeiInput();}
-  if(!data.meiK){STATE.meiManual=false;onMeiInput();}
+  const seiSt=document.getElementById('seiKSt');
+  const meiSt=document.getElementById('meiKSt');
+  if(seiSt){
+    seiSt.className=STATE.seiManual?'stroke-status manual':'stroke-status auto';
+    seiSt.textContent=STATE.seiManual?'保存値':'自動';
+  }
+  if(meiSt){
+    meiSt.className=STATE.meiManual?'stroke-status manual':'stroke-status auto';
+    meiSt.textContent=STATE.meiManual?'保存値':'自動';
+  }
+  renderCharStrokes();
   return true;
 }
 function loadLifeName(showMessage){
@@ -1278,6 +1355,11 @@ function runReading(){
 
   // 命名・改名の参考情報
   showNamingRef(seiStr, meiStr, gk);
+  renderEvidencePanel({
+    seiStr, meiStr, furiMei, seiKs, meiKs,
+    ten, jin, chi, gai, so,
+    onResult, starInfo
+  });
 
   // 表示切り替え
   document.getElementById('formSection').style.display='none';
@@ -1700,17 +1782,37 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
   </div>`;
 }
 
-// ── リセット ──
+// ── 結果から入力へ戻る / リセット ──
+function showLifeForm(clear){
+  const results=document.getElementById('results');
+  const form=document.getElementById('formSection');
+  if(results)results.style.display='none';
+  if(form)form.style.display='block';
+  if(clear){
+    STATE.seiManual=false;STATE.meiManual=false;
+    Object.keys(STROKE_OVERRIDE).forEach(k=>delete STROKE_OVERRIDE[k]);
+    ['sei','mei','furiSei','furiMei','seiK','meiK'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){
+        el.value='';
+        if(el.placeholder==='手動で入力')el.placeholder='—';
+      }
+    });
+    const seiSt=document.getElementById('seiKSt');
+    const meiSt=document.getElementById('meiKSt');
+    if(seiSt){seiSt.className='stroke-status auto';seiSt.textContent='自動';}
+    if(meiSt){meiSt.className='stroke-status auto';meiSt.textContent='自動';}
+    renderCharStrokes();
+    const actionMsg=document.getElementById('resultActionMsg');
+    if(actionMsg)actionMsg.textContent='';
+  }
+  const target=document.getElementById('formSection')||document.body;
+  if(target.scrollIntoView)target.scrollIntoView({behavior:'smooth',block:'start'});
+  else window.scrollTo(0,0);
+}
+
 function resetAll(){
-  STATE.seiManual=false;STATE.meiManual=false;
-  ['sei','mei','furiSei','furiMei','seiK','meiK'].forEach(id=>{
-    const el=document.getElementById(id);if(el){el.value='';if(el.placeholder==='手動で入力')el.placeholder='—';}
-  });
-  document.getElementById('seiKSt').className='stroke-status auto';document.getElementById('seiKSt').textContent='自動';
-  document.getElementById('meiKSt').className='stroke-status auto';document.getElementById('meiKSt').textContent='自動';
-  document.getElementById('results').style.display='none';
-  document.getElementById('formSection').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
+  showLifeForm(true);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
