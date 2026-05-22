@@ -528,7 +528,27 @@ footer{
     </div>
 
     <div class="card">
-      <div class="card-title">五格（Five Pillars）— 各格をタップして読む</div>
+      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>五格（Five Pillars）— 各格をタップして読む</span>
+        <button onclick="document.getElementById('gkHowto').style.display=document.getElementById('gkHowto').style.display==='none'?'block':'none'" style="font-size:.58rem;color:var(--goldlt);background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;padding:3px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;flex-shrink:0;">計算根拠 ？</button>
+      </div>
+      <div id="gkHowto" style="display:none;margin-bottom:12px;padding:12px;background:rgba(138,104,32,.05);border-radius:8px;font-size:.62rem;color:var(--mist);line-height:1.95;">
+        <div style="font-weight:700;color:var(--goldlt);margin-bottom:8px;">✦ 五格の計算方法（KITOKU標準）</div>
+        <div style="display:grid;gap:6px;">
+          <div><strong style="color:var(--goldlt);">天格</strong> = 姓の総画数（家系から受け継ぐ土壌）</div>
+          <div><strong style="color:var(--goldlt);">人格</strong> = 姓の最後の文字 ＋ 名の最初の文字（社会での核心）</div>
+          <div><strong style="color:var(--goldlt);">地格</strong> = 名の総画数（内なる性格の根源）</div>
+          <div><strong style="color:var(--goldlt);">外格</strong> = 天格 ＋ 地格 － 人格（縁と環境のパターン）</div>
+          <div><strong style="color:var(--goldlt);">総格</strong> = 全文字の総画数（人生全体を統括する気）</div>
+        </div>
+        <div style="margin-top:10px;padding:8px;background:rgba(138,104,32,.06);border-radius:6px;">
+          <strong style="color:var(--goldlt);">五行の判定：</strong>画数の1の位で決まります<br>
+          1・2 → 木　3・4 → 火　5・6 → 土　7・8 → 金　9・0 → 水
+        </div>
+        <div style="margin-top:8px;font-size:.58rem;opacity:.8;">
+          ※ 流派によって計算方法が異なります。「文字ごとで判定」タブで他流派との比較ができます。
+        </div>
+      </div>
       <div class="gk-grid" id="gkGrid"></div>
       <p style="font-size:.58rem;color:var(--mist);text-align:center;margin-top:8px;">各格をタップすると詳しい解説が開きます</p>
     </div>
@@ -536,7 +556,30 @@ footer{
     <div class="reading-card" id="jinCard"></div>
 
     <div class="card">
-      <div class="card-title">気質の構造 — The Five Laws</div>
+      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>気質の構造 — The Five Laws</span>
+        <button onclick="document.getElementById('lawsHowto').style.display=document.getElementById('lawsHowto').style.display==='none'?'block':'none'" style="font-size:.58rem;color:var(--goldlt);background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;padding:3px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;flex-shrink:0;">計算根拠 ？</button>
+      </div>
+      <div id="lawsHowto" style="display:none;margin-bottom:12px;padding:12px;background:rgba(138,104,32,.05);border-radius:8px;font-size:.62rem;color:var(--mist);line-height:1.95;">
+        <div style="font-weight:700;color:var(--goldlt);margin-bottom:8px;">✦ 三才・陰陽・音の五行の根拠</div>
+        <div style="display:grid;gap:8px;">
+          <div>
+            <strong style="color:var(--goldlt);">三才の配置</strong><br>
+            天格・人格・地格の五行の並び順。相生（木→火→土→金→水）か相剋（木→土→水→火→金）かで気の流れを判定します。
+          </div>
+          <div>
+            <strong style="color:var(--goldlt);">陰陽バランス</strong><br>
+            KITOKUは五格（5つの数字）の奇偶で判定。奇数＝陽、偶数＝陰。流派によっては各文字の画数で判定します（タブで切替可）。
+          </div>
+          <div>
+            <strong style="color:var(--goldlt);">音の五行</strong><br>
+            名前のフリガナの行で判定。ア・ナ・マ・ヤ行→土、カ・ラ・ワ行→金、サ行→水、タ行→火、ハ行→木。名前の音が持つ気質の補助です。
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:.58rem;opacity:.8;">
+          ※ いずれも流派により異なります。KITOKUはMurayama流×Y理論に基づく解釈です。
+        </div>
+      </div>
       <div class="truth-row" id="truthRow"></div>
     </div>
 
@@ -1007,22 +1050,98 @@ function runReading(){
   const onDesc=onResult?ON_NARRATIVE.getDesc(onResult.g1,onResult.g2):null;
 
   const truthRow=document.getElementById('truthRow');
+
+  // 文字ごとの陰陽計算
+  const allChars = [...(seiStr||''), ...(meiStr||'')];
+  const charYY = allChars.map(ch => {
+    const s = getStroke(ch);
+    return { ch, stroke: s, yang: s ? s%2!==0 : null };
+  }).filter(c => c.stroke);
+  const charYang = charYY.filter(c=>c.yang).length;
+  const charYin  = charYY.length - charYang;
+  const charYYText = charYang > charYin ? '陽の気が強い配列です。行動力・発信力・前進するエネルギーが強く働きます。'
+    : charYin > charYang ? '陰の気が強い配列です。受け取る力・内省する力・深く考える力が強く働きます。'
+    : '陰と陽がほぼ均等に配置されています。バランスの取れた安定したエネルギーです。';
+
   truthRow.innerHTML=`
     <div class="truth-cell">
       <div class="tc-name">三才の配置</div>
       <div class="tc-val">${sansaiG.join('→')}</div>
       <div class="tc-desc">${sansaiBothSojo?SANSAI_TEXT.sojo(sansaiG):sansaiHasSokoku?SANSAI_TEXT.sokoku(sansaiG):SANSAI_TEXT.neutral(sansaiG)}</div>
     </div>
-    <div class="truth-cell">
+    <div class="truth-cell" id="yyCell">
       <div class="tc-name">陰陽バランス</div>
-      <div class="tc-val">陰${yy.yin} / 陽${yy.yang}</div>
-      <div class="tc-desc">${yyText}</div>
+      <div style="display:flex;gap:5px;margin-bottom:8px;">
+        <button id="yyTabGk" onclick="switchYYTab('gk')" style="flex:1;padding:5px 0;border-radius:6px;font-size:.58rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">五格で判定</button>
+        <button id="yyTabChar" onclick="switchYYTab('char')" style="flex:1;padding:5px 0;border-radius:6px;font-size:.58rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:1px solid rgba(138,104,32,.25);">文字ごと</button>
+      </div>
+      <div id="yyGk">
+        <div class="tc-val">陰${yy.yin} / 陽${yy.yang}</div>
+        <div class="tc-desc">${yyText}</div>
+        <div style="margin-top:7px;padding:7px 9px;background:rgba(138,104,32,.05);border-radius:6px;font-size:.58rem;color:var(--mist);line-height:1.75;">
+          <strong style="color:var(--goldlt);">なぜこの方法？</strong><br>
+          KITOKUは五格（天格・人格・地格・外格・総格）の奇偶で判定します。個々の文字より、名前全体が作り出すエネルギーの流れを重視するためです。
+        </div>
+      </div>
+      <div id="yyChar" style="display:none;">
+        <div class="tc-val">陰${charYin} / 陽${charYang}</div>
+        <div class="tc-desc">${charYYText}</div>
+        <div style="margin-top:6px;font-size:.58rem;color:var(--mist);line-height:1.8;">
+          ${charYY.map(c=>`${c.ch}(${c.stroke}画)=${c.yang?'陽':'陰'}`).join('　')}
+        </div>
+        <div style="margin-top:7px;padding:7px 9px;background:rgba(138,104,32,.05);border-radius:6px;font-size:.58rem;color:var(--mist);line-height:1.75;">
+          <strong style="color:var(--goldlt);">他流派参考</strong><br>
+          流派によっては各文字の画数の奇偶で陰陽を判定します。奇数＝陽、偶数＝陰。KITOKUとの違いをご自身で比較してください。
+        </div>
+      </div>
     </div>
     ${onDesc?`<div class="truth-cell wide">
       <div class="tc-name">音の五行 — ${furiMei}</div>
       <div class="tc-val">${onResult?.g1} + ${onResult?.g2}</div>
       <div class="tc-desc">${onDesc}</div>
     </div>`:''}
+    <div class="truth-cell wide" id="gyoCell">
+      <div class="tc-name">五行の構成</div>
+      <div style="display:flex;gap:5px;margin-bottom:8px;">
+        <button id="gyoTabGk" onclick="switchGyoTab('gk')" style="flex:1;padding:5px 0;border-radius:6px;font-size:.58rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">五格で判定</button>
+        <button id="gyoTabChar" onclick="switchGyoTab('char')" style="flex:1;padding:5px 0;border-radius:6px;font-size:.58rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:1px solid rgba(138,104,32,.25);">文字ごと</button>
+      </div>
+      <div id="gyoGk">
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+          ${[{l:'天格',n:ten},{l:'人格',n:jin},{l:'地格',n:chi},{l:'外格',n:gai},{l:'総格',n:so}].map(g=>{
+            const gg=gogyoOf(g.n);
+            const col=GG_COLOR[gg]||'#ccc';
+            return `<div style="flex:1;min-width:48px;text-align:center;background:${col}22;border:1px solid ${col}55;border-radius:7px;padding:6px 3px;">
+              <div style="font-size:.52rem;color:var(--mist);">${g.l}</div>
+              <div style="font-size:.72rem;font-weight:700;color:${col};">${gg}</div>
+              <div style="font-size:.48rem;color:var(--mist);">${g.n}画</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="padding:7px 9px;background:rgba(138,104,32,.05);border-radius:6px;font-size:.58rem;color:var(--mist);line-height:1.75;">
+          <strong style="color:var(--goldlt);">なぜこの方法？</strong><br>
+          KITOKUは五格の数字の1の位で五行を判定します（1・2→木、3・4→火、5・6→土、7・8→金、9・0→水）。名前全体の気のバランスを重視するためです。
+        </div>
+      </div>
+      <div id="gyoChar" style="display:none;">
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+          ${allChars.filter(ch=>getStroke(ch)).map(ch=>{
+            const s=getStroke(ch);
+            const gg=gogyoOf(s);
+            const col=GG_COLOR[gg]||'#ccc';
+            return `<div style="flex:1;min-width:40px;text-align:center;background:${col}22;border:1px solid ${col}55;border-radius:7px;padding:6px 3px;">
+              <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);">${ch}</div>
+              <div style="font-size:.65rem;font-weight:700;color:${col};">${gg}</div>
+              <div style="font-size:.48rem;color:var(--mist);">${s}画</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="padding:7px 9px;background:rgba(138,104,32,.05);border-radius:6px;font-size:.58rem;color:var(--mist);line-height:1.75;">
+          <strong style="color:var(--goldlt);">他流派参考</strong><br>
+          流派によっては各文字の画数の1の位で五行を判定します。KITOKUとの違いをご自身で比較・判断してください。
+        </div>
+      </div>
+    </div>
   `;
 
   // 名前が示す旅路
@@ -1048,6 +1167,24 @@ function runReading(){
   const res=document.getElementById('results');
   res.style.display='block';
   setTimeout(()=>{res.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
+function switchGyoTab(tab) {
+  document.getElementById('gyoGk').style.display   = tab==='gk'   ? 'block' : 'none';
+  document.getElementById('gyoChar').style.display = tab==='char' ? 'block' : 'none';
+  const btnGk   = document.getElementById('gyoTabGk');
+  const btnChar = document.getElementById('gyoTabChar');
+  if(btnGk)   { btnGk.style.background   = tab==='gk'   ? 'var(--goldlt)' : 'rgba(138,104,32,.08)'; btnGk.style.color   = tab==='gk'   ? '#fff' : 'var(--goldlt)'; btnGk.style.border   = tab==='gk'   ? 'none' : '1px solid rgba(138,104,32,.25)'; }
+  if(btnChar) { btnChar.style.background = tab==='char' ? 'var(--goldlt)' : 'rgba(138,104,32,.08)'; btnChar.style.color = tab==='char' ? '#fff' : 'var(--goldlt)'; btnChar.style.border = tab==='char' ? 'none' : '1px solid rgba(138,104,32,.25)'; }
+}
+
+function switchYYTab(tab) {
+  document.getElementById('yyGk').style.display   = tab==='gk'   ? 'block' : 'none';
+  document.getElementById('yyChar').style.display = tab==='char' ? 'block' : 'none';
+  const btnGk   = document.getElementById('yyTabGk');
+  const btnChar = document.getElementById('yyTabChar');
+  if(btnGk)   { btnGk.style.background   = tab==='gk'   ? 'var(--goldlt)' : 'rgba(138,104,32,.08)'; btnGk.style.color   = tab==='gk'   ? '#fff' : 'var(--goldlt)'; btnGk.style.border   = tab==='gk'   ? 'none' : '1px solid rgba(138,104,32,.25)'; }
+  if(btnChar) { btnChar.style.background = tab==='char' ? 'var(--goldlt)' : 'rgba(138,104,32,.08)'; btnChar.style.color = tab==='char' ? '#fff' : 'var(--goldlt)'; btnChar.style.border = tab==='char' ? 'none' : '1px solid rgba(138,104,32,.25)'; }
 }
 
 // ── 五格ポップアップ ──
