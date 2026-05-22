@@ -13,11 +13,14 @@
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a3c64;--hire:#2a6ab0;--boss:#4a7a3a;--founder:#8a4a10;}
+:root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a3c64;--hire:#2a6ab0;--boss:#4a7a3a;--founder:#8a4a10;--money:#9a6a12;--deal:#7a3f7f;--balance:#2f7658;}
 /* カテゴリカード */
 .menu-card.hire{border-left:4px solid var(--hire);}
 .menu-card.boss{border-left:4px solid var(--boss);}
 .menu-card.founder{border-left:4px solid var(--founder);}
+.menu-card.money{border-left:4px solid var(--money);}
+.menu-card.deal{border-left:4px solid var(--deal);}
+.menu-card.balance{border-left:4px solid var(--balance);}
 .cat-badge{display:inline-block;border-radius:20px;padding:3px 12px;font-size:.62rem;font-weight:700;margin-bottom:8px;}
 .cat-badge.hire{background:rgba(42,106,176,.1);color:var(--hire);border:1px solid rgba(42,106,176,.25);}
 .cat-badge.boss{background:rgba(74,122,58,.1);color:var(--boss);border:1px solid rgba(74,122,58,.25);}
@@ -50,6 +53,19 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .menu-name{font-size:1rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;letter-spacing:.06em;}
 .menu-desc{font-size:.7rem;color:var(--mist);line-height:1.7;}
 .free-badge{display:inline-block;background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.25);border-radius:20px;padding:3px 12px;font-size:.6rem;color:var(--gold);font-weight:700;margin-top:6px;}
+.paid-badge{display:inline-block;background:rgba(42,60,100,.08);border:1px solid rgba(42,60,100,.22);border-radius:20px;padding:3px 12px;font-size:.6rem;color:var(--biz);font-weight:700;margin-top:6px;margin-left:4px;}
+.menu-section-label{font-size:.62rem;color:var(--gold);letter-spacing:.18em;font-weight:800;margin:18px 2px 10px;}
+.preview-lead{background:linear-gradient(135deg,rgba(100,80,40,.09),rgba(255,255,255,.55));border:1px solid rgba(100,80,40,.18);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.preview-title{font-size:1.05rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:6px;}
+.preview-body{font-size:.72rem;color:var(--mist);line-height:1.9;}
+.preview-grid{display:grid;gap:10px;margin:12px 0;}
+.preview-card{background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:14px;}
+.preview-card-title{font-size:.78rem;color:var(--goldlt);font-weight:800;margin-bottom:8px;}
+.preview-card-body{font-size:.68rem;color:var(--mist);line-height:1.9;}
+.preview-card ul{padding-left:18px;}
+.preview-card li{margin:4px 0;}
+.premium-card{background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.62));border:1px solid rgba(138,104,32,.26);}
+.safe-note{font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(100,80,40,.055);border:1px solid rgba(100,80,40,.12);border-radius:10px;padding:11px 13px;margin-top:12px;}
 /* フォーム */
 .sec-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:16px;}
 .form-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;margin-bottom:12px;}
@@ -153,6 +169,46 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="hero-title">ビジネスに<br>5000年の知恵を</div>
     <div class="hero-sub">採用・チーム・経営判断に<br>東洋の気の学問という視点を添える</div>
   </div>
+
+  <div class="menu-section-label">MONEY & DECISION</div>
+
+  <div class="menu-card money" onclick="showBusinessPreview('money')">
+    <div class="menu-icon">💴</div>
+    <div>
+      <div class="menu-name">お金・投資判断</div>
+      <div class="menu-desc">
+        自分の判断癖とリスク姿勢を知る<br>
+        買う・売るではなく、迷い方を整える
+      </div>
+      <div class="free-badge">無料：簡易チェック</div><div class="paid-badge">有料予定：AI軍師レポート</div>
+    </div>
+  </div>
+
+  <div class="menu-card deal" onclick="showBusinessPreview('deal')">
+    <div class="menu-icon">📜</div>
+    <div>
+      <div class="menu-name">商談・契約日</div>
+      <div class="menu-desc">
+        商談・契約・開業の日を整える<br>
+        線路の日込みの候補比較は有料予定
+      </div>
+      <div class="free-badge">無料：今日の姿勢</div><div class="paid-badge">有料予定：日程比較</div>
+    </div>
+  </div>
+
+  <div class="menu-card balance" onclick="showBusinessPreview('balance')">
+    <div class="menu-icon">📊</div>
+    <div>
+      <div class="menu-name">事業の五行バランス</div>
+      <div class="menu-desc">
+        成長・発信・基盤・利益・流動性<br>
+        事業のお金と力の偏りを見る
+      </div>
+      <div class="free-badge">無料：簡易診断</div><div class="paid-badge">有料予定：改善レポート</div>
+    </div>
+  </div>
+
+  <div class="menu-section-label">PEOPLE & TEAM</div>
 
   <div class="menu-card hire" onclick="selCat('hire')">
     <div class="menu-icon">👤</div>
@@ -283,9 +339,84 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <button class="back-btn" onclick="showScreen('s1')">← 別の候補者を見る</button>
 </div>
 
+<!-- お金・契約・事業バランス プレビュー画面 -->
+<div class="screen" id="s3">
+  <div class="preview-lead">
+    <span class="cat-badge founder" id="previewBadge">💴 お金・投資判断</span>
+    <div class="preview-title" id="previewTitle">お金・投資判断</div>
+    <div class="preview-body" id="previewLead">
+      投資判断そのものではなく、自分の判断癖とリスク姿勢を整えるための入口です。
+    </div>
+  </div>
+
+  <div class="preview-grid">
+    <div class="preview-card">
+      <div class="preview-card-title">無料でできること</div>
+      <div class="preview-card-body" id="previewFree"></div>
+    </div>
+    <div class="preview-card premium-card">
+      <div class="preview-card-title">有料機能として準備中</div>
+      <div class="preview-card-body" id="previewPaid"></div>
+    </div>
+    <div class="preview-card">
+      <div class="preview-card-title">KITOKUでの扱い</div>
+      <div class="preview-card-body" id="previewPolicy"></div>
+    </div>
+  </div>
+
+  <div class="safe-note">
+    ※ 投資・資金判断は損失を伴う可能性があります。KITOKUは銘柄選定や売買指示を行うものではありません。判断癖・タイミング・リスク姿勢を整理するための補助資料としてご利用ください。
+  </div>
+
+  <button class="main-btn" onclick="showPreparingMessage()">✦ 簡易版を準備中</button>
+  <button class="back-btn" onclick="showScreen('s0')">← ビジネス入口へ戻る</button>
+</div>
+
 <script>
 /* ===== カテゴリ・賢者・場面 ===== */
 var curCat='hire', curC='kitoku', curT='basic';
+
+var BUSINESS_PREVIEWS={
+  money:{
+    badge:'💴 お金・投資判断',
+    title:'お金・投資判断',
+    lead:'投資判断そのものではなく、自分の判断癖とリスク姿勢を整えるための入口です。買う・売るを決めるのではなく、焦り・欲・恐れ・待ちすぎを点検します。',
+    free:['自分の投資タイプを知る','九星別の判断癖を確認する','今日のお金の姿勢を整える','リスクを取りすぎていないか点検する'],
+    paid:['AI軍師による投資メンタルレポート','月間の資金判断カレンダー','線路の日込みの行動日チェック','保存・履歴・再比較'],
+    policy:'銘柄名や売買指示ではなく、意思決定の偏りを整える機能として設計します。金融助言ではなく、自己点検とリスク管理の補助資料です。'
+  },
+  deal:{
+    badge:'📜 商談・契約日',
+    title:'商談・契約日',
+    lead:'商談、契約、開業、登記、設備購入など、大きな意思決定の日を整えるための入口です。まずは今日の姿勢を見て、深い日程比較は有料機能として準備します。',
+    free:['今日が攻める日か、整える日かを見る','商談前の姿勢を整える','契約前に確認する問いを出す','大きな決断を急ぎすぎていないか点検する'],
+    paid:['候補日の比較','線路の日込みの最適日検索','月間カレンダー表示','商談・契約日のAI軍師レポート'],
+    policy:'日付を絶対視せず、事業判断の補助線として使います。契約内容、法務、資金繰り、相手先の信用確認を優先した上で、タイミングを整えるための機能です。'
+  },
+  balance:{
+    badge:'📊 事業の五行バランス',
+    title:'事業の五行バランス',
+    lead:'事業を木・火・土・金・水で見ます。成長、発信、基盤、利益、流動性のどこが強く、どこが不足しているかを整理する入口です。',
+    free:['事業の五行を簡易チェック','強い領域と不足領域を見る','今月整えるべき経営テーマを出す','お金の流れを五行で言語化する'],
+    paid:['事業改善AIレポート','売上・利益・固定費・広告費の五行分析','月次の経営テーマ提案','保存・履歴・再比較'],
+    policy:'会計や税務の代替ではなく、経営状態を見直すための比喩的な整理法です。数字の正確な分析は会計資料と専門家確認を併用してください。'
+  }
+};
+
+function showBusinessPreview(kind){
+  var data=BUSINESS_PREVIEWS[kind]||BUSINESS_PREVIEWS.money;
+  st('previewBadge',data.badge);
+  st('previewTitle',data.title);
+  st('previewLead',data.lead);
+  document.getElementById('previewFree').innerHTML='<ul>'+data.free.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
+  document.getElementById('previewPaid').innerHTML='<ul>'+data.paid.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul><div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;">現在準備中。無料版で入口を確認できる形から追加予定です。</div>';
+  st('previewPolicy',data.policy);
+  showScreen('s3');
+}
+
+function showPreparingMessage(){
+  alert('簡易版は準備中です。まずは無料で入口を体験でき、詳細レポート・線路の日・日程比較は有料機能として追加予定です。');
+}
 
 var CAT_LABELS={
   hire:{badge:'👤 採用判断',title:'採用判断',myLabel:'✦ あなたの生年月日（採用担当・経営者）',partnerName:'✦ 候補者のお名前',partnerBirth:'✦ 候補者の生年月日'},
