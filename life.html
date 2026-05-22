@@ -1267,7 +1267,10 @@ function runReading(){
     if(onResult.g1) nameGyoArr.push(onResult.g1);
     if(onResult.g2) nameGyoArr.push(onResult.g2);
   }
-  const gkGyoArr = [jinGG].filter(Boolean);
+  // 五格全ての五行を使う
+  const gkGyoArr = [
+    gogyoOf(ten), gogyoOf(jin), gogyoOf(chi), gogyoOf(gai), gogyoOf(so)
+  ].filter(Boolean);
   showSeimeiDesign(starInfo, nameGyoArr, gkGyoArr);
 
   // 表示切り替え
