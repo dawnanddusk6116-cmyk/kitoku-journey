@@ -1174,6 +1174,15 @@ function runReading(){
         </div>
       </div>
       <div id="yyChar" style="display:none;">
+        ${(()=>{
+          const autoSeiSum = getCharStroke('sei', seiStr).reduce((a,b)=>a+b,0);
+          const autoMeiSum = getCharStroke('mei', meiStr).reduce((a,b)=>a+b,0);
+          const manualDiff = (seiK !== autoSeiSum || meiK !== autoMeiSum);
+          return manualDiff ? `<div style="padding:6px 9px;background:rgba(192,112,32,.08);border:1px solid rgba(192,112,32,.3);border-radius:6px;font-size:.58rem;color:#c07020;margin-bottom:8px;">
+            ⚠ 総画数を手動修正しています（姓${seiK}画・名${meiK}画）。<br>
+            各文字の画数を反映するには、下の「② 画数を確認・修正する」で個別に修正してください。
+          </div>` : '';
+        })()}
         <div class="tc-val">陰${charYin} / 陽${charYang}</div>
         <div class="tc-desc">${charYYText}</div>
         <div style="margin-top:6px;font-size:.58rem;color:var(--mist);line-height:1.8;">
@@ -1214,9 +1223,17 @@ function runReading(){
         </div>
       </div>
       <div id="gyoChar" style="display:none;">
+        ${(()=>{
+          const autoSeiSum = getCharStroke('sei', seiStr).reduce((a,b)=>a+b,0);
+          const autoMeiSum = getCharStroke('mei', meiStr).reduce((a,b)=>a+b,0);
+          const manualDiff = (seiK !== autoSeiSum || meiK !== autoMeiSum);
+          return manualDiff ? `<div style="padding:6px 9px;background:rgba(192,112,32,.08);border:1px solid rgba(192,112,32,.3);border-radius:6px;font-size:.58rem;color:#c07020;margin-bottom:8px;">
+            ⚠ 総画数を手動修正しています。各文字の五行を正確に見るには<br>「② 画数を確認・修正する」で個別に修正してください。
+          </div>` : '';
+        })()}
         <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
-          ${allChars.filter(ch=>getStroke(ch)).map(ch=>{
-            const s=getStroke(ch);
+          ${allChars.filter(ch=>getStroke(ch)).map((ch,i)=>{
+            const s=allStrokes[i]||getStroke(ch);
             const gg=gogyoOf(s);
             const col=GG_COLOR[gg]||'#ccc';
             return `<div style="flex:1;min-width:40px;text-align:center;background:${col}22;border:1px solid ${col}55;border-radius:7px;padding:6px 3px;">
