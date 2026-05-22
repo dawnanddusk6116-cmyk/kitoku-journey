@@ -1278,9 +1278,10 @@ function runReading(){
 }
 
 function goToStrokeEdit() {
-  // 結果を非表示にして入力フォームに戻り、画数セクションへスクロール
   document.getElementById('results').style.display = 'none';
   document.getElementById('formSection').style.display = 'block';
+  // 名前が入力済みの状態で画数を再描画
+  renderCharStrokes();
   setTimeout(() => {
     const el = document.getElementById('strokeCard');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
