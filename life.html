@@ -495,8 +495,7 @@ footer{
       <div class="save-msg" id="lifeNameSaveMsg">保存した名前はこの端末内だけに残ります。別の名前を試しても、保存ボタンを押すまで上書きされません。</div>
     </div>
 
-    <div class="card">
-      <div class="card-title">② 画数を確認・修正する</div>
+    <div class="card" id="strokeCard">
       <div id="charStrokeArea">
         <p class="stroke-hint" style="margin-bottom:8px;">姓名を入力すると各文字の画数が表示されます。旧字体など字体が違う場合は直接修正してください。</p>
       </div>
@@ -1180,7 +1179,8 @@ function runReading(){
           const manualDiff = (seiK !== autoSeiSum || meiK !== autoMeiSum);
           return manualDiff ? `<div style="padding:6px 9px;background:rgba(192,112,32,.08);border:1px solid rgba(192,112,32,.3);border-radius:6px;font-size:.58rem;color:#c07020;margin-bottom:8px;">
             ⚠ 総画数を手動修正しています（姓${seiK}画・名${meiK}画）。<br>
-            各文字の画数を反映するには、下の「② 画数を確認・修正する」で個別に修正してください。
+            各文字の画数を反映するには、下のボタンから修正してください。
+            <br><button onclick="goToStrokeEdit()" style="margin-top:6px;padding:5px 12px;background:var(--goldlt);color:#fff;border:none;border-radius:6px;font-size:.6rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;">✏ 画数を修正する</button>
           </div>` : '';
         })()}
         <div class="tc-val">陰${charYin} / 陽${charYang}</div>
@@ -1228,7 +1228,8 @@ function runReading(){
           const autoMeiSum = getCharStroke('mei', meiStr).reduce((a,b)=>a+b,0);
           const manualDiff = (seiK !== autoSeiSum || meiK !== autoMeiSum);
           return manualDiff ? `<div style="padding:6px 9px;background:rgba(192,112,32,.08);border:1px solid rgba(192,112,32,.3);border-radius:6px;font-size:.58rem;color:#c07020;margin-bottom:8px;">
-            ⚠ 総画数を手動修正しています。各文字の五行を正確に見るには<br>「② 画数を確認・修正する」で個別に修正してください。
+            ⚠ 総画数を手動修正しています。各文字の五行を正確に見るには個別修正が必要です。
+            <br><button onclick="goToStrokeEdit()" style="margin-top:6px;padding:5px 12px;background:var(--goldlt);color:#fff;border:none;border-radius:6px;font-size:.6rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;">✏ 画数を修正する</button>
           </div>` : '';
         })()}
         <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
@@ -1274,6 +1275,16 @@ function runReading(){
   const res=document.getElementById('results');
   res.style.display='block';
   setTimeout(()=>{res.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
+function goToStrokeEdit() {
+  // 結果を非表示にして入力フォームに戻り、画数セクションへスクロール
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('formSection').style.display = 'block';
+  setTimeout(() => {
+    const el = document.getElementById('strokeCard');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
 
 function switchGyoTab(tab) {
