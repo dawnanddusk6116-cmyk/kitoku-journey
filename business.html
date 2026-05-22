@@ -375,14 +375,18 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <div class="free-tool" id="moneyTool" style="display:none;">
     <div class="tool-title">無料版｜投資メンタル簡易チェック</div>
-    <div class="preview-card-body" style="margin-bottom:10px;">生年月日から九星を出し、お金の扱い方・判断の癖・今日の問いを表示します。</div>
-    <div class="tool-row">
+    <div class="preview-card-body" style="margin-bottom:12px;">生年月日から九星を出し、お金の扱い方・判断の癖・今このタイミングで動くべきかを表示します。</div>
+
+    <!-- 星バー（登録済みの場合） -->
+    <div id="moneyStarBar" style="display:none;margin-bottom:12px;padding:9px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);border-radius:8px;font-size:.68rem;color:var(--goldlt);font-weight:700;"></div>
+
+    <div class="tool-row" id="moneyInputRow">
       <div><input class="form-input" type="number" id="moneyYear" placeholder="1967"><div class="date-unit">年</div></div>
       <div><input class="form-input" type="number" id="moneyMonth" placeholder="6"><div class="date-unit">月</div></div>
       <div><input class="form-input" type="number" id="moneyDay" placeholder="14"><div class="date-unit">日</div></div>
     </div>
     <button class="main-btn" type="button" onclick="runMoneyFree()">✦ 投資メンタルを見る</button>
-    <div class="tool-result" id="moneyResult"></div>
+    <div id="moneyResult" style="display:none;margin-top:14px;"></div>
   </div>
 
   <div class="free-tool" id="balanceTool" style="display:none;">
@@ -451,6 +455,7 @@ function showBusinessPreview(kind){
   var moneyTool=document.getElementById('moneyTool');
   var balanceTool=document.getElementById('balanceTool');
   if(moneyTool)moneyTool.style.display=kind==='money'?'block':'none';
+  if(kind==='money') loadMoneyStarBar();
   if(balanceTool)balanceTool.style.display=kind==='balance'?'block':'none';
   var mr=document.getElementById('moneyResult');if(mr)mr.style.display='none';
   var br=document.getElementById('balanceResult');if(br)br.style.display='none';
@@ -478,15 +483,105 @@ function runMoneyFree(){
   var m=parseInt(document.getElementById('moneyMonth').value)||0;
   var d=parseInt(document.getElementById('moneyDay').value)||1;
   if(!y||!m){alert('生年月日を入力してください');return;}
+
   var h=calcH(y,m), t=calcT(y,m);
-  var hs=STARS[h], ts=STARS[t], type=MONEY_TYPE[h]||MONEY_TYPE[1];
+  var hs=STARS[h], ts=STARS[t];
+  var type=MONEY_TYPE[h]||MONEY_TYPE[1];
+
+  // 今月の月盤
+  var now=new Date();
+  var nowY=now.getFullYear(), nowM=now.getMonth()+1;
+  var mh=calcH(nowY,nowM);
+  var mhs=STARS[mh];
+
+  // 今月の吉凶判定（本命殺・定位対冲）
+  var OPP={N:'S',S:'N',NE:'SW',SW:'NE',E:'W',W:'E',SE:'NW',NW:'SE'};
+  var GYO_MAP={木:'東',火:'南',土:'中央',金:'西',水:'北'};
+  var monthTiming='';
+  // 本命星の今月位置チェック（簡易）
+  var starGyo={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+  var myGyo=starGyo[h]||'土';
+  var monthGyo=starGyo[mh]||'土';
+  var SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
+  var SOKOKU={木:'土',土:'水',水:'火',火:'金',金:'木'};
+  var timingLabel='';
+  var timingColor='';
+  var timingMsg='';
+  if(mh===h){
+    timingLabel='◎ 本命同会月';
+    timingColor='#5c8a20';
+    timingMsg='本命星と同じ気の月です。自分の直感と判断が冴えやすい時期。積極的に動いてよい月です。';
+  } else if(SOJO[monthGyo]===myGyo){
+    timingLabel='✦ 相生の月';
+    timingColor='#2a6e3a';
+    timingMsg='今月の気があなたの気を育てる関係です。新しい動きを始めるのに向いています。';
+  } else if(SOKOKU[monthGyo]===myGyo){
+    timingLabel='⚠ 相剋の月';
+    timingColor='#c07020';
+    timingMsg='今月の気があなたの気を剋する関係です。大きな決断は来月以降に持ち越すか、慎重に複数の目で確認しましょう。';
+  } else {
+    timingLabel='○ 通常の月';
+    timingColor='var(--goldlt)';
+    timingMsg='特別な相生・相剋はありません。通常の判断軸で動いてください。';
+  }
+
   var el=document.getElementById('moneyResult');
-  el.innerHTML='<strong>'+hs.k+'｜'+type.t+'</strong><br>'+
-    '月命：'+ts.k+'。お金の判断では、本命星が表の判断癖、月命星が内側の不安や欲の出方に影響します。<br><br>'+
-    '<strong>注意点：</strong>'+type.risk+'<br>'+
-    '<strong>今日の問い：</strong>'+type.q+'<br><br>'+
-    '※ これは投資助言ではありません。売買判断ではなく、自分の判断姿勢を整えるための簡易チェックです。';
   el.style.display='block';
+  el.innerHTML=`
+    <div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">
+
+      <!-- 星・タイプヘッダー -->
+      <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border-bottom:1px solid rgba(138,104,32,.15);">
+        <div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">MONEY MENTALITY</div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--goldlt);">${hs.k}｜${type.t}</div>
+        <div style="font-size:.62rem;color:var(--mist);margin-top:3px;">月命：${ts.k}</div>
+      </div>
+
+      <!-- 今月のタイミング -->
+      <div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.04);">
+        <div style="font-size:.6rem;color:var(--mist);margin-bottom:5px;">📅 今月（${nowY}年${nowM}月 / ${mhs.k}月）のタイミング</div>
+        <div style="font-size:.72rem;font-weight:700;color:${timingColor};margin-bottom:5px;">${timingLabel}</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">${timingMsg}</div>
+      </div>
+
+      <!-- 判断の癖 -->
+      <div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">💡 あなたの判断の癖</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">${type.risk}</div>
+      </div>
+
+      <!-- 今日の問い -->
+      <div style="padding:12px 16px;background:rgba(138,104,32,.05);">
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🪬 今日の問い</div>
+        <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);line-height:1.9;">${type.q}</div>
+      </div>
+
+      <!-- 免責 -->
+      <div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;border-top:1px solid rgba(138,104,32,.1);">
+        ※ 投資助言ではありません。自分の判断姿勢を整えるための参考情報です。
+      </div>
+    </div>`;
+}
+
+function loadMoneyStarBar(){
+  try{
+    var h=parseInt(localStorage.getItem('kitoku_honmei'))||0;
+    var t=parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
+    var nain=localStorage.getItem('kitoku_nain')||'';
+    var bar=document.getElementById('moneyStarBar');
+    var row=document.getElementById('moneyInputRow');
+    if(!h||!bar)return;
+    var STAR_NAMES=['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+    bar.style.display='block';
+    bar.innerHTML='✦ 本命星：'+STAR_NAMES[h]+'　月命星：'+STAR_NAMES[t]+'　納音：'+nain+'<br><span style="font-size:.58rem;font-weight:400;opacity:.8;">登録済みの生年月日を使用します</span>';
+    // 登録済み生年月日を自動セット
+    var b=localStorage.getItem('kitoku-birth');
+    if(b){var a=b.split('-').map(Number);
+      if(a[0])document.getElementById('moneyYear').value=a[0];
+      if(a[1])document.getElementById('moneyMonth').value=a[1];
+      if(a[2])document.getElementById('moneyDay').value=a[2];
+    }
+  }catch(e){}
 }
 
 var ON_GYO_BIZ={
