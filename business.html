@@ -385,24 +385,37 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div><input class="form-input" type="number" id="moneyMonth" placeholder="6"><div class="date-unit">月</div></div>
       <div><input class="form-input" type="number" id="moneyDay" placeholder="14"><div class="date-unit">日</div></div>
     </div>
+
+    <div style="margin:10px 0 14px;">
+      <div class="form-label">お名前のフリガナ（任意）<span style="font-size:.58rem;color:var(--mist);margin-left:6px;">音の五行で判断タイプを深掘り</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <input class="form-input" type="text" id="moneyFuriSei" placeholder="セイ（例：カワカミ）">
+        <input class="form-input" type="text" id="moneyFuriMei" placeholder="メイ（例：タカノリ）">
+      </div>
+    </div>
     <button class="main-btn" type="button" onclick="runMoneyFree()">✦ 投資メンタルを見る</button>
     <div id="moneyResult" style="display:none;margin-top:14px;"></div>
   </div>
 
   <div class="free-tool" id="balanceTool" style="display:none;">
-    <div class="tool-title">無料版｜事業名と五行バランス</div>
-    <div class="preview-card-body" style="margin-bottom:10px;">法人名・屋号・ブランド名の音の五行と、事業内容の五行バランスを簡易表示します。</div>
-    <input class="form-input" type="text" id="bizName" placeholder="例：KITOKU JOURNEY" style="margin-bottom:8px;">
-    <input class="form-input" type="text" id="bizKana" placeholder="フリガナ・読み（例：キトクジャーニー）">
-    <div class="balance-grid">
-      <div class="balance-chip"><label>木｜成長・新規開拓</label><input type="range" min="0" max="5" value="2" id="balWood"></div>
-      <div class="balance-chip"><label>火｜発信・広告</label><input type="range" min="0" max="5" value="2" id="balFire"></div>
-      <div class="balance-chip"><label>土｜基盤・管理</label><input type="range" min="0" max="5" value="2" id="balEarth"></div>
-      <div class="balance-chip"><label>金｜利益・回収</label><input type="range" min="0" max="5" value="2" id="balMetal"></div>
-      <div class="balance-chip"><label>水｜情報・資金繰り</label><input type="range" min="0" max="5" value="2" id="balWater"></div>
+    <div class="tool-title">社名・屋号の気質を読む</div>
+    <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名の参考にしてください。</div>
+
+    <div style="margin-bottom:10px;">
+      <div class="form-label">社名・屋号・ブランド名</div>
+      <input class="form-input" type="text" id="bizName" placeholder="例：KITOKU JOURNEY / キトクジャーニー">
     </div>
-    <button class="main-btn" type="button" onclick="runBalanceFree()">✦ 事業五行を見る</button>
-    <div class="tool-result" id="balanceResult"></div>
+    <div style="margin-bottom:10px;">
+      <div class="form-label">フリガナ（読み）<span style="font-size:.58rem;color:var(--mist);margin-left:6px;">音の五行判定に使用</span></div>
+      <input class="form-input" type="text" id="bizKana" placeholder="例：キトクジャーニー">
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="form-label">総画数（わかる場合）<span style="font-size:.58rem;color:var(--mist);margin-left:6px;">任意・不明なら空欄</span></div>
+      <input class="form-input" type="number" id="bizStrokes" placeholder="例：38" style="width:120px;">
+    </div>
+
+    <button class="main-btn" type="button" onclick="runBizReading()">✦ 社名の気質を読む</button>
+    <div id="balanceResult" style="display:none;margin-top:14px;"></div>
   </div>
 
   <div class="safe-note">
@@ -525,6 +538,30 @@ function runMoneyFree(){
     timingMsg='特別な相生・相剋はありません。通常の判断軸で動いてください。';
   }
 
+  // 名前の深掘り
+  var furiSei=(document.getElementById('moneyFuriSei').value||'').trim();
+  var furiMei=(document.getElementById('moneyFuriMei').value||'').trim();
+  var furi=furiSei+furiMei;
+  var nameDepth='';
+  if(furi){
+    var nc={木:0,火:0,土:0,金:0,水:0};
+    [...furi].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)nc[g]++;});
+    var nDominant=Object.keys(nc).sort(function(a,b){return nc[b]-nc[a];})[0];
+    var GYO_MONEY_DESC={
+      木:'行動力と判断が速く、機会を見つけるのが得意です。ただし早く動きすぎてリスク確認が後回しになりやすい傾向があります。',
+      火:'直感と情熱で判断するタイプ。上昇局面では力を発揮しますが、熱が冷めると判断が揺れやすい。',
+      土:'安定と実績を重視します。慎重で信頼できる判断をしますが、機会コストを逃しやすい一面も。',
+      金:'利益と結果を明確に見る力があります。数字に強い反面、感情的なバイアスに気づきにくいことも。',
+      水:'情報収集力が高く、流れを読むのが得意です。ただし情報過多で決断が遅くなりやすい。'
+    };
+    nameDepth='<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+      +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🔤 名前の音から見た判断スタイル：'+nDominant+'</div>'
+      +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+GYO_MONEY_DESC[nDominant]+'</div>'
+      +'<div style="margin-top:8px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;font-size:.62rem;color:var(--goldlt);font-weight:700;">'
+      +'✦ 九星（'+hs.k+'）の判断癖 × 名前の音（'+nDominant+'）の傾向を重ねて読むと、より正確な自己分析ができます。'
+      +'</div></div>';
+  }
+
   var el=document.getElementById('moneyResult');
   el.style.display='block';
   el.innerHTML=`
@@ -584,17 +621,249 @@ function loadMoneyStarBar(){
   }catch(e){}
 }
 
-var ON_GYO_BIZ={
+// 音の五行マップ（business用）
+var ON_GYO_FULL={
   'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土','あ':'土','い':'土','う':'土','え':'土','お':'土',
-  'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金','ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金','か':'金','き':'金','く':'金','け':'金','こ':'金','が':'金','ぎ':'金','ぐ':'金','げ':'金','ご':'金',
-  'サ':'水','シ':'水','ス':'水','セ':'水','ソ':'水','ザ':'水','ジ':'水','ズ':'水','ゼ':'水','ゾ':'水','さ':'水','し':'水','す':'水','せ':'水','そ':'水','ざ':'水','じ':'水','ず':'水','ぜ':'水','ぞ':'水',
-  'タ':'火','チ':'火','ツ':'火','テ':'火','ト':'火','ダ':'火','デ':'火','ド':'火','ナ':'火','ニ':'火','ヌ':'火','ネ':'火','ノ':'火','ラ':'火','リ':'火','ル':'火','レ':'火','ロ':'火','た':'火','ち':'火','つ':'火','て':'火','と':'火','な':'火','に':'火','ぬ':'火','ね':'火','の':'火','ら':'火','り':'火','る':'火','れ':'火','ろ':'火',
-  'ハ':'木','ヒ':'木','フ':'木','ヘ':'木','ホ':'木','バ':'木','ビ':'木','ブ':'木','ベ':'木','ボ':'木','パ':'木','ピ':'木','プ':'木','ペ':'木','ポ':'木','マ':'木','ミ':'木','ム':'木','メ':'木','モ':'木','ヤ':'木','ユ':'木','ヨ':'木','は':'木','ひ':'木','ふ':'木','へ':'木','ほ':'木','ま':'木','み':'木','む':'木','め':'木','も':'木','や':'木','ゆ':'木','よ':'木'
+  'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金','ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金','か':'金','き':'金','く':'金','け':'金','こ':'金',
+  'サ':'水','シ':'水','ス':'水','セ':'水','ソ':'水','ザ':'水','ジ':'水','ズ':'水','ゼ':'水','ゾ':'水','さ':'水','し':'水','す':'水','せ':'水','そ':'水',
+  'タ':'火','チ':'火','ツ':'火','テ':'火','ト':'火','ダ':'火','デ':'火','ド':'火','た':'火','ち':'火','つ':'火','て':'火','と':'火',
+  'ナ':'土','ニ':'土','ヌ':'土','ネ':'土','ノ':'土','な':'土','に':'土','ぬ':'土','ね':'土','の':'土',
+  'ハ':'木','ヒ':'木','フ':'木','ヘ':'木','ホ':'木','バ':'木','ビ':'木','ブ':'木','ベ':'木','ボ':'木','パ':'木','ピ':'木','プ':'木','ペ':'木','ポ':'木','は':'木','ひ':'木','ふ':'木','へ':'木','ほ':'木',
+  'マ':'土','ミ':'土','ム':'土','メ':'土','モ':'土','ヤ':'土','ユ':'土','ヨ':'土','ワ':'金','ヲ':'金','ン':'金',
+  'ラ':'金','リ':'金','ル':'金','レ':'金','ロ':'金','ら':'金','り':'金','る':'金','れ':'金','ろ':'金',
+  'ま':'土','み':'土','む':'土','め':'土','も':'土','や':'土','ゆ':'土','よ':'土'
 };
+var GG_COL_BIZ={木:'#5a8a3a',火:'#c05050',土:'#9a7a2a',金:'#4a8aa0',水:'#3a70a0'};
+var GG_BIZ_MEAN={
+  木:{key:'成長・発展・新規開拓',desc:'木のエネルギーが強い名前は、成長力・拡張力・新しい始まりを象徴します。スタートアップや新規事業に向いています。'},
+  火:{key:'発信・ブランド・認知',desc:'火のエネルギーが強い名前は、発信力・表現力・ブランド構築に向いています。SNS・メディア・教育系のビジネスに適しています。'},
+  土:{key:'安定・信頼・基盤',desc:'土のエネルギーが強い名前は、堅実さ・信頼・長期的な安定を象徴します。サービス業・コンサル・管理系のビジネスに向いています。'},
+  金:{key:'利益・契約・収穫',desc:'金のエネルギーが強い名前は、利益回収・契約・実績を象徴します。金融・不動産・製造業に向いています。'},
+  水:{key:'情報・流通・変化',desc:'水のエネルギーが強い名前は、情報収集・流通・柔軟な変化を象徴します。IT・物流・コンテンツ配信に向いています。'}
+};
+var GYO_SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
+
+function onGyoCount(kana){
+  var c={木:0,火:0,土:0,金:0,水:0};
+  [...(kana||'')].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)c[g]++;});
+  return c;
+}
+
+// ── 社名鑑定 ──
+function runBizReading(){
+  var name=document.getElementById('bizName').value.trim();
+  var kana=document.getElementById('bizKana').value.trim();
+  var strokes=parseInt(document.getElementById('bizStrokes').value)||0;
+  if(!name&&!kana){alert('社名・屋号を入力してください');return;}
+
+  var count=onGyoCount(kana||name);
+  var total=Object.values(count).reduce(function(a,b){return a+b;},0);
+  var sorted=Object.keys(count).sort(function(a,b){return count[b]-count[a];});
+  var dominant=sorted[0];
+  var weak=sorted[sorted.length-1];
+  var strokeGyo=strokes?['木','木','火','火','土','土','金','金','水','水'][strokes%10]:'';
+
+  // 五行カウント表示
+  var bars=sorted.map(function(g){
+    var pct=total?Math.round(count[g]/total*100):0;
+    var col=GG_COL_BIZ[g];
+    return '<div style="margin-bottom:6px;">'
+      +'<div style="display:flex;justify-content:space-between;font-size:.62rem;margin-bottom:2px;">'
+      +'<span style="color:'+col+';font-weight:700;">'+g+'（'+GG_BIZ_MEAN[g].key+'）</span>'
+      +'<span style="color:var(--mist);">'+count[g]+'音 / '+pct+'%</span></div>'
+      +'<div style="background:rgba(0,0,0,.06);border-radius:4px;height:6px;">'
+      +'<div style="background:'+col+';height:6px;border-radius:4px;width:'+pct+'%;"></div></div></div>';
+  }).join('');
+
+  // 処方箋
+  var nextGyo=GYO_SOJO[dominant]||'土';
+  var rx='音の五行で「'+weak+'」が少ない傾向です。'
+    +'読み方・略称・キャッチコピーに「'+
+    ({木:'ハヒフヘホ・マミムメモ行',火:'タチツテト行',土:'アイウエオ・ナニヌネノ行',金:'カキクケコ・ラリルレロ行',水:'サシスセソ行'}[weak])+'」の音を取り入れると、'+weak+'の気を補えます。';
+
+  var el=document.getElementById('balanceResult');
+  el.style.display='block';
+  el.innerHTML='<div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">'
+
+    // ヘッダー
+    +'<div style="padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border-bottom:1px solid rgba(138,104,32,.15);">'
+    +'<div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">BUSINESS NAME READING</div>'
+    +'<div style="font-size:.92rem;font-weight:700;color:var(--goldlt);">'+(name||kana)+'</div>'
+    +(kana?'<div style="font-size:.62rem;color:var(--mist);">'+kana+'</div>':'')
+    +'</div>'
+
+    // 音の五行
+    +'<div style="padding:14px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:10px;">🔤 音の五行バランス</div>'
+    +bars
+    +'</div>'
+
+    // 主気質
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.04);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 主たる気質：'+dominant+'（'+GG_BIZ_MEAN[dominant].key+'）</div>'
+    +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+GG_BIZ_MEAN[dominant].desc+'</div>'
+    +'</div>'
+
+    // 総画数の五行
+    +(strokeGyo?'<div style="padding:10px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:4px;">📐 総画数の五行：'+strokes+'画 → '+strokeGyo+'</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);">音の五行と総画数の五行が同じ場合、その気質がより強調されます。</div>'
+    +'</div>':'')
+
+    // 処方箋
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">💡 補いたい五行：'+weak+'</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+rx+'</div>'
+    +'</div>'
+
+    // LIFEへ誘導
+    +'<div style="padding:12px 16px;background:rgba(138,104,32,.04);">'
+    +'<div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">個人の名前の五格・三才・陰陽も含めた詳細鑑定はこちら</div>'
+    +'<a href="life.html" style="display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--goldlt);color:#fff;border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">🪬 KITOKU @ LIFE で読む →</a>'
+    +'</div>'
+
+    +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;">'
+    +'※ 商標・法務上の判断ではありません。名前が持つ気質を東洋の叡智で読む参考情報です。'
+    +'</div></div>';
+}
+
+function runBalanceFree(){ runBizReading(); }
+
+
+
+
+function loadMoneyStarBar(){
+  try{
+    var h=parseInt(localStorage.getItem('kitoku_honmei'))||0;
+    var t=parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
+    var nain=localStorage.getItem('kitoku_nain')||'';
+    var bar=document.getElementById('moneyStarBar');
+    var row=document.getElementById('moneyInputRow');
+    if(!h||!bar)return;
+    var STAR_NAMES=['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+    bar.style.display='block';
+    bar.innerHTML='✦ 本命星：'+STAR_NAMES[h]+'　月命星：'+STAR_NAMES[t]+'　納音：'+nain+'<br><span style="font-size:.58rem;font-weight:400;opacity:.8;">登録済みの生年月日を使用します</span>';
+    // 登録済み生年月日を自動セット
+    var b=localStorage.getItem('kitoku-birth');
+    if(b){var a=b.split('-').map(Number);
+      if(a[0])document.getElementById('moneyYear').value=a[0];
+      if(a[1])document.getElementById('moneyMonth').value=a[1];
+      if(a[2])document.getElementById('moneyDay').value=a[2];
+    }
+  }catch(e){}
+}
+
+// 音の五行マップ（business用）
+var ON_GYO_FULL={
+  'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土','あ':'土','い':'土','う':'土','え':'土','お':'土',
+  'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金','ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金','か':'金','き':'金','く':'金','け':'金','こ':'金',
+  'サ':'水','シ':'水','ス':'水','セ':'水','ソ':'水','ザ':'水','ジ':'水','ズ':'水','ゼ':'水','ゾ':'水','さ':'水','し':'水','す':'水','せ':'水','そ':'水',
+  'タ':'火','チ':'火','ツ':'火','テ':'火','ト':'火','ダ':'火','デ':'火','ド':'火','た':'火','ち':'火','つ':'火','て':'火','と':'火',
+  'ナ':'土','ニ':'土','ヌ':'土','ネ':'土','ノ':'土','な':'土','に':'土','ぬ':'土','ね':'土','の':'土',
+  'ハ':'木','ヒ':'木','フ':'木','ヘ':'木','ホ':'木','バ':'木','ビ':'木','ブ':'木','ベ':'木','ボ':'木','パ':'木','ピ':'木','プ':'木','ペ':'木','ポ':'木','は':'木','ひ':'木','ふ':'木','へ':'木','ほ':'木',
+  'マ':'土','ミ':'土','ム':'土','メ':'土','モ':'土','ヤ':'土','ユ':'土','ヨ':'土','ワ':'金','ヲ':'金','ン':'金',
+  'ラ':'金','リ':'金','ル':'金','レ':'金','ロ':'金','ら':'金','り':'金','る':'金','れ':'金','ろ':'金',
+  'ま':'土','み':'土','む':'土','め':'土','も':'土','や':'土','ゆ':'土','よ':'土'
+};
+var GG_COL_BIZ={木:'#5a8a3a',火:'#c05050',土:'#9a7a2a',金:'#4a8aa0',水:'#3a70a0'};
+var GG_BIZ_MEAN={
+  木:{key:'成長・発展・新規開拓',desc:'木のエネルギーが強い名前は、成長力・拡張力・新しい始まりを象徴します。スタートアップや新規事業に向いています。'},
+  火:{key:'発信・ブランド・認知',desc:'火のエネルギーが強い名前は、発信力・表現力・ブランド構築に向いています。SNS・メディア・教育系のビジネスに適しています。'},
+  土:{key:'安定・信頼・基盤',desc:'土のエネルギーが強い名前は、堅実さ・信頼・長期的な安定を象徴します。サービス業・コンサル・管理系のビジネスに向いています。'},
+  金:{key:'利益・契約・収穫',desc:'金のエネルギーが強い名前は、利益回収・契約・実績を象徴します。金融・不動産・製造業に向いています。'},
+  水:{key:'情報・流通・変化',desc:'水のエネルギーが強い名前は、情報収集・流通・柔軟な変化を象徴します。IT・物流・コンテンツ配信に向いています。'}
+};
+var GYO_SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
+
+function onGyoCount(kana){
+  var c={木:0,火:0,土:0,金:0,水:0};
+  [...(kana||'')].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)c[g]++;});
+  return c;
+}
+
+// ── 社名鑑定 ──
+function runBizReading(){
+  var name=document.getElementById('bizName').value.trim();
+  var kana=document.getElementById('bizKana').value.trim();
+  var strokes=parseInt(document.getElementById('bizStrokes').value)||0;
+  if(!name&&!kana){alert('社名・屋号を入力してください');return;}
+
+  var count=onGyoCount(kana||name);
+  var total=Object.values(count).reduce(function(a,b){return a+b;},0);
+  var sorted=Object.keys(count).sort(function(a,b){return count[b]-count[a];});
+  var dominant=sorted[0];
+  var weak=sorted[sorted.length-1];
+  var strokeGyo=strokes?['木','木','火','火','土','土','金','金','水','水'][strokes%10]:'';
+
+  // 五行カウント表示
+  var bars=sorted.map(function(g){
+    var pct=total?Math.round(count[g]/total*100):0;
+    var col=GG_COL_BIZ[g];
+    return '<div style="margin-bottom:6px;">'
+      +'<div style="display:flex;justify-content:space-between;font-size:.62rem;margin-bottom:2px;">'
+      +'<span style="color:'+col+';font-weight:700;">'+g+'（'+GG_BIZ_MEAN[g].key+'）</span>'
+      +'<span style="color:var(--mist);">'+count[g]+'音 / '+pct+'%</span></div>'
+      +'<div style="background:rgba(0,0,0,.06);border-radius:4px;height:6px;">'
+      +'<div style="background:'+col+';height:6px;border-radius:4px;width:'+pct+'%;"></div></div></div>';
+  }).join('');
+
+  // 処方箋
+  var nextGyo=GYO_SOJO[dominant]||'土';
+  var rx='音の五行で「'+weak+'」が少ない傾向です。'
+    +'読み方・略称・キャッチコピーに「'+
+    ({木:'ハヒフヘホ・マミムメモ行',火:'タチツテト行',土:'アイウエオ・ナニヌネノ行',金:'カキクケコ・ラリルレロ行',水:'サシスセソ行'}[weak])+'」の音を取り入れると、'+weak+'の気を補えます。';
+
+  var el=document.getElementById('balanceResult');
+  el.style.display='block';
+  el.innerHTML='<div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">'
+
+    // ヘッダー
+    +'<div style="padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border-bottom:1px solid rgba(138,104,32,.15);">'
+    +'<div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">BUSINESS NAME READING</div>'
+    +'<div style="font-size:.92rem;font-weight:700;color:var(--goldlt);">'+(name||kana)+'</div>'
+    +(kana?'<div style="font-size:.62rem;color:var(--mist);">'+kana+'</div>':'')
+    +'</div>'
+
+    // 音の五行
+    +'<div style="padding:14px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:10px;">🔤 音の五行バランス</div>'
+    +bars
+    +'</div>'
+
+    // 主気質
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.04);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 主たる気質：'+dominant+'（'+GG_BIZ_MEAN[dominant].key+'）</div>'
+    +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+GG_BIZ_MEAN[dominant].desc+'</div>'
+    +'</div>'
+
+    // 総画数の五行
+    +(strokeGyo?'<div style="padding:10px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:4px;">📐 総画数の五行：'+strokes+'画 → '+strokeGyo+'</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);">音の五行と総画数の五行が同じ場合、その気質がより強調されます。</div>'
+    +'</div>':'')
+
+    // 処方箋
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">💡 補いたい五行：'+weak+'</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+rx+'</div>'
+    +'</div>'
+
+    // LIFEへ誘導
+    +'<div style="padding:12px 16px;background:rgba(138,104,32,.04);">'
+    +'<div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">個人の名前の五格・三才・陰陽も含めた詳細鑑定はこちら</div>'
+    +'<a href="life.html" style="display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--goldlt);color:#fff;border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">🪬 KITOKU @ LIFE で読む →</a>'
+    +'</div>'
+
+    +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;">'
+    +'※ 商標・法務上の判断ではありません。名前が持つ気質を東洋の叡智で読む参考情報です。'
+    +'</div></div>';
+}
+
+function runBalanceFree(){ runBizReading(); }
 
 function soundElements(text){
   var count={木:0,火:0,土:0,金:0,水:0};
-  [...(text||'')].forEach(function(ch){var g=ON_GYO_BIZ[ch];if(g)count[g]++;});
+  [...(text||'')].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)count[g]++;});
   return count;
 }
 function topKeys(obj){
