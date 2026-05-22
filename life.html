@@ -572,7 +572,7 @@ footer{
           </div>
         </div>
         <div style="margin-top:8px;font-size:.58rem;opacity:.8;">
-          ※ いずれも流派により異なります。KITOKUはMurayama流×Y理論に基づく解釈です。
+          ※ いずれも流派により異なります。KITOKUは東洋の叡智とY理論に基づく独自解釈です。
         </div>
       </div>
       <div class="truth-row" id="truthRow"></div>
@@ -584,6 +584,9 @@ footer{
 
     <!-- 命の設計図との関係 -->
     <div id="seimeiCard" style="display:none;margin-bottom:14px;"></div>
+
+    <!-- 命名・改名の参考情報 -->
+    <div id="namingRef" style="display:none;margin-bottom:14px;"></div>
 
     <div class="close-msg">
       <div class="close-msg-body">
@@ -1273,6 +1276,9 @@ function runReading(){
   ].filter(Boolean);
   showSeimeiDesign(starInfo, nameGyoArr, gkGyoArr);
 
+  // 命名・改名の参考情報
+  showNamingRef(seiStr, meiStr, gk);
+
   // 表示切り替え
   document.getElementById('formSection').style.display='none';
   const res=document.getElementById('results');
@@ -1466,6 +1472,68 @@ const GYO_RX = {
 const STAR_NAMES = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
 const STAR_GYO   = ['','水','土','木','木','土','金','金','土','火'];
 const STAR_GYO_JP= ['','みず','つち','き','き','つち','かね','かね','つち','ひ'];
+
+// ── 命名・改名の参考情報 ──
+function showNamingRef(seiStr, meiStr, gk) {
+  const card = document.getElementById('namingRef');
+  if (!card) return;
+  const tips = [];
+
+  // ① 一文字名
+  if (meiStr && [...meiStr].length === 1) {
+    tips.push({ icon:'📌', title:'一文字名について',
+      body:'名が一文字の場合、外格の計算に「霊数1」が加わります。縁や社会との繋がりが薄くなりやすいという傾向を指摘する流派があります。一方でシンプルに気が凝縮されるという見方もあります。' });
+  }
+
+  // ② 一文字姓
+  if (seiStr && [...seiStr].length === 1) {
+    tips.push({ icon:'📌', title:'一文字姓について',
+      body:'姓が一文字の場合、天格の計算に「霊数1」が加わります。天格・人格・外格の数字が変わるため、流派によって計算方法が異なります。' });
+  }
+
+  // ③ 同じ文字の繰り返し
+  const allChars = [...(seiStr||''), ...(meiStr||'')];
+  const charCount = {};
+  allChars.forEach(ch => { charCount[ch] = (charCount[ch]||0) + 1; });
+  const dupes = Object.entries(charCount).filter(([,v])=>v>1).map(([k])=>k);
+  if (dupes.length > 0) {
+    tips.push({ icon:'📌', title:`同じ文字の繰り返し（${dupes.join('・')}）`,
+      body:`同じ文字が複数含まれると、その文字の五行が強調されます。一つの気質が突出しやすく、バランスが偏る傾向があります。` });
+  }
+
+  // ④ 要注意数が複数
+  const cauNums = [gk.ten, gk.jin, gk.chi, gk.gai, gk.so].filter(n => CAUTION_NUMS[n]);
+  if (cauNums.length >= 2) {
+    tips.push({ icon:'📌', title:`要注意数が複数あります（${cauNums.join('・')}画）`,
+      body:'五格に要注意数が2つ以上含まれています。それぞれの数が持つエネルギーが重なり合う傾向があります。「避けるべき」ではなく「知った上で意志を持って生きる」ための参考情報です。' });
+  }
+
+  // ⑤ 五行の極端な偏り
+  const gyos = [gk.ten, gk.jin, gk.chi, gk.gai, gk.so].map(n => gogyoOf(n));
+  const gyoMap = {};
+  gyos.forEach(g => { gyoMap[g] = (gyoMap[g]||0) + 1; });
+  const dominant = Object.entries(gyoMap).filter(([,v])=>v>=3).map(([k])=>k);
+  if (dominant.length > 0) {
+    tips.push({ icon:'📌', title:`五行の偏り（${dominant.join('・')}が強い）`,
+      body:`五格の中で「${dominant.join('・')}」の気が3つ以上集中しています。その五行の特性が強く出やすい反面、バランスが崩れやすい傾向があります。不足している五行を意識的に補うことが助けになります。` });
+  }
+
+  if (tips.length === 0) { card.style.display = 'none'; return; }
+
+  card.style.display = 'block';
+  card.innerHTML = `
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;">
+      <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:4px;">📋 命名・改名の参考情報</div>
+      <div style="font-size:.62rem;color:var(--mist);margin-bottom:14px;line-height:1.7;">以下はあくまで傾向の参考情報です。吉凶を断じるものではありません。最終的な判断はご自身で行ってください。</div>
+      <div style="display:grid;gap:10px;">
+        ${tips.map(t=>`
+          <div style="padding:11px 13px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.18);border-radius:9px;">
+            <div style="font-size:.67rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">${t.icon} ${t.title}</div>
+            <div style="font-size:.64rem;color:var(--mist);line-height:1.9;">${t.body}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
 
 function loadStarInfo() {
   let honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
