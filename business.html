@@ -66,6 +66,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .preview-card li{margin:4px 0;}
 .premium-card{background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.62));border:1px solid rgba(138,104,32,.26);}
 .safe-note{font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(100,80,40,.055);border:1px solid rgba(100,80,40,.12);border-radius:10px;padding:11px 13px;margin-top:12px;}
+.free-tool{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:16px;margin:12px 0;}
+.tool-title{font-size:.82rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:10px;}
+.tool-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.tool-result{display:none;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.55));border:1px solid rgba(138,104,32,.2);border-radius:12px;padding:14px;margin-top:12px;font-size:.72rem;color:var(--mist);line-height:1.9;}
+.tool-result strong{color:var(--goldlt);}
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.balance-chip{background:rgba(100,80,40,.045);border:1px solid var(--rim);border-radius:10px;padding:10px;}
+.balance-chip label{display:block;font-size:.62rem;color:var(--goldlt);font-weight:800;margin-bottom:6px;}
+.balance-chip input{width:100%;}
 /* フォーム */
 .sec-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:16px;}
 .form-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:18px;margin-bottom:12px;}
@@ -364,6 +373,34 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
+  <div class="free-tool" id="moneyTool" style="display:none;">
+    <div class="tool-title">無料版｜投資メンタル簡易チェック</div>
+    <div class="preview-card-body" style="margin-bottom:10px;">生年月日から九星を出し、お金の扱い方・判断の癖・今日の問いを表示します。</div>
+    <div class="tool-row">
+      <div><input class="form-input" type="number" id="moneyYear" placeholder="1967"><div class="date-unit">年</div></div>
+      <div><input class="form-input" type="number" id="moneyMonth" placeholder="6"><div class="date-unit">月</div></div>
+      <div><input class="form-input" type="number" id="moneyDay" placeholder="14"><div class="date-unit">日</div></div>
+    </div>
+    <button class="main-btn" type="button" onclick="runMoneyFree()">✦ 投資メンタルを見る</button>
+    <div class="tool-result" id="moneyResult"></div>
+  </div>
+
+  <div class="free-tool" id="balanceTool" style="display:none;">
+    <div class="tool-title">無料版｜事業名と五行バランス</div>
+    <div class="preview-card-body" style="margin-bottom:10px;">法人名・屋号・ブランド名の音の五行と、事業内容の五行バランスを簡易表示します。</div>
+    <input class="form-input" type="text" id="bizName" placeholder="例：KITOKU JOURNEY" style="margin-bottom:8px;">
+    <input class="form-input" type="text" id="bizKana" placeholder="フリガナ・読み（例：キトクジャーニー）">
+    <div class="balance-grid">
+      <div class="balance-chip"><label>木｜成長・新規開拓</label><input type="range" min="0" max="5" value="2" id="balWood"></div>
+      <div class="balance-chip"><label>火｜発信・広告</label><input type="range" min="0" max="5" value="2" id="balFire"></div>
+      <div class="balance-chip"><label>土｜基盤・管理</label><input type="range" min="0" max="5" value="2" id="balEarth"></div>
+      <div class="balance-chip"><label>金｜利益・回収</label><input type="range" min="0" max="5" value="2" id="balMetal"></div>
+      <div class="balance-chip"><label>水｜情報・資金繰り</label><input type="range" min="0" max="5" value="2" id="balWater"></div>
+    </div>
+    <button class="main-btn" type="button" onclick="runBalanceFree()">✦ 事業五行を見る</button>
+    <div class="tool-result" id="balanceResult"></div>
+  </div>
+
   <div class="safe-note">
     ※ 投資・資金判断は損失を伴う可能性があります。KITOKUは銘柄選定や売買指示を行うものではありません。判断癖・タイミング・リスク姿勢を整理するための補助資料としてご利用ください。
   </div>
@@ -411,11 +448,88 @@ function showBusinessPreview(kind){
   document.getElementById('previewFree').innerHTML='<ul>'+data.free.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
   document.getElementById('previewPaid').innerHTML='<ul>'+data.paid.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul><div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;">現在準備中。無料版で入口を確認できる形から追加予定です。</div>';
   st('previewPolicy',data.policy);
+  var moneyTool=document.getElementById('moneyTool');
+  var balanceTool=document.getElementById('balanceTool');
+  if(moneyTool)moneyTool.style.display=kind==='money'?'block':'none';
+  if(balanceTool)balanceTool.style.display=kind==='balance'?'block':'none';
+  var mr=document.getElementById('moneyResult');if(mr)mr.style.display='none';
+  var br=document.getElementById('balanceResult');if(br)br.style.display='none';
   showScreen('s3');
 }
 
 function showPreparingMessage(){
   alert('簡易版は準備中です。まずは無料で入口を体験でき、詳細レポート・線路の日・日程比較は有料機能として追加予定です。');
+}
+
+var MONEY_TYPE={
+  1:{t:'情報を集めてから動くタイプ',risk:'調べすぎて機会を逃しやすい。出口条件を先に決めると安定します。',q:'この判断は、情報不足ではなく不安で止まっていませんか？'},
+  2:{t:'堅実に積み上げるタイプ',risk:'安全を重視しすぎて成長機会を逃しやすい。小さく試す枠を作ると良いです。',q:'守るお金と育てるお金を分けていますか？'},
+  3:{t:'勢いで機会をつかむタイプ',risk:'ニュースや熱気に反応して早く入りすぎることがあります。翌日も同じ判断か確認しましょう。',q:'これは自分の計画ですか、それとも場の熱ですか？'},
+  4:{t:'流れと人脈で広げるタイプ',risk:'人からの話に影響されやすい。紹介案件ほど数字と撤退条件を確認してください。',q:'誰が言ったかではなく、数字で納得していますか？'},
+  5:{t:'大きく張れる中心型',risk:'自信が強い時ほどポジションが大きくなりがちです。最悪ケースを先に見ましょう。',q:'外れた時に、生活と事業を守れるサイズですか？'},
+  6:{t:'基準と品質で選ぶタイプ',risk:'完璧な条件を待ちすぎるか、正しさに固執しやすい。分割判断が向いています。',q:'一度に決めようとしていませんか？'},
+  7:{t:'収穫と楽しさを見つけるタイプ',risk:'利益が出ると気が緩みやすい。利確ルールと再投入ルールを分けましょう。',q:'利益を守るルールは先に決めていますか？'},
+  8:{t:'長期で持ち切るタイプ',risk:'一度決めると変えにくい。環境が変わった時の見直し日を設定してください。',q:'持ち続ける理由は、今も有効ですか？'},
+  9:{t:'直感とテーマで選ぶタイプ',risk:'美しい物語に惹かれやすい。期待ではなく事実を確認する癖が大切です。',q:'そのテーマは数字でも裏づけられていますか？'}
+};
+
+function runMoneyFree(){
+  var y=parseInt(document.getElementById('moneyYear').value)||0;
+  var m=parseInt(document.getElementById('moneyMonth').value)||0;
+  var d=parseInt(document.getElementById('moneyDay').value)||1;
+  if(!y||!m){alert('生年月日を入力してください');return;}
+  var h=calcH(y,m), t=calcT(y,m);
+  var hs=STARS[h], ts=STARS[t], type=MONEY_TYPE[h]||MONEY_TYPE[1];
+  var el=document.getElementById('moneyResult');
+  el.innerHTML='<strong>'+hs.k+'｜'+type.t+'</strong><br>'+
+    '月命：'+ts.k+'。お金の判断では、本命星が表の判断癖、月命星が内側の不安や欲の出方に影響します。<br><br>'+
+    '<strong>注意点：</strong>'+type.risk+'<br>'+
+    '<strong>今日の問い：</strong>'+type.q+'<br><br>'+
+    '※ これは投資助言ではありません。売買判断ではなく、自分の判断姿勢を整えるための簡易チェックです。';
+  el.style.display='block';
+}
+
+var ON_GYO_BIZ={
+  'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土','あ':'土','い':'土','う':'土','え':'土','お':'土',
+  'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金','ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金','か':'金','き':'金','く':'金','け':'金','こ':'金','が':'金','ぎ':'金','ぐ':'金','げ':'金','ご':'金',
+  'サ':'水','シ':'水','ス':'水','セ':'水','ソ':'水','ザ':'水','ジ':'水','ズ':'水','ゼ':'水','ゾ':'水','さ':'水','し':'水','す':'水','せ':'水','そ':'水','ざ':'水','じ':'水','ず':'水','ぜ':'水','ぞ':'水',
+  'タ':'火','チ':'火','ツ':'火','テ':'火','ト':'火','ダ':'火','デ':'火','ド':'火','ナ':'火','ニ':'火','ヌ':'火','ネ':'火','ノ':'火','ラ':'火','リ':'火','ル':'火','レ':'火','ロ':'火','た':'火','ち':'火','つ':'火','て':'火','と':'火','な':'火','に':'火','ぬ':'火','ね':'火','の':'火','ら':'火','り':'火','る':'火','れ':'火','ろ':'火',
+  'ハ':'木','ヒ':'木','フ':'木','ヘ':'木','ホ':'木','バ':'木','ビ':'木','ブ':'木','ベ':'木','ボ':'木','パ':'木','ピ':'木','プ':'木','ペ':'木','ポ':'木','マ':'木','ミ':'木','ム':'木','メ':'木','モ':'木','ヤ':'木','ユ':'木','ヨ':'木','は':'木','ひ':'木','ふ':'木','へ':'木','ほ':'木','ま':'木','み':'木','む':'木','め':'木','も':'木','や':'木','ゆ':'木','よ':'木'
+};
+
+function soundElements(text){
+  var count={木:0,火:0,土:0,金:0,水:0};
+  [...(text||'')].forEach(function(ch){var g=ON_GYO_BIZ[ch];if(g)count[g]++;});
+  return count;
+}
+function topKeys(obj){
+  var arr=Object.keys(obj).sort(function(a,b){return obj[b]-obj[a];});
+  return arr.filter(function(k){return obj[k]===obj[arr[0]]&&obj[k]>0;});
+}
+function runBalanceFree(){
+  var name=document.getElementById('bizName').value.trim();
+  var kana=document.getElementById('bizKana').value.trim();
+  if(!name&&!kana){alert('法人名・屋号・ブランド名を入力してください');return;}
+  var sound=soundElements(kana||name);
+  var focus={
+    木:parseInt(document.getElementById('balWood').value)||0,
+    火:parseInt(document.getElementById('balFire').value)||0,
+    土:parseInt(document.getElementById('balEarth').value)||0,
+    金:parseInt(document.getElementById('balMetal').value)||0,
+    水:parseInt(document.getElementById('balWater').value)||0
+  };
+  var soundTop=topKeys(sound);
+  var strong=topKeys(focus);
+  var weak=Object.keys(focus).filter(function(k){return focus[k]===Math.min.apply(null,Object.values(focus));});
+  var meaning={木:'成長・新規開拓',火:'発信・広告・ブランド',土:'基盤・管理・信頼',金:'利益・契約・回収',水:'情報・資金繰り・流通'};
+  var el=document.getElementById('balanceResult');
+  el.innerHTML='<strong>'+(name||kana)+' の簡易五行</strong><br>'+
+    '名前の音で強い五行：'+(soundTop.length?soundTop.map(function(g){return g+'（'+meaning[g]+'）';}).join('・'):'読みから五行を拾えませんでした')+'<br>'+
+    '事業内容で強い五行：'+strong.map(function(g){return g+'（'+meaning[g]+'）';}).join('・')+'<br>'+
+    '意識して補いたい五行：'+weak.map(function(g){return g+'（'+meaning[g]+'）';}).join('・')+'<br><br>'+
+    '<strong>見立て：</strong>名前の音が強める気質と、実際の事業で必要な気質が重なるほど伝わりやすくなります。足りない五行は、運営ルール・発信・資金管理・人材配置で補えます。<br><br>'+
+    '※ これは会計・税務・法務判断ではありません。事業の状態を五行で整理するための簡易チェックです。';
+  el.style.display='block';
 }
 
 var CAT_LABELS={
