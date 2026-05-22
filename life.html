@@ -496,20 +496,16 @@ footer{
     </div>
 
     <div class="card">
-      <div class="card-title">② 画数を確認する</div>
-      <div id="strokeSei" class="stroke-row">
-        <span class="stroke-tag">姓</span>
-        <input type="number" class="stroke-input" id="seiK" min="1" max="99" placeholder="—" oninput="onStrokeManual('sei')">
-        <span class="stroke-status auto" id="seiKSt">自動</span>
+      <div class="card-title">② 画数を確認・修正する</div>
+      <div id="charStrokeArea">
+        <p class="stroke-hint" style="margin-bottom:8px;">姓名を入力すると各文字の画数が表示されます。旧字体など字体が違う場合は直接修正してください。</p>
       </div>
-      <div id="strokeMei" class="stroke-row">
-        <span class="stroke-tag">名</span>
-        <input type="number" class="stroke-input" id="meiK" min="1" max="99" placeholder="—" oninput="onStrokeManual('mei')">
-        <span class="stroke-status auto" id="meiKSt">自動</span>
-      </div>
+      <!-- 合計表示（隠し） -->
+      <input type="hidden" id="seiK">
+      <input type="hidden" id="meiK">
       <p class="stroke-hint">
         ※ 気学では字体により画数が変わります（草冠=4、さんずい=3、しんにょう=4 など）。<br>
-        自動値を確認し、必要なら手動で修正してください。
+        各文字の画数を確認し、必要なら直接修正してください。修正すると五格・文字ごと表示に反映されます。
       </p>
     </div>
 
@@ -874,31 +870,121 @@ function getLifeMode(){
 }
 
 // ── 画数自動入力 ──
-function onSeiInput(){
-  if(!STATE.seiManual){
-    const v=document.getElementById('sei').value.trim();
-    const t=sumStrokes(v);
-    const el=document.getElementById('seiK');
-    const st=document.getElementById('seiKSt');
-    if(t!==null){el.value=t;st.className='stroke-status auto';st.textContent='自動';}
-    else{el.value='';el.placeholder='手動で入力';st.className='stroke-status missing';st.textContent='要確認';}
+// 個別文字画数のオーバーライドを保持
+const STROKE_OVERRIDE = {}; // key: "sei_0", "mei_1" など
+
+function renderCharStrokes() {
+  const sei = document.getElementById('sei').value.trim();
+  const mei = document.getElementById('mei').value.trim();
+  const area = document.getElementById('charStrokeArea');
+  if (!area) return;
+
+  let html = '';
+
+  // 姓
+  if (sei) {
+    html += `<div style="margin-bottom:10px;">`;
+    html += `<div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;font-weight:700;">姓（${sei}）の画数</div>`;
+    html += `<div style="display:flex;gap:6px;flex-wrap:wrap;">`;
+    [...sei].forEach((ch, i) => {
+      const key = `sei_${i}`;
+      const auto = getStroke(ch);
+      const val = STROKE_OVERRIDE[key] !== undefined ? STROKE_OVERRIDE[key] : (auto || '');
+      const isManual = STROKE_OVERRIDE[key] !== undefined;
+      html += `<div style="text-align:center;">
+        <div style="font-size:.8rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;">${ch}</div>
+        <input type="number" min="1" max="99" value="${val}" placeholder="?"
+          style="width:48px;padding:6px 4px;border:1px solid ${isManual?'rgba(40,130,60,.5)':'rgba(138,104,32,.25)'};border-radius:7px;font-size:.78rem;text-align:center;font-family:'Noto Serif JP',serif;color:var(--snow);background:${isManual?'rgba(40,130,60,.05)':'rgba(255,255,255,.85)'};outline:none;"
+          oninput="onCharStroke('sei',${i},this.value)">
+        <div style="font-size:.5rem;color:var(--mist);margin-top:2px;">${isManual?'修正済':'自動'}</div>
+      </div>`;
+    });
+    const total = calcTotal('sei', sei);
+    html += `<div style="display:flex;align-items:center;font-size:.7rem;color:var(--mist);padding-top:18px;">= <strong style="color:var(--goldlt);margin-left:4px;">${total??'?'}</strong>画</div>`;
+    html += `</div></div>`;
   }
+
+  // 名
+  if (mei) {
+    html += `<div style="margin-bottom:6px;">`;
+    html += `<div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;font-weight:700;">名（${mei}）の画数</div>`;
+    html += `<div style="display:flex;gap:6px;flex-wrap:wrap;">`;
+    [...mei].forEach((ch, i) => {
+      const key = `mei_${i}`;
+      const auto = getStroke(ch);
+      const val = STROKE_OVERRIDE[key] !== undefined ? STROKE_OVERRIDE[key] : (auto || '');
+      const isManual = STROKE_OVERRIDE[key] !== undefined;
+      html += `<div style="text-align:center;">
+        <div style="font-size:.8rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;">${ch}</div>
+        <input type="number" min="1" max="99" value="${val}" placeholder="?"
+          style="width:48px;padding:6px 4px;border:1px solid ${isManual?'rgba(40,130,60,.5)':'rgba(138,104,32,.25)'};border-radius:7px;font-size:.78rem;text-align:center;font-family:'Noto Serif JP',serif;color:var(--snow);background:${isManual?'rgba(40,130,60,.05)':'rgba(255,255,255,.85)'};outline:none;"
+          oninput="onCharStroke('mei',${i},this.value)">
+        <div style="font-size:.5rem;color:var(--mist);margin-top:2px;">${isManual?'修正済':'自動'}</div>
+      </div>`;
+    });
+    const total = calcTotal('mei', mei);
+    html += `<div style="display:flex;align-items:center;font-size:.7rem;color:var(--mist);padding-top:18px;">= <strong style="color:var(--goldlt);margin-left:4px;">${total??'?'}</strong>画</div>`;
+    html += `</div></div>`;
+  }
+
+  area.innerHTML = html || `<p class="stroke-hint">姓名を入力すると各文字の画数が表示されます。</p>`;
+  updateTotals(sei, mei);
+}
+
+function calcTotal(which, str) {
+  let total = 0;
+  for (let i = 0; i < str.length; i++) {
+    const key = `${which}_${i}`;
+    const v = STROKE_OVERRIDE[key] !== undefined ? STROKE_OVERRIDE[key] : getStroke(str[i]);
+    if (!v) return null;
+    total += parseInt(v);
+  }
+  return total;
+}
+
+function updateTotals(sei, mei) {
+  const seiTotal = sei ? calcTotal('sei', sei) : null;
+  const meiTotal = mei ? calcTotal('mei', mei) : null;
+  const seiEl = document.getElementById('seiK');
+  const meiEl = document.getElementById('meiK');
+  if (seiEl) seiEl.value = seiTotal ?? '';
+  if (meiEl) meiEl.value = meiTotal ?? '';
+}
+
+function onCharStroke(which, idx, val) {
+  const key = `${which}_${idx}`;
+  const n = parseInt(val);
+  if (val === '' || isNaN(n)) {
+    delete STROKE_OVERRIDE[key];
+  } else {
+    STROKE_OVERRIDE[key] = n;
+  }
+  const sei = document.getElementById('sei').value.trim();
+  const mei = document.getElementById('mei').value.trim();
+  updateTotals(sei, mei);
+  renderCharStrokes();
+}
+
+function getCharStroke(which, str) {
+  return [...str].map((ch, i) => {
+    const key = `${which}_${i}`;
+    return STROKE_OVERRIDE[key] !== undefined ? STROKE_OVERRIDE[key] : (getStroke(ch) || 0);
+  });
+}
+
+function onSeiInput(){
+  // OVERRIDEをクリア
+  const sei = document.getElementById('sei').value.trim();
+  Object.keys(STROKE_OVERRIDE).filter(k=>k.startsWith('sei_')).forEach(k=>delete STROKE_OVERRIDE[k]);
+  renderCharStrokes();
 }
 function onMeiInput(){
-  if(!STATE.meiManual){
-    const v=document.getElementById('mei').value.trim();
-    const t=sumStrokes(v);
-    const el=document.getElementById('meiK');
-    const st=document.getElementById('meiKSt');
-    if(t!==null){el.value=t;st.className='stroke-status auto';st.textContent='自動';}
-    else{el.value='';el.placeholder='手動で入力';st.className='stroke-status missing';st.textContent='要確認';}
-  }
+  const mei = document.getElementById('mei').value.trim();
+  Object.keys(STROKE_OVERRIDE).filter(k=>k.startsWith('mei_')).forEach(k=>delete STROKE_OVERRIDE[k]);
+  renderCharStrokes();
 }
 function onFuriInput(){}
-function onStrokeManual(which){
-  if(which==='sei'){STATE.seiManual=true;document.getElementById('seiKSt').className='stroke-status manual';document.getElementById('seiKSt').textContent='手動確定';}
-  else{STATE.meiManual=true;document.getElementById('meiKSt').className='stroke-status manual';document.getElementById('meiKSt').textContent='手動確定';}
-}
+function onStrokeManual(which){}
 
 // ── 自分の名前保存（端末内のみ） ──
 const LIFE_NAME_KEY = 'kitoku-life-name';
@@ -1051,10 +1137,14 @@ function runReading(){
 
   const truthRow=document.getElementById('truthRow');
 
-  // 文字ごとの陰陽計算
+  // 文字ごとの陰陽計算（STROKE_OVERRIDEを考慮）
   const allChars = [...(seiStr||''), ...(meiStr||'')];
-  const charYY = allChars.map(ch => {
-    const s = getStroke(ch);
+  const allStrokes = [
+    ...getCharStroke('sei', seiStr||''),
+    ...getCharStroke('mei', meiStr||'')
+  ];
+  const charYY = allChars.map((ch, i) => {
+    const s = allStrokes[i];
     return { ch, stroke: s, yang: s ? s%2!==0 : null };
   }).filter(c => c.stroke);
   const charYang = charYY.filter(c=>c.yang).length;
