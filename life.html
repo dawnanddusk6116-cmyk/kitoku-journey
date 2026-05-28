@@ -2660,7 +2660,7 @@ function calcInYoPattern(seiStr,meiStr,seiKs,meiKs){
   const sAll=new Set(sIY).size===1;
   const mAll=new Set(mIY).size===1;
   if(sAll&&mAll&&sIY[0]!==mIY[0])return{pattern:'中断',label:'中断（中途断絶）',text:'姓と名の境目で陰陽が真っ二つに分かれています。人生の途中で大きな転換を経験しやすいパターンです。',kitoku:'中断とは「リセットと再出発の才能」。一つの章を閉じ、全く新しい舞台で再起動できる変革力があります。',score_deduct:30};
-  if(new Set(iy).size===1)return{pattern:'縛り',label:'縛り',text:'全ての文字が同じ陰陽です。自由が利かなくなりやすいパターンとされています。',kitoku:'縛りとは「一つの道を極め尽くす集中力」。その分野で圧倒的なプロフェッショナルになる宿命を持っています。',score_deduct:25};
+  if(new Set(iy).size===1){const isW=iy[0]==='陽';return{pattern:isW?'白寄り':'黒寄り',label:isW?'白寄り（全陽）':'黒寄り（全陰）',text:isW?'全ての文字が陽（奇数画）です。気が強く偏り、自由が利かなくなりやすいパターンとされています。':'全ての文字が陰（偶数画）です。気が沈みがちになり、行動力が出にくいパターンとされています。',kitoku:isW?'白寄りは「突き抜ける突破力」の証。強すぎる陽の気を意識的にゆるめることで、周囲と調和できます。':'黒寄りは「深く考える思慮深さ」の証。内向きの気を外に向けることで、豊かな人間関係が生まれます。',score_deduct:25};}
   if(n>=3&&iy[0]===iy[n-1]&&iy[0]!==iy[1]){const mid=iy.slice(1,n-1);if(n===3||new Set(mid).size===1)return{pattern:'大バサミ',label:'大ハサミ',text:'外側と内側で陰陽が対称に反転しています。両端から圧力を受けやすく精神的な苦労が絶えないパターンです。',kitoku:'外から強い圧力を受けやすい配列とされています。吉方位取りで補えます。',score_deduct:30};}
   if(n>=3){
     const r1=iy.slice(1);const r2=iy.slice(0,-1);
@@ -2671,13 +2671,18 @@ function calcInYoPattern(seiStr,meiStr,seiKs,meiKs){
   const yin=n-yang;
   if(yang>=Math.ceil(n*0.7)||yin>=Math.ceil(n*0.7)){
     const h=yang>yin?'陽':'陰';
-    return{pattern:'片寄り',label:'片寄り',text:`${h}の気が強く偏っています。人生の良い時期と悪い時期がはっきりしやすいパターンです。`,kitoku:'陰陽の偏りは人生の波が出やすいとされています。吉方位取りで補えます。',score_deduct:10};
+    const isW2=yang>yin;return{pattern:isW2?'白寄り':'黒寄り',label:isW2?'白寄り（陽が多い）':'黒寄り（陰が多い）',text:`${h}の気が強く偏っています。人生の良い時期と悪い時期がはっきりしやすいパターンです。`,kitoku:'陰陽の偏りは人生の波が出やすいとされています。吉方位取りで補えます。',score_deduct:10};
   }
   return{pattern:'善良',label:'善良',text:'陰陽のバランスが整っています。良い縁を自然に引き寄せやすい配列です。',kitoku:'善良な配列は「天性の調和力」の証。どんな環境でも美しい人間関係を育むことができます。',score_deduct:0};
 }
 function calcTenchi(seiStr,meiStr,seiKs,meiKs){
   if(!seiKs.length||!meiKs.length)return null;
   const tf=seiKs[0],cf=meiKs[0];
+  const seiTotal=seiKs.reduce((a,b)=>a+b,0);
+  const meiTotal=meiKs.reduce((a,b)=>a+b,0);
+  const tenBottom=seiKs[0],chiTop=meiKs[meiKs.length-1];
+  if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。村山先生が「ものすごい危ない名前」と警告する、人生が真っ二つに分断されやすい致命的な配列です。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
+  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、村山先生が「体がズタズタになる」と厳しく警告するパターンです。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
   const HEAVY=[3,5,9,13,15,19,8];
   if(tf===cf){
     const isH=HEAVY.includes(tf);
@@ -2703,7 +2708,7 @@ function calcInYoPattern(seiStr,meiStr,seiKs,meiKs){
   // 中断
   if(sAll&&mAll&&sIY[0]!==mIY[0])return{pattern:'中断',label:'中断（中途断絶）',text:'姓と名の境目で陰陽が真っ二つに分かれています。人生の途中で大きな転換を経験しやすいパターンです。',kitoku:'中断とは「リセットと再出発の才能」。一つの章を閉じ、全く新しい舞台で再起動できる変革力があります。',score_deduct:30};
   // 縛り
-  if(new Set(iy).size===1)return{pattern:'縛り',label:'縛り',text:'全ての文字が同じ陰陽です。自由が利かなくなりやすいパターンとされています。',kitoku:'縛りとは「一つの道を極め尽くす集中力」。その分野で圧倒的なプロフェッショナルになる宿命を持っています。',score_deduct:25};
+  if(new Set(iy).size===1){const isW=iy[0]==='陽';return{pattern:isW?'白寄り':'黒寄り',label:isW?'白寄り（全陽）':'黒寄り（全陰）',text:isW?'全ての文字が陽（奇数画）です。気が強く偏り、自由が利かなくなりやすいパターンとされています。':'全ての文字が陰（偶数画）です。気が沈みがちになり、行動力が出にくいパターンとされています。',kitoku:isW?'白寄りは「突き抜ける突破力」の証。強すぎる陽の気を意識的にゆるめることで、周囲と調和できます。':'黒寄りは「深く考える思慮深さ」の証。内向きの気を外に向けることで、豊かな人間関係が生まれます。',score_deduct:25};}
   // 大バサミ
   if(n>=3&&iy[0]===iy[n-1]&&iy[0]!==iy[1]){const mid=iy.slice(1,n-1);if(n===3||new Set(mid).size===1)return{pattern:'大バサミ',label:'大ハサミ',text:'外側と内側で陰陽が対称に反転しています。両端から圧力を受けやすく精神的な苦労が絶えないパターンです。',kitoku:'外から強い圧力を受けやすい配列とされています。吉方位取りで補えます。',score_deduct:30};}
   // 蒔直し
@@ -2717,7 +2722,7 @@ function calcInYoPattern(seiStr,meiStr,seiKs,meiKs){
   const yin=n-yang;
   if(yang>=Math.ceil(n*0.7)||yin>=Math.ceil(n*0.7)){
     const h=yang>yin?'陽':'陰';
-    return{pattern:'片寄り',label:'片寄り',text:`${h}の気が強く偏っています。人生の良い時期と悪い時期がはっきりしやすいパターンです。`,kitoku:'陰陽の偏りは人生の波が出やすいとされています。吉方位取りで補えます。',score_deduct:10};
+    const isW2=yang>yin;return{pattern:isW2?'白寄り':'黒寄り',label:isW2?'白寄り（陽が多い）':'黒寄り（陰が多い）',text:`${h}の気が強く偏っています。人生の良い時期と悪い時期がはっきりしやすいパターンです。`,kitoku:'陰陽の偏りは人生の波が出やすいとされています。吉方位取りで補えます。',score_deduct:10};
   }
   return{pattern:'善良',label:'善良',text:'陰陽のバランスが整っています。良い縁を自然に引き寄せやすい配列です。',kitoku:'善良な配列は「天性の調和力」の証。どんな環境でも美しい人間関係を育むことができます。',score_deduct:0};
 }
