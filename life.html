@@ -3404,7 +3404,7 @@ function runCompatibility(){
       <div style="padding:12px 14px;background:rgba(138,104,32,.06);border-radius:10px;">
         <div style="font-size:.65rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">✦ 琥珀色の処方箋</div>
         ${(AI_ADVICE[relType]||[]).map(t=>`<div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:4px;">${t}</div>`).join('')}
-        <div style="font-size:.55rem;color:var(--mist);opacity:.7;margin-top:8px;line-height:1.7;">※ 名前の五行（主音）ベースの参考値です。生年月日を合わせた鑑定でより深い相性が読めます。</div>
+        <div style="font-size:.55rem;color:var(--mist);opacity:.7;margin-top:8px;line-height:1.7;">※ 二人の「名前の主音（フリガナの名頭の読み）」から五行を取得し、相生・相剋・比和で相性を判定しています。生年月日との組み合わせでより正確な鑑定ができます。</div>
       </div>
     </div>
   `;
