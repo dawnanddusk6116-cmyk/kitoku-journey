@@ -233,6 +233,10 @@ body{
   box-shadow:0 2px 8px rgba(90,60,10,.12);
 }
 .cta:active{opacity:.85;transform:translateY(1px);}
+.life-count-hint{
+  font-size:.6rem;color:var(--gold);text-align:center;
+  margin-top:8px;line-height:1.7;
+}
 .err{
   font-size:.65rem;color:#c0392b;text-align:center;
   min-height:20px;margin-top:4px;
@@ -553,6 +557,7 @@ footer{
 
     <div class="cta-wrap">
       <button class="cta" id="lifeCta" onclick="runReading()">✦ 命の器を読む</button>
+      <div class="life-count-hint" id="lifeCountHint"></div>
     </div>
     <div class="err" id="err"></div>
   </div>
@@ -1522,6 +1527,30 @@ function getLifeMode(){
   return LIFE_MODE_TEXT[STATE.lifeMode] ? STATE.lifeMode : 'self';
 }
 
+const LIFE_FREE=3;
+function lifeTodayKey(){
+  const d=new Date();
+  return 'klife_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();
+}
+function getLifeCount(){
+  return parseInt(localStorage.getItem(lifeTodayKey())||'0',10)||0;
+}
+function addLifeCount(){
+  try{localStorage.setItem(lifeTodayKey(),getLifeCount()+1);}catch(e){}
+}
+function updateLifeCountHint(){
+  const el=document.getElementById('lifeCountHint');
+  if(!el)return;
+  const rest=Math.max(0,LIFE_FREE-getLifeCount());
+  if(rest>0){
+    el.textContent='本日あと'+rest+'回（無料：1日'+LIFE_FREE+'回）';
+    el.style.color='var(--gold)';
+  }else{
+    el.textContent='本日の無料回数（'+LIFE_FREE+'回）を使い切りました';
+    el.style.color='#b04040';
+  }
+}
+
 // ── 画数自動入力 ──
 // 個別文字画数のオーバーライドを保持
 const STROKE_OVERRIDE = {}; // key: "sei_0", "mei_1" など
@@ -1723,6 +1752,12 @@ function runReading(){
 
   if(!seiStr||!meiStr){er.textContent='姓と名を入力してください。';er.style.display='block';return;}
   if(!seiK||!meiK){er.textContent='画数を確認してください。自動取得できない場合は手動で入力してください。';er.style.display='block';return;}
+  if(getLifeCount()>=LIFE_FREE){
+    er.textContent='本日の無料回数（1日'+LIFE_FREE+'回）を使い切りました。明日またご利用いただけます。';
+    er.style.display='block';
+    updateLifeCountHint();
+    return;
+  }
 
   const seiChars=[...seiStr],meiChars=[...meiStr];
   // STROKE_OVERRIDEを反映した個別画数（手動修正値を優先）
@@ -2045,6 +2080,8 @@ function runReading(){
   document.getElementById('formSection').style.display='none';
   const res=document.getElementById('results');
   res.style.display='block';
+  addLifeCount();
+  updateLifeCountHint();
   setTimeout(()=>{res.scrollIntoView({behavior:'smooth',block:'start'});},100);
 }
 
@@ -3147,6 +3184,7 @@ document.addEventListener('DOMContentLoaded', function(){
   catch(e){setLifeMode('self');}
   loadStarInfo();
   loadLifeName(false);
+  updateLifeCountHint();
 });
 
 </script>
