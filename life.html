@@ -427,6 +427,27 @@ footer{
 </div>
 
 <!-- POPUP -->
+<!-- ── 五行相性 解説ポップアップ ── -->
+<div id="gokeiPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--card);border:1px solid var(--rim);border-radius:16px;max-width:340px;width:100%;padding:24px 20px;position:relative;">
+    <button onclick="document.getElementById('gokeiPopup').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--mist);font-size:1rem;cursor:pointer;">✕</button>
+    <div style="font-size:.65rem;color:var(--goldlt);letter-spacing:.15em;margin-bottom:6px;">KITOKU / 五行の相性</div>
+    <div style="font-size:1rem;font-weight:700;color:var(--goldlt);margin-bottom:16px;">✦ 相性の見方</div>
+    <div style="font-size:.72rem;color:var(--mist);line-height:2.1;">
+      気学では、あらゆるものを木・火・土・金・水の「五行」で分類し、その組み合わせで相性を見ます。<br><br>
+      <span style="color:var(--goldlt);font-weight:700;">相生（そうじょう）</span><br>
+      五行がお互いを生み育てる吉の関係。<br>
+      木→火→土→金→水→木 の順に助け合います。自然に補い合えるパートナーシップです。<br><br>
+      <span style="color:var(--goldlt);font-weight:700;">比和（ひわ）</span><br>
+      同じ五行同士の関係。共感しやすく息が合いますが、同じ弱点も持つため、停滞しやすい面もあります。<br><br>
+      <span style="color:var(--goldlt);font-weight:700;">相剋（そうこく）</span><br>
+      五行がぶつかり合う関係。<br>
+      木→土→水→火→金→木 の順に剋します。摩擦は生まれやすいですが、お互いを高め合う成長の関係でもあります。<br><br>
+      <span style="font-size:.6rem;opacity:.75;">※ スコアはあくまで参考値です。どんな組み合わせも、知ることで活かせる力になります。</span>
+    </div>
+  </div>
+</div>
+
 <!-- ── なぜ旧字体か ポップアップ ── -->
 <div id="strokeWhyPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:var(--card);border:1px solid var(--rim);border-radius:16px;max-width:340px;width:100%;padding:24px 20px;position:relative;">
@@ -3390,7 +3411,10 @@ function runCompatibility(){
 
       <!-- 五行の関係 -->
       <div style="padding:12px 14px;background:rgba(138,104,32,.06);border-radius:10px;margin-bottom:12px;">
-        <div style="font-size:.65rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">✦ 五行の関係：${rel}</div>
+        <div style="font-size:.65rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+          ✦ 五行の関係：${rel}
+          <button onclick="document.getElementById('gokeiPopup').style.display='flex'" style="font-size:.55rem;color:#fff;background:rgba(138,104,32,.5);border:none;border-radius:999px;padding:2px 8px;cursor:pointer;font-weight:700;flex-shrink:0;">？</button>
+        </div>
         <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">${AI_DESC[pair]||''}</div>
       </div>
 
