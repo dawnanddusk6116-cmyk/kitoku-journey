@@ -537,10 +537,10 @@ footer{
         <label>フリガナ<span class="furi-hint">音の五行判定に使用</span></label>
         <div class="row2">
           <div>
-            <input type="text" id="furiSei" placeholder="セイ（例：ヤマダ）" oninput="onFuriInput()">
+            <input type="text" id="furiSei" placeholder="姓の読み（例：やまだ）" oninput="onFuriInput()">
           </div>
           <div>
-            <input type="text" id="furiMei" placeholder="メイ（例：ハナコ）" oninput="onFuriInput()">
+            <input type="text" id="furiMei" placeholder="名の読み全て（例：けいとや）" oninput="onFuriInput()">
           </div>
         </div>
       </div>
@@ -1303,8 +1303,12 @@ function getSeiLastFuri(furiSei, seiStr){
   const f=furiSei.trim();
   const sl=seiStr.length;
   if(sl<=1)return f; // 一字姓：フリガナ全体
-  // 多字姓：均等分割
   const fl=f.length;
+  // fl=sl+1 の場合（やまじ=3、山地=2など）
+  // 最後の漢字が1文字読みのケース → 最後の1文字を使用
+  // 誤判定より見逃しの方がユーザー体験が良いため
+  if(fl===sl+1) return f[fl-1];
+  // 通常：均等分割
   const startIdx=Math.floor(fl*(sl-1)/sl);
   return f.slice(startIdx);
 }
@@ -3519,7 +3523,7 @@ function runCompatibility(){
         <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">
           <strong style="color:var(--goldlt);">${relH}</strong>　${AI_DESC[pairH]||''}
         </div>
-        ${g1t&&g2t?`<div style="font-size:.6rem;color:var(--mist);margin-top:8px;opacity:.8;">月命：${STAR_NAMES[t1]||''}（${g1t}）× ${STAR_NAMES[t2]||''}（${g2t}）→ ${AI_GOKEI[g1t+g2t]||''}</div>`:''}
+        ${buildTsukiHTML(t1,t2,g1t,g2t)}
       </div>
     `;
     area.querySelector('div').appendChild(kyuseiDiv);
@@ -3538,6 +3542,20 @@ function onLifeCtaClick(){
   } else {
     runReading();
   }
+}
+
+
+function buildTsukiHTML(t1,t2,g1t,g2t){
+  if(!g1t||!g2t) return '';
+  const pairT=g1t+g2t;
+  const relT=AI_GOKEI[pairT]||'';
+  const relTypeT=relT.includes('相生')?'相生':relT.includes('相剋')?'相剋':'比和';
+  const relDesc={'相生':'感情・日常面で自然に助け合える関係です。','相剋':'感情・日常面で摩擦が生まれやすい関係です。ぶつかることもありますが、お互いを高め合う成長の関係でもあります。','比和':'感情・日常面で似た気質を持ちます。共感しやすい反面、同じ弱点も持ちます。'};
+  return '<div style="margin-top:8px;padding:8px 10px;background:rgba(138,104,32,.04);border-radius:6px;">'
+    +'<div style="font-size:.6rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;">月命星（日常・感情の相性）</div>'
+    +'<div style="font-size:.6rem;color:var(--mist);">'+(STAR_NAMES[t1]||'')+'（'+g1t+'）× '+(STAR_NAMES[t2]||'')+'（'+g2t+'）→ '+relT+'</div>'
+    +'<div style="font-size:.58rem;color:var(--mist);margin-top:3px;opacity:.85;">'+(relDesc[relTypeT]||'')+'</div>'
+    +'</div>';
 }
 
 </script>
