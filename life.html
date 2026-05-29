@@ -3258,6 +3258,17 @@ document.addEventListener('DOMContentLoaded', function(){
   updateLifeCountHint();
 });
 
+// 他ページで生年月日を変更して戻ってきた時に星情報を再読み込み
+window.addEventListener('pageshow', function(){
+  loadStarInfo();
+  updateLifeCountHint();
+});
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState==='visible'){
+    loadStarInfo();
+  }
+});
+
 
 // ── 相性モード：相手の画数自動入力 ──
 function onStroke2(){
