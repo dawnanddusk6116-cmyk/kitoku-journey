@@ -178,18 +178,27 @@ html.theme-night-root{
 .selector-arrow{font-size:.9rem;color:rgba(100,80,40,.3);flex-shrink:0;}
 
 /* ── 画面内の目次バー ── */
-.nav-bar{
-  display:flex;gap:8px;overflow-x:auto;
+.home-control-row{
+  display:flex;align-items:center;gap:7px;
   padding:9px 14px 10px;
-  margin:0;
   background:linear-gradient(180deg,rgba(247,244,239,.98),rgba(247,244,239,.92));
-  border-top:1px solid rgba(138,104,32,.18);
-  border-bottom:1px solid rgba(138,104,32,.22);
+  border-bottom:1px solid rgba(138,104,32,.2);
   position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px);z-index:95;
   backdrop-filter:blur(14px);
   box-shadow:0 8px 18px rgba(80,54,20,.08);
+}
+.nav-bar{
+  display:flex;gap:8px;overflow-x:auto;
+  padding:0;
+  margin:0;
+  background:transparent;
+  border:0;
+  position:static;z-index:auto;
+  backdrop-filter:none;
+  box-shadow:none;
   scrollbar-width:none;
   overscroll-behavior-x:contain;
+  flex:1;min-width:0;
 }
 .nav-bar::before{
   content:'目次';
@@ -214,11 +223,11 @@ html.theme-night-root{
   transition:all .18s;
   box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
 }
-.nav-btn:nth-child(2){border-color:var(--c-daily-border);color:var(--c-daily);}
-.nav-btn:nth-child(3){border-color:var(--c-self-border);color:var(--c-self);}
-.nav-btn:nth-child(4){border-color:var(--c-relation-border);color:var(--c-relation);}
-.nav-btn:nth-child(5){border-color:var(--c-work-border);color:var(--c-work);}
-.nav-btn:nth-child(6){border-color:var(--c-travel-border);color:var(--c-travel);}
+.nav-btn:nth-child(1){border-color:var(--c-daily-border);color:var(--c-daily);}
+.nav-btn:nth-child(2){border-color:var(--c-self-border);color:var(--c-self);}
+.nav-btn:nth-child(3){border-color:var(--c-relation-border);color:var(--c-relation);}
+.nav-btn:nth-child(4){border-color:var(--c-work-border);color:var(--c-work);}
+.nav-btn:nth-child(5){border-color:var(--c-travel-border);color:var(--c-travel);}
 .nav-btn:active{
   background:rgba(138,104,32,.14);
   transform:translateY(1px);
@@ -227,18 +236,28 @@ html.theme-night-root{
 /* ── 戻るリンク ── */
 .back-to-selector{
   display:inline-flex;align-items:center;gap:7px;
-  margin:10px 16px 8px;
+  margin:0;
   min-height:36px;
-  font-size:.72rem;color:var(--goldlt);font-weight:700;
-  cursor:pointer;padding:8px 14px;
+  font-size:.66rem;color:var(--goldlt);font-weight:700;
+  cursor:pointer;padding:7px 11px;
   background:rgba(138,104,32,.08);
   border:1px solid rgba(138,104,32,.28);
   border-radius:999px;
   font-family:'Noto Serif JP',serif;
   letter-spacing:.06em;
   box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
+  white-space:nowrap;flex-shrink:0;
 }
 .back-to-selector:active{opacity:.78;transform:translateY(1px);}
+.home-setting-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:36px;padding:7px 10px;
+  background:rgba(100,80,40,.08);border:1px solid var(--rim);
+  color:var(--mist);font-size:.66rem;border-radius:999px;
+  cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;
+  white-space:nowrap;flex-shrink:0;
+}
+body.home-active .header-setting-btn{display:none;}
 
 /* ════════════════════
    初回画面
@@ -778,8 +797,13 @@ body.theme-night .today-date{
   color:var(--mist);opacity:.95;
 }
 body.theme-night .nav-bar{
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+}
+body.theme-night .home-control-row{
   background:linear-gradient(180deg,rgba(7,11,22,.98),rgba(7,11,22,.92));
-  border-color:rgba(229,190,85,.22);
+  border-bottom-color:rgba(229,190,85,.22);
   box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 body.theme-night .nav-btn{
@@ -862,7 +886,7 @@ body.theme-night .start-btn{
       <button class="font-btn" id="fontMediumBtn" type="button" onclick="setFontSize('medium')">中</button>
       <button class="font-btn" id="fontLargeBtn" type="button" onclick="setFontSize('large')">大</button>
     </div>
-    <button class="setting-btn" onclick="openSettings()">⚙ 生年月日</button>
+    <button class="setting-btn header-setting-btn" onclick="openSettings()">⚙ 生年月日</button>
   </div>
 </div>
 
@@ -1112,18 +1136,21 @@ body.theme-night .start-btn{
 <!-- ════════════ ホーム画面（JOURNEY） ════════════ -->
 <div class="screen" id="screenHome">
 
-  <!-- 戻るリンク -->
-  <button class="back-to-selector" onclick="showSelector()">
-    ← 入口へ戻る
-  </button>
+  <!-- ホーム操作バー -->
+  <div class="home-control-row">
+    <button class="back-to-selector" onclick="showSelector()">
+      ← 入口
+    </button>
 
-  <!-- 画面内の目次バー -->
-  <div class="nav-bar" aria-label="画面内の目次">
-    <button class="nav-btn" type="button" onclick="scrollToSection('sec1')">① 九星・整える</button>
-    <button class="nav-btn" type="button" onclick="scrollToSection('sec2')">② 自分を知る</button>
-    <button class="nav-btn" type="button" onclick="scrollToSection('sec3')" style="display:none;">③ 人との縁</button>
-    <button class="nav-btn" type="button" onclick="scrollToSection('sec4')" style="display:none;">④ 仕事</button>
-    <button class="nav-btn" type="button" onclick="scrollToSection('sec5')" style="display:none;">⑤ 旅</button>
+    <div class="nav-bar" aria-label="画面内の目次">
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec1')">① 九星・整える</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec2')">② 自分を知る</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec3')" style="display:none;">③ 人との縁</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec4')" style="display:none;">④ 仕事</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec5')" style="display:none;">⑤ 旅</button>
+    </div>
+
+    <button class="home-setting-btn" type="button" onclick="openSettings()">⚙ 生年月日</button>
   </div>
 
   <!-- 今日の情報バー -->
@@ -1460,6 +1487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function showScreenFirst() {
+  document.body.classList.remove('home-active');
   document.getElementById('screenFirst').classList.add('active');
   document.getElementById('screenSelector').classList.remove('active');
   document.getElementById('screenHome').classList.remove('active');
@@ -1479,6 +1507,7 @@ function showSelector() {
   document.getElementById('screenFirst').classList.remove('active');
   document.getElementById('screenSelector').classList.add('active');
   document.getElementById('screenHome').classList.remove('active');
+  document.body.classList.remove('home-active');
 }
 
 
@@ -1499,6 +1528,7 @@ function showFirst(clearData) {
   }
   document.getElementById('screenFirst').classList.add('active');
   document.getElementById('screenHome').classList.remove('active');
+  document.body.classList.remove('home-active');
   // 入力欄をリセット
   document.getElementById('birthInput').value = '';
   setGender('male');
@@ -1508,6 +1538,7 @@ function showHome(birth) {
   document.getElementById('screenFirst').classList.remove('active');
   document.getElementById('screenSelector').classList.remove('active');
   document.getElementById('screenHome').classList.add('active');
+  document.body.classList.add('home-active');
 
   const savedBirth = birth || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (savedBirth) buildHomeScreen(savedBirth);
