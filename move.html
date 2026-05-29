@@ -1124,7 +1124,15 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="railway-text">
       年盤・月盤が吉の月が決まったら、その月の中から線路の日を引越し実行日に選びましょう。吉方位で得た幸運が長く続く着火スイッチになります。
     </div>
-    <div class="railway-days" id="railwayDays"></div>
+    <div style="position:relative;">
+      <div class="railway-days" id="railwayDays"></div>
+      <!-- ぼかしオーバーレイ -->
+      <div id="railwayBlur" style="position:absolute;inset:-8px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:rgba(247,244,239,.5);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:12px;">
+        <div style="font-size:1rem;">🔒</div>
+        <div style="font-size:.65rem;color:var(--goldlt);font-weight:700;">プレミアムプランで確認できます</div>
+        <div style="font-size:.58rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日に引越しを実行すると<br>吉が長く続きます</div>
+      </div>
+    </div>
   </div>
 
   <!-- ベスト候補 -->

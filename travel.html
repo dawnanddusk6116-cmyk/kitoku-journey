@@ -1080,7 +1080,15 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="railway-text">
       契約・出発・開始など、長く続けたいことを始める目安です。方位の吉凶とは別枠で確認します。
     </div>
-    <div class="railway-days" id="railwayDays"></div>
+    <div style="position:relative;">
+      <div class="railway-days" id="railwayDays"></div>
+      <!-- ぼかしオーバーレイ -->
+      <div id="railwayBlur" style="position:absolute;inset:-8px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:rgba(247,244,239,.5);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:12px;">
+        <div style="font-size:1rem;">🔒</div>
+        <div style="font-size:.65rem;color:var(--goldlt);font-weight:700;">プレミアムプランで確認できます</div>
+        <div style="font-size:.58rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日に出発すると<br>吉が長く続きます</div>
+      </div>
+    </div>
   </div>
 
   <!-- ベスト候補 -->
