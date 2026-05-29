@@ -598,6 +598,12 @@ footer{
         <div style="font-size:.58rem;color:var(--mist);margin-bottom:4px;opacity:.8;">相手の画数</div>
         <div id="strokeRow2" style="display:flex;flex-wrap:wrap;gap:6px;font-size:.65rem;"></div>
       </div>
+      <!-- 生年月日（任意）-->
+      <div class="field" style="margin-top:10px;">
+        <label>相手の生年月日 <span style="font-size:.58rem;opacity:.6;margin-left:4px;">任意・入力すると九星も比較できます</span></label>
+        <input type="date" id="birth2" style="width:100%;">
+      </div>
+      <div id="starDisplay2" style="display:none;margin-top:6px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.62rem;color:var(--mist);"></div>
     </div>
 
         <div class="cta-wrap">
@@ -1297,19 +1303,10 @@ function getSeiLastFuri(furiSei, seiStr){
   const f=furiSei.trim();
   const sl=seiStr.length;
   if(sl<=1)return f; // 一字姓：フリガナ全体
-  // 多字姓：均等分割で最後の漢字の読みを推定
+  // 多字姓：均等分割
   const fl=f.length;
   const startIdx=Math.floor(fl*(sl-1)/sl);
-  const splitResult=f.slice(startIdx);
-  // 補正：分割結果・KANJI_ON_GYO・フリガナ最終文字で三者照合
-  // 分割結果と辞書が食い違い、かつフリガナ最終文字が辞書と一致する場合は最終文字を使用
-  const splitGyo=kanaToGyo(splitResult[0]);
-  const dictGyo=KANJI_ON_GYO[seiStr[sl-1]]||null;
-  const lastCharGyo=kanaToGyo(f[fl-1]);
-  if(splitGyo!==dictGyo && dictGyo===lastCharGyo){
-    return f[fl-1]; // 山地(やまち)→ち=火 のケース
-  }
-  return splitResult;
+  return f.slice(startIdx);
 }
 
 function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
@@ -3279,6 +3276,45 @@ document.addEventListener('visibilitychange', function(){
 });
 
 
+// ── 相性モード：生年月日入力で九星自動表示 ──
+document.addEventListener('DOMContentLoaded', function(){
+  const birth2 = document.getElementById('birth2');
+  if(birth2) birth2.addEventListener('change', onBirth2Change);
+});
+function onBirth2Change(){
+  const val = (document.getElementById('birth2')||{}).value||'';
+  const disp = document.getElementById('starDisplay2');
+  if(!val||!disp){ if(disp)disp.style.display='none'; return; }
+  try{
+    const parts = val.split('-').map(Number);
+    if(parts.length!==3||!parts.every(Boolean)){ disp.style.display='none'; return; }
+    const [by,bm,bd] = parts;
+    if(typeof getKD!=='function'){ disp.style.display='none'; return; }
+    const kd = getKD(by,bm,bd);
+    const h = calcHonmei(kd.kY);
+    const t = calcTsukimei(h, kd.kM);
+    const isSame = h===t;
+    let tFK = t;
+    if(isSame){
+      const g = localStorage.getItem('kitoku-gender')||'male';
+      const TC = {1:9,2:8,3:4,4:3,6:2,7:1,8:7,9:1};
+      tFK = (h===5)?(g==='female'?6:7):(TC[h]||t);
+    }
+    const k = (typeof calcKeisha==='function')?calcKeisha(h,tFK):0;
+    const yn = calcNayin(by);
+    const nainStr = yn&&yn.n?yn.n:'';
+    disp.style.display='block';
+    disp.innerHTML = `本命：${STAR_NAMES[h]}（${STAR_GYO[h]}）　月命：${STAR_NAMES[t]}（${STAR_GYO[t]}）　傾斜：${k?STAR_NAMES[k]+'（'+STAR_GYO[k]+'）':'—'}${nainStr?'　納音：'+nainStr:''}`;
+    // データをdata属性に保存
+    disp.dataset.honmei = h;
+    disp.dataset.tsukimei = t;
+    disp.dataset.keisha = k||0;
+    disp.dataset.gyo_h = STAR_GYO[h]||'';
+    disp.dataset.gyo_t = STAR_GYO[t]||'';
+    disp.dataset.gyo_k = k?STAR_GYO[k]||'':'';
+  }catch(e){ disp.style.display='none'; }
+}
+
 // ── 相性モード：相手の画数自動入力 ──
 function onStroke2(){
   const s2 = (document.getElementById('sei2')||{}).value||'';
@@ -3452,6 +3488,47 @@ function runCompatibility(){
       </div>
     </div>
   `;
+  // 九星相性（生年月日入力済みの場合）
+  const disp2 = document.getElementById('starDisplay2');
+  const h1 = parseInt(localStorage.getItem('kitoku_honmei'))||0;
+  const t1 = parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
+  const h2 = disp2&&disp2.dataset.honmei ? parseInt(disp2.dataset.honmei)||0 : 0;
+  const t2 = disp2&&disp2.dataset.tsukimei ? parseInt(disp2.dataset.tsukimei)||0 : 0;
+
+  if(h1&&h2&&typeof STAR_GYO!=='undefined'){
+    const g1h = STAR_GYO[h1]||'', g2h = STAR_GYO[h2]||'';
+    const g1t = STAR_GYO[t1]||'', g2t = STAR_GYO[t2]||'';
+    const pairH = g1h+g2h;
+    const relH = AI_GOKEI[pairH]||'';
+    const relTypeH = relH.includes('相生')?'相生':relH.includes('相剋')?'相剋':'比和';
+    const scoreH = AI_SCORE[relTypeH]||60;
+
+    // 九星相性を結果エリアに追加
+    const kyuseiDiv = document.createElement('div');
+    kyuseiDiv.style.cssText = 'margin-top:12px;';
+    kyuseiDiv.innerHTML = `
+      <div style="padding:12px 14px;background:rgba(138,104,32,.06);border-radius:10px;margin-bottom:10px;">
+        <div style="font-size:.65rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">✦ 九星の相性（本命星）</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:.72rem;color:var(--goldlt);">${STAR_NAMES[h1]||''}</div>
+            <div style="font-size:.6rem;color:var(--mist);">${g1h}</div>
+          </div>
+          <div style="text-align:center;font-size:.8rem;color:var(--mist);">⇄</div>
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:.72rem;color:var(--goldlt);">${STAR_NAMES[h2]||''}</div>
+            <div style="font-size:.6rem;color:var(--mist);">${g2h}</div>
+          </div>
+        </div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">
+          <strong style="color:var(--goldlt);">${relH}</strong>　${AI_DESC[pairH]||''}
+        </div>
+        ${g1t&&g2t?`<div style="font-size:.6rem;color:var(--mist);margin-top:8px;opacity:.8;">月命：${STAR_NAMES[t1]||''}（${g1t}）× ${STAR_NAMES[t2]||''}（${g2t}）→ ${AI_GOKEI[g1t+g2t]||''}</div>`:''}
+      </div>
+    `;
+    area.querySelector('div').appendChild(kyuseiDiv);
+  }
+
   addLifeCount();
   updateLifeCountHint();
   area.scrollIntoView({behavior:'smooth',block:'start'});
