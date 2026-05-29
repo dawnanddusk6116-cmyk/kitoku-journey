@@ -1300,7 +1300,16 @@ function getSeiLastFuri(furiSei, seiStr){
   // 多字姓：均等分割で最後の漢字の読みを推定
   const fl=f.length;
   const startIdx=Math.floor(fl*(sl-1)/sl);
-  return f.slice(startIdx);
+  const splitResult=f.slice(startIdx);
+  // 補正：分割結果・KANJI_ON_GYO・フリガナ最終文字で三者照合
+  // 分割結果と辞書が食い違い、かつフリガナ最終文字が辞書と一致する場合は最終文字を使用
+  const splitGyo=kanaToGyo(splitResult[0]);
+  const dictGyo=KANJI_ON_GYO[seiStr[sl-1]]||null;
+  const lastCharGyo=kanaToGyo(f[fl-1]);
+  if(splitGyo!==dictGyo && dictGyo===lastCharGyo){
+    return f[fl-1]; // 山地(やまち)→ち=火 のケース
+  }
+  return splitResult;
 }
 
 function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
