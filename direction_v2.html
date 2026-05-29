@@ -1475,6 +1475,30 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div id="rxCard" style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;"></div>
   </div>
 
+  <!-- 線路の日（プレミアム） -->
+  <div style="margin:14px 16px 0;">
+    <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ 今月の線路の日</div>
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;position:relative;overflow:hidden;">
+      <!-- ぼかしオーバーレイ -->
+      <div id="senroBlur" style="position:absolute;inset:0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(247,244,239,.5);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-radius:14px;">
+        <div style="font-size:1.2rem;">🔒</div>
+        <div style="font-size:.7rem;color:var(--gold);font-weight:700;">プレミアムプランで確認できます</div>
+        <div style="font-size:.6rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日と吉方位を合わせることで<br>行動の精度が上がります</div>
+      </div>
+      <!-- 実際のコンテンツ（ぼかし下） -->
+      <div id="senroContent">
+        <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
+          今月、あなたの本命星が定位宮に戻る日です。<br>
+          吉方位と重ねると、行動の気が最大になります。
+        </div>
+        <div id="senroDays" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div style="font-size:.58rem;color:var(--mist);margin-top:10px;opacity:.7;">
+          ※ 村山流（社会運勢学）に基づく計算です。流派により異なります。
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- AIに相談する -->
   <div style="margin:14px 16px 0;">
     <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ AIに相談する</div>
@@ -4311,6 +4335,54 @@ function copyAIPrompt(){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);
   else show();
 })();
+
+// ── 線路の日の計算・表示 ──
+(function(){
+  const BRANCH_NAME=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const WEEK=['日','月','火','水','木','金','土'];
+
+  function renderSenro(){
+    // kitoku-railway-branchesから読み込む（pilgrimage.htmlと共通のキー）
+    let indices = [1,4,7,10]; // デフォルト：丑・辰・未・戌
+    try{
+      const saved = localStorage.getItem('kitoku-railway-branches');
+      if(saved) indices = JSON.parse(saved);
+    }catch(e){}
+    if(!indices||!indices.length) return;
+
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth()+1;
+    const lastDay = new Date(y, m, 0).getDate();
+
+    const days = [];
+    for(let d=1; d<=lastDay; d++){
+      try{
+        const branch = getDayBranch(y, m, d);
+        if(indices.includes(branch)){
+          const date = new Date(y, m-1, d);
+          const w = WEEK[date.getDay()];
+          days.push({d, branch, w});
+        }
+      }catch(e){}
+    }
+
+    const branchNames = indices.map(i=>BRANCH_NAME[i]).join('・');
+    const container = document.getElementById('senroDays');
+    if(!container) return;
+
+    container.innerHTML = days.map(item=>`
+      <div style="padding:6px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;text-align:center;">
+        <div style="font-size:.75rem;font-weight:700;color:var(--gold);">${m}/${item.d}（${item.w}）</div>
+        <div style="font-size:.55rem;color:var(--mist);margin-top:2px;">${BRANCH_NAME[item.branch]}の日</div>
+      </div>
+    `).join('') || '<div style="font-size:.62rem;color:var(--mist);">今月の線路の日はありません</div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', renderSenro);
+  window.addEventListener('pageshow', renderSenro);
+})();
+
 </script>
 </body>
 </html>
