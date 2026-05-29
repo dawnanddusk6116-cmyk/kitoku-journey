@@ -601,7 +601,7 @@ footer{
       <!-- 生年月日（任意）-->
       <div class="field" style="margin-top:10px;">
         <label>相手の生年月日 <span style="font-size:.58rem;opacity:.6;margin-left:4px;">任意・入力すると九星も比較できます</span></label>
-        <input type="date" id="birth2" style="width:100%;">
+        <input type="date" id="birth2" style="width:100%;" onchange="onBirth2Change()">
       </div>
       <div id="starDisplay2" style="display:none;margin-top:6px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.62rem;color:var(--mist);"></div>
     </div>
@@ -3277,10 +3277,6 @@ document.addEventListener('visibilitychange', function(){
 
 
 // ── 相性モード：生年月日入力で九星自動表示 ──
-document.addEventListener('DOMContentLoaded', function(){
-  const birth2 = document.getElementById('birth2');
-  if(birth2) birth2.addEventListener('change', onBirth2Change);
-});
 function onBirth2Change(){
   const val = (document.getElementById('birth2')||{}).value||'';
   const disp = document.getElementById('starDisplay2');
