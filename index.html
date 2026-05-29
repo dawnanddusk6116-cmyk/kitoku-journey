@@ -1126,25 +1126,6 @@ body.theme-night .start-btn{
     <button class="nav-btn" type="button" onclick="scrollToSection('sec5')" style="display:none;">⑤ 旅</button>
   </div>
 
-  <!-- 挨拶エリア -->
-  <div class="home-hero">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
-      <div>
-        <div class="home-greeting">おかえりなさい</div>
-        <div class="home-name" id="homeName">六白金星</div>
-      </div>
-      <button onclick="showFirst()" style="
-        background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.18);
-        border-radius:6px;padding:7px 10px;font-size:.6rem;color:var(--mist);
-        cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;
-        white-space:nowrap;margin-top:4px;flex-shrink:0;
-      ">別の人を見る</button>
-    </div>
-    <div class="home-tagline" id="homeTagline">
-      天の視点で道を示す人。<br>今日も、自分の羅針盤で進みましょう。
-    </div>
-  </div>
-
   <!-- 今日の情報バー -->
   <div class="today-bar">
     <div class="today-date-block">
@@ -1154,18 +1135,6 @@ body.theme-night .start-btn{
     <div class="today-star-block">
       <div class="today-star-label">今日の中宮</div>
       <div class="today-star-name" id="todayStar">六白金星</div>
-    </div>
-  </div>
-
-  <!-- 今日の問い -->
-  <div class="today-question">
-    <div class="tq-label">✦ TODAY'S QUESTION</div>
-    <div class="tq-text" id="todayQuestionText">読み込み中...</div>
-    <button class="tq-copy-btn" onclick="copyTodayQuestion()">
-      この問いをAIにコピーして相談する
-    </button>
-    <div class="tq-sub-links">
-      <button class="tq-sub-link" onclick="location.href='journal.html'">✍ 記帳する（答えを書く）</button>
     </div>
   </div>
 
@@ -1717,8 +1686,10 @@ function buildHomeScreen(birth) {
   const h = calcHonmei(kY);
 
   // 挨拶
-  document.getElementById('homeName').textContent = STARS_JP[h] || '';
-  document.getElementById('homeTagline').textContent = STAR_TAGLINES[h] || '';
+  const homeNameEl = document.getElementById('homeName');
+  const homeTaglineEl = document.getElementById('homeTagline');
+  if (homeNameEl) homeNameEl.textContent = STARS_JP[h] || '';
+  if (homeTaglineEl) homeTaglineEl.textContent = STAR_TAGLINES[h] || '';
 
   // 今日
   const now = new Date();
@@ -1761,12 +1732,14 @@ function buildTodayQuestion(honmei, dayCenter, y, m, d) {
   const idx = (y * 12 + m + d) % QUESTIONS.length;
   const text = QUESTIONS[idx](dayCenter);
   const fullText = `私は${STARS_JP[honmei]}です。\n\n${text}\n\n5000年の東洋の知恵と私の星から見て、具体的に教えてください。`;
-  document.getElementById('todayQuestionText').textContent = text;
+  const questionEl = document.getElementById('todayQuestionText');
+  if (questionEl) questionEl.textContent = text;
   window._todayQuestionFull = fullText;
 }
 
 function copyTodayQuestion() {
-  const text = window._todayQuestionFull || document.getElementById('todayQuestionText').textContent;
+  const questionEl = document.getElementById('todayQuestionText');
+  const text = window._todayQuestionFull || (questionEl ? questionEl.textContent : '');
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.querySelector('.tq-copy-btn');
     const orig = btn.textContent;
