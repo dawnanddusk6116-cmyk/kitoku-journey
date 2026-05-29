@@ -106,7 +106,36 @@ html.theme-night-root{
 }
 .selector-name{
   font-family:'Cormorant Garamond',serif;
-  font-size:1.7rem;letter-spacing:.1em;color:var(--goldlt);margin-bottom:4px;
+  font-size:1.7rem;letter-spacing:.1em;color:var(--goldlt);
+}
+.selector-name-row{
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  margin-bottom:4px;
+}
+.selector-search-toggle{
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  min-height:30px;padding:6px 11px;border-radius:999px;
+  border:1px solid rgba(138,104,32,.24);
+  background:rgba(138,104,32,.08);color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;
+  letter-spacing:.06em;cursor:pointer;white-space:nowrap;
+}
+.selector-search-panel{
+  display:none;margin:8px 16px 12px;
+  padding:10px 12px;border:1px solid rgba(138,104,32,.18);
+  border-radius:12px;background:rgba(255,255,255,.58);
+}
+.selector-search-panel.open{display:block;}
+.selector-search-input{
+  width:100%;border:1px solid rgba(138,104,32,.22);
+  border-radius:999px;background:rgba(255,255,255,.86);
+  padding:10px 14px;font-family:'Noto Serif JP',serif;
+  font-size:.76rem;color:var(--snow);outline:none;
+}
+.selector-search-input::placeholder{color:rgba(94,80,61,.58);}
+.selector-search-help{
+  margin-top:7px;font-size:.58rem;color:var(--mist);
+  line-height:1.7;text-align:left;
 }
 .selector-tagline{
   font-size:.68rem;color:var(--mist);line-height:1.8;
@@ -779,6 +808,16 @@ body.theme-night .font-switch{
   background:rgba(229,190,85,.08);
   border-color:rgba(229,190,85,.26);
 }
+body.theme-night .selector-search-toggle,
+body.theme-night .selector-search-panel{
+  background:rgba(229,190,85,.1);
+  border-color:rgba(229,190,85,.24);
+}
+body.theme-night .selector-search-input{
+  background:rgba(18,24,43,.86);
+  border-color:rgba(229,190,85,.24);
+  color:var(--snow);
+}
 body.theme-night .mode-btn.active,
 body.theme-night .font-btn.active{
   background:rgba(229,190,85,.2);
@@ -920,8 +959,19 @@ body.theme-night .start-btn{
 
   <div class="selector-hero">
     <div class="selector-greeting" id="selectorGreeting">おかえりなさい</div>
-    <div class="selector-name" id="selectorName">六白金星</div>
+    <div class="selector-name-row">
+      <div class="selector-name" id="selectorName">六白金星</div>
+      <button class="selector-search-toggle" type="button" onclick="toggleSelectorSearch()">🔍 探す</button>
+    </div>
     <div class="selector-tagline">今日は何のためにKITOKUを開きますか？</div>
+  </div>
+
+  <div class="selector-search-panel" id="selectorSearchPanel">
+    <input class="selector-search-input" id="selectorSearchInput" type="search"
+      placeholder="日盤、方位、名前、相性、旅行、仕事…" oninput="filterSelectorSearch(this.value)">
+    <div class="selector-search-help" id="selectorSearchHelp">
+      やりたいことの言葉で探せます。例：日盤・吉方位・線路の日・名前・相性・引越し
+    </div>
   </div>
 
   <!-- 目的選択グリッド -->
@@ -960,7 +1010,7 @@ body.theme-night .start-btn{
   <div class="selector-cards">
 
     <!-- JOURNEY -->
-    <div class="selector-card s-journey" data-purpose="daily self" onclick="showHome()">
+    <div class="selector-card s-journey" data-purpose="daily self" data-search="今日 日盤 方位盤 吉方位 凶方位 九星 月命 納音 AI 相談 香り 色 食べ物 整える 羅針盤" onclick="showHome()">
       <div class="selector-icon">✦</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ JOURNEY</div>
@@ -976,7 +1026,7 @@ body.theme-night .start-btn{
     </div>
 
     <!-- LIFE -->
-    <a class="selector-card s-life" data-purpose="self" href="life.html">
+    <a class="selector-card s-life" data-purpose="self" data-search="名前 姓名判断 命名 改名 子供 赤ちゃん 五格 五行 画数 常用漢字 人名漢字 九星 月命 納音 命の設計図" href="life.html">
       <div class="selector-icon">🌱</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ LIFE</div>
@@ -987,7 +1037,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- RELATIONS -->
-    <a class="selector-card s-relations" data-purpose="relation" href="relations.html">
+    <a class="selector-card s-relations" data-purpose="relation" data-search="相性 人間関係 恋愛 家族 友人 夫婦 親子 仕事相手 パートナー 関係" href="relations.html">
       <div class="selector-icon">🔗</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ RELATIONS</div>
@@ -998,7 +1048,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- BUSINESS -->
-    <a class="selector-card s-business" data-purpose="relation" href="business.html">
+    <a class="selector-card s-business" data-purpose="relation" data-search="仕事 ビジネス 採用 面談 チーム 契約 商談 お金 投資 判断 法人名 事業 五行 組織" href="business.html">
       <div class="selector-icon">💼</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ BUSINESS</div>
@@ -1009,7 +1059,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- PILGRIMAGE -->
-    <a class="selector-card s-pilgrimage" data-purpose="travel" href="pilgrimage.html">
+    <a class="selector-card s-pilgrimage" data-purpose="travel" data-search="聖地巡礼 聖地 お遍路 伊勢 出雲 熊野 神社 寺 吉方位 旅行 日程 線路の日" href="pilgrimage.html">
       <div class="selector-icon">🗾</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ PILGRIMAGE</div>
@@ -1020,7 +1070,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- TRAVEL -->
-    <a class="selector-card s-pilgrimage" data-purpose="travel" href="travel.html" onclick="openTravel(event)">
+    <a class="selector-card s-pilgrimage" data-purpose="travel" data-search="旅行 旅 海外 国内 吉方位 日程 方位 目的地 出発日 線路の日" href="travel.html" onclick="openTravel(event)">
       <div class="selector-icon">✈️</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ TRAVEL</div>
@@ -1031,7 +1081,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- MOVE -->
-    <a class="selector-card s-pilgrimage" data-purpose="home" href="move.html">
+    <a class="selector-card s-pilgrimage" data-purpose="home" data-search="引越し 引っ越し 住まい 家 方位 年盤 月盤 仮吉方 同一市内 転居 線路の日" href="move.html">
       <div class="selector-icon">🏡</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ MOVE</div>
@@ -1042,7 +1092,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- JOURNAL（コンパクトバナー） -->
-    <a href="journal.html" style="
+    <a href="journal.html" data-search="記帳 日記 今日の問い 禅問答 感謝 書く 魂の記帳" style="
       display:flex;align-items:center;gap:10px;
       background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
       border:1px solid rgba(138,104,32,.22);border-radius:10px;
@@ -1057,7 +1107,7 @@ body.theme-night .start-btn{
     </a>
 
     <!-- WORLD GALLERY（コンパクトバナー） -->
-    <button type="button" onclick="openImgGallery()" style="
+    <button type="button" onclick="openImgGallery()" data-search="図解 ギャラリー KITOKUの世界 九星 納音 5000年 知恵 絵 画像" style="
       display:flex;align-items:center;gap:10px;width:100%;
       background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.55));
       border:1px solid rgba(138,104,32,.24);border-radius:10px;
@@ -1073,7 +1123,7 @@ body.theme-night .start-btn{
     </button>
 
     <!-- ENGLISH（コンパクトバナー） -->
-    <a href="en/index.html" class="en-banner" style="margin:4px 0 0;">
+    <a href="en/index.html" class="en-banner" data-search="英語 English Japan OS international foreign preview" style="margin:4px 0 0;">
       <div class="en-badge">EN</div>
       <div class="en-info" style="flex:1;">
         <div class="card-title" style="font-size:.78rem;">JAPAN OS — English Preview</div>
@@ -1843,6 +1893,7 @@ function showFirst(clearData) {
 let currentPurpose = 'all';
 function filterPurpose(purpose, btn) {
   currentPurpose = purpose;
+  clearSelectorSearch(false);
   document.querySelectorAll('.purpose-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
@@ -1860,6 +1911,65 @@ function filterPurpose(purpose, btn) {
       }
     }
   });
+}
+
+function toggleSelectorSearch(){
+  const panel=document.getElementById('selectorSearchPanel');
+  const input=document.getElementById('selectorSearchInput');
+  if(!panel||!input)return;
+  const open=!panel.classList.contains('open');
+  panel.classList.toggle('open',open);
+  if(open){
+    setTimeout(()=>input.focus(),80);
+  }else{
+    clearSelectorSearch(true);
+  }
+}
+
+function clearSelectorSearch(restorePurpose){
+  const input=document.getElementById('selectorSearchInput');
+  const help=document.getElementById('selectorSearchHelp');
+  if(input)input.value='';
+  document.querySelectorAll('[data-search]').forEach(el=>{el.hidden=false;});
+  document.querySelectorAll('.selector-card.dimmed').forEach(el=>el.classList.remove('dimmed'));
+  if(help)help.textContent='やりたいことの言葉で探せます。例：日盤・吉方位・線路の日・名前・相性・引越し';
+  if(restorePurpose && currentPurpose!=='all'){
+    filterPurpose(currentPurpose);
+  }
+}
+
+function normalizeSearchText(text){
+  return (text||'')
+    .toLowerCase()
+    .replace(/[ァ-ン]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60))
+    .replace(/\s+/g,'')
+    .replace(/　/g,'');
+}
+
+function filterSelectorSearch(raw){
+  const q=normalizeSearchText(raw);
+  const items=[...document.querySelectorAll('[data-search]')];
+  const help=document.getElementById('selectorSearchHelp');
+  document.querySelectorAll('.purpose-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.selector-card.dimmed').forEach(el=>el.classList.remove('dimmed'));
+  currentPurpose='all';
+  if(!q){
+    items.forEach(el=>{el.hidden=false;});
+    if(help)help.textContent='やりたいことの言葉で探せます。例：日盤・吉方位・線路の日・名前・相性・引越し';
+    return;
+  }
+  let count=0;
+  items.forEach(el=>{
+    const hay=normalizeSearchText((el.textContent||'')+' '+(el.getAttribute('data-search')||''));
+    const match=hay.includes(q);
+    el.hidden=!match;
+    if(match)count++;
+  });
+  if(help){
+    help.textContent=count
+      ? count+'件見つかりました。該当カードを開いてください。'
+      : '該当する入口が見つかりません。言葉を短くして試してください。例：方位・名前・仕事';
+  }
 }
 </script>
 
