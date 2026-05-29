@@ -61,10 +61,33 @@ html.theme-night-root{
   display:flex;align-items:center;gap:8px;
 }
 .setting-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
   background:rgba(100,80,40,.08);border:1px solid var(--rim);
   color:var(--mist);font-size:.72rem;padding:7px 12px;
   border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;
-  letter-spacing:.08em;
+  letter-spacing:.08em;white-space:nowrap;flex-shrink:0;
+}
+@media (max-width:430px){
+  .app-header{
+    padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;
+  }
+  .header-logo{
+    font-size:1.18rem;letter-spacing:.22em;
+  }
+  .header-right{
+    gap:6px;
+  }
+  .mode-btn,
+  .font-btn{
+    min-width:30px;padding:5px 6px;font-size:.62rem;
+  }
+  .header-setting-btn{
+    width:36px;min-width:36px;height:36px;padding:0;border-radius:10px;
+    font-size:.78rem;letter-spacing:0;
+  }
+  .header-setting-btn .setting-label{
+    display:none;
+  }
 }
 
 /* ── 画面切り替え ── */
@@ -886,7 +909,9 @@ body.theme-night .start-btn{
       <button class="font-btn" id="fontMediumBtn" type="button" onclick="setFontSize('medium')">中</button>
       <button class="font-btn" id="fontLargeBtn" type="button" onclick="setFontSize('large')">大</button>
     </div>
-    <button class="setting-btn header-setting-btn" onclick="openSettings()">⚙ 生年月日</button>
+    <button class="setting-btn header-setting-btn" onclick="openSettings()" aria-label="生年月日を変更">
+      <span class="setting-icon">⚙</span><span class="setting-label">生年月日</span>
+    </button>
   </div>
 </div>
 
