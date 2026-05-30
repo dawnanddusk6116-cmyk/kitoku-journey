@@ -150,6 +150,23 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 </div>
 
 <section class="section">
+  <div class="label">AIに渡す相談文</div>
+  <div class="prompt-guide">
+    <div class="prompt-guide-title">まずここをコピーしてAIに貼り付けます</div>
+    下の生年月日・KITOKU OS DATA・RESULTは、この相談文に自動で反映されます。下の情報は確認と調整用です。
+  </div>
+  <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
+  <button class="copy" onclick="copyPrompt()">相談文をコピー</button>
+  <div class="deep-dive">
+    <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
+    <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
+    <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
+    <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
+  </div>
+  <div class="deep-note">まず上の相談文をAIに貼り、次に気になる深掘り文を続けて貼ると、会話が進めやすくなります。</div>
+</section>
+
+<section class="section">
   <div class="label">BIRTH DATA</div>
   <div class="grid">
     <div class="field"><label>年</label><input id="year" type="number" placeholder="例：1990"></div>
@@ -175,23 +192,6 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <textarea id="kitokuData" class="input-area" oninput="runAstro64(false)" placeholder="生年月日を入力して計算すると、ここにKITOKU星情報が自動で入ります。"></textarea>
     <div class="hint" id="kitokuAutoNote">生年月日から、本命星・月命星・傾斜・同会・納音を自動で入れます。必要なら後から書き足せます。</div>
   </div>
-</section>
-
-<section class="section">
-  <div class="label">AIに渡す相談文</div>
-  <div class="prompt-guide">
-    <div class="prompt-guide-title">ここをコピーしてAIに貼り付けます</div>
-    生年月日・KITOKU星情報・星読みクロスチェックの結果が、この相談文にまとまります。計算後に内容が自動で更新されます。
-  </div>
-  <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
-  <button class="copy" onclick="copyPrompt()">相談文をコピー</button>
-  <div class="deep-dive">
-    <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
-    <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
-    <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
-    <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
-  </div>
-  <div class="deep-note">まず上の相談文をAIに貼り、次に気になる深掘り文を続けて貼ると、会話が進めやすくなります。</div>
 </section>
 
 <section class="section">
