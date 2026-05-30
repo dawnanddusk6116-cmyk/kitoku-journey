@@ -8,7 +8,7 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="kitoku-engine.js" defer></script>
+<script src="kitoku-engine.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--r:14px;}
@@ -83,6 +83,26 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .senro-branch{font-size:.58rem;color:var(--mist);margin-top:3px;}
 .unlock{margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.75));border:1px solid rgba(138,104,32,.22);border-radius:10px;padding:10px;font-size:.64rem;color:var(--mist);line-height:1.8;text-align:center;}
 .missing{margin:18px 16px;background:var(--card);border:1px solid rgba(176,64,64,.22);border-radius:12px;padding:16px;text-align:center;color:var(--mist);font-size:.72rem;line-height:1.9;}
+.self-accordion{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:0;overflow:hidden;}
+.self-accordion summary{list-style:none;cursor:pointer;padding:14px 15px;font-size:.72rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.self-accordion summary::-webkit-details-marker{display:none;}
+.self-accordion summary::after{content:'⌄';font-size:.8rem;color:var(--gold);transition:transform .18s;}
+.self-accordion[open] summary::after{transform:rotate(180deg);}
+.self-accordion-body{border-top:1px solid var(--rim);padding:14px 15px 15px;}
+.life-link{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:12px 13px;border-radius:10px;border:1px solid rgba(74,138,90,.24);background:linear-gradient(135deg,rgba(74,138,90,.08),rgba(255,255,255,.7));color:var(--goldlt);text-decoration:none;}
+.life-link-title{font-size:.75rem;font-weight:800;}
+.life-link-note{font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
+.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px;}
+.topic-btn{border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.68rem;font-weight:800;line-height:1.45;padding:10px 8px;cursor:pointer;text-align:left;}
+.topic-btn span{display:block;font-size:.52rem;color:var(--mist);font-weight:500;margin-top:2px;}
+.topic-btn:active{transform:scale(.98);}
+.mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 10px;}
+.mode-btn{border:1px solid var(--rim);border-radius:999px;background:rgba(255,255,255,.72);color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.66rem;font-weight:800;padding:8px 6px;cursor:pointer;}
+.mode-btn.active{background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);}
+.mode-guide{font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.18);border-radius:10px;padding:10px 12px;margin-bottom:12px;}
+.mode-guide strong{color:var(--goldlt);}
+.mode-links{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 0;}
+.mode-link{display:flex;align-items:center;justify-content:center;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--rim);background:rgba(100,80,40,.04);color:var(--goldlt);font-size:.62rem;font-weight:800;text-decoration:none;line-height:1.35;padding:7px;}
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
 </style>
@@ -115,38 +135,67 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   </div>
 
   <section id="premiumContent" style="display:none;">
-    <div class="panel">
-      <div class="panel-title">① 自分の九星情報</div>
-      <div class="star-text" id="starInfoText">読み込み中...</div>
-      <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
-      <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
+    <div class="panel" id="aiChatPanel">
+      <div class="panel-title">気学先生に相談する</div>
+      <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
+        あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
+        コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
+        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
+      </div>
+
+      <div id="aiContextSummary" style="font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.24);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+        読み込み中...
+      </div>
+
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.62);border:1px solid var(--rim);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+        <strong style="color:var(--goldlt);">うまく使うコツ</strong><br>
+        ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
+        ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星」を調べて貼ると相談しやすくなります。
+      </div>
+
+      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ</div>
+      <div class="topic-grid">
+        <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="pill active" id="tone-simple" onclick="setTone('simple')">🎯 シンプル</button>
+          <button class="pill" id="tone-amber" onclick="setTone('amber')">✨ 琥珀色</button>
+          <button class="pill" id="tone-night" onclick="setTone('night')">🌙 夜モード</button>
+        </div>
+      </div>
+
+      <div id="chatMessages" style="min-height:120px;max-height:400px;overflow-y:auto;background:rgba(100,80,40,.03);border:1px solid var(--rim);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:.65rem;color:var(--mist);text-align:center;line-height:1.8;">
+          今日の過ごし方、仕事、お金、人間関係、旅や移動の判断などを相談できます。
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:flex-end;">
+        <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
+          oninput="autoResizeChatInput()"
+          style="flex:1;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;resize:none;min-height:86px;max-height:260px;line-height:1.7;overflow-y:auto;"
+          rows="3"></textarea>
+        <button onclick="sendChat()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.35);color:var(--goldlt);font-size:1.2rem;cursor:pointer;flex-shrink:0;">✦</button>
+      </div>
+      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
     </div>
 
     <div class="panel">
-      <div class="panel-title">② 相手の星も入れる（この画面だけ）</div>
-      <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
-      <div class="field-grid">
-        <div>
-          <label>相手の名前・メモ</label>
-          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
-        </div>
-        <div>
-          <label>性別</label>
-          <select id="targetGender" onchange="updateTargetInfo()">
-            <option value="male">男性</option>
-            <option value="female">女性</option>
-          </select>
-        </div>
+      <div class="panel-title">① プレミア方位盤</div>
+      <div class="mode-switch" aria-label="方位盤の使い方">
+        <button class="mode-btn active" id="mode-travel" onclick="setCompassMode('travel')">旅行</button>
+        <button class="mode-btn" id="mode-pilgrimage" onclick="setCompassMode('pilgrimage')">聖地巡礼</button>
+        <button class="mode-btn" id="mode-move" onclick="setCompassMode('move')">引越し</button>
       </div>
-      <div style="margin-top:8px;">
-        <label>相手の生年月日</label>
-        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
-      </div>
-      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">③ プレミア方位盤</div>
+      <div class="mode-guide" id="modeGuide"></div>
       <div class="orient-row">
         <button class="orient-btn active" id="orient-south" onclick="setOrient('south')">南上（気学式）</button>
         <button class="orient-btn" id="orient-north" onclick="setOrient('north')">北上（地図式）</button>
@@ -173,53 +222,64 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
       <div class="compass" id="compassWrap"></div>
       <button class="copy-btn" onclick="copyBoardSummary(this)">📋 方位盤メモをコピー</button>
+      <div class="mode-links">
+        <a class="mode-link" href="travel.html">✈️ 旅行ナビ<br>で確認</a>
+        <a class="mode-link" href="pilgrimage.html">📿 聖地巡礼<br>で確認</a>
+        <a class="mode-link" href="move.html">🏡 引越し<br>で確認</a>
+      </div>
       <div class="note">まずは日盤・月盤・年盤をここに集約。プレミア課金後は、ここから線路日・吉方日程・事業判断へ広げられます。</div>
     </div>
 
     <div class="panel">
-      <div class="panel-title">④ 今月の線路の日</div>
+      <div class="panel-title">② 相手の星も入れる（この画面だけ）</div>
+      <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
+      <div class="field-grid">
+        <div>
+          <label>相手の名前・メモ</label>
+          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
+        </div>
+        <div>
+          <label>性別</label>
+          <select id="targetGender" onchange="updateTargetInfo()">
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <label>相手の生年月日</label>
+        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+      </div>
+      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+      <button class="copy-btn" id="copyTargetBtn" onclick="copyTargetInfo()">📋 相手の星情報をコピー</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">③ 今月の線路の日</div>
       <div class="senro-list" id="senroDays"></div>
       <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
     </div>
-    <!-- ⑤ 気学先生との会話 -->
-    <div class="panel" id="aiChatPanel">
-      <div class="panel-title">⑤ 気学先生に相談する</div>
-      <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
-        KITOKUのデータを読み込んで、気学先生が直接答えます。
-      </div>
 
-      <!-- トーン選択 -->
-      <div style="margin-bottom:12px;">
-        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="pill active" id="tone-simple" onclick="setTone('simple')">🎯 シンプル</button>
-          <button class="pill" id="tone-amber" onclick="setTone('amber')">✨ 琥珀色</button>
-          <button class="pill" id="tone-night" onclick="setTone('night')">🌙 夜モード</button>
-        </div>
+    <details class="self-accordion">
+      <summary>④ 自分の九星情報・姓名鑑定へ</summary>
+      <div class="self-accordion-body">
+        <div class="star-text" id="starInfoText">読み込み中...</div>
+        <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
+        <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
+        <a class="life-link" href="life.html">
+          <div>
+            <div class="life-link-title">🌱 KITOKU @ LIFE で名前と命の設計図を見る</div>
+            <div class="life-link-note">姓名の五行、本命星・月命・納音との関係を詳しく読む入口です。</div>
+          </div>
+          <div style="color:var(--gold);font-weight:800;">›</div>
+        </a>
       </div>
-
-      <!-- チャット表示エリア -->
-      <div id="chatMessages" style="min-height:120px;max-height:400px;overflow-y:auto;background:rgba(100,80,40,.03);border:1px solid var(--rim);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:.65rem;color:var(--mist);text-align:center;line-height:1.8;">
-          今日のデータを読み込んで相談できます。<br>気になることを入力してください。
-        </div>
-      </div>
-
-      <!-- 入力エリア -->
-      <div style="display:flex;gap:8px;align-items:flex-end;">
-        <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
-          style="flex:1;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;resize:none;min-height:60px;max-height:120px;line-height:1.7;"
-          rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
-        <button onclick="sendChat()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.35);color:var(--goldlt);font-size:1.2rem;cursor:pointer;flex-shrink:0;">✦</button>
-      </div>
-      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">Enterで送信 / Shift+Enterで改行</div>
-    </div>
-
+    </details>
   </section>
 </main>
 
 <script>
-const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',date:new Date()};
+const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',mode:'travel',date:new Date()};
 const WEEK=['日','月','火','水','木','金','土'];
 const BRANCH_LABEL=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const SOUTH_LAYOUT=[['SE','S','SW'],['E','C','W'],['NE','N','NW']];
@@ -257,32 +317,55 @@ function starLine(info,prefix='私は'){
   return `${prefix}${STARS[info.honmei]?.j||''}・月命${STARS[info.tsukimei]?.j||''}・傾斜${STARS[info.keisha]?.j||''}・同会${STARS[info.dokai]?.j||''}・納音 ${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）です。`;
 }
 function init(){
-  initFontSize();
-  state.birth=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
-  state.gender=localStorage.getItem('kitoku-gender')||'male';
-  state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
-  ['south','north'].forEach(k=>{
-    const btn=document.getElementById('orient-'+k);
-    if(btn)btn.classList.toggle('active',k===state.orient);
-  });
-  if(!state.birth){
-    document.getElementById('missingBirth').style.display='block';
-    return;
+  try{
+    initFontSize();
+    if(typeof getKD!=='function'||typeof calcHonmei!=='function'||typeof buildBoardFromCenter!=='function'){
+      throw new Error('kitoku-engine.js が読み込めていません');
+    }
+    state.birth=normalizeBirth(localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'');
+    state.gender=localStorage.getItem('kitoku-gender')||'male';
+    state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
+    state.mode=localStorage.getItem('kitoku-premium-mode')||'travel';
+    ['south','north'].forEach(k=>{
+      const btn=document.getElementById('orient-'+k);
+      if(btn)btn.classList.toggle('active',k===state.orient);
+    });
+    setCompassMode(state.mode,false);
+    if(!state.birth){
+      document.getElementById('missingBirth').style.display='block';
+      return;
+    }
+    state.info=buildInfo(state.birth,state.gender);
+    document.getElementById('premiumContent').style.display='block';
+    document.getElementById('starInfoText').textContent=starLine(state.info);
+    renderBoard();
+    renderSenro();
+    renderAiContextSummary();
+  }catch(e){
+    showPremiumError(e);
   }
-  if(typeof getKD!=='function'){
-    console.warn('kitoku-engine.js not loaded');
-    return;
-  }
-  state.info=buildInfo(state.birth,state.gender);
-  document.getElementById('premiumContent').style.display='block';
-  document.getElementById('starInfoText').textContent=starLine(state.info);
-  renderBoard();
-  renderSenro();
+}
+function normalizeBirth(value){
+  const v=String(value||'').trim();
+  if(!v)return '';
+  const m=v.match(/^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);
+  if(!m)return '';
+  return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+}
+function showPremiumError(error){
+  const box=document.getElementById('missingBirth');
+  if(!box)return;
+  box.style.display='block';
+  box.innerHTML=`プレミアページの読み込みで止まりました。<br>
+  <span style="font-size:.64rem;color:#9b4a4a;">${String(error&&error.message?error.message:error)}</span><br>
+  <button class="copy-btn" onclick="location.reload()">再読み込み</button>
+  <button class="copy-btn" onclick="location.href='index.html'">TOPへ戻る</button>`;
 }
 function setBanType(type){
   state.banType=type;
   ['day','month','year'].forEach(k=>document.getElementById('tab-'+k).classList.toggle('active',k===type));
   renderBoard();
+  renderAiContextSummary();
 }
 function moveDate(delta){
   if(state.banType==='year')state.date.setFullYear(state.date.getFullYear()+delta);
@@ -290,6 +373,7 @@ function moveDate(delta){
   else state.date.setDate(state.date.getDate()+delta);
   renderBoard();
   renderSenro();
+  renderAiContextSummary();
 }
 function setOrient(orient){
   state.orient=orient==='north'?'north':'south';
@@ -299,6 +383,25 @@ function setOrient(orient){
     if(btn)btn.classList.toggle('active',k===state.orient);
   });
   renderBoard();
+  renderAiContextSummary();
+}
+function setCompassMode(mode,save=true){
+  state.mode=['travel','pilgrimage','move'].includes(mode)?mode:'travel';
+  if(save)localStorage.setItem('kitoku-premium-mode',state.mode);
+  ['travel','pilgrimage','move'].forEach(k=>{
+    const btn=document.getElementById('mode-'+k);
+    if(btn)btn.classList.toggle('active',k===state.mode);
+  });
+  const guide=document.getElementById('modeGuide');
+  if(guide){
+    const html={
+      travel:'<strong>旅行モード</strong><br>年盤・月盤・日盤を見て、目的地の方位と出発候補日を整えます。候補日がある時は、その日の方位盤メモをAIに貼ると相談しやすくなります。',
+      pilgrimage:'<strong>聖地巡礼モード</strong><br>目的地への方位、出発日、線路の日を重ねて見ます。魂の旅として、年盤・月盤・日盤の順に確認します。',
+      move:'<strong>引越しモード</strong><br>年盤と月盤を最優先で見ます。日盤は基本的に重視しません。引越し月が決まったら、線路の日を実行日の候補にします。'
+    }[state.mode];
+    guide.innerHTML=html;
+  }
+  renderAiContextSummary();
 }
 function centerForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
@@ -417,6 +520,22 @@ function fallbackCopy(text,done){
   document.body.removeChild(ta);
 }
 function copyStarInfo(){copyText(starLine(state.info),document.getElementById('copyStarBtn'));}
+function copyTargetInfo(){
+  const birth=document.getElementById('targetBirth').value;
+  const name=document.getElementById('targetName').value.trim()||'相手';
+  const gender=document.getElementById('targetGender').value||'male';
+  const btn=document.getElementById('copyTargetBtn');
+  if(!birth){
+    copyText('相手の生年月日を入力すると、ここで相手の星情報をコピーできます。',btn);
+    return;
+  }
+  try{
+    const info=buildInfo(birth,gender);
+    copyText(`${starLine(info,`${name}は`)}\n生年月日：${birth}\n性別：${gender==='female'?'女性':'男性'}`,btn);
+  }catch(e){
+    copyText('相手の星情報を計算できませんでした。生年月日を確認してください。',btn);
+  }
+}
 function copyBoardSummary(btn){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   const center=centerForDate();
@@ -425,7 +544,48 @@ function copyBoardSummary(btn){
   const kichi=ALL8.filter(dir=>dirData[dir].rank>=2&&!dirData[dir].isKyo).map(dir=>JP[dir]).join('・')||'なし';
   const kyo=kyouItems.map(x=>`${JP[x.dir]}（${x.name}）`).join('・')||'なし';
   const orient=state.orient==='north'?'北上（地図式）':'南上（気学式）';
-  copyText(`${starLine(state.info)}\n\n【${title} ${state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤'}】\n表示：${orient}\n中宮：${STARS[center]?.j||''}\n吉方位：${kichi}\n注意方位：${kyo}`,btn);
+  copyText(`${starLine(state.info)}\n\n【${getModeMeta().label} / ${title} ${state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤'}】\n表示：${orient}\n中宮：${STARS[center]?.j||''}\n吉方位：${kichi}\n注意方位：${kyo}`,btn);
+}
+function getModeMeta(){
+  return {
+    travel:{label:'旅行モード',template:'旅行について相談したいです。',purpose:'旅行',nav:'旅行ナビ'},
+    pilgrimage:{label:'聖地巡礼モード',template:'聖地巡礼について相談したいです。',purpose:'聖地巡礼',nav:'聖地巡礼ナビ'},
+    move:{label:'引越しモード',template:'引越しについて相談したいです。',purpose:'引越し',nav:'引越しナビ'}
+  }[state.mode]||{label:'旅行モード',template:'旅行について相談したいです。',purpose:'旅行',nav:'旅行ナビ'};
+}
+function getCurrentBoardContext(){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const center=centerForDate();
+  const data=buildDirData(center);
+  const dirData=data.dirData;
+  const title=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年${m}月`:`${y}年${m}月${d}日`;
+  const banLabel=state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤';
+  const kichi=ALL8.filter(dir=>dirData[dir].rank>=2&&!dirData[dir].isKyo).map(dir=>JP[dir]).join('・')||'なし';
+  const kyo=data.kyouItems.map(x=>`${JP[x.dir]}（${x.name}）`).join('・')||'なし';
+  const orient=state.orient==='north'?'北上（地図式）':'南上（気学式）';
+  return {title,banLabel,center,kichi,kyo,orient};
+}
+function getSenroContext(){
+  let indices=[1,4,7,10];
+  try{const saved=localStorage.getItem('kitoku-railway-branches');if(saved)indices=JSON.parse(saved);}catch(e){}
+  return indices.map(i=>BRANCH_LABEL[i]).filter(Boolean).join('・')||'未設定';
+}
+function renderAiContextSummary(){
+  const el=document.getElementById('aiContextSummary');
+  if(!el||!state.info)return;
+  try{
+    const board=getCurrentBoardContext();
+    el.innerHTML=`
+      <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
+      <div><strong style="color:var(--goldlt);">用途</strong>：${getModeMeta().label}</div>
+      <div><strong style="color:var(--goldlt);">九星</strong>：${starLine(state.info).replace(/^私は/,'')}</div>
+      <div><strong style="color:var(--goldlt);">盤面</strong>：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}</div>
+      <div><strong style="color:var(--goldlt);">吉方位</strong>：${board.kichi}</div>
+      <div><strong style="color:var(--goldlt);">注意方位</strong>：${board.kyo}</div>
+      <div><strong style="color:var(--goldlt);">線路の日支</strong>：${getSenroContext()}</div>`;
+  }catch(e){
+    el.textContent='九星情報は読み込まれています。盤面情報は下の方位盤を確認してください。';
+  }
 }
 document.addEventListener('DOMContentLoaded',init);
 
@@ -449,29 +609,90 @@ function setTone(tone) {
   try{ localStorage.setItem('kitoku-ai-tone', tone); }catch(e){}
 }
 
+function insertConsultTemplate(type){
+  const input=document.getElementById('chatInput');
+  if(!input) return;
+  const mode=getModeMeta();
+  const templates={
+    today:`今日の動き方について相談したいです。
+
+今日やること：【ここに入力】
+迷っていること：【ここに入力】
+気をつけたいこと：【ここに入力】
+
+私の九星情報・今日の盤面情報・線路の日を見た上で、今日の動き方を短く具体的に教えてください。`,
+    date:`未来の日付について相談したいです。
+
+見たい日付：【ここに入力】
+目的（契約・開始・出発・商談など）：【ここに入力】
+その日に始めたいこと：【ここに入力】
+気になっていること：【ここに入力】
+
+必要なら、下の方位盤でその日の「方位盤メモ」をコピーして貼るので、見るポイントから教えてください。`,
+    travel:`${mode.template}
+
+目的地：【ここに入力】
+出発地・現在地：【ここに入力】
+候補日：【ここに入力】
+目的（${mode.purpose}・仮吉方など）：【ここに入力】
+気になっていること：【ここに入力】
+
+必要なら、下の方位盤や${mode.nav}で何を調べればいいか、手順から教えてください。`,
+    person:`第三者との関わりについて相談したいです。
+
+相手との関係：【ここに入力】
+相談したい場面（家族・恋愛・仕事・商談・面談など）：【ここに入力】
+困っていること：【ここに入力】
+どうなりたいか：【ここに入力】
+
+必要なら、下の「相手の星も入れる」で相手の星情報を調べて貼るので、見るポイントから教えてください。`,
+    money:`お金・仕事の判断について相談したいです。
+
+相談したいこと：【ここに入力】
+今迷っている選択肢：【ここに入力】
+急いでいるか：【ここに入力】
+怖さ・焦り・欲が出ている点：【ここに入力】
+
+私の九星情報と今日の盤面をもとに、売買や正解を断定せず、判断の整え方を教えてください。`,
+    free:`自由に相談したいです。
+
+相談内容：【ここに入力】
+今の状況：【ここに入力】
+迷っていること：【ここに入力】
+
+私の九星情報・今日の盤面情報・線路の日を踏まえて、次の一手を教えてください。`
+  };
+  input.value=templates[type]||templates.free;
+  autoResizeChatInput();
+  focusFirstInputMarker(input);
+  input.focus();
+  input.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function autoResizeChatInput(){
+  const input=document.getElementById('chatInput');
+  if(!input) return;
+  input.style.height='auto';
+  input.style.height=Math.min(input.scrollHeight,260)+'px';
+}
+
+function focusFirstInputMarker(input){
+  const marker='【ここに入力】';
+  const start=input.value.indexOf(marker);
+  if(start>=0){
+    input.setSelectionRange(start,start+marker.length);
+  }
+}
+
 function buildSystemPrompt() {
   const info = state.info || {};
   const today = new Date();
   const y = today.getFullYear(), m = today.getMonth()+1, d = today.getDate();
 
-  // 今日の方位データ
-  let dirSummary = '';
+  let boardSummary = '';
   try {
-    const dc = typeof centerForDate === 'function' ? centerForDate(y,m,d,'d') : null;
-    if(dc) {
-      const allDirs = ['N','NE','E','SE','S','SW','W','NW'];
-      const dd = typeof buildDirData === 'function' ? buildDirData(dc, allDirs) : null;
-      if(dd) {
-        const kichiDirs = allDirs.filter(dir => dd[dir] && dd[dir].rank >= 2)
-          .map(dir => ({N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'}[dir]))
-          .join('・');
-        const kyoDirs = allDirs.filter(dir => dd[dir] && dd[dir].rank <= 0)
-          .map(dir => ({N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'}[dir]))
-          .join('・');
-        if(kichiDirs) dirSummary += `今日の吉方位：${kichiDirs}\n`;
-        if(kyoDirs) dirSummary += `今日の凶方位：${kyoDirs}\n`;
-      }
-    }
+    const board=getCurrentBoardContext();
+    boardSummary=`表示盤面：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}\n吉方位：${board.kichi}\n注意方位：${board.kyo}\n`;
   } catch(e){}
 
   // 線路の日
@@ -483,26 +704,34 @@ function buildSystemPrompt() {
   } catch(e){}
 
   const userData = `
-本命星：${info.honmeiName||''}（${info.honmeiGyo||''}）
-月命星：${info.tsukimeiName||''}
-傾斜：${info.keishaName||''}
-同会：${info.dokaiName||''}
-納音：${info.nainName||''}
-${dirSummary}${senroSummary}
+相談モード：${getModeMeta().label}
+本命星：${STARS[info.honmei]?.j||''}（${STARS[info.honmei]?.elem||''}）
+月命星：${STARS[info.tsukimei]?.j||''}
+傾斜：${STARS[info.keisha]?.j||''}
+同会：${STARS[info.dokai]?.j||''}
+納音：${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）
+${boardSummary}${senroSummary}
 今日：${y}年${m}月${d}日`.trim();
 
   return `あなたはKITOKUの気学の専門家です。
 5000年の東洋の知恵（九星気学・村山流）をベースに相談に乗ります。
 
-【絶対ルール・必ず守ること】
+【絶対ルール】
 ・方位の吉凶は【ユーザーデータ】の記載のみを使う。自分で計算しない
-・「本命殺」「的殺」「五黄殺」などの凶方位判定は、データに記載がない限り絶対に言わない
-・データに「吉方位」と書いてあれば、それが唯一の正解。AIの知識で上書きしない
+・「本命殺」「的殺」「五黄殺」「暗剣殺」などの凶方位判定は、データに記載がない限り絶対に言わない
+・データに「吉方位」と書いてあれば、それが唯一の正解。AIの気学知識で上書きしない
+・データにない情報は「KITOKUのデータには記載がありません」と正直に伝える
 ・計算は絶対にしない（下記データが正確な値）
 ・「村山先生」「気学」とは言わない
 ・「5000年の知恵」として伝える
 ・吉凶で脅さない、Y理論（全肯定）で答える
-・データにない情報は「KITOKUのデータには記載がありません」と正直に伝える
+・スマホで読みやすいように、1段落は1〜2文で短くし、段落の間に空行を入れる
+・Markdownの表、#見出し、横線、長い装飾は使わない
+・見出しは「まず確認すること」「次にやること」のような短い日本語にする
+・箇条書きは「・」または「①②③」を使い、1回の返答で多くても5項目までにする
+・最初に結論、その次に手順、最後に次の一手を書く
+・相談に将来の日付・移動・契約日が関係する場合は、このページ下部の方位盤でその日を表示し、「方位盤メモ」をコピーして貼ると精度が上がる、と自然に案内する
+・相談に第三者との人間関係・商談・面談が関係する場合は、このページ下部の「相手の星も入れる」で相手の星情報を調べ、コピーして貼ると相談しやすい、と自然に案内する
 ・${TONES[currentTone]}
 
 【ユーザーデータ】
@@ -523,23 +752,32 @@ async function sendChat() {
   const thinkingEl = addMessage('assistant', '…', true);
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    if(location.protocol==='file:'){
+      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
+    }
+    const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+m.content).join('\n\n');
+    const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n上記を踏まえて、最後の相談者の発言に答えてください。';
+    const res = await fetch('/api/claude', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system: buildSystemPrompt(),
-        messages: chatHistory.slice(-10)
-      })
+      body:JSON.stringify({prompt:prompt})
     });
-    const data = await res.json();
+    const raw = await res.text();
+    if(!res.ok){
+      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
+    }
+    let data;
+    try{
+      data=JSON.parse(raw);
+    }catch(parseError){
+      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
+    }
     const reply = data.content?.[0]?.text || '申し訳ありません、もう一度お試しください。';
     thinkingEl.textContent = reply;
     thinkingEl.style.fontStyle = 'normal';
     chatHistory.push({role:'assistant', content:reply});
   } catch(e) {
-    thinkingEl.textContent = '通信エラーが発生しました。もう一度お試しください。';
+    thinkingEl.textContent = '通信エラーが発生しました。\n' + (e && e.message ? e.message : String(e));
   }
   isThinking = false;
 }
