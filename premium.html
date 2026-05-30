@@ -119,11 +119,18 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div class="panel-title">気学先生に相談する</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
         あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
-        コピーや貼り付けをしなくても、そのまま自由に会話できます。
+        コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
+        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
       </div>
 
       <div id="aiContextSummary" style="font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.24);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
         読み込み中...
+      </div>
+
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.62);border:1px solid var(--rim);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+        <strong style="color:var(--goldlt);">うまく使うコツ</strong><br>
+        ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
+        ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星」を調べて貼ると相談しやすくなります。
       </div>
 
       <div style="margin-bottom:12px;">
@@ -147,41 +154,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           rows="3"></textarea>
         <button onclick="sendChat()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.35);color:var(--goldlt);font-size:1.2rem;cursor:pointer;flex-shrink:0;">✦</button>
       </div>
-      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。送信は右の ✦ ボタンを押してください。</div>
+      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
     </div>
 
     <div class="panel">
-      <div class="panel-title">① 自分の九星情報</div>
-      <div class="star-text" id="starInfoText">読み込み中...</div>
-      <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
-      <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">② 相手の星も入れる（この画面だけ）</div>
-      <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
-      <div class="field-grid">
-        <div>
-          <label>相手の名前・メモ</label>
-          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
-        </div>
-        <div>
-          <label>性別</label>
-          <select id="targetGender" onchange="updateTargetInfo()">
-            <option value="male">男性</option>
-            <option value="female">女性</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-top:8px;">
-        <label>相手の生年月日</label>
-        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
-      </div>
-      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">③ プレミア方位盤</div>
+      <div class="panel-title">① プレミア方位盤</div>
       <div class="orient-row">
         <button class="orient-btn active" id="orient-south" onclick="setOrient('south')">南上（気学式）</button>
         <button class="orient-btn" id="orient-north" onclick="setOrient('north')">北上（地図式）</button>
@@ -209,6 +186,37 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div class="compass" id="compassWrap"></div>
       <button class="copy-btn" onclick="copyBoardSummary(this)">📋 方位盤メモをコピー</button>
       <div class="note">まずは日盤・月盤・年盤をここに集約。プレミア課金後は、ここから線路日・吉方日程・事業判断へ広げられます。</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">② 自分の九星情報</div>
+      <div class="star-text" id="starInfoText">読み込み中...</div>
+      <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
+      <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">③ 相手の星も入れる（この画面だけ）</div>
+      <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
+      <div class="field-grid">
+        <div>
+          <label>相手の名前・メモ</label>
+          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
+        </div>
+        <div>
+          <label>性別</label>
+          <select id="targetGender" onchange="updateTargetInfo()">
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <label>相手の生年月日</label>
+        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+      </div>
+      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+      <button class="copy-btn" id="copyTargetBtn" onclick="copyTargetInfo()">📋 相手の星情報をコピー</button>
     </div>
 
     <div class="panel">
@@ -441,6 +449,22 @@ function fallbackCopy(text,done){
   document.body.removeChild(ta);
 }
 function copyStarInfo(){copyText(starLine(state.info),document.getElementById('copyStarBtn'));}
+function copyTargetInfo(){
+  const birth=document.getElementById('targetBirth').value;
+  const name=document.getElementById('targetName').value.trim()||'相手';
+  const gender=document.getElementById('targetGender').value||'male';
+  const btn=document.getElementById('copyTargetBtn');
+  if(!birth){
+    copyText('相手の生年月日を入力すると、ここで相手の星情報をコピーできます。',btn);
+    return;
+  }
+  try{
+    const info=buildInfo(birth,gender);
+    copyText(`${starLine(info,`${name}は`)}\n生年月日：${birth}\n性別：${gender==='female'?'女性':'男性'}`,btn);
+  }catch(e){
+    copyText('相手の星情報を計算できませんでした。生年月日を確認してください。',btn);
+  }
+}
 function copyBoardSummary(btn){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   const center=centerForDate();
@@ -542,6 +566,8 @@ ${boardSummary}${senroSummary}
 ・「村山先生」「気学」とは言わない
 ・「5000年の知恵」として伝える
 ・吉凶で脅さない、Y理論（全肯定）で答える
+・相談に将来の日付・移動・契約日が関係する場合は、このページ下部の方位盤でその日を表示し、「方位盤メモ」をコピーして貼ると精度が上がる、と自然に案内する
+・相談に第三者との人間関係・商談・面談が関係する場合は、このページ下部の「相手の星も入れる」で相手の星情報を調べ、コピーして貼ると相談しやすい、と自然に案内する
 ・${TONES[currentTone]}
 
 【ユーザーデータ】
