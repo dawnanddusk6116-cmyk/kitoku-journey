@@ -13,9 +13,9 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--r:14px;}
 html{background:var(--bg);min-height:100dvh;}
-html[data-font-size="small"]{font-size:15px;}
-html[data-font-size="medium"]{font-size:16px;}
-html[data-font-size="large"]{font-size:17.5px;}
+html[data-font-size="small"]{font-size:15.5px;}
+html[data-font-size="medium"]{font-size:17px;}
+html[data-font-size="large"]{font-size:19px;}
 body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;padding-bottom:34px;}
 .header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.96);z-index:20;backdrop-filter:blur(12px);}
 .brand{font-family:'Cormorant Garamond',serif;font-size:1.05rem;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}
@@ -832,6 +832,13 @@ ${boardSummary}${senroSummary}
 ・相談に将来の日付・移動・契約日が関係する場合は、このページ下部の方位盤でその日を表示し、「方位盤メモ」をコピーして貼ると精度が上がる、と自然に案内する
 ・出発地が「現在地」とだけ書かれている場合、AIは地名や座標を知らない。具体的な場所判断には、方位盤メモまたは市区町村の追記を自然に依頼する
 ・相談に第三者との人間関係・商談・面談が関係する場合は、このページ下部の「相手の星も入れる」で相手の星情報を調べ、コピーして貼ると相談しやすい、と自然に案内する
+・相談内容に必要な情報が足りない時は、結論を急がず、最初に確認質問をする
+・確認質問は一度に最大3つまで。スマホの音声入力で答えやすい短い質問にする
+・旅・引越し・聖地巡礼では、目的地、出発地、候補日、目的、同伴者の有無、方位盤メモの有無を必要に応じて聞く
+・人間関係・商談・面談では、相手との関係、相談したい場面、相手の生年月日または相手の星情報の有無を必要に応じて聞く
+・お金・仕事では、判断したい内容、期限、迷っている選択肢、焦りや不安の有無を必要に応じて聞く
+・命名・姓名・LIFEに関係する相談では、名前、生年月日、本人用か命名用か、何を整えたいかを必要に応じて聞く
+・自由相談では、まず「何について相談したいか」「いつの話か」「誰が関係するか」をやさしく聞く
 ・${TONES[currentTone]}
 
 【ユーザーデータ】
