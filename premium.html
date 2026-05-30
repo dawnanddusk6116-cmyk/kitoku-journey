@@ -809,16 +809,23 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 // ── モード別コンテンツ ──
-// 地域プリセット（代表座標）
-const REGION_PRESETS = [
-  {name:'北海道・東北', lat:43.06, lon:141.35},
-  {name:'関東', lat:35.68, lon:139.69},
-  {name:'中部・北陸', lat:36.57, lon:136.62},
-  {name:'近畿', lat:34.69, lon:135.50},
-  {name:'中国・四国', lat:34.39, lon:132.45},
-  {name:'九州・沖縄', lat:33.58, lon:130.40},
-  {name:'東北・北東', lat:38.26, lon:140.87},
-  {name:'伊豆・房総', lat:35.10, lon:139.10},
+// 国内地域プリセット
+const REGION_PRESETS_DOM = [
+  {name:'北海道',lat:43.06,lon:141.35},{name:'東北',lat:38.26,lon:140.87},
+  {name:'関東',lat:35.68,lon:139.69},{name:'伊豆・房総',lat:35.10,lon:139.10},
+  {name:'中部・北陸',lat:36.57,lon:136.62},{name:'近畿',lat:34.69,lon:135.50},
+  {name:'中国・四国',lat:34.39,lon:132.45},{name:'九州',lat:33.58,lon:130.40},
+  {name:'沖縄',lat:26.21,lon:127.68},
+];
+// 海外地域プリセット
+const REGION_PRESETS_INT = [
+  {name:'ソウル',lat:37.57,lon:126.98},{name:'北京',lat:39.90,lon:116.40},
+  {name:'上海',lat:31.23,lon:121.47},{name:'台北',lat:25.05,lon:121.56},
+  {name:'香港',lat:22.32,lon:114.17},{name:'バンコク',lat:13.75,lon:100.49},
+  {name:'バリ島',lat:-8.51,lon:115.26},{name:'シンガポール',lat:1.35,lon:103.82},
+  {name:'ハワイ',lat:21.31,lon:-157.86},{name:'ニューヨーク',lat:40.71,lon:-74.01},
+  {name:'ロンドン',lat:51.51,lon:-0.13},{name:'パリ',lat:48.86,lon:2.35},
+  {name:'ローマ',lat:41.90,lon:12.50},{name:'シドニー',lat:-33.87,lon:151.21},
 ];
 
 function calcBearingPrem(lat1,lon1,lat2,lon2){
@@ -831,27 +838,42 @@ function calcBearingPrem(lat1,lon1,lat2,lon2){
 function bearingToDirPrem(b){
   return['N','NE','E','SE','S','SW','W','NW'][Math.floor((b+22.5)/45)%8];
 }
-const DIR_LABEL={'N':'北','NE':'北東','E':'東','SE':'南東','S':'南','SW':'南西','W':'西','NW':'北西'};
+const DIR_LABEL_P={'N':'北','NE':'北東','E':'東','SE':'南東','S':'南','SW':'南西','W':'西','NW':'北西'};
+
+function getHomePrem(){
+  try{
+    const h=JSON.parse(localStorage.getItem('kitoku-home')||'{}');
+    if(h.lat&&h.lon) return h;
+  }catch(e){}
+  return null;
+}
+
+function registerHomePrem(){
+  if(!navigator.geolocation){alert('位置情報が使えません');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const h={lat:pos.coords.latitude,lon:pos.coords.longitude,label:'現在地'};
+    localStorage.setItem('kitoku-home',JSON.stringify(h));
+    document.getElementById('homeStatusPrem').textContent='✅ 登録済み（現在地）';
+    alert('現在地を出発地として登録しました');
+  },()=>alert('位置情報の取得に失敗しました'));
+}
 
 function checkRegionDir(lat,lon,name){
-  const hLat=parseFloat(localStorage.getItem('kitoku-home-lat')||'0');
-  const hLon=parseFloat(localStorage.getItem('kitoku-home-lon')||'0');
-  if(!hLat||!hLon){
-    alert('出発地（現在地・自宅）が未登録です。\n旅行ナビページで登録してください。');
+  const home=getHomePrem();
+  if(!home){
+    alert('出発地が未登録です。現在地を登録ボタンで登録してください。');
     return;
   }
-  const bearing=calcBearingPrem(hLat,hLon,lat,lon);
+  const bearing=calcBearingPrem(home.lat,home.lon,lat,lon);
   const dir=bearingToDirPrem(bearing);
-  const label=DIR_LABEL[dir]||dir;
-  // 方位盤の吉凶を確認
+  const label=DIR_LABEL_P[dir]||dir;
   const today=new Date();
-  const dc=typeof centerForDate==='function'?centerForDate(today.getFullYear(),today.getMonth()+1,today.getDate(),state.banType||'d'):null;
-  let rankText='';
+  const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
+  const dc=typeof centerForDate==='function'?centerForDate(y,m,d,state.banType||'d'):null;
+  let rankText='確認できません';
   if(dc){
     const dd=typeof buildDirData==='function'?buildDirData(dc,[dir]):null;
-    if(dd&&dd[dir]){
-      rankText=dd[dir].rank>=2?'✅ 吉方位':dd[dir].rank<=0?'⚠️ 注意方位':'— 中性';
-    }
+    if(dd&&dd[dir]) rankText=dd[dir].rank>=2?'✅ 吉方位':dd[dir].rank<=0?'⚠️ 注意方位':'― 中性';
   }
   alert(`${name}\n方角：${label}（${bearing.toFixed(0)}°）\n${rankText}`);
 }
@@ -860,12 +882,25 @@ function renderModeContent(mode){
   const wrap=document.getElementById('modeContent');
   if(!wrap)return;
   if(mode==='travel'){
+    const homeData=getHomePrem();
+    const homeStatus=homeData?`✅ 登録済み（${homeData.label||''}）`:'未登録';
     wrap.innerHTML=`
-      <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 旅行先の方位チェック</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-        ${REGION_PRESETS.map(r=>`<button onclick="checkRegionDir(${r.lat},${r.lon},'${r.name}')" style="padding:6px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;font-size:.65rem;color:var(--goldlt);cursor:pointer;">${r.name}</button>`).join('')}
+      <div style="margin-bottom:10px;padding:10px;background:rgba(138,104,32,.06);border-radius:10px;">
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:6px;">✦ 出発地</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="homeStatusPrem" style="font-size:.65rem;color:var(--mist);flex:1;">${homeStatus}</span>
+          <button onclick="registerHomePrem()" style="padding:5px 10px;background:rgba(138,104,32,.12);border:1px solid rgba(138,104,32,.25);border-radius:8px;font-size:.6rem;color:var(--goldlt);cursor:pointer;">📍 現在地を登録</button>
+        </div>
       </div>
-      <div style="font-size:.58rem;color:var(--mist);line-height:1.7;">詳しい目的地選択・方位計算は
+      <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 国内</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        ${REGION_PRESETS_DOM.map(r=>`<button onclick="checkRegionDir(${r.lat},${r.lon},'${r.name}')" style="padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;font-size:.62rem;color:var(--goldlt);cursor:pointer;">${r.name}</button>`).join('')}
+      </div>
+      <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 海外</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        ${REGION_PRESETS_INT.map(r=>`<button onclick="checkRegionDir(${r.lat},${r.lon},'${r.name}')" style="padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;font-size:.62rem;color:var(--goldlt);cursor:pointer;">${r.name}</button>`).join('')}
+      </div>
+      <div style="font-size:.58rem;color:var(--mist);line-height:1.7;">詳しい目的地選択は
         <a href="travel.html" style="color:var(--goldlt);">旅行ナビ →</a>
       </div>`;
   } else if(mode==='pilgrimage'){
