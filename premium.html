@@ -171,6 +171,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('blank')">白紙で話す<span>音声入力・フリートーク</span></button>
       </div>
 
       <div style="margin-bottom:12px;">
@@ -643,6 +644,13 @@ function setTone(tone) {
 function insertConsultTemplate(type){
   const input=document.getElementById('chatInput');
   if(!input) return;
+  if(type==='blank'){
+    input.value='';
+    autoResizeChatInput();
+    input.focus();
+    input.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
   if(type==='travel') setCompassMode('travel');
   if(type==='pilgrimage') setCompassMode('pilgrimage');
   if(type==='move') setCompassMode('move');
