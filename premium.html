@@ -167,6 +167,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimage')">聖地巡礼<span>出発日と線路の日</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
@@ -642,6 +643,9 @@ function setTone(tone) {
 function insertConsultTemplate(type){
   const input=document.getElementById('chatInput');
   if(!input) return;
+  if(type==='travel') setCompassMode('travel');
+  if(type==='pilgrimage') setCompassMode('pilgrimage');
+  if(type==='move') setCompassMode('move');
   const mode=getModeMeta();
   const templates={
     today:`今日の動き方について相談したいです。
@@ -668,6 +672,16 @@ function insertConsultTemplate(type){
 気になっていること：【ここに入力】
 
 必要なら、下の方位盤や${mode.nav}で何を調べればいいか、手順から教えてください。`,
+    pilgrimage:`聖地巡礼について相談したいです。
+
+行きたい聖地：【ここに入力】
+出発地・現在地：【ここに入力】
+出発日・候補日：【ここに入力】
+巡礼の目的：【ここに入力】
+気になっていること：【ここに入力】
+
+下の聖地巡礼モードで出発日を合わせ、必要なら「方位盤メモ」を貼ります。
+線路の日との重なりや、出発前に整えることも含めて、手順から教えてください。`,
     person:`第三者との関わりについて相談したいです。
 
 相手との関係：【ここに入力】
