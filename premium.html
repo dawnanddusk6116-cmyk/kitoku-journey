@@ -83,6 +83,15 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .senro-branch{font-size:.58rem;color:var(--mist);margin-top:3px;}
 .unlock{margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.75));border:1px solid rgba(138,104,32,.22);border-radius:10px;padding:10px;font-size:.64rem;color:var(--mist);line-height:1.8;text-align:center;}
 .missing{margin:18px 16px;background:var(--card);border:1px solid rgba(176,64,64,.22);border-radius:12px;padding:16px;text-align:center;color:var(--mist);font-size:.72rem;line-height:1.9;}
+.self-accordion{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:0;overflow:hidden;}
+.self-accordion summary{list-style:none;cursor:pointer;padding:14px 15px;font-size:.72rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.self-accordion summary::-webkit-details-marker{display:none;}
+.self-accordion summary::after{content:'⌄';font-size:.8rem;color:var(--gold);transition:transform .18s;}
+.self-accordion[open] summary::after{transform:rotate(180deg);}
+.self-accordion-body{border-top:1px solid var(--rim);padding:14px 15px 15px;}
+.life-link{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:12px 13px;border-radius:10px;border:1px solid rgba(74,138,90,.24);background:linear-gradient(135deg,rgba(74,138,90,.08),rgba(255,255,255,.7));color:var(--goldlt);text-decoration:none;}
+.life-link-title{font-size:.75rem;font-weight:800;}
+.life-link-note{font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
 </style>
@@ -189,14 +198,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </div>
 
     <div class="panel">
-      <div class="panel-title">② 自分の九星情報</div>
-      <div class="star-text" id="starInfoText">読み込み中...</div>
-      <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
-      <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">③ 相手の星も入れる（この画面だけ）</div>
+      <div class="panel-title">② 相手の星も入れる（この画面だけ）</div>
       <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
       <div class="field-grid">
         <div>
@@ -220,10 +222,26 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </div>
 
     <div class="panel">
-      <div class="panel-title">④ 今月の線路の日</div>
+      <div class="panel-title">③ 今月の線路の日</div>
       <div class="senro-list" id="senroDays"></div>
       <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
     </div>
+
+    <details class="self-accordion">
+      <summary>④ 自分の九星情報・姓名鑑定へ</summary>
+      <div class="self-accordion-body">
+        <div class="star-text" id="starInfoText">読み込み中...</div>
+        <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
+        <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
+        <a class="life-link" href="life.html">
+          <div>
+            <div class="life-link-title">🌱 KITOKU @ LIFE で名前と命の設計図を見る</div>
+            <div class="life-link-note">姓名の五行、本命星・月命・納音との関係を詳しく読む入口です。</div>
+          </div>
+          <div style="color:var(--gold);font-weight:800;">›</div>
+        </a>
+      </div>
+    </details>
   </section>
 </main>
 
