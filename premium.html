@@ -103,6 +103,15 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .mode-guide strong{color:var(--goldlt);}
 .mode-links{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 0;}
 .mode-link{display:flex;align-items:center;justify-content:center;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--rim);background:rgba(100,80,40,.04);color:var(--goldlt);font-size:.62rem;font-weight:800;text-decoration:none;line-height:1.35;padding:7px;}
+.dest-result{display:none;margin:10px 0;padding:10px 12px;border-radius:10px;border:1px solid rgba(138,104,32,.24);background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.72));font-size:.68rem;color:var(--mist);line-height:1.8;}
+.dest-result strong{color:var(--goldlt);font-size:.78rem;}
+.premium-help{margin:0 0 10px;border:1px solid rgba(138,104,32,.2);border-radius:10px;background:rgba(255,255,255,.62);overflow:hidden;}
+.premium-help summary{list-style:none;cursor:pointer;padding:10px 12px;font-size:.68rem;color:var(--goldlt);font-weight:800;display:flex;justify-content:space-between;gap:10px;}
+.premium-help summary::-webkit-details-marker{display:none;}
+.premium-help summary::after{content:'⌄';color:var(--gold);transition:transform .18s;}
+.premium-help[open] summary::after{transform:rotate(180deg);}
+.premium-help-body{border-top:1px solid rgba(138,104,32,.16);padding:10px 12px;font-size:.62rem;color:var(--mist);line-height:1.85;}
+.premium-help-body strong{color:var(--goldlt);}
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
 </style>
@@ -190,6 +199,21 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 
     <div class="panel">
       <div class="panel-title">① プレミア方位盤</div>
+      <details class="premium-help">
+        <summary>Premium Compass の使い方</summary>
+        <div class="premium-help-body">
+          <strong>① 最初に一度だけ</strong><br>
+          旅行モードで「現在地を登録」を押し、位置情報を許可します。登録済みになれば、次回から自動で読み込みます。<br><br>
+          <strong>② 旅行</strong><br>
+          旅行タブで日付を合わせ、国内・海外の目的地を選びます。結果が出たら「方位盤メモ」をコピーして、気学先生に貼って相談します。<br><br>
+          <strong>③ 聖地巡礼</strong><br>
+          聖地巡礼タブで出発日を確認し、線路の日と照合します。行き先と方位盤メモを気学先生に貼ると相談しやすくなります。<br><br>
+          <strong>④ 引越し</strong><br>
+          引越しタブでは年盤・月盤を優先します。吉方位を確認し、線路の日を実行日の候補にします。<br><br>
+          <strong>⑤ 相談の流れ</strong><br>
+          方位盤メモをコピー → 入力欄に貼る → 「明日○○に行きます」と追記 → 送信、の順で使います。
+        </div>
+      </details>
       <div class="mode-switch" aria-label="方位盤の使い方">
         <button class="mode-btn active" id="mode-travel" onclick="setCompassMode('travel')">旅行</button>
         <button class="mode-btn" id="mode-pilgrimage" onclick="setCompassMode('pilgrimage')">聖地巡礼</button>
@@ -280,7 +304,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 </main>
 
 <script>
-const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',mode:'travel',date:new Date()};
+const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',mode:'travel',destination:null,date:new Date()};
 const WEEK=['日','月','火','水','木','金','土'];
 const BRANCH_LABEL=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const SOUTH_LAYOUT=[['SE','S','SW'],['E','C','W'],['NE','N','NW']];
@@ -366,6 +390,7 @@ function setBanType(type){
   state.banType=type;
   ['day','month','year'].forEach(k=>document.getElementById('tab-'+k).classList.toggle('active',k===type));
   renderBoard();
+  refreshDestinationPrem();
   renderAiContextSummary();
 }
 function moveDate(delta){
@@ -373,6 +398,7 @@ function moveDate(delta){
   else if(state.banType==='month')state.date.setMonth(state.date.getMonth()+delta);
   else state.date.setDate(state.date.getDate()+delta);
   renderBoard();
+  refreshDestinationPrem();
   renderSenro();
   renderAiContextSummary();
 }
@@ -384,6 +410,7 @@ function setOrient(orient){
     if(btn)btn.classList.toggle('active',k===state.orient);
   });
   renderBoard();
+  refreshDestinationPrem();
   renderAiContextSummary();
 }
 function setCompassMode(mode,save=true){
@@ -546,7 +573,8 @@ function copyBoardSummary(btn){
   const kichi=ALL8.filter(dir=>dirData[dir].rank>=2&&!dirData[dir].isKyo).map(dir=>JP[dir]).join('・')||'なし';
   const kyo=kyouItems.map(x=>`${JP[x.dir]}（${x.name}）`).join('・')||'なし';
   const orient=state.orient==='north'?'北上（地図式）':'南上（気学式）';
-  copyText(`${starLine(state.info)}\n\n【${getModeMeta().label} / ${title} ${state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤'}】\n表示：${orient}\n中宮：${STARS[center]?.j||''}\n吉方位：${kichi}\n注意方位：${kyo}`,btn);
+  const dest=state.destination?`\n目的地：${state.destination.name}\n目的地方位：${state.destination.label}（${state.destination.bearing.toFixed(0)}°） ${state.destination.resultText}`:'';
+  copyText(`${starLine(state.info)}\n\n【${getModeMeta().label} / ${title} ${state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤'}】\n表示：${orient}\n中宮：${STARS[center]?.j||''}\n吉方位：${kichi}\n注意方位：${kyo}${dest}`,btn);
 }
 function getModeMeta(){
   return {
@@ -866,16 +894,36 @@ function checkRegionDir(lat,lon,name){
   }
   const bearing=calcBearingPrem(home.lat,home.lon,lat,lon);
   const dir=bearingToDirPrem(bearing);
+  state.destination={name,lat,lon,bearing,dir};
+  refreshDestinationPrem();
   const label=DIR_LABEL_P[dir]||dir;
-  const today=new Date();
-  const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
-  const dc=typeof centerForDate==='function'?centerForDate(y,m,d,state.banType||'d'):null;
-  let rankText='確認できません';
-  if(dc){
-    const dd=typeof buildDirData==='function'?buildDirData(dc,[dir]):null;
-    if(dd&&dd[dir]) rankText=dd[dir].rank>=2?'✅ 吉方位':dd[dir].rank<=0?'⚠️ 注意方位':'― 中性';
-  }
-  alert(`${name}\n方角：${label}（${bearing.toFixed(0)}°）\n${rankText}`);
+  const result=state.destination.resultText||'確認できません';
+  alert(`${name}\n方角：${label}（${bearing.toFixed(0)}°）\n${result}`);
+}
+
+function evaluateDestinationPrem(dest){
+  if(!dest)return null;
+  const center=centerForDate();
+  const data=buildDirData(center);
+  const dd=data.dirData[dest.dir];
+  let resultText='― 中性';
+  if(dd&&dd.isKyo) resultText='⚠️ 注意方位';
+  else if(dd&&dd.rank>=2) resultText='✅ 吉方位';
+  else if(dd&&dd.rank<=0) resultText='― 中性';
+  const label=DIR_LABEL_P[dest.dir]||dest.dir;
+  return {...dest,label,resultText,banLabel:state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤'};
+}
+
+function refreshDestinationPrem(){
+  if(!state.destination)return;
+  const evaluated=evaluateDestinationPrem(state.destination);
+  state.destination=evaluated;
+  const box=document.getElementById('destResultPrem');
+  if(!box||!evaluated)return;
+  box.style.display='block';
+  box.innerHTML=`<strong>${evaluated.name}</strong><br>
+    ${evaluated.label}（${evaluated.bearing.toFixed(0)}°） ${evaluated.resultText}<br>
+    <span style="font-size:.58rem;color:var(--mist);">現在の${evaluated.banLabel}で判定。日付や盤を変えると自動で更新されます。</span>`;
 }
 
 function renderModeContent(mode){
@@ -900,9 +948,11 @@ function renderModeContent(mode){
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
         ${REGION_PRESETS_INT.map(r=>`<button onclick="checkRegionDir(${r.lat},${r.lon},'${r.name}')" style="padding:5px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;font-size:.62rem;color:var(--goldlt);cursor:pointer;">${r.name}</button>`).join('')}
       </div>
+      <div class="dest-result" id="destResultPrem"></div>
       <div style="font-size:.58rem;color:var(--mist);line-height:1.7;">詳しい目的地選択は
         <a href="travel.html" style="color:var(--goldlt);">旅行ナビ →</a>
       </div>`;
+    setTimeout(refreshDestinationPrem,0);
   } else if(mode==='pilgrimage'){
     wrap.innerHTML=`
       <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 聖地巡礼ナビ</div>
