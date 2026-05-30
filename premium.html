@@ -173,7 +173,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 
       <div style="display:flex;gap:8px;align-items:flex-end;">
         <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
-          style="flex:1;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;resize:none;min-height:60px;max-height:120px;line-height:1.7;"
+          oninput="autoResizeChatInput()"
+          style="flex:1;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;resize:none;min-height:86px;max-height:260px;line-height:1.7;overflow-y:auto;"
           rows="3"></textarea>
         <button onclick="sendChat()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.35);color:var(--goldlt);font-size:1.2rem;cursor:pointer;flex-shrink:0;">✦</button>
       </div>
@@ -568,55 +569,72 @@ function insertConsultTemplate(type){
   const templates={
     today:`今日の動き方について相談したいです。
 
-今日やること：
-迷っていること：
-気をつけたいこと：
+今日やること：【ここに入力】
+迷っていること：【ここに入力】
+気をつけたいこと：【ここに入力】
 
 私の九星情報・今日の盤面情報・線路の日を見た上で、今日の動き方を短く具体的に教えてください。`,
     date:`未来の日付について相談したいです。
 
-見たい日付：
-目的（契約・開始・出発・商談など）：
-その日に始めたいこと：
-気になっていること：
+見たい日付：【ここに入力】
+目的（契約・開始・出発・商談など）：【ここに入力】
+その日に始めたいこと：【ここに入力】
+気になっていること：【ここに入力】
 
 必要なら、下の方位盤でその日の「方位盤メモ」をコピーして貼るので、見るポイントから教えてください。`,
     travel:`旅・引越しについて相談したいです。
 
-目的地：
-出発地・現在地：
-候補日：
-目的（旅行・聖地巡礼・引越し・仮吉方など）：
-気になっていること：
+目的地：【ここに入力】
+出発地・現在地：【ここに入力】
+候補日：【ここに入力】
+目的（旅行・聖地巡礼・引越し・仮吉方など）：【ここに入力】
+気になっていること：【ここに入力】
 
 必要なら、下の方位盤や旅行ナビ・引越しナビで何を調べればいいか、手順から教えてください。`,
     person:`第三者との関わりについて相談したいです。
 
-相手との関係：
-相談したい場面（家族・恋愛・仕事・商談・面談など）：
-困っていること：
-どうなりたいか：
+相手との関係：【ここに入力】
+相談したい場面（家族・恋愛・仕事・商談・面談など）：【ここに入力】
+困っていること：【ここに入力】
+どうなりたいか：【ここに入力】
 
 必要なら、下の「相手の星も入れる」で相手の星情報を調べて貼るので、見るポイントから教えてください。`,
     money:`お金・仕事の判断について相談したいです。
 
-相談したいこと：
-今迷っている選択肢：
-急いでいるか：
-怖さ・焦り・欲が出ている点：
+相談したいこと：【ここに入力】
+今迷っている選択肢：【ここに入力】
+急いでいるか：【ここに入力】
+怖さ・焦り・欲が出ている点：【ここに入力】
 
 私の九星情報と今日の盤面をもとに、売買や正解を断定せず、判断の整え方を教えてください。`,
     free:`自由に相談したいです。
 
-相談内容：
-今の状況：
-迷っていること：
+相談内容：【ここに入力】
+今の状況：【ここに入力】
+迷っていること：【ここに入力】
 
 私の九星情報・今日の盤面情報・線路の日を踏まえて、次の一手を教えてください。`
   };
   input.value=templates[type]||templates.free;
+  autoResizeChatInput();
+  focusFirstInputMarker(input);
   input.focus();
   input.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function autoResizeChatInput(){
+  const input=document.getElementById('chatInput');
+  if(!input) return;
+  input.style.height='auto';
+  input.style.height=Math.min(input.scrollHeight,260)+'px';
+}
+
+function focusFirstInputMarker(input){
+  const marker='【ここに入力】';
+  const start=input.value.indexOf(marker);
+  if(start>=0){
+    input.setSelectionRange(start,start+marker.length);
+  }
 }
 
 function buildSystemPrompt() {
