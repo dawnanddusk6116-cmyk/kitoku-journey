@@ -80,9 +80,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
 
-.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
-.header-reset{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;}
-.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.96);z-index:20;backdrop-filter:blur(12px);}
+.app-title{font-family:'Cormorant Garamond',serif;font-size:1.06rem;letter-spacing:.14em;color:var(--gold);white-space:nowrap;min-width:0;}
+.header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.header-reset{display:inline-flex;align-items:center;justify-content:center;min-height:34px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.72rem;padding:7px 11px;border-radius:8px;cursor:pointer;letter-spacing:.04em;font-weight:700;font-family:'Noto Serif JP',serif;white-space:nowrap;}
+.toolbar{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-bottom:1px solid var(--rim);background:var(--card);overflow-x:auto;}
 .tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
 .tb-btn{background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;}
 .tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
@@ -104,17 +106,20 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
+@media(max-width:390px){.app-header{padding:9px 11px;gap:7px}.app-title{font-size:.92rem;letter-spacing:.1em}.header-actions{gap:5px}.header-reset{font-size:.66rem;padding:7px 8px;min-height:31px}.toolbar{justify-content:flex-start}.tb-btn{padding:5px 10px}}
 </style>
 </head>
 <body>
 
 <!-- ヘッダー -->
 <div class="app-header">
-  <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);">
+  <div class="app-title">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
-  <button class="header-reset" onclick="history.back()" style="display:block;margin-right:6px;">← 戻る</button>
-  <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+  <div class="header-actions">
+    <button class="header-reset" onclick="history.back()">← 戻る</button>
+    <button class="header-reset" onclick="window.location.href='index.html'">TOPへ</button>
+  </div>
 </div>
 
 <!-- ツールバー -->
