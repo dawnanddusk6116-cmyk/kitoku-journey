@@ -34,13 +34,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-step-text{font-size:.58rem;color:var(--mist);line-height:1.5;margin-top:3px;}
 .lead-step-note{margin-top:10px;background:linear-gradient(135deg,rgba(255,226,140,.28),rgba(255,255,255,.55));border:1px dashed rgba(184,128,20,.42);border-radius:9px;padding:9px 10px;font-size:.66rem;color:var(--goldlt);line-height:1.85;font-weight:700;}
 
-/* AI使い分けガイド */
-.guide{margin:14px 0;background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;}
-.guide-label{font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;}
-.guide-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;}
-.guide-ai{font-size:.68rem;font-weight:700;min-width:60px;color:var(--goldlt);}
-.guide-desc{font-size:.68rem;color:var(--mist);line-height:1.7;}
-
 /* 注意書き */
 .caution{background:rgba(176,64,64,.04);border:1px solid rgba(176,64,64,.2);border-radius:8px;padding:10px 12px;margin-top:10px;}
 .caution-text{font-size:.65rem;color:#804040;line-height:1.9;}
@@ -60,16 +53,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .target-box label{display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:5px;}
 .target-box input,.target-box select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.62);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:9px;}
 .target-preview{font-size:.68rem;color:var(--snow);line-height:1.8;background:rgba(255,255,255,.44);border:1px dashed rgba(138,104,32,.3);border-radius:9px;padding:9px;margin-top:8px;}
-.link-map{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:13px;margin-top:10px;}
-.link-map-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:7px;}
-.link-map-text{font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:9px;}
-.link-map-grid{display:grid;gap:7px;}
-.link-map-item{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;background:rgba(100,80,40,.035);border:1px solid rgba(138,104,32,.16);border-radius:9px;padding:8px 9px;text-decoration:none;color:inherit;}
-.link-map-num{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(196,160,67,.15);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);font-size:.68rem;font-weight:900;}
-.link-map-name{font-size:.68rem;color:var(--snow);font-weight:800;margin-bottom:2px;}
-.link-map-desc{font-size:.58rem;color:var(--mist);line-height:1.55;}
-.link-map-arrow{font-size:.72rem;color:var(--goldlt);}
-
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
 .cat-label{font-size:.6rem;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;background:var(--cat-bg,linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.42)));border:1px solid var(--cat-border,rgba(196,160,67,.28));border-radius:12px;padding:11px 12px;position:relative;overflow:hidden;box-shadow:0 8px 22px var(--cat-shadow,rgba(100,80,40,.035));}
@@ -154,7 +137,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 }
 [data-theme="dark"] .lead-point,
 [data-theme="dark"] .target-box,
-[data-theme="dark"] .link-map,
 [data-theme="dark"] .write-guide,
 [data-theme="dark"] .value-guide{
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.045));
@@ -170,7 +152,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .lead-step,
 [data-theme="dark"] .write-guide-example,
 [data-theme="dark"] .value-guide-item,
-[data-theme="dark"] .link-map-item,
 [data-theme="dark"] .target-preview{
   background:rgba(255,255,255,.055);
   border-color:rgba(196,160,67,.22);
@@ -186,8 +167,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .value-guide-text,
 [data-theme="dark"] .value-guide-item,
 [data-theme="dark"] .star-mini-note,
-[data-theme="dark"] .link-map-text,
-[data-theme="dark"] .link-map-desc,
 [data-theme="dark"] .prompt-desc,
 [data-theme="dark"] .prompt-use-note,
 [data-theme="dark"] .target-desc{
@@ -259,26 +238,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="lead-step-note">迷ったら、下の「1 今日のことを相談する」か「AI軍師セッション」から始めてください。別ページへのリンクは、もっと深く見たい時の入口です。</div>
     </div>
 
-    <!-- AI使い分けガイド -->
-    <div class="guide">
-      <div class="guide-label">✦ AIの使い分けガイド</div>
-      <div class="guide-row">
-        <div class="guide-ai">Claude</div>
-        <div class="guide-desc">深い対話・哲学的分析・星情報の精緻な読み解き</div>
-      </div>
-      <div class="guide-row">
-        <div class="guide-ai">ChatGPT</div>
-        <div class="guide-desc">幅広い対応・汎用性が高い・具体的な整理が得意</div>
-      </div>
-      <div class="guide-row">
-        <div class="guide-ai">Gemini</div>
-        <div class="guide-desc">Google連携・最新情報に強い・検索との組み合わせ</div>
-      </div>
-      <div class="guide-row" style="margin-bottom:0;">
-        <div class="guide-ai" style="color:#c04040;">⚠</div>
-        <div class="guide-desc" style="color:#904040;">AIは間違う場合があります。位置情報・日程は必ず別途ご確認を。</div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -313,36 +272,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <input id="targetBirth" type="date" onchange="updateTargetInfo()">
     </div>
     <div class="target-preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
-  </div>
-  <div class="link-map">
-    <div class="link-map-title">③ ほかの画面とのつながり</div>
-    <div class="link-map-text">もっと詳しく見たい時は、目的に合わせて下の画面も使えます。AIに聞く画面は、それらの結果を相談文に変える入口です。</div>
-    <div class="link-map-grid">
-      <a class="link-map-item" href="kyusei_v2.html">
-        <span class="link-map-num">星</span>
-        <span>
-          <span class="link-map-name">九星を知る</span>
-          <span class="link-map-desc">本命星・月命・傾斜・同会・納音と、西洋星読みクロスチェック</span>
-        </span>
-        <span class="link-map-arrow">›</span>
-      </a>
-      <a class="link-map-item" href="relations.html">
-        <span class="link-map-num">縁</span>
-        <span>
-          <span class="link-map-name">KITOKU @ RELATIONS</span>
-          <span class="link-map-desc">家族・友人・恋愛・職場など、人間関係を深く見る</span>
-        </span>
-        <span class="link-map-arrow">›</span>
-      </a>
-      <a class="link-map-item" href="business.html">
-        <span class="link-map-num">仕</span>
-        <span>
-          <span class="link-map-name">KITOKU for BUSINESS</span>
-          <span class="link-map-desc">採用・面談・育成・候補者理解を仕事用に整理する</span>
-        </span>
-        <span class="link-map-arrow">›</span>
-      </a>
-    </div>
   </div>
 </div>
 
