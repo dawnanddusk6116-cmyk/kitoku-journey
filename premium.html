@@ -389,6 +389,7 @@ function setOrient(orient){
 function setCompassMode(mode,save=true){
   state.mode=['travel','pilgrimage','move'].includes(mode)?mode:'travel';
   if(save)localStorage.setItem('kitoku-premium-mode',state.mode);
+  if(typeof renderModeContent==='function') renderModeContent(state.mode);
   ['travel','pilgrimage','move'].forEach(k=>{
     const btn=document.getElementById('mode-'+k);
     if(btn)btn.classList.toggle('active',k===state.mode);
@@ -890,16 +891,9 @@ function renderModeContent(mode){
   }
 }
 
-// setCompassModeにrenderModeContentを追加
-const _origSetCompassMode = typeof setCompassMode==='function'?setCompassMode:null;
-function setCompassMode(mode,save=true){
-  if(_origSetCompassMode) _origSetCompassMode(mode,save);
-  renderModeContent(mode);
-}
-
 document.addEventListener('DOMContentLoaded',function(){
   const saved=localStorage.getItem('kitoku-premium-mode')||'travel';
-  renderModeContent(saved);
+  setTimeout(function(){ renderModeContent(saved); }, 100);
 });
 
 </script>
