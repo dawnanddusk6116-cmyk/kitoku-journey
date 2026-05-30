@@ -168,6 +168,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('pilgrimage')">聖地巡礼<span>出発日と線路の日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimageRoute')">巡礼ルート相談<span>回る順番と移動手段</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
@@ -690,7 +691,7 @@ function insertConsultTemplate(type){
     return;
   }
   if(type==='travel') setCompassMode('travel');
-  if(type==='pilgrimage') setCompassMode('pilgrimage');
+  if(type==='pilgrimage'||type==='pilgrimageRoute') setCompassMode('pilgrimage');
   if(type==='move') setCompassMode('move');
   const mode=getModeMeta();
   const home=getHomePrem();
@@ -731,6 +732,19 @@ function insertConsultTemplate(type){
 
 下の聖地巡礼モードで出発日を合わせ、必要なら「方位盤メモ」を貼ります。
 線路の日との重なりや、出発前に整えることも含めて、手順から教えてください。`,
+    pilgrimageRoute:`聖地巡礼の回る順番を相談したいです。
+
+巡礼先・札所候補：【ここに入力】
+出発地・現在地：${homeText}${homeNote}
+終了地（自宅・宿・駅など）：【ここに入力】
+候補日・出発日：【ここに入力】
+移動手段（車・徒歩・電車バス・タクシー併用）：【ここに入力】
+使える時間（午前だけ・1日・何時までなど）：【ここに入力】
+同行者（人数・高齢者/子ども・相手の星情報など）：【ここに入力】
+優先したいこと（方位・線路の日・移動効率・体力・時間）：【ここに入力】
+
+下の方位盤メモや相手の星情報も必要に応じて貼ります。
+方位・線路の日・移動手段・体力面を踏まえて、無理のない回る順番を提案してください。`,
     person:`第三者との関わりについて相談したいです。
 
 相手との関係：【ここに入力】
@@ -835,6 +849,8 @@ ${boardSummary}${senroSummary}
 ・相談内容に必要な情報が足りない時は、結論を急がず、最初に確認質問をする
 ・確認質問は一度に最大3つまで。スマホの音声入力で答えやすい短い質問にする
 ・旅・引越し・聖地巡礼では、目的地、出発地、候補日、目的、同伴者の有無、方位盤メモの有無を必要に応じて聞く
+・聖地巡礼のルート相談では、回る順番を断定する前に、移動手段（車・徒歩・公共交通）、終了地、使える時間、同行者、体力面を必要に応じて確認する
+・巡礼ルートは、方位だけでなく、移動効率、無理のなさ、線路の日、同行者の負担を合わせて提案する
 ・人間関係・商談・面談では、相手との関係、相談したい場面、相手の生年月日または相手の星情報の有無を必要に応じて聞く
 ・お金・仕事では、判断したい内容、期限、迷っている選択肢、焦りや不安の有無を必要に応じて聞く
 ・命名・姓名・LIFEに関係する相談では、名前、生年月日、本人用か命名用か、何を整えたいかを必要に応じて聞く

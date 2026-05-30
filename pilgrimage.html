@@ -201,6 +201,93 @@ body{
 }
 .preset-name{font-size:.72rem;color:var(--snow);font-weight:600;line-height:1.3;}
 .preset-area{font-size:.58rem;color:var(--mist);margin-top:2px;}
+.route-planner{
+  margin-top:10px;
+  background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(255,255,255,.62));
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:10px;
+  padding:12px;
+}
+.route-title{
+  font-size:.72rem;
+  color:var(--goldlt);
+  font-weight:700;
+  letter-spacing:.05em;
+  margin-bottom:5px;
+}
+.route-note{
+  font-size:.6rem;
+  color:var(--mist);
+  line-height:1.75;
+  margin-bottom:9px;
+}
+.route-list{display:grid;gap:6px;margin-bottom:9px;}
+.route-stop{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,.72);
+  border:1px solid var(--rim);
+  border-radius:9px;
+  padding:8px;
+}
+.route-num{
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(196,160,67,.15);
+  border:1px solid rgba(196,160,67,.36);
+  color:var(--goldlt);
+  font-size:.66rem;
+  font-weight:700;
+}
+.route-name{font-size:.68rem;color:var(--snow);font-weight:700;line-height:1.35;}
+.route-area{font-size:.55rem;color:var(--mist);margin-top:1px;}
+.route-actions{display:flex;gap:3px;align-items:center;}
+.route-mini{
+  width:26px;height:26px;border-radius:7px;
+  border:1px solid rgba(138,104,32,.2);
+  background:rgba(100,80,40,.04);
+  color:var(--goldlt);
+  font-size:.58rem;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.route-map-btn{
+  width:100%;
+  margin-top:7px;
+  background:rgba(52,168,83,.1);
+  border:1px solid rgba(52,168,83,.35);
+  color:#1a6e30;
+  border-radius:9px;
+  padding:10px;
+  font-size:.68rem;
+  font-weight:700;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.route-clear-btn{
+  width:100%;
+  margin-top:6px;
+  background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);
+  color:var(--mist);
+  border-radius:9px;
+  padding:8px;
+  font-size:.62rem;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.route-empty{
+  background:rgba(255,255,255,.58);
+  border:1px dashed rgba(138,104,32,.24);
+  border-radius:9px;
+  padding:10px;
+  font-size:.62rem;
+  color:var(--mist);
+  line-height:1.75;
+  text-align:center;
+}
 .divider{
   text-align:center;font-size:.6rem;color:var(--mist);
   margin:10px 0;letter-spacing:.12em;
@@ -940,6 +1027,18 @@ html.font-large .font-btn{font-size:.8rem;}
     <span style="color:rgba(138,104,32,.6);">📎 <a href="https://88shikokuhenro.jp/" target="_blank" style="color:var(--goldlt);text-decoration:underline;">四国八十八ヶ所霊場公式サイト</a>　／　<a href="https://www.jbf.ne.jp/eventcont/hallowed" target="_blank" style="color:var(--goldlt);text-decoration:underline;">全国霊場紹介（全日本仏教会）</a></span>
     <span style="font-size:.6rem;opacity:.8;">リクエストは kitoku@journey6112.jp まで</span>
   </div>
+
+  <div class="route-planner" id="pilgrimageRoutePlanner">
+    <div class="route-title">🚗 巡礼ルートを作る</div>
+    <div class="route-note">
+      札所を行く順番にタップすると、Googleマップの経路に渡せます。61番→62番→63番のように並べてください。
+    </div>
+    <div class="route-list" id="pilgrimageRouteList">
+      <div class="route-empty">まだルートに札所が入っていません。</div>
+    </div>
+    <button class="route-map-btn" type="button" onclick="openPilgrimageRoute()">Googleマップで順路を開く</button>
+    <button class="route-clear-btn" type="button" onclick="clearPilgrimageRoute()">ルートをクリア</button>
+  </div>
 </div>
 
   <!-- 方位盤ガイドボタン -->
@@ -1470,6 +1569,7 @@ let gState = {
   destName: '',
   destArea: '',
   destDir: null,
+  routeStops: [],
   honmei: null,
   tsukimei: null,
   calYear: null,
@@ -1501,6 +1601,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // プリセットボタン描画（常に実行）
   try { renderPresets(); } catch(e) { console.warn('renderPresets error:', e); }
+  try { renderPilgrimageRoute(); } catch(e) { console.warn('renderPilgrimageRoute error:', e); }
 
   // 今月のカレンダー初期化
   const now = new Date();
@@ -1686,6 +1787,7 @@ async function selectPresetByQuery(btn, query, name, area) {
     gState.destLon = parseFloat(data[0].lon);
     gState.destName = name;
     gState.destArea = area;
+    addPilgrimageStop({lat:gState.destLat, lon:gState.destLon, name, area});
     if (status) status.textContent = '';
     if (gState.homeLat && gState.honmei) {
       calcAndShowDir();
@@ -1703,6 +1805,7 @@ function selectPreset(btn, lat, lon, name, area) {
   btn.classList.add('selected');
   gState.destLat = lat; gState.destLon = lon;
   gState.destName = name; gState.destArea = area;
+  addPilgrimageStop({lat, lon, name, area});
   if (gState.homeLat && gState.honmei) calcAndShowDir();
   else if (!gState.homeLat) showHomePrompt();
 }
@@ -1723,6 +1826,7 @@ async function searchCustomDest() {
     gState.destLon = parseFloat(r.lon);
     gState.destName = val;
     gState.destArea = r.display_name.split(',').slice(1, 3).join(' ');
+    addPilgrimageStop({lat:gState.destLat, lon:gState.destLon, name:gState.destName, area:gState.destArea});
     status.textContent = `📍 ${r.display_name.split(',').slice(0, 2).join(' ')}`;
     if (gState.homeLat) calcAndShowDir();
     else showHomePrompt();
@@ -1768,6 +1872,97 @@ function mapSearchUrl(lat, lon) {
 
 function mapRouteUrl(originLat, originLon, destLat, destLon) {
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originLat + ',' + originLon)}&destination=${encodeURIComponent(destLat + ',' + destLon)}&travelmode=driving`;
+}
+
+function mapMultiRouteUrl(stops) {
+  if (!stops || !stops.length) return '';
+  if (stops.length === 1) {
+    if (gState.homeLat && gState.homeLon) {
+      return mapRouteUrl(gState.homeLat, gState.homeLon, stops[0].lat, stops[0].lon);
+    }
+    return mapSearchUrl(stops[0].lat, stops[0].lon);
+  }
+  const origin = (gState.homeLat && gState.homeLon)
+    ? `${gState.homeLat},${gState.homeLon}`
+    : `${stops[0].lat},${stops[0].lon}`;
+  const routeStops = (gState.homeLat && gState.homeLon) ? stops : stops.slice(1);
+  const destination = routeStops[routeStops.length - 1];
+  const waypoints = routeStops.slice(0, -1).map(p => `${p.lat},${p.lon}`).join('|');
+  let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination.lat + ',' + destination.lon)}&travelmode=driving`;
+  if (waypoints) url += `&waypoints=${encodeURIComponent(waypoints)}`;
+  return url;
+}
+
+function escapeHtml(str) {
+  return String(str||'').replace(/[&<>"']/g, s => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[s]));
+}
+
+function addPilgrimageStop(place) {
+  if (!place || !place.lat || !place.lon) return;
+  const key = `${Number(place.lat).toFixed(5)},${Number(place.lon).toFixed(5)}`;
+  const exists = gState.routeStops.some(p => p.key === key);
+  if (!exists) {
+    gState.routeStops.push({
+      key,
+      lat: Number(place.lat),
+      lon: Number(place.lon),
+      name: place.name || '選択した場所',
+      area: place.area || ''
+    });
+  }
+  renderPilgrimageRoute();
+}
+
+function renderPilgrimageRoute() {
+  const list = document.getElementById('pilgrimageRouteList');
+  if (!list) return;
+  if (!gState.routeStops.length) {
+    list.innerHTML = '<div class="route-empty">まだルートに札所が入っていません。</div>';
+    return;
+  }
+  list.innerHTML = gState.routeStops.map((p, idx) => `
+    <div class="route-stop">
+      <div class="route-num">${idx + 1}</div>
+      <div>
+        <div class="route-name">${escapeHtml(p.name)}</div>
+        <div class="route-area">${escapeHtml(p.area)}</div>
+      </div>
+      <div class="route-actions">
+        <button class="route-mini" type="button" onclick="movePilgrimageStop(${idx},-1)" aria-label="上へ">↑</button>
+        <button class="route-mini" type="button" onclick="movePilgrimageStop(${idx},1)" aria-label="下へ">↓</button>
+        <button class="route-mini" type="button" onclick="removePilgrimageStop(${idx})" aria-label="削除">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function movePilgrimageStop(index, dir) {
+  const next = index + dir;
+  if (next < 0 || next >= gState.routeStops.length) return;
+  const item = gState.routeStops[index];
+  gState.routeStops.splice(index, 1);
+  gState.routeStops.splice(next, 0, item);
+  renderPilgrimageRoute();
+}
+
+function removePilgrimageStop(index) {
+  gState.routeStops.splice(index, 1);
+  renderPilgrimageRoute();
+}
+
+function clearPilgrimageRoute() {
+  gState.routeStops = [];
+  renderPilgrimageRoute();
+}
+
+function openPilgrimageRoute() {
+  if (!gState.routeStops.length) {
+    alert('行きたい札所を順番にタップしてください。');
+    return;
+  }
+  openExternalMap(mapMultiRouteUrl(gState.routeStops));
 }
 
 function openExternalMap(url) {
@@ -2665,6 +2860,7 @@ function confirmMapPicker() {
   gState.destLon  = mapPickerTemp.lon;
   gState.destName = mapPickerTemp.name;
   gState.destArea = mapPickerTemp.area;
+  addPilgrimageStop({lat:gState.destLat, lon:gState.destLon, name:gState.destName, area:gState.destArea});
 
   closeMapPicker();
 
