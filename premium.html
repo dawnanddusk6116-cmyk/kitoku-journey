@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU PREMIUM</title>
+<meta name="theme-color" content="#f7f4ef">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="kitoku-engine.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--r:14px;}
+html{background:var(--bg);min-height:100dvh;}
+html[data-font-size="small"]{font-size:15px;}
+html[data-font-size="medium"]{font-size:16px;}
+html[data-font-size="large"]{font-size:17.5px;}
+body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;padding-bottom:34px;}
+.header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.96);z-index:20;backdrop-filter:blur(12px);}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.05rem;letter-spacing:.14em;color:var(--gold);white-space:nowrap;}
+.actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.font-control{display:flex;align-items:center;gap:2px;padding:3px;border:1px solid rgba(100,80,40,.16);border-radius:999px;background:rgba(255,255,255,.45);}
+.font-btn{width:25px;height:25px;border:0;border-radius:999px;background:transparent;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:800;cursor:pointer;}
+.font-btn.active{background:rgba(138,104,32,.16);color:var(--goldlt);}
+.nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:34px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);border-radius:8px;padding:8px 12px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;white-space:nowrap;cursor:pointer;}
+.hero{text-align:center;padding:22px 18px 14px;}
+.eyebrow{font-size:.62rem;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:8px;}
+.title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;letter-spacing:.12em;color:var(--goldlt);line-height:1.2;}
+.subtitle{font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:8px;}
+.panel{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:15px;}
+.panel-title{font-size:.72rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:10px;}
+.star-text{font-size:.78rem;color:var(--snow);line-height:2;font-weight:500;}
+.note{font-size:.62rem;color:var(--mist);line-height:1.8;margin-top:8px;}
+.copy-btn,.ghost-btn{width:100%;border-radius:9px;padding:11px 12px;font-family:'Noto Serif JP',serif;font-size:.75rem;cursor:pointer;letter-spacing:.04em;}
+.copy-btn{margin-top:10px;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);}
+.ghost-btn{background:rgba(255,255,255,.72);border:1px solid var(--rim);color:var(--goldlt);}
+.field-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:8px;margin-top:10px;}
+label{display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:5px;}
+input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:9px;}
+.preview{font-size:.68rem;color:var(--snow);line-height:1.8;background:rgba(100,80,40,.035);border:1px dashed rgba(138,104,32,.3);border-radius:9px;padding:9px;margin-top:9px;}
+.toolbar{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 12px;}
+.pill{border:1px solid var(--rim);background:rgba(255,255,255,.76);border-radius:999px;padding:7px 14px;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.72rem;cursor:pointer;}
+.pill.active{background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);font-weight:800;}
+.date-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px;}
+.date-main{text-align:center;flex:1;}
+.date-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--goldlt);letter-spacing:.08em;}
+.date-sub{font-size:.62rem;color:var(--mist);margin-top:3px;}
+.arrow{width:38px;height:38px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(138,104,32,.06);color:var(--goldlt);font-size:1.1rem;cursor:pointer;}
+.orient-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 12px;}
+.orient-btn{border:1px solid var(--rim);background:rgba(255,255,255,.76);border-radius:999px;padding:6px 12px;color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.66rem;cursor:pointer;}
+.orient-btn.active{background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);font-weight:800;}
+.ban-guide{display:flex;gap:10px;align-items:center;background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.78));border:1px solid rgba(196,160,67,.28);border-radius:10px;padding:10px;margin:0 0 12px;}
+.ban-guide-mark{width:34px;height:34px;border-radius:999px;background:rgba(196,160,67,.15);display:flex;align-items:center;justify-content:center;color:var(--goldlt);font-weight:800;flex-shrink:0;}
+.ban-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:800;}
+.ban-guide-text{font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
+.compass{position:relative;width:100%;max-width:330px;margin:8px auto 0;}
+.compass-inner{max-width:310px;margin:0 auto;}
+.dir-row{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;max-width:280px;margin:0 auto;}
+.dir-row.top{margin-bottom:5px;}
+.dir-row.bottom{margin-top:5px;}
+.dir-cell{text-align:center;overflow:hidden;line-height:1.25;padding:2px 1px;min-height:31px;}
+.dir-name{font-size:.76rem;font-weight:800;color:rgba(60,40,10,.58);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dir-name.kichi{color:#8a6820;}
+.dir-name.kyo{color:#9b4a4a;}
+.dir-badge{display:inline-block;margin-top:2px;padding:1px 4px;border-radius:4px;font-size:.42rem;max-width:100%;overflow:hidden;white-space:nowrap;}
+.dir-badge.kichi{background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.35);color:#7a5715;}
+.dir-badge.kyo{background:rgba(176,64,64,.08);border:1px solid rgba(176,64,64,.24);color:#9b4a4a;}
+.mid-row{display:flex;align-items:center;justify-content:center;max-width:330px;margin:0 auto;}
+.side-label{width:31px;flex:0 0 31px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:224px;padding:0 2px;}
+.side-label .dir-name{writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.08em;}
+.side-label .dir-badge{writing-mode:vertical-rl;white-space:nowrap;margin-top:5px;padding:3px 2px;font-size:.38rem;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px;background:#f8f5ef;border:1px solid rgba(120,90,20,.2);border-radius:12px;flex:1;min-width:0;max-width:252px;}
+.cell{height:68px;border:1px solid rgba(100,80,40,.12);background:#fff;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:rgba(30,20,5,.58);}
+.cell.center{border-radius:999px;background:rgba(196,160,67,.08);border-color:rgba(196,160,67,.24);}
+.cell.kichi{border-color:rgba(183,131,24,.58);background:rgba(183,131,24,.12);color:var(--goldlt);font-weight:800;}
+.cell.kyo{border-color:rgba(100,80,40,.12);background:#fff;color:rgba(30,20,5,.58);}
+.star-num{font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1;}
+.star-name{font-size:.55rem;}
+.senro-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.senro-day{background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:10px;padding:9px;text-align:center;}
+.senro-date{font-size:.78rem;font-weight:800;color:var(--goldlt);}
+.senro-branch{font-size:.58rem;color:var(--mist);margin-top:3px;}
+.unlock{margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.75));border:1px solid rgba(138,104,32,.22);border-radius:10px;padding:10px;font-size:.64rem;color:var(--mist);line-height:1.8;text-align:center;}
+.missing{margin:18px 16px;background:var(--card);border:1px solid rgba(176,64,64,.22);border-radius:12px;padding:16px;text-align:center;color:var(--mist);font-size:.72rem;line-height:1.9;}
+@media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
+@media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="brand">✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>PREMIUM</div>
+  <div class="actions">
+    <div class="font-control" aria-label="文字サイズ">
+      <button class="font-btn" id="font-small" onclick="setFontSize('small')" aria-label="文字サイズ 小">小</button>
+      <button class="font-btn active" id="font-medium" onclick="setFontSize('medium')" aria-label="文字サイズ 中">中</button>
+      <button class="font-btn" id="font-large" onclick="setFontSize('large')" aria-label="文字サイズ 大">大</button>
+    </div>
+    <button class="nav-btn" onclick="history.back()">← 戻る</button>
+    <button class="nav-btn" onclick="location.href='index.html'">TOPへ</button>
+  </div>
+</div>
+
+<main id="app">
+  <section class="hero">
+    <div class="eyebrow">PREMIUM BASE</div>
+    <div class="title">Premium Compass</div>
+    <div class="subtitle">方位盤・星情報・線路の日をまとめる、プレミア機能の土台ページです。</div>
+  </section>
+
+  <div id="missingBirth" class="missing" style="display:none;">
+    生年月日が登録されていません。<br>
+    TOPから生年月日を登録してください。<br>
+    <button class="copy-btn" onclick="location.href='index.html'">TOPへ戻る</button>
+  </div>
+
+  <section id="premiumContent" style="display:none;">
+    <div class="panel" id="aiChatPanel">
+      <div class="panel-title">気学先生に相談する</div>
+      <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
+        あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
+        コピーや貼り付けをしなくても、そのまま自由に会話できます。
+      </div>
+
+      <div id="aiContextSummary" style="font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.24);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+        読み込み中...
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="pill active" id="tone-simple" onclick="setTone('simple')">🎯 シンプル</button>
+          <button class="pill" id="tone-amber" onclick="setTone('amber')">✨ 琥珀色</button>
+          <button class="pill" id="tone-night" onclick="setTone('night')">🌙 夜モード</button>
+        </div>
+      </div>
+
+      <div id="chatMessages" style="min-height:120px;max-height:400px;overflow-y:auto;background:rgba(100,80,40,.03);border:1px solid var(--rim);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:.65rem;color:var(--mist);text-align:center;line-height:1.8;">
+          今日の過ごし方、仕事、お金、人間関係、旅や移動の判断などを相談できます。
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:flex-end;">
+        <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
+          style="flex:1;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;resize:none;min-height:60px;max-height:120px;line-height:1.7;"
+          rows="3"></textarea>
+        <button onclick="sendChat()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.35);color:var(--goldlt);font-size:1.2rem;cursor:pointer;flex-shrink:0;">✦</button>
+      </div>
+      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。送信は右の ✦ ボタンを押してください。</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">① 自分の九星情報</div>
+      <div class="star-text" id="starInfoText">読み込み中...</div>
+      <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
+      <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">② 相手の星も入れる（この画面だけ）</div>
+      <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
+      <div class="field-grid">
+        <div>
+          <label>相手の名前・メモ</label>
+          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
+        </div>
+        <div>
+          <label>性別</label>
+          <select id="targetGender" onchange="updateTargetInfo()">
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <label>相手の生年月日</label>
+        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+      </div>
+      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">③ プレミア方位盤</div>
+      <div class="orient-row">
+        <button class="orient-btn active" id="orient-south" onclick="setOrient('south')">南上（気学式）</button>
+        <button class="orient-btn" id="orient-north" onclick="setOrient('north')">北上（地図式）</button>
+      </div>
+      <div class="ban-guide">
+        <div class="ban-guide-mark">本</div>
+        <div>
+          <div class="ban-guide-title">吉方・凶方を確認する</div>
+          <div class="ban-guide-text">本命・月命の吉方、五黄殺・暗剣殺・破れなどを盤面上で確認できます。</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="pill active" id="tab-day" onclick="setBanType('day')">日盤</button>
+        <button class="pill" id="tab-month" onclick="setBanType('month')">月盤</button>
+        <button class="pill" id="tab-year" onclick="setBanType('year')">年盤</button>
+      </div>
+      <div class="date-nav">
+        <button class="arrow" onclick="moveDate(-1)">◀</button>
+        <div class="date-main">
+          <div class="date-title" id="banDateTitle">—</div>
+          <div class="date-sub" id="banDateSub">—</div>
+        </div>
+        <button class="arrow" onclick="moveDate(1)">▶</button>
+      </div>
+      <div class="compass" id="compassWrap"></div>
+      <button class="copy-btn" onclick="copyBoardSummary(this)">📋 方位盤メモをコピー</button>
+      <div class="note">まずは日盤・月盤・年盤をここに集約。プレミア課金後は、ここから線路日・吉方日程・事業判断へ広げられます。</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">④ 今月の線路の日</div>
+      <div class="senro-list" id="senroDays"></div>
+      <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',date:new Date()};
+const WEEK=['日','月','火','水','木','金','土'];
+const BRANCH_LABEL=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SOUTH_LAYOUT=[['SE','S','SW'],['E','C','W'],['NE','N','NW']];
+const NORTH_LAYOUT=[['NW','N','NE'],['W','C','E'],['SW','S','SE']];
+
+function setFontSize(size){
+  const safe=['small','medium','large'].includes(size)?size:'medium';
+  document.documentElement.dataset.fontSize=safe;
+  localStorage.setItem('kitoku-premium-font-size',safe);
+  ['small','medium','large'].forEach(k=>{
+    const btn=document.getElementById('font-'+k);
+    if(btn)btn.classList.toggle('active',k===safe);
+  });
+}
+function initFontSize(){
+  setFontSize(localStorage.getItem('kitoku-premium-font-size')||'medium');
+}
+function safeNayin(y){try{return calcNayin(y);}catch(e){return null;}}
+function safeMonthNayin(by,kM){try{return monthNayin(by,kM);}catch(e){return null;}}
+function buildInfo(birth,gender){
+  if(typeof getKD!=='function') return null;
+  const [by,bm,bd]=birth.split('-').map(Number);
+  const kd=getKD(by,bm,bd);
+  if(!kd) return null;
+  const honmei=calcHonmei(kd.kY);
+  const tsukimei=calcTsukimei(honmei,kd.kM);
+  const tFor=typeof getTsukimeiForKeisha==='function'?getTsukimeiForKeisha(honmei,tsukimei):tsukimei;
+  const keisha=calcKeisha(honmei,tFor);
+  const dokai=calcDokai(honmei,tFor);
+  const yN=safeNayin(kd.kY);
+  const mN=safeMonthNayin(by,kd.kM);
+  return {birth,gender,by,bm,bd,kY:kd.kY,kM:kd.kM,honmei,tsukimei,keisha,dokai,yN,mN};
+}
+function starLine(info,prefix='私は'){
+  return `${prefix}${STARS[info.honmei]?.j||''}・月命${STARS[info.tsukimei]?.j||''}・傾斜${STARS[info.keisha]?.j||''}・同会${STARS[info.dokai]?.j||''}・納音 ${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）です。`;
+}
+function init(){
+  try{
+    initFontSize();
+    if(typeof getKD!=='function'||typeof calcHonmei!=='function'||typeof buildBoardFromCenter!=='function'){
+      throw new Error('kitoku-engine.js が読み込めていません');
+    }
+    state.birth=normalizeBirth(localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'');
+    state.gender=localStorage.getItem('kitoku-gender')||'male';
+    state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
+    ['south','north'].forEach(k=>{
+      const btn=document.getElementById('orient-'+k);
+      if(btn)btn.classList.toggle('active',k===state.orient);
+    });
+    if(!state.birth){
+      document.getElementById('missingBirth').style.display='block';
+      return;
+    }
+    state.info=buildInfo(state.birth,state.gender);
+    document.getElementById('premiumContent').style.display='block';
+    document.getElementById('starInfoText').textContent=starLine(state.info);
+    renderBoard();
+    renderSenro();
+    renderAiContextSummary();
+  }catch(e){
+    showPremiumError(e);
+  }
+}
+function normalizeBirth(value){
+  const v=String(value||'').trim();
+  if(!v)return '';
+  const m=v.match(/^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);
+  if(!m)return '';
+  return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+}
+function showPremiumError(error){
+  const box=document.getElementById('missingBirth');
+  if(!box)return;
+  box.style.display='block';
+  box.innerHTML=`プレミアページの読み込みで止まりました。<br>
+  <span style="font-size:.64rem;color:#9b4a4a;">${String(error&&error.message?error.message:error)}</span><br>
+  <button class="copy-btn" onclick="location.reload()">再読み込み</button>
+  <button class="copy-btn" onclick="location.href='index.html'">TOPへ戻る</button>`;
+}
+function setBanType(type){
+  state.banType=type;
+  ['day','month','year'].forEach(k=>document.getElementById('tab-'+k).classList.toggle('active',k===type));
+  renderBoard();
+  renderAiContextSummary();
+}
+function moveDate(delta){
+  if(state.banType==='year')state.date.setFullYear(state.date.getFullYear()+delta);
+  else if(state.banType==='month')state.date.setMonth(state.date.getMonth()+delta);
+  else state.date.setDate(state.date.getDate()+delta);
+  renderBoard();
+  renderSenro();
+  renderAiContextSummary();
+}
+function setOrient(orient){
+  state.orient=orient==='north'?'north':'south';
+  localStorage.setItem('kitoku-premium-orient',state.orient);
+  ['south','north'].forEach(k=>{
+    const btn=document.getElementById('orient-'+k);
+    if(btn)btn.classList.toggle('active',k===state.orient);
+  });
+  renderBoard();
+  renderAiContextSummary();
+}
+function centerForDate(){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  if(state.banType==='year')return yearCenter(y);
+  if(state.banType==='month')return getMonthCenter(y,m,d);
+  return getDayCenter(y,m,d);
+}
+function getBreakDirForDate(){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  if(state.banType==='year')return OPP[BRANCH_DIR[getZodiac(y).d]];
+  if(state.banType==='month')return OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
+  return OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
+}
+function buildDirData(center){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const p2s=buildBoardFromCenter(center);
+  const sangoSet=new Set((SANGO_MAP[getZodiac(y).k]||{dirs:[]}).dirs);
+  const tendoDir=state.banType==='year'?null:getTendoDir(y,m,d);
+  const kyou=getKyouDirs(center,state.info.honmei,getBreakDirForDate(),state.info.tsukimei,state.banType,{teiiAsKyo:false,tsukimeiSatsu:'off'});
+  const dirData={};
+  ALL8.forEach(dir=>{
+    const starN=p2s[dir];
+    const rank=rankDir(dir,starN,state.info.honmei,state.info.tsukimei,sangoSet,tendoDir).rank;
+    dirData[dir]={starN,rank,isKyo:kyou.kyouSet.has(dir),kyoNames:kyou.items.filter(x=>x.dir===dir).map(x=>x.name.split('/')[0])};
+  });
+  dirData.C={starN:p2s.C||center,rank:0,isKyo:false,kyoNames:[]};
+  return {p2s,dirData,kyouItems:kyou.items};
+}
+function dirInfo(dir,dirData){
+  const dd=dirData[dir]||{};
+  if(dd.isKyo)return {nameClass:'kyo',badgeClass:'kyo',sub:dd.kyoNames.join('・')||'凶方'};
+  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'最高吉方'};
+  if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:'本命・月命 吉'};
+  if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方'};
+  if(dd.rank>=1)return {nameClass:'kichi',badgeClass:'kichi',sub:'天道'};
+  return {nameClass:'',badgeClass:'',sub:''};
+}
+function dirCell(dir,dirData,side=false){
+  const meta=dirInfo(dir,dirData);
+  return `<div class="${side?'side-label':'dir-cell'}">
+    <div class="dir-name ${meta.nameClass}">${JP[dir]||''}</div>
+    ${meta.sub?`<div class="dir-badge ${meta.badgeClass}">${meta.sub}</div>`:''}
+  </div>`;
+}
+function renderBoard(){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const center=centerForDate();
+  const {dirData}=buildDirData(center);
+  const layout=state.orient==='north'?NORTH_LAYOUT:SOUTH_LAYOUT;
+  const topRow=state.orient==='north'?['NW','N','NE']:['SE','S','SW'];
+  const bottomRow=state.orient==='north'?['SW','S','SE']:['NE','N','NW'];
+  const leftDir=state.orient==='north'?'W':'E';
+  const rightDir=state.orient==='north'?'E':'W';
+  const wrap=document.getElementById('compassWrap');
+  document.getElementById('banDateTitle').textContent=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年 ${m}月`:`${y}年 ${m}月 ${d}日`;
+  document.getElementById('banDateSub').textContent=(state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤')+' — 中宮 '+(STARS[center]?.j||'');
+  const gridHtml=layout.flat().map(dir=>{
+    const dd=dirData[dir];
+    const n=dd.starN;
+    const cls=dir==='C'?'center':dd.isKyo?'kyo':dd.rank>=2?'kichi':'';
+    return `<div class="cell ${cls}">
+      <div class="star-num">${n||''}</div>
+      <div class="star-name">${STARS[n]?.k||''}</div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML=`
+    <div class="compass-inner">
+      <div class="dir-row top">${topRow.map(dir=>dirCell(dir,dirData)).join('')}</div>
+      <div class="mid-row">
+        ${dirCell(leftDir,dirData,true)}
+        <div class="grid">${gridHtml}</div>
+        ${dirCell(rightDir,dirData,true)}
+      </div>
+      <div class="dir-row bottom">${bottomRow.map(dir=>dirCell(dir,dirData)).join('')}</div>
+    </div>`;
+}
+function renderSenro(){
+  let indices=[1,4,7,10];
+  try{const saved=localStorage.getItem('kitoku-railway-branches');if(saved)indices=JSON.parse(saved);}catch(e){}
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,last=new Date(y,m,0).getDate();
+  const days=[];
+  for(let d=1;d<=last;d++){
+    const branch=getDayBranch(y,m,d);
+    if(indices.includes(branch)){
+      const dt=new Date(y,m-1,d);
+      days.push({d,w:WEEK[dt.getDay()],branch});
+    }
+  }
+  document.getElementById('senroDays').innerHTML=days.map(x=>`
+    <div class="senro-day">
+      <div class="senro-date">${m}/${x.d}（${x.w}）</div>
+      <div class="senro-branch">${BRANCH_LABEL[x.branch]}の日</div>
+    </div>`).join('')||'<div class="note">今月の線路の日はありません。</div>';
+}
+function updateTargetInfo(){
+  const birth=document.getElementById('targetBirth').value;
+  const name=document.getElementById('targetName').value.trim()||'相手';
+  const gender=document.getElementById('targetGender').value||'male';
+  const preview=document.getElementById('targetPreview');
+  if(!birth){preview.textContent='相手の生年月日を入れると、ここに星情報が表示されます。';return;}
+  try{
+    const info=buildInfo(birth,gender);
+    preview.textContent=starLine(info,`${name}は`);
+  }catch(e){
+    preview.textContent='相手の星情報を計算できませんでした。';
+  }
+}
+function copyText(text,btn){
+  const done=()=>{if(btn){const o=btn.textContent;btn.textContent='✅ コピーしました';setTimeout(()=>btn.textContent=o,1800);}};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));
+  else fallbackCopy(text,done);
+}
+function fallbackCopy(text,done){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');done&&done();}catch(e){alert('コピーできませんでした');}
+  document.body.removeChild(ta);
+}
+function copyStarInfo(){copyText(starLine(state.info),document.getElementById('copyStarBtn'));}
+function copyBoardSummary(btn){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const center=centerForDate();
+  const {dirData,kyouItems}=buildDirData(center);
+  const title=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年${m}月`:`${y}年${m}月${d}日`;
+  const kichi=ALL8.filter(dir=>dirData[dir].rank>=2&&!dirData[dir].isKyo).map(dir=>JP[dir]).join('・')||'なし';
+  const kyo=kyouItems.map(x=>`${JP[x.dir]}（${x.name}）`).join('・')||'なし';
+  const orient=state.orient==='north'?'北上（地図式）':'南上（気学式）';
+  copyText(`${starLine(state.info)}\n\n【${title} ${state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤'}】\n表示：${orient}\n中宮：${STARS[center]?.j||''}\n吉方位：${kichi}\n注意方位：${kyo}`,btn);
+}
+function getCurrentBoardContext(){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const center=centerForDate();
+  const data=buildDirData(center);
+  const dirData=data.dirData;
+  const title=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年${m}月`:`${y}年${m}月${d}日`;
+  const banLabel=state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤';
+  const kichi=ALL8.filter(dir=>dirData[dir].rank>=2&&!dirData[dir].isKyo).map(dir=>JP[dir]).join('・')||'なし';
+  const kyo=data.kyouItems.map(x=>`${JP[x.dir]}（${x.name}）`).join('・')||'なし';
+  const orient=state.orient==='north'?'北上（地図式）':'南上（気学式）';
+  return {title,banLabel,center,kichi,kyo,orient};
+}
+function getSenroContext(){
+  let indices=[1,4,7,10];
+  try{const saved=localStorage.getItem('kitoku-railway-branches');if(saved)indices=JSON.parse(saved);}catch(e){}
+  return indices.map(i=>BRANCH_LABEL[i]).filter(Boolean).join('・')||'未設定';
+}
+function renderAiContextSummary(){
+  const el=document.getElementById('aiContextSummary');
+  if(!el||!state.info)return;
+  try{
+    const board=getCurrentBoardContext();
+    el.innerHTML=`
+      <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
+      <div><strong style="color:var(--goldlt);">九星</strong>：${starLine(state.info).replace(/^私は/,'')}</div>
+      <div><strong style="color:var(--goldlt);">盤面</strong>：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}</div>
+      <div><strong style="color:var(--goldlt);">吉方位</strong>：${board.kichi}</div>
+      <div><strong style="color:var(--goldlt);">注意方位</strong>：${board.kyo}</div>
+      <div><strong style="color:var(--goldlt);">線路の日支</strong>：${getSenroContext()}</div>`;
+  }catch(e){
+    el.textContent='九星情報は読み込まれています。盤面情報は下の方位盤を確認してください。';
+  }
+}
+document.addEventListener('DOMContentLoaded',init);
+
+// ── 気学先生との会話 ──
+let chatHistory = [];
+let currentTone = 'simple';
+let isThinking = false;
+
+const TONES = {
+  simple: '短く的確に答えてください。次の具体的な行動を明確に示してください。余計な装飾は不要です。',
+  amber:  'Y理論（全肯定）で温かく答えてください。背中を押す言葉で、琥珀色の光のように導いてください。',
+  night:  'ゆっくりと深く、感情に寄り添って答えてください。急がず、じっくり話を聞くように答えてください。'
+};
+
+function setTone(tone) {
+  currentTone = tone;
+  ['simple','amber','night'].forEach(t => {
+    const btn = document.getElementById('tone-'+t);
+    if(btn) btn.classList.toggle('active', t===tone);
+  });
+  try{ localStorage.setItem('kitoku-ai-tone', tone); }catch(e){}
+}
+
+function buildSystemPrompt() {
+  const info = state.info || {};
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth()+1, d = today.getDate();
+
+  let boardSummary = '';
+  try {
+    const board=getCurrentBoardContext();
+    boardSummary=`表示盤面：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}\n吉方位：${board.kichi}\n注意方位：${board.kyo}\n`;
+  } catch(e){}
+
+  // 線路の日
+  let senroSummary = '';
+  try {
+    const rb = JSON.parse(localStorage.getItem('kitoku-railway-branches')||'[1,4,7,10]');
+    const BN = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+    senroSummary = '線路の日支：' + rb.map(i=>BN[i]).join('・');
+  } catch(e){}
+
+  const userData = `
+本命星：${STARS[info.honmei]?.j||''}（${STARS[info.honmei]?.elem||''}）
+月命星：${STARS[info.tsukimei]?.j||''}
+傾斜：${STARS[info.keisha]?.j||''}
+同会：${STARS[info.dokai]?.j||''}
+納音：${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）
+${boardSummary}${senroSummary}
+今日：${y}年${m}月${d}日`.trim();
+
+  return `あなたはKITOKUの気学の専門家です。
+5000年の東洋の知恵（九星気学・村山流）をベースに相談に乗ります。
+
+【絶対ルール】
+・計算は絶対にしない（下記データが正確な値）
+・「村山先生」「気学」とは言わない
+・「5000年の知恵」として伝える
+・吉凶で脅さない、Y理論（全肯定）で答える
+・${TONES[currentTone]}
+
+【ユーザーデータ】
+${userData}`;
+}
+
+async function sendChat() {
+  if(isThinking) return;
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  input.value = '';
+  addMessage('user', msg);
+  chatHistory.push({role:'user', content:msg});
+
+  isThinking = true;
+  const thinkingEl = addMessage('assistant', '…', true);
+
+  try {
+    if(location.protocol==='file:'){
+      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
+    }
+    const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+m.content).join('\n\n');
+    const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n上記を踏まえて、最後の相談者の発言に答えてください。';
+    const res = await fetch('/api/claude', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:prompt})
+    });
+    const raw = await res.text();
+    if(!res.ok){
+      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
+    }
+    let data;
+    try{
+      data=JSON.parse(raw);
+    }catch(parseError){
+      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
+    }
+    const reply = data.content?.[0]?.text || '申し訳ありません、もう一度お試しください。';
+    thinkingEl.textContent = reply;
+    thinkingEl.style.fontStyle = 'normal';
+    chatHistory.push({role:'assistant', content:reply});
+  } catch(e) {
+    thinkingEl.textContent = '通信エラーが発生しました。\n' + (e && e.message ? e.message : String(e));
+  }
+  isThinking = false;
+}
+
+function addMessage(role, text, isThinking=false) {
+  const wrap = document.getElementById('chatMessages');
+  // 最初のヒントテキストを消す
+  if(wrap.children.length===1 && wrap.children[0].tagName!=='DIV'.toLowerCase()) {}
+  const el = document.createElement('div');
+  el.style.cssText = role==='user'
+    ? 'align-self:flex-end;background:rgba(138,104,32,.12);border:1px solid rgba(138,104,32,.25);border-radius:10px 10px 3px 10px;padding:9px 12px;max-width:88%;font-size:.72rem;color:var(--snow);line-height:1.8;'
+    : 'align-self:flex-start;background:rgba(255,255,255,.85);border:1px solid var(--rim);border-radius:10px 10px 10px 3px;padding:9px 12px;max-width:92%;font-size:.72rem;color:var(--snow);line-height:1.8;';
+  el.style.fontStyle = isThinking ? 'italic' : 'normal';
+  el.textContent = text;
+  // 初回メッセージ時にヒントを消す
+  if(wrap.children.length===1) wrap.innerHTML='';
+  wrap.appendChild(el);
+  wrap.scrollTop = wrap.scrollHeight;
+  return el;
+}
+
+// 初期化
+document.addEventListener('DOMContentLoaded', function(){
+  const saved = localStorage.getItem('kitoku-ai-tone');
+  if(saved) setTone(saved);
+});
+
+</script>
+</body>
+</html>
