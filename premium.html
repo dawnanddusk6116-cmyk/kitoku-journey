@@ -593,7 +593,14 @@ function copyTargetInfo(){
   }
   try{
     const info=buildInfo(birth,gender);
-    copyText(`${starLine(info,`${name}は`)}\n生年月日：${birth}\n性別：${gender==='female'?'女性':'男性'}`,btn);
+    const senroIdx = SENRO_IDX[info.honmei]||[1,4,7,10];
+    const branches = senroIdx.map(i=>BRANCH_NAME_P[i]).join('・');
+    const today=new Date();
+    const y=today.getFullYear(),m=today.getMonth()+1;
+    const nm=m===12?1:m+1,ny=m===12?y+1:y;
+    const days1=calcSenroDaysForMonth(y,m,senroIdx).map(x=>`${m}/${x.d}(${x.w})`).join('・')||'なし';
+    const days2=calcSenroDaysForMonth(ny,nm,senroIdx).map(x=>`${nm}/${x.d}(${x.w})`).join('・')||'なし';
+    copyText(`${starLine(info,`${name}は`)}\n生年月日：${birth}\n性別：${gender==='female'?'女性':'男性'}\n線路の日支：${branches}\n今月の線路の日：${days1}\n来月の線路の日：${days2}`,btn);
   }catch(e){
     copyText('相手の星情報を計算できませんでした。生年月日を確認してください。',btn);
   }
