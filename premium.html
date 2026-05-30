@@ -92,6 +92,10 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .life-link{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:12px 13px;border-radius:10px;border:1px solid rgba(74,138,90,.24);background:linear-gradient(135deg,rgba(74,138,90,.08),rgba(255,255,255,.7));color:var(--goldlt);text-decoration:none;}
 .life-link-title{font-size:.75rem;font-weight:800;}
 .life-link-note{font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
+.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px;}
+.topic-btn{border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.68rem;font-weight:800;line-height:1.45;padding:10px 8px;cursor:pointer;text-align:left;}
+.topic-btn span{display:block;font-size:.52rem;color:var(--mist);font-weight:500;margin-top:2px;}
+.topic-btn:active{transform:scale(.98);}
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
 </style>
@@ -140,6 +144,16 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <strong style="color:var(--goldlt);">うまく使うコツ</strong><br>
         ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
         ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星」を調べて貼ると相談しやすくなります。
+      </div>
+
+      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ</div>
+      <div class="topic-grid">
+        <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
       </div>
 
       <div style="margin-bottom:12px;">
@@ -546,6 +560,63 @@ function setTone(tone) {
     if(btn) btn.classList.toggle('active', t===tone);
   });
   try{ localStorage.setItem('kitoku-ai-tone', tone); }catch(e){}
+}
+
+function insertConsultTemplate(type){
+  const input=document.getElementById('chatInput');
+  if(!input) return;
+  const templates={
+    today:`今日の動き方について相談したいです。
+
+今日やること：
+迷っていること：
+気をつけたいこと：
+
+私の九星情報・今日の盤面情報・線路の日を見た上で、今日の動き方を短く具体的に教えてください。`,
+    date:`未来の日付について相談したいです。
+
+見たい日付：
+目的（契約・開始・出発・商談など）：
+その日に始めたいこと：
+気になっていること：
+
+必要なら、下の方位盤でその日の「方位盤メモ」をコピーして貼るので、見るポイントから教えてください。`,
+    travel:`旅・引越しについて相談したいです。
+
+目的地：
+出発地・現在地：
+候補日：
+目的（旅行・聖地巡礼・引越し・仮吉方など）：
+気になっていること：
+
+必要なら、下の方位盤や旅行ナビ・引越しナビで何を調べればいいか、手順から教えてください。`,
+    person:`第三者との関わりについて相談したいです。
+
+相手との関係：
+相談したい場面（家族・恋愛・仕事・商談・面談など）：
+困っていること：
+どうなりたいか：
+
+必要なら、下の「相手の星も入れる」で相手の星情報を調べて貼るので、見るポイントから教えてください。`,
+    money:`お金・仕事の判断について相談したいです。
+
+相談したいこと：
+今迷っている選択肢：
+急いでいるか：
+怖さ・焦り・欲が出ている点：
+
+私の九星情報と今日の盤面をもとに、売買や正解を断定せず、判断の整え方を教えてください。`,
+    free:`自由に相談したいです。
+
+相談内容：
+今の状況：
+迷っていること：
+
+私の九星情報・今日の盤面情報・線路の日を踏まえて、次の一手を教えてください。`
+  };
+  input.value=templates[type]||templates.free;
+  input.focus();
+  input.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 function buildSystemPrompt() {
