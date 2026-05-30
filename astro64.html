@@ -19,10 +19,11 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--bg);min-height:100dvh;}
 body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;max-width:520px;margin:0 auto;line-height:1.8;padding-bottom:40px;min-height:100dvh;}
-.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
-.brand-logo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);white-space:nowrap;}
-.header-reset{width:auto;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;margin:0;}
-.toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.96);z-index:20;backdrop-filter:blur(12px);}
+.brand-logo{font-family:'Cormorant Garamond',serif;font-size:1.06rem;letter-spacing:.14em;color:var(--gold);white-space:nowrap;min-width:0;}
+.header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.header-reset{display:inline-flex;align-items:center;justify-content:center;width:auto;min-height:34px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.72rem;padding:7px 11px;border-radius:8px;cursor:pointer;letter-spacing:.04em;font-weight:700;margin:0;font-family:'Noto Serif JP',serif;white-space:nowrap;}
+.toolbar{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-bottom:1px solid var(--rim);background:var(--card);overflow-x:auto;}
 .tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
 .tb-btn{width:auto;background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;margin:0;font-weight:400;}
 .tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
@@ -110,13 +111,16 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 [data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
+@media(max-width:390px){.app-header{padding:9px 11px;gap:7px}.brand-logo{font-size:.92rem;letter-spacing:.1em}.header-actions{gap:5px}.header-reset{font-size:.66rem;padding:7px 8px;min-height:31px}.toolbar{justify-content:flex-start}.tb-btn{padding:5px 10px}}
 </style>
 </head>
 <body>
 <div class="app-header">
   <div class="brand-logo">✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY</div>
-  <button class="header-reset" onclick="history.back()" style="display:block;margin-right:6px;">← 戻る</button>
-  <button class="header-reset" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+  <div class="header-actions">
+    <button class="header-reset" onclick="history.back()">← 戻る</button>
+    <button class="header-reset" onclick="window.location.href='index.html'">TOPへ</button>
+  </div>
 </div>
 
 <div class="toolbar">
@@ -174,21 +178,10 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 </section>
 
 <section class="section">
-  <div class="label">RESULT</div>
-  <div class="plain-guide">
-    <strong>ここは計算結果です。</strong><br>
-    太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。下の「AIに渡す相談文」に、この結果が自動で反映されます。
-  </div>
-  <div id="results" class="results">
-    <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
-  </div>
-</section>
-
-<section class="section">
   <div class="label">AIに渡す相談文</div>
   <div class="prompt-guide">
-    <div class="prompt-guide-title">コピーするのは、この下の大きな枠です</div>
-    上の計算結果とKITOKU星情報は、すでにこの相談文の中に入っています。下の枠をコピーして、ChatGPT・Claude・GeminiなどのAIに貼り付けてください。
+    <div class="prompt-guide-title">ここをコピーしてAIに貼り付けます</div>
+    生年月日・KITOKU星情報・星読みクロスチェックの結果が、この相談文にまとまります。計算後に内容が自動で更新されます。
   </div>
   <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
   <button class="copy" onclick="copyPrompt()">相談文をコピー</button>
@@ -199,6 +192,17 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
   </div>
   <div class="deep-note">まず上の相談文をAIに貼り、次に気になる深掘り文を続けて貼ると、会話が進めやすくなります。</div>
+</section>
+
+<section class="section">
+  <div class="label">RESULT</div>
+  <div class="plain-guide">
+    <strong>ここは計算結果です。</strong><br>
+    太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。上の「AIに渡す相談文」に、この結果が自動で反映されます。
+  </div>
+  <div id="results" class="results">
+    <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
+  </div>
 </section>
 
 <footer><a href="kyusei_v2.html" style="color:var(--goldlt);text-decoration:none;">← 九星を知るへ戻る</a><br>KITOKU STAR READING — 自分を知り、自分を愛し、自分で動く</footer>
