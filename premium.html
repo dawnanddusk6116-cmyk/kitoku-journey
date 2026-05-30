@@ -196,6 +196,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="mode-btn" id="mode-move" onclick="setCompassMode('move')">引越し</button>
       </div>
       <div class="mode-guide" id="modeGuide"></div>
+      <div id="modeContent" style="margin-top:10px;"></div>
       <div class="orient-row">
         <button class="orient-btn active" id="orient-south" onclick="setOrient('south')">南上（気学式）</button>
         <button class="orient-btn" id="orient-north" onclick="setOrient('north')">北上（地図式）</button>
@@ -803,6 +804,102 @@ function addMessage(role, text, isThinking=false) {
 document.addEventListener('DOMContentLoaded', function(){
   const saved = localStorage.getItem('kitoku-ai-tone');
   if(saved) setTone(saved);
+});
+
+
+// ── モード別コンテンツ ──
+// 地域プリセット（代表座標）
+const REGION_PRESETS = [
+  {name:'北海道・東北', lat:43.06, lon:141.35},
+  {name:'関東', lat:35.68, lon:139.69},
+  {name:'中部・北陸', lat:36.57, lon:136.62},
+  {name:'近畿', lat:34.69, lon:135.50},
+  {name:'中国・四国', lat:34.39, lon:132.45},
+  {name:'九州・沖縄', lat:33.58, lon:130.40},
+  {name:'東北・北東', lat:38.26, lon:140.87},
+  {name:'伊豆・房総', lat:35.10, lon:139.10},
+];
+
+function calcBearingPrem(lat1,lon1,lat2,lon2){
+  const r=Math.PI/180;
+  const f1=lat1*r,f2=lat2*r,dl=(lon2-lon1)*r;
+  const y=Math.sin(dl)*Math.cos(f2);
+  const x=Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl);
+  return((Math.atan2(y,x)/r)+360)%360;
+}
+function bearingToDirPrem(b){
+  return['N','NE','E','SE','S','SW','W','NW'][Math.floor((b+22.5)/45)%8];
+}
+const DIR_LABEL={'N':'北','NE':'北東','E':'東','SE':'南東','S':'南','SW':'南西','W':'西','NW':'北西'};
+
+function checkRegionDir(lat,lon,name){
+  const hLat=parseFloat(localStorage.getItem('kitoku-home-lat')||'0');
+  const hLon=parseFloat(localStorage.getItem('kitoku-home-lon')||'0');
+  if(!hLat||!hLon){
+    alert('出発地（現在地・自宅）が未登録です。\n旅行ナビページで登録してください。');
+    return;
+  }
+  const bearing=calcBearingPrem(hLat,hLon,lat,lon);
+  const dir=bearingToDirPrem(bearing);
+  const label=DIR_LABEL[dir]||dir;
+  // 方位盤の吉凶を確認
+  const today=new Date();
+  const dc=typeof centerForDate==='function'?centerForDate(today.getFullYear(),today.getMonth()+1,today.getDate(),state.banType||'d'):null;
+  let rankText='';
+  if(dc){
+    const dd=typeof buildDirData==='function'?buildDirData(dc,[dir]):null;
+    if(dd&&dd[dir]){
+      rankText=dd[dir].rank>=2?'✅ 吉方位':dd[dir].rank<=0?'⚠️ 注意方位':'— 中性';
+    }
+  }
+  alert(`${name}\n方角：${label}（${bearing.toFixed(0)}°）\n${rankText}`);
+}
+
+function renderModeContent(mode){
+  const wrap=document.getElementById('modeContent');
+  if(!wrap)return;
+  if(mode==='travel'){
+    wrap.innerHTML=`
+      <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 旅行先の方位チェック</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        ${REGION_PRESETS.map(r=>`<button onclick="checkRegionDir(${r.lat},${r.lon},'${r.name}')" style="padding:6px 10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;font-size:.65rem;color:var(--goldlt);cursor:pointer;">${r.name}</button>`).join('')}
+      </div>
+      <div style="font-size:.58rem;color:var(--mist);line-height:1.7;">詳しい目的地選択・方位計算は
+        <a href="travel.html" style="color:var(--goldlt);">旅行ナビ →</a>
+      </div>`;
+  } else if(mode==='pilgrimage'){
+    wrap.innerHTML=`
+      <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 聖地巡礼ナビ</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">
+        出発地からの方位確認・線路の日との照合は下記ナビで行えます。
+      </div>
+      <a href="pilgrimage.html" style="display:block;padding:10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:10px;font-size:.7rem;color:var(--goldlt);text-align:center;text-decoration:none;">
+        📿 聖地巡礼ナビへ →
+      </a>`;
+  } else if(mode==='move'){
+    wrap.innerHTML=`
+      <div style="font-size:.6rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">✦ 引越しナビ</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">
+        引越しは<strong>年盤・月盤</strong>を最優先に確認します。<br>
+        日盤は基本見ません。線路の日で実行日を決めます。<br>
+        年盤・月盤で吉方位を確認 → 線路の日と合わせる。
+      </div>
+      <a href="move.html" style="display:block;padding:10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:10px;font-size:.7rem;color:var(--goldlt);text-align:center;text-decoration:none;">
+        🏠 引越しナビへ →
+      </a>`;
+  }
+}
+
+// setCompassModeにrenderModeContentを追加
+const _origSetCompassMode = typeof setCompassMode==='function'?setCompassMode:null;
+function setCompassMode(mode,save=true){
+  if(_origSetCompassMode) _origSetCompassMode(mode,save);
+  renderModeContent(mode);
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const saved=localStorage.getItem('kitoku-premium-mode')||'travel';
+  renderModeContent(saved);
 });
 
 </script>
