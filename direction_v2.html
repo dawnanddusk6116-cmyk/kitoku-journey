@@ -37,8 +37,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 /* ── ヘッダー ── */
 .app-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:env(safe-area-inset-top,12px) 18px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:env(safe-area-inset-top,12px) 16px 12px;
   border-bottom:1px solid var(--rim);
   background:rgba(10,12,24,.92);
   position:sticky;top:0;z-index:100;
@@ -46,7 +46,19 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 }
 .header-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.3em;color:var(--gold);}
 .header-sub{display:none;}
-.header-reset{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;}
+.header-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;letter-spacing:.14em;color:var(--gold);
+  cursor:pointer;min-width:0;white-space:nowrap;
+}
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.header-reset{display:inline-flex;align-items:center;justify-content:center;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.72rem;padding:8px 12px;border-radius:8px;cursor:pointer;letter-spacing:.06em;font-weight:700;font-family:'Noto Serif JP',serif;white-space:nowrap;min-height:34px;}
+@media (max-width:380px){
+  .app-header{padding:env(safe-area-inset-top,10px) 12px 10px;}
+  .header-brand{font-size:.96rem;letter-spacing:.1em;}
+  .header-actions{gap:6px;}
+  .header-reset{font-size:.66rem;padding:7px 9px;}
+}
 
 /* ── スクリーン ── */
 .screen{display:none;padding:0 0 80px;}
@@ -983,11 +995,13 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 <div class="app-wrap" id="appWrap" data-theme="dark">
 
 <div class="app-header">
-  <div onclick="openKitokuAbout()" style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.15em;color:var(--gold);cursor:pointer;">
+  <div class="header-brand" onclick="openKitokuAbout()">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
-  <button class="header-reset" onclick="history.back()" style="display:block;margin-right:6px;">← 戻る</button>
-  <button class="header-reset" id="headerReset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+  <div class="header-actions">
+    <button class="header-reset" onclick="history.back()">← 戻る</button>
+    <button class="header-reset" id="headerReset" onclick="window.location.href='index.html'">TOPへ</button>
+  </div>
 </div>
 
 <div class="life-element-banner" id="lifeElementBanner"></div>
@@ -1427,11 +1441,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div id="compassWrap" style="overflow:hidden;width:100%;"></div>
 
     <!-- シェア用画像保存ボタン -->
-    <div style="margin:10px 0 4px;text-align:center;">
+    <div style="margin:10px 0 4px;text-align:center;display:grid;gap:8px;">
       <button onclick="saveBanImage()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.35);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.75rem;letter-spacing:.1em;padding:9px 20px;cursor:pointer;transition:all .2s;">
         📷 画像として保存・シェア
       </button>
-      <div style="font-size:.62rem;color:var(--mist);margin-top:5px;line-height:1.7;opacity:.8;">保存した画像をLINE・SNS・AIに送れます</div>
+      <button onclick="copyDirectionStarInfo(this)" style="background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.75rem;letter-spacing:.06em;padding:9px 20px;cursor:pointer;transition:all .2s;">
+        📋 星情報だけをコピー
+      </button>
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.7;opacity:.8;">方位盤画像や星情報をLINE・SNS・AIに送れます</div>
     </div>
   </div>
 
@@ -3898,6 +3915,16 @@ function copyClaudeStar(){
   const txt=buildStarText();
   if(!txt||txt.includes('undefined')){alert('先に羅針盤を開いてください');return;}
   copyToClipboard(txt);
+}
+function copyDirectionStarInfo(btn){
+  const txt=buildStarText();
+  if(!txt||txt.includes('undefined')){alert('先に羅針盤を開いてください');return;}
+  copyToClipboard(txt);
+  if(btn){
+    const original=btn.textContent;
+    btn.textContent='✅ コピーしました';
+    setTimeout(()=>{btn.textContent=original;},1800);
+  }
 }
 function copyTemplate(type){
   haptic('light');
