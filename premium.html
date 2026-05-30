@@ -509,6 +509,27 @@ function renderBoard(){
       <div class="dir-row bottom">${bottomRow.map(dir=>dirCell(dir,dirData)).join('')}</div>
     </div>`;
 }
+// 本命星ごとの線路の日支インデックス
+const SENRO_IDX={1:[0,3,6,9],2:[1,4,7,10],3:[2,5,8,11],4:[2,5,8,11],5:[1,4,7,10],6:[1,4,7,10],7:[0,3,6,9],8:[1,4,7,10],9:[0,3,6,9]};
+const BRANCH_NAME_P=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const WEEK_P=['日','月','火','水','木','金','土'];
+
+// 指定月の線路の日を計算する関数
+function calcSenroDaysForMonth(y, m, indices){
+  const last=new Date(y,m,0).getDate();
+  const days=[];
+  for(let d=1;d<=last;d++){
+    try{
+      const branch=getDayBranch(y,m,d);
+      if(indices.includes(branch)){
+        const dt=new Date(y,m-1,d);
+        days.push({d, w:WEEK_P[dt.getDay()], branch});
+      }
+    }catch(e){}
+  }
+  return days;
+}
+
 function renderSenro(){
   let indices=[1,4,7,10];
   try{const saved=localStorage.getItem('kitoku-railway-branches');if(saved)indices=JSON.parse(saved);}catch(e){}
@@ -535,7 +556,17 @@ function updateTargetInfo(){
   if(!birth){preview.textContent='相手の生年月日を入れると、ここに星情報が表示されます。';return;}
   try{
     const info=buildInfo(birth,gender);
-    preview.textContent=starLine(info,`${name}は`);
+    const senroIdx = SENRO_IDX[info.honmei]||[1,4,7,10];
+    const bn = senroIdx.map(i=>BRANCH_NAME_P[i]).join('・');
+    const today=new Date();
+    const y=today.getFullYear(),m=today.getMonth()+1;
+    const nm=m===12?1:m+1,ny=m===12?y+1:y;
+    const days1=calcSenroDaysForMonth(y,m,senroIdx).map(x=>`${m}/${x.d}(${x.w})`).join('・');
+    const days2=calcSenroDaysForMonth(ny,nm,senroIdx).map(x=>`${nm}/${x.d}(${x.w})`).join('・');
+    preview.innerHTML=starLine(info,`${name}は`)
+      +`<br><span style="font-size:.6rem;color:var(--goldlt);">線路の日支：${bn}</span>`
+      +`<br><span style="font-size:.58rem;color:var(--mist);">今月：${days1||'なし'}</span>`
+      +`<br><span style="font-size:.58rem;color:var(--mist);">来月：${days2||'なし'}</span>`;
   }catch(e){
     preview.textContent='相手の星情報を計算できませんでした。';
   }
@@ -750,12 +781,16 @@ function buildSystemPrompt() {
     boardSummary=`表示盤面：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}\n吉方位：${board.kichi}\n注意方位：${board.kyo}\n`;
   } catch(e){}
 
-  // 線路の日
+  // 線路の日（今月・来月の具体的な日付をAIに渡す）
   let senroSummary = '';
   try {
     const rb = JSON.parse(localStorage.getItem('kitoku-railway-branches')||'[1,4,7,10]');
     const BN = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-    senroSummary = '線路の日支：' + rb.map(i=>BN[i]).join('・');
+    const branches = rb.map(i=>BN[i]).join('・');
+    const nm=m===12?1:m+1, ny=m===12?y+1:y;
+    const d1=calcSenroDaysForMonth(y,m,rb).map(x=>`${m}/${x.d}(${x.w})`).join('・');
+    const d2=calcSenroDaysForMonth(ny,nm,rb).map(x=>`${nm}/${x.d}(${x.w})`).join('・');
+    senroSummary = `線路の日支：${branches}\n今月の線路の日：${d1||'なし'}\n来月の線路の日：${d2||'なし'}`;
   } catch(e){}
 
   const userData = `
@@ -777,6 +812,7 @@ ${boardSummary}${senroSummary}
 ・「本命殺」「的殺」「五黄殺」「暗剣殺」などの凶方位判定は、データに記載がない限り絶対に言わない
 ・データに「吉方位」と書いてあれば、それが唯一の正解。AIの気学知識で上書きしない
 ・データにない情報は「KITOKUのデータには記載がありません」と正直に伝える
+・2ヶ月以降の線路の日を聞かれたら「調べたい期間の最初と最後の日付の方位盤メモをコピーして貼ってください。日支から線路の日を特定できます」と案内する
 ・計算は絶対にしない（下記データが正確な値）
 ・「村山先生」「気学」とは言わない
 ・「5000年の知恵」として伝える
