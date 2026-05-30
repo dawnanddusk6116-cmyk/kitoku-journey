@@ -349,7 +349,7 @@ function loadSavedBirthData(){
 
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
-  navigator.clipboard.writeText(text).then(()=>alert('コピーしました'));
+  navigator.clipboard.writeText(text).then(()=>alert('コピーしました\nお好きなAIに貼り付けてください！'));
 }
 
 const DEEP_DIVE_PROMPTS={
@@ -362,7 +362,7 @@ const DEEP_DIVE_PROMPTS={
 function copyDeepDive(type){
   const text=DEEP_DIVE_PROMPTS[type]||'';
   if(!text)return;
-  navigator.clipboard.writeText(text).then(()=>alert('深掘り用の相談文をコピーしました'));
+  navigator.clipboard.writeText(text).then(()=>alert('深掘り用の相談文をコピーしました\nお好きなAIに貼り付けてください！'));
 }
 
 function setTheme(t){
