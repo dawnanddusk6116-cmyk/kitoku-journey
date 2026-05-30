@@ -647,6 +647,8 @@ function insertConsultTemplate(type){
   if(type==='pilgrimage') setCompassMode('pilgrimage');
   if(type==='move') setCompassMode('move');
   const mode=getModeMeta();
+  const home=getHomePrem();
+  const homeText=home&&home.label?home.label:'【ここに入力】';
   const templates={
     today:`今日の動き方について相談したいです。
 
@@ -666,7 +668,7 @@ function insertConsultTemplate(type){
     travel:`${mode.template}
 
 目的地：【ここに入力】
-出発地・現在地：【ここに入力】
+出発地・現在地：${homeText}
 候補日：【ここに入力】
 目的（${mode.purpose}・仮吉方など）：【ここに入力】
 気になっていること：【ここに入力】
@@ -675,7 +677,7 @@ function insertConsultTemplate(type){
     pilgrimage:`聖地巡礼について相談したいです。
 
 行きたい聖地：【ここに入力】
-出発地・現在地：【ここに入力】
+出発地・現在地：${homeText}
 出発日・候補日：【ここに入力】
 巡礼の目的：【ここに入力】
 気になっていること：【ここに入力】
