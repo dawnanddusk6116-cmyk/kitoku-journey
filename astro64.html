@@ -156,14 +156,15 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     下の生年月日・KITOKU OS DATA・RESULTは、この相談文に自動で反映されます。下の情報は確認と調整用です。
   </div>
   <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
-  <button class="copy" onclick="copyPrompt()">相談文をコピー</button>
+  <button class="copy" onclick="copyPrompt()">① まず相談文をコピー</button>
+  <div class="deep-note">お好きなAIに、まず①の相談文を貼り付けてください。</div>
   <div class="deep-dive">
-    <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
-    <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
-    <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
-    <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
+    <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
+    <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
+    <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
+    <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
   </div>
-  <div class="deep-note">まず上の相談文をAIに貼り、次に気になる深掘り文を続けて貼ると、会話が進めやすくなります。</div>
+  <div class="deep-note">続けて知りたいテーマがあれば、②の深掘り文をコピーして同じAIの会話に貼ると、会話が進めやすくなります。</div>
 </section>
 
 <section class="section">
@@ -349,7 +350,7 @@ function loadSavedBirthData(){
 
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
-  navigator.clipboard.writeText(text).then(()=>alert('コピーしました\nお好きなAIに貼り付けてください！'));
+  navigator.clipboard.writeText(text).then(()=>alert('① 相談文をコピーしました\nまず、お好きなAIに貼り付けてください！'));
 }
 
 const DEEP_DIVE_PROMPTS={
@@ -362,7 +363,7 @@ const DEEP_DIVE_PROMPTS={
 function copyDeepDive(type){
   const text=DEEP_DIVE_PROMPTS[type]||'';
   if(!text)return;
-  navigator.clipboard.writeText(text).then(()=>alert('深掘り用の相談文をコピーしました\nお好きなAIに貼り付けてください！'));
+  navigator.clipboard.writeText(text).then(()=>alert('② 深掘り用の相談文をコピーしました\n①の続きとして、同じAIの会話に貼り付けてください！'));
 }
 
 function setTheme(t){
