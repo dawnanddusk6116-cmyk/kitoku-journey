@@ -219,18 +219,18 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     <div class="inspiration-card">
       <div class="inspiration-kicker">
         <span>TODAY'S INSPIRATION</span>
-        <span class="premium-badge">Premium / 準備中</span>
+        <span class="premium-badge">Premium</span>
       </div>
       <div class="inspiration-line">
         今日の気に、ひとつだけ<br>言葉を灯す。
       </div>
       <div class="inspiration-body">
         今日の九星・日支・あなたの星情報から、短い格言、今日の問い、小さな行動を生成する予定です。<br>
-        API実装後は1日1回だけ生成し、同じ日は保存して再表示します。
+        今日の九星・日支・星情報から生成します。1日1回生成し、同じ日は保存して再表示します。
       </div>
       <div class="inspiration-actions">
-        <button class="inspiration-btn" type="button" disabled>今日の一言を生成</button>
-        <button class="inspiration-btn" type="button" disabled>気学先生に相談</button>
+        <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="generateTodayInspiration()">今日の一言を生成</button>
+        <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">気学先生に相談</button>
       </div>
       <div class="inspiration-note">
         無料トップには戻さず、毎日使うプレミアム機能として育てる枠です。
@@ -961,7 +961,10 @@ function buildSystemPrompt() {
       const gkLine = lr.gk
         ? `\n五格：天格${lr.gk.ten}画・人格${lr.gk.jin}画・地格${lr.gk.chi}画・外格${lr.gk.gai}画・総格${lr.gk.so}画`
         : '';
-      lifeReadingSummary = `\n\n【姓名鑑定の結果（${lr.name}）】\nスコア：${lr.score}点${strokeLine}${gkLine}\n${issues}`;
+      const blueprintLine = lr.blueprint
+        ? `\n命の設計図：星の五行 ${lr.blueprint.starGyos?.join('・')||''} / 名前の五行 ${lr.blueprint.nameGyos?.join('・')||''}\n名前が補完する五行：${lr.blueprint.complement?.join('・')||'なし'} / 星と名前が共鳴する五行：${lr.blueprint.resonance?.join('・')||'なし'} / 未配置の五行：${lr.blueprint.missing?.join('・')||'なし'}`
+        : '';
+      lifeReadingSummary = `\n\n【姓名鑑定の結果（${lr.name}）】\nスコア：${lr.score}点${strokeLine}${gkLine}${blueprintLine}\n${issues}`;
       applyLifeReadingBanner();
     }
   }catch(e){}
@@ -995,6 +998,9 @@ ${boardSummary}${senroSummary}
 ◆禁止配列：大バサミ・二重挟み・縛り（全陰全陽）・中断
 ◆読み下し禁止：一文字名・水性始まり（マ・ハ行）・濁音始まり・ん終わり
 ◆大凶音配列禁止：水水・火火・水火・火水
+・音の五行は、姓の最後の「文字」ではなく、フリガナ上の最後の音と名の最初の音で人格音を確認する
+・例：カワカミ＋ナオキは、姓末音「ミ（水）」と名頭音「ナ（火）」で水火の激突として見る
+・水水・火火・水火・火水が人格音に出る候補は、画数・陰陽・総格が良くても「推奨」と言い切らない
 ◆姓との組み合わせ禁止：天地同数・姓名同数・天底同数・天地衝突（3・5・9画の激突）
 ◆五行バランス：3種類以上が理想
 ◆優先順位：①読み下し→②五行→③陰陽→④天地→⑤画数
@@ -1008,6 +1014,10 @@ ${boardSummary}${senroSummary}
 ・総格だけで「良い名前」と判断しない
 ・候補ごとに、人格・地格・総格・名の1文字目・天地同数・姓名同数・天底同数・陰陽配列・読み下し・音の五行を確認する
 ・候補は「推奨」「注意あり」「避ける」の3段階で分ける
+・候補名を表示する前に、内部で一度チェックを完了してから返答する
+・「推奨」と書いたあとで同じ候補を見送るような自己修正をしない
+・見送る候補は最初から「見送り候補」または「避ける」として別枠にする
+・名乗り読み、当て読み、複数読みの候補は「推奨」だけで終わらせず「推奨候補・読みやすさ注意」と明記する
 ・19・22・28・44画が総格に出る候補は原則「避ける」
 ・26・30・34・36画が総格に出る候補は「注意あり」として、使う意志と補い方を説明する
 ・人格または地格が9画・19画の候補は「注意あり」または「避ける」と明記する
@@ -1029,6 +1039,7 @@ ${boardSummary}${senroSummary}
 ・最初に「この候補は推奨／注意あり／避ける」を短く示す
 ・次に「良い点」「注意点」「補い方」を分けて書く
 ・候補が3つ以上ある時は、最後に「一番検討しやすい候補」を1つだけ選んで理由を添える
+・LIFE鑑定結果に「名前が補完する五行」「星と名前が共鳴する五行」「未配置の五行」がある場合は、候補評価と補い方に必ず反映する
 ◆改名相談の基本方針：
 ・基本は戸籍名を変える前提にしない
 ・まずSNS名、通称、仕事名、ビジネスネームとして試す前提で提案する
@@ -1275,6 +1286,95 @@ function renderModeContent(mode){
 document.addEventListener('DOMContentLoaded',function(){
   const saved=localStorage.getItem('kitoku-premium-mode')||'travel';
   setTimeout(function(){ renderModeContent(saved); }, 100);
+});
+
+
+// ── TODAY'S INSPIRATION ──
+function scrollToAiChat(){
+  const el=document.getElementById('aiChatPanel');
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+async function generateTodayInspiration(){
+  const btn=document.getElementById('genInspirationBtn');
+  const today=new Date();
+  const dateKey='kitoku-insp-'+today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+  // キャッシュ確認
+  const cached=localStorage.getItem(dateKey);
+  if(cached){
+    showInspiration(JSON.parse(cached));
+    return;
+  }
+
+  if(btn){ btn.disabled=true; btn.textContent='生成中…'; }
+
+  // 今日のデータ取得
+  const info=state.info||{};
+  const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
+  let boardInfo='';
+  try{
+    const dc=typeof centerForDate==='function'?centerForDate():null;
+    if(dc&&typeof buildDirData==='function'){
+      const dd=buildDirData(dc,['N','NE','E','SE','S','SW','W','NW']);
+      const kichi=Object.entries(dd).filter(([k,v])=>v.rank>=2).map(([k])=>k).join('・');
+      boardInfo=`今日の中宮：${dc}星　吉方位：${kichi}`;
+    }
+  }catch(e){}
+
+  const honmeiName=typeof STARS!=='undefined'?STARS[info.honmei]?.j||'':info.honmeiName||'';
+  const prompt=`あなたはKITOKUの気学先生です。
+今日（${y}年${m}月${d}日）の気と、ユーザーの星情報をもとに、短いインスピレーションを生成してください。
+
+【ユーザーの星情報】
+本命星：${honmeiName}
+${boardInfo}
+
+【生成ルール】
+・JSONのみ返す（前後に余分なテキスト不要）
+・以下の形式で：
+{"quote":"今日の格言（20字以内）","message":"今日のあなたへのメッセージ（60字以内）","action":"今日の小さな一歩（30字以内）"}
+・Y理論（全肯定）で。吉凶で脅さない。
+・「村山先生」「気学」は使わない`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.[0]?.text||'{}';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const obj=JSON.parse(clean);
+    localStorage.setItem(dateKey,JSON.stringify(obj));
+    showInspiration(obj);
+  }catch(e){
+    showInspiration({quote:'今日の気に、ひとつだけ言葉を灯す。',message:'データの取得に失敗しました。もう一度お試しください。',action:''});
+  }
+  if(btn){ btn.disabled=false; btn.textContent='今日の一言を生成'; }
+}
+
+function showInspiration(obj){
+  const body=document.querySelector('.inspiration-body');
+  if(!body) return;
+  body.innerHTML=`
+    <div style="font-size:.9rem;font-weight:700;line-height:1.6;margin-bottom:10px;color:#fffaf0;">${obj.quote||''}</div>
+    <div style="font-size:.68rem;line-height:1.85;color:rgba(255,250,240,.85);margin-bottom:8px;">${obj.message||''}</div>
+    ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(255,250,240,.1);border-radius:8px;color:rgba(255,250,240,.9);">✦ 今日の一歩：${obj.action}</div>`:''}
+  `;
+}
+
+// ページロード時にキャッシュ確認
+document.addEventListener('DOMContentLoaded',function(){
+  const today=new Date();
+  const dateKey='kitoku-insp-'+today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  const cached=localStorage.getItem(dateKey);
+  if(cached) try{ showInspiration(JSON.parse(cached)); }catch(e){}
 });
 
 </script>

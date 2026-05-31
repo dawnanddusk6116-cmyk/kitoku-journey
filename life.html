@@ -707,7 +707,6 @@ footer{
 
   <!-- 相性診断結果 -->
   <div id="aiResultArea" style="display:none;margin:0 16px 16px;"></div>
-  <div id="aiDeepDiveArea" style="display:none;"></div>
 
   <!-- 結果 -->
   <div id="results">
@@ -747,6 +746,7 @@ footer{
     <div id="nameCard" style="display:none;margin-bottom:14px;"></div>
     <!-- 五大真理スコア -->
     <div id="scoreCard" style="display:none;margin-bottom:14px;"></div>
+    <div id="aiDeepDiveArea" style="display:none;"></div>
 
     <div class="reading-card" id="jinCard" style="display:none"></div>
 
@@ -1404,6 +1404,13 @@ function getSeiLastFuri(furiSei, seiStr){
   // 通常：均等分割
   const startIdx=Math.floor(fl*(sl-1)/sl);
   return f.slice(startIdx);
+}
+// 姓と名の接点を見る時は、姓の最後の「音」を使う。
+// 例：カワカミ → ミ（水）。最後の漢字読み「カミ」の先頭カ（木）を拾うと判定が甘くなる。
+function getSeiTailSound(furiSei){
+  if(!furiSei)return '';
+  const f=furiSei.trim().replace(/[\s　]+/g,'');
+  return f ? f[f.length-1] : '';
 }
 
 function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
@@ -2650,6 +2657,13 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
   const complement = analysis.filter(a => !a.starHas && a.nameHas).map(a => a.g);
   const resonance = analysis.filter(a => a.starHas && a.nameHas).map(a => a.g);
   const missing = analysis.filter(a => !a.starHas && !a.nameHas).map(a => a.g);
+  window._kitokuLifeBlueprint = {
+    starGyos,
+    nameGyos,
+    complement,
+    resonance,
+    missing
+  };
 
   card.innerHTML = `
   <div style="background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border:1px solid rgba(138,104,32,.25);border-radius:12px;padding:16px;">
@@ -2970,14 +2984,15 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   }
   // ② 人格の大凶配列（音ベース：姓末文字＋名頭文字）
   // フリガナベースで人格の音を判定（訓読み対応）
-  const seiLastOnGyo2=(furiSei&&kanaToGyo(getSeiLastFuri(furiSei,seiStr)))||getOnGyo(seiStr[seiStr.length-1]);
+  const seiLastSound = getSeiTailSound(furiSei) || getSeiLastFuri(furiSei,seiStr);
+  const seiLastOnGyo2=(furiSei&&kanaToGyo(seiLastSound))||getOnGyo(seiStr[seiStr.length-1]);
   const meiFirstOnGyo2=(furiMei&&kanaToGyo(furiMei.trim()[0]))||getOnGyo(meiStr[0]);
   if(seiLastOnGyo2&&meiFirstOnGyo2){
     const BAD_ON=[['水','水'],['火','火'],['水','火'],['火','水']];
     if(BAD_ON.some(([a,b])=>seiLastOnGyo2===a&&meiFirstOnGyo2===b)){
-      gyd+=30;
-      items.push({cat:'五行',icon:'⚠',title:`人格の音が大凶（${seiLastOnGyo2}・${meiFirstOnGyo2}）`,deduct:30,
-        text:`姓末「${seiStr[seiStr.length-1]}（${seiLastOnGyo2}）」と名頭「${meiStr[0]}（${meiFirstOnGyo2}）」の音が大凶配列です。感情の暴走や対立が起きやすいとされます。`,
+      gyd+=45;
+      items.push({cat:'五行',icon:'⚠',title:`人格の音が大凶（${seiLastOnGyo2}・${meiFirstOnGyo2}）`,deduct:45,
+        text:`姓の最後の音「${seiLastSound||seiStr[seiStr.length-1]}（${seiLastOnGyo2}）」と名の最初の音「${furiMei?furiMei.trim()[0]:meiStr[0]}（${meiFirstOnGyo2}）」が大凶配列です。画数や陰陽が整っていても、呼び名の接点で強い摩擦が出やすいとされます。`,
         kitoku:(()=>{ const pair=seiLastOnGyo2+meiFirstOnGyo2; if(pair==='火火')return '二つの炎の激突は底知れぬ情熱の証。水（冷静な洞察）でコントロールし、土（具体的な行動）に落とし込むことで最強の創造力へ変換できます。'; if(pair==='水水')return '二つの水の流れは深い共感力と洞察の証。木（方向性と成長）を意識することで、その深い知恵を行動へと導けます。'; return `${seiLastOnGyo2}と${meiFirstOnGyo2}の激突は深い感情の起伏を持つ証。土（具体的な形）を意識することで創造力へと変換できます。`;})() });
     }
   }
@@ -2992,7 +3007,7 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
         kitoku:'幼い頃から深い感情を知る者だけが持てる共感力があります。その経験が人生の宝になります。'});
     }
   }
-  score-=Math.min(gyd,20);
+  score-=Math.min(gyd,45);
   const iy=calcInYoPattern(seiStr,meiStr,seiKs,meiKs);
   if(iy.score_deduct>0){score-=Math.min(iy.score_deduct,20);items.push({cat:'陰陽配列',icon:'⚠',title:iy.label,deduct:iy.score_deduct,text:iy.text,kitoku:iy.kitoku});}
   const tc=calcTenchi(seiStr,meiStr,seiKs,meiKs);
@@ -3127,6 +3142,7 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
       meiTotal: (meiKs||[]).reduce((a,b)=>a+(Number(b)||0),0)
     },
     gk: gk || null,
+    blueprint: window._kitokuLifeBlueprint || null,
     items: (scoreResult.items||[]).map(i=>({cat:i.cat,title:i.title,text:i.text})),
     jinGG,
     mode: getLifeMode(),
@@ -3136,11 +3152,11 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
 
   area.style.display = 'block';
   area.innerHTML = `
-    <div style="margin:16px;padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.8));border:1px solid rgba(138,104,32,.3);border-radius:14px;text-align:center;">
-      <div style="font-size:.62rem;color:var(--goldlt);letter-spacing:.1em;margin-bottom:6px;">✦ KITOKU @ PREMIUM</div>
-      <div style="font-size:.75rem;color:var(--snow);font-weight:700;margin-bottom:8px;">${sei}${mei}さんの鑑定を気学先生に深掘りしてもらう</div>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">改名・命名の提案・相性の深掘り・人生のアドバイスをAIが答えます</div>
-      <a href="premium.html?from=life" style="display:inline-block;padding:10px 24px;background:rgba(138,104,32,.18);border:1px solid rgba(138,104,32,.4);border-radius:10px;color:var(--goldlt);font-size:.72rem;font-weight:700;text-decoration:none;">✦ 気学先生に相談する →</a>
+    <div style="margin:0 0 14px;padding:12px 14px;background:rgba(255,253,248,.72);border:1px solid rgba(138,104,32,.18);border-radius:12px;text-align:center;">
+      <div style="font-size:.55rem;color:var(--gold);letter-spacing:.13em;margin-bottom:5px;">✦ KITOKU @ PREMIUM</div>
+      <div style="font-size:.67rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">${sei}${mei}さんの鑑定をもう少し深く読む</div>
+      <div style="font-size:.56rem;color:var(--mist);line-height:1.75;margin-bottom:10px;">改名・命名、相性、人生のアドバイスを気学先生に相談できます。</div>
+      <a href="premium.html?from=life" style="display:inline-block;padding:8px 18px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.28);border-radius:999px;color:var(--goldlt);font-size:.64rem;font-weight:700;text-decoration:none;">気学先生に相談する →</a>
     </div>
   `;
 }
@@ -3661,6 +3677,17 @@ function runCompatibility(){
       </div>
     `;
     area.querySelector('div').appendChild(kyuseiDiv);
+
+    // 時間軸の相性
+    if(h1&&h2){
+      const timeHTML=buildTimeAxisHTML(h1,h2,sei1+mei1,sei2+mei2);
+      if(timeHTML){
+        const timeDiv=document.createElement('div');
+        timeDiv.style.cssText='margin-top:0;';
+        timeDiv.innerHTML=timeHTML;
+        area.querySelector('div').appendChild(timeDiv);
+      }
+    }
   }
 
   addLifeCount();
@@ -3701,6 +3728,69 @@ function buildTsukiHTML(t1,t2,g1t,g2t){
     +'<div style="font-size:.6rem;color:var(--mist);">'+(STAR_NAMES[t1]||'')+'（'+g1t+'）× '+(STAR_NAMES[t2]||'')+'（'+g2t+'）→ '+relT+'</div>'
     +'<div style="font-size:.58rem;color:var(--mist);margin-top:3px;opacity:.85;">'+(relDesc[relTypeT]||'')+'</div>'
     +'</div>';
+}
+
+
+// ── 時間軸の相性 ──
+const SENRO_IDX_L={1:[0,3,6,9],2:[1,4,7,10],3:[2,5,8,11],4:[2,5,8,11],5:[1,4,7,10],6:[1,4,7,10],7:[0,3,6,9],8:[1,4,7,10],9:[0,3,6,9]};
+
+function buildTimeAxisHTML(h1, h2, name1, name2){
+  if(!h1||!h2) return '';
+  const BN=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const WK=['日','月','火','水','木','金','土'];
+  const SN=['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+  const SG=['','水','土','木','木','土','金','金','土','火'];
+  const SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
+  const SOKOKU={木:'土',火:'金',土:'水',金:'木',水:'火'};
+
+  // 流年：本命星から年の位置を計算
+  // 年の中宮星 = yearCenter(y)（エンジンから）
+  // 本命星の流年位置 = 九星盤上での位置の五行
+  // 簡易版：年中宮と本命星の五行関係で判断
+  function getYearGyo(honmei, y){
+    try{
+      if(typeof yearCenter==='function'){
+        const yc=yearCenter(y);
+        return SG[yc]||'土';
+      }
+    }catch(e){}
+    // フォールバック：9年サイクル
+    const cycle=((honmei-1+(y-2026))%9+9)%9+1;
+    return SG[cycle]||'土';
+  }
+
+  function getRelType(g1, g2){
+    if(g1===g2) return {type:'比和',mark:'〜',color:'#8a6820'};
+    if(SOJO[g2]===g1) return {type:'相生',mark:'✅',color:'#2a6038'};
+    if(SOKOKU[g2]===g1) return {type:'相剋',mark:'⚠',color:'#8a2840'};
+    if(SOJO[g1]===g2) return {type:'相生',mark:'✅',color:'#2a6038'};
+    return {type:'中性',mark:'—',color:'#5e503d'};
+  }
+
+  const today=new Date();
+  const years=[today.getFullYear(), today.getFullYear()+1, today.getFullYear()+2];
+
+  const rows=years.map(y=>{
+    const g1=getYearGyo(h1,y);
+    const g2=getYearGyo(h2,y);
+    const rel=getRelType(g1,g2);
+    return `<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;padding:8px 10px;background:rgba(138,104,32,.04);border-radius:8px;margin-bottom:6px;">
+      <div style="font-size:.62rem;color:var(--mist);">${y}年<br><span style="color:var(--goldlt);">${g1}の年</span></div>
+      <div style="text-align:center;font-size:.7rem;font-weight:700;color:${rel.color};">${rel.mark}<br><span style="font-size:.5rem;">${rel.type}</span></div>
+      <div style="font-size:.62rem;color:var(--mist);text-align:right;">${y}年<br><span style="color:var(--goldlt);">${g2}の年</span></div>
+    </div>`;
+  }).join('');
+
+  return `<div style="margin-top:12px;padding:12px 14px;background:rgba(138,104,32,.06);border-radius:10px;">
+    <div style="font-size:.65rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">✦ 時間軸の相性（今年〜3年後）</div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-bottom:8px;">
+      <div style="font-size:.6rem;color:var(--mist);font-weight:700;">${name1}</div>
+      <div></div>
+      <div style="font-size:.6rem;color:var(--mist);font-weight:700;text-align:right;">${name2}</div>
+    </div>
+    ${rows}
+    <div style="font-size:.55rem;color:var(--mist);margin-top:8px;opacity:.8;line-height:1.7;">※ 年盤の中宮と本命星の五行関係をもとにした参考値です。</div>
+  </div>`;
 }
 
 </script>
