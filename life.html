@@ -2984,8 +2984,11 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   }
   // ② 人格の大凶配列（音ベース：姓末文字＋名頭文字）
   // フリガナベースで人格の音を判定（訓読み対応）
-  const seiLastSound = getSeiTailSound(furiSei) || getSeiLastFuri(furiSei,seiStr);
-  const seiLastOnGyo2=(furiSei&&kanaToGyo(seiLastSound))||getOnGyo(seiStr[seiStr.length-1]);
+  // 村山流：姓の最後の漢字の主音（第一音）を取得
+  // 例：河上(カワカミ) → 上=カミ → 主音「カ」= カ行 = 木
+  const seiLastFuriPart = getSeiLastFuri(furiSei, seiStr);
+  const seiLastSound = seiLastFuriPart ? seiLastFuriPart[0] : '';
+  const seiLastOnGyo2=(furiSei&&seiLastSound&&kanaToGyo(seiLastSound))||getOnGyo(seiStr[seiStr.length-1]);
   const meiFirstOnGyo2=(furiMei&&kanaToGyo(furiMei.trim()[0]))||getOnGyo(meiStr[0]);
   if(seiLastOnGyo2&&meiFirstOnGyo2){
     const BAD_ON=[['水','水'],['火','火'],['水','火'],['火','水']];
