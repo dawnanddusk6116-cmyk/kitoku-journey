@@ -373,6 +373,8 @@ function init(){
     renderBoard();
     renderSenro();
     renderAiContextSummary();
+    applyLifeReadingBanner();
+    maybePrefillLifeConsult();
   }catch(e){
     showPremiumError(e);
   }
@@ -662,6 +664,42 @@ function renderAiContextSummary(){
     el.textContent='九星情報は読み込まれています。盤面情報は下の方位盤を確認してください。';
   }
 }
+function getLifeReading(){
+  try{
+    const lr = JSON.parse(localStorage.getItem('kitoku-life-reading')||'{}');
+    if(lr.name && lr.ts && (Date.now()-lr.ts) < 86400000) return lr;
+  }catch(e){}
+  return null;
+}
+function applyLifeReadingBanner(){
+  const lr=getLifeReading();
+  const banner=document.getElementById('lifeReadingBanner');
+  const nameEl=document.getElementById('lifeReadingName');
+  if(!banner||!nameEl)return;
+  if(lr){
+    banner.style.display='block';
+    nameEl.textContent=`${lr.name}さんの鑑定結果（${lr.score}点）を読み込み済み`;
+  }else{
+    banner.style.display='none';
+    nameEl.textContent='';
+  }
+}
+function maybePrefillLifeConsult(){
+  const params=new URLSearchParams(location.search);
+  if(params.get('from')!=='life')return;
+  const input=document.getElementById('chatInput');
+  const lr=getLifeReading();
+  if(!input||!lr||input.value.trim())return;
+  input.value=`姓名鑑定の結果について相談したいです。
+
+名前：${lr.name}
+モード：${lr.mode||'自分'}
+スコア：${lr.score}点
+
+この名前を、命の設計図・九星・納音と合わせて見ると、どのように活かせますか？
+改名・命名の相談として、意志を持って使うためのポイントを教えてください。`;
+  autoResizeChatInput();
+}
 document.addEventListener('DOMContentLoaded',init);
 
 // ── 気学先生との会話 ──
@@ -821,14 +859,11 @@ function buildSystemPrompt() {
   // 姓名鑑定の結果を読み込む（life.htmlから連携）
   let lifeReadingSummary = '';
   try{
-    const lr = JSON.parse(localStorage.getItem('kitoku-life-reading')||'{}');
-    if(lr.name && (Date.now()-lr.ts) < 86400000){
+    const lr = getLifeReading();
+    if(lr){
       const issues = (lr.items||[]).map(i=>`・${i.title}：${i.text}`).join('\n');
       lifeReadingSummary = `\n\n【姓名鑑定の結果（${lr.name}）】\nスコア：${lr.score}点\n${issues}`;
-      const banner = document.getElementById('lifeReadingBanner');
-      const nameEl = document.getElementById('lifeReadingName');
-      if(banner) banner.style.display='block';
-      if(nameEl) nameEl.textContent = `${lr.name}さんの鑑定結果（${lr.score}点）を読み込み済み`;
+      applyLifeReadingBanner();
     }
   }catch(e){}
 

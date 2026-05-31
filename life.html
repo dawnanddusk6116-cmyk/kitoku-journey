@@ -2412,12 +2412,12 @@ function showNamingRef(seiStr, meiStr, gk) {
 }
 
 function loadStarInfo() {
-  let honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
-  let tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
-  let nain    = localStorage.getItem('kitoku_nain') || '';
+  let honmei  = 0;
+  let tsukimei= 0;
+  let nain    = '';
   const bar     = document.getElementById('starBar');
 
-  if ((!honmei || !tsukimei || !nain) && typeof getKD === 'function') {
+  if (typeof getKD === 'function') {
     const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
     const parts = birth.split('-').map(Number);
     if (parts.length === 3 && parts.every(Boolean)) {
@@ -2433,6 +2433,12 @@ function loadStarInfo() {
         if (nain) localStorage.setItem('kitoku_nain', nain);
       } catch(e) {}
     }
+  }
+
+  if (!honmei) {
+    honmei  = parseInt(localStorage.getItem('kitoku_honmei'))  || 0;
+    tsukimei= parseInt(localStorage.getItem('kitoku_tsukimei'))|| 0;
+    nain    = localStorage.getItem('kitoku_nain') || '';
   }
 
   // 傾斜・同会：honmeiとtsukimeiが確定した後に毎回計算して保存
@@ -3035,7 +3041,7 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG){
       <div style="font-size:.62rem;color:var(--goldlt);letter-spacing:.1em;margin-bottom:6px;">✦ KITOKU @ PREMIUM</div>
       <div style="font-size:.75rem;color:var(--snow);font-weight:700;margin-bottom:8px;">${sei}${mei}さんの鑑定を気学先生に深掘りしてもらう</div>
       <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">改名・命名の提案・相性の深掘り・人生のアドバイスをAIが答えます</div>
-      <a href="premium.html" style="display:inline-block;padding:10px 24px;background:rgba(138,104,32,.18);border:1px solid rgba(138,104,32,.4);border-radius:10px;color:var(--goldlt);font-size:.72rem;font-weight:700;text-decoration:none;">✦ 気学先生に相談する →</a>
+      <a href="premium.html?from=life" style="display:inline-block;padding:10px 24px;background:rgba(138,104,32,.18);border:1px solid rgba(138,104,32,.4);border-radius:10px;color:var(--goldlt);font-size:.72rem;font-weight:700;text-decoration:none;">✦ 気学先生に相談する →</a>
     </div>
   `;
 }
@@ -3566,10 +3572,21 @@ function runCompatibility(){
 
 // ── CTAボタンのルーティング ──
 function onLifeCtaClick(){
-  if(STATE.lifeMode==='ai'){
-    runCompatibility();
-  } else {
-    runReading();
+  try{
+    if(STATE.lifeMode==='ai'){
+      runCompatibility();
+    } else {
+      runReading();
+    }
+  }catch(e){
+    console.error('LIFE button error:', e);
+    const er=document.getElementById('err');
+    if(er){
+      er.textContent='処理中にエラーが発生しました。入力内容を確認して、もう一度お試しください。';
+      er.style.display='block';
+    }else{
+      alert('処理中にエラーが発生しました。');
+    }
   }
 }
 

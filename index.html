@@ -1569,6 +1569,7 @@ function showFirst(clearData) {
     localStorage.removeItem('kitoku-birth');
     localStorage.removeItem('kitoku_birth');
     localStorage.removeItem('kitoku-gender');
+    clearDerivedStarCache();
   }
   document.getElementById('screenFirst').classList.add('active');
   document.getElementById('screenHome').classList.remove('active');
@@ -1717,6 +1718,17 @@ function renderGalleryNouin(group) {
 // ============================================================
 let gGender = 'male';
 
+function clearDerivedStarCache() {
+  [
+    'kitoku_honmei',
+    'kitoku_tsukimei',
+    'kitoku_keisha',
+    'kitoku_dokai',
+    'kitoku_nain',
+    'kitoku-life-reading'
+  ].forEach(key => localStorage.removeItem(key));
+}
+
 function setGender(g) {
   gGender = g;
   document.getElementById('genderMale').classList.toggle('active', g === 'male');
@@ -1726,7 +1738,9 @@ function setGender(g) {
 function startKITOKU() {
   const val = document.getElementById('birthInput').value;
   if (!val) { alert('生年月日を入力してください。'); return; }
+  clearDerivedStarCache();
   localStorage.setItem('kitoku-birth', val);
+  localStorage.setItem('kitoku_birth', val);
   localStorage.setItem('kitoku-gender', gGender);
   showSelector();
 }
@@ -1841,6 +1855,7 @@ function resetBirth() {
   localStorage.removeItem('kitoku-birth');
   localStorage.removeItem('kitoku_birth');
   localStorage.removeItem('kitoku-gender');
+  clearDerivedStarCache();
   document.getElementById('settingPanel').style.display = 'none';
   showScreenFirst();
   document.getElementById('birthInput').value = '';
@@ -1852,6 +1867,7 @@ function showFirst(clearData) {
     localStorage.removeItem('kitoku-birth');
     localStorage.removeItem('kitoku_birth');
     localStorage.removeItem('kitoku-gender');
+    clearDerivedStarCache();
   }
   showScreenFirst();
   document.getElementById('birthInput').value = '';
