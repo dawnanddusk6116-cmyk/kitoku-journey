@@ -2081,7 +2081,7 @@ function runReading(){
   renderIntentionCard(`${seiStr}${meiStr}`, jinGGon, getLifeMode());
 
   // 診断書スコアカード
-  showScoreCard(seiStr, meiStr, furiSei, furiMei, gk, seiKs, meiKs);
+  showScoreCard(seiStr, meiStr, furiSei, furiMei, gk, seiKs, meiKs, jinGGon);
 
   // 命の設計図との関係
   const _mode = getLifeMode();
@@ -2922,7 +2922,7 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   for(const k of Object.keys(CAT_MAX))catScores[k]=Math.max(0,CAT_MAX[k]-Math.min(catDed[k],CAT_MAX[k]));
   return{score:Math.max(0,score),catScores,catMax:CAT_MAX,items,inYoResult:iy,tenchiResult:tc};
 }
-function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
+function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
   const div=document.getElementById('scoreCard');
   if(!div)return;
   const r=calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs);
