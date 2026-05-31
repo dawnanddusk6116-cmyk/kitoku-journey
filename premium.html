@@ -551,11 +551,18 @@ function buildDirData(center){
   const p2s=buildBoardFromCenter(center);
   const sangoSet=new Set((SANGO_MAP[getZodiac(y).k]||{dirs:[]}).dirs);
   const tendoDir=state.banType==='year'?null:getTendoDir(y,m,d);
-  const kyou=getKyouDirs(center,state.info.honmei,getBreakDirForDate(),state.info.tsukimei,state.banType,{teiiAsKyo:false,tsukimeiSatsu:'off'});
+  // direction_v2.htmlと設定を共有
+  const _teiiKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
+  const _tmSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'off';
+  const _soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
+  const kyou=getKyouDirs(center,state.info.honmei,getBreakDirForDate(),state.info.tsukimei,state.banType,{teiiAsKyo:_teiiKyo,tsukimeiSatsu:_tmSatsu});
   const dirData={};
   ALL8.forEach(dir=>{
     const starN=p2s[dir];
-    const rank=rankDir(dir,starN,state.info.honmei,state.info.tsukimei,sangoSet,tendoDir).rank;
+    const rankObj=rankDir(dir,starN,state.info.honmei,state.info.tsukimei,sangoSet,tendoDir);
+    let rank=rankObj.rank;
+    // 相剋OFF（出会いの摩擦を活かす）
+    if(_soukouOff && rank===1) rank=2;
     dirData[dir]={starN,rank,isKyo:kyou.kyouSet.has(dir),kyoNames:kyou.items.filter(x=>x.dir===dir).map(x=>x.name.split('/')[0])};
   });
   dirData.C={starN:p2s.C||center,rank:0,isKyo:false,kyoNames:[]};
