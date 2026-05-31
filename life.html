@@ -213,6 +213,62 @@ body{
   border-color:rgba(138,104,32,.38);
   box-shadow:0 1px 8px rgba(60,40,10,.06);
 }
+.feature-map{
+  background:rgba(255,255,255,.7);
+  border:1px solid rgba(138,104,32,.2);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.feature-map-title{
+  font-size:.68rem;
+  color:var(--goldlt);
+  font-weight:700;
+  letter-spacing:.08em;
+  margin-bottom:10px;
+}
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.feature-box{
+  border:1px solid rgba(138,104,32,.18);
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,253,248,.88),rgba(255,255,255,.62));
+  padding:10px 8px;
+  min-height:86px;
+}
+.feature-label{
+  display:inline-flex;
+  align-items:center;
+  min-height:20px;
+  padding:2px 7px;
+  border-radius:999px;
+  font-size:.5rem;
+  font-weight:700;
+  margin-bottom:7px;
+}
+.feature-label.free{background:rgba(74,138,90,.1);color:#2f6d3d;border:1px solid rgba(74,138,90,.22);}
+.feature-label.premium{background:rgba(138,104,32,.12);color:var(--goldlt);border:1px solid rgba(138,104,32,.25);}
+.feature-label.soon{background:rgba(90,115,160,.09);color:#425c86;border:1px solid rgba(90,115,160,.18);}
+.feature-box strong{
+  display:block;
+  color:var(--goldlt);
+  font-size:.62rem;
+  line-height:1.45;
+  margin-bottom:4px;
+}
+.feature-box span{
+  display:block;
+  color:var(--mist);
+  font-size:.54rem;
+  line-height:1.65;
+}
+@media(max-width:420px){
+  .feature-grid{grid-template-columns:1fr;}
+  .feature-box{min-height:auto;}
+}
 .intention-card{
   background:linear-gradient(135deg,rgba(255,253,248,.92),rgba(246,239,226,.72));
   border:1px solid rgba(138,104,32,.24);border-radius:12px;
@@ -518,6 +574,42 @@ footer{
         <button class="mode-tab" id="mode-rename" type="button" onclick="setLifeMode('rename')">改名</button>
         <button class="mode-tab" id="mode-other" type="button" onclick="setLifeMode('other')">他の人</button>
         <button class="mode-tab" id="mode-ai" type="button" onclick="setLifeMode('ai')">相性</button>
+      </div>
+    </div>
+
+    <div class="feature-map">
+      <div class="feature-map-title">LIFEでできること</div>
+      <div class="feature-grid">
+        <div class="feature-box">
+          <div class="feature-label free">無料</div>
+          <strong>五大真理の診断</strong>
+          <span>1日3回まで。名前の構造・点数・注意点・根拠を確認できます。</span>
+        </div>
+        <div class="feature-box">
+          <div class="feature-label free">無料</div>
+          <strong>名前だけの相性</strong>
+          <span>生年月日なしで、名前の五行から関係の傾向を見ます。</span>
+        </div>
+        <div class="feature-box">
+          <div class="feature-label premium">Premium</div>
+          <strong>気学先生と深掘り</strong>
+          <span>名前＋九星、改名・命名、通称・SNS名の相談へ進めます。</span>
+        </div>
+        <div class="feature-box">
+          <div class="feature-label premium">Premium</div>
+          <strong>名前＋九星の相性</strong>
+          <span>生年月日を入れて、相手との関係を深く読みます。</span>
+        </div>
+        <div class="feature-box">
+          <div class="feature-label premium">Premium</div>
+          <strong>改名・命名の提案</strong>
+          <span>戸籍変更ではなく、通称・仕事名・SNS名から試せます。</span>
+        </div>
+        <div class="feature-box">
+          <div class="feature-label soon">準備中</div>
+          <strong>時間軸の相性</strong>
+          <span>今年・今月・今日の流れから、関係の扱い方を見ます。</span>
+        </div>
       </div>
     </div>
 
@@ -3016,10 +3108,10 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
   const _dt=document.getElementById('detailToggle');if(_dt)_dt.style.display='block';
 
   // 気学先生に深掘りボタンを表示
-  renderAiDeepDiveBtn(seiStr, meiStr, r, jinGGon);
+  renderAiDeepDiveBtn(seiStr, meiStr, r, jinGGon, gk, seiKs, meiKs);
 }
 
-function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG){
+function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
   const area = document.getElementById('aiDeepDiveArea');
   if(!area) return;
 
@@ -3028,6 +3120,13 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG){
     name: sei+mei,
     sei, mei,
     score: scoreResult.score,
+    strokes: {
+      sei: [...sei].map((ch,i)=>({ch, n: seiKs?.[i] || null})),
+      mei: [...mei].map((ch,i)=>({ch, n: meiKs?.[i] || null})),
+      seiTotal: (seiKs||[]).reduce((a,b)=>a+(Number(b)||0),0),
+      meiTotal: (meiKs||[]).reduce((a,b)=>a+(Number(b)||0),0)
+    },
+    gk: gk || null,
     items: (scoreResult.items||[]).map(i=>({cat:i.cat,title:i.title,text:i.text})),
     jinGG,
     mode: getLifeMode(),

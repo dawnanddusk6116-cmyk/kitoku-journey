@@ -112,6 +112,78 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .premium-help[open] summary::after{transform:rotate(180deg);}
 .premium-help-body{border-top:1px solid rgba(138,104,32,.16);padding:10px 12px;font-size:.62rem;color:var(--mist);line-height:1.85;}
 .premium-help-body strong{color:var(--goldlt);}
+.inspiration-card{
+  margin:12px 16px 0;
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:var(--r);
+  padding:16px;
+  background:
+    linear-gradient(135deg,rgba(28,18,8,.72),rgba(92,64,16,.56)),
+    radial-gradient(circle at 20% 20%,rgba(196,160,67,.28),transparent 42%),
+    linear-gradient(150deg,#233c45,#75613d 48%,#1c1208);
+  color:#fffaf0;
+  box-shadow:0 6px 22px rgba(30,20,5,.08);
+  overflow:hidden;
+}
+.inspiration-kicker{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:.58rem;
+  letter-spacing:.14em;
+  color:rgba(255,250,240,.72);
+  font-weight:800;
+  margin-bottom:12px;
+}
+.premium-badge{
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,250,240,.32);
+  background:rgba(255,255,255,.12);
+  color:#fffaf0;
+  font-size:.5rem;
+  letter-spacing:.08em;
+  white-space:nowrap;
+}
+.inspiration-line{
+  font-size:1.15rem;
+  line-height:1.75;
+  letter-spacing:.03em;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.inspiration-body{
+  font-size:.68rem;
+  line-height:1.95;
+  color:rgba(255,250,240,.82);
+}
+.inspiration-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:14px;
+}
+.inspiration-btn{
+  border:1px solid rgba(255,250,240,.25);
+  border-radius:9px;
+  background:rgba(255,255,255,.12);
+  color:#fffaf0;
+  font-family:'Noto Serif JP',serif;
+  font-size:.62rem;
+  font-weight:800;
+  padding:10px 8px;
+  cursor:not-allowed;
+}
+.inspiration-note{
+  margin-top:10px;
+  font-size:.56rem;
+  line-height:1.75;
+  color:rgba(255,250,240,.62);
+}
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
 </style>
@@ -144,6 +216,27 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   </div>
 
   <section id="premiumContent" style="display:none;">
+    <div class="inspiration-card">
+      <div class="inspiration-kicker">
+        <span>TODAY'S INSPIRATION</span>
+        <span class="premium-badge">Premium / 準備中</span>
+      </div>
+      <div class="inspiration-line">
+        今日の気に、ひとつだけ<br>言葉を灯す。
+      </div>
+      <div class="inspiration-body">
+        今日の九星・日支・あなたの星情報から、短い格言、今日の問い、小さな行動を生成する予定です。<br>
+        API実装後は1日1回だけ生成し、同じ日は保存して再表示します。
+      </div>
+      <div class="inspiration-actions">
+        <button class="inspiration-btn" type="button" disabled>今日の一言を生成</button>
+        <button class="inspiration-btn" type="button" disabled>気学先生に相談</button>
+      </div>
+      <div class="inspiration-note">
+        無料トップには戻さず、毎日使うプレミアム機能として育てる枠です。
+      </div>
+    </div>
+
     <div class="panel" id="aiChatPanel">
       <div class="panel-title">気学先生に相談する</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
