@@ -3108,16 +3108,17 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
     if(JIGI_SHIBARI.has(ch))items.push({cat:'字義',icon:'⚠',title:`字義による縛り（${ch}）`,text:`「${ch}」は「結ぶ・縛る・つなぐ」という意味を持つ文字です。画数や陰陽が整っていても、字義の気が過剰な束縛感をもたらすことがあります。`,kitoku:'この字が持つ「結ぶ力」を「縛られる」ではなく「人と縁を結ぶ才能」として使うことで、字義の気を昇華できます。'});
     else if(NATURE_CHARS_SET.has(ch)){yd+=15;items.push({cat:'読み下し',icon:'⚠',title:`自然の文字「${ch}」`,deduct:15,text:'動植物・気象・鉱物の漢字はその自然の過酷さが人生に出やすいとされます。',kitoku:'自然の文字は浮き沈みが出やすいとされています。吉方位取りで補えます。'});}
   });
-  // ── 名乗り読みチェック ──
+  // ── 名乗り読みチェック（減点なし・情報提供のみ）──
+  // 名乗り読みは日本の名前文化の一部。禁止ではなく、知った上でどう使うかを提案する。
   if(furiMei&&meiStr){
     const meinoriProbs=checkMeinoriYomi(meiStr,furiMei);
     if(meinoriProbs&&meinoriProbs.length>0){
       const probTxt=meinoriProbs.map(p=>`「${p.kanji}」を「${p.furi}」と読む`).join('、');
-      yd+=15;
-      items.push({cat:'読み下し',icon:'⚠',title:'名乗り読み（特殊な読み方）',deduct:15,
-        text:`${probTxt}は、一般的な読みから外れた特殊な読み方です。パッと見てその音で呼ばれにくい名前は、気が通りにくいとされます。`,
-        kitoku:'通称・SNS名では読みやすい呼び名を使うことで補えます。',
-        basis:'村山流では「生命は音から来る」とされます。読みが伝わりにくい名前は、社会生活で正しく認識されにくく、気の通り道に摩擦が生じやすいとされます。'
+      // yd+=0; ← 減点なし
+      items.push({cat:'読み下し',icon:'ℹ',title:'名乗り読みについて',deduct:0,
+        text:`${probTxt}は名乗り読みです。ルールと構造が整っていれば問題ありません。読み方を添えると、より伝わりやすくなります。`,
+        kitoku:'プロフィールや名刺にひらがなを併記すると自然に定着します。音で呼ばれる場（動画・音声など）を作ることも有効です。',
+        basis:'名乗り読みは日本の名前文化の一部です。村山流でも禁止ではなく、五行・陰陽・天地・画数のルールが整っていれば、読みやすさは工夫で補えます。最終的にどの名前を選ぶかは本人が決めます。'
       });
     }
   }
