@@ -1415,6 +1415,136 @@ function getSeiTailSound(furiSei){
 
 function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
 
+// ── 名乗り読みペナルティ（村山流） ──
+// 漢字の主な読み（音読み・訓読み・代表的な名乗り読み）
+const KANJI_READINGS = {
+  // 行動・修養
+  '修':['シュウ','おさむ','なが','のぶ','おさ'],         // ナオ は対象外
+  '治':['ジ','チ','おさむ','なお','はる','おさ'],
+  '直':['チョク','ただ','なお','すぐ'],                  // ナオ は直の読みとして標準
+  '徳':['トク','のり','あつ','よし'],
+  '貴':['キ','たか','よし','あて'],
+  '輝':['キ','てる','ひかる','あきら'],
+  '剛':['ゴウ','つよ','つよし','こわ'],
+  '誠':['セイ','まこと','とも'],
+  '誉':['ヨ','ほまれ'],
+  '優':['ユウ','まさ','すぐる','やさ','ゆ'],
+  // 自然・方向
+  '春':['シュン','はる'],
+  '夏':['カ','なつ'],
+  '秋':['シュウ','あき'],
+  '冬':['トウ','ふゆ'],
+  '光':['コウ','ひかる','みつ','てる'],
+  '明':['メイ','あきら','あき','はる'],
+  '晴':['セイ','はる','はれ'],
+  '清':['セイ','きよ','きよし'],
+  '空':['クウ','そら','から'],
+  '海':['カイ','うみ'],
+  '山':['サン','やま'],
+  '川':['セン','かわ'],
+  '花':['カ','はな'],
+  '桜':['おう','さくら'],
+  // 人物・人格
+  '健':['ケン','たけ','たけし','はや'],
+  '剛':['ゴウ','つよ','つよし'],
+  '武':['ム','たけ','たけし','たける'],
+  '龍':['リュウ','たつ','りょう'],  // ただし動植物禁止
+  '虎':['コ','とら'],              // 動物禁止
+  '翼':['ヨク','つばさ'],
+  '翔':['ショウ','かける','と','しょう'],
+  '駿':['シュン','はや','すぐる'],
+  // 女性名
+  '美':['ビ','み','よし'],
+  '愛':['アイ','あい','まな','めぐ'],
+  '恵':['ケイ','エ','めぐみ','さと'],
+  '子':['シ','こ','ね'],
+  '奈':['ナ','な'],
+  '菜':['サイ','な'],
+  '咲':['さく','さき'],
+  '萌':['ホウ','もえ','きざ'],
+  '瑞':['ズイ','みず','みずほ'],
+  '葵':['き','あおい'],            // 植物禁止
+  '桃':['トウ','もも'],            // 植物禁止
+  // 共通
+  '一':['イチ','かず','はじめ','もと'],
+  '二':['ジ','ふた','つぎ'],
+  '三':['サン','みつ','そう'],
+  '太':['タ','ふと','ひろ','お'],
+  '大':['ダイ','おお','ひろ','まさ'],
+  '小':['ショウ','お','こ'],
+  '新':['シン','あら','にい','よし'],
+  '進':['シン','すすむ'],
+  '信':['シン','のぶ','まこと'],
+  '仁':['ジン','ニン','ひと','まさ','さと'],
+  '義':['ギ','よし','のり'],
+  '礼':['レイ','ライ','あや','のり'],
+  '忠':['チュウ','ただ'],
+  '孝':['コウ','たか','ゆき'],
+  '哲':['テツ','さと','あき'],
+  '智':['チ','とも','さと'],
+  '知':['チ','とも','さと'],
+  '和':['ワ','かず','やわ','のど'],
+  '平':['ヘイ','ひら','たいら','ひろ'],
+  '安':['アン','やす'],
+  '幸':['コウ','ゆき','さち','みゆき'],
+  '豊':['ホウ','とよ','ゆたか'],
+  '実':['ジツ','みのる','まこと','み'],
+  '正':['セイ','ただ','まさ'],  // 字義縛りだが読みはOK
+  '勝':['ショウ','かつ','まさる'],
+  '功':['コウ','いさお','のり'],
+  '成':['セイ','なり','しげ'],
+  '雄':['ユウ','お','たけ'],
+  '英':['エイ','はな','ひで'],
+  '彦':['ゲン','ひこ'],
+  '郎':['ロウ','お'],
+  '朗':['ロウ','あきら'],
+  '良':['リョウ','よし','よ'],
+  '司':['シ','つかさ'],
+  '史':['シ','ふみ','ちか'],
+  '典':['テン','のり','ふみ'],
+  '則':['ソク','のり'],
+  '範':['ハン','のり'],
+  '規':['キ','のり'],
+};
+
+// フリガナを漢字ごとに均等分割
+function splitFuriPerChar(furi, kanjiStr){
+  const f = furi.trim().replace(/\s/g,'');
+  const sl = kanjiStr.length;
+  if(sl === 0) return [];
+  const fl = f.length;
+  const result = [];
+  for(let i=0;i<sl;i++){
+    const start = Math.floor(fl*i/sl);
+    const end = Math.floor(fl*(i+1)/sl);
+    result.push({kanji:kanjiStr[i], furi:f.slice(start,end)});
+  }
+  return result;
+}
+
+// 名乗り読みチェック
+function checkMeinoriYomi(meiStr, furiMei){
+  if(!furiMei||!meiStr) return null;
+  const splits = splitFuriPerChar(furiMei, meiStr);
+  const problems = [];
+  splits.forEach(({kanji, furi})=>{
+    if(!furi||!kanji) return;
+    const accepted = KANJI_READINGS[kanji];
+    if(!accepted) return; // 辞書にない漢字はスキップ
+    const furiNorm = furi.replace(/[ぁ-ん]/g, c=>String.fromCharCode(c.charCodeAt(0)+96));
+    // 小文字カナを大文字に変換
+    const furiUpper = furiNorm.replace(/[ァィゥェォッャュョ]/g, c=>String.fromCharCode(c.charCodeAt(0)+1));
+    const matched = accepted.some(r=>{
+      const rUpper = r.replace(/[ぁ-ん]/g, c=>String.fromCharCode(c.charCodeAt(0)+96))
+                      .replace(/[ァィゥェォッャュョ]/g, c=>String.fromCharCode(c.charCodeAt(0)+1));
+      return furiUpper.startsWith(rUpper) || rUpper.startsWith(furiUpper);
+    });
+    if(!matched) problems.push({kanji, furi, accepted});
+  });
+  return problems.length > 0 ? problems : null;
+}
+
+
 // ── 五行 ──
 const GG_TABLE={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};
 const SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
@@ -2971,6 +3101,19 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
     if(JIGI_SHIBARI.has(ch))items.push({cat:'字義',icon:'⚠',title:`字義による縛り（${ch}）`,text:`「${ch}」は「結ぶ・縛る・つなぐ」という意味を持つ文字です。画数や陰陽が整っていても、字義の気が過剰な束縛感をもたらすことがあります。`,kitoku:'この字が持つ「結ぶ力」を「縛られる」ではなく「人と縁を結ぶ才能」として使うことで、字義の気を昇華できます。'});
     else if(NATURE_CHARS_SET.has(ch)){yd+=15;items.push({cat:'読み下し',icon:'⚠',title:`自然の文字「${ch}」`,deduct:15,text:'動植物・気象・鉱物の漢字はその自然の過酷さが人生に出やすいとされます。',kitoku:'自然の文字は浮き沈みが出やすいとされています。吉方位取りで補えます。'});}
   });
+  // ── 名乗り読みチェック ──
+  if(furiMei&&meiStr){
+    const meinoriProbs=checkMeinoriYomi(meiStr,furiMei);
+    if(meinoriProbs&&meinoriProbs.length>0){
+      const probTxt=meinoriProbs.map(p=>`「${p.kanji}」を「${p.furi}」と読む`).join('、');
+      yd+=15;
+      items.push({cat:'読み下し',icon:'⚠',title:'名乗り読み（特殊な読み方）',deduct:15,
+        text:`${probTxt}は、一般的な読みから外れた特殊な読み方です。パッと見てその音で呼ばれにくい名前は、気が通りにくいとされます。`,
+        kitoku:'通称・SNS名では読みやすい呼び名を使うことで補えます。',
+        basis:'村山流では「生命は音から来る」とされます。読みが伝わりにくい名前は、社会生活で正しく認識されにくく、気の通り道に摩擦が生じやすいとされます。'
+      });
+    }
+  }
   score-=Math.min(yd,30);
   // ══ 五行チェック（音読みベース・村山ロジック準拠）══
   let gyd=0;
@@ -2984,11 +3127,8 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   }
   // ② 人格の大凶配列（音ベース：姓末文字＋名頭文字）
   // フリガナベースで人格の音を判定（訓読み対応）
-  // 村山流：姓の最後の漢字の主音（第一音）を取得
-  // 例：河上(カワカミ) → 上=カミ → 主音「カ」= カ行 = 木
-  const seiLastFuriPart = getSeiLastFuri(furiSei, seiStr);
-  const seiLastSound = seiLastFuriPart ? seiLastFuriPart[0] : '';
-  const seiLastOnGyo2=(furiSei&&seiLastSound&&kanaToGyo(seiLastSound))||getOnGyo(seiStr[seiStr.length-1]);
+  const seiLastSound = getSeiTailSound(furiSei) || getSeiLastFuri(furiSei,seiStr);
+  const seiLastOnGyo2=(furiSei&&kanaToGyo(seiLastSound))||getOnGyo(seiStr[seiStr.length-1]);
   const meiFirstOnGyo2=(furiMei&&kanaToGyo(furiMei.trim()[0]))||getOnGyo(meiStr[0]);
   if(seiLastOnGyo2&&meiFirstOnGyo2){
     const BAD_ON=[['水','水'],['火','火'],['水','火'],['火','水']];
