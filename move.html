@@ -12,7 +12,7 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="kitoku-engine.js"></script>
+<script src="kitoku-engine.js" defer></script>
 <style>
 /* ═══════════════════════════════════════
    KITOKU 引越し 吉方位ナビ
@@ -1621,6 +1621,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadStarInfo() {
+  if(typeof getKD !== 'function'){
+    console.warn('kitoku-engine not loaded:', new ReferenceError('getKD is not defined'));
+    return;
+  }
   const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (!birth) return;
   const [by, bm, bd] = birth.split('-').map(Number);
@@ -3055,7 +3059,25 @@ function confirmDestAddr() {
       </div>
     </div>
 
-    <div style="font-size:.6rem;color:var(--mist);line-height:1.8;padding:4px 2px;">
+    <!-- 仮吉方候補地を探す -->
+    <div style="margin-top:16px;padding:14px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:12px;">
+      <div style="font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">🗺 仮吉方の候補地を探す</div>
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
+        現在地から吉方位にある場所を自動で探します。<br>出発地が登録済みの場合、すぐに候補が表示されます。
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <select id="kariBanType" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.65rem;color:#3a2a10;">
+          <option value="year">年盤で探す</option>
+          <option value="month">月盤で探す</option>
+        </select>
+        <button onclick="searchKariPlaces()" style="padding:8px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.3);border-radius:8px;font-size:.65rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;">
+          🌿 候補地を探す
+        </button>
+      </div>
+      <div id="kariResults"></div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.8;padding:4px 2px;margin-top:12px;">
       ✦ 仮吉方は精神的修行でもあります。不自由な期間を笑って乗り越えられた時、新しい家には最高の幸運が定着します。
     </div>
   </div>
@@ -3084,6 +3106,101 @@ function goPreviousPage(){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);
   else show();
 })();
+
+// ── 仮吉方候補地検索 ──
+function searchKariPlaces(){
+  const results = document.getElementById('kariResults');
+  if(!results) return;
+
+  if(!gState.homeLat || !gState.homeLon){
+    results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">出発地が未登録です。先に出発地（現在地）を登録してください。</div>';
+    return;
+  }
+
+  results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">候補地を検索中…</div>';
+
+  const banType = document.getElementById('kariBanType').value;
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth()+1, d = today.getDate();
+
+  // 年盤・月盤の中心を取得
+  let center;
+  try{
+    center = banType==='year'
+      ? yearCenter(y)
+      : (typeof getMonthCenter==='function' ? getMonthCenter(y,m,d) : yearCenter(y));
+  }catch(e){ center=5; }
+
+  // 方位盤を構築して吉方位を取得
+  const board = buildBoardFromCenter(center);
+  const kichiDirs = [];
+  ['N','NE','E','SE','S','SW','W','NW'].forEach(dir=>{
+    const starN = board[dir]||5;
+    const r = rankDir(dir, starN, gState.honmei, gState.tsukimei, new Set(), null);
+    if(r.rank >= 2) kichiDirs.push(dir);
+  });
+
+  const DIR_LABEL = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+
+  if(kichiDirs.length === 0){
+    results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">現在の盤面では吉方位が見つかりませんでした。月盤でも確認してみてください。</div>';
+    return;
+  }
+
+  // SACRED_PLACESから吉方位の候補地を探す（10km〜500km）
+  const candidates = [];
+  Object.values(SACRED_PLACES).forEach(group=>{
+    group.forEach(place=>{
+      if(!place.lat || !place.lon) return;
+      const bearing = calcBearing(gState.homeLat, gState.homeLon, place.lat, place.lon);
+      const dir = bearingToDir(bearing);
+      if(kichiDirs.includes(dir)){
+        const dist = calcDist(gState.homeLat, gState.homeLon, place.lat, place.lon);
+        if(dist >= 10 && dist <= 500){
+          candidates.push({...place, dir, dist});
+        }
+      }
+    });
+  });
+
+  candidates.sort((a,b)=>a.dist-b.dist);
+  const top = candidates.slice(0,8);
+
+  if(top.length === 0){
+    results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">条件に合う候補地が見つかりませんでした。</div>';
+    return;
+  }
+
+  const banLabel = banType==='year'?`${y}年盤（中宮${center}）`:`${y}年${m}月盤`;
+  results.innerHTML=`
+    <div style="font-size:.6rem;color:var(--goldlt);margin-bottom:8px;">
+      ✦ ${banLabel}の吉方位：${kichiDirs.map(d=>DIR_LABEL[d]).join('・')}
+    </div>
+    <div style="display:grid;gap:6px;">
+      ${top.map(p=>`
+        <div style="padding:9px 11px;background:rgba(255,255,255,.7);border:1px solid rgba(138,104,32,.15);border-radius:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+            <span style="font-size:.7rem;font-weight:700;color:#3a2a10;">${p.name}</span>
+            <span style="font-size:.6rem;color:var(--goldlt);font-weight:700;">${DIR_LABEL[p.dir]} ${Math.round(p.dist)}km</span>
+          </div>
+          <div style="font-size:.58rem;color:#7a6040;">${p.area||''}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="font-size:.55rem;color:var(--mist);margin-top:8px;line-height:1.7;">
+      ※ 方位方向の参考候補です。実際の滞在場所は番地単位で方位を確認してください。
+    </div>
+  `;
+}
+
+// 距離計算（km）
+function calcDist(lat1,lon1,lat2,lon2){
+  const R=6371, r=Math.PI/180;
+  const dLat=(lat2-lat1)*r, dLon=(lon2-lon1)*r;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
 </script>
 </div>
 

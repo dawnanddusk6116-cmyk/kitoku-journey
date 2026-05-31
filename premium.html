@@ -229,11 +229,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         今日の九星・日支・星情報から生成します。1日1回生成し、同じ日は保存して再表示します。
       </div>
       <div class="inspiration-actions">
-        <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="generateTodayInspiration()">今日の一言を生成</button>
+        <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="showInspirationPreparing()">今日の一言を生成</button>
         <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">気学先生に相談</button>
       </div>
       <div class="inspiration-note">
-        無料トップには戻さず、毎日使うプレミアム機能として育てる枠です。
+        Premium機能として準備中です。正式接続後、1日1回生成して同じ日は保存されます。
       </div>
     </div>
 
@@ -1000,8 +1000,8 @@ ${boardSummary}${senroSummary}
 ◆大凶音配列禁止：水水・火火・水火・火水
 ◆判定基準：姓の最後の漢字の主音（第一音）と名の最初の音を比較
 　例：河上(かわかみ)→上(かみ)→主音「か」=カ行=木　※フリガナ末尾「み」は使わない
-・音の五行は、姓の最後の「文字」ではなく、フリガナ上の最後の音と名の最初の音で人格音を確認する
-・例：カワカミ＋ナオキは、姓末音「ミ（水）」と名頭音「ナ（火）」で水火の激突として見る
+・音の五行は、フリガナ全体の末尾ではなく、姓の最後の漢字の読みの第一音で人格音を確認する
+・例：カワカミ＋ナオキは、上（カミ）の主音「カ（木）」と名頭音「ナ（火）」で木火の相生として見る
 ・水水・火火・水火・火水が人格音に出る候補は、画数・陰陽・総格が良くても「推奨」と言い切らない
 ◆姓との組み合わせ禁止：天地同数・姓名同数・天底同数・天地衝突（3・5・9画の激突）
 ◆五行バランス：3種類以上が理想
@@ -1360,6 +1360,14 @@ ${boardInfo}
     showInspiration({quote:'今日の気に、ひとつだけ言葉を灯す。',message:'データの取得に失敗しました。もう一度お試しください。',action:''});
   }
   if(btn){ btn.disabled=false; btn.textContent='今日の一言を生成'; }
+}
+
+function showInspirationPreparing(){
+  showInspiration({
+    quote:'今日の一言は準備中です。',
+    message:'Premium機能として、今日の九星・日支・星情報から生成できるように整えています。',
+    action:'いまは気学先生に相談ボタンから自由に相談できます'
+  });
 }
 
 function showInspiration(obj){

@@ -1405,12 +1405,12 @@ function getSeiLastFuri(furiSei, seiStr){
   const startIdx=Math.floor(fl*(sl-1)/sl);
   return f.slice(startIdx);
 }
-// 姓と名の接点を見る時は、姓の最後の「音」を使う。
-// 例：カワカミ → ミ（水）。最後の漢字読み「カミ」の先頭カ（木）を拾うと判定が甘くなる。
-function getSeiTailSound(furiSei){
+// 姓と名の接点を見る時は、姓の最後の漢字の主音を使う。
+// 例：河上（カワカミ）→ 上（カミ）→ 主音カ（木）。フリガナ末尾のミは使わない。
+function getSeiTailSound(furiSei, seiStr){
   if(!furiSei)return '';
-  const f=furiSei.trim().replace(/[\s　]+/g,'');
-  return f ? f[f.length-1] : '';
+  const lastFuri=getSeiLastFuri(furiSei, seiStr);
+  return lastFuri ? lastFuri[0] : '';
 }
 
 function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
@@ -1423,7 +1423,8 @@ const KANJI_READINGS = {
   '治':['ジ','チ','おさむ','なお','はる','おさ'],
   '直':['チョク','ただ','なお','すぐ'],                  // ナオ は直の読みとして標準
   '徳':['トク','のり','あつ','よし'],
-  '貴':['キ','たか','よし','あて'],
+  '貴':['キ','たか','たけ','よし','あて'],
+  '己':['キ','おのれ','つちのと'],
   '輝':['キ','てる','ひかる','あきら'],
   '剛':['ゴウ','つよ','つよし','こわ'],
   '誠':['セイ','まこと','とも'],
@@ -1513,6 +1514,12 @@ function splitFuriPerChar(furi, kanjiStr){
   const sl = kanjiStr.length;
   if(sl === 0) return [];
   const fl = f.length;
+  if(sl===2 && fl===3){
+    return [
+      {kanji:kanjiStr[0], furi:f.slice(0,2)},
+      {kanji:kanjiStr[1], furi:f.slice(2)}
+    ];
+  }
   const result = [];
   for(let i=0;i<sl;i++){
     const start = Math.floor(fl*i/sl);
@@ -1537,7 +1544,7 @@ function checkMeinoriYomi(meiStr, furiMei){
     const matched = accepted.some(r=>{
       const rUpper = r.replace(/[ぁ-ん]/g, c=>String.fromCharCode(c.charCodeAt(0)+96))
                       .replace(/[ァィゥェォッャュョ]/g, c=>String.fromCharCode(c.charCodeAt(0)+1));
-      return furiUpper.startsWith(rUpper) || rUpper.startsWith(furiUpper);
+      return furiUpper===rUpper || furiUpper.startsWith(rUpper) || (furiUpper.length>=2 && rUpper.startsWith(furiUpper));
     });
     if(!matched) problems.push({kanji, furi, accepted});
   });
@@ -3127,7 +3134,7 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   }
   // ② 人格の大凶配列（音ベース：姓末文字＋名頭文字）
   // フリガナベースで人格の音を判定（訓読み対応）
-  const seiLastSound = getSeiTailSound(furiSei) || getSeiLastFuri(furiSei,seiStr);
+  const seiLastSound = getSeiTailSound(furiSei,seiStr) || getSeiLastFuri(furiSei,seiStr);
   const seiLastOnGyo2=(furiSei&&kanaToGyo(seiLastSound))||getOnGyo(seiStr[seiStr.length-1]);
   const meiFirstOnGyo2=(furiMei&&kanaToGyo(furiMei.trim()[0]))||getOnGyo(meiStr[0]);
   if(seiLastOnGyo2&&meiFirstOnGyo2){
@@ -3135,7 +3142,7 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
     if(BAD_ON.some(([a,b])=>seiLastOnGyo2===a&&meiFirstOnGyo2===b)){
       gyd+=45;
       items.push({cat:'五行',icon:'⚠',title:`人格の音が大凶（${seiLastOnGyo2}・${meiFirstOnGyo2}）`,deduct:45,
-        text:`姓の最後の音「${seiLastSound||seiStr[seiStr.length-1]}（${seiLastOnGyo2}）」と名の最初の音「${furiMei?furiMei.trim()[0]:meiStr[0]}（${meiFirstOnGyo2}）」が大凶配列です。画数や陰陽が整っていても、呼び名の接点で強い摩擦が出やすいとされます。`,
+        text:`姓の最後の漢字の主音「${seiLastSound||seiStr[seiStr.length-1]}（${seiLastOnGyo2}）」と名の最初の音「${furiMei?furiMei.trim()[0]:meiStr[0]}（${meiFirstOnGyo2}）」が大凶配列です。画数や陰陽が整っていても、呼び名の接点で強い摩擦が出やすいとされます。`,
         kitoku:(()=>{ const pair=seiLastOnGyo2+meiFirstOnGyo2; if(pair==='火火')return '二つの炎の激突は底知れぬ情熱の証。水（冷静な洞察）でコントロールし、土（具体的な行動）に落とし込むことで最強の創造力へ変換できます。'; if(pair==='水水')return '二つの水の流れは深い共感力と洞察の証。木（方向性と成長）を意識することで、その深い知恵を行動へと導けます。'; return `${seiLastOnGyo2}と${meiFirstOnGyo2}の激突は深い感情の起伏を持つ証。土（具体的な形）を意識することで創造力へと変換できます。`;})() });
     }
   }
