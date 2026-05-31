@@ -155,6 +155,10 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div id="aiContextSummary" style="font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.24);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
         読み込み中...
       </div>
+      <div id="lifeReadingBanner" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:10px;">
+        <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 姓名鑑定の結果を読み込みました</div>
+        <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);"></div>
+      </div>
 
       <div style="font-size:.6rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.62);border:1px solid var(--rim);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
         <strong style="color:var(--goldlt);">うまく使うコツ</strong><br>
@@ -814,6 +818,20 @@ function buildSystemPrompt() {
     senroSummary = `線路の日支：${branches}\n今月の線路の日：${d1||'なし'}\n来月の線路の日：${d2||'なし'}`;
   } catch(e){}
 
+  // 姓名鑑定の結果を読み込む（life.htmlから連携）
+  let lifeReadingSummary = '';
+  try{
+    const lr = JSON.parse(localStorage.getItem('kitoku-life-reading')||'{}');
+    if(lr.name && (Date.now()-lr.ts) < 86400000){
+      const issues = (lr.items||[]).map(i=>`・${i.title}：${i.text}`).join('\n');
+      lifeReadingSummary = `\n\n【姓名鑑定の結果（${lr.name}）】\nスコア：${lr.score}点\n${issues}`;
+      const banner = document.getElementById('lifeReadingBanner');
+      const nameEl = document.getElementById('lifeReadingName');
+      if(banner) banner.style.display='block';
+      if(nameEl) nameEl.textContent = `${lr.name}さんの鑑定結果（${lr.score}点）を読み込み済み`;
+    }
+  }catch(e){}
+
   const userData = `
 相談モード：${getModeMeta().label}
 出発地登録：${getHomePrem()?'登録済み（AIには地名・座標は自動送信しません）':'未登録'}
@@ -834,6 +852,18 @@ ${boardSummary}${senroSummary}
 ・データに「吉方位」と書いてあれば、それが唯一の正解。AIの気学知識で上書きしない
 ・データにない情報は「KITOKUのデータには記載がありません」と正直に伝える
 ・2ヶ月以降の線路の日を聞かれたら「調べたい期間の最初と最後の日付の方位盤メモをコピーして貼ってください。日支から線路の日を特定できます」と案内する
+
+【改名・命名の絶対ルール（村山流）】
+◆禁止漢字：動植物・気象・鉱物・十二支（龍・雪・葵など）
+◆字義縛り禁止：歩・泉・亜・絆・結・恩・正・未・香・唯
+◆禁止画数（総格）：19・22・28・44画が絶対禁忌。26・30・34・36画は要注意
+◆人格・地格のNG：9画・19画
+◆禁止配列：大バサミ・二重挟み・縛り（全陰全陽）・中断
+◆読み下し禁止：一文字名・水性始まり（マ・ハ行）・濁音始まり・ん終わり
+◆大凶音配列禁止：水水・火火・水火・火水
+◆姓との組み合わせ禁止：天地同数・姓名同数・天底同数・天地衝突（3・5・9画の激突）
+◆五行バランス：3種類以上が理想
+◆優先順位：①読み下し→②五行→③陰陽→④天地→⑤画数
 ・計算は絶対にしない（下記データが正確な値）
 ・「村山先生」「気学」とは言わない
 ・「5000年の知恵」として伝える
@@ -858,7 +888,7 @@ ${boardSummary}${senroSummary}
 ・${TONES[currentTone]}
 
 【ユーザーデータ】
-${userData}`;
+${userData}${lifeReadingSummary}`;
 }
 
 async function sendChat() {

@@ -615,6 +615,7 @@ footer{
 
   <!-- 相性診断結果 -->
   <div id="aiResultArea" style="display:none;margin:0 16px 16px;"></div>
+  <div id="aiDeepDiveArea" style="display:none;"></div>
 
   <!-- 結果 -->
   <div id="results">
@@ -3008,7 +3009,35 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   window._tcData = r.tenchiResult;
   const _dt=document.getElementById('detailToggle');if(_dt)_dt.style.display='block';
 
+  // 気学先生に深掘りボタンを表示
+  renderAiDeepDiveBtn(seiStr, meiStr, r, jinGGon);
+}
 
+function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG){
+  const area = document.getElementById('aiDeepDiveArea');
+  if(!area) return;
+
+  // 鑑定データをlocalStorageに保存
+  const readingData = {
+    name: sei+mei,
+    sei, mei,
+    score: scoreResult.score,
+    items: (scoreResult.items||[]).map(i=>({cat:i.cat,title:i.title,text:i.text})),
+    jinGG,
+    mode: getLifeMode(),
+    ts: Date.now()
+  };
+  localStorage.setItem('kitoku-life-reading', JSON.stringify(readingData));
+
+  area.style.display = 'block';
+  area.innerHTML = `
+    <div style="margin:16px;padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.8));border:1px solid rgba(138,104,32,.3);border-radius:14px;text-align:center;">
+      <div style="font-size:.62rem;color:var(--goldlt);letter-spacing:.1em;margin-bottom:6px;">✦ KITOKU @ PREMIUM</div>
+      <div style="font-size:.75rem;color:var(--snow);font-weight:700;margin-bottom:8px;">${sei}${mei}さんの鑑定を気学先生に深掘りしてもらう</div>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">改名・命名の提案・相性の深掘り・人生のアドバイスをAIが答えます</div>
+      <a href="premium.html" style="display:inline-block;padding:10px 24px;background:rgba(138,104,32,.18);border:1px solid rgba(138,104,32,.4);border-radius:10px;color:var(--goldlt);font-size:.72rem;font-weight:700;text-decoration:none;">✦ 気学先生に相談する →</a>
+    </div>
+  `;
 }
 
 function openBasisModal(title, basis){
