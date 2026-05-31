@@ -3065,15 +3065,27 @@ function confirmDestAddr() {
       <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
         現在地から吉方位にある場所を自動で探します。<br>出発地が登録済みの場合、すぐに候補が表示されます。
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <!-- 同一市内の説明 -->
+      <div style="margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.85;">
+        <strong style="color:var(--goldlt);">同一市内の引越しの場合：</strong><br>
+        引越し先が市内で方位が凶でも、仮吉方の滞在場所は市内・近郊でOKです。<br>
+        「近距離（2〜20km）」で吉方位の場所を探してください。<br>
+        <span style="opacity:.8;">※ 750m未満は方位の作用が発生しないため仮吉方は不要です。</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
         <select id="kariBanType" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.65rem;color:#3a2a10;">
           <option value="year">年盤で探す</option>
           <option value="month">月盤で探す</option>
         </select>
-        <button onclick="searchKariPlaces()" style="padding:8px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.3);border-radius:8px;font-size:.65rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;">
-          🌿 候補地を探す
-        </button>
+        <select id="kariDistRange" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.65rem;color:#3a2a10;">
+          <option value="near">近距離（2〜20km）</option>
+          <option value="mid" selected>中距離（20〜150km）</option>
+          <option value="far">遠距離（150〜500km）</option>
+        </select>
       </div>
+      <button onclick="searchKariPlaces()" style="width:100%;padding:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.3);border-radius:8px;font-size:.65rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;margin-bottom:10px;">
+        🌿 仮吉方の候補地を探す
+      </button>
       <div id="kariResults"></div>
     </div>
 
@@ -3148,6 +3160,12 @@ function searchKariPlaces(){
   }
 
   // SACRED_PLACESから吉方位の候補地を探す（10km〜500km）
+  // 距離範囲の設定
+  const distRangeEl = document.getElementById('kariDistRange');
+  const distRange = distRangeEl ? distRangeEl.value : 'mid';
+  const distMin = distRange==='near' ? 2 : distRange==='mid' ? 20 : 150;
+  const distMax = distRange==='near' ? 20 : distRange==='mid' ? 150 : 500;
+
   const candidates = [];
   Object.values(SACRED_PLACES).forEach(group=>{
     group.forEach(place=>{
@@ -3156,7 +3174,7 @@ function searchKariPlaces(){
       const dir = bearingToDir(bearing);
       if(kichiDirs.includes(dir)){
         const dist = calcDist(gState.homeLat, gState.homeLon, place.lat, place.lon);
-        if(dist >= 10 && dist <= 500){
+        if(dist >= distMin && dist <= distMax){
           candidates.push({...place, dir, dist});
         }
       }
@@ -3167,15 +3185,24 @@ function searchKariPlaces(){
   const top = candidates.slice(0,8);
 
   if(top.length === 0){
-    results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">条件に合う候補地が見つかりませんでした。</div>';
+    const rangeLabel = distRange==='near'?'近距離（2〜20km）':distRange==='mid'?'中距離（20〜150km）':'遠距離（150〜500km）';
+    results.innerHTML=`
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.8;">
+        ${rangeLabel}の範囲で候補地が見つかりませんでした。<br>
+        ${distRange==='near'?'中距離・遠距離でも探してみてください。':'別の距離範囲でも探してみてください。'}<br><br>
+        <strong style="color:var(--goldlt);">吉方位：${kichiDirs.map(d=>DIR_LABEL[d]).join('・')}</strong><br>
+        この方向の宿・ホテルを自分で探してください。
+      </div>`;
     return;
   }
 
+  const distRangeLabel = distRange==='near'?'近距離（2〜20km）':distRange==='mid'?'中距離（20〜150km）':'遠距離（150〜500km）';
   const banLabel = banType==='year'?`${y}年盤（中宮${center}）`:`${y}年${m}月盤`;
   results.innerHTML=`
-    <div style="font-size:.6rem;color:var(--goldlt);margin-bottom:8px;">
+    <div style="font-size:.6rem;color:var(--goldlt);margin-bottom:4px;">
       ✦ ${banLabel}の吉方位：${kichiDirs.map(d=>DIR_LABEL[d]).join('・')}
     </div>
+    <div style="font-size:.55rem;color:var(--mist);margin-bottom:8px;">${distRangeLabel}の候補</div>
     <div style="display:grid;gap:6px;">
       ${top.map(p=>`
         <div style="padding:9px 11px;background:rgba(255,255,255,.7);border:1px solid rgba(138,104,32,.15);border-radius:8px;">
