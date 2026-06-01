@@ -226,7 +226,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
       <div class="inspiration-body">
         今日の九星・日支・あなたの星情報から、短い格言、今日の問い、小さな行動を生成する予定です。<br>
-        今日の九星・日支・星情報から生成します。1日1回生成し、同じ日は保存して再表示します。
+        1日1回生成し、同じ日は保存して再表示します。
       </div>
       <div class="inspiration-actions">
         <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="showInspirationPreparing()">今日の一言を生成</button>
@@ -237,43 +237,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </div>
 
-
-    <!-- ④ 改名・命名の採点 -->
-    <div class="panel" id="renameScorePanel">
-      <div class="panel-title">④ 改名・命名の採点</div>
-      <div style="font-size:.62rem;color:var(--mist);margin-bottom:12px;line-height:1.8;">
-        姓と候補の名前を入力して採点できます。<br>
-        気学先生の提案をそのまま確認できます。
-      </div>
-
-      <!-- 姓の入力 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div>
-          <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">姓</div>
-          <input id="rsName1" type="text" placeholder="河上" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
-        </div>
-        <div>
-          <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">フリガナ</div>
-          <input id="rsName1Furi" type="text" placeholder="カワカミ" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
-        </div>
-      </div>
-
-      <!-- 候補の入力（3件） -->
-      <div id="rsCandidates">
-        <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:6px;">候補の名前（最大5件）</div>
-      </div>
-      <div id="rsCandRows"></div>
-
-      <button onclick="addRsRow()" style="width:100%;padding:8px;background:rgba(138,104,32,.06);border:1px dashed rgba(138,104,32,.3);border-radius:8px;font-size:.62rem;color:var(--mist);cursor:pointer;margin-bottom:10px;">＋ 候補を追加</button>
-
-      <button onclick="runRenameScore()" style="width:100%;padding:11px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.3);border-radius:10px;font-size:.72rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">
-        ✦ 一括採点する
-      </button>
-
-      <div id="rsResults" style="margin-top:12px;"></div>
-    </div>
     <div class="panel" id="aiChatPanel">
-      <div class="panel-title">気学先生に相談する</div>
+      <div class="panel-title">① 気学先生に相談する</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
         あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
         コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
@@ -343,7 +308,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </div>
 
     <div class="panel">
-      <div class="panel-title">① プレミア方位盤</div>
+      <div class="panel-title">② プレミア方位盤</div>
       <details class="premium-help">
         <summary>Premium Compass の使い方</summary>
         <div class="premium-help-body">
@@ -400,8 +365,45 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div class="note">まずは日盤・月盤・年盤をここに集約。プレミア課金後は、ここから線路日・吉方日程・事業判断へ広げられます。</div>
     </div>
 
-    <div class="panel">
-      <div class="panel-title">② 相手の星も入れる（この画面だけ）</div>
+    <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">便利ツール</div>
+
+    <details class="self-accordion">
+      <summary>簡易姓名採点 <button type="button" onclick="event.stopPropagation();openToolHelp('rename')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
+      <div class="self-accordion-body" id="renameScorePanel">
+        <div style="font-size:.62rem;color:var(--mist);margin-bottom:12px;line-height:1.8;">
+          姓と候補の名前を入力して採点できます。<br>
+          気学先生の提案をそのまま確認できます。
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">姓</div>
+            <input id="rsName1" type="text" placeholder="河上" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
+          </div>
+          <div>
+            <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">フリガナ</div>
+            <input id="rsName1Furi" type="text" placeholder="カワカミ" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
+          </div>
+        </div>
+
+        <div id="rsCandidates">
+          <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:6px;">候補の名前（最大5件）</div>
+        </div>
+        <div id="rsCandRows"></div>
+
+        <button onclick="addRsRow()" style="width:100%;padding:8px;background:rgba(138,104,32,.06);border:1px dashed rgba(138,104,32,.3);border-radius:8px;font-size:.62rem;color:var(--mist);cursor:pointer;margin-bottom:10px;">＋ 候補を追加</button>
+
+        <button onclick="runRenameScore()" style="width:100%;padding:11px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.3);border-radius:10px;font-size:.72rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">
+          ✦ 一括採点する
+        </button>
+
+        <div id="rsResults" style="margin-top:12px;"></div>
+      </div>
+    </details>
+
+    <details class="self-accordion">
+      <summary>相手の星も入れる <button type="button" onclick="event.stopPropagation();openToolHelp('target')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
+      <div class="self-accordion-body">
       <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
       <div class="field-grid">
         <div>
@@ -422,16 +424,19 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
       <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
       <button class="copy-btn" id="copyTargetBtn" onclick="copyTargetInfo()">📋 相手の星情報をコピー</button>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">③ 今月の線路の日</div>
-      <div class="senro-list" id="senroDays"></div>
-      <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
-    </div>
+      </div>
+    </details>
 
     <details class="self-accordion">
-      <summary>④ 自分の九星情報・姓名鑑定へ</summary>
+      <summary>今月の線路の日 <button type="button" onclick="event.stopPropagation();openToolHelp('senro')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
+      <div class="self-accordion-body">
+      <div class="senro-list" id="senroDays"></div>
+      <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
+      </div>
+    </details>
+
+    <details class="self-accordion">
+      <summary>自分の九星情報・姓名鑑定へ <button type="button" onclick="event.stopPropagation();openToolHelp('self')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
       <div class="self-accordion-body">
         <div class="star-text" id="starInfoText">読み込み中...</div>
         <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
@@ -445,8 +450,17 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </a>
       </div>
     </details>
+
   </section>
 </main>
+
+<div id="toolHelpModal" onclick="closeToolHelp()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(35,25,12,.42);backdrop-filter:blur(3px);">
+  <div onclick="event.stopPropagation()" style="position:absolute;left:16px;right:16px;bottom:18px;max-width:480px;margin:0 auto;background:var(--card);border:1px solid var(--rim);border-radius:16px;padding:18px 18px 20px;box-shadow:0 18px 50px rgba(60,40,15,.16);">
+    <div id="toolHelpTitle" style="font-size:.78rem;color:var(--goldlt);font-weight:800;letter-spacing:.06em;margin-bottom:10px;"></div>
+    <div id="toolHelpBody" style="font-size:.66rem;color:var(--mist);line-height:1.9;"></div>
+    <button onclick="closeToolHelp()" style="width:100%;margin-top:14px;padding:10px 14px;border:1px solid rgba(138,104,32,.28);border-radius:999px;background:rgba(138,104,32,.08);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-weight:700;">閉じる</button>
+  </div>
+</div>
 
 <script>
 const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',mode:'travel',destination:null,date:new Date()};
@@ -1383,6 +1397,41 @@ document.addEventListener('DOMContentLoaded',function(){
 function scrollToAiChat(){
   const el=document.getElementById('aiChatPanel');
   if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+const TOOL_HELP = {
+  rename: {
+    title: '簡易姓名採点はこんな時に使えます',
+    body: '気学先生に出してもらった改名・通称・SNS名の候補を、すぐに並べて確認したい時に使います。ここでは候補を絞るための簡易チェックを行い、最終的な深掘りは気学先生に相談します。'
+  },
+  target: {
+    title: '相手の星はこんな時に使えます',
+    body: '家族・恋愛・仕事・商談・面談など、相手がいる相談で使います。相手の生年月日を入れて星情報をコピーし、気学先生に貼ると、関係性や伝え方をより具体的に相談できます。'
+  },
+  senro: {
+    title: '線路の日はこんな時に使えます',
+    body: '契約、開始、出発、申し込み、長く続けたいことを始める日を見る時に使います。方位の吉凶とは別枠で、物事を始める力を見たい時の材料です。'
+  },
+  self: {
+    title: '自分の情報はこんな時に使えます',
+    body: 'AI相談、日程判断、方位判断、姓名鑑定の土台になる情報です。普段は自動で相談文に入りますが、別のAIやメモに貼りたい時はここからコピーできます。'
+  },
+  inspiration: {
+    title: '今日のインスピレーションはこんな時に使えます',
+    body: '毎朝のひとこと、今日の問い、小さな行動を受け取りたい時の入口です。正式接続後は、今日の九星・日支・あなたの星情報から1日1回生成する予定です。'
+  }
+};
+
+function openToolHelp(type){
+  const data=TOOL_HELP[type]||TOOL_HELP.self;
+  document.getElementById('toolHelpTitle').textContent=data.title;
+  document.getElementById('toolHelpBody').textContent=data.body;
+  document.getElementById('toolHelpModal').style.display='block';
+}
+
+function closeToolHelp(){
+  const modal=document.getElementById('toolHelpModal');
+  if(modal) modal.style.display='none';
 }
 
 async function generateTodayInspiration(){
