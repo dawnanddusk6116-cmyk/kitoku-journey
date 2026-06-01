@@ -1262,7 +1262,7 @@ ${boardSummary}${senroSummary}
 ${userData}${lifeReadingSummary}`;
 }
 
-async function sendChat() {
+async function sendChatBase() {
   if(isThinking) return;
   const input = document.getElementById('chatInput');
   const msg = input.value.trim();
@@ -2289,11 +2289,10 @@ function removeImage(){
   document.getElementById('imagePreview').src = '';
 }
 
-// sendChatをオーバーライドして画像対応
-const _origSendChat = sendChat;
+// sendChatを画像対応の入口として一本化
 async function sendChat(){
   if(!attachedImageData){
-    await _origSendChat();
+    await sendChatBase();
     return;
   }
   if(isThinking) return;
