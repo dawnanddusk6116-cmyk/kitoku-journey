@@ -2293,47 +2293,55 @@ function removeImage(){
 const _origSendChat = sendChat;
 async function sendChat(){
   if(!attachedImageData){
-    _origSendChat();
+    await _origSendChat();
     return;
   }
-  // 画像付きで送信
   if(isThinking) return;
   const input = document.getElementById('chatInput');
   const msg = input.value.trim() || '添付した写真を見てください';
+  const imageData = attachedImageData;
+  const imageType = attachedImageType;
+  const previewSrc = document.getElementById('imagePreview').src;
   input.value = '';
 
-  // ユーザーメッセージ表示（サムネイル付き）
-  const userContent = [
-    {type:'image',source:{type:'base64',media_type:attachedImageType,data:attachedImageData}},
-    {type:'text',text:msg}
-  ];
-  addMessage('user', msg, false, document.getElementById('imagePreview').src);
-  chatHistory.push({role:'user', content: userContent});
+  addMessage('user', msg, false, previewSrc);
+  chatHistory.push({role:'user', content: msg + '\n\n※写真を添付しています。'});
 
-  // 画像をクリア
   removeImage();
 
   isThinking = true;
   const thinkingEl = addMessage('assistant','…',true);
 
   try{
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
+    if(location.protocol==='file:'){
+      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
+    }
+    const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+String(m.content||'')).join('\n\n');
+    const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n最後の相談者は写真も添付しています。写真から見える色・質感・用途・場面を五行に置き換え、相談内容に答えてください。';
+    const res = await fetch('/api/claude',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system: buildSystemPrompt(),
-        messages: chatHistory.slice(-10)
+        prompt:prompt,
+        image:{media_type:imageType,data:imageData}
       })
     });
-    const data = await res.json();
+    const raw = await res.text();
+    if(!res.ok){
+      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
+    }
+    let data;
+    try{
+      data=JSON.parse(raw);
+    }catch(parseError){
+      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
+    }
     const reply = data.content?.[0]?.text||'申し訳ありません、もう一度お試しください。';
     thinkingEl.textContent = reply;
     thinkingEl.style.fontStyle='normal';
     chatHistory.push({role:'assistant',content:reply});
   }catch(e){
-    thinkingEl.textContent='通信エラーが発生しました。もう一度お試しください。';
+    thinkingEl.textContent='通信エラーが発生しました。\n' + (e && e.message ? e.message : String(e));
   }
   isThinking = false;
 }
