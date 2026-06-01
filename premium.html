@@ -163,18 +163,28 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 }
 .inspiration-summary{
   position:relative;
-  padding-right:22px;
+  padding-right:34px;
 }
 .inspiration-summary::after{
-  content:'⌄';
+  content:'▾';
   position:absolute;
   right:0;
-  bottom:4px;
-  color:rgba(255,250,240,.72);
-  font-size:.92rem;
+  top:50%;
+  width:26px;
+  height:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,250,240,.32);
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  color:#fffaf0;
+  font-size:1.08rem;
+  line-height:1;
   transition:transform .18s ease;
+  transform:translateY(-50%);
 }
-.inspiration-card[open] .inspiration-summary::after{transform:rotate(180deg);}
+.inspiration-card[open] .inspiration-summary::after{transform:translateY(-50%) rotate(180deg);}
 .inspiration-detail{
   margin-top:12px;
   padding-top:12px;
@@ -207,6 +217,50 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   font-size:.56rem;
   line-height:1.75;
   color:rgba(255,250,240,.62);
+}
+.mini-accordion{
+  border:1px solid rgba(138,104,32,.2);
+  border-radius:10px;
+  background:rgba(255,255,255,.62);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.mini-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--goldlt);
+  font-size:.62rem;
+  font-weight:800;
+}
+.mini-accordion summary::-webkit-details-marker{display:none;}
+.mini-accordion summary::after{
+  content:'▾';
+  width:22px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  border:1px solid rgba(138,104,32,.22);
+  background:rgba(138,104,32,.07);
+  color:var(--goldlt);
+  font-size:.82rem;
+  line-height:1;
+  flex:0 0 auto;
+  transition:transform .18s ease;
+}
+.mini-accordion[open] summary::after{transform:rotate(180deg);}
+.mini-accordion-body{
+  border-top:1px solid rgba(138,104,32,.14);
+  padding:10px 12px;
+  font-size:.6rem;
+  color:var(--mist);
+  line-height:1.85;
 }
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
@@ -273,19 +327,24 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
       </div>
 
-      <div id="aiContextSummary" style="font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.24);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
-        読み込み中...
-      </div>
+      <details class="mini-accordion">
+        <summary>AI相談に入る情報</summary>
+        <div class="mini-accordion-body" id="aiContextSummary">
+          読み込み中...
+        </div>
+      </details>
       <div id="lifeReadingBanner" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:10px;">
         <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 姓名鑑定の結果を読み込みました</div>
         <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);"></div>
       </div>
 
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.62);border:1px solid var(--rim);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
-        <strong style="color:var(--goldlt);">うまく使うコツ</strong><br>
-        ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
-        ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星」を調べて貼ると相談しやすくなります。
-      </div>
+      <details class="mini-accordion">
+        <summary>うまく使うコツ</summary>
+        <div class="mini-accordion-body">
+          ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
+          ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星」を調べて貼ると相談しやすくなります。
+        </div>
+      </details>
 
       <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ</div>
       <div class="topic-grid">
