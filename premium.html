@@ -303,6 +303,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="topic-btn" onclick="insertConsultTemplate('pilgrimageRoute')">巡礼ルート相談<span>回る順番と移動手段</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('photo')">写真で相談<span>香水・服・持ち物</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('blank')">白紙で話す<span>音声入力・フリートーク</span></button>
       </div>
@@ -326,6 +327,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div id="imagePreviewArea" style="display:none;margin-bottom:8px;position:relative;">
         <img id="imagePreview" style="max-height:120px;border-radius:8px;border:1px solid var(--rim);">
         <button onclick="removeImage()" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.5);border:none;border-radius:50%;color:#fff;font-size:.6rem;cursor:pointer;">✕</button>
+        <div style="font-size:.55rem;color:var(--mist);line-height:1.6;margin-top:5px;">写真から見える色・質感・用途を五行に置き換えて、今日の気に合う使い方を相談できます。</div>
       </div>
       <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
 
@@ -946,6 +948,14 @@ function insertConsultTemplate(type){
 怖さ・焦り・欲が出ている点：【ここに入力】
 
 私の九星情報と今日の盤面をもとに、売買や正解を断定せず、判断の整え方を教えてください。`,
+    photo:`添付した写真について相談したいです。
+
+写真の内容（香水・服・小物・部屋・食べ物など）：【ここに入力】
+今日の予定・シチュエーション：【ここに入力】
+なりたい印象・整えたい気分：【ここに入力】
+迷っていること：【ここに入力】
+
+写真から見える色・質感・用途を五行に置き換えて、今日の九星情報や盤面と合わせて、どれを選ぶとよいか、また足りない五行をどう補うとよいかを教えてください。`,
     free:`自由に相談したいです。
 
 相談内容：【ここに入力】
@@ -1036,12 +1046,21 @@ ${boardSummary}${senroSummary}
 【KITOKUの基本姿勢】
 ・KITOKUは占いで人を縛るものではなく、構造を読む道具である
 ・名前、方位、九星、納音、線路の日は、本人が自分を知り、自分で動くための判断材料として扱う
+・写真に写るものも、色、形、質感、用途、香り、季節感、印象から五行に置き換えて、日常の判断材料として扱う
 ・「この名前はダメです」「この方位は絶対ダメです」「100点でないから変えるべきです」と断定しない
 ・100点は絶対的な正解ではなく、構造が整っている目安である
 ・70点や50点にも、その名前や方位の活かし方がある
 ・弱い部分は、行動、方位、習慣、言葉、香り、人との関わり方で補える
 ・回答では、現在の構造、強み、注意点、補い方、本人が選ぶための次の一手を示す
 ・最終的にどうするかは本人が決める。AIは選択を整理する伴走役である
+
+【写真相談のルール】
+・写真が添付された場合は、香水、服、色、小物、部屋、食べ物、仕事道具など、対象を限定せず相談に乗る
+・画像から見える色、形、素材感、明るさ、重さ、清潔感、季節感、使う場面を読み取り、内部で木火土金水に翻訳する
+・ユーザーに難しい五行変換を要求しない。AI側で「この写真は火と金が強い」「水が足りない」など、わかりやすく説明する
+・美容、香水、ファッションの相談では、今日の予定、なりたい印象、本人の星情報、今日の盤面を合わせて提案する
+・「これが絶対正解」と断定せず、今日のシチュエーションに合う選択、足りない五行を補う選択、避けたい過剰さを分けて示す
+・回答は、写真の印象、五行への翻訳、今日のおすすめ、足すなら何を足すか、ひとことで使い方、の順で短く整理する
 
 【絶対ルール】
 ・方位の吉凶は【ユーザーデータ】の記載のみを使う。自分で計算しない
