@@ -125,6 +125,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   box-shadow:0 6px 22px rgba(30,20,5,.08);
   overflow:hidden;
 }
+.inspiration-card summary{
+  list-style:none;
+  cursor:pointer;
+}
+.inspiration-card summary::-webkit-details-marker{display:none;}
 .inspiration-kicker{
   display:flex;
   align-items:center;
@@ -154,7 +159,26 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   line-height:1.75;
   letter-spacing:.03em;
   font-weight:700;
-  margin-bottom:12px;
+  margin-bottom:0;
+}
+.inspiration-summary{
+  position:relative;
+  padding-right:22px;
+}
+.inspiration-summary::after{
+  content:'⌄';
+  position:absolute;
+  right:0;
+  bottom:4px;
+  color:rgba(255,250,240,.72);
+  font-size:.92rem;
+  transition:transform .18s ease;
+}
+.inspiration-card[open] .inspiration-summary::after{transform:rotate(180deg);}
+.inspiration-detail{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,250,240,.16);
 }
 .inspiration-body{
   font-size:.68rem;
@@ -216,26 +240,30 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   </div>
 
   <section id="premiumContent" style="display:none;">
-    <div class="inspiration-card">
-      <div class="inspiration-kicker">
-        <span>TODAY'S INSPIRATION</span>
-        <span class="premium-badge">Premium</span>
+    <details class="inspiration-card">
+      <summary>
+        <div class="inspiration-kicker">
+          <span>TODAY'S INSPIRATION</span>
+          <span class="premium-badge">Premium</span>
+        </div>
+        <div class="inspiration-line inspiration-summary">
+          今日の気に、ひとつだけ<br>言葉を灯す。
+        </div>
+      </summary>
+      <div class="inspiration-detail">
+        <div class="inspiration-body">
+          今日の九星・日支・あなたの星情報から、短い格言、今日の問い、小さな行動を生成する予定です。<br>
+          1日1回生成し、同じ日は保存して再表示します。
+        </div>
+        <div class="inspiration-actions">
+          <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="showInspirationPreparing()">今日の一言を生成</button>
+          <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">気学先生に相談</button>
+        </div>
+        <div class="inspiration-note">
+          Premium機能として準備中です。正式接続後、1日1回生成して同じ日は保存されます。
+        </div>
       </div>
-      <div class="inspiration-line">
-        今日の気に、ひとつだけ<br>言葉を灯す。
-      </div>
-      <div class="inspiration-body">
-        今日の九星・日支・あなたの星情報から、短い格言、今日の問い、小さな行動を生成する予定です。<br>
-        1日1回生成し、同じ日は保存して再表示します。
-      </div>
-      <div class="inspiration-actions">
-        <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="showInspirationPreparing()">今日の一言を生成</button>
-        <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">気学先生に相談</button>
-      </div>
-      <div class="inspiration-note">
-        Premium機能として準備中です。正式接続後、1日1回生成して同じ日は保存されます。
-      </div>
-    </div>
+    </details>
 
     <div class="panel" id="aiChatPanel">
       <div class="panel-title">① 気学先生に相談する</div>
