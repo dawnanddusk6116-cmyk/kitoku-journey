@@ -493,11 +493,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
           <div>
             <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">姓</div>
-            <input id="rsName1" type="text" placeholder="河上" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
+            <input id="rsName1" type="text" placeholder="山田" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
           </div>
           <div>
             <div style="font-size:.58rem;color:var(--goldlt);margin-bottom:4px;">フリガナ</div>
-            <input id="rsName1Furi" type="text" placeholder="カワカミ" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
+            <input id="rsName1Furi" type="text" placeholder="ヤマダ" style="width:100%;padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
           </div>
         </div>
 
@@ -2136,10 +2136,18 @@ function addRsRow(){
   rsRowCount++;
   const wrap = document.getElementById('rsCandRows');
   const row = document.createElement('div');
+  const examples=[
+    {name:'陽向',furi:'ヒナタ'},
+    {name:'悠真',furi:'ユウマ'},
+    {name:'結菜',furi:'ユイナ'},
+    {name:'蒼空',furi:'ソラ'},
+    {name:'彩葉',furi:'イロハ'}
+  ];
+  const ex=examples[(rsRowCount-1)%examples.length];
   row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-bottom:6px;';
   row.innerHTML = `
-    <input type="text" placeholder="悠真" class="rs-mei" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
-    <input type="text" placeholder="ユウマ" class="rs-furi" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
+    <input type="text" placeholder="${ex.name}" class="rs-mei" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
+    <input type="text" placeholder="${ex.furi}" class="rs-furi" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.75rem;color:var(--snow);font-family:'Noto Serif JP',serif;">
     <button onclick="this.parentElement.remove();rsRowCount--;" style="padding:6px 10px;background:rgba(200,100,100,.1);border:1px solid rgba(200,100,100,.2);border-radius:8px;font-size:.65rem;color:#a05050;cursor:pointer;">✕</button>
   `;
   wrap.appendChild(row);
