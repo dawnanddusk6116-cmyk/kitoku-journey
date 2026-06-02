@@ -103,6 +103,28 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .mode-guide strong{color:var(--goldlt);}
 .mode-links{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 0;}
 .mode-link{display:flex;align-items:center;justify-content:center;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--rim);background:rgba(100,80,40,.04);color:var(--goldlt);font-size:.62rem;font-weight:800;text-decoration:none;line-height:1.35;padding:7px;}
+.daily-direction-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:10px 0 0;
+  padding:11px 13px;
+  border-radius:10px;
+  border:1px solid rgba(138,104,32,.32);
+  background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.72));
+  color:var(--goldlt);
+  text-decoration:none;
+  font-weight:800;
+  font-size:.72rem;
+}
+.daily-direction-link small{
+  color:var(--mist);
+  font-size:.56rem;
+  font-weight:600;
+  line-height:1.4;
+  text-align:right;
+}
 .dest-result{display:none;margin:10px 0;padding:10px 12px;border-radius:10px;border:1px solid rgba(138,104,32,.24);background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.72));font-size:.68rem;color:var(--mist);line-height:1.8;}
 .dest-result strong{color:var(--goldlt);font-size:.78rem;}
 .premium-help{margin:0 0 10px;border:1px solid rgba(138,104,32,.2);border-radius:10px;background:rgba(255,255,255,.62);overflow:hidden;}
@@ -444,6 +466,10 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
       <div class="compass" id="compassWrap"></div>
       <button class="copy-btn" onclick="copyBoardSummary(this)">📋 方位盤メモをコピー</button>
+      <a class="daily-direction-link" href="direction_v2.html">
+        <span>⭐ 今日の吉方位を取る</span>
+        <small>周辺スポット・今日の処方箋を見る</small>
+      </a>
       <div class="mode-links">
         <a class="mode-link" href="travel.html">✈️ 旅行ナビ<br>で確認</a>
         <a class="mode-link" href="pilgrimage.html">📿 聖地巡礼<br>で確認</a>
