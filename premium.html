@@ -62,10 +62,10 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .dir-cell{text-align:center;overflow:hidden;line-height:1.25;padding:2px 1px;min-height:31px;}
 .dir-name{font-size:.76rem;font-weight:800;color:rgba(60,40,10,.58);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .dir-name.kichi{color:#8a6820;}
-.dir-name.kyo{color:#9b4a4a;}
+.dir-name.kyo{color:#a33b4f;font-weight:900;}
 .dir-badge{display:inline-block;margin-top:2px;padding:1px 4px;border-radius:4px;font-size:.42rem;max-width:100%;overflow:hidden;white-space:nowrap;}
 .dir-badge.kichi{background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.35);color:#7a5715;}
-.dir-badge.kyo{background:rgba(176,64,64,.08);border:1px solid rgba(176,64,64,.24);color:#9b4a4a;}
+.dir-badge.kyo{background:rgba(185,55,78,.1);border:1px solid rgba(185,55,78,.38);color:#a33b4f;font-weight:800;}
 .mid-row{display:flex;align-items:center;justify-content:center;max-width:330px;margin:0 auto;}
 .side-label{width:31px;flex:0 0 31px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:224px;padding:0 2px;}
 .side-label .dir-name{writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.08em;}
@@ -74,7 +74,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .cell{height:68px;border:1px solid rgba(100,80,40,.12);background:#fff;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:rgba(30,20,5,.58);}
 .cell.center{border-radius:999px;background:rgba(196,160,67,.08);border-color:rgba(196,160,67,.24);}
 .cell.kichi{border-color:rgba(183,131,24,.58);background:rgba(183,131,24,.12);color:var(--goldlt);font-weight:800;}
-.cell.kyo{border-color:rgba(100,80,40,.12);background:#fff;color:rgba(30,20,5,.58);}
+.cell.kyo{border-color:rgba(185,55,78,.18);background:#fffafa;color:rgba(120,55,65,.68);}
+.cell.kyo .star-num{color:rgba(120,55,65,.72);font-weight:600;}
+.cell.kyo .star-name{color:rgba(120,55,65,.52);}
 .star-num{font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1;}
 .star-name{font-size:.55rem;}
 .senro-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
