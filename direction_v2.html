@@ -4185,13 +4185,41 @@ if('serviceWorker' in navigator){
 <script>
 
 // 処方箋・AI・地図を描画
+function updateSpotLinks(dirJP){
+  const label = dirJP ? `${dirJP}方向のスポットを探す（750m以上離れた場所が目安）` : '周辺スポットを探す';
+  const query = dirJP ? `${dirJP}方向 カフェ コンビニ 公園 神社` : '近くの カフェ コンビニ 公園 神社';
+  const q = encodeURIComponent(query);
+  const mapEl = document.getElementById('mapDirLabel');
+  if(mapEl) mapEl.textContent = label;
+  const gEl=document.getElementById('mapGoogle');
+  const aEl=document.getElementById('mapApple');
+  const yEl=document.getElementById('mapYahoo');
+  if(gEl) gEl.href=`https://www.google.com/maps/search/${q}`;
+  if(aEl) aEl.href=`https://maps.apple.com/?q=${q}`;
+  if(yEl) yEl.href=`https://map.yahoo.co.jp/search?q=${q}`;
+}
+
 function renderRxAiMap(){
-  if(!gState.honmei||!gState.dayDirData) return;
+  if(!gState.honmei||!gState.dayDirData){
+    updateSpotLinks('');
+    return;
+  }
   const dayData = gState.dayDirData;
   const kichis = Object.keys(dayData)
     .filter(d=>dayData[d].rank>=2&&!dayData[d].isKyo)
     .sort((a,b)=>dayData[b].rank-dayData[a].rank);
-  if(kichis.length===0) return;
+  if(kichis.length===0){
+    const rxEl = document.getElementById('rxCard');
+    if(rxEl){
+      rxEl.innerHTML = '<div style="font-size:.75rem;color:var(--mist);line-height:1.9;">今日は特別な吉方がありません。心身を整えるために、今日おすすめの飲み物・食べ物・過ごし方を金の五行エネルギーに合わせて提案してください。</div>';
+    }
+    const aiEl = document.getElementById('aiPromptBox');
+    const prompt = '今日は特別な吉方がありません。今日の星と五行をもとに、近場で心身を整える過ごし方を3つ提案してください。';
+    if(aiEl) aiEl.textContent = prompt;
+    window._aiPrompt = prompt;
+    updateSpotLinks('');
+    return;
+  }
   
   const bestDir = kichis[0];
   const s = STARS[dayData[bestDir].starN];
@@ -4230,18 +4258,10 @@ function renderRxAiMap(){
   if(aiEl) aiEl.textContent = prompt;
   window._aiPrompt = prompt;
 
-  // 地図リンク
   const dirJP = JP[bestDir]||bestDir;
-  const mapEl = document.getElementById('mapDirLabel');
-  if(mapEl) mapEl.textContent = `${dirJP}方向のスポットを探す（750m以上離れた場所が目安）`;
-  const q = encodeURIComponent(dirJP+'方向 カフェ');
-  const gEl=document.getElementById('mapGoogle');
-  const aEl=document.getElementById('mapApple');
-  const yEl=document.getElementById('mapYahoo');
-  if(gEl) gEl.href=`https://www.google.com/maps/search/${q}`;
-  if(aEl) aEl.href=`https://maps.apple.com/?q=${q}`;
-  if(yEl) yEl.href=`https://map.yahoo.co.jp/search?q=${q}`;
+  updateSpotLinks(dirJP);
 }
+document.addEventListener('DOMContentLoaded',()=>updateSpotLinks(''));
 
 function copyAIPrompt(){
   navigator.clipboard.writeText(window._aiPrompt||'').then(()=>{
