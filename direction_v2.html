@@ -886,6 +886,51 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-weight:600!important;
 }
 
+/* 吉凶の色分け：吉は金、凶・注意は赤で判別 */
+.dir-label-text.kyo,
+.dir-label.kyo{
+  color:#d98a9a!important;
+  font-weight:800!important;
+}
+.dir-badge.kyo{
+  background:rgba(217,86,112,.12)!important;
+  border-color:rgba(217,86,112,.42)!important;
+  color:#eaa3af!important;
+  font-weight:700!important;
+}
+.cell-kyo{
+  background:rgba(217,86,112,.025)!important;
+  border-color:rgba(217,86,112,.16)!important;
+}
+.cell-kyo .cell-num{
+  color:rgba(220,150,160,.62)!important;
+}
+.cell-kyo .cell-name{
+  color:rgba(220,150,160,.48)!important;
+}
+[data-theme="light"] .dir-label-text.kyo,
+[data-theme="light"] .dir-label.kyo{
+  color:#a33b4f!important;
+  font-weight:900!important;
+}
+[data-theme="light"] .dir-badge.kyo{
+  background:rgba(185,55,78,.1)!important;
+  border-color:rgba(185,55,78,.38)!important;
+  color:#a33b4f!important;
+  font-weight:800!important;
+}
+[data-theme="light"] .cell-kyo{
+  background:#fffafa!important;
+  border-color:rgba(185,55,78,.18)!important;
+}
+[data-theme="light"] .cell-kyo .cell-num{
+  color:rgba(120,55,65,.62)!important;
+  font-weight:600!important;
+}
+[data-theme="light"] .cell-kyo .cell-name{
+  color:rgba(120,55,65,.5)!important;
+}
+
 
 /* ── タップボタン統一デザイン ── */
 
