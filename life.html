@@ -2989,6 +2989,11 @@ function calcInYoPattern(seiStr,meiStr,seiKs,meiKs){
   const mAll=new Set(mIY).size===1;
   if(sAll&&mAll&&sIY[0]!==mIY[0])return{pattern:'中断',label:'中断（中途断絶）',text:'姓と名の境目で陰陽が真っ二つに分かれています。人生の途中で大きな転換を経験しやすいパターンです。',kitoku:'中断とは「リセットと再出発の才能」。一つの章を閉じ、全く新しい舞台で再起動できる変革力があります。',score_deduct:30};
   if(new Set(iy).size===1){const isW=iy[0]==='陽';return{pattern:isW?'白寄り':'黒寄り',label:isW?'白寄り（全陽）':'黒寄り（全陰）',text:isW?'全ての文字が陽（奇数画）です。気が強く偏り、自由が利かなくなりやすいパターンとされています。':'全ての文字が陰（偶数画）です。気が沈みがちになり、行動力が出にくいパターンとされています。',kitoku:isW?'白寄りは「突き抜ける突破力」の証。強すぎる陽の気を意識的にゆるめることで、周囲と調和できます。':'黒寄りは「深く考える思慮深さ」の証。内向きの気を外に向けることで、豊かな人間関係が生まれます。',score_deduct:25};}
+  // 二重バサミ（3文字：上2下1 or 上1下2の分断）
+  if(n===3){
+    if(iy[0]===iy[1]&&iy[1]!==iy[2])return{pattern:'二重バサミ',label:'二重バサミ（極大凶）',text:'上2文字と下1文字で陰陽が分断されています。通常の大バサミより圧迫が強く、自由と行動力が極めて制限されやすいパターンです。',kitoku:'二重バサミは「極限まで削られた後に覚醒する魂」の証。吉方位取りで補えます。',score_deduct:35};
+    if(iy[0]!==iy[1]&&iy[1]===iy[2])return{pattern:'二重バサミ',label:'二重バサミ（極大凶）',text:'上1文字と下2文字で陰陽が分断されています。通常の大バサミより圧迫が強く、自由と行動力が極めて制限されやすいパターンです。',kitoku:'二重バサミは「極限まで削られた後に覚醒する魂」の証。吉方位取りで補えます。',score_deduct:35};
+  }
   if(n>=3&&iy[0]===iy[n-1]&&iy[0]!==iy[1]){const mid=iy.slice(1,n-1);if(n===3||new Set(mid).size===1)return{pattern:'大バサミ',label:'大ハサミ',text:'外側と内側で陰陽が対称に反転しています。両端から圧力を受けやすく精神的な苦労が絶えないパターンです。',kitoku:'外から強い圧力を受けやすい配列とされています。吉方位取りで補えます。',score_deduct:30};}
   if(n>=3){
     const r1=iy.slice(1);const r2=iy.slice(0,-1);
@@ -3010,7 +3015,7 @@ function calcTenchi(seiStr,meiStr,seiKs,meiKs){
   const meiTotal=meiKs.reduce((a,b)=>a+b,0);
   const tenBottom=seiKs[0],chiTop=meiKs[meiKs.length-1];
   if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。村山先生が「ものすごい危ない名前」と警告する、人生が真っ二つに分断されやすい致命的な配列です。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
-  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、村山先生が「体がズタズタになる」と厳しく警告するパターンです。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
+  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、村山先生が「社会運と家庭運が同数になる大動角が発動するパターンです。五大真理が全て整っている場合は影響が軽減されます。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
   const HEAVY=[3,5,9,13,15,19,8];
   if(tf===cf){
     const isH=HEAVY.includes(tf);
@@ -3159,6 +3164,30 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
         text:`名の最初2文字「${meiStr[0]}（${m0}）・${meiStr[1]}（${m1}）」の音の組み合わせは幼少期の感情的な苦労が多くなりやすいとされます。`,
         kitoku:'幼い頃から深い感情を知る者だけが持てる共感力があります。その経験が人生の宝になります。'});
     }
+  }
+  // ── 命名禁止数（43・53画）チェック ──
+  const _totalS=[...seiKs,...meiKs].reduce((a,b)=>a+b,0);
+  if([43,53].includes(_totalS)){
+    score-=20;
+    items.push({cat:'画数',icon:'⚠',title:`命名禁止数（総格${_totalS}画）`,deduct:20,
+      text:`総格${_totalS}画は本名での使用が禁止とされる特殊な数です。改名・選名としてのみ使用可能です。`,
+      kitoku:'芸名・ペンネームなどの選名として活用すると独特の輝きを放ちます。'});
+  }
+  // ── 芸名特例（25・26画）──
+  const _meiT=meiKs.reduce((a,b)=>a+b,0);
+  if([25,26].includes(_meiT)){
+    items.push({cat:'画数',icon:'ℹ',title:`芸名・選名の特例（地格${_meiT}画）`,deduct:0,
+      text:`地格${_meiT}画は通常の名前では要注意数ですが、芸名・ペンネームとして使う場合は大吉数に転じます。`,
+      kitoku:'タレント・作家・クリエイターとして活動する場合、この画数は特別な輝きをもたらします。'});
+  }
+  // ── 長幼の順序チェック ──
+  const _jinan=['二','次','副','助','補'];
+  const _chon=['一','太','初','元','始'];
+  const _mChars=[...meiStr];
+  if(_mChars.some(c=>_jinan.includes(c))||_mChars.some(c=>_chon.includes(c))){
+    items.push({cat:'読み下し',icon:'ℹ',title:'長幼の順序について',deduct:0,
+      text:'長男・次男を示す文字が含まれています。家族の中での序列と名前の字義が一致しているかご確認ください。',
+      kitoku:'序列が合っている場合は問題ありません。家族の中での役割を示す名前は、意味を活かして生きることで輝きます。'});
   }
   score-=Math.min(gyd,45);
   const iy=calcInYoPattern(seiStr,meiStr,seiKs,meiKs);
