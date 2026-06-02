@@ -621,8 +621,8 @@ function init(){
     if(typeof getKD!=='function'||typeof calcHonmei!=='function'||typeof buildBoardFromCenter!=='function'){
       throw new Error('kitoku-engine.js が読み込めていません');
     }
-    state.birth=normalizeBirth(localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'');
-    state.gender=localStorage.getItem('kitoku-gender')||'male';
+    state.birth=normalizeBirth(localStorage.getItem('kitoku-self-birth')||localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'');
+    state.gender=localStorage.getItem('kitoku-self-gender')||localStorage.getItem('kitoku-gender')||'male';
     state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
     state.mode=localStorage.getItem('kitoku-premium-mode')||'travel';
     ['south','north'].forEach(k=>{

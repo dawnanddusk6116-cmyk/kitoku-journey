@@ -2656,7 +2656,7 @@ function loadStarInfo() {
   const bar     = document.getElementById('starBar');
 
   if (typeof getKD === 'function') {
-    const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+    const birth = localStorage.getItem('kitoku-self-birth') || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
     const parts = birth.split('-').map(Number);
     if (parts.length === 3 && parts.every(Boolean)) {
       const [by, bm, bd] = parts;
@@ -2666,7 +2666,7 @@ function loadStarInfo() {
       const yn = calcNayin(kd.kY);
       nain = yn && yn.n ? yn.n : nain;
       try {
-        localStorage.setItem('kitoku_honmei',  String(honmei));
+      localStorage.setItem('kitoku_honmei',  String(honmei));
         localStorage.setItem('kitoku_tsukimei', String(tsukimei));
         if (nain) localStorage.setItem('kitoku_nain', nain);
       } catch(e) {}

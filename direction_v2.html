@@ -2047,6 +2047,7 @@ function launch(){
   // 生年月日・時間を保存
   try{
     localStorage.setItem('kitoku-birth',bStr);
+    localStorage.setItem('kitoku-self-birth',bStr);
     if(tStr)localStorage.setItem('kitoku-birth-time',tStr);
     document.getElementById('birthRegistered').style.display='flex';
     document.getElementById('inputBirth').style.display='none';
