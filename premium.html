@@ -951,6 +951,17 @@ function renderAiContextSummary(){
   const el=document.getElementById('aiContextSummary');
   if(!el||!state.info)return;
   try{
+    const lr=getLifeReading();
+    if(isExternalLifeReading(lr)){
+      el.innerHTML=`
+        <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
+        <div><strong style="color:var(--goldlt);">用途</strong>：姓名鑑定（${getLifeModeLabel(lr.mode)}）</div>
+        <div><strong style="color:var(--goldlt);">鑑定対象</strong>：${lr.name}さん</div>
+        <div><strong style="color:var(--goldlt);">読み込み</strong>：姓名鑑定結果 ${lr.score}点</div>
+        <div style="margin-top:6px;color:#9b5b3b;font-weight:700;">※ あなた本人の九星情報は、この名前相談には自動適用しません。</div>
+        <div style="margin-top:3px;color:var(--mist);">対象者の生年月日・九星情報が必要な場合は、AIが確認します。</div>`;
+      return;
+    }
     const board=getCurrentBoardContext();
     el.innerHTML=`
       <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
@@ -971,6 +982,19 @@ function getLifeReading(){
   }catch(e){}
   return null;
 }
+function getLifeModeLabel(mode){
+  return {self:'自分',rename:'改名',baby:'命名',other:'他の人',ai:'相性'}[String(mode||'')] || (mode||'未設定');
+}
+function isExternalLifeReading(lr){
+  return !!(lr && ['other','baby'].includes(String(lr.mode||'')));
+}
+function getLifeReadingScopeText(lr){
+  if(!lr) return '';
+  if(isExternalLifeReading(lr)){
+    return `この相談は、ユーザー本人ではなく「${lr.name}」さんの姓名鑑定です。ユーザー本人の九星・納音・方位盤・線路の日を、鑑定対象者の情報として使わないでください。`;
+  }
+  return `この相談は「${lr.name}」さん本人の姓名鑑定です。ユーザー本人の九星情報と合わせて読んでください。`;
+}
 function applyLifeReadingBanner(){
   const lr=getLifeReading();
   const banner=document.getElementById('lifeReadingBanner');
@@ -990,14 +1014,27 @@ function maybePrefillLifeConsult(){
   const input=document.getElementById('chatInput');
   const lr=getLifeReading();
   if(!input||!lr||input.value.trim())return;
-  input.value=`姓名鑑定の結果について相談したいです。
+  if(isExternalLifeReading(lr)){
+    input.value=`姓名鑑定の結果について相談したいです。
 
 名前：${lr.name}
-モード：${lr.mode||'自分'}
+モード：${getLifeModeLabel(lr.mode)}
+スコア：${lr.score}点
+
+※この相談は、私本人ではなく「${lr.name}さん」の姓名鑑定です。
+鑑定対象者の生年月日・九星情報がない場合は、私本人の九星を使わず、姓名鑑定結果を中心に読んでください。
+
+この名前を、意志を持って使うためのポイントを教えてください。`;
+  }else{
+    input.value=`姓名鑑定の結果について相談したいです。
+
+名前：${lr.name}
+モード：${getLifeModeLabel(lr.mode)}
 スコア：${lr.score}点
 
 この名前を、命の設計図・九星・納音と合わせて見ると、どのように活かせますか？
 改名・命名の相談として、意志を持って使うためのポイントを教えてください。`;
+  }
   autoResizeChatInput();
 }
 document.addEventListener('DOMContentLoaded',init);
@@ -1179,9 +1216,10 @@ function buildSystemPrompt() {
   } catch(e){}
 
   // 姓名鑑定の結果を読み込む（life.htmlから連携）
+  const lr = getLifeReading();
+  const externalLifeReading = isExternalLifeReading(lr);
   let lifeReadingSummary = '';
   try{
-    const lr = getLifeReading();
     if(lr){
       const issues = (lr.items||[]).map(i=>`・${i.title}：${i.text}`).join('\n');
       const strokeLine = lr.strokes
@@ -1193,12 +1231,15 @@ function buildSystemPrompt() {
       const blueprintLine = lr.blueprint
         ? `\n命の設計図：星の五行 ${lr.blueprint.starGyos?.join('・')||''} / 名前の五行 ${lr.blueprint.nameGyos?.join('・')||''}\n名前が補完する五行：${lr.blueprint.complement?.join('・')||'なし'} / 星と名前が共鳴する五行：${lr.blueprint.resonance?.join('・')||'なし'} / 未配置の五行：${lr.blueprint.missing?.join('・')||'なし'}`
         : '';
-      lifeReadingSummary = `\n\n【姓名鑑定の結果（${lr.name}）】\nスコア：${lr.score}点${strokeLine}${gkLine}${blueprintLine}\n${issues}`;
+      const scopeLine = externalLifeReading
+        ? '\n相談範囲：この鑑定はユーザー本人ではなく鑑定対象者の名前です。ユーザー本人の九星・納音・方位盤・線路の日を対象者の情報として使わない。対象者の星情報が必要な場合は、生年月日または星情報を確認する。'
+        : '\n相談範囲：ユーザー本人の姓名鑑定として、九星情報と合わせて読める。';
+      lifeReadingSummary = `\n\n【姓名鑑定の結果（${lr.name}）】\nスコア：${lr.score}点${scopeLine}${strokeLine}${gkLine}${blueprintLine}\n${issues}`;
       applyLifeReadingBanner();
     }
   }catch(e){}
 
-  const userData = `
+  const selfUserData = `
 相談モード：${getModeMeta().label}
 出発地登録：${getHomePrem()?'登録済み（AIには地名・座標は自動送信しません）':'未登録'}
 本命星：${STARS[info.honmei]?.j||''}（${STARS[info.honmei]?.elem||''}）
@@ -1208,6 +1249,17 @@ function buildSystemPrompt() {
 納音：${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）
 ${boardSummary}${senroSummary}
 今日：${y}年${m}月${d}日`.trim();
+
+  const externalLifeUserData = lr ? `
+相談モード：姓名鑑定（${getLifeModeLabel(lr.mode)}）
+鑑定対象：${lr.name}さん
+重要：この相談はユーザー本人ではなく、鑑定対象者の姓名鑑定である。
+重要：ユーザー本人の本命星・月命星・傾斜・同会・納音・方位盤・線路の日は、鑑定対象者の情報として使わない。
+重要：鑑定対象者の生年月日・九星・納音・線路の日が渡されていない場合は、六白金星・一白水星・天河水などを当てはめず、姓名鑑定結果だけで読む。
+必要な場合：鑑定対象者の生年月日または九星情報を一つだけ確認する。
+今日：${y}年${m}月${d}日`.trim() : '';
+
+  const userData = externalLifeReading ? externalLifeUserData : selfUserData;
 
   return `あなたはKITOKUの気学の専門家です。
 5000年の東洋の知恵（九星気学・KITOKU式）をベースに相談に乗ります。
