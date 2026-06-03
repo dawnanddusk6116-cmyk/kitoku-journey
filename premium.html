@@ -9,6 +9,7 @@
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="kitoku-engine.js"></script>
+<script src="kitoku-teachings.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--r:14px;}
@@ -331,15 +332,15 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </summary>
       <div class="inspiration-detail">
         <div class="inspiration-body">
-          今日の九星・日支・あなたの星情報から、短い格言、今日の問い、小さな行動を生成する予定です。<br>
-          1日1回生成し、同じ日は保存して再表示します。
+          東洋の先人の教えから、今日の九星・日支・あなたの星情報に合う一言を選びます。<br>
+          見出し・教えの要点・出典を、琥珀色の言葉で届けます。
         </div>
         <div class="inspiration-actions">
-          <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="showInspirationPreparing()">今日の一言を生成</button>
+          <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="generateTodayInspiration()">今日の一言を生成</button>
           <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">気学先生に相談</button>
         </div>
         <div class="inspiration-note">
-          Premium機能として準備中です。正式接続後、1日1回生成して同じ日は保存されます。
+          1日1回生成し、同じ日は保存して再表示します。接続済みの156本の教えから参照します。
         </div>
       </div>
     </details>
@@ -1635,32 +1636,60 @@ async function generateTodayInspiration(){
   }catch(e){}
 
   const honmeiName=typeof STARS!=='undefined'?STARS[info.honmei]?.j||'':info.honmeiName||'';
+  const teachingCorpus = (window.KITOKU_ORIENTAL_TEACHINGS || '').trim();
   const prompt=`あなたはKITOKUの気学先生です。
-今日（${y}年${m}月${d}日）の気と、ユーザーの星情報をもとに、短いインスピレーションを生成してください。
+今日（${y}年${m}月${d}日）の気と、ユーザーの星情報をもとに、今日の格言を選んでください。
 
 【ユーザーの星情報】
 本命星：${honmeiName}
 ${boardInfo}
 
+【今日の格言の選び方】
+・今日の格言は、東洋の先人の教え156本から、今日の九星・方位・運気に最もふさわしい1本を選んで引用する
+・教え本文が渡されている場合は、必ずその中から選ぶ
+・教え本文が未接続の場合は、創作した出典を断定せず、一般的な東洋思想・禅語・実語教・童子教の範囲で、出典を「東洋の教えより」と控えめにする
+・引用形式は「見出し」「教えの要点」「出典」の3点を含める
+・琥珀色の言葉で、短く、静かに、押しつけずに届ける
+・脅しや断定ではなく、今日を整える一言にする
+
+【東洋の先人の教え156本】
+${teachingCorpus || '※ 現在、156本の本文データは未接続です。接続後はここにVol.01〜Vol.156の全文が入ります。'}
+
+【期待する出力例】
+✦ 今日の一言
+Vol.53「啐啄同時」
+卵が内から叩く前に
+外から割ってはならない。
+待つことが最高の愛です。
+─ 禅語より
+
 【生成ルール】
 ・JSONのみ返す（前後に余分なテキスト不要）
 ・以下の形式で：
-{"quote":"今日の格言（20字以内）","message":"今日のあなたへのメッセージ（60字以内）","action":"今日の小さな一歩（30字以内）"}
+{"title":"Vol番号と見出し","quote":"教えの要点（2〜4行）","source":"出典","message":"今日のあなたへの短い受け取り方（60字以内）","action":"今日の小さな一歩（30字以内）"}
 ・Y理論（全肯定）で。吉凶で脅さない。
 ・「村山先生」「気学」は使わない`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    if(location.protocol==='file:'){
+      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
+    }
+    const res=await fetch('/api/claude',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:300,
-        messages:[{role:'user',content:prompt}]
-      })
+      body:JSON.stringify({prompt:prompt})
     });
-    const data=await res.json();
-    const text=data.content?.[0]?.text||'{}';
+    const raw=await res.text();
+    if(!res.ok){
+      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
+    }
+    let data;
+    try{
+      data=JSON.parse(raw);
+    }catch(parseError){
+      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
+    }
+    const text=data.reply||data.text||data.content?.[0]?.text||'{}';
     const clean=text.replace(/```json|```/g,'').trim();
     const obj=JSON.parse(clean);
     localStorage.setItem(dateKey,JSON.stringify(obj));
@@ -1673,9 +1702,11 @@ ${boardInfo}
 
 function showInspirationPreparing(){
   showInspiration({
+    title:'準備中',
     quote:'今日の一言は準備中です。',
-    message:'Premium機能として、今日の九星・日支・星情報から生成できるように整えています。',
-    action:'いまは気学先生に相談ボタンから自由に相談できます'
+    source:'KITOKUより',
+    message:'正式接続後、東洋の先人の教えから今日の一言を選びます。',
+    action:'いまは気学先生に相談できます'
   });
 }
 
@@ -1683,7 +1714,9 @@ function showInspiration(obj){
   const body=document.querySelector('.inspiration-body');
   if(!body) return;
   body.innerHTML=`
-    <div style="font-size:.9rem;font-weight:700;line-height:1.6;margin-bottom:10px;color:#fffaf0;">${obj.quote||''}</div>
+    ${obj.title?`<div style="font-size:.64rem;letter-spacing:.12em;font-weight:700;line-height:1.5;margin-bottom:8px;color:rgba(255,250,240,.72);">${obj.title}</div>`:''}
+    <div style="font-size:.9rem;font-weight:700;line-height:1.75;margin-bottom:10px;color:#fffaf0;white-space:pre-line;">${obj.quote||''}</div>
+    ${obj.source?`<div style="font-size:.62rem;line-height:1.6;margin:-2px 0 10px;color:rgba(255,250,240,.72);">─ ${obj.source}</div>`:''}
     <div style="font-size:.68rem;line-height:1.85;color:rgba(255,250,240,.85);margin-bottom:8px;">${obj.message||''}</div>
     ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(255,250,240,.1);border-radius:8px;color:rgba(255,250,240,.9);">✦ 今日の一歩：${obj.action}</div>`:''}
   `;
