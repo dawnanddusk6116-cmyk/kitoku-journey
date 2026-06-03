@@ -213,6 +213,53 @@ body{
   border-color:rgba(138,104,32,.38);
   box-shadow:0 1px 8px rgba(60,40,10,.06);
 }
+.life-reading-guide{
+  margin-bottom:14px;
+  border:1px solid rgba(138,104,32,.2);
+  border-radius:12px;
+  background:rgba(255,255,255,.58);
+  overflow:hidden;
+}
+.life-reading-guide summary{
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 14px;
+  color:var(--goldlt);
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  cursor:pointer;
+  list-style:none;
+}
+.life-reading-guide summary::-webkit-details-marker{display:none;}
+.life-reading-guide summary::after{
+  content:"⌄";
+  width:26px;
+  height:26px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(138,104,32,.24);
+  border-radius:999px;
+  background:rgba(138,104,32,.05);
+  color:var(--goldlt);
+  font-size:.8rem;
+  line-height:1;
+  flex-shrink:0;
+  transition:transform .18s ease;
+}
+.life-reading-guide[open] summary::after{transform:rotate(180deg);}
+.life-reading-guide-body{
+  border-top:1px solid rgba(138,104,32,.14);
+  padding:13px 14px 15px;
+  color:var(--mist);
+  font-size:.65rem;
+  line-height:1.95;
+}
+.life-reading-guide-body strong{color:var(--goldlt);}
 .feature-map{
   background:rgba(255,255,255,.7);
   border:1px solid rgba(138,104,32,.2);
@@ -557,6 +604,17 @@ footer{
       <span style="font-size:.68rem;opacity:.75;">吉凶を断じる鑑定ではありません。<br>あなたの本質を照らす、<em>自己理解の道具</em>として使ってください。</span>
     </div>
   </div>
+
+  <details class="life-reading-guide">
+    <summary>姓名鑑定の読み方</summary>
+    <div class="life-reading-guide-body">
+      姓名は、ただの記号ではなく、日々呼ばれ、使い続ける<strong>命の器</strong>です。<br><br>
+      KITOKUでは、五大真理にもとづき、名前の構造、音、五行、陰陽、画数、漢字の象意を読み解きます。<br><br>
+      ただし、この鑑定は吉凶を断定するものではありません。どの名前にも強みと注意点があります。<br><br>
+      大切なのは、名前に縛られることではなく、名前の構造を知ったうえで、<strong>どう意志を持って活かすか</strong>です。<br><br>
+      100点の名前を探すためではなく、自分の名前を理解し、必要な部分を行動・習慣・言葉・方位で整えるための羅針盤としてお使いください。
+    </div>
+  </details>
 
   <!-- 星バー（localStorage から読み込み） -->
   <div id="starBar" style="display:none;margin-bottom:16px;background:linear-gradient(135deg,#fffdf8,#f6efe2);border:1px solid rgba(138,104,32,.34);border-radius:10px;padding:11px 14px;font-size:.68rem;color:var(--goldlt);font-weight:700;text-align:center;line-height:1.8;box-shadow:0 2px 10px rgba(60,40,10,.04);"></div>
