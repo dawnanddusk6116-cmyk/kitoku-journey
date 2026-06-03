@@ -932,6 +932,142 @@ body.theme-night .start-btn{
   background:linear-gradient(135deg,rgba(168,123,31,.95),rgba(224,184,75,.78));
 }
 
+
+.selector-read-row{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+}
+.selector-read-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:34px;
+  padding:7px 15px;
+  border-radius:999px;
+  border:1px solid rgba(79,139,93,.26);
+  background:linear-gradient(135deg,rgba(79,139,93,.11),rgba(255,255,255,.78));
+  color:#2f5d3b;
+  font-family:'Noto Serif JP',serif;
+  font-size:.66rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  cursor:pointer;
+  box-shadow:0 1px 0 rgba(255,255,255,.86) inset;
+}
+.selector-read-btn:active{
+  transform:translateY(1px);
+  opacity:.86;
+}
+.philosophy-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:850;
+  align-items:center;
+  justify-content:center;
+  padding:22px 16px;
+  background:rgba(32,22,12,.45);
+  backdrop-filter:blur(10px);
+}
+.philosophy-modal.open{
+  display:flex;
+}
+.philosophy-dialog{
+  width:100%;
+  max-width:430px;
+  max-height:min(82vh,720px);
+  overflow:auto;
+  padding:22px 20px 20px;
+  border:1px solid rgba(138,104,32,.25);
+  border-radius:18px;
+  background:#fffdf8;
+  box-shadow:0 22px 70px rgba(48,34,10,.22);
+}
+.philosophy-kicker{
+  color:var(--gold);
+  font-family:'Cinzel',serif;
+  font-size:.64rem;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-align:center;
+}
+.philosophy-title{
+  margin:10px 0 14px;
+  color:var(--ink);
+  font-family:'Noto Serif JP',serif;
+  font-size:1.35rem;
+  letter-spacing:.04em;
+  text-align:center;
+}
+.philosophy-lead{
+  margin:0 0 14px;
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.92rem;
+  font-weight:700;
+  line-height:1.8;
+  text-align:center;
+}
+.philosophy-copy{
+  color:var(--ink);
+  font-family:'Noto Serif JP',serif;
+  font-size:.78rem;
+  line-height:1.9;
+}
+.philosophy-copy p{
+  margin:0 0 12px;
+}
+.philosophy-list{
+  margin:10px 0 14px;
+  padding:14px 16px 14px 28px;
+  border:1px solid rgba(79,139,93,.18);
+  border-radius:13px;
+  background:rgba(79,139,93,.06);
+}
+.philosophy-list li{
+  margin:0 0 8px;
+}
+.philosophy-list li:last-child{
+  margin-bottom:0;
+}
+.philosophy-note{
+  color:var(--goldlt);
+  font-weight:700;
+  text-align:center;
+}
+.philosophy-close{
+  width:100%;
+  min-height:42px;
+  margin-top:14px;
+  border:1px solid rgba(138,104,32,.28);
+  border-radius:999px;
+  background:linear-gradient(135deg,rgba(138,104,32,.10),rgba(255,255,255,.82));
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.78rem;
+  font-weight:800;
+  cursor:pointer;
+}
+body.theme-night .selector-read-btn{
+  border-color:rgba(229,190,85,.28);
+  background:rgba(229,190,85,.10);
+  color:#e9d994;
+}
+body.theme-night .philosophy-dialog{
+  border-color:rgba(229,190,85,.22);
+  background:#141827;
+}
+body.theme-night .philosophy-title,
+body.theme-night .philosophy-copy{
+  color:#f7efe2;
+}
+body.theme-night .philosophy-list{
+  border-color:rgba(229,190,85,.18);
+  background:rgba(229,190,85,.07);
+}
+
 </style>
 </head>
 <body>
@@ -965,6 +1101,9 @@ body.theme-night .start-btn{
       <button class="selector-search-toggle" type="button" onclick="toggleSelectorSearch()">🔍 探す</button>
     </div>
     <div class="selector-tagline">今日は何のためにKITOKUを開きますか？</div>
+    <div class="selector-read-row">
+      <button class="selector-read-btn" type="button" onclick="openPhilosophyModal()">✦ まずは読んでくださいね</button>
+    </div>
   </div>
 
   <div class="selector-search-panel" id="selectorSearchPanel">
@@ -1425,6 +1564,27 @@ body.theme-night .start-btn{
 
 </div>
 
+
+<!-- KITOKUの読み方ポップアップ -->
+<div id="philosophyModal" class="philosophy-modal" onclick="closePhilosophyModal(event)" aria-hidden="true">
+  <div class="philosophy-dialog" role="dialog" aria-modal="true" aria-labelledby="philosophyTitle" onclick="event.stopPropagation()">
+    <div class="philosophy-kicker">KITOKU JAPAN OS</div>
+    <h2 id="philosophyTitle" class="philosophy-title">まずは読んでくださいね</h2>
+    <p class="philosophy-lead">あなたには、あなただけのストーリーがあります。</p>
+    <div class="philosophy-copy">
+      <p>KITOKUは、占いで人を決めつけるためのものではありません。</p>
+      <p>星・名前・方位・香り・色・人との関わりを通して、自分の命の構造を知り、今日の自分を整えるためのJAPAN OSです。</p>
+      <ul class="philosophy-list">
+        <li>大切なのは、良い・悪いではなく「知って、どう活かすか」。</li>
+        <li>服・香り・色・方位・言葉は、今日どの自分を起動するかを選ぶスイッチです。</li>
+        <li>自分を知るほど、自分を許し、人と比べずに動きやすくなります。</li>
+      </ul>
+      <p class="philosophy-note">まずは気になる入口をひとつ選んで、今日の自分を整えてみてください。</p>
+    </div>
+    <button class="philosophy-close" type="button" onclick="closePhilosophyModal()">閉じる</button>
+  </div>
+</div>
+
 <!-- 設定パネル（簡易） -->
 <div id="settingPanel" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;" onclick="closeSettings(event)">
   <div style="background:#fefcf8;border-radius:20px 20px 0 0;border-top:1px solid rgba(100,80,40,.2);width:100%;max-width:480px;padding:24px 20px 40px;" onclick="event.stopPropagation()">
@@ -1515,6 +1675,27 @@ function setFontSize(size) {
   localStorage.setItem('kitoku-index-font', normalized);
   applyFontSize(normalized);
 }
+
+
+function openPhilosophyModal() {
+  const modal = document.getElementById('philosophyModal');
+  if (!modal) return;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePhilosophyModal() {
+  const modal = document.getElementById('philosophyModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closePhilosophyModal();
+});
 
 // ============================================================
 // 初期化
