@@ -3367,9 +3367,18 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
 
     ${r.items.length>0?`<div style="font-size:.63rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">知っておくこと（${r.items.length}項目）</div><div style="display:grid;gap:8px;">${r.items.map(it=>`<div style="padding:10px 12px;background:rgba(192,112,32,.06);border:1px solid rgba(192,112,32,.2);border-radius:8px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;"><span style="font-size:.58rem;background:rgba(138,104,32,.12);color:var(--goldlt);padding:2px 6px;border-radius:999px;">${it.cat}</span><span style="font-size:.63rem;font-weight:700;color:#c07020;">${it.icon} ${it.title}</span></div><div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-bottom:5px;">${it.text}</div><div style="font-size:.6rem;color:var(--goldlt);font-weight:700;padding:5px 8px;background:rgba(138,104,32,.07);border-radius:5px;">✦ ${it.kitoku}</div></div>`).join('')}</div>`:`<div style="font-size:.65rem;color:#2a6e3a;font-weight:700;padding:10px;background:rgba(40,130,60,.06);border-radius:8px;">✦ 特に気になる要素はありません。バランスの良い名前です。</div>`}
     <div style="margin-top:12px;padding:10px;background:rgba(138,104,32,.05);border-radius:8px;">
-      <div style="font-size:.63rem;font-weight:700;color:var(--goldlt);margin-bottom:5px;">流年（人生の転換期）</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;">
+        <div style="font-size:.63rem;font-weight:700;color:var(--goldlt);">流年（人生の転換期）</div>
+        <button type="button" onclick="const h=document.getElementById('ryuunenHelp');if(h)h.style.display=h.style.display==='none'?'block':'none';" style="width:25px;height:25px;border-radius:999px;border:1px solid rgba(138,104,32,.28);background:rgba(255,255,255,.72);color:var(--goldlt);font-size:.58rem;font-weight:800;line-height:1;display:inline-flex;align-items:center;justify-content:center;">？</button>
+      </div>
       <div style="font-size:.62rem;color:var(--goldlt);font-weight:700;">${fy.join('・')}</div>
       <div style="font-size:.58rem;color:var(--mist);margin-top:3px;">各年齢の前後1〜2年が人生の大きな転換期になりやすい時期です。</div>
+      <div id="ryuunenHelp" style="display:none;margin-top:8px;padding:10px 11px;background:rgba(255,255,255,.74);border:1px solid rgba(138,104,32,.14);border-radius:8px;font-size:.57rem;color:var(--mist);line-height:1.85;">
+        <div style="font-weight:800;color:var(--goldlt);margin-bottom:4px;">流年とは</div>
+        姓名の総画数を1桁になるまで足し、その基本数から9年ごとに巡る「変化の年」です。数え年で見るため、表示年齢の前後1〜2年も人生が動きやすいゾーンとして見ます。<br><br>
+        吉が多い名前では飛躍や出会い、過酷な配列がある名前では摩擦や見直しが表に出やすい時期です。恐れるためではなく、前もって傘を用意するための時刻表として使います。<br><br>
+        近い流年では、環境を整える・吉方を取る・言葉や習慣を見直すことで、大きな変化を人生の推進力に変えやすくなります。
+      </div>
     </div>
   </div>`;
   // innerHTML設定後にカテゴリバーを描画
