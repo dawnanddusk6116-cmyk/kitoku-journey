@@ -2799,8 +2799,17 @@ function nainToGyo(nain) {
 function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
   const card = document.getElementById('seimeiCard');
   if (!starInfo || !starInfo.honmei) {
-    // 他の人・命名モード：名前の五行のみ表示
+    // 他の人・命名モード：名前の五行のみ表示。本人の命の設計図を残さない。
     const nameGyos = [...(nameGyo||[])];
+    window._kitokuLifeBlueprint = {
+      scope: 'name-only',
+      starGyos: [],
+      nameGyos,
+      complement: [],
+      resonance: [],
+      missing: [],
+      note: '他の人・命名モードでは、鑑定対象者の生年月日がないため名前の五行のみを保存します。'
+    };
     if(nameGyos.length===0){card.style.display='none';return;}
     card.style.display='block';
     card.innerHTML=`<div style="background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;">

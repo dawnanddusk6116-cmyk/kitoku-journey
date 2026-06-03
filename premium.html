@@ -1229,7 +1229,9 @@ function buildSystemPrompt() {
         ? `\n五格：天格${lr.gk.ten}画・人格${lr.gk.jin}画・地格${lr.gk.chi}画・外格${lr.gk.gai}画・総格${lr.gk.so}画`
         : '';
       const blueprintLine = lr.blueprint
-        ? `\n命の設計図：星の五行 ${lr.blueprint.starGyos?.join('・')||''} / 名前の五行 ${lr.blueprint.nameGyos?.join('・')||''}\n名前が補完する五行：${lr.blueprint.complement?.join('・')||'なし'} / 星と名前が共鳴する五行：${lr.blueprint.resonance?.join('・')||'なし'} / 未配置の五行：${lr.blueprint.missing?.join('・')||'なし'}`
+        ? (externalLifeReading
+          ? `\n名前の五行：${lr.blueprint.nameGyos?.join('・')||'未取得'}\n※鑑定対象者の星の五行・納音は未入力のため、この相談では名前の構造のみを読む。`
+          : `\n命の設計図：星の五行 ${lr.blueprint.starGyos?.join('・')||''} / 名前の五行 ${lr.blueprint.nameGyos?.join('・')||''}\n名前が補完する五行：${lr.blueprint.complement?.join('・')||'なし'} / 星と名前が共鳴する五行：${lr.blueprint.resonance?.join('・')||'なし'} / 未配置の五行：${lr.blueprint.missing?.join('・')||'なし'}`)
         : '';
       const scopeLine = externalLifeReading
         ? '\n相談範囲：この鑑定はユーザー本人ではなく鑑定対象者の名前です。ユーザー本人の九星・納音・方位盤・線路の日を対象者の情報として使わない。対象者の星情報が必要な場合は、生年月日または星情報を確認する。'
