@@ -36,6 +36,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .badge.love{background:rgba(176,64,96,.1);color:var(--love);border:1px solid rgba(176,64,96,.25);}
 .badge.friend{background:rgba(138,90,154,.1);color:var(--friend);border:1px solid rgba(138,90,154,.25);}
 .badge.fam{background:rgba(58,138,74,.1);color:var(--fam);border:1px solid rgba(58,138,74,.25);}
+.usage-guide{background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.72));border:1px solid rgba(138,104,32,.2);border-radius:var(--r);padding:14px 15px;margin:0 0 12px;}
+.usage-title{font-size:.78rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:8px;}
+.usage-text{font-size:.66rem;color:var(--mist);line-height:1.85;}
+.usage-steps{display:grid;gap:7px;margin-top:10px;}
+.usage-step{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;font-size:.64rem;color:var(--mist);line-height:1.7;}
+.usage-num{width:22px;height:22px;border-radius:999px;background:rgba(138,104,32,.12);border:1px solid rgba(138,104,32,.28);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.62rem;}
+.usage-step strong{color:var(--goldlt);}
 .fc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px;margin-bottom:12px;}
 .fl{font-size:.72rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
 .fi{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:12px 14px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;}
@@ -181,6 +188,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div style="margin-bottom:16px;">
     <span class="badge" id="pBadge">💼 ビジネス</span>
     <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);">縁を読み解く</div>
+  </div>
+  <div class="usage-guide">
+    <div class="usage-title">この画面の使い方</div>
+    <div class="usage-text">二人の生年月日から、星の違い・距離感・今日の関わり方を読む画面です。相性を決めつけるのではなく、関係を整える材料として使ってください。</div>
+    <div class="usage-steps">
+      <div class="usage-step"><span class="usage-num">1</span><span><strong>自分と相手の生年月日</strong>を入れます。</span></div>
+      <div class="usage-step"><span class="usage-num">2</span><span><strong>誰の言葉・どんな場面</strong>で読むかを選びます。</span></div>
+      <div class="usage-step"><span class="usage-num">3</span><span><strong>レポート</strong>で、伝え方・距離感・活かし方を確認します。</span></div>
+    </div>
   </div>
   <div class="fc">
     <div class="fl">✦ あなたの生年月日</div>
