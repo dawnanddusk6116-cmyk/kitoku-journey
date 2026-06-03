@@ -367,7 +367,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </details>
       <div id="lifeReadingBanner" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:10px;">
         <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 姓名鑑定の結果を読み込みました</div>
-        <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);"></div>
+        <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);line-height:1.7;"></div>
+        <button type="button" onclick="clearLifeReadingContext()" style="margin-top:8px;width:100%;border:1px solid rgba(138,104,32,.28);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 12px;color:var(--goldlt);font-size:.62rem;font-weight:800;">自分の相談に戻す</button>
+        <div style="margin-top:5px;font-size:.54rem;color:var(--mist);line-height:1.6;">読み込んだ姓名鑑定だけを解除して、あなた本人の九星情報モードに戻します。</div>
       </div>
 
       <details class="mini-accordion">
@@ -959,7 +961,8 @@ function renderAiContextSummary(){
         <div><strong style="color:var(--goldlt);">鑑定対象</strong>：${lr.name}さん</div>
         <div><strong style="color:var(--goldlt);">読み込み</strong>：姓名鑑定結果 ${lr.score}点</div>
         <div style="margin-top:6px;color:#9b5b3b;font-weight:700;">※ あなた本人の九星情報は、この名前相談には自動適用しません。</div>
-        <div style="margin-top:3px;color:var(--mist);">対象者の生年月日・九星情報が必要な場合は、AIが確認します。</div>`;
+        <div style="margin-top:3px;color:var(--mist);">対象者の生年月日・九星情報が必要な場合は、AIが確認します。</div>
+        <button type="button" onclick="clearLifeReadingContext()" style="margin-top:9px;width:100%;border:1px solid rgba(138,104,32,.28);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 12px;color:var(--goldlt);font-size:.6rem;font-weight:800;">自分の相談に戻す</button>`;
       return;
     }
     const board=getCurrentBoardContext();
@@ -994,6 +997,26 @@ function getLifeReadingScopeText(lr){
     return `この相談は、ユーザー本人ではなく「${lr.name}」さんの姓名鑑定です。ユーザー本人の九星・納音・方位盤・線路の日を、鑑定対象者の情報として使わないでください。`;
   }
   return `この相談は「${lr.name}」さん本人の姓名鑑定です。ユーザー本人の九星情報と合わせて読んでください。`;
+}
+function clearLifeReadingContext(){
+  try{ localStorage.removeItem('kitoku-life-reading'); }catch(e){}
+  const banner=document.getElementById('lifeReadingBanner');
+  const nameEl=document.getElementById('lifeReadingName');
+  if(banner) banner.style.display='none';
+  if(nameEl) nameEl.textContent='';
+  try{
+    const url=new URL(location.href);
+    if(url.searchParams.get('from')==='life'){
+      url.searchParams.delete('from');
+      history.replaceState(null,'',url.pathname+(url.search?url.search:'')+url.hash);
+    }
+  }catch(e){}
+  renderAiContextSummary();
+  const input=document.getElementById('chatInput');
+  if(input && /姓名鑑定の結果について相談したいです。/.test(input.value)){
+    input.value='';
+  }
+  alert('自分の九星情報で相談する通常モードに戻しました。');
 }
 function applyLifeReadingBanner(){
   const lr=getLifeReading();
