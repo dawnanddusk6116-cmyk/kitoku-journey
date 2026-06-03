@@ -56,6 +56,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .ban-guide-text{font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
 .compass{position:relative;width:100%;max-width:330px;margin:8px auto 0;}
 .compass-inner{max-width:310px;margin:0 auto;}
+.angle-rule-note{font-size:.56rem;color:var(--mist);line-height:1.6;text-align:center;margin:4px auto 8px;max-width:330px;opacity:.9;}
 .dir-row{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;max-width:280px;margin:0 auto;}
 .dir-row.top{margin-bottom:5px;}
 .dir-row.bottom{margin-top:5px;}
@@ -467,6 +468,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="arrow" onclick="moveDate(1)">▶</button>
       </div>
       <div class="compass" id="compassWrap"></div>
+      <div class="angle-rule-note">※ 方位判定は気学式の「正方位30度・斜方位60度」を使用しています。45度均等表示とは境界が異なる場合があります。</div>
       <button class="copy-btn" onclick="copyBoardSummary(this)">📋 方位盤メモをコピー</button>
       <a class="daily-direction-link" href="direction_v2.html">
         <span>⭐ 今日の吉方位を取る</span>
@@ -1438,7 +1440,15 @@ function calcBearingPrem(lat1,lon1,lat2,lon2){
   return((Math.atan2(y,x)/r)+360)%360;
 }
 function bearingToDirPrem(b){
-  return['N','NE','E','SE','S','SW','W','NW'][Math.floor((b+22.5)/45)%8];
+  const deg=((b%360)+360)%360;
+  if(deg<15||deg>=345)return'N';
+  if(deg<75)return'NE';
+  if(deg<105)return'E';
+  if(deg<165)return'SE';
+  if(deg<195)return'S';
+  if(deg<255)return'SW';
+  if(deg<285)return'W';
+  return'NW';
 }
 const DIR_LABEL_P={'N':'北','NE':'北東','E':'東','SE':'南東','S':'南','SW':'南西','W':'西','NW':'北西'};
 

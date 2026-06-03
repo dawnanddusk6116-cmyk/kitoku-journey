@@ -1900,8 +1900,15 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 }
 
 function bearingToDir(bearing) {
-  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  return dirs[Math.floor((bearing + 22.5) / 45) % 8];
+  const b = ((bearing % 360) + 360) % 360;
+  if (b < 15 || b >= 345) return 'N';
+  if (b < 75) return 'NE';
+  if (b < 105) return 'E';
+  if (b < 165) return 'SE';
+  if (b < 195) return 'S';
+  if (b < 255) return 'SW';
+  if (b < 285) return 'W';
+  return 'NW';
 }
 
 function mapSearchUrl(lat, lon) {
@@ -2197,6 +2204,9 @@ function calcAndShowDir() {
       </div>
       <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;text-align:center;">
         ▲ = 目的地の方向　南上（気学式）表示
+      </div>
+      <div style="font-size:.56rem;color:var(--mist);line-height:1.6;text-align:center;margin:-2px 0 8px;opacity:.9;">
+        ※ 方位判定は気学式の「正方位30度・斜方位60度」を使用しています。45度均等表示とは境界が異なる場合があります。
       </div>
       <div class="ban-grid" id="banGridYear" >${yearBoardHtml}</div>
       <div class="ban-grid" id="banGridMonth" style="display:none;">${monthBoardHtml}</div>
