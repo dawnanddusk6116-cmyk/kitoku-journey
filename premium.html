@@ -1879,11 +1879,11 @@ function showInspiration(obj){
   const body=document.querySelector('.inspiration-body');
   if(!body) return;
   body.innerHTML=`
-    ${obj.title?`<div style="font-size:.64rem;letter-spacing:.12em;font-weight:700;line-height:1.5;margin-bottom:8px;color:rgba(255,250,240,.72);">${obj.title}</div>`:''}
-    <div style="font-size:.9rem;font-weight:700;line-height:1.75;margin-bottom:10px;color:#fffaf0;white-space:pre-line;">${obj.quote||''}</div>
-    ${obj.source?`<div style="font-size:.62rem;line-height:1.6;margin:-2px 0 10px;color:rgba(255,250,240,.72);">─ ${obj.source}</div>`:''}
-    <div style="font-size:.68rem;line-height:1.85;color:rgba(255,250,240,.85);margin-bottom:8px;">${obj.message||''}</div>
-    ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(255,250,240,.1);border-radius:8px;color:rgba(255,250,240,.9);">✦ 今日の一歩：${obj.action}</div>`:''}
+    ${obj.title?`<div style="font-size:.64rem;letter-spacing:.12em;font-weight:700;line-height:1.5;margin-bottom:8px;color:rgba(92,116,79,.9);">${obj.title}</div>`:''}
+    <div style="font-size:.9rem;font-weight:700;line-height:1.75;margin-bottom:10px;color:var(--goldlt);white-space:pre-line;">${obj.quote||''}</div>
+    ${obj.source?`<div style="font-size:.62rem;line-height:1.6;margin:-2px 0 10px;color:var(--mist);">─ ${obj.source}</div>`:''}
+    <div style="font-size:.68rem;line-height:1.85;color:var(--snow);margin-bottom:8px;">${obj.message||''}</div>
+    ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(93,128,96,.08);border:1px solid rgba(93,128,96,.14);border-radius:8px;color:var(--goldlt);">✦ 今日の一歩：${obj.action}</div>`:''}
   `;
 }
 
