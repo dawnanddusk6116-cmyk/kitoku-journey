@@ -660,6 +660,16 @@ footer{
         <button class="mini-btn subtle" type="button" onclick="loadLifeName(true)">保存した名前を使う</button>
       </div>
       <div class="save-msg" id="lifeNameSaveMsg">保存した名前はこの端末内だけに残ります。別の名前を試しても、保存ボタンを押すまで上書きされません。</div>
+      <div id="primaryBirthCard" style="display:none;margin-top:12px;">
+        <div class="field">
+          <label>鑑定する人の生年月日 <span style="font-size:.58rem;opacity:.6;margin-left:4px;">任意・生年月日も合わせて読む時に入力</span></label>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;">
+            <input type="date" id="birth1" style="width:100%;" onchange="onBirth1Change()">
+            <button class="mini-btn subtle" id="selfBirthResetBtn" type="button" onclick="useSelfBirthForCompat()" style="white-space:nowrap;padding:10px 12px;">本人に戻す</button>
+          </div>
+        </div>
+        <div id="starDisplay1" style="margin-top:6px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.62rem;color:var(--mist);">任意です。入力すると、本命星・月命星・傾斜・同会・納音を名前の鑑定に使います。</div>
+      </div>
     </div>
 
     <div class="card" id="strokeCard">
@@ -1855,12 +1865,12 @@ const LIFE_MODE_TEXT={
     label:'改名候補'
   },
   other:{
-    body:'⚠️ 命の設計図（九星・納音）はその人固有のものです。生年月日がわからないと、名前の「構造」しか読めません。同じ名前でも、本命星が違えば全く異なる人生になります。まず名前の器を確認し、できればその人の生年月日で「自分」モードで鑑定してください。',
-    cta:'✦ 名前の構造だけを読む',
+    body:'他の人の名前を読む時は、まず名前の器を確認します。生年月日がわかる場合は、下の欄に入力すると、その人の本命星・月命星・傾斜・同会・納音まで合わせて読めます。あなた本人の九星情報は、この鑑定には自動適用しません。',
+    cta:'✦ この人の命の器を読む',
     label:'他の人の名前'
   },
   ai:{
-    body:'二人の名前が持つ気質を比べ、関係性の傾向と処方箋を読みます。生年月日不要で名前だけで相性の構造を確認できます。',
+    body:'二人の名前が持つ気質を比べ、関係性の傾向と処方箋を読みます。生年月日なしでも名前だけで確認できます。1人目・2人目それぞれに生年月日を入れると、本命・月命・傾斜・同会まで含めて比較できます。1人目が未入力の場合は、上部に登録されているあなた本人の情報を使います。',
     cta:'✦ 二人の相性を読む',
     label:'相性診断'
   }
@@ -1880,12 +1890,26 @@ function setLifeMode(mode){
   try{localStorage.setItem('kitoku-life-mode',STATE.lifeMode);}catch(e){}
   // 相性モードの制御
   const partnerCard = document.getElementById('partnerCard');
+  const primaryBirthCard = document.getElementById('primaryBirthCard');
   const aiArea = document.getElementById('aiResultArea');
+  const selfBirthResetBtn = document.getElementById('selfBirthResetBtn');
   if(mode==='ai'){
     if(partnerCard) partnerCard.style.display='block';
+    if(primaryBirthCard) primaryBirthCard.style.display='block';
+    if(selfBirthResetBtn) selfBirthResetBtn.style.display='inline-flex';
+    onBirth1Change();
     document.getElementById('lifeCta').textContent='✦ 二人の相性を読む';
+  } else if(mode==='other'){
+    if(partnerCard) partnerCard.style.display='none';
+    if(primaryBirthCard) primaryBirthCard.style.display='block';
+    if(selfBirthResetBtn) selfBirthResetBtn.style.display='none';
+    if(aiArea) aiArea.style.display='none';
+    onBirth1Change();
+    const modeInfo = LIFE_MODE_TEXT[mode];
+    if(modeInfo) document.getElementById('lifeCta').textContent = modeInfo.cta||'✦ 命の器を読む';
   } else {
     if(partnerCard) partnerCard.style.display='none';
+    if(primaryBirthCard) primaryBirthCard.style.display='none';
     if(aiArea) aiArea.style.display='none';
     // CTAテキストをモードに合わせて更新
     const modeInfo = LIFE_MODE_TEXT[mode];
@@ -2378,8 +2402,8 @@ function runReading(){
 
   // 命の設計図との関係
   const _mode = getLifeMode();
-  // 「他の人」「命名」モードは本命星を使わない
-  const starInfo = (_mode==='other'||_mode==='baby') ? null : loadStarInfo();
+  // 「他の人」モードは、任意入力された鑑定対象者の生年月日だけを使う。本人情報は混ぜない。
+  const starInfo = getReadingTargetStarInfo(_mode);
   // 音読みベースで全文字の五行を収集（村山ロジック準拠）
   const nameGyoArr = [...seiStr, ...meiStr]
     .map(ch => getOnGyo(ch))
@@ -2816,8 +2840,8 @@ function showSeimeiDesign(starInfo, nameGyo, gkGyo) {
         <div style="font-size:.6rem;font-weight:700;color:#c07020;margin-bottom:6px;">⚠️ この鑑定は「名前の構造」のみです</div>
         <div style="font-size:.56rem;color:var(--mist);">
           同じ名前でも、<strong style="color:var(--goldlt);">本命星・月命星・納音が違えば全く異なる器</strong>になります。<br><br>
-          完全な鑑定には、その人の<strong style="color:var(--goldlt);">生年月日</strong>が必要です。<br>
-          その人の生年月日がわかる場合は、「自分」モードで生年月日を登録した上で鑑定してください。
+          完全な鑑定には、その人の<strong style="color:var(--goldlt);">生年月日</strong>があると深く読めます。<br>
+          その人の生年月日がわかる場合は、入力画面に戻り「鑑定する人の生年月日」に入れてください。本人情報と混ぜずに、その人の命の設計図として読みます。
         </div>
       </div>
     </div>`;
@@ -3245,6 +3269,22 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   for(const it of items)if(catDed[it.cat]!==undefined)catDed[it.cat]+=it.deduct||0;
   const catScores={};
   for(const k of Object.keys(CAT_MAX))catScores[k]=Math.max(0,CAT_MAX[k]-Math.min(catDed[k],CAT_MAX[k]));
+
+  // ── アンプ効果（画数10%の法則）──
+  // 総格が吉数なのに陰陽・天地に重大な問題がある場合、凶が加速する
+  const _souG=gk?gk.so:0;
+  const _kichiSo=[11,15,16,21,23,24,25,31,32,33,35,37,39,41,45,47,52,57,61,63,65,67];
+  const _hasAmp=_kichiSo.includes(_souG);
+  const _badIyo=iy&&['大バサミ','二重バサミ','縛り'].includes(iy.pattern);
+  const _badTc=tc&&['天地同数','天底同数','姓名同数'].includes(tc.type);
+  if(_hasAmp&&(_badIyo||_badTc)){
+    items.push({cat:'画数',icon:'⚠',title:`アンプ効果（総格${_souG}画が凶を加速）`,deduct:0,
+      text:`総格${_souG}画は大吉数ですが、陰陽・天地の配列に問題があります。強いエンジン（総格）が凶の作用を加速させてしまう「ハンドルが壊れたフェラーリ」の状態です。`,
+      kitoku:'エンジンの強さを活かすには、まず陰陽・天地の問題を整えることが先決です。改名・通名への一文字追加で状況は大きく変わります。',
+      basis:'画数は姓名鑑定全体の10%。残り90%が整っていなければ、総格の強さはむしろ凶を引き出すエンジンになります。'
+    });
+  }
+
   return{score:Math.max(0,score),catScores,catMax:CAT_MAX,items,inYoResult:iy,tenchiResult:tc};
 }
 
@@ -3697,37 +3737,154 @@ document.addEventListener('visibilitychange', function(){
 
 
 // ── 相性モード：生年月日入力で九星自動表示 ──
+function normalizeLifeDateValue(v){
+  const raw = String(v||'').trim().replace(/\//g,'-');
+  const m = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(!m) return raw;
+  return m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0');
+}
+
+function getLifeStarByBirthValue(val){
+  const normalized = normalizeLifeDateValue(val);
+  const parts = normalized.split('-').map(Number);
+  if(parts.length!==3||!parts.every(Boolean)||typeof getKD!=='function') return null;
+  const [by,bm,bd] = parts;
+  const kd = getKD(by,bm,bd);
+  const h = calcHonmei(kd.kY);
+  const t = calcTsukimei(h, kd.kM);
+  const isSame = h===t;
+  let tFK = t;
+  if(isSame){
+    const g = localStorage.getItem('kitoku-gender')||'male';
+    const TC = {1:9,2:8,3:4,4:3,6:2,7:1,8:7,9:1};
+    tFK = (h===5)?(g==='female'?6:7):(TC[h]||t);
+  }
+  const k = (typeof calcKeisha==='function')?calcKeisha(h,tFK):0;
+  const d = (typeof calcDokai==='function')?calcDokai(h,tFK):0;
+  const yn = (typeof calcNayin==='function')?calcNayin(by):null;
+  return {
+    birth: normalized,
+    honmei: h,
+    tsukimei: tFK,
+    keisha: k||0,
+    dokai: d||0,
+    nain: yn&&yn.n?yn.n:'',
+    gyo_h: STAR_GYO[h]||'',
+    gyo_t: STAR_GYO[tFK]||'',
+    gyo_k: k?STAR_GYO[k]||'':'',
+    gyo_d: d?STAR_GYO[d]||'':''
+  };
+}
+
+function renderLifeStarLine(info, fallbackText){
+  if(!info) return fallbackText||'';
+  const keishaName = info.keisha ? STAR_NAMES[info.keisha]+'（'+STAR_GYO[info.keisha]+'）' : '—';
+  const dokaiName = info.dokai ? STAR_NAMES[info.dokai]+'（'+STAR_GYO[info.dokai]+'）' : '—';
+  return `本命：${STAR_NAMES[info.honmei]}（${STAR_GYO[info.honmei]}）　月命：${STAR_NAMES[info.tsukimei]}（${STAR_GYO[info.tsukimei]}）　傾斜：${keishaName}<br><span style="font-size:.58rem;opacity:.85;">同会：${dokaiName}${info.nain?'　納音：'+info.nain:''}</span>`;
+}
+
+function applyLifeStarDataset(disp, info){
+  if(!disp||!info) return;
+  disp.dataset.honmei = info.honmei;
+  disp.dataset.tsukimei = info.tsukimei;
+  disp.dataset.keisha = info.keisha||0;
+  disp.dataset.dokai = info.dokai||0;
+  disp.dataset.gyo_h = info.gyo_h||'';
+  disp.dataset.gyo_t = info.gyo_t||'';
+  disp.dataset.gyo_k = info.gyo_k||'';
+  disp.dataset.gyo_d = info.gyo_d||'';
+}
+
+function getSavedSelfBirth(){
+  return normalizeLifeDateValue(localStorage.getItem('kitoku-self-birth') || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '');
+}
+
+function normalizeLifeStarForDesign(info){
+  if(!info || !info.honmei) return null;
+  const honmei = info.honmei;
+  const tsukimei = info.tsukimei || 0;
+  const keisha = info.keisha || 0;
+  const dokai = info.dokai || 0;
+  return {
+    honmei, tsukimei, keisha, dokai,
+    nain: info.nain || '',
+    gyoH: info.gyoH || info.gyo_h || STAR_GYO[honmei] || '',
+    gyoT: info.gyoT || info.gyo_t || STAR_GYO[tsukimei] || '',
+    gyoK: info.gyoK || info.gyo_k || (keisha ? STAR_GYO[keisha] : null),
+    gyoD: info.gyoD || info.gyo_d || (dokai ? STAR_GYO[dokai] : null)
+  };
+}
+
+function getReadingTargetStarInfo(mode){
+  if(mode==='baby') return null;
+  if(mode==='other'){
+    const birth = (document.getElementById('birth1')||{}).value || '';
+    return birth ? normalizeLifeStarForDesign(getLifeStarByBirthValue(birth)) : null;
+  }
+  return loadStarInfo();
+}
+
+function onBirth1Change(){
+  const input = document.getElementById('birth1');
+  const disp = document.getElementById('starDisplay1');
+  if(!disp) return;
+  const val = input ? input.value : '';
+  if(!val){
+    disp.style.display='block';
+    disp.innerHTML = STATE.lifeMode==='other'
+      ? '任意です。入力すると、この人の本命星・月命星・傾斜・同会・納音を名前の鑑定に使います。未入力の場合は、名前の構造だけを読みます。'
+      : '未入力の場合は、上部に登録されているあなた本人の九星情報を使います。';
+    delete disp.dataset.honmei;
+    delete disp.dataset.tsukimei;
+    delete disp.dataset.keisha;
+    delete disp.dataset.dokai;
+    return;
+  }
+  try{
+    const info = getLifeStarByBirthValue(val);
+    if(!info){ disp.style.display='none'; return; }
+    disp.style.display='block';
+    disp.innerHTML = renderLifeStarLine(info);
+    applyLifeStarDataset(disp, info);
+  }catch(e){ disp.style.display='none'; }
+}
+
+function useSelfBirthForCompat(){
+  const input = document.getElementById('birth1');
+  const saved = getSavedSelfBirth();
+  if(input&&saved){ input.value=saved; onBirth1Change(); }
+  else alert('本人の生年月日が登録されていません。上部の「生年月日」から登録してください。');
+}
+
+function getCompatPrimaryStarInfo(){
+  const customBirth = (document.getElementById('birth1')||{}).value||'';
+  if(customBirth){
+    const info = getLifeStarByBirthValue(customBirth);
+    if(info) return info;
+  }
+  const h = parseInt(localStorage.getItem('kitoku_honmei'))||0;
+  const t = parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
+  const k = parseInt(localStorage.getItem('kitoku_keisha'))||0;
+  const d = parseInt(localStorage.getItem('kitoku_dokai'))||0;
+  const n = localStorage.getItem('kitoku_nain')||'';
+  if(!h) return null;
+  return {
+    honmei:h, tsukimei:t, keisha:k, dokai:d, nain:n,
+    gyo_h:STAR_GYO[h]||'', gyo_t:STAR_GYO[t]||'',
+    gyo_k:k?STAR_GYO[k]||'':'', gyo_d:d?STAR_GYO[d]||'':''
+  };
+}
+
 function onBirth2Change(){
   const val = (document.getElementById('birth2')||{}).value||'';
   const disp = document.getElementById('starDisplay2');
   if(!val||!disp){ if(disp)disp.style.display='none'; return; }
   try{
-    const parts = val.split('-').map(Number);
-    if(parts.length!==3||!parts.every(Boolean)){ disp.style.display='none'; return; }
-    const [by,bm,bd] = parts;
-    if(typeof getKD!=='function'){ disp.style.display='none'; return; }
-    const kd = getKD(by,bm,bd);
-    const h = calcHonmei(kd.kY);
-    const t = calcTsukimei(h, kd.kM);
-    const isSame = h===t;
-    let tFK = t;
-    if(isSame){
-      const g = localStorage.getItem('kitoku-gender')||'male';
-      const TC = {1:9,2:8,3:4,4:3,6:2,7:1,8:7,9:1};
-      tFK = (h===5)?(g==='female'?6:7):(TC[h]||t);
-    }
-    const k = (typeof calcKeisha==='function')?calcKeisha(h,tFK):0;
-    const yn = calcNayin(by);
-    const nainStr = yn&&yn.n?yn.n:'';
+    const info = getLifeStarByBirthValue(val);
+    if(!info){ disp.style.display='none'; return; }
     disp.style.display='block';
-    disp.innerHTML = `本命：${STAR_NAMES[h]}（${STAR_GYO[h]}）　月命：${STAR_NAMES[t]}（${STAR_GYO[t]}）　傾斜：${k?STAR_NAMES[k]+'（'+STAR_GYO[k]+'）':'—'}${nainStr?'　納音：'+nainStr:''}`;
-    // データをdata属性に保存
-    disp.dataset.honmei = h;
-    disp.dataset.tsukimei = t;
-    disp.dataset.keisha = k||0;
-    disp.dataset.gyo_h = STAR_GYO[h]||'';
-    disp.dataset.gyo_t = STAR_GYO[t]||'';
-    disp.dataset.gyo_k = k?STAR_GYO[k]||'':'';
+    disp.innerHTML = renderLifeStarLine(info);
+    applyLifeStarDataset(disp, info);
   }catch(e){ disp.style.display='none'; }
 }
 
@@ -3900,14 +4057,15 @@ function runCompatibility(){
       <div style="padding:12px 14px;background:rgba(138,104,32,.06);border-radius:10px;">
         <div style="font-size:.65rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">✦ 琥珀色の処方箋</div>
         ${(AI_ADVICE[relType]||[]).map(t=>`<div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:4px;">${t}</div>`).join('')}
-        <div style="font-size:.55rem;color:var(--mist);opacity:.7;margin-top:8px;line-height:1.7;">※ 二人の「名前の主音（フリガナの名頭の読み）」から五行を取得し、相生・相剋・比和で相性を判定しています。生年月日との組み合わせでより正確な鑑定ができます。</div>
+        <div style="font-size:.55rem;color:var(--mist);opacity:.7;margin-top:8px;line-height:1.7;">※ 二人の「名前の主音（フリガナの名頭の読み）」から五行を取得し、相生・相剋・比和で相性を判定しています。生年月日を入れると、本命・月命・傾斜・同会も含めて比較できます。</div>
       </div>
     </div>
   `;
   // 九星相性（生年月日入力済みの場合）
   const disp2 = document.getElementById('starDisplay2');
-  const h1 = parseInt(localStorage.getItem('kitoku_honmei'))||0;
-  const t1 = parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
+  const primaryStar = getCompatPrimaryStarInfo();
+  const h1 = primaryStar ? parseInt(primaryStar.honmei)||0 : 0;
+  const t1 = primaryStar ? parseInt(primaryStar.tsukimei)||0 : 0;
   const h2 = disp2&&disp2.dataset.honmei ? parseInt(disp2.dataset.honmei)||0 : 0;
   const t2 = disp2&&disp2.dataset.tsukimei ? parseInt(disp2.dataset.tsukimei)||0 : 0;
 
