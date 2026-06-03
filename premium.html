@@ -605,7 +605,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 </div>
 
 <script>
-const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',mode:'travel',destination:null,date:new Date()};
+const state={birth:null,gender:'male',info:null,banType:'day',orient:'south',mode:'travel',consultType:'free',destination:null,date:new Date()};
 const WEEK=['日','月','火','水','木','金','土'];
 const BRANCH_LABEL=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const SOUTH_LAYOUT=[['SE','S','SW'],['E','C','W'],['NE','N','NW']];
@@ -652,6 +652,7 @@ function init(){
     state.gender=localStorage.getItem('kitoku-self-gender')||localStorage.getItem('kitoku-gender')||'male';
     state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
     state.mode=localStorage.getItem('kitoku-premium-mode')||'travel';
+    state.consultType=localStorage.getItem('kitoku-premium-consult-type')||'free';
     ['south','north'].forEach(k=>{
       const btn=document.getElementById('orient-'+k);
       if(btn)btn.classList.toggle('active',k===state.orient);
@@ -931,6 +932,26 @@ function getModeMeta(){
     move:{label:'引越しモード',template:'引越しについて相談したいです。',purpose:'引越し',nav:'引越しナビ'}
   }[state.mode]||{label:'旅行モード',template:'旅行について相談したいです。',purpose:'旅行',nav:'旅行ナビ'};
 }
+function getConsultMeta(type=state.consultType){
+  return {
+    today:{label:'今日の動き方',note:'今日どう過ごすか'},
+    date:{label:'未来の日付',note:'契約・開始・出発日'},
+    travel:{label:'旅・引越し',note:'目的地と候補日'},
+    pilgrimage:{label:'聖地巡礼',note:'出発日と線路の日'},
+    pilgrimageRoute:{label:'巡礼ルート相談',note:'回る順番と移動手段'},
+    person:{label:'人との関わり',note:'相手の星も使う'},
+    money:{label:'お金・仕事',note:'判断を整える'},
+    photo:{label:'写真で相談',note:'香水・服・持ち物'},
+    scent:{label:'香りで整える',note:'香水・花・色'},
+    free:{label:'自由相談',note:'そのまま聞く'},
+    blank:{label:'白紙で話す',note:'音声入力・フリートーク'}
+  }[type]||{label:'自由相談',note:'そのまま聞く'};
+}
+function setConsultType(type){
+  state.consultType = getConsultMeta(type) ? type : 'free';
+  try{ localStorage.setItem('kitoku-premium-consult-type', state.consultType); }catch(e){}
+  renderAiContextSummary();
+}
 function getCurrentBoardContext(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   const center=centerForDate();
@@ -967,7 +988,8 @@ function renderAiContextSummary(){
     const board=getCurrentBoardContext();
     el.innerHTML=`
       <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
-      <div><strong style="color:var(--goldlt);">用途</strong>：${getModeMeta().label}</div>
+      <div><strong style="color:var(--goldlt);">相談テーマ</strong>：${getConsultMeta().label}</div>
+      <div><strong style="color:var(--goldlt);">方位盤</strong>：${getModeMeta().label}</div>
       <div><strong style="color:var(--goldlt);">九星</strong>：${starLine(state.info).replace(/^私は/,'')}</div>
       <div><strong style="color:var(--goldlt);">盤面</strong>：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}</div>
       <div><strong style="color:var(--goldlt);">吉方位</strong>：${board.kichi}</div>
@@ -1084,6 +1106,7 @@ function setTone(tone) {
 function insertConsultTemplate(type){
   const input=document.getElementById('chatInput');
   if(!input) return;
+  setConsultType(type||'free');
   if(type==='blank'){
     input.value='';
     autoResizeChatInput();
@@ -1307,7 +1330,8 @@ function buildSystemPrompt() {
   }catch(e){}
 
   const selfUserData = `
-相談モード：${getModeMeta().label}
+相談テーマ：${getConsultMeta().label}
+方位盤モード：${getModeMeta().label}
 出発地登録：${getHomePrem()?'登録済み（AIには地名・座標は自動送信しません）':'未登録'}
 本命星：${STARS[info.honmei]?.j||''}（${STARS[info.honmei]?.elem||''}）
 月命星：${STARS[info.tsukimei]?.j||''}
