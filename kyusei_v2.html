@@ -48,6 +48,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-kicker{font-size:.56rem;letter-spacing:.18em;color:var(--gold);font-weight:800;margin-bottom:6px;}
 .report-title{font-size:.92rem;color:var(--goldlt);font-weight:800;letter-spacing:.06em;margin-bottom:6px;}
 .report-lead{font-size:.74rem;color:var(--snow);line-height:1.95;font-weight:600;margin-bottom:10px;}
+.report-accordion{margin-top:8px;}
+.report-accordion summary{list-style:none;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:11px;padding:11px 12px;cursor:pointer;color:var(--goldlt);font-weight:800;font-size:.72rem;line-height:1.55;}
+.report-accordion summary::-webkit-details-marker{display:none;}
+.report-accordion summary::after{content:"▼";margin-left:auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.13);border:1px solid rgba(196,160,67,.28);color:var(--goldlt);font-size:.66rem;transition:transform .2s ease;}
+.report-accordion[open] summary::after{transform:rotate(180deg);}
+.report-accordion-sub{display:block;font-size:.58rem;color:var(--mist);font-weight:600;margin-top:2px;letter-spacing:0;}
+.report-accordion-body{padding-top:8px;}
 .report-block{background:rgba(255,255,255,.45);border:1px solid rgba(100,80,40,.1);border-radius:10px;padding:10px;margin-top:8px;}
 .report-block-title{font-size:.66rem;color:var(--goldlt);font-weight:800;margin-bottom:4px;}
 .report-text{font-size:.68rem;color:var(--mist);line-height:1.9;}
@@ -151,6 +158,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .modal-tag{background:rgba(196,160,67,.1);border-color:rgba(196,160,67,.25);color:var(--goldlt);}
 [data-theme="dark"] .kitoku-report{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));border-color:rgba(196,160,67,.32);}
 [data-theme="dark"] .report-block{background:rgba(255,255,255,.055);border-color:rgba(212,175,55,.18);}
+[data-theme="dark"] .report-accordion summary{background:rgba(255,255,255,.055);border-color:rgba(212,175,55,.2);}
+[data-theme="dark"] .report-accordion summary::after{background:rgba(196,160,67,.14);border-color:rgba(196,160,67,.28);}
 [data-theme="dark"] .report-text{color:rgba(232,238,255,.76);}
 [data-theme="dark"] .report-next-card{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.24);box-shadow:none;}
 [data-theme="dark"] .report-next-card.ai{background:linear-gradient(135deg,rgba(112,156,210,.12),rgba(18,21,42,.95));border-color:rgba(112,156,210,.32);}
@@ -278,20 +287,27 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="kitoku-report" id="kitokuReport">
         <div class="report-kicker">BY KITOKU INTERPRETATION</div>
         <div class="report-title">私のKITOKUレポート</div>
-        <div class="report-lead" id="reportLead">—</div>
-        <div class="report-block">
-          <div class="report-block-title">九星の骨格</div>
-          <div class="report-text" id="reportStructure">—</div>
-        </div>
-        <div class="report-block">
-          <div class="report-block-title">納音の音色</div>
-          <div class="report-text" id="reportNacchin">—</div>
-        </div>
-        <div class="report-block">
-          <div class="report-block-title">自分を扱うヒント</div>
-          <div class="report-text" id="reportAction">—</div>
-          <div class="report-tags" id="reportTags"></div>
-        </div>
+        <details class="report-accordion">
+          <summary>
+            <span>レポート本文を読む<span class="report-accordion-sub">九星・納音・扱い方の詳しい解説</span></span>
+          </summary>
+          <div class="report-accordion-body">
+            <div class="report-lead" id="reportLead">—</div>
+            <div class="report-block">
+              <div class="report-block-title">九星の骨格</div>
+              <div class="report-text" id="reportStructure">—</div>
+            </div>
+            <div class="report-block">
+              <div class="report-block-title">納音の音色</div>
+              <div class="report-text" id="reportNacchin">—</div>
+            </div>
+            <div class="report-block">
+              <div class="report-block-title">自分を扱うヒント</div>
+              <div class="report-text" id="reportAction">—</div>
+              <div class="report-tags" id="reportTags"></div>
+            </div>
+          </div>
+        </details>
         <div class="report-next">
           <div class="report-next-label">✦ 次にできること</div>
           <a class="report-next-card ai" href="ai.html">
