@@ -1183,6 +1183,17 @@ ${boardSummary}${senroSummary}
 ・回答では、現在の構造、強み、注意点、補い方、本人が選ぶための次の一手を示す
 ・最終的にどうするかは本人が決める。AIは選択を整理する伴走役である
 
+【凶作用・注意点の伝え方】
+・凶方位、注意配列、大凶画数、相剋、破れ、暗剣殺、本命殺、的殺などの注意点は、データに記載がある場合のみ明確に伝える
+・ただし「悪い」「危険」「終わり」「必ず不幸になる」のように突き放さない
+・伝え方は「ここには摩擦があります」「この構造には注意点があります」「この時期は無理に押し切らない方が整います」のようにする
+・注意点を伝えたら、必ず「では、どう整えるか」を続ける
+・処方箋は、行動、方位、線路の日、香り、色、言葉、休み方、人との距離感、相談先などから現実的に提案する
+・名前の注意点は「この名前はダメ」ではなく「この名前を使うなら、ここを意識すると活かしやすい」と伝える
+・方位の注意点は「行ってはいけない」ではなく「行くなら短時間にする、目的を絞る、吉方位や線路の日で補う」など扱い方を示す
+・健康、子供、法律、投資、重大な金銭判断に関わる相談では、不安を煽らず、必要に応じて医療・法律・金融・鑑定の専門家への相談も自然に促す
+・古典や徳の話を使う場合は、説教や断定ではなく「焦らず整えるための視点」として短く添える
+
 【写真相談のルール】
 ・写真が添付された場合は、香水、服、色、小物、部屋、食べ物、仕事道具など、対象を限定せず相談に乗る
 ・画像から見える色、形、素材感、明るさ、重さ、清潔感、季節感、使う場面を読み取り、内部で木火土金水に翻訳する
@@ -1202,8 +1213,10 @@ ${boardSummary}${senroSummary}
 ◆禁止漢字：動植物・気象・鉱物・十二支（龍・雪・葵など）
 ◆字義縛り禁止：歩・泉・亜・絆・結・恩・正・未・香・唯
 ◆禁止画数（総格）：19・22・28・44画が絶対禁忌。26・30・34・36画は要注意
+◆命名で特に注意する画数：43・53画は命名では避けたい数として扱う
+◆芸名・通称の特例：25・26画は戸籍名では慎重に見るが、芸名・通称・SNS名では使い方次第で活かせる場合がある
 ◆人格・地格のNG：9画・19画
-◆禁止配列：大バサミ・二重挟み・縛り（全陰全陽）・中断
+◆禁止配列：大バサミ・二重挟み・縛り（全陰全陽）・中断・縦割れ文字の偏り
 ◆読み下し禁止：一文字名・水性始まり（マ・ハ行）・濁音始まり・ん終わり
 ◆大凶音配列禁止：水水・火火・水火・火水
 ◆判定基準：姓の最後の漢字の主音（第一音）と名の最初の音を比較
@@ -1238,7 +1251,11 @@ ${boardSummary}${senroSummary}
 ・人格または地格が9画・19画の候補は「注意あり」または「避ける」と明記する
 ・名の1文字目が9画・19画の場合は、自我・衝突・孤独が強く出やすい注意点を明記する
 ・天地同数、姓名同数、天底同数、天地衝突が残る候補は、必ず注意点を明記する
+・天底同数は「一文字追加」「通称名」「表記変更」で解除できる場合があるため、救済案も添える
 ・大バサミ、二重挟み、全陰全陽、中断が出る候補は、必ず注意点を明記する
+・縦割れ文字が多い候補は、組織・家庭・人間関係が分かれやすい注意点を明記する
+・長男・次男・出生順に関係する字（一・二・次・太など）は、本人の出生順や家族構成と矛盾しないか確認する
+・良い総格が出ていても、上位の注意点がある場合は「吉数が注意点を強めるアンプ効果」として説明する
 ・一文字名、水性始まり、濁音始まり、「ん」終わり、男女判別が曖昧な名前は注意点を明記する
 ・水水、火火、水火、火水の音配列がある候補は、必ず注意点を明記する
 ・字義縛りや禁止漢字に該当する可能性がある字は、必ず「確認が必要」と明記する
@@ -2236,6 +2253,21 @@ function runRenameScore(){
 }
 
 // 採点ロジック
+const RS_TATE_WARE_SET=new Set(['次','郎','部','阿','那','邦','郁','邑','邪','郊','郷','郡','野','輝','樹','検','棋','横','欄','槇','槿','林','好','男','析','桐','柳','村','杉','梅','桃','栗','柿','梨','楓','橘','枝','枠','棟','棒','概','橋','昌','昇','晶','識','謙','請','讃','語','詩','説','講','論','詠','課','調','護','財','資','賞','賛','貸','貫','購']);
+function checkTateWareRS(sei,mei){
+  const all=[...sei,...mei];
+  if(all.length<2)return false;
+  const cnt=all.filter(ch=>RS_TATE_WARE_SET.has(ch)).length;
+  return cnt>=2 || cnt/all.length>=0.5;
+}
+function hasOrderNameRiskRS(mei){
+  return /[一二次太]/.test(mei);
+}
+function hasAmpRiskRS(scoreIssues,sou){
+  const goodAmp=[24,31,33,35,37,39,41,45,47,48,52];
+  const hasHeavy=scoreIssues.some(i=>/天地同数|姓名同数|天底同数|大バサミ|二重バサミ|中断|人格音の大凶|縦割れ/.test(i));
+  return hasHeavy && goodAmp.includes(sou);
+}
 function scoreNameRS(sei, seiFuri, mei, meiFuri){
   const issues = [];
   let score = 100;
@@ -2254,6 +2286,8 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
   const CHUI = [26,30,34,36];
   if(KINKI.includes(sou)){ issues.push(`総格${sou}画は絶対禁忌数`); score-=30; }
   else if(CHUI.includes(sou)){ issues.push(`総格${sou}画は要注意数`); score-=10; }
+  if([43,53].includes(sou)){ issues.push(`命名では総格${sou}画は避けたい数`); score-=18; }
+  if([25,26].includes(sou)){ issues.push(`総格${sou}画は芸名・通称なら特例的に使える場合あり`); score-= sou===26 ? 6 : 0; }
   if([9,19].includes(jin)){ issues.push(`人格${jin}画は要注意`); score-=15; }
   if([9,19].includes(chi)){ issues.push(`地格${chi}画は要注意`); score-=10; }
 
@@ -2262,7 +2296,9 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
   const yo = allS.map(s=>s%2===0?0:1); // 1=陽 0=陰
   const n = yo.length;
   if(n>=4){
-    if(yo[0]===yo[n-1] && yo[1]===yo[n-2] && yo[0]!==yo[1]){
+    if(n>=5 && yo[0]===yo[n-1] && yo[1]===yo[n-2] && yo[0]!==yo[1] && yo[2]===yo[1]){
+      issues.push('二重バサミ（陰陽配列の強い圧迫）'); score-=25;
+    } else if(yo[0]===yo[n-1] && yo[1]===yo[n-2] && yo[0]!==yo[1]){
       issues.push('大バサミ（陰陽配列の凶）'); score-=20;
     } else if(yo.every(v=>v===0)){
       issues.push('全陰（縛り）'); score-=15;
@@ -2279,7 +2315,9 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
   // 天地同数・姓名同数・天底同数
   if(seiS[0]===meiS[0]){ issues.push(`天地同数（${seiS[0]}画）`); score-=20; }
   if(ten===chi){ issues.push('姓名同数（総画が同じ）'); score-=20; }
-  if(seiS[0]===meiS[meiS.length-1]){ issues.push('天底同数'); score-=20; }
+  if(seiS[0]===meiS[meiS.length-1]){ issues.push('天底同数（一文字追加・通称で解除しやすい）'); score-=14; }
+  if(checkTateWareRS(sei,mei)){ issues.push('縦割れ文字が多い（組織・家庭が分かれやすい）'); score-=12; }
+  if(hasOrderNameRiskRS(mei)){ issues.push('長男・次男など出生順との整合確認'); score-=5; }
 
   // 読み下し
   const meiF = meiFuri.trim();
@@ -2298,6 +2336,9 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
   const BAD_PAIRS = [['水','水'],['火','火'],['水','火'],['火','水']];
   if(sGyo && mGyo && BAD_PAIRS.some(([a,b])=>sGyo===a&&mGyo===b)){
     issues.push(`人格音の大凶（${sGyo}×${mGyo}）`); score-=20;
+  }
+  if(hasAmpRiskRS(issues,sou)){
+    issues.push(`総格${sou}画の力が注意点を強める可能性（アンプ効果）`); score-=5;
   }
 
   return { score: Math.max(0, score), issues, ten, jin, chi, gai, sou };
