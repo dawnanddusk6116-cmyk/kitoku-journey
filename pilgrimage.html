@@ -151,6 +151,31 @@ body{
   font-size:.64rem;
   font-weight:600;
 }
+.usage-guide{
+  padding:0;
+  overflow:hidden;
+}
+.usage-guide summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:13px 16px;
+  cursor:pointer;
+  list-style:none;
+  color:#3a2508;
+  font-size:.84rem;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+.usage-guide summary::-webkit-details-marker{display:none;}
+.usage-guide summary::after{
+  content:"▶";
+  font-size:.62rem;
+  color:var(--goldlt);
+}
+.usage-guide[open] summary::after{content:"▼";}
+.usage-guide-body{padding:0 16px 14px;}
 
 /* ── 自宅登録 ── */
 .home-reg{padding:0;}
@@ -882,10 +907,9 @@ html.font-large .font-btn{font-size:.8rem;}
 </div>
 
 <!-- 使い方の解説 -->
-<div class="usage-guide">
-  <div style="font-size:.75rem;color:var(--goldlt);font-weight:700;margin-bottom:10px;">
-    ✦ 聖地巡礼ナビの使い方
-  </div>
+<details class="usage-guide">
+  <summary>✦ 聖地巡礼ナビの使い方</summary>
+  <div class="usage-guide-body">
   <div style="font-size:.66rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.55);border:1px solid rgba(138,104,32,.16);border-radius:10px;padding:10px 12px;margin-bottom:10px;">
     無料版では、聖地へ向かう前に「どの順番で確認するか」を整理できます。<br>
     自宅・行きたい聖地・候補日をそろえ、年盤・月盤・日盤の順に見ていくと安全に判断しやすくなります。
@@ -911,7 +935,8 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="usage-tip">
     💡 線路の日（契約・出発・開始の目安）は方位の吉凶とは別枠で確認できます。両方重なる日が最優先です。
   </div>
-</div>
+  </div>
+</details>
 
 <!-- STEP 1: 自宅登録 -->
 <div class="section">

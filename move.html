@@ -172,6 +172,31 @@ body{
   font-size:.65rem;
   font-weight:600;
 }
+.usage-guide{
+  padding:0;
+  overflow:hidden;
+}
+.usage-guide summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:13px 16px;
+  cursor:pointer;
+  list-style:none;
+  color:#3a2508;
+  font-size:.84rem;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+.usage-guide summary::-webkit-details-marker{display:none;}
+.usage-guide summary::after{
+  content:"▶";
+  font-size:.62rem;
+  color:var(--goldlt);
+}
+.usage-guide[open] summary::after{content:"▼";}
+.usage-guide-body{padding:0 16px 14px;}
 
 /* ── 自宅登録 ── */
 .home-reg{padding:0;}
@@ -835,8 +860,9 @@ html.font-large .font-btn{font-size:.8rem;}
 <div class="life-element-banner" id="lifeElementBanner"></div>
 
 <!-- 使い方の解説 -->
-<div class="usage-guide">
-  <div style="font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">🏡 引越し吉方位ナビ</div>
+<details class="usage-guide">
+  <summary>🏡 引越し吉方位ナビ</summary>
+  <div class="usage-guide-body">
   <div style="font-size:.67rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">
     引越しは、あなたが新しく根を張る「人生の土壌」を選ぶ行為です。<br>
     <strong style="color:var(--snow);">年盤と月盤が両方吉の方角・月</strong>を選ぶことが、運勢のOSを書き換える唯一の条件です。
@@ -872,7 +898,8 @@ html.font-large .font-btn{font-size:.8rem;}
       padding:5px 12px;font-size:.62rem;color:#3a6e3a;font-weight:700;cursor:pointer;
       font-family:'Noto Serif JP',serif;">🌿 仮吉方の詳しいルールを見る</button>
   </div>
-</div>
+  </div>
+</details>
 
 <!-- STEP 1: 自宅登録 -->
 <div class="section">
