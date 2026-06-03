@@ -293,6 +293,50 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   color:var(--mist);
   line-height:1.85;
 }
+.chat-composer{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 40px;
+  gap:8px;
+  align-items:stretch;
+}
+.chat-composer textarea{
+  width:100%;
+  min-width:0;
+  border:1px solid var(--rim);
+  border-radius:10px;
+  background:rgba(255,255,255,.72);
+  color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  font-size:.72rem;
+  padding:10px 11px;
+  resize:none;
+  min-height:122px;
+  max-height:300px;
+  line-height:1.7;
+  overflow-y:auto;
+}
+.chat-actions{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.chat-action-btn{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  border:1px solid rgba(138,104,32,.28);
+  color:var(--goldlt);
+  font-size:1rem;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+.chat-action-btn.photo{background:rgba(138,104,32,.08);}
+.chat-action-btn.send{background:rgba(138,104,32,.15);border-color:rgba(138,104,32,.35);font-size:1.15rem;}
+@media(max-width:420px){
+  .chat-composer{grid-template-columns:minmax(0,1fr) 38px;gap:7px;}
+  .chat-composer textarea{min-height:132px;font-size:.73rem;padding:10px;}
+  .chat-action-btn{width:38px;height:38px;}
+}
 @media(max-width:420px){.header{gap:7px;padding:10px 12px}.brand{font-size:.92rem;letter-spacing:.09em}.actions{gap:5px}.font-control{padding:2px}.font-btn{width:22px;height:22px;font-size:.58rem}.nav-btn{min-height:31px;font-size:.64rem;padding:7px 8px;letter-spacing:.02em}}
 @media(max-width:380px){.brand{font-size:.86rem;letter-spacing:.07em}.nav-btn{padding:7px}.compass{width:236px}.cell{height:64px}}
 </style>
@@ -433,13 +477,14 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
       <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
 
-      <div style="display:flex;gap:8px;align-items:flex-end;">
+      <div class="chat-composer">
         <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
           oninput="autoResizeChatInput()"
-          style="flex:1;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;resize:none;min-height:86px;max-height:260px;line-height:1.7;overflow-y:auto;"
-          rows="3"></textarea>
-        <button onclick="document.getElementById('imageInput').click()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);color:var(--goldlt);font-size:1.1rem;cursor:pointer;flex-shrink:0;" title="写真を添付">📷</button>
-        <button onclick="sendChat()" style="width:44px;height:44px;border-radius:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.35);color:var(--goldlt);font-size:1.2rem;cursor:pointer;flex-shrink:0;">✦</button>
+          rows="5"></textarea>
+        <div class="chat-actions">
+          <button class="chat-action-btn photo" onclick="document.getElementById('imageInput').click()" title="写真を添付" aria-label="写真を添付">📷</button>
+          <button class="chat-action-btn send" onclick="sendChat()" aria-label="送信">✦</button>
+        </div>
       </div>
       <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
     </div>
