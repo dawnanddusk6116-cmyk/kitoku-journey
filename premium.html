@@ -2541,8 +2541,8 @@ function hasOrderNameRiskRS(mei){
   return /[一二次太]/.test(mei);
 }
 function hasAmpRiskRS(scoreIssues,sou){
-  const goodAmp=[24,31,33,35,37,39,41,45,47,48,52];
-  const hasHeavy=scoreIssues.some(i=>/天地同数|姓名同数|天底同数|大バサミ|二重バサミ|中断|人格音の大凶|縦割れ/.test(i));
+  const goodAmp=[11,15,16,21,23,24,25,31,32,33,35,37,39,41,45,47,52,57,61,63,65,67];
+  const hasHeavy=scoreIssues.some(i=>/天地同数|姓名同数|天底同数|大バサミ|二重バサミ|縛り/.test(i));
   return hasHeavy && goodAmp.includes(sou);
 }
 function scoreNameRS(sei, seiFuri, mei, meiFuri){
@@ -2615,7 +2615,7 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
     issues.push(`人格音の大凶（${sGyo}×${mGyo}）`); score-=20;
   }
   if(hasAmpRiskRS(issues,sou)){
-    issues.push(`総格${sou}画の力が注意点を強める可能性（アンプ効果）`); score-=5;
+    issues.push(`アンプ効果（総格${sou}画が凶を加速）：総格${sou}画は大吉数ですが、陰陽・天地の配列に強い注意点があります。強いエンジンが凶の作用を加速させる「ハンドルが壊れたフェラーリ」の状態です。まず陰陽・天地を整えることが先決です。`);
   }
 
   return { score: Math.max(0, score), issues, ten, jin, chi, gai, sou };
