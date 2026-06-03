@@ -100,6 +100,12 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .topic-btn{border:1px solid var(--rim);border-radius:9px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:800;line-height:1.35;padding:8px 8px;cursor:pointer;text-align:left;min-height:54px;}
 .topic-btn span{display:block;font-size:.5rem;color:var(--mist);font-weight:500;margin-top:1px;line-height:1.35;}
 .topic-btn:active{transform:scale(.98);}
+.scent-link-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.scent-link-grid .scent-link{display:block;text-decoration:none;text-align:center;border:1px solid rgba(138,104,32,.22);background:rgba(255,255,255,.72);border-radius:9px;padding:9px 7px;color:var(--goldlt);font-size:.64rem;font-weight:800;line-height:1.45;}
+.scent-link-grid .scent-link span{display:block;font-size:.5rem;color:var(--mist);font-weight:500;margin-top:1px;}
+.scent-link-grid .scent-link.main{border-color:rgba(199,93,122,.34);background:rgba(199,93,122,.06);color:#9f3f5c;}
+.scent-link-grid .scent-link.wide{grid-column:1/-1;}
+.scent-note{font-size:.56rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:8px;}
 .mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 10px;}
 .mode-btn{border:1px solid var(--rim);border-radius:999px;background:rgba(255,255,255,.72);color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.66rem;font-weight:800;padding:8px 6px;cursor:pointer;}
 .mode-btn.active{background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);}
@@ -382,9 +388,26 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('photo')">写真で相談<span>香水・服・持ち物</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('scent')">香りで整える<span>香水・花・色</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('blank')">白紙で話す<span>音声入力・フリートーク</span></button>
       </div>
+
+      <details class="mini-accordion">
+        <summary>香りの参考リンク</summary>
+        <div class="mini-accordion-body">
+          香り・色・場面を相談したあと、試す場所を探すための入口です。商品名・価格・在庫は変わるため、購入前に公式ページで確認してください。
+          <div class="scent-link-grid">
+            <a class="scent-link main" href="https://px.a8.net/svt/ejp?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" target="_blank" rel="nofollow sponsored noopener">カラリアで探す<span>香りを試す</span></a>
+            <a class="scent-link" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<span>参考リンク</span></a>
+            <a class="scent-link wide" href="https://coen-fragrance.com?afid=kitokujourney&token=OLflEHlAOlo" target="_blank" rel="nofollow sponsored noopener">Coenで王道ブランドを少量から探す<span>参考リンク</span></a>
+            <a class="scent-link" href="https://www.aoyamaflowermarket.com/item/510112.html" target="_blank" rel="noopener">青山フラワー<span>花の香り</span></a>
+            <a class="scent-link" href="https://www.fromcocoro.com/kaori/" target="_blank" rel="noopener">From COCORO<span>和の香り</span></a>
+            <a class="scent-link" href="https://noseshop.jp/" target="_blank" rel="noopener">NOSE SHOP<span>個性派</span></a>
+          </div>
+          <div class="scent-note">リンクは参考入口です。最終的な購入判断は、公式ページで確認してください。</div>
+        </div>
+      </details>
 
       <div style="margin-bottom:12px;">
         <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
@@ -1080,6 +1103,20 @@ function insertConsultTemplate(type){
 怖さ・焦り・欲が出ている点：【ここに入力】
 
 私の九星情報と今日の盤面をもとに、売買や正解を断定せず、判断の整え方を教えてください。`,
+    scent:`香り・色・持ち物について相談したいです。
+
+今回の相談モード：自分に合う香りを選ぶ
+相談したい場面（仕事・会食・休息・勝負どころなど）：【ここに入力】
+なりたい印象・整えたい気分：【ここに入力】
+手持ちの香水・お香・ボディケア：【ここに入力】
+苦手な香り・予算・試したいブランド：【ここに入力】
+
+私はKITOKUの九星情報と今日の盤面情報をもとに相談したいです。
+九星気学を主役に、香り・色・シーン・相手との関係を統合して、押し付けではなく「自分で選ぶための香りの処方箋」を作ってください。
+
+High（香水・勝負）、Mid（ボディケア・日常）、Low（空間・浄化）に分けて、今日の使い方、避けた方がよい強さ、足りない五行を補う香りや色も教えてください。
+
+参考にしてよい入口：カラリア、Celes、Coen、青山フラワー、From COCORO、NOSE SHOP。`,
     photo:`添付した写真について相談したいです。
 
 写真の内容（香水・服・小物・部屋・食べ物など）：【ここに入力】
