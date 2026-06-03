@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="kitoku-engine.js"></script>
+<script src="kitoku-teachings.js"></script>
 <script>
 // ── engine.jsが未ロードの場合のフォールバック ──
 if(typeof calcKeisha !== 'function'){
@@ -3250,6 +3251,45 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
   for(const k of Object.keys(CAT_MAX))catScores[k]=Math.max(0,CAT_MAX[k]-Math.min(catDed[k],CAT_MAX[k]));
   return{score:Math.max(0,score),catScores,catMax:CAT_MAX,items,inYoResult:iy,tenchiResult:tc};
 }
+
+function parseLifeOrientalTeachings(){
+  const corpus=(window.KITOKU_ORIENTAL_TEACHINGS||'').trim();
+  if(!corpus)return[];
+  const list=[];
+  const re=/Vol\.(\d+)【見出し】([\s\S]*?)【教え・哲学】([\s\S]*?)【出典】([\s\S]*?)(?=\s*,?\s*Vol\.|$)/g;
+  let m;
+  while((m=re.exec(corpus))){
+    list.push({no:String(m[1]).padStart(2,'0'),title:m[2].replace(/\s+/g,' ').trim(),body:m[3].replace(/\s+/g,' ').trim(),source:m[4].replace(/\s+/g,' ').trim()});
+  }
+  return list;
+}
+function getLifeTeachingByNo(no){
+  const list=parseLifeOrientalTeachings();
+  return list.find(t=>t.no===String(no).padStart(2,'0'));
+}
+function getLifeTeachingForItem(it){
+  const s=[it.cat,it.title,it.text,it.kitoku].join(' ');
+  let no=28;
+  if(/大バサミ|バサミ|ハサミ|二重/.test(s))no=64;
+  else if(/中断|破れ|巻き直し|蒔直し/.test(s))no=90;
+  else if(/陰陽|縛り|偏り|片寄り|全陰|全陽/.test(s))no=13;
+  else if(/天地同数|天地衝突|姓名同数|天底同数|天地/.test(s))no=120;
+  else if(/五行|水性|大凶音|水水|火火|水火|火水/.test(s))no=124;
+  else if(/読み下し|字義|自然|名乗り|一文字|音/.test(s))no=145;
+  else if(/画数|総格|人格|地格|外格/.test(s))no=11;
+  return getLifeTeachingByNo(no);
+}
+function renderLifeTeachingNote(it,idx){
+  if(idx>=3)return'';
+  const t=getLifeTeachingForItem(it);
+  if(!t)return'';
+  const body=t.body.length>76?t.body.slice(0,76)+'…':t.body;
+  return '<div style="font-size:.56rem;color:var(--mist);line-height:1.7;margin-top:6px;padding:7px 8px;background:rgba(138,104,32,.045);border-left:2px solid rgba(138,104,32,.35);border-radius:6px;">'
+    +'<strong style="color:var(--goldlt);">先人のことば：</strong>Vol.'+t.no+'「'+t.title+'」<br>'
+    +'<span>'+body+'</span>'
+    +'</div>';
+}
+
 function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
   const div=document.getElementById('scoreCard');
   if(!div)return;

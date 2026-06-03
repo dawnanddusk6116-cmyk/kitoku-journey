@@ -1192,6 +1192,49 @@ function focusFirstInputMarker(input){
   }
 }
 
+
+function parseKitokuOrientalTeachings() {
+  const corpus = (window.KITOKU_ORIENTAL_TEACHINGS || '').trim();
+  if (!corpus) return [];
+  const list = [];
+  const re = /Vol\.(\d+)【見出し】([\s\S]*?)【教え・哲学】([\s\S]*?)【出典】([\s\S]*?)(?=\s*,?\s*Vol\.|$)/g;
+  let m;
+  while ((m = re.exec(corpus))) {
+    list.push({
+      no: String(m[1]).padStart(2, '0'),
+      title: m[2].replace(/\s+/g, ' ').trim(),
+      body: m[3].replace(/\s+/g, ' ').trim(),
+      source: m[4].replace(/\s+/g, ' ').trim()
+    });
+  }
+  return list;
+}
+
+function buildSelectedTeachingGuide(seedText) {
+  const list = parseKitokuOrientalTeachings();
+  if (!list.length) return '';
+  const seed = String(seedText || '');
+  const wanted = new Set();
+  const add = (...nums) => nums.forEach(n => wanted.add(String(n).padStart(2, '0')));
+
+  if (/凶|本命殺|的殺|五黄|暗剣|破壊|破れ|方位|線路/.test(seed)) add(11, 90, 128, 152);
+  if (/相剋|摩擦|人間関係|関係|商談|面談|相手/.test(seed)) add(4, 30, 55, 93);
+  if (/陰陽|中道|バランス|偏り|縛り|バサミ|ハサミ|中断/.test(seed)) add(13, 64, 90, 120);
+  if (/姓名|名前|命名|改名|画数|天地|字義|読み|名乗り/.test(seed)) add(6, 11, 145, 156);
+  if (/迷い|不安|悩み|決断|どうしたら/.test(seed)) add(10, 44, 57, 81);
+  if (/仕事|お金|投資|契約|事業|ビジネス/.test(seed)) add(72, 85, 124, 149);
+  if (/健康|体調|身体|休み|疲れ/.test(seed)) add(16, 26, 107);
+  if (/香り|色|服|写真|美容|ファッション/.test(seed)) add(20, 106, 128);
+  if (!wanted.size) add(5, 22, 28, 31);
+
+  const selected = list.filter(t => wanted.has(t.no)).slice(0, 5);
+  if (!selected.length) return '';
+  return '【今回使える先人の教え】\n' + selected.map(t => {
+    const body = t.body.length > 110 ? t.body.slice(0, 110) + '…' : t.body;
+    return `Vol.${t.no}「${t.title}」\n要点：${body}\n出典：${t.source}`;
+  }).join('\n\n');
+}
+
 function buildSystemPrompt() {
   const info = state.info || {};
   const today = new Date();
@@ -1262,6 +1305,8 @@ ${boardSummary}${senroSummary}
 今日：${y}年${m}月${d}日`.trim() : '';
 
   const userData = externalLifeReading ? externalLifeUserData : selfUserData;
+  const teachingSeed = [userData, lifeReadingSummary, (chatHistory || []).slice(-4).map(m => m.content).join('\n')].join('\n');
+  const selectedTeachingGuide = buildSelectedTeachingGuide(teachingSeed);
 
   return `あなたはKITOKUの気学の専門家です。
 5000年の東洋の知恵（九星気学・KITOKU式）をベースに相談に乗ります。
@@ -1427,6 +1472,13 @@ ${boardSummary}${senroSummary}
 ・吉凶で脅さない。「どう活かすか」に変換する
 ・「ダメです・最悪です」とは言わない
 ・必ず「では、どうするか」の処方箋をセットで渡す
+
+【先人の教えの使い方】
+・凶方位、姓名の注意点、難しい運気、相剋、破れ、迷いを説明する時は、下の「今回使える先人の教え」から1本だけ短く引用してよい
+・引用は恐怖を強めるためではなく、処方箋に知恵を添えるために使う
+・毎回必ず引用しない。使う場合も1本まで
+・出典を短く添える
+${selectedTeachingGuide || '※今回の相談では引用候補を渡していません。必要な時だけ一般的な東洋の教えとして短く触れる。'}
 
 【ユーザーデータ】
 ${userData}${lifeReadingSummary}`;
