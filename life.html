@@ -1921,7 +1921,7 @@ function getLifeMode(){
   return LIFE_MODE_TEXT[STATE.lifeMode] ? STATE.lifeMode : 'self';
 }
 
-const LIFE_FREE=3;
+const LIFE_FREE=999; // 検証用
 function lifeTodayKey(){
   const d=new Date();
   return 'klife_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();
@@ -3374,15 +3374,7 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
         +'<span style="font-size:.52rem;font-weight:700;color:'+bc+';width:28px;text-align:right;">'+got+'<span style="font-size:.44rem;font-weight:400;color:var(--mist);">/'+max+'</span></span>'
         +(showTag?'<span style="font-size:.44rem;color:var(--goldlt);font-weight:700;width:50px;padding:1px 4px;background:rgba(138,104,32,.1);border-radius:4px;text-align:center;">'+tag+'</span>':'<span style="width:50px;"></span>')
         +'</div>'
-        +(ci.length>0?(()=>{
-        const totalDed=ci.reduce((s,it)=>s+(it.deduct||0),0);
-        const actualDed=Math.min(totalDed,max);
-        const titles=ci.filter(it=>it.deduct>0).map(it=>it.title).join('・');
-        const detail=totalDed>max
-          ?'-'+actualDed+'点（上限）内訳：'+titles
-          :ci.filter(it=>it.deduct>0).map(it=>'-'+it.deduct+'点（'+it.title+'）').join('、');
-        return '<div style="font-size:.5rem;color:#a05050;padding-left:54px;margin-top:1px;">'+detail+'</div>';
-      })():'')
+        +(ci.length>0?(()=>{const td=ci.reduce((s,it)=>s+(it.deduct||0),0);const ad=Math.min(td,max);const tl=ci.filter(it=>it.deduct>0).map(it=>it.title).join('・');const det=td>max?'-'+ad+'点（上限）内訳：'+tl:ci.filter(it=>it.deduct>0).map(it=>'-'+it.deduct+'点（'+it.title+'）').join('、');return '<div style="font-size:.5rem;color:#a05050;padding-left:54px;margin-top:1px;">'+det+'</div>';})():'')
         +'</div>';
     }).join('');
   };
