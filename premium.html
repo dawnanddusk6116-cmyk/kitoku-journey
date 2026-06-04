@@ -2594,6 +2594,12 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
   if(ten===chi){ issues.push('姓名同数（総画が同じ）'); score-=20; }
   if(seiS[0]===meiS[meiS.length-1]){ issues.push('天底同数（一文字追加・通称で解除しやすい）'); score-=14; }
   if(checkTateWareRS(sei,mei)){ issues.push('縦割れ文字が多い（組織・家庭が分かれやすい）'); score-=12; }
+
+  // 五行バランス不足チェック
+  const meiGyosRS=[...mei].map(c=>getOnGyo(c)).filter(Boolean);
+  if(meiGyosRS.length>=2&&new Set(meiGyosRS).size<2){
+    issues.push('五行バランス不足（1種類のみ）'); score-=20;
+  }
   if(hasOrderNameRiskRS(mei)){ issues.push('長男・次男など出生順との整合確認'); score-=5; }
 
   // 読み下し
