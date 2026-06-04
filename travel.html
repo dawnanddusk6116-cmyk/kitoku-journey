@@ -1641,6 +1641,15 @@ let gState = {
   activeBanTab: 'year', // 現在選択中のタブ（year/month/day）
 };
 
+// direction_v2.html と凶方位の設定を共有する
+function getSharedKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType) {
+  const opts = {
+    teiiAsKyo: localStorage.getItem('kitoku-teii-kyo') === '1',
+    tsukimeiSatsu: localStorage.getItem('kitoku-tsukimei-satsu') || 'off'
+  };
+  return getKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType, opts);
+}
+
 // ============================================================
 // 初期化
 // ============================================================
@@ -2191,7 +2200,7 @@ function calcAndShowDir() {
   const dayRank = rankDir(dir, dayStarN, gState.honmei, gState.tsukimei, dSangoSet, tendo);
 
   // ── 凶方位チェック（年盤）
-  const { kyouSet: yKyouSet, items: yKyoItems } = getKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year');
+  const { kyouSet: yKyouSet, items: yKyoItems } = getSharedKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year');
   const isYearKyo = yKyouSet.has(dir);
   if (isYearKyo) {
     yearRank.rank = 0;
@@ -2200,7 +2209,7 @@ function calcAndShowDir() {
 
   // ── 凶方位チェック（月盤）
   const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranch) + 6) % 12)];
-  const { items: mKyoItems, kyouSet: mKyouSet } = getKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
+  const { items: mKyoItems, kyouSet: mKyouSet } = getSharedKyouDirs(monthCenter, gState.honmei, monthBreakDir, gState.tsukimei, 'month');
   const isKyo = mKyouSet.has(dir);
   if (isKyo) {
     monthRank.rank = 0;
@@ -2209,7 +2218,7 @@ function calcAndShowDir() {
 
   // ── 凶方位チェック（日盤）
   const dayBreakDir2 = BRANCH_DIR[((dayBranchIdx + 6) % 12)];
-  const { kyouSet: dKyouSet } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir2, gState.tsukimei, 'day');
+  const { kyouSet: dKyouSet } = getSharedKyouDirs(dayCenter, gState.honmei, dayBreakDir2, gState.tsukimei, 'day');
   const isDayKyo = dKyouSet.has(dir);
   if (isDayKyo) {
     dayRank.rank = 0;
@@ -2227,7 +2236,7 @@ function calcAndShowDir() {
   const monthRankMap = calcRankMap(monthCenter,  mKyouSet);
   const dayRankMap   = calcRankMap(dayCenter,    dKyouSet);
 
-  const yKyoItemsForGrid = getKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year').items;
+  const yKyoItemsForGrid = getSharedKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year').items;
 
   const yearBoardHtml  = makeBanGrid(yearBoard,  dir, yKyoItemsForGrid, yKyouSet,  yearRankMap);
   const monthBoardHtml = makeBanGrid(monthBoard, dir, mKyoItems,        mKyouSet,  monthRankMap);
@@ -2488,7 +2497,7 @@ function renderCalendar() {
       const mc = getMonthCenter(y, m, viewD);
       const mb = BRANCH_NAME[getMonthBranch(y, m, viewD)];
       const mbDir = BRANCH_DIR[((BRANCH_NAME.indexOf(mb) + 6) % 12)];
-      const { kyouSet } = getKyouDirs(mc, gState.honmei, mbDir, gState.tsukimei, 'month');
+      const { kyouSet } = getSharedKyouDirs(mc, gState.honmei, mbDir, gState.tsukimei, 'month');
       mKyouSet = kyouSet;
     } catch(e) {}
 
@@ -2512,7 +2521,7 @@ function renderCalendar() {
         dayRank = rankDir(gState.destDir, dStar, gState.honmei, gState.tsukimei, dSango, tnd);
 
         // 日盤の凶方位チェック → 凶なら rank=0
-        const { kyouSet: dKyouSetD } = getKyouDirs(dc, gState.honmei, dayBreakDirD, gState.tsukimei, 'day');
+        const { kyouSet: dKyouSetD } = getSharedKyouDirs(dc, gState.honmei, dayBreakDirD, gState.tsukimei, 'day');
         if (dKyouSetD.has(gState.destDir)) {
           isKyoDay = true;
           dayRank.rank = 0;
@@ -2667,14 +2676,14 @@ function showDayDetail(y, m, d) {
     const dow = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
 
     // 日盤の凶方位チェック
-    const { kyouSet: dKyouSetDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
+    const { kyouSet: dKyouSetDD } = getSharedKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
     const isDayKyo = dKyouSetDD.has(dir);
     const finalRank = isDayKyo ? 0 : dayRank.rank;
 
     // 日盤グリッドをmakeBanGrid（グローバル）で生成
     const dayBoardD = buildBoardFromCenter(dayCenter);
     const dayRankMapD = calcRankMap(dayCenter, dKyouSetDD);
-    const { items: dKyoItemsDD } = getKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
+    const { items: dKyoItemsDD } = getSharedKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
     const html = makeBanGrid(dayBoardD, dir, dKyoItemsDD, dKyouSetDD, dayRankMapD);
 
     // 日盤サマリーパネルも更新

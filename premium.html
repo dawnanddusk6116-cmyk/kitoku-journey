@@ -559,7 +559,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div class="self-accordion-body" id="renameScorePanel">
         <div style="font-size:.62rem;color:var(--mist);margin-bottom:12px;line-height:1.8;">
           姓と候補の名前を入力して採点できます。<br>
-          気学先生の提案をそのまま確認できます。
+          気学先生の提案をそのまま確認できます。<br>
+          ※ここは候補を比べるための簡易採点です。正式鑑定とは点数や表示項目が異なる場合があります。最終確認は <a href="life.html" style="color:var(--goldlt);font-weight:700;text-decoration:underline;text-underline-offset:2px;">KITOKU @ LIFE</a> で行ってください。
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -2545,6 +2546,26 @@ function hasAmpRiskRS(scoreIssues,sou){
   const hasHeavy=scoreIssues.some(i=>/天地同数|姓名同数|天底同数|大バサミ|二重バサミ|縛り/.test(i));
   return hasHeavy && goodAmp.includes(sou);
 }
+function scoreRenameIssuesRS(issues){
+  const caps={reading:30,gyo:20,inyo:20,tenchi:20,strokes:10};
+  const ded={reading:0,gyo:0,inyo:0,tenchi:0,strokes:0};
+  issues.forEach(i=>{
+    if(/水性始まり/.test(i))ded.reading+=25;
+    else if(/濁音始まり/.test(i))ded.reading+=15;
+    else if(/ん終わり/.test(i))ded.reading+=15;
+    else if(/一文字名/.test(i))ded.reading+=25;
+    else if(/出生順/.test(i))ded.reading+=5;
+    else if(/五行バランス/.test(i))ded.gyo+=20;
+    else if(/人格音の大凶/.test(i))ded.gyo+=20;
+    else if(/二重バサミ|大バサミ/.test(i))ded.inyo+=20;
+    else if(/全陰|全陽|中断/.test(i))ded.inyo+=15;
+    else if(/姓名同数|天底同数|天地同数/.test(i))ded.tenchi+=20;
+    else if(/縦割れ/.test(i))ded.tenchi+=12;
+    else if(/総格|人格|地格|命名では/.test(i))ded.strokes+=10;
+  });
+  const total=Object.keys(caps).reduce((sum,k)=>sum+Math.min(ded[k],caps[k]),0);
+  return Math.max(0,100-total);
+}
 function scoreNameRS(sei, seiFuri, mei, meiFuri){
   const issues = [];
   let score = 100;
@@ -2624,7 +2645,8 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
     issues.push(`アンプ効果（総格${sou}画が凶を加速）：総格${sou}画は大吉数ですが、陰陽・天地の配列に強い注意点があります。強いエンジンが凶の作用を加速させる「ハンドルが壊れたフェラーリ」の状態です。まず陰陽・天地を整えることが先決です。`);
   }
 
-  return { score: Math.max(0, score), issues, ten, jin, chi, gai, sou };
+  score = scoreRenameIssuesRS(issues);
+  return { score, issues, ten, jin, chi, gai, sou };
 }
 
 // 結果を気学先生に送る

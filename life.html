@@ -3146,6 +3146,11 @@ function calcInYoPattern(seiStr,meiStr,seiKs,meiKs){
 function calcTenchi(seiStr,meiStr,seiKs,meiKs){
   if(!seiKs.length||!meiKs.length)return null;
   const tf=seiKs[0],cf=meiKs[0];
+  const seiTotal=seiKs.reduce((a,b)=>a+b,0);
+  const meiTotal=meiKs.reduce((a,b)=>a+b,0);
+  const tenBottom=seiKs[0],chiTop=meiKs[meiKs.length-1];
+  if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。村山先生が「ものすごい危ない名前」と警告する、人生が真っ二つに分断されやすい致命的な配列です。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
+  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、村山先生が「体がズタズタになる」と厳しく警告するパターンです。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
   const HEAVY=[3,5,9,13,15,19,8];
   if(tf===cf){
     const isH=HEAVY.includes(tf);
