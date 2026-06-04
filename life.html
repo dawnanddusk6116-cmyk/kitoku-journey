@@ -1921,7 +1921,7 @@ function getLifeMode(){
   return LIFE_MODE_TEXT[STATE.lifeMode] ? STATE.lifeMode : 'self';
 }
 
-const LIFE_FREE=999; // 検証用
+const LIFE_FREE=3;
 function lifeTodayKey(){
   const d=new Date();
   return 'klife_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();
