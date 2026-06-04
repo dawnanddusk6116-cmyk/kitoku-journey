@@ -3249,7 +3249,7 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
         kitoku:'幼い頃から深い感情を知る者だけが持てる共感力があります。その経験が人生の宝になります。'});
     }
   }
-  score-=Math.min(gyd,45);
+  score-=Math.min(gyd,20);
   const iy=calcInYoPattern(seiStr,meiStr,seiKs,meiKs);
   if(iy.score_deduct>0){score-=Math.min(iy.score_deduct,20);items.push({cat:'陰陽配列',icon:'⚠',title:iy.label,deduct:iy.score_deduct,text:iy.text,kitoku:iy.kitoku});}
   const tc=calcTenchi(seiStr,meiStr,seiKs,meiKs);
@@ -3373,6 +3373,8 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
         +'</div>'
         +'<span style="font-size:.52rem;font-weight:700;color:'+bc+';width:28px;text-align:right;">'+got+'<span style="font-size:.44rem;font-weight:400;color:var(--mist);">/'+max+'</span></span>'
         +(showTag?'<span style="font-size:.44rem;color:var(--goldlt);font-weight:700;width:50px;padding:1px 4px;background:rgba(138,104,32,.1);border-radius:4px;text-align:center;">'+tag+'</span>':'<span style="width:50px;"></span>')
+        +'</div>'
+        +(ci.length>0?'<div style="font-size:.5rem;color:#a05050;padding-left:54px;margin-top:1px;">'+ci.filter(it=>it.deduct>0).map(it=>'-'+it.deduct+'点（'+it.title+'）').join('、')+'</div>':'')
         +'</div>';
     }).join('');
   };
