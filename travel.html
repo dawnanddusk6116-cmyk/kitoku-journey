@@ -1650,6 +1650,12 @@ function getSharedKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType) {
   return getKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType, opts);
 }
 
+function getMonthBoardDay(y, m) {
+  const now = new Date();
+  if (y === now.getFullYear() && m === now.getMonth() + 1) return now.getDate();
+  return 15;
+}
+
 // ============================================================
 // 初期化
 // ============================================================
@@ -2162,7 +2168,7 @@ function calcAndShowDir() {
   const todayD = now.getDate();
   const viewY = gState.calYear || todayY;
   const viewM = gState.calMonth || todayM;
-  const viewD = 15;
+  const viewD = getMonthBoardDay(viewY, viewM);
 
   // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
   const monthCenter = getMonthCenter(viewY, viewM, viewD);
@@ -2493,7 +2499,7 @@ function renderCalendar() {
     // 月盤の凶方位を事前計算（カレンダー全日に適用）
     let mKyouSet = new Set();
     try {
-      const viewD = 15;
+      const viewD = getMonthBoardDay(y, m);
       const mc = getMonthCenter(y, m, viewD);
       const mb = BRANCH_NAME[getMonthBranch(y, m, viewD)];
       const mbDir = BRANCH_DIR[((BRANCH_NAME.indexOf(mb) + 6) % 12)];
