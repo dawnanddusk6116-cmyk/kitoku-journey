@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="kitoku-engine.js"></script>
 <script src="kitoku-teachings.js"></script>
+<script src="kitoku-self-manual.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--r:14px;}
@@ -1326,6 +1327,37 @@ function buildSelectedTeachingGuide(seedText) {
   }).join('\n\n');
 }
 
+function buildSelfSteeringGuide(info, seedText, externalLifeReading) {
+  if (externalLifeReading) return '';
+  const data = window.KITOKU_SELF_STEERING;
+  if (!data || !info || !info.honmei) return '';
+  const seed = String(seedText || '');
+  const h = data.STAR_STEERING && data.STAR_STEERING[info.honmei];
+  if (!h) return '';
+  const lines = [
+    `本命星：${h.star}`,
+    `裏の出方：${h.back}`,
+    `自己操縦：${h.prescription}`
+  ];
+  if (info.keisha && data.STAR_STEERING[info.keisha]) {
+    const k = data.STAR_STEERING[info.keisha];
+    lines.push(`傾斜の使い方：${k.star}の「${k.prescription}」を、隠れた才能の伸ばし方として読む。`);
+  }
+  if (info.dokai && data.STAR_STEERING[info.dokai]) {
+    const d = data.STAR_STEERING[info.dokai];
+    lines.push(`同会の使い方：${d.star}の「${d.prescription}」を、社会から期待される役割として読む。`);
+  }
+  const notes = (data.STRUCTURE_NOTES || []).filter(note => {
+    if (/傾斜/.test(note)) return /傾斜|才能|やりたい|迷い|仕事|自分/.test(seed);
+    if (/同会/.test(note)) return /同会|人間関係|相手|仕事|舞台|評価/.test(seed);
+    if (/最大吉方/.test(note)) return /疲れ|気力|方位|吉方|整え/.test(seed);
+    if (/相剋/.test(note)) return /相剋|相手|人間関係|摩擦|合わない/.test(seed);
+    return true;
+  }).slice(0, 2);
+  if (notes.length) lines.push('補助メモ：' + notes.join(' / '));
+  return '【Premium専用・自己操縦ヒント】\n' + lines.join('\n');
+}
+
 function buildSystemPrompt() {
   const info = state.info || {};
   const today = new Date();
@@ -1399,6 +1431,7 @@ ${boardSummary}${senroSummary}
   const userData = externalLifeReading ? externalLifeUserData : selfUserData;
   const teachingSeed = [userData, lifeReadingSummary, (chatHistory || []).slice(-4).map(m => m.content).join('\n')].join('\n');
   const selectedTeachingGuide = buildSelectedTeachingGuide(teachingSeed);
+  const selfSteeringGuide = buildSelfSteeringGuide(info, teachingSeed, externalLifeReading);
 
   return `あなたはKITOKUの気学の専門家です。
 5000年の東洋の知恵（九星気学・KITOKU式）をベースに相談に乗ります。
@@ -1571,6 +1604,14 @@ ${boardSummary}${senroSummary}
 ・毎回必ず引用しない。使う場合も1本まで
 ・出典を短く添える
 ${selectedTeachingGuide || '※今回の相談では引用候補を渡していません。必要な時だけ一般的な東洋の教えとして短く触れる。'}
+
+【Premium専用・自己操縦ヒントの使い方】
+・下の自己操縦ヒントは、回答を面白く深くするための裏資料である
+・「バグ」「機体」などの強い比喩は、そのまま連発せず、ユーザーにはやさしい日常語に翻訳する
+・本命星は本人の基本OS、傾斜は隠れた才能、同会は社会から求められる役割として読む
+・本人が語っていない悩みや性格を決めつけない。「〜として出やすい」「今日はこう扱うと整いやすい」と表現する
+・姓名鑑定、方位、仕事、人間関係、香り、写真相談などに必要な時だけ短く使う
+${selfSteeringGuide || '※今回の相談では自己操縦ヒントを渡していません。'}
 
 【ユーザーデータ】
 ${userData}${lifeReadingSummary}`;
