@@ -3331,6 +3331,26 @@ function renderLifeTeachingNote(it,idx){
     +'</div>';
 }
 
+function renderWarmNamePrescription(scoreResult){
+  const sc=scoreResult&&Number(scoreResult.score);
+  const items=(scoreResult&&scoreResult.items)||[];
+  if(!(sc<60)||!items.length)return'';
+  const titles=items.map(it=>String(it.title||'')).join(' ');
+  let focus='この名前には、力が強く出やすい部分があります。';
+  if(/一文字/.test(titles))focus='一文字名は、力が一点に集まりやすい名前です。';
+  else if(/大ハサミ|大バサミ|陰陽|白寄り|黒寄り|中断|巻き直し|蒔直し/.test(titles))focus='陰陽の偏りは、人生の波や環境からの圧を感じやすい配置です。';
+  else if(/天地同数|天地衝突|姓名同数|天底同数/.test(titles))focus='天地の注意点は、人間関係や環境とのぶつかり方に出やすい配置です。';
+  else if(/五行|水性|大凶/.test(titles))focus='音や五行の注意点は、感情や対人関係の扱い方に出やすい配置です。';
+  else if(/総格|人格|地格|画/.test(titles))focus='画数の注意点は、名前の力が強く働きやすいサインです。';
+  return `<div style="margin:10px 0 12px;padding:12px 14px;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.18);border-radius:10px;">
+    <div style="font-size:.6rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:6px;">✦ この名前を乗りこなすために</div>
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.9;">
+      ${focus}<br>
+      けれど、これは「悪い名前」と決めるためのものではありません。通名・呼び名・SNS名、吉方位、日々の整え方を使うことで、名前の強いエネルギーは扱いやすくなります。まずは怖がらず、どこを整えると楽になるかを見る材料として受け取ってください。
+    </div>
+  </div>`;
+}
+
 function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
   const div=document.getElementById('scoreCard');
   if(!div)return;
@@ -3411,6 +3431,7 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
     <div style="font-size:.52rem;color:var(--mist);line-height:1.7;text-align:center;">
       📌 要注意漢字などのチェックは<strong style="color:var(--goldlt);">名（given name）のみ</strong>対象。姓は家系の継承であり変更するものではないためです。
     </div>
+    ${renderWarmNamePrescription(r)}
 
     ${r.items.length>0?`<div style="font-size:.63rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">知っておくこと（${r.items.length}項目）</div><div style="display:grid;gap:8px;">${r.items.map(it=>`<div style="padding:10px 12px;background:rgba(192,112,32,.06);border:1px solid rgba(192,112,32,.2);border-radius:8px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;"><span style="font-size:.58rem;background:rgba(138,104,32,.12);color:var(--goldlt);padding:2px 6px;border-radius:999px;">${it.cat}</span><span style="font-size:.63rem;font-weight:700;color:#c07020;">${it.icon} ${it.title}</span></div><div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-bottom:5px;">${it.text}</div><div style="font-size:.6rem;color:var(--goldlt);font-weight:700;padding:5px 8px;background:rgba(138,104,32,.07);border-radius:5px;">✦ ${it.kitoku}</div></div>`).join('')}</div>`:`<div style="font-size:.65rem;color:#2a6e3a;font-weight:700;padding:10px;background:rgba(40,130,60,.06);border-radius:8px;">✦ 特に気になる要素はありません。バランスの良い名前です。</div>`}
     <div style="margin-top:12px;padding:10px;background:rgba(138,104,32,.05);border-radius:8px;">
