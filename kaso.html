@@ -30,7 +30,14 @@ body[data-fontsize="l"]{font-size:19px;}
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(12px);}
 .header-logo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.25em;color:var(--gold);}
 .header-sub{font-size:.6rem;letter-spacing:.18em;color:var(--mist);margin-top:2px;}
+.header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
 .back-btn{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);font-size:.73rem;padding:8px 13px;border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;}
+@media(max-width:390px){
+  .app-header{padding:12px 12px;gap:8px;}
+  .header-logo{font-size:1rem;letter-spacing:.18em;}
+  .back-btn{font-size:.68rem;padding:7px 9px;}
+  .header-actions{gap:5px;}
+}
 
 /* ── ツールバー ── */
 .toolbar{display:flex;align-items:center;gap:6px;padding:9px 16px;border-bottom:1px solid var(--rim);background:var(--card);overflow-x:auto;}
@@ -131,7 +138,10 @@ body[data-fontsize="l"]{font-size:19px;}
     <div class="header-logo">✦ KITOKU @ HOME</div>
     <div class="header-sub">家相診断 — 今の家を読み解く</div>
   </div>
-  <button class="back-btn" onclick="window.location.href='index.html'">← TOPへ</button>
+  <div class="header-actions">
+    <button class="back-btn" onclick="goBackKaso()">← 戻る</button>
+    <button class="back-btn" onclick="window.location.href='index.html'">TOPへ</button>
+  </div>
 </div>
 
 <!-- ツールバー -->
@@ -522,11 +532,35 @@ body[data-fontsize="l"]{font-size:19px;}
 var selectedForm='';
 var selectedHoui={hb:[],kb:[]};
 var selectedChiso=[];
+var kasoPageHistory=[];
 
-function showPage(id){
+function currentKasoPage(){
+  var active=document.querySelector('.page.on');
+  return active ? active.id : 's0';
+}
+
+function showPage(id, fromHistory){
+  var current=currentKasoPage();
+  if(!fromHistory && current && current!==id){
+    kasoPageHistory.push(current);
+    if(kasoPageHistory.length>20)kasoPageHistory.shift();
+  }
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   document.getElementById(id).classList.add('on');
   window.scrollTo(0,0);
+}
+
+function goBackKaso(){
+  if(kasoPageHistory.length){
+    var prev=kasoPageHistory.pop();
+    showPage(prev,true);
+    return;
+  }
+  if(window.history.length>1){
+    window.history.back();
+    return;
+  }
+  window.location.href='index.html';
 }
 
 /* ===== s1: 家の中心チェック ===== */
