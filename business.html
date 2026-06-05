@@ -389,6 +389,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">総合｜仕事上の関係性</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="compatDesc">—</div></div>
   <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">本命星｜表に出る役割と相性</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiDesc">—</div></div>
   <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">月命星｜内面の動機と育て方</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="tsukiDesc">—</div></div>
+  <!-- 裏性格・操縦法 -->
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">🎭 裏の本性（バグと強み）</div><div class="accord-arr">▼</div></div><div class="accord-body" id="uraDesc">—</div></div>
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">⚙️ この人の操縦法</div><div class="accord-arr">▼</div></div><div class="accord-body" id="soujuDesc">—</div></div>
 
   <!-- AIレポート -->
   <div class="ai-section">
@@ -481,6 +484,26 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <button class="main-btn" onclick="showPreparingMessage()">✦ 簡易版を準備中</button>
   <button class="back-btn" onclick="showScreen('s0')">← ビジネス入口へ戻る</button>
+</div>
+
+<!-- 設定パネル -->
+<div id="settingPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeSettings()">
+  <div style="background:var(--bg,#f7f4ef);border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:22px 20px 40px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-size:.82rem;color:var(--goldlt,#5c4010);font-weight:800;letter-spacing:.1em;">⚙ 表示設定</div>
+      <button onclick="closeSettings()" style="background:none;border:none;color:var(--mist,#4a3820);font-size:1.1rem;cursor:pointer;">✕</button>
+    </div>
+    <div style="font-size:.72rem;color:var(--mist,#4a3820);margin-bottom:12px;">テーマと文字サイズを変更できます。</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button class="tb-btn" onclick="setTheme('light');closeSettings()">昼モード</button>
+      <button class="tb-btn" onclick="setTheme('dark');closeSettings()">夜モード</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="tb-btn" onclick="setFontSize('s');closeSettings()">文字 小</button>
+      <button class="tb-btn" onclick="setFontSize('m');closeSettings()">文字 中</button>
+      <button class="tb-btn" onclick="setFontSize('l');closeSettings()">文字 大</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -698,118 +721,6 @@ var GG_BIZ_MEAN={
   金:{key:'利益・契約・収穫',desc:'金のエネルギーが強い名前は、利益回収・契約・実績を象徴します。金融・不動産・製造業に向いています。'},
   水:{key:'情報・流通・変化',desc:'水のエネルギーが強い名前は、情報収集・流通・柔軟な変化を象徴します。IT・物流・コンテンツ配信に向いています。'}
 };
-var GYO_SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
-
-function onGyoCount(kana){
-  var c={木:0,火:0,土:0,金:0,水:0};
-  [...(kana||'')].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)c[g]++;});
-  return c;
-}
-
-// ── 社名鑑定 ──
-function runBizReading(){
-  var name=document.getElementById('bizName').value.trim();
-  var kana=document.getElementById('bizKana').value.trim();
-  var strokes=parseInt(document.getElementById('bizStrokes').value)||0;
-  if(!name&&!kana){alert('社名・屋号を入力してください');return;}
-
-  var count=onGyoCount(kana||name);
-  var total=Object.values(count).reduce(function(a,b){return a+b;},0);
-  var sorted=Object.keys(count).sort(function(a,b){return count[b]-count[a];});
-  var dominant=sorted[0];
-  var weak=sorted[sorted.length-1];
-  var strokeGyo=strokes?['木','木','火','火','土','土','金','金','水','水'][strokes%10]:'';
-
-  // 五行カウント表示
-  var bars=sorted.map(function(g){
-    var pct=total?Math.round(count[g]/total*100):0;
-    var col=GG_COL_BIZ[g];
-    return '<div style="margin-bottom:6px;">'
-      +'<div style="display:flex;justify-content:space-between;font-size:.62rem;margin-bottom:2px;">'
-      +'<span style="color:'+col+';font-weight:700;">'+g+'（'+GG_BIZ_MEAN[g].key+'）</span>'
-      +'<span style="color:var(--mist);">'+count[g]+'音 / '+pct+'%</span></div>'
-      +'<div style="background:rgba(0,0,0,.06);border-radius:4px;height:6px;">'
-      +'<div style="background:'+col+';height:6px;border-radius:4px;width:'+pct+'%;"></div></div></div>';
-  }).join('');
-
-  // 処方箋
-  var nextGyo=GYO_SOJO[dominant]||'土';
-  var rx='音の五行で「'+weak+'」が少ない傾向です。'
-    +'読み方・略称・キャッチコピーに「'+
-    ({木:'ハヒフヘホ・マミムメモ行',火:'タチツテト行',土:'アイウエオ・ナニヌネノ行',金:'カキクケコ・ラリルレロ行',水:'サシスセソ行'}[weak])+'」の音を取り入れると、'+weak+'の気を補えます。';
-
-  var el=document.getElementById('balanceResult');
-  el.style.display='block';
-  el.innerHTML='<div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">'
-
-    // ヘッダー
-    +'<div style="padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border-bottom:1px solid rgba(138,104,32,.15);">'
-    +'<div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">BUSINESS NAME READING</div>'
-    +'<div style="font-size:.92rem;font-weight:700;color:var(--goldlt);">'+(name||kana)+'</div>'
-    +(kana?'<div style="font-size:.62rem;color:var(--mist);">'+kana+'</div>':'')
-    +'</div>'
-
-    // 音の五行
-    +'<div style="padding:14px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:10px;">🔤 音の五行バランス</div>'
-    +bars
-    +'</div>'
-
-    // 主気質
-    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.04);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 主たる気質：'+dominant+'（'+GG_BIZ_MEAN[dominant].key+'）</div>'
-    +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+GG_BIZ_MEAN[dominant].desc+'</div>'
-    +'</div>'
-
-    // 総画数の五行
-    +(strokeGyo?'<div style="padding:10px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:4px;">📐 総画数の五行：'+strokes+'画 → '+strokeGyo+'</div>'
-    +'<div style="font-size:.63rem;color:var(--mist);">音の五行と総画数の五行が同じ場合、その気質がより強調されます。</div>'
-    +'</div>':'')
-
-    // 処方箋
-    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">💡 補いたい五行：'+weak+'</div>'
-    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+rx+'</div>'
-    +'</div>'
-
-    // LIFEへ誘導
-    +'<div style="padding:12px 16px;background:rgba(138,104,32,.04);">'
-    +'<div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">個人の名前の五格・三才・陰陽も含めた詳細鑑定はこちら</div>'
-    +'<a href="life.html" style="display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--goldlt);color:#fff;border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">🪬 KITOKU @ LIFE で読む →</a>'
-    +'</div>'
-
-    +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;">'
-    +'※ 商標・法務上の判断ではありません。名前が持つ気質を東洋の叡智で読む参考情報です。'
-    +'</div></div>';
-}
-
-function runBalanceFree(){ runBizReading(); }
-
-
-
-
-function loadMoneyStarBar(){
-  try{
-    var h=parseInt(localStorage.getItem('kitoku_honmei'))||0;
-    var t=parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
-    var nain=localStorage.getItem('kitoku_nain')||'';
-    var bar=document.getElementById('moneyStarBar');
-    var row=document.getElementById('moneyInputRow');
-    if(!h||!bar)return;
-    var STAR_NAMES=['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
-    bar.style.display='block';
-    bar.innerHTML='✦ 本命星：'+STAR_NAMES[h]+'　月命星：'+STAR_NAMES[t]+'　納音：'+nain+'<br><span style="font-size:.58rem;font-weight:400;opacity:.8;">登録済みの生年月日を使用します</span>';
-    // 登録済み生年月日を自動セット
-    var b=localStorage.getItem('kitoku-birth');
-    if(b){var a=b.split('-').map(Number);
-      if(a[0])document.getElementById('moneyYear').value=a[0];
-      if(a[1])document.getElementById('moneyMonth').value=a[1];
-      if(a[2])document.getElementById('moneyDay').value=a[2];
-    }
-  }catch(e){}
-}
-
 // 音の五行マップ（business用）
 var ON_GYO_FULL={
   'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土','あ':'土','い':'土','う':'土','え':'土','お':'土',
@@ -916,8 +827,6 @@ function runBizReading(){
     +'</div></div>';
 }
 
-function runBalanceFree(){ runBizReading(); }
-
 function soundElements(text){
   var count={木:0,火:0,土:0,金:0,水:0};
   [...(text||'')].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)count[g]++;});
@@ -927,32 +836,6 @@ function topKeys(obj){
   var arr=Object.keys(obj).sort(function(a,b){return obj[b]-obj[a];});
   return arr.filter(function(k){return obj[k]===obj[arr[0]]&&obj[k]>0;});
 }
-function runBalanceFree(){
-  var name=document.getElementById('bizName').value.trim();
-  var kana=document.getElementById('bizKana').value.trim();
-  if(!name&&!kana){alert('法人名・屋号・ブランド名を入力してください');return;}
-  var sound=soundElements(kana||name);
-  var focus={
-    木:parseInt(document.getElementById('balWood').value)||0,
-    火:parseInt(document.getElementById('balFire').value)||0,
-    土:parseInt(document.getElementById('balEarth').value)||0,
-    金:parseInt(document.getElementById('balMetal').value)||0,
-    水:parseInt(document.getElementById('balWater').value)||0
-  };
-  var soundTop=topKeys(sound);
-  var strong=topKeys(focus);
-  var weak=Object.keys(focus).filter(function(k){return focus[k]===Math.min.apply(null,Object.values(focus));});
-  var meaning={木:'成長・新規開拓',火:'発信・広告・ブランド',土:'基盤・管理・信頼',金:'利益・契約・回収',水:'情報・資金繰り・流通'};
-  var el=document.getElementById('balanceResult');
-  el.innerHTML='<strong>'+(name||kana)+' の簡易五行</strong><br>'+
-    '名前の音で強い五行：'+(soundTop.length?soundTop.map(function(g){return g+'（'+meaning[g]+'）';}).join('・'):'読みから五行を拾えませんでした')+'<br>'+
-    '事業内容で強い五行：'+strong.map(function(g){return g+'（'+meaning[g]+'）';}).join('・')+'<br>'+
-    '意識して補いたい五行：'+weak.map(function(g){return g+'（'+meaning[g]+'）';}).join('・')+'<br><br>'+
-    '<strong>見立て：</strong>名前の音が強める気質と、実際の事業で必要な気質が重なるほど伝わりやすくなります。足りない五行は、運営ルール・発信・資金管理・人材配置で補えます。<br><br>'+
-    '※ これは会計・税務・法務判断ではありません。事業の状態を五行で整理するための簡易チェックです。';
-  el.style.display='block';
-}
-
 var CAT_LABELS={
   hire:{badge:'👤 採用判断',title:'採用判断',myLabel:'✦ あなたの生年月日（採用担当・経営者）',partnerName:'✦ 候補者のお名前',partnerBirth:'✦ 候補者の生年月日'},
   boss:{badge:'👥 リーダー×メンバー',title:'リーダー×メンバー 関係を整える',myLabel:'✦ リーダー側の生年月日（あなた・上司・主催者など）',partnerName:'✦ 相手・メンバーのお名前',partnerBirth:'✦ 相手・メンバーの生年月日'},
@@ -1046,6 +929,32 @@ var CHAR_DESC={
   9:'真実を見抜く直感と美意識を持つ人材です。感性で世界を捉え、クリエイティブな分野で光を放ちます。'
 };
 
+/* 裏性格データ（ビジネス版）*/
+var URA_BIZ={
+  1:'情報を集めすぎて決断を先送りにするバグがあります。人の苦労に敏感すぎて疲弊しやすい。ただし信頼関係が生まれると驚くほどの粘り強さを発揮します。',
+  2:'決断が異常に遅い。安全を重視しすぎて機会コストを逃しやすい。ただし一度動き出すと着実な歩みで周囲をごぼう抜きにします。',
+  3:'飽きっぽく熱しやすく冷めやすい。過去を振り返らず同じ失敗を繰り返す傾向も。ただし「完成しない自由」が最大の推進力になります。',
+  4:'人に合わせすぎて決断を先延ばしにするバグがあります。内心は計算高く、不機嫌になると周囲の空気を一変させる力があります。',
+  5:'言葉が極端に少なく理由を言わない。上から目線に見られやすい。ただし全責任を背負う姿勢を見せた瞬間、周囲は無条件にひれ伏します。',
+  6:'「なぜこんなこともできないの？」という圧が無意識に出る。完璧主義が周囲を疲弊させることも。ただし尊敬できる師匠に出会うと圧倒的実力を発揮します。',
+  7:'失敗すると「やってます、悪いのは向こうです」と他責にする傾向。土台が弱く愚痴が多い。ただし人を楽しませることに特化した才能があります。',
+  8:'本音は絶対に言わない。腹に一物を抱えて動く。無自覚な上から目線で意見対立が起きやすい。ただし明確な目標があると七転び八起きで諦めません。',
+  9:'自分が一番頭がいいという無意識の確信がある。自己流を貫いて孤立することも。ただし心からひれ伏す師匠に出会うと天才的な才能が開花します。'
+};
+
+/* ビジネス操縦法データ */
+var SOUJU_BIZ={
+  1:'アドバイスより「聞く」ことが有効。定期的に話す場を作り、内に抱えさせないこと。指示より相談形式で接すると動きやすくなります。',
+  2:'「絶対に届かないような高すぎる目標」を提示すること。決断が遅くても責めない。着実に歩ませれば後半戦で誰よりも高い成果を出す大器晩成型です。',
+  3:'過度な指示を避け自由に動かして見守ること。短期プロジェクトと長期プロジェクトをバランスよく与えると飽きずに走り続けます。',
+  4:'「あなたの意見を聞かせてほしい」と主体性を引き出す声かけが効果的。決断を強制せず、時間と選択肢を与えることで力を発揮します。',
+  5:'下げたくない頭をあえて下げることに挑戦させると運勢が爆発。汚れ役や縁の下を引き受けた時に周囲が自然にひれ伏す構造を持っています。',
+  6:'大げさに褒め称えること。完璧主義のエネルギーは「見えない部分の整理整頓」に向けさせると最適化される。目上の引き立てを意識させましょう。',
+  7:'大げさに褒め称え、楽しさや意義を伝えることで動機付けする。愚痴には「あの人のここは素晴らしいよね」と視点を反転させる一言が効きます。',
+  8:'遥か先の巨大な目標（山頂）を提示すること。本音を言わせるには長い時間と深い信頼が必要。変化を提案する際は過去の成功体験と結びつけて話すと受け入れやすい。',
+  9:'「すごいね」と励まし、適度な距離を保つこと。頭ごなしの命令は絶対NGです。心からひれ伏す尊敬できる師匠に出会わせることが最大の育成法。'
+};
+
 var GROWTH_ADVICE={
   1:'深く考えすぎて動けなくなることがあります。定期的に「今の状況を共有する」場を作り、内に抱えすぎないよう促してください。',
   2:'変化への対応が遅くなりがちです。新しい取り組みを強制せず、なぜ変化が必要かを丁寧に説明し、移行の時間を十分に取ってください。',
@@ -1091,7 +1000,7 @@ var DB={
 var COMPAT_DESC={
   saiko:'相生の関係。自然にサポートし合える理想的な組み合わせです。あなたのエネルギーが候補者の成長を促すか、候補者があなたの活動を自然に支える流れが生まれます。入社後、比較的スムーズに馴染める可能性が高いです。',
   yoi:'比和の関係。価値観や行動パターンが似ているため深く共感し合えます。コミュニケーションがスムーズで、即戦力として期待できます。ただし同質すぎて刺激が少なくなることも。外からの視点を意識的に取り入れましょう。',
-  chui:'相剋の関係。緊張感のある組み合わせですが、「合わないがゆえに全部できるようになる」死角ゼロの最強チームになれる可能性を秘めています。互いの違いを活かす役割分担が鍵です。'
+  chui:'相剋の関係。これは「最悪の相性」ではなく「死角ゼロの最強チーム」の予感です。合わないがゆえに全部できるようになる——互いの違いを役割分担に活かすことで、一人では決して届かない高みへ到達できる最強の補完関係です。'
 };
 
 /* ===== 計算 ===== */
@@ -1175,6 +1084,8 @@ function analyze(){
   st('compatDesc',buildBusinessSummary(myS,cS,myTS,cTS,compat,tsukiCompat));
   st('honmeiDesc',buildHonmeiBusiness(cN,cS,compat));
   st('tsukiDesc',buildTsukiBusiness(cTN,cTS,tsukiCompat));
+  st('uraDesc',URA_BIZ[cN]||'');
+  st('soujuDesc',SOUJU_BIZ[cN]||'');
 
   // 結果バッジ更新
   var resBadge=document.getElementById('resCatBadge');
@@ -1185,7 +1096,7 @@ function analyze(){
   }
 
   // AIレポート用データ保存
-  rData={cat:curCat,sage:curC,scene:curT,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,cH:cS.k,cE:cS.e,cT:cTS.k,compat:compat.l,compatType:compat.t};
+  rData={cat:curCat,sage:curC,scene:curT,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,cH:cS.k,cE:cS.e,cT:cTS.k,compat:compat.l,compatType:compat.t,cUra:URA_BIZ[cN]||'',cSouju:SOUJU_BIZ[cN]||'',cInterviewQ:INTERVIEW_Q[cN]||[]};
   updateCount();
   document.getElementById('aiArea').style.display='none';
   document.getElementById('aiReport').style.display='none';
@@ -1245,7 +1156,7 @@ function genReport(){
   var sageName=SAGE_LABEL[d.sage||'kitoku'];
   var catLabel=CAT_LABELS[d.cat||'hire'];
 
-  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
+  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n裏の本性（バグ）：'+d.cUra+'\n操縦法（最適な動かし方）：'+d.cSouju+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\n【KITOKUの絶対哲学】\n・相剋は「死角ゼロの最強チーム」として全肯定する\n・「合わないがゆえに全部できるようになる」\n・弱点は必ず「活かし方」とセットで伝える\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。操縦法（'+d.cSouju+'）を踏まえ、具体的な関わり方を示す。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
 
   fetch('/api/claude',{
     method:'POST',
