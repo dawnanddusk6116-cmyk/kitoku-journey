@@ -1220,6 +1220,17 @@ body.theme-night .philosophy-list{
       <div class="selector-arrow">›</div>
     </a>
 
+    <!-- KASO -->
+    <a class="selector-card s-pilgrimage" data-purpose="home" data-search="家相 家 住まい 間取り 張り 欠け 中心 鬼門 温度差 玄関 地相 処方箋 環境 空間" href="kaso.html">
+      <div class="selector-icon">🏠</div>
+      <div class="selector-info">
+        <div class="selector-en">KITOKU @ HOME</div>
+        <div class="selector-title">家相診断</div>
+        <div class="selector-desc">今の家を読み解く。中心・張り欠け・玄関・温度差・地相を診断。</div>
+      </div>
+      <div class="selector-arrow">›</div>
+    </a>
+
     <!-- MOVE -->
     <a class="selector-card s-pilgrimage" data-purpose="home" data-search="引越し 引っ越し 住まい 家 方位 年盤 月盤 仮吉方 同一市内 転居 線路の日" href="move.html">
       <div class="selector-icon">🏡</div>
@@ -1503,10 +1514,19 @@ body.theme-night .philosophy-list{
       </div>
       <div class="app-card-wide-arrow">›</div>
     </a>
+    <a class="app-card-wide tone-travel" href="kaso.html">
+      <div class="card-icon">🏠</div>
+      <div class="card-info">
+        <div class="card-num">⑫ 家相診断</div>
+        <div class="card-title">KITOKU @ HOME — 今の家を読み解く</div>
+        <div class="card-desc">中心・張り欠け・玄関・温度差・地相・リカバリー処方箋。住んでいる家の見直しサインを診断する。</div>
+      </div>
+      <div class="app-card-wide-arrow">›</div>
+    </a>
     <a class="app-card-wide tone-travel" href="move.html">
       <div class="card-icon">🏡</div>
       <div class="card-info">
-        <div class="card-num">⑪ 引越し 吉方位ナビ</div>
+        <div class="card-num">⑬ 引越し 吉方位ナビ</div>
         <div class="card-title">引越し・仮吉方ナビ</div>
         <div class="card-desc">年盤・月盤で引越し先を選ぶ。同一市内の精密計算・仮吉方対応。</div>
       </div>
@@ -1757,22 +1777,6 @@ function scrollToSection(id) {
   const offset = 120;
   const top = el.getBoundingClientRect().top + window.scrollY - offset;
   window.scrollTo({ top, behavior: 'smooth' });
-}
-
-function showFirst(clearData) {
-  // clearData=trueの時だけデータをリセット（設定からの変更用）
-  if (clearData) {
-    localStorage.removeItem('kitoku-birth');
-    localStorage.removeItem('kitoku_birth');
-    localStorage.removeItem('kitoku-gender');
-    clearDerivedStarCache();
-  }
-  document.getElementById('screenFirst').classList.add('active');
-  document.getElementById('screenHome').classList.remove('active');
-  document.body.classList.remove('home-active');
-  // 入力欄をリセット
-  document.getElementById('birthInput').value = '';
-  setGender('male');
 }
 
 function showHome(birth) {

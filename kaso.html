@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU @ HOME 家相診断</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);
+  --gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;
+  --r:12px;--green:#3a7a4e;--green-bg:rgba(58,122,78,.1);
+  --warn:#b04030;--warn-bg:rgba(176,64,48,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);min-height:100dvh;}
+body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;font-size:15px;padding-bottom:60px;}
+
+/* ── ヘッダー ── */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(12px);}
+.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.25em;color:var(--gold);}
+.header-sub{font-size:.6rem;letter-spacing:.18em;color:var(--mist);margin-top:2px;}
+.back-btn{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.35);color:var(--goldlt);font-size:.73rem;padding:8px 13px;border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;}
+
+/* ── ツールバー ── */
+.toolbar{display:flex;align-items:center;gap:6px;padding:9px 16px;border-bottom:1px solid var(--rim);background:var(--card);overflow-x:auto;}
+.toolbar::-webkit-scrollbar{display:none;}
+.tb-lbl{font-size:.62rem;color:var(--mist);flex-shrink:0;}
+.tb-btn{background:rgba(0,0,0,.04);border:1px solid var(--rim);border-radius:16px;padding:5px 11px;font-size:.68rem;color:var(--mist);cursor:pointer;white-space:nowrap;}
+.tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
+
+/* ── メニュー画面 ── */
+.page{display:none;padding:16px;}
+.page.on{display:block;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;letter-spacing:.18em;color:var(--goldlt);text-align:center;margin-bottom:4px;padding-top:6px;}
+.page-sub{font-size:.62rem;letter-spacing:.15em;color:var(--mist);text-align:center;margin-bottom:20px;}
+
+/* ── メニューカード ── */
+.menu-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;margin-bottom:10px;transition:all .18s;}
+.menu-card:active{transform:scale(.98);}
+.menu-card.ok{border-left:3px solid var(--green);}
+.menu-card.warn{border-left:3px solid var(--warn);}
+.menu-card.gold{border-left:3px solid var(--gold);}
+.menu-icon{font-size:1.6rem;width:40px;text-align:center;flex-shrink:0;}
+.menu-name{font-size:.88rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;}
+.menu-desc{font-size:.65rem;color:var(--mist);line-height:1.65;}
+.menu-badge{display:inline-block;font-size:.55rem;padding:2px 8px;border-radius:10px;margin-top:4px;font-weight:700;}
+.menu-badge.free{background:var(--green-bg);color:var(--green);border:1px solid rgba(58,122,78,.25);}
+.menu-badge.ai{background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.25);}
+
+/* ── ツール画面 ── */
+.tool-header{margin-bottom:16px;}
+.tool-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:4px;}
+.tool-desc{font-size:.65rem;color:var(--mist);line-height:1.85;}
+.fc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+.fl{font-size:.68rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
+.fi{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:11px 13px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.88rem;outline:none;}
+.fi:focus{border-color:var(--gold);}
+.fi-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a6820'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+.mb{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.15),rgba(100,80,40,.06));border:1px solid rgba(100,80,40,.4);border-radius:10px;color:var(--gold);font-size:.9rem;padding:15px;cursor:pointer;letter-spacing:.16em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
+.mb:disabled{opacity:.5;cursor:not-allowed;}
+.back-tool-btn{width:100%;background:none;border:1px solid var(--rim);border-radius:8px;color:var(--mist);font-size:.75rem;padding:12px;cursor:pointer;margin-top:10px;font-family:'Noto Serif JP',serif;}
+
+/* ── 結果 ── */
+.result-box{border-radius:var(--r);padding:14px 16px;margin-bottom:10px;}
+.result-box.ok{background:var(--green-bg);border:1px solid rgba(58,122,78,.3);}
+.result-box.warn{background:var(--warn-bg);border:1px solid rgba(176,64,48,.3);}
+.result-box.amber{background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.2);}
+.result-label{font-size:.6rem;letter-spacing:.14em;font-weight:800;margin-bottom:6px;}
+.result-label.ok{color:var(--green);}
+.result-label.warn{color:var(--warn);}
+.result-label.amber{color:var(--goldlt);}
+.result-title{font-size:.86rem;font-weight:700;margin-bottom:6px;}
+.result-text{font-size:.7rem;color:var(--mist);line-height:1.9;white-space:pre-line;}
+
+/* ── アコーディオン ── */
+.accord{background:var(--card);border:1px solid var(--rim);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.accord-head{padding:13px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.accord-ttl{font-size:.82rem;color:var(--snow);font-weight:700;}
+.accord-arr{color:var(--gold);font-size:.75rem;transition:transform .22s;}
+.accord-arr.open{transform:rotate(180deg);}
+.accord-body{display:none;padding:11px 16px 13px;font-size:.76rem;color:var(--mist);line-height:2;border-top:1px solid var(--rim);white-space:pre-line;}
+.accord-body.open{display:block;}
+
+/* ── チェックリスト ── */
+.check-item{display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+.check-item.checked{background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(255,255,255,.5));border-color:rgba(58,122,78,.3);}
+.check-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--rim);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;background:var(--bg);}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green);}
+.check-text{font-size:.76rem;color:var(--snow);line-height:1.8;}
+.check-sub{font-size:.62rem;color:var(--mist);margin-top:2px;}
+
+/* ── 方位選択グリッド ── */
+.houi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+.houi-btn{background:var(--card);border:1px solid var(--rim);border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;font-size:.72rem;color:var(--mist);}
+.houi-btn.on{background:rgba(138,104,32,.12);border-color:var(--gold);color:var(--goldlt);font-weight:700;}
+.houi-btn.center{background:rgba(100,80,40,.04);color:var(--mist);cursor:default;font-size:.62rem;}
+
+/* ── スコアバー ── */
+.score-section{margin-bottom:14px;}
+.score-lbl{font-size:.62rem;letter-spacing:.12em;color:var(--gold);font-weight:700;margin-bottom:6px;}
+.score-bar-wrap{background:rgba(100,80,40,.06);border-radius:20px;height:8px;overflow:hidden;margin-bottom:4px;}
+.score-bar{height:100%;border-radius:20px;transition:width .5s ease;}
+.score-num{font-size:.68rem;color:var(--mist);text-align:right;}
+
+/* テーマ */
+[data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
+[data-theme="dark"] .app-header{background:rgba(10,12,24,.95);}
+[data-theme="dark"] .fi{background:rgba(255,255,255,.08);border-color:rgba(212,175,55,.3);color:rgba(220,232,255,.92);}
+[data-theme="dark"] .fi::placeholder{color:rgba(220,232,255,.4);}
+[data-theme="dark"] .toolbar{background:var(--card);}
+[data-theme="dark"] .tb-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);}
+[data-theme="dark"] .tb-btn.active{background:rgba(196,160,67,.2);}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="app-header">
+  <div>
+    <div class="header-logo">✦ KITOKU @ HOME</div>
+    <div class="header-sub">家相診断 — 今の家を読み解く</div>
+  </div>
+  <button class="back-btn" onclick="window.location.href='index.html'">← TOPへ</button>
+</div>
+
+<!-- ツールバー -->
+<div class="toolbar">
+  <span class="tb-lbl">表示</span>
+  <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
+  <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+</div>
+
+<!-- ===== メニュー画面 ===== -->
+<div class="page on" id="s0">
+  <div class="page-title">今の家を読み解く</div>
+  <div class="page-sub">KITOKU @ HOME — 家相診断</div>
+
+  <div style="background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.18);border-radius:var(--r);padding:13px 15px;margin-bottom:16px;">
+    <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">家相とは何か</div>
+    <div style="font-size:.64rem;color:var(--mist);line-height:1.85;">家相は「今住んでいる家の形と方位」から、そこに住む人の健康・家族関係・運勢への影響を読み解く東洋の環境学です。間取りの良し悪しより「温度差・明暗差・中心の有無」が家族の運勢を左右します。</div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s1')">
+    <div class="menu-icon">🏠</div>
+    <div><div class="menu-name">家の中心チェック</div><div class="menu-desc">コの字・中庭・中階段の注意点を確認<br>五黄の座（中心）が外に出ていないか</div></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s2')">
+    <div class="menu-icon">📐</div>
+    <div><div class="menu-name">張りと欠けの診断</div><div class="menu-desc">方位別の張り・欠けの意味を読み解く<br>1/3ルールで影響を確認</div></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s3')">
+    <div class="menu-icon">🚪</div>
+    <div><div class="menu-name">玄関の配置チェック</div><div class="menu-desc">玄関の方位による特徴と処方箋<br>南玄関・鬼門ラインの対応</div></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s4')">
+    <div class="menu-icon">🌡️</div>
+    <div><div class="menu-name">温度差・明暗差チェック</div><div class="menu-desc">家族のすれ違いサインを確認<br>1階と2階の温度差が家族に与える影響を見る</div></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s5')">
+    <div class="menu-icon">🏗️</div>
+    <div><div class="menu-name">1階ガレージ（下駄履き）診断</div><div class="menu-desc">大地との接続が弱くなっていないか確認<br>5階ルール・地下室の見方</div></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s6')">
+    <div class="menu-icon">💧</div>
+    <div><div class="menu-name">水漏れアラート診断</div><div class="menu-desc">水漏れの方位から関係性のサインを確認<br>修理と一緒に見直したいこと</div></div>
+  </div>
+
+  <div class="menu-card gold" onclick="showPage('s7')">
+    <div class="menu-icon">🗺️</div>
+    <div><div class="menu-name">地相チェック（立地診断）</div><div class="menu-desc">周囲の環境・立地の特徴を確認<br>四神相応・袋小路・丘の上の孤立感</div></div>
+  </div>
+
+  <div class="menu-card gold" onclick="showPage('s8')">
+    <div class="menu-icon">🌿</div>
+    <div><div class="menu-name">リカバリー処方箋</div><div class="menu-desc">気になる点があっても整えられる<br>花・植物・光・手入れで補う方法</div></div>
+  </div>
+
+  <div class="menu-card warn" onclick="showPage('s9')">
+    <div class="menu-icon">🤖</div>
+    <div><div class="menu-name">AI気学先生に相談</div><div class="menu-desc">間取りの状況を伝えて深掘り処方箋<br>気学先生と連携して相談する</div></div>
+  </div>
+</div>
+
+<!-- ===== s1: 家の中心チェック ===== -->
+<div class="page" id="s1">
+  <div class="tool-header">
+    <div class="tool-title">🏠 家の中心チェック</div>
+    <div class="tool-desc">家を9分割した「ど真ん中（五黄の座）」に何があるかを確認します。中心が屋外に出たり空洞になると、家族の結束が弱まりやすい注意サインになります。</div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 家の形を選んでください</span>
+    <div style="display:grid;gap:8px;">
+      <label class="check-item" id="form-sq" onclick="selForm('sq')"><div class="check-box" id="cb-sq"></div><div><div class="check-text">四角形（長方形・正方形）</div><div class="check-sub">一般的な形。張りと欠けで個性が出ます</div></div></label>
+      <label class="check-item" id="form-l" onclick="selForm('l')"><div class="check-box" id="cb-l"></div><div><div class="check-text">L字型</div><div class="check-sub">一部が張り出している形。張りと欠けを確認</div></div></label>
+      <label class="check-item" id="form-ko" onclick="selForm('ko')"><div class="check-box" id="cb-ko"></div><div><div class="check-text">コの字型・中庭あり</div><div class="check-sub">⚠ 中心が外に出る可能性あり</div></div></label>
+      <label class="check-item" id="form-stair" onclick="selForm('stair')"><div class="check-box" id="cb-stair"></div><div><div class="check-text">家の中心に階段がある（中階段）</div><div class="check-sub">⚠ 中心に空洞ができる構造</div></div></label>
+      <label class="check-item" id="form-toilet" onclick="selForm('toilet')"><div class="check-box" id="cb-toilet"></div><div><div class="check-text">家の中心にトイレ・浴室がある</div><div class="check-sub">⚠ 中心の水回りは要調整</div></div></label>
+    </div>
+  </div>
+  <button class="mb" onclick="runCenterCheck()">✦ 中心の状態を診断する</button>
+  <div id="centerResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s2: 張りと欠けの診断 ===== -->
+<div class="page" id="s2">
+  <div class="tool-header">
+    <div class="tool-title">📐 張りと欠けの診断</div>
+    <div class="tool-desc">家のどの方位が張り出しているか（凸）、欠けているか（凹）を確認します。方位によって「誰が力を持ち、何が育つか」が変わります。</div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 張り出している方位（凸・出っ張り）を選んでください（複数可）</span>
+    <div class="houi-grid">
+      <div class="houi-btn" id="hb-NW" onclick="togHoui('hb-NW','張-NW')">北西（六白）</div>
+      <div class="houi-btn" id="hb-N" onclick="togHoui('hb-N','張-N')">北（一白）</div>
+      <div class="houi-btn" id="hb-NE" onclick="togHoui('hb-NE','張-NE')">北東（八白）</div>
+      <div class="houi-btn" id="hb-W" onclick="togHoui('hb-W','張-W')">西（七赤）</div>
+      <div class="houi-btn center">中央</div>
+      <div class="houi-btn" id="hb-E" onclick="togHoui('hb-E','張-E')">東（三碧）</div>
+      <div class="houi-btn" id="hb-SW" onclick="togHoui('hb-SW','張-SW')">南西（二黒）</div>
+      <div class="houi-btn" id="hb-S" onclick="togHoui('hb-S','張-S')">南（九紫）</div>
+      <div class="houi-btn" id="hb-SE" onclick="togHoui('hb-SE','張-SE')">東南（四緑）</div>
+    </div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 欠けている方位（凹・へこみ）を選んでください（複数可）</span>
+    <div class="houi-grid">
+      <div class="houi-btn" id="kb-NW" onclick="togHoui('kb-NW','欠-NW')">北西（六白）</div>
+      <div class="houi-btn" id="kb-N" onclick="togHoui('kb-N','欠-N')">北（一白）</div>
+      <div class="houi-btn" id="kb-NE" onclick="togHoui('kb-NE','欠-NE')">北東（八白）</div>
+      <div class="houi-btn" id="kb-W" onclick="togHoui('kb-W','欠-W')">西（七赤）</div>
+      <div class="houi-btn center">中央</div>
+      <div class="houi-btn" id="kb-E" onclick="togHoui('kb-E','欠-E')">東（三碧）</div>
+      <div class="houi-btn" id="kb-SW" onclick="togHoui('kb-SW','欠-SW')">南西（二黒）</div>
+      <div class="houi-btn" id="kb-S" onclick="togHoui('kb-S','欠-S')">南（九紫）</div>
+      <div class="houi-btn" id="kb-SE" onclick="togHoui('kb-SE','欠-SE')">東南（四緑）</div>
+    </div>
+  </div>
+  <button class="mb" onclick="runHariKake()">✦ 張りと欠けを診断する</button>
+  <div id="hariResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s3: 玄関の配置チェック ===== -->
+<div class="page" id="s3">
+  <div class="tool-header">
+    <div class="tool-title">🚪 玄関の配置チェック</div>
+    <div class="tool-desc">玄関は「気が入る口」です。方位によって吉凶が大きく変わります。正確には「真北」基準で確認してください。</div>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 玄関の方位を選んでください</span>
+    <select class="fi fi-select" id="genkanDir">
+      <option value="">選択してください</option>
+      <option value="SE">東南（辰巳）— 良い配置</option>
+      <option value="E">東（卯）— 発展・活気</option>
+      <option value="NW">北西（戌亥）— 主人の守り</option>
+      <option value="N">北（子）— 人間関係重視</option>
+      <option value="S">南（午）— 目標達成の気</option>
+      <option value="W">西（酉）— 喜び・収穫</option>
+      <option value="NE">北東（丑寅）— 鬼門ライン</option>
+      <option value="SW">南西（未申）— 裏鬼門ライン</option>
+    </select>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 玄関の形状</span>
+    <select class="fi fi-select" id="genkanShape">
+      <option value="normal">建物と同じ面（凹みも張りもない）</option>
+      <option value="dashi">張り出している（凸）</option>
+      <option value="komi">引っ込んでいる（凹・土間状）</option>
+    </select>
+  </div>
+  <button class="mb" onclick="runGenkanCheck()">✦ 玄関を診断する</button>
+  <div id="genkanResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s4: 温度差・明暗差チェック ===== -->
+<div class="page" id="s4">
+  <div class="tool-header">
+    <div class="tool-title">🌡️ 温度差・明暗差チェック</div>
+    <div class="tool-desc">間取りの良し悪し以上に、家の「温度差」と「明暗の差」が家族のすれ違いを生みます。確認してみましょう。</div>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 1階と2階（またはロフト）の温度差</span>
+    <select class="fi fi-select" id="tempDiff">
+      <option value="none">ほぼ同じ温度（±2℃以内）</option>
+      <option value="mild">少し差がある（3〜5℃程度）</option>
+      <option value="strong">大きな差がある（6℃以上・冬に1階だけ寒いなど）</option>
+    </select>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 家の中の明暗差</span>
+    <select class="fi fi-select" id="lightDiff">
+      <option value="none">全体的に明るい</option>
+      <option value="mild">一部に暗い部屋がある</option>
+      <option value="strong">北側・廊下・階段など常に暗い場所が多い</option>
+    </select>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 最近の家族の状況（該当するものを選択）</span>
+    <select class="fi fi-select" id="familySituation">
+      <option value="good">特に問題なし</option>
+      <option value="mild">最近すれ違いや小さな対立がある</option>
+      <option value="strong">親子・夫婦間で大きな意見の食い違いがある</option>
+    </select>
+  </div>
+  <button class="mb" onclick="runTempCheck()">✦ 温度差サインを診断する</button>
+  <div id="tempResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s5: 1階ガレージ診断 ===== -->
+<div class="page" id="s5">
+  <div class="tool-header">
+    <div class="tool-title">🏗️ 1階ガレージ（下駄履き）診断</div>
+    <div class="tool-desc">家相の「気」は大地から立ち上がります。1階が車庫・店舗・柱だけの場合、大地との接続が切れて人生が浮ついてしまいます。</div>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 1階の使われ方</span>
+    <select class="fi fi-select" id="firstFloor">
+      <option value="house">居住スペース（普通の住宅）</option>
+      <option value="garage">ビルトインガレージ（1階が車庫）</option>
+      <option value="shop">1階が店舗・事務所</option>
+      <option value="pillar">1階が柱のみ（ピロティ構造）</option>
+      <option value="mansion">マンション（何階か入力）</option>
+    </select>
+  </div>
+  <div id="floorNumWrap" style="display:none;" class="fc">
+    <span class="fl">✦ 何階ですか？</span>
+    <input class="fi" type="number" id="floorNum" placeholder="例：5" min="1" max="60">
+    <div style="font-size:.6rem;color:var(--mist);margin-top:5px;">1階から何階離れているかを確認します（5階以上で注意作用が軽減、8階以上で影響がかなり弱まる読み方）</div>
+  </div>
+  <button class="mb" onclick="runFloorCheck()">✦ 大地の接続を診断する</button>
+  <div id="floorResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s6: 水漏れアラート ===== -->
+<div class="page" id="s6">
+  <div class="tool-header">
+    <div class="tool-title">💧 水漏れアラート診断</div>
+    <div class="tool-desc">家の水漏れは単なる劣化だけでなく、関係性を見直すサインとしても読みます。どの方位で水漏れが起きているかで、影響する関係性が変わります。</div>
+  </div>
+  <div class="fc">
+    <span class="fl">✦ 水漏れ・水のトラブルが起きている方位</span>
+    <select class="fi fi-select" id="waterDir">
+      <option value="">選択してください（なければ「なし」）</option>
+      <option value="none">水漏れなし</option>
+      <option value="N">北（子）</option>
+      <option value="NE">北東（丑寅・鬼門）</option>
+      <option value="E">東（卯）</option>
+      <option value="SE">東南（辰巳）</option>
+      <option value="S">南（午）</option>
+      <option value="SW">南西（未申・裏鬼門）</option>
+      <option value="W">西（酉）</option>
+      <option value="NW">北西（戌亥）</option>
+      <option value="center">家の中心付近</option>
+    </select>
+  </div>
+  <button class="mb" onclick="runWaterCheck()">✦ 水漏れアラートを確認する</button>
+  <div id="waterResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s7: 地相チェック ===== -->
+<div class="page" id="s7">
+  <div class="tool-header">
+    <div class="tool-title">🗺️ 地相チェック（立地診断）</div>
+    <div class="tool-desc">家の形だけでなく、周囲の環境（地相）も運勢を左右します。以下の項目を確認してください。</div>
+  </div>
+
+  <div style="margin-bottom:12px;">
+    <div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">✦ 該当するものを選んでください（複数可）</div>
+    <div id="chisoChecks">
+      <div class="check-item" id="chi-1" onclick="togChiso(1)"><div class="check-box" id="cc-1"></div><div><div class="check-text">南側または東側に、自分の家より高いビル・マンション・山がある</div></div></div>
+      <div class="check-item" id="chi-2" onclick="togChiso(2)"><div class="check-box" id="cc-2"></div><div><div class="check-text">袋小路の突き当たりに家がある</div></div></div>
+      <div class="check-item" id="chi-3" onclick="togChiso(3)"><div class="check-box" id="cc-3"></div><div><div class="check-text">丘の上・高台の一軒家（周囲に建物が少ない）</div></div></div>
+      <div class="check-item" id="chi-4" onclick="togChiso(4)"><div class="check-box" id="cc-4"></div><div><div class="check-text">北側・西側が川や低地になっている</div></div></div>
+      <div class="check-item" id="chi-5" onclick="togChiso(5)"><div class="check-box" id="cc-5"></div><div><div class="check-text">東・南が開けていて明るい（吉）</div></div></div>
+      <div class="check-item" id="chi-6" onclick="togChiso(6)"><div class="check-box" id="cc-6"></div><div><div class="check-text">北・西に街道・山・建物がある（吉）</div></div></div>
+    </div>
+  </div>
+  <button class="mb" onclick="runChisoCheck()">✦ 地相を診断する</button>
+  <div id="chisoResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s8: リカバリー処方箋 ===== -->
+<div class="page" id="s8">
+  <div class="tool-header">
+    <div class="tool-title">🌿 リカバリー処方箋</div>
+    <div class="tool-desc">完璧な家相の家はほぼ存在しません。気になる点があっても諦めず、「生命力と手入れ」で補う方法があります。</div>
+  </div>
+
+  <div class="accord">
+    <div class="accord-head" onclick="togAccord(this)"><div class="accord-ttl">🌱 花・植物で気になる点を補う法則</div><div class="accord-arr open">▼</div></div>
+    <div class="accord-body open">家の中心に空洞（中階段など）がある場合は、その中心に鉢植えや大きな花をたくさん飾ること。植物の生命力が空洞を埋め、家族の考え方が明るく前向きになります。
+
+【注意ルール】
+・1つの部屋・空間に植物は必ず「2つ以上（対や複数）」で置く
+・1つだけポツンと置くと孤独感や混乱のサインになりやすい
+・ピンク・オレンジは中心には避ける（白・黄・青・緑が吉）
+・昼間でも照明をつけて光を補うと効果倍増</div>
+  </div>
+
+  <div class="accord">
+    <div class="accord-head" onclick="togAccord(this)"><div class="accord-ttl">🔧 手入れで家の命を蘇らせる</div><div class="accord-arr">▼</div></div>
+    <div class="accord-body">家は生き物です。住む者が愛着を持ち、手をかけるほど環境の命が活性化します。
+
+実践リスト：
+・網戸を定期的に張り替える
+・窓をこまめに拭く
+・外壁・玄関まわりを清潔に保つ
+・使っていない部屋に時々風を通す
+・不要なものを定期的に手放す
+
+小さな手入れの積み重ねが、住む者を守る力になって返ってきます。</div>
+  </div>
+
+  <div class="accord">
+    <div class="accord-head" onclick="togAccord(this)"><div class="accord-ttl">💡 光で滞りを中和する</div><div class="accord-arr">▼</div></div>
+    <div class="accord-body">中心にトイレがある・中階段がある・鬼門に水回りがある場合の処方箋：
+
+・トイレは昼間でも照明をつける（常時点灯）
+・暗い廊下・階段に間接照明を置く
+・北側の部屋に明るいスタンドを置く
+
+光は「気」を活性化させます。暗がりをなくすことが最も手軽なリカバリーです。</div>
+  </div>
+
+  <div class="accord">
+    <div class="accord-head" onclick="togAccord(this)"><div class="accord-ttl">🏡 カレンダーのルール</div><div class="accord-arr">▼</div></div>
+    <div class="accord-body">知られていない日常の注意点：
+
+【注意】カレンダーが3つ以上ある → 予定やお金の流れが散りやすい
+【禁止】トイレにカレンダーを貼る → 同上
+【禁止】鍵付きの傘立て・水が溜まったまま → 売上低下
+【OK】玄関に鏡を置く（南玄関は特に有効）
+【OK】南玄関に赤・紫の花（必ず素焼きの鉢・2つ以上）
+
+小さな習慣の積み重ねが空間の気質を変えます。</div>
+  </div>
+
+  <div class="accord">
+    <div class="accord-head" onclick="togAccord(this)"><div class="accord-ttl">🧹 空き家・放置物の注意点</div><div class="accord-arr">▼</div></div>
+    <div class="accord-body">誰も住んでいない空き家を所有・放置している場合、その停滞したエネルギーは離れて住んでいても所有者本人に重さとして返ってきます。
+
+処方箋：
+・使わない空き家は解体か譲渡する
+・庭・物置・倉庫を定期的に整理する
+・長く開けない部屋に時々換気をする
+
+これが自らの運勢を守る必須のパッチ（修正）です。</div>
+  </div>
+
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s9: AI相談 ===== -->
+<div class="page" id="s9">
+  <div class="tool-header">
+    <div class="tool-title">🤖 AI気学先生に相談</div>
+    <div class="tool-desc">家相の診断結果をAI気学先生に伝えて、深掘りの処方箋をもらいましょう。</div>
+  </div>
+  <div style="background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.2);border-radius:var(--r);padding:14px 15px;margin-bottom:14px;">
+    <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">✦ 使い方</div>
+    <div style="font-size:.64rem;color:var(--mist);line-height:1.9;">
+      ① 上のツールで気になる診断を実行する<br>
+      ② 診断結果をコピーする<br>
+      ③ 下のボタンから気学先生を開く<br>
+      ④ 診断結果を貼り付けて「この家相について処方箋を教えてください」と相談する
+    </div>
+  </div>
+  <a href="premium.html" style="display:block;width:100%;background:linear-gradient(135deg,rgba(100,80,40,.18),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.45);border-radius:12px;color:var(--goldlt);font-size:.9rem;padding:16px;text-align:center;letter-spacing:.16em;font-weight:700;text-decoration:none;margin-bottom:10px;">✦ 気学先生に相談する</a>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<script>
+/* ===== ページ遷移 ===== */
+var selectedForm='';
+var selectedHoui={hb:[],kb:[]};
+var selectedChiso=[];
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+/* ===== s1: 家の中心チェック ===== */
+function selForm(v){
+  selectedForm=v;
+  ['sq','l','ko','stair','toilet'].forEach(function(k){
+    document.getElementById('form-'+k).classList.toggle('checked',k===v);
+    document.getElementById('cb-'+k).innerHTML=k===v?'<svg width="12" height="10" viewBox="0 0 12 10"><polyline points="1,5 4,9 11,1" stroke="#fff" stroke-width="2" fill="none"/></svg>':'';
+  });
+}
+
+function runCenterCheck(){
+  if(!selectedForm){alert('家の形を選んでください');return;}
+  var res=document.getElementById('centerResult');
+  res.style.display='block';
+  var results={
+    sq:{type:'ok',label:'✅ 中心は安定',title:'四角形の家 — 中心は安定しています',text:'四角形・長方形の家は中心（五黄の座）が室内に収まりやすい形です。ただし「張りがない」場合、推進力が生まれにくいという特性があります。\n\n処方箋：方位別の張りを意識して家具配置や増築計画を立てることで、家族それぞれの長所が伸びやすくなります。'},
+    l:{type:'amber',label:'✦ 要確認',title:'L字型の家 — 張りと欠けを確認してください',text:'L字型は張りと欠けが同時に生まれます。重要なのは「どの方位に欠けが生じているか」です。\n\n特に注意：\n・北東（鬼門）の欠け → 家系の中心人物や体調面を見直すサイン\n・東南の欠け → 発展・信用が伸びにくいサイン\n・南の欠け → 名誉・夫婦関係・対人面を丁寧に整えるサイン\n\n「張りと欠けの診断」で詳しく確認してください。'},
+    ko:{type:'warn',label:'⚠️ 中心の注意サイン',title:'コの字型・中庭 — 中心が外に出やすい形です',text:'コの字型や中庭のある家は、家の「中心（五黄の座）」が屋外に出やすい形です。中心の弱い家は家族の結束がゆるみやすく、すれ違いの原因になることがあります。\n\n処方箋：\n・中庭に植物を茂らせる（生命力で中心を補う）\n・中庭に水を置かない\n・自らの足で「東北の吉方（八白土星の吉方）」を取りに行き、肉体側のエネルギーで補う\n・根本的には設計を見直すことが理想ですが、植物と吉方取りでリカバリー可能です。'},
+    stair:{type:'warn',label:'⚠️ 中心の注意サイン',title:'中階段 — 中心に空洞ができやすい形です',text:'家の中心（9分割のど真ん中）に階段があると、住む人が悩みを内側に抱え込みやすい読み方をします。親族の相談事や身内の問題が表に出にくいこともあります。\n\n処方箋：\n・階段の下・踊り場に鉢植えや大きな花をたくさん飾る\n・昼間も照明をつけて明るくする\n・「1つだけ」置くのは避ける（必ず2つ以上セットで）\n・植物の生命力と光で空洞を埋めると、家族の考え方が前向きになります。'},
+    toilet:{type:'warn',label:'⚠️ 中心の注意サイン',title:'中心にトイレ・浴室 — 水回りの要調整ポイントです',text:'家の中心に水回り（トイレ・浴室）があると、中心の気が湿りやすくなります。\n\n処方箋：\n・昼間でも照明をつけて明るくする（常時点灯）\n・換気扇を常時運転する\n・清潔に保つことが最優先（こまめな掃除が有効なリカバリー）\n・観葉植物（小さくてOK）を置く（2つ以上）'}
+  };
+  var r=results[selectedForm];
+  res.innerHTML='<div class="result-box '+r.type+'"><div class="result-label '+r.type+'">'+r.label+'</div><div class="result-title">'+r.title+'</div><div class="result-text">'+r.text+'</div></div>';
+}
+
+/* ===== s2: 張りと欠け ===== */
+var HARI_DATA={
+  'NW':{name:'北西（六白金星）',hari:'主人・父親の権威が強くなる。リーダーシップが発揮されやすい家。決断力が冴える。',kake:'主人・父親の影響力が弱まり、組織や家庭をまとめる力が低下しやすい。'},
+  'N':{name:'北（一白水星）',hari:'人間関係が豊かになる。縁が広がり、水商売・飲食業に縁が集まりやすい。',kake:'人間関係が冷えやすく、孤立・疎遠が起きやすい。'},
+  'NE':{name:'北東（八白土星・鬼門）',hari:'変革・変化の力が強まる。不動産・継承事業に縁が集まりやすい。',kake:'【重要】家系の中心人物や体調面を丁寧に見直したい方位です。鬼門の欠けは、掃除や改修だけでなく、吉方取りで肉体エネルギーを補う視点も大切です。'},
+  'E':{name:'東（三碧木星）',hari:'発展・活気・新しいアイデアが生まれやすい。子供の成長に良い影響。',kake:'活気が止まる。新製品・新企画が出にくく、従業員・子供の元気がなくなりやすい。'},
+  'SE':{name:'東南（四緑木星）',hari:'信用・縁・発展を育てる張り。営業・縁結び・対外的な信頼を高める。',kake:'信用が得られにくい。縁が切れやすく、発展が止まりやすい。'},
+  'S':{name:'南（九紫火星）',hari:'知性と発信力を育てる張り。頭脳明晰な子供が育ちやすく、表現力が高まる。',kake:'名誉・夫婦関係・対人面の摩擦が出やすい注意サイン。'},
+  'SW':{name:'南西（二黒土星・裏鬼門）',hari:'女性（妻・姑）が主導権を握る家になる。家事・育成・大衆への影響力が高まる。',kake:'母親・女性の健康・立場に影響が出やすい。'},
+  'W':{name:'西（七赤金星）',hari:'喜び・収穫・娯楽の張り。商売・飲食業が繁盛しやすい。',kake:'収入・喜びが減りやすい。娯楽・楽しみが遠ざかる傾向。'}
+};
+
+function togHoui(id,key){
+  var btn=document.getElementById(id);
+  var isOn=btn.classList.contains('on');
+  btn.classList.toggle('on');
+  if(!isOn){
+    if(id.startsWith('h'))selectedHoui.hb.push(key);
+    else selectedHoui.kb.push(key);
+  }else{
+    selectedHoui.hb=selectedHoui.hb.filter(function(k){return k!==key;});
+    selectedHoui.kb=selectedHoui.kb.filter(function(k){return k!==key;});
+  }
+}
+
+function runHariKake(){
+  var hList=selectedHoui.hb;
+  var kList=selectedHoui.kb;
+  if(hList.length===0&&kList.length===0){alert('方位を選択してください');return;}
+  var html='';
+  if(hList.length>0){
+    html+='<div class="result-box ok"><div class="result-label ok">✅ 張りの方位</div>';
+    hList.forEach(function(k){
+      var dir=k.replace('張-','');
+      var d=HARI_DATA[dir];
+      if(d)html+='<div style="margin-bottom:10px;"><div style="font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:4px;">'+d.name+'</div><div class="result-text">'+d.hari+'</div></div>';
+    });
+    html+='</div>';
+  }
+  if(kList.length>0){
+    html+='<div class="result-box warn"><div class="result-label warn">⚠️ 欠けの方位</div>';
+    kList.forEach(function(k){
+      var dir=k.replace('欠-','');
+      var d=HARI_DATA[dir];
+      if(d)html+='<div style="margin-bottom:10px;"><div style="font-size:.78rem;font-weight:700;color:var(--warn);margin-bottom:4px;">'+d.name+'</div><div class="result-text">'+d.kake+'</div></div>';
+    });
+    html+='<div class="result-text" style="margin-top:10px;border-top:1px solid rgba(176,64,48,.2);padding-top:10px;">欠けがある場合は「リカバリー処方箋」で補い方を確認してください。また欠けの方位に凶殺（五黄・暗剣）が巡る年は特に注意が必要です。</div></div>';
+  }
+  var res=document.getElementById('hariResult');
+  res.style.display='block';
+  res.innerHTML=html;
+}
+
+/* ===== s3: 玄関チェック ===== */
+var GENKAN_DATA={
+  SE:{type:'ok',title:'東南（辰巳）— 良い配置',text:'東南の玄関は東洋の環境学において良い配置とされます。お客様・社会との縁が自然に集まり、発展と信用を育てます。'},
+  E:{type:'ok',title:'東（卯）— 発展・活気の配置',text:'東の玄関は朝日の気を取り込む良い配置です。新しいことへの挑戦と活気が生まれやすくなります。'},
+  NW:{type:'ok',title:'北西（戌亥）— 主人の守り',text:'北西の玄関は主人・父親の権威を守る配置です。裏玄関に最適。外から帰った時の落ち着きが生まれます。'},
+  N:{type:'amber',title:'北（子）— 人間関係は良いが儲けが少ない',text:'北の玄関は人間関係を豊かにしますが、経済的な推進力は弱め。縁は集まりやすいが、利益につながりにくいことも。\n\n処方箋：北玄関には白・黒の小物と塩水が入った小さな器を置くと気が整います。'},
+  S:{type:'warn',title:'南（午）— 目標達成の気だが注意も多い',text:'南の玄関は目標達成のエネルギーが高い反面、気が強く出やすい配置です。\n\n避けたいこと：黒色の物品（傘・靴など）を出しっぱなしにしない\n\n処方箋：\n・玄関に鏡を置く\n・赤・紫の花が咲く植物を必ず素焼きの鉢で2つ以上置く\n・明るく整えることで、良いエネルギー空間に変わります。'},
+  W:{type:'ok',title:'西（酉）— 喜び・収穫',text:'西の玄関は喜びと収穫の気が入る配置。商売繁盛・娯楽・楽しさを引き寄せやすくなります。'},
+  NE:{type:'warn',title:'北東（鬼門）— 世間では注意されるが…',text:'「鬼門の玄関は大きな注意」と言われますが、KITOKUではそれだけで悪いとは見ません。鬼門側に門・玄関があり、そこから中に向かうアプローチは気が入ってくる良い配置です。\n\n真の問題は玄関ではなく「北東が欠けていること」です。欠けがなければ落ち着いて確認してください。'},
+  SW:{type:'warn',title:'南西（裏鬼門）— 女性の力が強くなる配置',text:'南西の玄関は女性（妻・母）の主導権が強まる配置です。\n\n処方箋：南西の玄関まわりに花が咲く植木鉢（2つ以上）を置くと女性の気が穏やかに安定します。'}
+};
+
+function runGenkanCheck(){
+  var dir=document.getElementById('genkanDir').value;
+  var shape=document.getElementById('genkanShape').value;
+  if(!dir){alert('玄関の方位を選んでください');return;}
+  var d=GENKAN_DATA[dir]||{type:'amber',title:'個別に確認が必要',text:'この方位の詳細はAI気学先生にご相談ください。'};
+  var shapeText='';
+  if(shape==='dashi') shapeText='\n\n【形状】張り出した玄関は建物全体を「張り」として計算できる良い形です。';
+  if(shape==='komi') shapeText='\n\n【形状注意】引っ込んだ玄関（土間）は「欠け」の作用が出やすくなります。できれば玄関を張り出す設計が理想です。';
+  var res=document.getElementById('genkanResult');
+  res.style.display='block';
+  res.innerHTML='<div class="result-box '+d.type+'"><div class="result-label '+d.type+'">'+(d.type==='ok'?'✅ 良い配置':d.type==='warn'?'⚠️ 注意あり':'✦ 確認事項')+'</div><div class="result-title">'+d.title+'</div><div class="result-text">'+d.text+shapeText+'</div></div>';
+}
+
+/* ===== s4: 温度差チェック ===== */
+function runTempCheck(){
+  var temp=document.getElementById('tempDiff').value;
+  var light=document.getElementById('lightDiff').value;
+  var fam=document.getElementById('familySituation').value;
+  var score=(temp==='none'?0:temp==='mild'?1:2)+(light==='none'?0:light==='mild'?1:2)+(fam==='good'?0:fam==='mild'?1:2);
+  var type=score<=1?'ok':score<=3?'amber':'warn';
+  var title=score<=1?'温度差・明暗差は問題なさそうです':score<=3?'一部見直しサインがあります':'温度差・明暗差の見直しサインが出ています';
+  var text='';
+  if(temp==='strong') text+='【温度差の見直し】1階と2階で大きな温度差があります。これは家族の「感情のすれ違い」を生みやすい注意サインです。\n\n処方箋：サーキュレーターを使って家全体の空気を循環させる。高気密高断熱（魔法瓶構造）へのリノベーションが理想。まずは扇風機1台でも効果があります。\n\n';
+  if(light==='strong') text+='【明暗差の見直し】常に暗い場所が多い状態です。暗がりは「気の停滞」を生み、閉塞感・引きこもり・コミュニケーション不全につながります。\n\n処方箋：北側・廊下・階段に間接照明を置く。昼間でも照明をつける習慣をつける。\n\n';
+  if(score===0) text='家全体の温度と明るさが均一に保たれています。これが家族の「心の温度差」をなくす有効な空間づくりです。この状態を維持し続けてください。';
+  var res=document.getElementById('tempResult');
+  res.style.display='block';
+  res.innerHTML='<div class="result-box '+type+'"><div class="result-label '+type+'">'+(type==='ok'?'✅ 安定':type==='amber'?'✦ 要改善':'⚠️ 見直しサイン')+'</div><div class="result-title">'+title+'</div><div class="result-text">'+(text||'温度差・明暗差を少し改善することで、家族のすれ違いが減ってきます。まずサーキュレーターで空気を循環させることから始めてみてください。')+'</div></div>';
+}
+
+/* ===== s5: 1階ガレージ ===== */
+document.getElementById('firstFloor').addEventListener('change',function(){
+  document.getElementById('floorNumWrap').style.display=this.value==='mansion'?'block':'none';
+});
+
+function runFloorCheck(){
+  var v=document.getElementById('firstFloor').value;
+  var res=document.getElementById('floorResult');
+  res.style.display='block';
+  if(v==='house'){res.innerHTML='<div class="result-box ok"><div class="result-label ok">✅ 問題なし</div><div class="result-title">居住スペースが1階 — 大地との接続は正常です</div><div class="result-text">1階に居住スペースがあり、大地との気の接続は良好です。この状態を維持してください。</div></div>';return;}
+  if(v==='mansion'){
+    var floor=parseInt(document.getElementById('floorNum').value)||0;
+    if(!floor){alert('何階かを入力してください');res.style.display='none';return;}
+    var type=floor>=8?'ok':floor>=5?'amber':'warn';
+    var txt=floor>=8?'8階以上のため、1階の注意作用はかなり受けにくい読み方になります。':floor>=5?'5〜7階。注意作用は軽減されますが、完全には消えない読み方です。吉方取りで補うことをおすすめします。':'4階以下。1階が店舗・駐車場の場合、大地の気の影響を受けやすい状態です。できれば5階以上への移動を検討してください。';
+    res.innerHTML='<div class="result-box '+type+'"><div class="result-label '+type+'">'+(type==='ok'?'✅ 影響は弱め':type==='amber'?'✦ 軽減状態':'⚠️ 注意作用あり')+'</div><div class="result-title">'+floor+'階 — '+txt.split('。')[0]+'</div><div class="result-text">'+txt+'</div></div>';
+    return;
+  }
+  var warns={
+    garage:'1階がビルトインガレージ（下駄履き住宅）の状態です。大地の気との接続が弱く、生活の基盤が落ち着きにくい読み方をします。\n\n処方箋：\n・1階のガレージの壁をできる限り取り払い、柱だけの開放空間にする\n・風が通り抜ける構造にすることで大地との循環が回復します\n・外階段にすることも効果的です',
+    shop:'1階が店舗・事務所で、2階以上に住居がある場合です。靴を脱がない空間の直上に住む構造は、大地の気が根付きにくい状態です。\n\n処方箋：\n・1階の空間に定期的に風を通す\n・店舗に植物を置く（2つ以上）\n・可能であれば居住階を5階以上に移動する',
+    pillar:'ピロティ構造（柱のみ）は大地との接続がかなり弱い状態です。経済面や生活基盤の不安定さとして出やすい読み方をします。\n\n処方箋：\n・柱の間に観葉植物を多数置く\n・定期的に1階部分を清掃・整理する\n・吉方取りを意識的に行い、肉体側のエネルギーで補う'
+  };
+  res.innerHTML='<div class="result-box warn"><div class="result-label warn">⚠️ 大地との接続サイン</div><div class="result-title">大地との接続が弱い状態です</div><div class="result-text">'+warns[v]+'</div></div>';
+}
+
+/* ===== s6: 水漏れ ===== */
+var WATER_DATA={
+  none:{type:'ok',text:'水漏れなし — 関係性の見直しサインは出ていません。この状態を維持してください。'},
+  N:{type:'warn',text:'【北の水漏れ】父親・主人との関係悪化のサインです（一白・六白の暗剣殺）。\n\n処方箋：\n① まず物理的に修理する\n② 「最近、父親（または主人）と意思疎通できているか？」を点検する\n③ 関係修復の行動をとることが真の根本治療です'},
+  NE:{type:'warn',text:'【北東（鬼門）の水漏れ】家系の中心人物・長男の健康・家族の基盤への影響のサインです。\n\n処方箋：修理は急いで。北東の吉方を取ることで家族全体の気が整います。'},
+  E:{type:'warn',text:'【東の水漏れ】長男・兄弟との対立、活気の停止のサインです（三碧の暗剣殺）。\n\n処方箋：修理後、東の方位を整える（観葉植物・照明など）。長男・兄弟との関係を確認してください。'},
+  SE:{type:'warn',text:'【東南の水漏れ】縁・信用・発展への影響のサインです。\n\n処方箋：取引先・縁のある人との関係を丁寧に確認し、信用を積み重ねる行動をとってください。'},
+  S:{type:'warn',text:'【南の水漏れ】名誉・夫婦関係・対人面の摩擦への警告サインです。\n\n処方箋：夫婦・パートナーとのコミュニケーションを見直してください。感情的な対立を避ける時期です。'},
+  SW:{type:'warn',text:'【南西（裏鬼門）の水漏れ】母親・女性の健康・家庭の基盤への警告サインです。\n\n処方箋：母親・女性家族の体調確認を。家庭内の安定を最優先にしてください。'},
+  W:{type:'amber',text:'【西の水漏れ】喜び・収入・娯楽の減少のサインです。\n\n処方箋：仕事の楽しさ・喜びを再確認する時間を作ってください。'},
+  NW:{type:'warn',text:'【北西の水漏れ】主人・リーダーの権威・判断力への影響のサインです。\n\n処方箋：経営者・管理職の方は特に注意。重要な意思決定を急がず、信頼できる人に相談することをおすすめします。'},
+  center:{type:'warn',text:'【中心の水漏れ】優先して整えたいサインです。家族全体のエネルギーの中枢に影響が出ています。\n\n処方箋：\n① 早急に修理する\n② 中心に植物（2つ以上）と照明で生命力を補う\n③ 家族全員で吉方取りを心がける'}
+};
+
+function runWaterCheck(){
+  var v=document.getElementById('waterDir').value;
+  if(!v){alert('方位を選択してください');return;}
+  var d=WATER_DATA[v];
+  var res=document.getElementById('waterResult');
+  res.style.display='block';
+  res.innerHTML='<div class="result-box '+d.type+'"><div class="result-label '+d.type+'">'+(d.type==='ok'?'✅ 問題なし':d.type==='amber'?'✦ 注意':'⚠️ 関係性の見直しサイン')+'</div><div class="result-text">'+d.text+'</div></div>';
+}
+
+/* ===== s7: 地相チェック ===== */
+function togChiso(n){
+  var item=document.getElementById('chi-'+n);
+  var cb=document.getElementById('cc-'+n);
+  var isOn=item.classList.contains('checked');
+  item.classList.toggle('checked');
+  cb.innerHTML=!isOn?'<svg width="12" height="10" viewBox="0 0 12 10"><polyline points="1,5 4,9 11,1" stroke="#fff" stroke-width="2" fill="none"/></svg>':'';
+  if(!isOn) selectedChiso.push(n);
+  else selectedChiso=selectedChiso.filter(function(k){return k!==n;});
+}
+
+function runChisoCheck(){
+  var html='';
+  var hasBad=[1,2,3,4].some(function(n){return selectedChiso.indexOf(n)>=0;});
+  var hasGood=[5,6].some(function(n){return selectedChiso.indexOf(n)>=0;});
+  if(selectedChiso.indexOf(1)>=0){
+    html+='<div class="result-box warn"><div class="result-label warn">⚠️ 南・東に高い建物</div><div class="result-text">南側・東側に自分より高いビルや山があると、日照と発展が遮られやすくなります。夫婦関係や名誉面の摩擦が出やすい地相として読みます。\n\n注意：この作用の影響範囲は「対象物から2軒目まで」です。3軒目以降は影響が弱まる読み方です。\n\n処方箋：南・東の窓に強い照明を置き、人工的に明るさを補うことで緩和できます。</div></div>';
+  }
+  if(selectedChiso.indexOf(2)>=0){
+    html+='<div class="result-box warn"><div class="result-label warn">⚠️ 袋小路の突き当たり</div><div class="result-text">袋小路の突き当たりは、周囲からの支えが弱くなり、孤立感や摩擦が起きやすい注意環境です。\n\n処方箋：玄関前に植物をたくさん置き、気の流れを和らげてください。門や壁で道から直接見えないよう工夫することも有効です。</div></div>';
+  }
+  if(selectedChiso.indexOf(3)>=0){
+    html+='<div class="result-box warn"><div class="result-label warn">⚠️ 丘の上・高台の一軒家</div><div class="result-text">見晴らしは良くても、周囲からの支えがなく孤独になりやすい地相です。トラブル時に助けが来にくい。\n\n処方箋：積極的に周囲と交流し、地域コミュニティとつながることが最大のリカバリーです。</div></div>';
+  }
+  if(selectedChiso.indexOf(4)>=0){
+    html+='<div class="result-box warn"><div class="result-label warn">⚠️ 北・西が低地・川</div><div class="result-text">北・西は「支え」の方位です。この方位が低地や川になっていると、背後からの支えが弱くなります。\n\n処方箋：北・西に重厚感のある家具や植物を置き、象徴的な「支え」を作ると緩和されます。</div></div>';
+  }
+  if(selectedChiso.indexOf(5)>=0){
+    html+='<div class="result-box ok"><div class="result-label ok">✅ 東・南が開けている（吉）</div><div class="result-text">東・南が低く開けている地相は、日照と発展の気を最大限に取り込める最良の立地です。四神相応に近い吉環境です。</div></div>';
+  }
+  if(selectedChiso.indexOf(6)>=0){
+    html+='<div class="result-box ok"><div class="result-label ok">✅ 北・西に高い環境（吉）</div><div class="result-text">北・西に街道・山・建物がある地相は、背後からの支えと守りが整った吉環境です。安定した発展が期待できます。</div></div>';
+  }
+  if(!hasBad&&!hasGood) html='<div class="result-box amber"><div class="result-label amber">✦ 選択なし</div><div class="result-text">該当する地相の特徴を選択してください。</div></div>';
+  if(selectedChiso.length===0) html='<div class="result-box amber"><div class="result-label amber">✦ 確認してください</div><div class="result-text">周囲の環境を確認して、該当するものを選択してください。</div></div>';
+  var res=document.getElementById('chisoResult');
+  res.style.display='block';
+  res.innerHTML=html;
+}
+
+/* ===== アコーディオン ===== */
+function togAccord(head){
+  var body=head.nextElementSibling;
+  var arr=head.querySelector('.accord-arr');
+  body.classList.toggle('open');
+  arr.classList.toggle('open');
+}
+
+/* ===== テーマ ===== */
+function setTheme(t){
+  document.body.setAttribute('data-theme',t);
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('kitoku-theme',t);}catch(e){}
+  ['dark','light'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+}
+
+(function(){
+  var t=localStorage.getItem('kitoku-theme')||'light';
+  document.body.setAttribute('data-theme',t);
+  document.documentElement.setAttribute('data-theme',t);
+  ['dark','light'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+})();
+</script>
+</body>
+</html>
