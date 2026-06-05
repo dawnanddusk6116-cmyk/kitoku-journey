@@ -207,6 +207,21 @@ html.theme-night-root{
 .selector-card.s-english::before{background:#48698c;}
 .selector-icon{font-size:2rem;flex-shrink:0;width:44px;text-align:center;}
 .selector-info{flex:1;}
+.selector-side{
+  width:92px;flex-shrink:0;
+  display:grid;gap:5px;
+}
+.selector-chip{
+  display:flex;align-items:center;justify-content:center;
+  min-height:25px;padding:5px 7px;border-radius:999px;
+  border:1px solid rgba(138,104,32,.18);
+  background:rgba(255,255,255,.62);
+  color:var(--goldlt);
+  font-size:.56rem;font-weight:800;line-height:1.25;
+  white-space:nowrap;
+}
+.selector-card.s-business .selector-chip{color:#1a3c70;border-color:rgba(42,106,176,.2);background:rgba(42,106,176,.06);}
+.selector-card.s-journey .selector-chip{color:var(--goldlt);border-color:rgba(138,104,32,.22);background:rgba(138,104,32,.07);}
 .selector-en{
   display:inline-block;
   font-size:.74rem;letter-spacing:.2em;color:var(--mist);
@@ -229,6 +244,11 @@ html.theme-night-root{
 .selector-card.s-english .selector-title{color:#244b72;}
 .selector-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
 .selector-arrow{font-size:.9rem;color:rgba(100,80,40,.3);flex-shrink:0;}
+@media (max-width:430px){
+  .selector-card{gap:12px;padding:18px 14px;}
+  .selector-side{width:78px;gap:4px;}
+  .selector-chip{font-size:.52rem;min-height:23px;padding:4px 5px;}
+}
 
 /* ── 画面内の目次バー ── */
 .home-control-row{
@@ -1162,6 +1182,11 @@ body.theme-night .philosophy-list{
           ⊙ 香り × AI で今日を整える →
         </div>
       </div>
+      <div class="selector-side" aria-hidden="true">
+        <div class="selector-chip">今日</div>
+        <div class="selector-chip">自分</div>
+        <div class="selector-chip">AI相談</div>
+      </div>
       <div class="selector-arrow">›</div>
     </div>
 
@@ -1192,8 +1217,13 @@ body.theme-night .philosophy-list{
       <div class="selector-icon">💼</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU @ BUSINESS</div>
-        <div class="selector-title">採用・面談・チーム編成</div>
-        <div class="selector-desc">候補者理解・相性診断・面談シート。5000年の知恵を仕事に。</div>
+        <div class="selector-title">仕事の判断を整える</div>
+        <div class="selector-desc">採用・面談・チーム・契約・社名。5000年の知恵を仕事の材料に。</div>
+      </div>
+      <div class="selector-side" aria-hidden="true">
+        <div class="selector-chip">採用</div>
+        <div class="selector-chip">関係</div>
+        <div class="selector-chip">契約</div>
       </div>
       <div class="selector-arrow">›</div>
     </a>
