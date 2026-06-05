@@ -306,10 +306,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="menu-card money" onclick="showBusinessPreview('money')">
     <div class="menu-icon">💴</div>
     <div>
-      <div class="menu-name">お金・投資判断</div>
+      <div class="menu-name">お金・事業適性を読む</div>
       <div class="menu-desc">
-        自分の判断癖とリスク姿勢を知る<br>
-        買う・売るではなく、迷い方を整える
+        事業家型か投資家型かを見る<br>
+        判断癖とお金の扱い方を整える
       </div>
     </div>
   </div>
@@ -420,8 +420,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- お金・契約・事業バランス プレビュー画面 -->
 <div class="screen" id="s3">
   <div class="preview-lead">
-    <span class="cat-badge founder" id="previewBadge">💴 お金・投資判断</span>
-    <div class="preview-title" id="previewTitle">お金・投資判断</div>
+    <span class="cat-badge founder" id="previewBadge">💴 お金・事業適性</span>
+    <div class="preview-title" id="previewTitle">お金・事業適性</div>
     <div class="preview-body" id="previewLead">
       投資判断そのものではなく、自分の判断癖とリスク姿勢を整えるための入口です。
     </div>
@@ -429,22 +429,34 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <div class="preview-grid">
     <div class="preview-card">
-      <div class="preview-card-title">無料でできること</div>
+      <div class="preview-card-title">この画面で確認できること</div>
       <div class="preview-card-body" id="previewFree"></div>
     </div>
     <div class="preview-card premium-card">
-      <div class="preview-card-title">有料機能として準備中</div>
+      <div class="preview-card-title">さらに深く見る項目</div>
       <div class="preview-card-body" id="previewPaid"></div>
     </div>
     <div class="preview-card">
       <div class="preview-card-title">KITOKUでの扱い</div>
       <div class="preview-card-body" id="previewPolicy"></div>
     </div>
+    <div class="preview-card">
+      <div class="preview-card-title">結果の活かし方</div>
+      <div class="preview-card-body">
+        出た結果は、そのまま結論にするのではなく、AIに相談するための材料として使えます。
+        <ul style="margin-top:8px;">
+          <li>まず結果の「星・五行・注意点・今日の問い」を確認する</li>
+          <li>プレミアムの気学先生には、そのまま貼って深掘りする</li>
+          <li>通常のAIにも貼れますが、回答は参考として使う</li>
+          <li>最後は自分で、現実の数字・契約・相手の状況と照らして決める</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="free-tool" id="moneyTool" style="display:none;">
-    <div class="tool-title">無料版｜投資メンタル簡易チェック</div>
-    <div class="preview-card-body" style="margin-bottom:12px;">生年月日から九星を出し、お金の扱い方・判断の癖・今このタイミングで動くべきかを表示します。</div>
+    <div class="tool-title">お金・事業適性チェック</div>
+    <div class="preview-card-body" style="margin-bottom:12px;">生年月日から九星を出し、事業家型・投資家型・短期判断・長期育成など、お金に関する判断傾向を整理します。売買判断ではなく、自分の向き不向きを見る入口です。</div>
 
     <!-- 星バー（登録済みの場合） -->
     <div id="moneyStarBar" style="display:none;margin-bottom:12px;padding:9px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);border-radius:8px;font-size:.68rem;color:var(--goldlt);font-weight:700;"></div>
@@ -462,12 +474,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         <input class="form-input" type="text" id="moneyFuriMei" placeholder="メイ（例：ハナコ）">
       </div>
     </div>
-    <button class="main-btn" type="button" onclick="runMoneyFree()">✦ 投資メンタルを見る</button>
+    <button class="main-btn" type="button" onclick="runMoneyFree()">✦ お金の適性を見る</button>
     <div id="moneyResult" style="display:none;margin-top:14px;"></div>
   </div>
 
   <div class="free-tool" id="dealTool" style="display:none;">
-    <div class="tool-title">無料版｜今日の商談姿勢</div>
+    <div class="tool-title">今日の商談姿勢</div>
     <div class="preview-card-body" style="margin-bottom:12px;">生年月日から本命星を出し、今日が「押す日」「整える日」「確認する日」のどれに近いかを表示します。</div>
 
     <div class="tool-row" id="dealInputRow">
@@ -480,7 +492,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div id="dealResult" style="display:none;margin-top:14px;"></div>
 
     <div class="preview-card premium-card" style="margin-top:14px;">
-      <div class="preview-card-title">有料予定｜MY線路カレンダー</div>
+      <div class="preview-card-title">追加予定｜MY線路カレンダー</div>
       <div class="preview-card-body">
         自分専用の線路の日を月間表示し、商談・契約・初回連絡・提案書提出に向く日を整理します。
       </div>
@@ -488,7 +500,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
 
     <div class="preview-card premium-card" style="margin-top:10px;">
-      <div class="preview-card-title">有料予定｜案件別 日程比較</div>
+      <div class="preview-card-title">追加予定｜案件別 日程比較</div>
       <div class="preview-card-body">
         候補日を複数入れて、商談向き・契約向き・関係構築向きの違いを比較します。
       </div>
@@ -554,7 +566,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     ※ 投資・資金判断は損失を伴う可能性があります。KITOKUは銘柄選定や売買指示を行うものではありません。判断癖・タイミング・リスク姿勢を整理するための補助資料としてご利用ください。
   </div>
 
-  <button class="main-btn" onclick="showPreparingMessage()">✦ 簡易版を準備中</button>
+  <button class="main-btn" onclick="showPreparingMessage()">✦ 詳細機能を準備中</button>
   <button class="back-btn" onclick="showScreen('s0')">← ビジネス入口へ戻る</button>
 </div>
 
@@ -584,17 +596,17 @@ var curCat='hire', curC='kitoku', curT='basic';
 
 var BUSINESS_PREVIEWS={
   money:{
-    badge:'💴 お金・投資判断',
-    title:'お金・投資判断',
-    lead:'投資判断そのものではなく、自分の判断癖とリスク姿勢を整えるための入口です。買う・売るを決めるのではなく、焦り・欲・恐れ・待ちすぎを点検します。',
-    free:['自分の投資タイプを知る','九星別の判断癖を確認する','今日のお金の姿勢を整える','リスクを取りすぎていないか点検する'],
-    paid:['AI軍師による投資メンタルレポート','月間の資金判断カレンダー','線路の日込みの行動日チェック','保存・履歴・再比較'],
-    policy:'銘柄名や売買指示ではなく、意思決定の偏りを整える機能として設計します。金融助言ではなく、自己点検とリスク管理の補助資料です。'
+    badge:'💴 お金・事業適性',
+    title:'お金・事業適性',
+    lead:'投資判断そのものではなく、自分がどんなお金の扱い方に向きやすいかを整理する入口です。九星と名前の音から、事業家型、金融投資家型、短期判断、長期育成などの傾向を見ます。',
+    free:['お金の判断タイプを知る','事業家型か投資家型かを見る','短期判断と長期育成の傾向を見る','名前の音から判断癖を深掘りする'],
+    paid:['AI軍師によるお金の適性レポート','事業・投資・副業の向き不向き整理','姓名判断と九星を重ねた判断癖分析','問い→現状→理想→次の一手の整理'],
+    policy:'銘柄名や売買指示ではなく、意思決定の偏りとお金の扱い方を整える機能として設計します。金融助言ではなく、自己点検と事業判断の補助資料です。'
   },
   deal:{
     badge:'📜 商談・契約日',
     title:'商談・契約日',
-    lead:'商談、契約、開業、登記、設備購入など、大きな意思決定の日を整えるための入口です。まずは今日の姿勢を見て、深い日程比較は有料機能として準備します。',
+    lead:'商談、契約、開業、登記、設備購入など、大きな意思決定の日を整えるための入口です。まずは今日の姿勢を見て、深い日程比較は詳細機能として準備します。',
     free:['今日が攻める日か、整える日かを見る','商談前の姿勢を整える','契約前に確認する問いを出す','大きな決断を急ぎすぎていないか点検する'],
     paid:['候補日の比較','線路の日込みの最適日検索','月間カレンダー表示','商談・契約日のAI軍師レポート'],
     policy:'日付を絶対視せず、事業判断の補助線として使います。契約内容、法務、資金繰り、相手先の信用確認を優先した上で、タイミングを整えるための機能です。'
@@ -623,7 +635,7 @@ function showBusinessPreview(kind){
   st('previewTitle',data.title);
   st('previewLead',data.lead);
   document.getElementById('previewFree').innerHTML='<ul>'+data.free.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
-  document.getElementById('previewPaid').innerHTML='<ul>'+data.paid.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul><div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;">現在準備中。無料版で入口を確認できる形から追加予定です。</div>';
+  document.getElementById('previewPaid').innerHTML='<ul>'+data.paid.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul><div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;">現在準備中。まずは入口の確認機能から使える形にしています。</div>';
   st('previewPolicy',data.policy);
   var moneyTool=document.getElementById('moneyTool');
   var dealTool=document.getElementById('dealTool');
@@ -642,22 +654,22 @@ function showBusinessPreview(kind){
 }
 
 function showPreparingMessage(){
-  alert('簡易版は準備中です。まずは無料で入口を体験でき、詳細レポート・線路の日・日程比較は有料機能として追加予定です。');
+  alert('詳細機能は準備中です。まずは入口の確認機能から使える形にしています。');
 }
 function showPaidFeatureMessage(name){
-  alert(name+'は有料機能として準備中です。現在は無料版の「今日の商談姿勢」で入口を確認できます。');
+  alert(name+'は準備中です。現在は「今日の商談姿勢」で入口を確認できます。');
 }
 
 var MONEY_TYPE={
-  1:{t:'情報を集めてから動くタイプ',risk:'調べすぎて機会を逃しやすい。出口条件を先に決めると安定します。',q:'この判断は、情報不足ではなく不安で止まっていませんか？'},
-  2:{t:'堅実に積み上げるタイプ',risk:'安全を重視しすぎて成長機会を逃しやすい。小さく試す枠を作ると良いです。',q:'守るお金と育てるお金を分けていますか？'},
-  3:{t:'勢いで機会をつかむタイプ',risk:'ニュースや熱気に反応して早く入りすぎることがあります。翌日も同じ判断か確認しましょう。',q:'これは自分の計画ですか、それとも場の熱ですか？'},
-  4:{t:'流れと人脈で広げるタイプ',risk:'人からの話に影響されやすい。紹介案件ほど数字と撤退条件を確認してください。',q:'誰が言ったかではなく、数字で納得していますか？'},
-  5:{t:'大きく張れる中心型',risk:'自信が強い時ほどポジションが大きくなりがちです。最悪ケースを先に見ましょう。',q:'外れた時に、生活と事業を守れるサイズですか？'},
-  6:{t:'基準と品質で選ぶタイプ',risk:'完璧な条件を待ちすぎるか、正しさに固執しやすい。分割判断が向いています。',q:'一度に決めようとしていませんか？'},
-  7:{t:'収穫と楽しさを見つけるタイプ',risk:'利益が出ると気が緩みやすい。利確ルールと再投入ルールを分けましょう。',q:'利益を守るルールは先に決めていますか？'},
-  8:{t:'長期で持ち切るタイプ',risk:'一度決めると変えにくい。環境が変わった時の見直し日を設定してください。',q:'持ち続ける理由は、今も有効ですか？'},
-  9:{t:'直感とテーマで選ぶタイプ',risk:'美しい物語に惹かれやすい。期待ではなく事実を確認する癖が大切です。',q:'そのテーマは数字でも裏づけられていますか？'}
+  1:{t:'情報を集めてから動くタイプ',apt:'金融・情報分析・相談業・流れを読む仕事に向きやすい傾向。短期売買より、情報を整理して判断材料を作る役割が合いやすいです。',style:'長期観察・分散・ルール型',risk:'調べすぎて機会を逃しやすい。出口条件を先に決めると安定します。',q:'この判断は、情報不足ではなく不安で止まっていませんか？'},
+  2:{t:'堅実に積み上げるタイプ',apt:'実業・不動産管理・店舗運営・積立型の資産形成に向きやすい傾向。派手な短期勝負より、守りながら育てる形が安定します。',style:'長期積立・守り・実物資産寄り',risk:'安全を重視しすぎて成長機会を逃しやすい。小さく試す枠を作ると良いです。',q:'守るお金と育てるお金を分けていますか？'},
+  3:{t:'勢いで機会をつかむタイプ',apt:'新規事業・営業・短期プロジェクト・成長テーマに反応しやすい傾向。瞬発力は強いので、入る前のルール化が鍵です。',style:'短期反応・成長株テーマ・小さく試す',risk:'ニュースや熱気に反応して早く入りすぎることがあります。翌日も同じ判断か確認しましょう。',q:'これは自分の計画ですか、それとも場の熱ですか？'},
+  4:{t:'流れと人脈で広げるタイプ',apt:'営業網・紹介ビジネス・広報・情報流通に向きやすい傾向。株や金融では、人の話を鵜呑みにせず数字確認を挟むと強みになります。',style:'分散・情報網・人脈活用',risk:'人からの話に影響されやすい。紹介案件ほど数字と撤退条件を確認してください。',q:'誰が言ったかではなく、数字で納得していますか？'},
+  5:{t:'大きく張れる中心型',apt:'経営判断・事業投資・責任を背負う案件に向きやすい傾向。金融投資でもサイズ管理ができれば強いですが、過信には注意です。',style:'事業投資・中核判断・上限管理',risk:'自信が強い時ほどポジションが大きくなりがちです。最悪ケースを先に見ましょう。',q:'外れた時に、生活と事業を守れるサイズですか？'},
+  6:{t:'基準と品質で選ぶタイプ',apt:'金融、士業、上場企業、品質や信用を重視する投資判断に向きやすい傾向。基準が明確な長期投資や優良資産の選定に強みがあります。',style:'長期品質・基準投資・分割判断',risk:'完璧な条件を待ちすぎるか、正しさに固執しやすい。分割判断が向いています。',q:'一度に決めようとしていませんか？'},
+  7:{t:'収穫と楽しさを見つけるタイプ',apt:'商売、飲食、接客、利益確定、回転のあるビジネスに向きやすい傾向。短期の利幅を見る力はありますが、気分で動かない仕組みが必要です。',style:'利益確定・回転・ルール型短期',risk:'利益が出ると気が緩みやすい。利確ルールと再投入ルールを分けましょう。',q:'利益を守るルールは先に決めていますか？'},
+  8:{t:'長期で持ち切るタイプ',apt:'不動産、長期保有、事業承継、積み上げ型の資産形成に向きやすい傾向。一度決めたものを育てる力があります。',style:'長期保有・不動産・積み上げ',risk:'一度決めると変えにくい。環境が変わった時の見直し日を設定してください。',q:'持ち続ける理由は、今も有効ですか？'},
+  9:{t:'直感とテーマで選ぶタイプ',apt:'テーマ投資、ブランド、教育、AI、先端分野、知識産業に向きやすい傾向。物語を見る力がある分、数字との照合が大切です。',style:'テーマ型・知識産業・検証重視',risk:'美しい物語に惹かれやすい。期待ではなく事実を確認する癖が大切です。',q:'そのテーマは数字でも裏づけられていますか？'}
 };
 
 function runMoneyFree(){
@@ -738,9 +750,16 @@ function runMoneyFree(){
 
       <!-- 星・タイプヘッダー -->
       <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.6));border-bottom:1px solid rgba(138,104,32,.15);">
-        <div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">MONEY MENTALITY</div>
+        <div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">MONEY & BUSINESS APTITUDE</div>
         <div style="font-size:.9rem;font-weight:700;color:var(--goldlt);">${hs.k}｜${type.t}</div>
         <div style="font-size:.62rem;color:var(--mist);margin-top:3px;">月命：${ts.k}</div>
+      </div>
+
+      <!-- 向きやすい領域 -->
+      <div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">💼 向きやすいお金の使い方</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">${type.apt}</div>
+        <div style="margin-top:8px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;font-size:.62rem;color:var(--goldlt);font-weight:700;">判断スタイル：${type.style}</div>
       </div>
 
       <!-- 今月のタイミング -->
@@ -762,9 +781,21 @@ function runMoneyFree(){
         <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);line-height:1.9;">${type.q}</div>
       </div>
 
+      <!-- AI軍師 -->
+      <div style="padding:12px 16px;border-top:1px solid rgba(138,104,32,.12);background:rgba(255,255,255,.74);">
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🧩 AI軍師セッションで深掘り</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">この結果をもとに、問い → 現状 → 理想 → 次の一手まで整理できます。投資の売買判断ではなく、事業・副業・お金の扱い方を自分で決めるための相談に使ってください。</div>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.12);border-radius:8px;padding:9px 10px;margin-bottom:8px;">
+          <strong style="color:var(--goldlt);">相談例：</strong><br>
+          私は${hs.k}・月命${ts.k}で、お金の判断タイプは「${type.t}」です。${type.apt} この傾向を踏まえて、事業・副業・金融投資のどこに力を置くとよいか、問い → 現状 → 理想 → 次の一手で整理してください。
+        </div>
+        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-bottom:8px;">プレミアムの気学先生なら、KITOKUの星情報を踏まえてより正確に相談できます。通常のAIでも、この相談例を貼れば方向性の整理はできますが、回答は参考として使ってください。</div>
+        <a href="ai.html" style="display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--goldlt);color:#fff;border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">✦ AI軍師セッションへ</a>
+      </div>
+
       <!-- 免責 -->
       <div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;border-top:1px solid rgba(138,104,32,.1);">
-        ※ 投資助言ではありません。自分の判断姿勢を整えるための参考情報です。
+        ※ 投資助言ではありません。売買判断ではなく、自分の判断姿勢とお金の扱い方を整えるための参考情報です。
       </div>
     </div>`;
 }
@@ -842,13 +873,13 @@ function dealPostureLogicText(h,date,key){
   var sum=h+day+month;
   var rem=sum%3;
   var label=key==='push'?'押す日':key==='arrange'?'整える日':'確認する日';
-  return 'この無料版では、本命星の数字（'+h+'）に今日の月（'+month+'）と日（'+day+'）を重ね、商談の姿勢を3つに分けています。'
+  return 'この入口機能では、本命星の数字（'+h+'）に今日の月（'+month+'）と日（'+day+'）を重ね、商談の姿勢を3つに分けています。'
     +'合計は '+h+' + '+month+' + '+day+' = '+sum+'。3で割った余りが '+rem+' なので、今日は「'+label+'」として表示しています。'
-    +'これは契約日を断定するものではなく、今日の動き方を整えるための簡易チェックです。線路の日・候補日比較・月間カレンダーは有料機能で詳しく見る設計です。';
+    +'これは契約日を断定するものではなく、今日の動き方を整えるための簡易チェックです。線路の日・候補日比較・月間カレンダーは詳細機能で詳しく見る設計です。';
 }
 function dealSenroGuide(h,senro){
   var group=([1,4,7].indexOf(h)>=0)?'人数系列':([2,5,8].indexOf(h)>=0)?'地数系列':'天数系列';
-  return 'あなたの本命星は'+group+'に属するため、MY線路は「'+senro+'」です。線路の日は、契約・初回連絡・口座開設・提案書提出など、空間移動を伴わない始動のタイミングを見る時に使います。無料版では線路グループまで表示し、月間カレンダーと候補日比較は有料機能で詳しく見ます。';
+  return 'あなたの本命星は'+group+'に属するため、MY線路は「'+senro+'」です。線路の日は、契約・初回連絡・口座開設・提案書提出など、空間移動を伴わない始動のタイミングを見る時に使います。ここでは線路グループまで表示し、月間カレンダーと候補日比較は詳細機能で深く見ます。';
 }
 function dealChecklistHtml(key){
   var base={
@@ -930,7 +961,7 @@ function runDealFree(){
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">📋 今日のチェックリスト</div>'
     +'<div style="font-size:.64rem;color:var(--mist);line-height:1.8;">'+dealChecklistHtml(key)+'</div>'
     +'</div>'
-    +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.72;border-top:1px solid rgba(138,104,32,.1);">※ 線路の日の月間表示・候補日比較は有料機能として準備中です。無料版では今日の姿勢だけ確認できます。</div>'
+    +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.72;border-top:1px solid rgba(138,104,32,.1);">※ 線路の日の月間表示・候補日比較は詳細機能として準備中です。ここでは今日の姿勢を確認できます。</div>'
     +'</div>';
 }
 
