@@ -110,6 +110,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .star-lbl{font-size:.56rem;color:var(--mist);margin-bottom:4px;}
 .star-nm{font-size:.86rem;color:var(--snow);font-weight:700;margin-bottom:4px;}
 .star-el{font-size:.66rem;font-weight:700;padding:2px 10px;border-radius:10px;display:inline-block;}
+.star-sub{font-size:.62rem;color:var(--mist);line-height:1.6;margin-top:5px;}
 .el-木{background:rgba(58,138,58,.12);color:#2a7a2a;}
 .el-火{background:rgba(184,64,48,.12);color:#a03020;}
 .el-土{background:rgba(138,104,32,.12);color:#7a5810;}
@@ -125,7 +126,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .accord-ttl{font-size:.84rem;color:var(--snow);font-weight:700;}
 .accord-arr{color:var(--gold);font-size:.75rem;transition:transform .22s;}
 .accord-arr.open{transform:rotate(180deg);}
-.accord-body{display:none;padding:12px 16px 14px;font-size:.8rem;color:var(--mist);line-height:2.1;border-top:1px solid var(--rim);}
+.accord-body{display:none;padding:12px 16px 14px;font-size:.8rem;color:var(--mist);line-height:2.1;border-top:1px solid var(--rim);white-space:pre-line;}
 .accord-body.open{display:block;}
 /* AIレポート */
 .ai-section{margin-top:16px;}
@@ -378,16 +379,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <!-- 星の比較 -->
   <div class="stars-row">
-    <div class="star-box"><div class="star-lbl">あなた</div><div class="star-nm" id="myHonmei">—</div><div class="star-el" id="myEl">—</div></div>
+    <div class="star-box"><div class="star-lbl">あなた</div><div class="star-nm" id="myHonmei">—</div><div class="star-el" id="myEl">—</div><div class="star-sub" id="myTsuki">月命：—</div></div>
     <div class="vs-arrow">⟷</div>
-    <div class="star-box"><div class="star-lbl">候補者</div><div class="star-nm" id="cHonmei">—</div><div class="star-el" id="cEl">—</div></div>
+    <div class="star-box"><div class="star-lbl">候補者</div><div class="star-nm" id="cHonmei">—</div><div class="star-el" id="cEl">—</div><div class="star-sub" id="cTsuki">月命：—</div></div>
   </div>
   <div class="compat-badge" id="compatBadge">—</div>
 
   <!-- 基本情報アコーディオン -->
-  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">候補者の本質と才能</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="charDesc">—</div></div>
-  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">あなたとの相性</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="compatDesc">—</div></div>
-  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">能力を伸ばす上での注意点</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="growthDesc">—</div></div>
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">総合｜仕事上の関係性</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="compatDesc">—</div></div>
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">本命星｜表に出る役割と相性</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="honmeiDesc">—</div></div>
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">月命星｜内面の動機と育て方</div><div class="accord-arr open">▼</div></div><div class="accord-body open" id="tsukiDesc">—</div></div>
 
   <!-- AIレポート -->
   <div class="ai-section">
@@ -1097,6 +1098,25 @@ var COMPAT_DESC={
 function calcH(y,m){var ky=(m<=2)?y-1:y;var ds=(ky%9+9)%9||9;return((11-ds-1)%9+9)%9+1;}
 function calcT(y,m){var SK=[0,11,1,2,3,4,5,6,7,8,9,10,11];var ky=(m<=2)?y-1:y;var h=calcH(ky,m);var kM=SK[m];var b=([1,4,7].indexOf(h)>=0)?10:([2,5,8].indexOf(h)>=0)?13:16;return((b-(kM+1)-1)%9+9)%9+1;}
 function ckKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'};if(ss[e1]===e2)return e2+e1;if(ss[e2]===e1)return e1+e2;if(e1===e2)return e1+e2;var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};if(sk[e1]===e2)return e1+e2;if(sk[e2]===e1)return e2+e1;return e1+e2;}
+function compatByElements(a,b){return DB[ckKey(a,b)]||{t:'yoi',l:'個性的な組み合わせ'};}
+function buildBusinessSummary(myS,cS,myTS,cTS,hCompat,tCompat){
+  return '総合では、本命星で表に出る役割と、月命星で内側の動機をあわせて見ます。'
+    +'本命星は「'+hCompat.l+'」、月命星は「'+tCompat.l+'」です。'
+    +'仕事では、相性の良し悪しを決めるより、どこで力を発揮し、どこで摩擦が起きやすいかを確認する材料として使ってください。';
+}
+function buildHonmeiBusiness(cN,cS,hCompat){
+  return '本命星は、仕事で表に出やすい役割・行動・周囲から見える印象を見ます。'
+    +CHAR_DESC[cN]+'\n\n'
+    +'あなたとの本命星の組み合わせは「'+hCompat.l+'」。'
+    +(COMPAT_DESC[hCompat.t]||'');
+}
+function buildTsukiBusiness(cTN,cTS,tCompat){
+  return '月命星は、本人の内側の動機、安心する環境、育て方のヒントを見ます。'
+    +'候補者の月命星は「'+cTS.k+'」。'
+    +(GROWTH_ADVICE[cTN]||'')+'\n\n'
+    +'月命星同士の組み合わせは「'+tCompat.l+'」。'
+    +'表の相性が良く見えても内面のペースが違うことがあり、反対に表では違いが目立っても、内側では支え合いやすいことがあります。';
+}
 
 /* ===== 回数制限 ===== */
 var FREE_LIMIT=1;
@@ -1144,15 +1164,17 @@ function analyze(){
   st('resStar',cS.k+'（'+cS.e+'のエネルギー）・月命：'+cTS.k);
   st('myHonmei',myS.k);st('myEl',myS.e);sc('myEl','star-el el-'+myS.e);
   st('cHonmei',cS.k);st('cEl',cS.e);sc('cEl','star-el el-'+cS.e);
+  st('myTsuki','月命：'+myTS.k);
+  st('cTsuki','月命：'+cTS.k);
 
-  var key=ckKey(myS.e,cS.e);
-  var compat=DB[key]||{t:'yoi',l:'個性的な組み合わせ'};
+  var compat=compatByElements(myS.e,cS.e);
+  var tsukiCompat=compatByElements(myTS.e,cTS.e);
   var cb=document.getElementById('compatBadge');
   cb.textContent=compat.l;cb.className='compat-badge '+compat.t;
 
-  st('charDesc',CHAR_DESC[cN]||'');
-  st('compatDesc',COMPAT_DESC[compat.t]||'');
-  st('growthDesc',GROWTH_ADVICE[cN]||'');
+  st('compatDesc',buildBusinessSummary(myS,cS,myTS,cTS,compat,tsukiCompat));
+  st('honmeiDesc',buildHonmeiBusiness(cN,cS,compat));
+  st('tsukiDesc',buildTsukiBusiness(cTN,cTS,tsukiCompat));
 
   // 結果バッジ更新
   var resBadge=document.getElementById('resCatBadge');
