@@ -240,6 +240,12 @@ body[data-fontsize="l"]{font-size:19px;}
     <div class="tool-desc">家のどの方位が張り出しているか（凸）、欠けているか（凹）を確認します。方位によって「誰が力を持ち、何が育つか」が変わります。</div>
   </div>
 
+  <!-- 初回無料バナー -->
+  <div id="hakiFreeNote" style="background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(255,255,255,.5));border:1px solid rgba(58,122,78,.25);border-radius:10px;padding:10px 13px;margin-bottom:12px;">
+    <div style="font-size:.64rem;color:var(--green);font-weight:700;margin-bottom:3px;">✅ 初回は全方位を無料で確認できます</div>
+    <div style="font-size:.62rem;color:var(--mist);line-height:1.7;">2回目以降は3方位まで。詳細相談は課金機能の公開後に利用できる予定です。</div>
+  </div>
+
   <div class="fc">
     <span class="fl">✦ 張り出している方位（凸・出っ張り）を選んでください（複数可）</span>
     <div class="houi-grid">
@@ -402,6 +408,11 @@ body[data-fontsize="l"]{font-size:19px;}
     <div class="tool-desc">家の形だけでなく、周囲の環境（地相）も運勢を左右します。以下の項目を確認してください。</div>
   </div>
 
+  <div id="chisoFreeNote" style="background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(255,255,255,.5));border:1px solid rgba(58,122,78,.25);border-radius:10px;padding:10px 13px;margin-bottom:12px;">
+    <div style="font-size:.64rem;color:var(--green);font-weight:700;margin-bottom:3px;">✅ 初回はすべての地相を無料で確認できます</div>
+    <div style="font-size:.62rem;color:var(--mist);line-height:1.7;">2回目以降は3項目まで。詳細相談は課金機能の公開後に利用できる予定です。</div>
+  </div>
+
   <div style="margin-bottom:12px;">
     <div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;">✦ 該当するものを選んでください（複数可）</div>
     <div id="chisoChecks">
@@ -528,6 +539,17 @@ body[data-fontsize="l"]{font-size:19px;}
 </div>
 
 <script>
+/* ===== 回数管理 ===== */
+var HAKI_FREE_KEY='kaso_haki_used';
+var CHISO_FREE_KEY='kaso_chiso_used';
+
+function isFreeUsed(key){
+  try{return localStorage.getItem(key)==='1';}catch(e){return false;}
+}
+function markUsed(key){
+  try{localStorage.setItem(key,'1');}catch(e){}
+}
+
 /* ===== ページ遷移 ===== */
 var selectedForm='';
 var selectedHoui={hb:[],kb:[]};
@@ -548,6 +570,28 @@ function showPage(id, fromHistory){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   document.getElementById(id).classList.add('on');
   window.scrollTo(0,0);
+
+  // s2: 初回/2回目でバナー切替
+  if(id==='s2'){
+    var note=document.getElementById('hakiFreeNote');
+    if(note&&isFreeUsed(HAKI_FREE_KEY)){
+      note.style.background='linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5))';
+      note.style.borderColor='rgba(138,104,32,.25)';
+      note.innerHTML='<div style="font-size:.64rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;">✦ 2回目以降は3方位まで無料</div>'
+        +'<div style="font-size:.62rem;color:var(--mist);line-height:1.7;">全方位の詳細診断・処方箋は、課金機能の公開後に気学先生で確認できる予定です。</div>';
+    }
+  }
+
+  // s7: 初回/2回目でバナー切替
+  if(id==='s7'){
+    var chisoNote=document.getElementById('chisoFreeNote');
+    if(chisoNote&&isFreeUsed(CHISO_FREE_KEY)){
+      chisoNote.style.background='linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5))';
+      chisoNote.style.borderColor='rgba(138,104,32,.25)';
+      chisoNote.innerHTML='<div style="font-size:.64rem;color:var(--goldlt);font-weight:700;margin-bottom:3px;">✦ 2回目以降は3項目まで無料</div>'
+        +'<div style="font-size:.62rem;color:var(--mist);line-height:1.7;">地相の詳細診断・複合的な処方箋は、課金機能の公開後に気学先生で確認できる予定です。</div>';
+    }
+  }
 }
 
 function goBackKaso(){
@@ -616,28 +660,67 @@ function runHariKake(){
   var hList=selectedHoui.hb;
   var kList=selectedHoui.kb;
   if(hList.length===0&&kList.length===0){alert('方位を選択してください');return;}
+
+  var alreadyUsed=isFreeUsed(HAKI_FREE_KEY);
+  var totalSelected=hList.length+kList.length;
+
+  // 2回目以降は3方位まで制限
+  var maxFree=3;
+  var limitedH=hList;
+  var limitedK=kList;
+  var isLimited=false;
+
+  if(alreadyUsed&&totalSelected>maxFree){
+    // 合計3方位に制限
+    var combined=hList.concat(kList);
+    var limited=combined.slice(0,maxFree);
+    limitedH=limited.filter(function(k){return k.indexOf('張')===0;});
+    limitedK=limited.filter(function(k){return k.indexOf('欠')===0;});
+    isLimited=true;
+  }
+
   var html='';
-  if(hList.length>0){
+
+  // 制限メッセージ
+  if(isLimited){
+    html+='<div style="background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.28);border-radius:10px;padding:12px 14px;margin-bottom:12px;">'
+      +'<div style="font-size:.62rem;color:var(--goldlt);font-weight:800;letter-spacing:.1em;margin-bottom:5px;">✦ 無料体験は3方位まで</div>'
+      +'<div style="font-size:.66rem;color:var(--mist);line-height:1.8;">すべての方位の詳細診断・処方箋は、課金機能の公開後に気学先生で確認できる予定です。</div>'
+      +'<button type="button" disabled style="display:block;width:100%;margin-top:8px;background:linear-gradient(135deg,rgba(100,80,40,.1),rgba(100,80,40,.04));border:1px solid rgba(100,80,40,.22);border-radius:8px;color:rgba(92,64,16,.55);font-size:.72rem;padding:10px;text-align:center;letter-spacing:.12em;font-weight:700;font-family:inherit;cursor:not-allowed;">✦ 気学先生で詳しく相談する（準備中）</button>'
+      +'</div>';
+  }
+
+  if(limitedH.length>0){
     html+='<div class="result-box ok"><div class="result-label ok">✅ 張りの方位</div>';
-    hList.forEach(function(k){
+    limitedH.forEach(function(k){
       var dir=k.replace('張-','');
       var d=HARI_DATA[dir];
       if(d)html+='<div style="margin-bottom:10px;"><div style="font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:4px;">'+d.name+'</div><div class="result-text">'+d.hari+'</div></div>';
     });
     html+='</div>';
   }
-  if(kList.length>0){
+  if(limitedK.length>0){
     html+='<div class="result-box warn"><div class="result-label warn">⚠️ 欠けの方位</div>';
-    kList.forEach(function(k){
+    limitedK.forEach(function(k){
       var dir=k.replace('欠-','');
       var d=HARI_DATA[dir];
       if(d)html+='<div style="margin-bottom:10px;"><div style="font-size:.78rem;font-weight:700;color:var(--warn);margin-bottom:4px;">'+d.name+'</div><div class="result-text">'+d.kake+'</div></div>';
     });
-    html+='<div class="result-text" style="margin-top:10px;border-top:1px solid rgba(176,64,48,.2);padding-top:10px;">欠けがある場合は「リカバリー処方箋」で補い方を確認してください。また欠けの方位に凶殺（五黄・暗剣）が巡る年は特に注意が必要です。</div></div>';
+    html+='<div class="result-text" style="margin-top:10px;border-top:1px solid rgba(176,64,48,.2);padding-top:10px;">欠けがある場合は「リカバリー処方箋」で補い方を確認してください。</div></div>';
   }
+
+  // AI誘導バナー（常時表示）
+  html+='<div style="background:linear-gradient(135deg,rgba(100,80,40,.08),rgba(255,255,255,.5));border:1px solid rgba(100,80,40,.2);border-radius:10px;padding:12px 14px;margin-top:10px;">'
+    +'<div style="font-size:.66rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">「この家をもっと詳しく整えたい」と感じたら、課金機能の公開後に、気学先生へ間取りの状況を伝えて深掘り処方箋を相談できます。</div>'
+    +'<button type="button" disabled style="display:block;width:100%;background:linear-gradient(135deg,rgba(100,80,40,.1),rgba(100,80,40,.04));border:1px solid rgba(100,80,40,.22);border-radius:8px;color:rgba(92,64,16,.55);font-size:.72rem;padding:10px;text-align:center;letter-spacing:.12em;font-weight:700;font-family:inherit;cursor:not-allowed;">✦ 気学先生に相談する（準備中）</button>'
+    +'</div>';
+
   var res=document.getElementById('hariResult');
   res.style.display='block';
   res.innerHTML=html;
+
+  // 初回使用済みフラグを立てる
+  if(!alreadyUsed) markUsed(HAKI_FREE_KEY);
 }
 
 /* ===== s3: 玄関チェック ===== */
@@ -744,31 +827,59 @@ function togChiso(n){
 
 function runChisoCheck(){
   var html='';
-  var hasBad=[1,2,3,4].some(function(n){return selectedChiso.indexOf(n)>=0;});
-  var hasGood=[5,6].some(function(n){return selectedChiso.indexOf(n)>=0;});
-  if(selectedChiso.indexOf(1)>=0){
+  var alreadyUsed=isFreeUsed(CHISO_FREE_KEY);
+  var maxFree=3;
+  var displayChiso=selectedChiso.slice();
+  var isLimited=false;
+
+  if(alreadyUsed&&displayChiso.length>maxFree){
+    displayChiso=displayChiso.slice(0,maxFree);
+    isLimited=true;
+  }
+
+  var hasBad=[1,2,3,4].some(function(n){return displayChiso.indexOf(n)>=0;});
+  var hasGood=[5,6].some(function(n){return displayChiso.indexOf(n)>=0;});
+
+  if(isLimited){
+    html+='<div style="background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.28);border-radius:10px;padding:12px 14px;margin-bottom:12px;">'
+      +'<div style="font-size:.62rem;color:var(--goldlt);font-weight:800;letter-spacing:.1em;margin-bottom:5px;">✦ 無料体験は3項目まで</div>'
+      +'<div style="font-size:.66rem;color:var(--mist);line-height:1.8;">選択した地相のうち、先に選んだ3項目を表示しています。複数条件を合わせた詳細処方箋は、課金機能の公開後に気学先生で確認できる予定です。</div>'
+      +'<button type="button" disabled style="display:block;width:100%;margin-top:8px;background:linear-gradient(135deg,rgba(100,80,40,.1),rgba(100,80,40,.04));border:1px solid rgba(100,80,40,.22);border-radius:8px;color:rgba(92,64,16,.55);font-size:.72rem;padding:10px;text-align:center;letter-spacing:.12em;font-weight:700;font-family:inherit;cursor:not-allowed;">✦ 気学先生で詳しく相談する（準備中）</button>'
+      +'</div>';
+  }
+
+  if(displayChiso.indexOf(1)>=0){
     html+='<div class="result-box warn"><div class="result-label warn">⚠️ 南・東に高い建物</div><div class="result-text">南側・東側に自分より高いビルや山があると、日照と発展が遮られやすくなります。夫婦関係や名誉面の摩擦が出やすい地相として読みます。\n\n注意：この作用の影響範囲は「対象物から2軒目まで」です。3軒目以降は影響が弱まる読み方です。\n\n処方箋：南・東の窓に強い照明を置き、人工的に明るさを補うことで緩和できます。</div></div>';
   }
-  if(selectedChiso.indexOf(2)>=0){
+  if(displayChiso.indexOf(2)>=0){
     html+='<div class="result-box warn"><div class="result-label warn">⚠️ 袋小路の突き当たり</div><div class="result-text">袋小路の突き当たりは、周囲からの支えが弱くなり、孤立感や摩擦が起きやすい注意環境です。\n\n処方箋：玄関前に植物をたくさん置き、気の流れを和らげてください。門や壁で道から直接見えないよう工夫することも有効です。</div></div>';
   }
-  if(selectedChiso.indexOf(3)>=0){
+  if(displayChiso.indexOf(3)>=0){
     html+='<div class="result-box warn"><div class="result-label warn">⚠️ 丘の上・高台の一軒家</div><div class="result-text">見晴らしは良くても、周囲からの支えがなく孤独になりやすい地相です。トラブル時に助けが来にくい。\n\n処方箋：積極的に周囲と交流し、地域コミュニティとつながることが最大のリカバリーです。</div></div>';
   }
-  if(selectedChiso.indexOf(4)>=0){
+  if(displayChiso.indexOf(4)>=0){
     html+='<div class="result-box warn"><div class="result-label warn">⚠️ 北・西が低地・川</div><div class="result-text">北・西は「支え」の方位です。この方位が低地や川になっていると、背後からの支えが弱くなります。\n\n処方箋：北・西に重厚感のある家具や植物を置き、象徴的な「支え」を作ると緩和されます。</div></div>';
   }
-  if(selectedChiso.indexOf(5)>=0){
+  if(displayChiso.indexOf(5)>=0){
     html+='<div class="result-box ok"><div class="result-label ok">✅ 東・南が開けている（吉）</div><div class="result-text">東・南が低く開けている地相は、日照と発展の気を最大限に取り込める最良の立地です。四神相応に近い吉環境です。</div></div>';
   }
-  if(selectedChiso.indexOf(6)>=0){
+  if(displayChiso.indexOf(6)>=0){
     html+='<div class="result-box ok"><div class="result-label ok">✅ 北・西に高い環境（吉）</div><div class="result-text">北・西に街道・山・建物がある地相は、背後からの支えと守りが整った吉環境です。安定した発展が期待できます。</div></div>';
   }
   if(!hasBad&&!hasGood) html='<div class="result-box amber"><div class="result-label amber">✦ 選択なし</div><div class="result-text">該当する地相の特徴を選択してください。</div></div>';
   if(selectedChiso.length===0) html='<div class="result-box amber"><div class="result-label amber">✦ 確認してください</div><div class="result-text">周囲の環境を確認して、該当するものを選択してください。</div></div>';
+
+  // AI深掘り誘導（地相は複合要素が多いため常時表示）
+  html+='<div style="background:linear-gradient(135deg,rgba(100,80,40,.08),rgba(255,255,255,.5));border:1px solid rgba(100,80,40,.2);border-radius:10px;padding:12px 14px;margin-top:10px;">'
+    +'<div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">地相は複合的な要素の組み合わせで変わります。課金機能の公開後は、「この立地でどう対処すべきか」の詳細処方箋を気学先生に相談できます。</div>'
+    +'<button type="button" disabled style="display:block;width:100%;background:linear-gradient(135deg,rgba(100,80,40,.1),rgba(100,80,40,.04));border:1px solid rgba(100,80,40,.22);border-radius:8px;color:rgba(92,64,16,.55);font-size:.72rem;padding:10px;text-align:center;letter-spacing:.12em;font-weight:700;font-family:inherit;cursor:not-allowed;">✦ 気学先生に相談する（準備中）</button>'
+    +'</div>';
+
   var res=document.getElementById('chisoResult');
   res.style.display='block';
   res.innerHTML=html;
+
+  if(selectedChiso.length>0&&!alreadyUsed) markUsed(CHISO_FREE_KEY);
 }
 
 /* ===== アコーディオン ===== */
