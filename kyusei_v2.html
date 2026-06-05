@@ -519,7 +519,7 @@ function init(){
   const h = calcHonmei(kY);
   const t = calcTsukimei(h,kM);
 
-  // 定位対冲ロジック（正しい値・村山先生指示書準拠）
+  // 定位対冲ロジック（KITOKU正式基準）
   const isSameStar = (h === t);
   let tFK = t;
   if(isSameStar){

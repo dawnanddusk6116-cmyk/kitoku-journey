@@ -12,7 +12,7 @@
 // ── engine.jsが未ロードの場合のフォールバック ──
 if(typeof calcKeisha !== 'function'){
   window.calcKeisha = function(h, t){
-    // 村山流・kyusei_v2と同一ロジック
+    // KITOKU正式基準・kyusei_v2と同一ロジック
     return ((h - t - 4) % 9 + 9) % 9 || 9;
   };
 }
@@ -939,12 +939,12 @@ function goLifeBack(){
 })();
 
 
-// ── 旧字体画数ルール（村山流基準）──
+// ── 旧字体画数ルール（KITOKU正式基準）──
 // 部首ごとの正しい画数を定義
 // くさかんむり=4、しんにょう=4、さんずい=3など
 const KITOKU_RULES = {
   stroke: {
-    note: '村山流は旧字体（正字）の画数を使用します',
+    note: 'KITOKU正式基準では旧字体（正字）の画数を使用します',
     radicals: {
       'くさかんむり（艹）': '4画（新字体の3画ではない）',
       'しんにょう（辶/辵）': '4画',
@@ -1482,7 +1482,7 @@ function getSeiTailSound(furiSei, seiStr){
 
 function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
 
-// ── 名乗り読みペナルティ（村山流） ──
+// ── 名乗り読みペナルティ（KITOKU正式基準） ──
 // 漢字の主な読み（音読み・訓読み・代表的な名乗り読み）
 const KANJI_READINGS = {
   // 行動・修養
@@ -2171,7 +2171,7 @@ function runReading(){
   const chiGG=gogyoOf(chi);
   const sansaiG=[tenGG,jinGG,chiGG];  // 五格グリッド用
 
-  // ── フリガナベース五行（村山ロジック：呼び名の主音が気を構成する）──
+  // ── フリガナベース五行（KITOKU正式基準：呼び名の主音が気を構成する）──
   const seiFirstOnGyo = (furiSei&&kanaToGyo(furiSei.trim()[0])) || getOnGyo(seiStr[0]) || tenGG;
   const seiLastOnGyo  = (furiSei&&kanaToGyo(getSeiLastFuri(furiSei,seiStr))) || getOnGyo(seiStr[seiStr.length-1]) || jinGG;
   const meiFirstOnGyo = (furiMei&&kanaToGyo(furiMei.trim()[0])) || getOnGyo(meiStr[0]) || chiGG;
@@ -2243,7 +2243,7 @@ function runReading(){
   `;
 
   // 気質の構造
-  // 三才は音ベースで判定（村山ロジック）
+  // 三才は音ベースで判定（KITOKU正式基準）
   const sansaiBothSojo=isSojo(sansaiGon[0],sansaiGon[1])&&isSojo(sansaiGon[1],sansaiGon[2]);
   const sansaiHasSokoku=isSokoku(sansaiGon[0],sansaiGon[1])||isSokoku(sansaiGon[1],sansaiGon[2]);
   const yyText=yy.balanced?YY_TEXT.balanced:yy.yang>yy.yin?YY_TEXT.yangHeavy:YY_TEXT.yinHeavy;
@@ -2257,7 +2257,7 @@ function runReading(){
     ...getCharStroke('sei', seiStr||''),
     ...getCharStroke('mei', meiStr||'')
   ];
-  // 文字ごとの陰陽（村山ロジック・採点・主表示用）
+  // 文字ごとの陰陽（KITOKU正式基準・採点・主表示用）
   const charYYmain=allChars.map((ch,i)=>{const s=allStrokes[i];return s?s%2!==0?'陽':'陰':null;}).filter(Boolean);
   const charYangMain=charYYmain.filter(x=>x==='陽').length;
   const charYinMain=charYYmain.length-charYangMain;
@@ -2404,7 +2404,7 @@ function runReading(){
   const _mode = getLifeMode();
   // 「他の人」モードは、任意入力された鑑定対象者の生年月日だけを使う。本人情報は混ぜない。
   const starInfo = getReadingTargetStarInfo(_mode);
-  // 音読みベースで全文字の五行を収集（村山ロジック準拠）
+  // 音読みベースで全文字の五行を収集（KITOKU正式基準）
   const nameGyoArr = [...seiStr, ...meiStr]
     .map(ch => getOnGyo(ch))
     .filter(Boolean);
@@ -3098,8 +3098,8 @@ function calcTenchi(seiStr,meiStr,seiKs,meiKs){
   const seiTotal=seiKs.reduce((a,b)=>a+b,0);
   const meiTotal=meiKs.reduce((a,b)=>a+b,0);
   const tenBottom=seiKs[0],chiTop=meiKs[meiKs.length-1];
-  if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。村山先生が「ものすごい危ない名前」と警告する、人生が真っ二つに分断されやすい致命的な配列です。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
-  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、村山先生が「体がズタズタになる」と厳しく警告するパターンです。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
+  if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。正式鑑定基準では、人生が真っ二つに分断されやすい致命的な配列として重く見ます。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
+  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、正式鑑定基準では心身や生活に負荷が出やすい重大なパターンとして見ます。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
   const HEAVY=[3,5,9,13,15,19,8];
   if(tf===cf){
     const isH=HEAVY.includes(tf);
@@ -3149,8 +3149,8 @@ function calcTenchi(seiStr,meiStr,seiKs,meiKs){
   const seiTotal=seiKs.reduce((a,b)=>a+b,0);
   const meiTotal=meiKs.reduce((a,b)=>a+b,0);
   const tenBottom=seiKs[0],chiTop=meiKs[meiKs.length-1];
-  if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。村山先生が「ものすごい危ない名前」と警告する、人生が真っ二つに分断されやすい致命的な配列です。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
-  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、村山先生が「体がズタズタになる」と厳しく警告するパターンです。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
+  if(seiTotal===meiTotal)return{type:'姓名同数',label:'姓名同数（致命的）',val:`姓${seiTotal}画 = 名${meiTotal}画`,text:'姓の総画数と名の総画数が同じです。正式鑑定基準では、人生が真っ二つに分断されやすい致命的な配列として重く見ます。',kitoku:'通名に一文字足して画数をずらすだけで、この配列から抜け出すことができます。',score_deduct:50};
+  if(tenBottom===chiTop){const sh=seiTotal+meiTotal-chiTop,kt=seiTotal+meiTotal-tenBottom;return{type:'天底同数',label:'天底同数 → 大動角（重大）',val:`姓首${seiStr[0]}(${tenBottom}画) = 名末${meiStr[meiStr.length-1]}(${chiTop}画) ／ 社会運${sh}・家庭運${kt}が同数`,text:'姓の一番上と名の一番下の画数が同じです。社会運と家庭運が同数になる「大動角」が発動しており、正式鑑定基準では心身や生活に負荷が出やすい重大なパターンとして見ます。',kitoku:'通名に一文字加えて画数をずらすだけで、大動角を解除できます。まず通名の活用から始めてみてください。',score_deduct:40};}
   const HEAVY=[3,5,9,13,15,19,8];
   if(tf===cf){
     const isH=HEAVY.includes(tf);
@@ -3180,7 +3180,7 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
 
   const ICHIJI_KYOU={11:'悪・トラブルに巻き込まれやすい',12:'完全な孤立を引き起こしやすい',13:'孤高になりすぎる',34:'才能はあるが報われない苦しみが続きやすい',44:'破壊的な大波乱'};
   if([...meiStr].length===1){yd+=25;items.push({cat:'読み下し',icon:'⚠',title:'一文字名',deduct:15,text:'名が一文字の場合、孤独感や波乱が多くなりやすいとされます。',kitoku:'一文字の名は孤立・波乱が出やすいとされています。九星の活用で補えます。',basis:'一文字の名前は気が凝縮されすぎるとされます。東洋の知恵では、文字数が社会との縁の広がりに影響するとされています。'});}
-  // 水性始まり：フリガナ（呼び名）の先頭音で判定（村山ロジック：呼び名の主音が気を構成する）
+  // 水性始まり：フリガナ（呼び名）の先頭音で判定（KITOKU正式基準：呼び名の主音が気を構成する）
   const _meiFirstGyo=(furiMei&&kanaToGyo(furiMei.trim()[0]))||getOnGyo(meiStr[0]);
   if(_meiFirstGyo==='水'){yd+=25;items.push({cat:'読み下し',icon:'⚠',title:'水性始まり（'+(furiMei?furiMei.trim()[0]:meiStr[0]||'')+'）',deduct:25,text:'名の頭が水性（マ・ハ・バ・パ行）の場合、努力が実りにくいとされます。',kitoku:'努力が実りにくい傾向があるとされています。吉方位取りで補えます。',basis:'音の五行で水性（マ・ハ・バ行）から始まる名は、努力が水のように流れやすいとされます。水は万物を包む柔軟さを持つ一方、形を保ちにくい性質があります。'});}
   // 濁音チェック：名の最初の音が濁音の場合のみ（中間のんや濁音は過検出になるため除外）
@@ -3214,12 +3214,12 @@ function calcNameScore(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs){
       items.push({cat:'読み下し',icon:'ℹ',title:'名乗り読みについて',deduct:0,
         text:`${probTxt}は名乗り読みです。ルールと構造が整っていれば問題ありません。読み方を添えると、より伝わりやすくなります。`,
         kitoku:'プロフィールや名刺にひらがなを併記すると自然に定着します。音で呼ばれる場（動画・音声など）を作ることも有効です。',
-        basis:'名乗り読みは日本の名前文化の一部です。村山流でも禁止ではなく、五行・陰陽・天地・画数のルールが整っていれば、読みやすさは工夫で補えます。最終的にどの名前を選ぶかは本人が決めます。'
+        basis:'名乗り読みは日本の名前文化の一部です。KITOKU正式基準でも禁止ではなく、五行・陰陽・天地・画数のルールが整っていれば、読みやすさは工夫で補えます。最終的にどの名前を選ぶかは本人が決めます。'
       });
     }
   }
   score-=Math.min(yd,30);
-  // ══ 五行チェック（音読みベース・村山ロジック準拠）══
+  // ══ 五行チェック（音読みベース・KITOKU正式基準）══
   let gyd=0;
   // ① 音読みベースの全文字五行バランス（名のみ3種類以上が望ましい）
   const onGyos=[...meiStr].map(ch=>getOnGyo(ch)).filter(Boolean);

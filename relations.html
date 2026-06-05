@@ -121,21 +121,24 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ld{width:12px;height:12px;border-radius:50%;background:var(--gold);margin:0 auto;animation:pulse 1.2s infinite;}
 .art{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px;font-size:.82rem;color:var(--snow);line-height:2.1;white-space:pre-wrap;}
 .sl3{font-size:.65rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px;}
-
+/* 裏性格カード */
+.ura-card{background:linear-gradient(135deg,rgba(100,80,40,.07),rgba(255,255,255,.5));border:1px solid rgba(100,80,40,.18);border-radius:10px;padding:12px 14px;margin-top:8px;}
+.ura-label{font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.ura-text{font-size:.76rem;color:var(--snow);line-height:1.9;}
+.souju-card{background:linear-gradient(135deg,rgba(42,106,176,.06),rgba(255,255,255,.5));border:1px solid rgba(42,106,176,.18);border-radius:10px;padding:12px 14px;margin-top:8px;}
+.souju-label{font-size:.58rem;letter-spacing:.14em;color:#2a6ab0;font-weight:800;margin-bottom:6px;}
+.souju-text{font-size:.76rem;color:var(--snow);line-height:1.9;}
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
 .header-reset{background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.8rem;padding:9px 16px;border-radius:6px;cursor:pointer;letter-spacing:.1em;font-weight:600;}
 .toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--rim);background:var(--card);}
 .tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
 .tb-btn{background:rgba(255,255,255,.05);border:1px solid var(--rim);border-radius:16px;padding:5px 12px;font-size:.7rem;color:var(--mist);cursor:pointer;transition:all .2s;letter-spacing:.06em;}
 .tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
-
-/* ── ダークモード ── */
 [data-theme="dark"]{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.82);--mist:rgba(220,232,255,.55);}
 [data-theme="dark"] .toolbar{background:var(--card);border-bottom-color:var(--rim);}
 [data-theme="dark"] .tb-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:var(--mist);}
 [data-theme="dark"] .tb-btn.active{background:rgba(196,160,67,.25);border-color:rgba(196,160,67,.6);color:var(--goldlt);}
 [data-theme="dark"] .app-header,[data-theme="dark"] .hdr{background:var(--bg);border-bottom-color:var(--rim);}
-[data-theme="dark"] .card{background:var(--card);border-color:var(--rim);}
 [data-theme="dark"] .fi{background:rgba(255,255,255,.08);border-color:rgba(212,175,55,.3);color:rgba(220,232,255,.92);color-scheme:dark;}
 [data-theme="dark"] .fi::placeholder{color:rgba(220,232,255,.4);}
 [data-theme="dark"] .fi:focus{border-color:rgba(196,160,67,.7);}
@@ -148,21 +151,19 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .header-reset{min-height:34px;padding:8px 12px;border-radius:8px;font-size:.72rem;letter-spacing:.04em;line-height:1.15;white-space:nowrap;}
 .toolbar{justify-content:center;gap:7px;padding:8px 12px;overflow-x:auto;}
 .toolbar::-webkit-scrollbar{display:none;}
-.tb-label{font-size:.62rem;}
 .tb-btn{padding:5px 11px;font-size:.68rem;white-space:nowrap;}
 @media(max-width:420px){
   .app-header{padding:9px 12px;gap:8px;}
-  .app-header>div:first-child{font-size:1rem!important;letter-spacing:.09em!important;}
-  .header-reset{min-height:32px;padding:7px 9px;font-size:.66rem;letter-spacing:.02em;}
+  .header-reset{min-height:32px;padding:7px 9px;font-size:.66rem;}
   .toolbar{padding:7px 10px;gap:5px;}
-  .tb-label{font-size:.58rem;}
-  .tb-btn{padding:5px 9px;font-size:.64rem;}
+  .tb-btn{padding:5px 9px;font-size:.64px;}
 }
-@media(max-width:360px){
-  .app-header>div:first-child{font-size:.92rem!important;letter-spacing:.07em!important;}
-  .header-reset{padding:6px 7px;font-size:.62rem;}
-  .tb-btn{padding:4px 8px;}
-}
+/* 設定パネル */
+#settingPanel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;align-items:flex-end;justify-content:center;}
+#settingPanel.open{display:flex;}
+.setting-inner{background:var(--bg);border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:22px 20px 40px;}
+.setting-title{font-size:.82rem;color:var(--goldlt);font-weight:800;letter-spacing:.1em;margin-bottom:16px;}
+.setting-close{float:right;background:none;border:none;color:var(--mist);font-size:1.1rem;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -188,14 +189,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
 </div>
 
+<!-- 目的選択 s0 -->
 <div class="scr on" id="s0">
   <div class="big-t">大切な人との縁を知る</div>
   <div class="big-s">KITOKU @ RELATIONS</div>
   <div class="top-guide">
     <div class="top-guide-title">この画面でできること</div>
-    <div class="top-guide-text">
-      二人の関係を「良い・悪い」で決めるのではなく、星の違いから距離感、伝え方、摩擦の活かし方を整える画面です。
-    </div>
+    <div class="top-guide-text">二人の関係を「良い・悪い」で決めるのではなく、星の違いから距離感、伝え方、摩擦の活かし方を整える画面です。</div>
     <div class="top-guide-points">
       <div class="top-guide-point">・<strong>恋愛・パートナー</strong>は、深い縁、すれ違いやすい点、今日伝える一言を見ます。</div>
       <div class="top-guide-point">・<strong>友人・知人</strong>は、近づき方、離れ方、摩擦を成長に変える視点を見ます。</div>
@@ -208,9 +208,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="pc fam" onclick="selP('fam')"><div class="pi">👨‍👩‍👧</div><div><div class="pn">家族</div><div class="pd">家族との関係を整える<br>親の介護・カルマの修復・二生の縁</div></div></div>
 </div>
 
+<!-- 入力 s1 -->
 <div class="scr" id="s1">
   <div style="margin-bottom:16px;">
-    <span class="badge" id="pBadge">💼 ビジネス</span>
+    <span class="badge" id="pBadge">💕 恋愛・パートナー</span>
     <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.15em;color:var(--goldlt);">縁を読み解く</div>
   </div>
   <div class="usage-guide">
@@ -250,15 +251,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="pn2">無料：5人まで登録可能</div>
 </div>
 
+<!-- 結果 s2 -->
 <div class="scr" id="s2">
   <div class="rh">
-    <span class="badge" id="rBadge">💼 ビジネス</span>
+    <span class="badge" id="rBadge">💕 恋愛・パートナー</span>
     <div class="rn" id="rName">—</div>
     <div class="rs" id="rStar">—</div>
   </div>
   <div class="report-guide">
     <div class="report-guide-title">レポート作成までの流れ</div>
-    <div class="report-guide-text">この画面では、まず二人の縁を総合・本命星・月命星・傾斜・納音・今日の関わり方から確認できます。さらに下の「誰の言葉」「どんな場面」を選ぶと、恋愛・友人・家族それぞれの目的に合わせた深掘りレポートを作れます。</div>
+    <div class="report-guide-text">この画面では、まず二人の縁を総合・本命星・月命星・傾斜・納音・今日の関わり方から確認できます。さらに下の「誰の言葉」「どんな場面」を選ぶと、それぞれの目的に合わせた深掘りレポートを作れます。</div>
     <div class="report-guide-steps">
       <div class="report-guide-step">・<strong>① 基本構造を見る</strong>：総合・本命星・月命星・傾斜・納音・今日の関わり方を確認します。</div>
       <div class="report-guide-step">・<strong>② 語り口を選ぶ</strong>：格さん、孔子、孫子など、読みたい言葉の調子を選びます。</div>
@@ -266,6 +268,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="report-guide-step">・<strong>④ AI深掘りレポート</strong>：選んだ語り口と場面で、伝え方・距離感・活かし方を文章にします。</div>
     </div>
   </div>
+
+  <!-- タブ -->
   <div class="tb">
     <button class="tbb on" onclick="swTab('sogo',this)">① 総合</button>
     <button class="tbb" onclick="swTab('honmei',this)">② 本命星</button>
@@ -275,37 +279,44 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <button class="tbb" onclick="swTab('today',this)">⑥ 今日</button>
   </div>
 
+  <!-- ① 総合 -->
   <div class="tp on" id="tab-sogo">
     <div class="ps">総合診断とアドバイス</div>
     <div class="cp" id="sogoC">—</div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の関係の全体像</div><div class="aa o">▼</div></div><div class="ab o" id="sogoD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">関係を良くするアドバイス</div><div class="aa o">▼</div></div><div class="ab o" id="sogoA">—</div></div>
-    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">媒介星の活用</div><div class="aa o">▼</div></div><div class="ab o" id="bridgeD">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">媒介星の活用（第3のピース）</div><div class="aa o">▼</div></div><div class="ab o" id="bridgeD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二生の関係</div><div class="aa o">▼</div></div><div class="ab o" id="niseiD">—</div></div>
+
+    <!-- 語り口選択 -->
     <div style="margin-top:28px;border-top:1px solid rgba(100,80,40,.15);padding-top:20px;">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.2em;color:#5c4010;font-weight:600;margin-bottom:8px;">✦ 誰の言葉で語りますか？</div>
-      <div style="display:inline-block;background:linear-gradient(135deg,rgba(100,80,40,.12),rgba(100,80,40,.05));border:1px solid rgba(100,80,40,.3);border-radius:20px;padding:5px 16px;font-size:.68rem;color:#8a6820;font-weight:700;letter-spacing:.1em;margin-bottom:14px;">🎁 5月中は全キャラクター無料公開中</div>
-    <div class="g2">
-      <div class="sc2 on" id="c-kitoku" onclick="selC('kitoku',this)"><div class="si">🏯</div><div class="sn3">格さん</div><div class="sd2">KITOKUオリジナル</div></div>
-      <div class="sc2" id="c-confucius" onclick="selC('confucius',this)"><div class="si">📜</div><div class="sn3">孔子</div><div class="sd2">論語の言葉で</div></div>
-      <div class="sc2" id="c-sunzi" onclick="selC('sunzi',this)"><div class="si">⚔️</div><div class="sn3">孫子</div><div class="sd2">兵法の言葉で</div></div>
-      <div class="sc2" id="c-musashi" onclick="selC('musashi',this)"><div class="si">🗡️</div><div class="sn3">宮本武蔵</div><div class="sd2">五輪書の言葉で</div></div>
-      <div class="sc2" id="c-saikon" onclick="selC('saikon',this)"><div class="si">🌿</div><div class="sn3">菜根譚</div><div class="sd2">処世の極意で</div></div>
-      <div class="sc2" id="c-shibusawa" onclick="selC('shibusawa',this)"><div class="si">💴</div><div class="sn3">渋沢栄一</div><div class="sd2">論語と算盤で</div></div>
-      <div class="sc2" id="c-jitsugokyo" onclick="selC('jitsugokyo',this)"><div class="si">📖</div><div class="sn3">実語教</div><div class="sd2">人としての根本</div></div>
-      <div class="sc2" id="c-dojikyo" onclick="selC('dojikyo',this)"><div class="si">🌱</div><div class="sn3">童子教</div><div class="sd2">礼・縁・人の道</div></div>
-    </div></div>
-    <div style="margin-top:24px;border-top:1px solid rgba(100,80,40,.15);padding-top:20px;"><div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.2em;color:#5c4010;font-weight:600;margin-bottom:12px;">🎯 どんな場面で使いますか？</div>
-    <div class="g2">
-      <div class="sc2 on" id="t-basic" onclick="selT('basic',this)"><div class="si">🤝</div><div class="sn3">基本の相性</div><div class="sd2">二人の縁を読み解く</div></div>
-      <div class="sc2" id="t-heart" onclick="selT('heart',this)"><div class="si">💗</div><div class="sn3">気持ちを伝える</div><div class="sd2">今日伝えるべき一言</div></div>
-      <div class="sc2" id="t-distance" onclick="selT('distance',this)"><div class="si">🌿</div><div class="sn3">距離感を整える</div><div class="sd2">心地よい関係の保ち方</div></div>
-      <div class="sc2" id="t-repair" onclick="selT('repair',this)"><div class="si">🔧</div><div class="sn3">関係を修復する</div><div class="sd2">摩擦・すれ違いを整える</div></div>
-      <div class="sc2 sf" id="t-kaigo" onclick="selT('kaigo',this)"><div class="si">🌸</div><div class="sn3">親の介護・家族の絆</div><div class="sd2">大切な親との残りの時間を最善に</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.2em;color:#5c4010;font-weight:600;margin-bottom:14px;">✦ 誰の言葉で語りますか？</div>
+      <div class="g2">
+        <div class="sc2 on" id="c-kitoku" onclick="selC('kitoku',this)"><div class="si">🏯</div><div class="sn3">格さん</div><div class="sd2">KITOKUオリジナル</div></div>
+        <div class="sc2" id="c-confucius" onclick="selC('confucius',this)"><div class="si">📜</div><div class="sn3">孔子</div><div class="sd2">論語の言葉で</div></div>
+        <div class="sc2" id="c-sunzi" onclick="selC('sunzi',this)"><div class="si">⚔️</div><div class="sn3">孫子</div><div class="sd2">兵法の言葉で</div></div>
+        <div class="sc2" id="c-musashi" onclick="selC('musashi',this)"><div class="si">🗡️</div><div class="sn3">宮本武蔵</div><div class="sd2">五輪書の言葉で</div></div>
+        <div class="sc2" id="c-saikon" onclick="selC('saikon',this)"><div class="si">🌿</div><div class="sn3">菜根譚</div><div class="sd2">処世の極意で</div></div>
+        <div class="sc2" id="c-shibusawa" onclick="selC('shibusawa',this)"><div class="si">💴</div><div class="sn3">渋沢栄一</div><div class="sd2">論語と算盤で</div></div>
+        <div class="sc2" id="c-jitsugokyo" onclick="selC('jitsugokyo',this)"><div class="si">📖</div><div class="sn3">実語教</div><div class="sd2">人としての根本</div></div>
+        <div class="sc2" id="c-dojikyo" onclick="selC('dojikyo',this)"><div class="si">🌱</div><div class="sn3">童子教</div><div class="sd2">礼・縁・人の道</div></div>
+      </div>
     </div>
-    <button class="ai-btn" id="aiBtn" onclick="genReport()" style="margin-top:12px;">✦ AI深掘りレポートを生成する</button>
-    <div style="font-size:.6rem;color:var(--gold);text-align:center;margin-top:6px;" id="cntHint"></div>
+
+    <!-- 場面選択 -->
+    <div style="margin-top:24px;border-top:1px solid rgba(100,80,40,.15);padding-top:20px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;letter-spacing:.2em;color:#5c4010;font-weight:600;margin-bottom:12px;">🎯 どんな場面で使いますか？</div>
+      <div class="g2">
+        <div class="sc2 on" id="t-basic" onclick="selT('basic',this)"><div class="si">🤝</div><div class="sn3">基本の相性</div><div class="sd2">二人の縁を読み解く</div></div>
+        <div class="sc2" id="t-heart" onclick="selT('heart',this)"><div class="si">💗</div><div class="sn3">気持ちを伝える</div><div class="sd2">今日伝えるべき一言</div></div>
+        <div class="sc2" id="t-distance" onclick="selT('distance',this)"><div class="si">🌿</div><div class="sn3">距離感を整える</div><div class="sd2">心地よい関係の保ち方</div></div>
+        <div class="sc2" id="t-repair" onclick="selT('repair',this)"><div class="si">🔧</div><div class="sn3">関係を修復する</div><div class="sd2">摩擦・すれ違いを整える</div></div>
+        <div class="sc2 sf" id="t-kaigo" onclick="selT('kaigo',this)"><div class="si">🌸</div><div class="sn3">親の介護・家族の絆</div><div class="sd2">大切な親との残りの時間を最善に</div></div>
+      </div>
+      <button class="ai-btn" id="aiBtn" onclick="genReport()" style="margin-top:12px;">✦ AI深掘りレポートを生成する</button>
+      <div style="font-size:.6rem;color:var(--gold);text-align:center;margin-top:6px;" id="cntHint"></div>
     </div>
+
     <div id="rptArea" style="display:none;margin-top:16px;">
       <div class="sl3">✦ AI深掘りレポート（<span id="rptChar">格さん</span>）</div>
       <div id="rptLoading" style="text-align:center;padding:24px;display:none;"><div class="ld"></div><div style="font-size:.75rem;color:var(--mist);margin-top:10px;">縁を読み解いています…</div></div>
@@ -313,68 +324,181 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
+  <!-- ② 本命星 -->
   <div class="tp" id="tab-honmei">
     <div class="ps">宿命的な相性</div>
-    <div class="sr"><div class="sb"><div class="sl2">あなた</div><div class="sn2" id="myH">—</div><div class="se" id="myHE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2" id="pLbl">相手</div><div class="sn2" id="pH">—</div><div class="se" id="pHE">—</div></div></div>
+    <div class="sr">
+      <div class="sb"><div class="sl2">あなた</div><div class="sn2" id="myH">—</div><div class="se" id="myHE">—</div></div>
+      <div class="vs">⟷</div>
+      <div class="sb"><div class="sl2" id="pLbl">相手</div><div class="sn2" id="pH">—</div><div class="se" id="pHE">—</div></div>
+    </div>
     <div class="cp" id="hC">—</div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">この関係の本質</div><div class="aa o">▼</div></div><div class="ab o" id="hD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の強み</div><div class="aa o">▼</div></div><div class="ab o" id="hS">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">注意すること</div><div class="aa o">▼</div></div><div class="ab o" id="hCa">—</div></div>
+    <!-- 裏性格 -->
+    <div class="ura-card" style="margin-top:12px;">
+      <div class="ura-label">🎭 あなたの裏の本性</div>
+      <div class="ura-text" id="myUra">—</div>
+    </div>
+    <div class="ura-card" style="margin-top:8px;">
+      <div class="ura-label">🎭 相手の裏の本性</div>
+      <div class="ura-text" id="pUra">—</div>
+    </div>
   </div>
 
+  <!-- ③ 月命星 -->
   <div class="tp" id="tab-tsuki">
     <div class="ps">精神面・内面の相性</div>
-    <div class="sr"><div class="sb"><div class="sl2">あなたの内面</div><div class="sn2" id="myT">—</div><div class="se" id="myTE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2">相手の内面</div><div class="sn2" id="pT">—</div><div class="se" id="pTE">—</div></div></div>
+    <div class="sr">
+      <div class="sb"><div class="sl2">あなたの内面</div><div class="sn2" id="myT">—</div><div class="se" id="myTE">—</div></div>
+      <div class="vs">⟷</div>
+      <div class="sb"><div class="sl2">相手の内面</div><div class="sn2" id="pT">—</div><div class="se" id="pTE">—</div></div>
+    </div>
     <div class="cp" id="tC">—</div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">精神的なつながり</div><div class="aa o">▼</div></div><div class="ab o" id="tD">—</div></div>
   </div>
 
+  <!-- ④ 傾斜 -->
   <div class="tp" id="tab-keisha">
-    <div class="ps">潜在的な性格</div>
-    <div class="sr"><div class="sb"><div class="sl2">あなたの傾斜</div><div class="sn2" id="myK">—</div><div class="se" id="myKE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2">相手の傾斜</div><div class="sn2" id="pK">—</div><div class="se" id="pKE">—</div></div></div>
+    <div class="ps">潜在的な性格・隠れた才能</div>
+    <div class="sr">
+      <div class="sb"><div class="sl2">あなたの傾斜</div><div class="sn2" id="myK">—</div><div class="se" id="myKE">—</div></div>
+      <div class="vs">⟷</div>
+      <div class="sb"><div class="sl2">相手の傾斜</div><div class="sn2" id="pK">—</div><div class="se" id="pKE">—</div></div>
+    </div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">あなたの深層の動機</div><div class="aa o">▼</div></div><div class="ab o" id="myKD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">相手の深層の動機</div><div class="aa o">▼</div></div><div class="ab o" id="pKD">—</div></div>
+    <!-- 操縦法 -->
+    <div class="souju-card" style="margin-top:12px;">
+      <div class="souju-label">⚙️ この相手の操縦法</div>
+      <div class="souju-text" id="pSouju">—</div>
+    </div>
   </div>
 
+  <!-- ⑤ 納音 -->
   <div class="tp" id="tab-nacchi">
     <div class="ps">魂の音色の分析</div>
-    <div class="sr"><div class="sb"><div class="sl2">あなたの納音</div><div class="sn2" id="myN">—</div><div class="se" id="myNE">—</div></div><div class="vs">⟷</div><div class="sb"><div class="sl2">相手の納音</div><div class="sn2" id="pN">—</div><div class="se" id="pNE">—</div></div></div>
+    <div class="sr">
+      <div class="sb"><div class="sl2">あなたの納音</div><div class="sn2" id="myN">—</div><div class="se" id="myNE">—</div></div>
+      <div class="vs">⟷</div>
+      <div class="sb"><div class="sl2">相手の納音</div><div class="sn2" id="pN">—</div><div class="se" id="pNE">—</div></div>
+    </div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">あなたの魂の音色</div><div class="aa o">▼</div></div><div class="ab o" id="myND">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">相手の魂の音色</div><div class="aa o">▼</div></div><div class="ab o" id="pND">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の納音の共鳴</div><div class="aa o">▼</div></div><div class="ab o" id="nD">—</div></div>
   </div>
 
+  <!-- ⑥ 今日 -->
   <div class="tp" id="tab-today">
     <div class="ps">今日できること</div>
     <div class="tb2"><div class="tt">🌿 今日の関係処方箋</div><div class="ta" id="todayA">—</div></div>
-    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">今日の第3のピース（色）</div><div class="aa o">▼</div></div><div class="ab o" id="todayC">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">今日の第3のピース（色・食・場所）</div><div class="aa o">▼</div></div><div class="ab o" id="todayC">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">今日の伝え方のコツ</div><div class="aa o">▼</div></div><div class="ab o" id="todayH">—</div></div>
   </div>
 </div>
 
+<!-- 設定パネル -->
+<div id="settingPanel" onclick="if(event.target===this)closeSettings()">
+  <div class="setting-inner">
+    <button class="setting-close" onclick="closeSettings()">✕</button>
+    <div class="setting-title">⚙ 表示設定</div>
+    <div style="font-size:.72rem;color:var(--mist);margin-bottom:16px;">テーマと文字サイズを変更できます。</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="tb-btn" onclick="setTheme('light');closeSettings()">昼モード</button>
+      <button class="tb-btn" onclick="setTheme('dark');closeSettings()">夜モード</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="tb-btn" onclick="setFontSize('s');closeSettings()">文字 小</button>
+      <button class="tb-btn" onclick="setFontSize('m');closeSettings()">文字 中</button>
+      <button class="tb-btn" onclick="setFontSize('l');closeSettings()">文字 大</button>
+    </div>
+  </div>
+</div>
+
 <script>
+/* ===== データ ===== */
 var STARS={1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
-var DB={'水木':{t:'s',l:'水生木 ― 最高の相性',d:'水が木を育てる関係。サポートが成長を促します。',s:'相手のサポートを受けて力を発揮できます。',c:'甘えすぎず自立した姿勢も大切です。'},'木火':{t:'s',l:'木生火 ― 最高の相性',d:'木が火に燃料を与える関係。熱量が増幅します。',s:'共に取り組む仕事で大きな成果が出ます。',c:'熱くなりすぎず冷静さも大切に。'},'火土':{t:'s',l:'火生土 ― 最高の相性',d:'火が土を豊かにする関係。情熱が基盤を強固にします。',s:'情熱を地に足のついた形に変換できます。',c:'変化のペースを意識して進みましょう。'},'土金':{t:'s',l:'土生金 ― 最高の相性',d:'土が金を生み出す関係。安定が決断力を磨きます。',s:'積み重ねが確かな実力につながります。',c:'慎重になりすぎずタイミングを逃さないよう。'},'金水':{t:'s',l:'金生水 ― 最高の相性',d:'金が水を生み出す関係。決断力が柔軟な発想を引き出します。',s:'リードし調整する理想的な協力関係です。',c:'引っ張りすぎず相手のペースも尊重しましょう。'},'木土':{t:'c',l:'木剋土 ― 緊張感のある関係',d:'一方がリードしすぎると摩擦が生まれます。',s:'違いを認め合うことで補完関係になれます。',c:'自分のやり方を押し付けず相手を尊重しましょう。'},'土水':{t:'c',l:'土剋水 ― 緊張感のある関係',d:'安定志向が相手の柔軟性を制限しやすい。',s:'バランスが良い判断を生むことがあります。',c:'変化を阻まず安定を添える意識を持ちましょう。'},'水火':{t:'c',l:'水剋火 ― 緊張感のある関係',d:'行き過ぎた情熱を整える役割も担います。',s:'冷静な判断力が暴走を防ぎます。',c:'相手の熱意を否定せず適切に整える視点を。'},'火金':{t:'c',l:'火剋金 ― 緊張感のある関係',d:'情熱が判断力を揺さぶります。',s:'情熱が決断に勢いを与え大胆な行動ができます。',c:'感情的な判断を避け冷静なタイミングで決断を。'},'金木':{t:'c',l:'金剋木 ― 緊張感のある関係',d:'鋭い判断力が相手の成長を阻むことも。',s:'明確な基準でぶれない方向性を示せます。',c:'批判より提案を。建設的な言い方を心がけましょう。'},'木木':{t:'y',l:'比和（木） ― 共鳴する関係',d:'価値観が似ているため深く共感できます。',s:'コミュニケーションがスムーズです。',c:'外からの新しい視点を積極的に取り入れましょう。'},'火火':{t:'y',l:'比和（火） ― 共鳴する関係',d:'情熱と行動力が共鳴し大きなエネルギーが生まれます。',s:'大きな目標に向かって一気に進めます。',c:'振り返りの時間を意識的に設けましょう。'},'土土':{t:'y',l:'比和（土） ― 共鳴する関係',d:'安定・継続・信頼が共鳴する関係です。',s:'長期的な信頼関係を築けます。',c:'時には大胆な一手も必要です。'},'金金':{t:'y',l:'比和（金） ― 共鳴する関係',d:'決断力と責任感が共鳴します。',s:'質の高いアウトプットを生み出せます。',c:'完璧主義が摩擦を生むことも。柔軟さを持ちましょう。'},'水水':{t:'y',l:'比和（水） ― 共鳴する関係',d:'柔軟性・適応力・知恵が共鳴します。',s:'深い理解と信頼が自然に生まれます。',c:'どちらかがリーダーシップを担う場面を作りましょう。'}};
+
+var DB={'水木':{t:'s',l:'水生木 ― 最高の相性',d:'水が木を育てる関係。サポートが成長を促します。',s:'相手のサポートを受けて力を発揮できます。',c:'甘えすぎず自立した姿勢も大切です。'},'木火':{t:'s',l:'木生火 ― 最高の相性',d:'木が火に燃料を与える関係。熱量が増幅します。',s:'共に取り組む仕事で大きな成果が出ます。',c:'熱くなりすぎず冷静さも大切に。'},'火土':{t:'s',l:'火生土 ― 最高の相性',d:'火が土を豊かにする関係。情熱が基盤を強固にします。',s:'情熱を地に足のついた形に変換できます。',c:'変化のペースを意識して進みましょう。'},'土金':{t:'s',l:'土生金 ― 最高の相性',d:'土が金を生み出す関係。安定が決断力を磨きます。',s:'積み重ねが確かな実力につながります。',c:'慎重になりすぎずタイミングを逃さないよう。'},'金水':{t:'s',l:'金生水 ― 最高の相性',d:'金が水を生み出す関係。決断力が柔軟な発想を引き出します。',s:'リードし調整する理想的な協力関係です。',c:'引っ張りすぎず相手のペースも尊重しましょう。'},'木土':{t:'c',l:'木剋土 ― 死角ゼロの最強チーム',d:'一方がリードしすぎると摩擦が生まれます。合わないからこそ全部できるようになります。',s:'違いを認め合うことで補完関係になれます。',c:'間に「火（九紫）」の要素を挟むと摩擦が調律されます。'},'土水':{t:'c',l:'土剋水 ― 死角ゼロの最強チーム',d:'安定志向が相手の柔軟性を制限しやすい。しかし異質な視点が問題解決能力を高めます。',s:'バランスが良い判断を生むことがあります。',c:'間に「金（六白・七赤）」の要素を挟むと調律されます。'},'水火':{t:'c',l:'水剋火 ― 死角ゼロの最強チーム',d:'行き過ぎた情熱を整える役割も担います。最も恋愛しやすい相手でもあります。',s:'冷静な判断力が暴走を防ぎます。',c:'間に「木（三碧・四緑）」の要素を挟むと永久機関になります。'},'火金':{t:'c',l:'火剋金 ― 死角ゼロの最強チーム',d:'情熱が判断力を揺さぶります。相手にないものを持っているため最大の成長源です。',s:'情熱が決断に勢いを与え大胆な行動ができます。',c:'間に「土（二黒・五黄・八白）」の要素を挟くと錬金術になります。'},'金木':{t:'c',l:'金剋木 ― 死角ゼロの最強チーム',d:'鋭い判断力が相手の成長を阻むことも。しかし互いの死角をなくす最強の組み合わせです。',s:'明確な基準でぶれない方向性を示せます。',c:'間に「水（一白）」の要素を挟むと刃が命を育む道具になります。'},'木木':{t:'y',l:'比和（木） ― 共鳴する関係',d:'価値観が似ているため深く共感できます。',s:'コミュニケーションがスムーズです。',c:'外からの新しい視点を積極的に取り入れましょう。'},'火火':{t:'y',l:'比和（火） ― 共鳴する関係',d:'情熱と行動力が共鳴し大きなエネルギーが生まれます。',s:'大きな目標に向かって一気に進めます。',c:'振り返りの時間を意識的に設けましょう。'},'土土':{t:'y',l:'比和（土） ― 共鳴する関係',d:'安定・継続・信頼が共鳴する関係です。',s:'長期的な信頼関係を築けます。',c:'時には大胆な一手も必要です。'},'金金':{t:'y',l:'比和（金） ― 共鳴する関係',d:'決断力と責任感が共鳴します。',s:'質の高いアウトプットを生み出せます。',c:'完璧主義が摩擦を生むことも。柔軟さを持ちましょう。'},'水水':{t:'y',l:'比和（水） ― 共鳴する関係',d:'柔軟性・適応力・知恵が共鳴します。',s:'深い理解と信頼が自然に生まれます。',c:'どちらかがリーダーシップを担う場面を作りましょう。'}};
+
+/* 裏性格データ */
+var URA={
+  1:'同情のプロだが流されやすい。人の苦労に敏感で愚痴を聞く天才。ただし悪い関係をズルズル引きずるのが最大の弱点。居場所を間違えると口答えが増えるサインです。',
+  2:'決断は遅いが逃げ足は光速。レストランのメニューで永遠に悩む一方、ゴキブリが出た時の速さは異常。へそくりを必ず持っている。二黒でへそくりがないのは運勢が悪いサイン。',
+  3:'永遠の未完成。完成した途端に老いるため、常に新しいものを求める。過去を振り返らず反省もしない。嘘が多く遅刻が多い三碧は運勢崩壊のサイン。',
+  4:'計算高い優しさ。悪意があっても決して表に出さない。しかし不機嫌な顔をして気難しいことを言い始めたら人生が崩壊していく明確なエラーサイン。',
+  5:'機嫌が良い時は体調不良。言葉が極端に少なく「ダメ」とだけ言うが、愛は一番深い。家族が倒れたら何が何でも直す強さを持つ絶対君主。',
+  6:'上から目線の完璧主義。なぜ他人ができないのか全く理解できない。ただし尊敬できる師匠を見つけた瞬間、圧倒的な実力を発揮する。',
+  7:'愚痴と遊びの天才。土台が弱く愚痴が多い。失敗すると「やってます、悪いのは向こうです」と他責にする。人の批判をやめて褒めるようになった時に覚醒する。',
+  8:'腹に一物抱える暴君。本音は絶対に言わない。家庭内では無自覚に上から目線になりやすい。家庭内で愛を失うと人生の基盤そのものが崩壊する。',
+  9:'自分以外は全員アホ。見栄えは良いが中はグズグズ。お金が入ると男女問題を引き起こす。ただしストーカーや悪縁・貧乏から離れたい時は九紫の吉方が最強。'
+};
+
+/* 操縦法データ */
+var SOUJU={
+  1:'愚痴をじっくり聞いてあげること。アドバイスは不要で、聞いてほしいだけ。落ち込んだ時は反省させず、明るい音楽・楽しい環境に連れ出すことで復活します。',
+  2:'「絶対に届かないような高すぎる目標」を一緒に掲げること。決断が遅くても責めない。着実に歩み続ければごぼう抜きする大器晩成。人の4倍勉強させれば最強になります。',
+  3:'過度な指示・干渉を避け、自由に動かして見守ること。反省させようとしても無意味。「完成」に向かって突き進む推進力を活かすのが最善です。',
+  4:'「自由にやってごらん、下から全力で支えるから」と伝えること。相手を上に乗せる器を見せると最大のパフォーマンスを発揮。家族への不機嫌を出させないよう安心感を与えましょう。',
+  5:'下げたくない頭をあえて下げることに挑戦させること。身近な女性（母・妻）に優しい言葉をかけると運勢が爆発的に成長します。愛想を求めず、腹の括りで動かします。',
+  6:'大げさに褒め称えること。完璧主義のエネルギーは「見えない部分（引き出し・鞄の中）」の整理整頓に向けさせると運勢が安定。目上の引き立てを意識させましょう。',
+  7:'大げさに褒め称え、美味しい食べ物や目に見えるメリットで動かすこと。愚痴を聞いたら「でもあの人のここは素晴らしいよね」と視点を反転させる一言が効きます。',
+  8:'「遥か先の巨大な目標（山頂）」を提示すること。何度倒れても起き上がる強靭さがあるため、目標さえあれば自走します。本音を言わせるには長い時間と信頼が必要です。',
+  9:'心からひれ伏す「尊敬できる師匠」に出会わせること。自己流では絶対に一流になれない星。逆境の圧力がバネになるため、あえて困難な道を選ばせると大成します。'
+};
+
 var KEISHA={1:'深い内省と洞察力を持ち人の痛みに静かに寄り添える才能があります。',2:'縁の下の力持ちとして周囲を支えることに喜びを感じます。',3:'新しいことへの好奇心と行動力が潜在的な原動力。',4:'人と人をつなぐことが自然にできる才能があります。',5:'強烈なエネルギーと影響力を持ちます。',6:'高い理想と完成への意志が潜在的な動機。妥協を嫌い最高を追求します。',7:'喜びと楽しさで周囲を活性化します。',8:'一度決めたら動かない強い意志と粘り強さが潜在的な強みです。',9:'真実を見抜く直感と美意識が潜在的な才能。'};
+
 var NL=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','井泉水','屋上土','霹靂火','松柏木','長流水','沙中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','柘榴木','大海水'];
 var NE=['金','火','木','土','金','火','水','土','金','木','水','土','火','木','水','金','火','木','土','金','火','水','土','金','木','水','土','火','木','水'];
 var ND={'海中金':'深海に眠る秘められた才能。時間をかけて磨かれるほど本物の輝きを放つ晩成型の金。','炉中火':'炉の中で燃え続ける持続する情熱。育てることと創造することに天賦の才を持つ火。','大林木':'大きな森のような包容力とネットワーク。多くの命を育み共生することが使命の木。','路傍土':'道端の土のような忍耐と誠実さ。踏まれるほどに強くなる不屈の大地。','剣鋒金':'剣の刃先のような切れ味と決断力。真理を守り本質を見抜く知性の金。','山頭火':'山頂に立つカリスマの炎。孤高の道標として多くの人を導く使命を持つ火。','澗下水':'岩間を流れる清廉な水。継続力と不屈の精神で深い知性を磨き続ける水。','城頭土':'城の頂上に立つ守護の土。高い視座から誠実に人と組織を守る土。','白蝋金':'白蝋のように柔軟に形を変える美意識の金。環境の中で最も美しく輝く変容の才能。','楊柳木':'柳のようにしなやかな強さと適応力。深い根を持ちながら風に揺れる柔軟な木。','井泉水':'井戸から湧き続ける純粋な水。枯れることなく誰かを潤し続ける慈しみの一滴。','屋上土':'屋根の上の高潔な土。高いところから世を俯瞰し守護し続ける孤独な盾。','霹靂火':'天の雷のような覚醒と瞬間の変革力。一撃で時代を動かす天の電撃。','松柏木':'松と柏のように年輪を刻む品格と一貫性。どんな季節にも緑を保つ不変の木。','長流水':'止まらない大河のような継続力と影響力。多くの命を潤しながら大海へ向かう水。','沙中金':'砂の中に隠れた砂金のような隠れた才能。洗われるほどに本物の輝きを放つ晩成の金。','山下火':'山の麓の夕暮れのような洗練された美意識。深まるほどに美しくなる夜の才能の火。','平地木':'平地に広がる安心感の木。社会の基盤として人々に木陰と安らぎを与える共生の木。','壁上土':'高い壁のような高潔と秩序。清潔な美しさで場を守り整える土。','金箔金':'金箔のような審美眼とプロデュース力。場を聖域に変える価値の証明の金。','覆燈火':'覆いに守られた消えない知性の灯火。嵐の中でも燃え続ける静かな羅針盤の火。','天河水':'銀河から降り注ぐ慈雨のような博愛と高い視座。すべての命を平等に潤す天の水。','大駅土':'四方八方に道が延びるターミナルの土。人・物・情報を循環させる夢の実現力。','釵釧金':'完成された装飾品のような品格と不変の美。磨き抜かれた魂の宝飾の金。','桑柘木':'桑と柘の変容する木。他者のために価値を織りなす利他の知恵の木。','大渓水':'急流のような突破力と意志ある流れ。目標に向かって一直線に進む大渓の水。','沙中土':'砂のようなフィルタリングと柔軟な受容力。隠れた価値を見抜く蒸留の土。','天上火':'天上に輝く太陽のような公明正大と博愛。すべてを平等に照らす慈愛の火。','柘榴木':'柘榴のような逆転と晩成の木。内に秘めた情熱の宝石が時を経て輝く木。','大海水':'大海のような包摂と無限の器。宇宙的な調和で全てを受け止める大海の水。'};
+
 var TBZ=['まず相手の話を最後まで聞いてから意見を言う日です。','今日は相手に「助かりました」と一言伝える日です。','メールより一本の電話が関係を深める日です。','今日は相手の意見を引き出すことに集中しましょう。','小さな感謝を言葉にするだけで関係が一段上がる日です。'];
 var TLV=['今日は一言「ありがとう」を伝える日です。','相手のそばにいるだけで十分な日です。言葉より存在を。','相手の好きなものを覚えていたことを伝えましょう。','今日は聞き役に徹することで深い信頼が生まれます。','「あなたといると安心する」この一言が最高の贈り物です。'];
 var TFM=['今日は「いつもありがとう」を素直に伝える日です。','一緒に食事をとることが関係を整える最善の行動です。','過去のことより今日のことを話しましょう。','「そうだね」と共感するだけで十分な日です。','小さな手伝いが大きな愛情として伝わる日です。','今日は隣に座るだけで十分です。言葉よりも存在が伝わる日です。','「ありがとう」この一言が今日の最大の処方箋です。'];
-var EC={木:'青・緑',火:'赤・オレンジ',土:'黄・ベージュ・茶',金:'白・金・銀',水:'黒・紺・グレー'};
+
+/* 第3のピース（色・食・場所）詳細データ */
+var PIECE={
+  水:{color:'白・黒・紺',food:'海産物・刺身・海鮮丼・お酒・乳製品',place:'水辺・温泉・静かな場所',action:'悩みを聞く・白湯の時間'},
+  木:{color:'青・緑',food:'サラダ・パスタ・柑橘類・レモン',place:'音楽の流れる明るい場所・森・公園',action:'散歩・新しい企画を書き出す'},
+  火:{color:'赤・紫・オレンジ',food:'カニ・エビ・貝類・コーヒー',place:'明るく華やかな場所',action:'感謝や称賛を言葉にする'},
+  土:{color:'黄色・ベージュ・茶色',food:'おにぎり・牛肉・鍋・すき焼き・発酵食品',place:'家族が集まる場所・食卓',action:'温かい食事を一緒に'},
+  金:{color:'白・金・銀・ピンク',food:'鶏肉・甘いもの・炭酸飲料',place:'楽しく食事できる場所',action:'ルール整理・明確な約束'}
+};
+
+var EC={木:'青・緑',火:'赤・オレンジ',土:'黄色・ベージュ・茶',金:'白・金・銀',水:'黒・紺・グレー'};
 var CL={kitoku:'格さん',confucius:'孔子（論語）',sunzi:'孫子（兵法）',musashi:'宮本武蔵（五輪書）',saikon:'菜根譚',shibusawa:'渋沢栄一（論語と算盤）',jitsugokyo:'実語教',dojikyo:'童子教'};
-var CP={kitoku:'琥珀色のトーンで、温かく静かに力強く語ってください。処方箋・調律・共鳴・宇宙の配剤という言葉を自然に使い、最後は具体的な食・色・場の処方箋で締めてください。',confucius:'孔子と論語の精神で語ってください。「子曰く」「仁」「礼」「徳」「君子」という言葉を自然に織り交ぜ、人間関係の本質を簡潔な格言調で深く静かに語ってください。',sunzi:'孫子の兵法の精神で語ってください。「彼を知り己を知れば百戦して殆うからず」など兵法の言葉を自然に使い、ビジネス戦略として二人の相性と動き方を戦略的・簡潔に分析してください。',musashi:'宮本武蔵と五輪書の精神で語ってください。「千日の稽古を鍛とし万日の稽古を錬とす」「場の空気を読む」「機を制する」という言葉を使い、二人の関係を武道・人生の修練として力強く・実直に語ってください。',saikon:'菜根譚の精神で語ってください。「逆境の中にこそ真の力がある」「花は半開を看るに宜し」という処世の極意を使い、二人の関係の深い智慧を静かで深い東洋の言葉で語ってください。',shibusawa:'渋沢栄一の論語と算盤の精神で語ってください。道徳と経済の融合という視点で、二人の関係とビジネスの展望を実直・誠実・前向きなトーンで語ってください。',jitsugokyo:'実語教の精神で語ってください。「人学ばざれば智なし 智なき者は愚人に近し」「山高きゆえに貴からず 樹あるをもって貴しとす」という言葉を使い、二人が互いから学び合える智慧をシンプルで力強く語ってください。',dojikyo:'童子教の精神で語ってください。人としての礼・縁・道という視点で、二人の関係の本質を語ってください。特に家族・介護・親子関係の場面に深く響く温かい言葉を選んでください。'};
-var SL={basic:'基本の相性分析',hire:'採用判断レポート',team:'チーム編成・上司部下の相性',partner:'ビジネスパートナー選定',deal:'商談・提案アプローチ',project:'プロジェクトチームの強みと注意点',kaigo:'親の介護・家族の絆'};
-var SP={basic:'宿命的な相性・内面の共鳴・潜在的な力学の3つの観点から分析してください。',hire:'採用判断の観点から：潜在的な強みと職場での役割、どんな環境で力を発揮するか、採用する場合の育て方・配属先の提案を含めてください。',team:'チーム編成の観点から：上司としての管理スタイル、この組み合わせの強みとなる場面、摩擦が起きやすい場面と対処法を含めてください。',partner:'ビジネスパートナーの観点から：長期的な見通し（3年・5年）、最適な役割分担、契約・合意の際に確認すべきことを含めてください。',deal:'商談・提案の観点から：この相手への最適なアプローチ、響くキーワード・価値観、避けるべき言葉・態度を含めてください。',project:'プロジェクトの観点から：二人の最適な役割分担、このチームの最大の強み、進行中の注意点を含めてください。',kaigo:'親の介護・家族の絆という観点から：この二人の星から見える自然な関わり方、なぜぶつかるのかの本質的な理由、介護の中で心が穏やかになる具体的なアプローチ、感謝を伝える最善のタイミングと方法、そして今この関係で最も大切なことを含めてください。不安を煽らず、5000年の知恵として温かく伝えてください。'};
-var BRIDGE_ELEMENT={木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'};
+var CP={
+  kitoku:'琥珀色のトーンで、温かく静かに力強く語ってください。処方箋・調律・共鳴・宇宙の配剤という言葉を自然に使い、最後は具体的な食・色・場の処方箋で締めてください。「相性が悪い」「合わない」「凶」という表現は絶対に使わないでください。どんな組み合わせも「死角ゼロの最強チーム」として全肯定してください。',
+  confucius:'孔子と論語の精神で語ってください。「子曰く」「仁」「礼」「徳」「君子」という言葉を自然に織り交ぜ、人間関係の本質を簡潔な格言調で深く静かに語ってください。',
+  sunzi:'孫子の兵法の精神で語ってください。「彼を知り己を知れば百戦して殆うからず」など兵法の言葉を自然に使い、ビジネス戦略として二人の相性と動き方を戦略的・簡潔に分析してください。',
+  musashi:'宮本武蔵と五輪書の精神で語ってください。「千日の稽古を鍛とし万日の稽古を錬とす」「場の空気を読む」「機を制する」という言葉を使い、二人の関係を武道・人生の修練として力強く・実直に語ってください。',
+  saikon:'菜根譚の精神で語ってください。「逆境の中にこそ真の力がある」「花は半開を看るに宜し」という処世の極意を使い、二人の関係の深い智慧を静かで深い東洋の言葉で語ってください。',
+  shibusawa:'渋沢栄一の論語と算盤の精神で語ってください。道徳と経済の融合という視点で、二人の関係とビジネスの展望を実直・誠実・前向きなトーンで語ってください。',
+  jitsugokyo:'実語教の精神で語ってください。「人学ばざれば智なし 智なき者は愚人に近し」「山高きゆえに貴からず 樹あるをもって貴しとす」という言葉を使い、二人が互いから学び合える智慧をシンプルで力強く語ってください。',
+  dojikyo:'童子教の精神で語ってください。人としての礼・縁・道という視点で、二人の関係の本質を語ってください。特に家族・介護・親子関係の場面に深く響く温かい言葉を選んでください。'
+};
+var SL={basic:'基本の相性分析',heart:'気持ちを伝える',distance:'距離感を整える',repair:'関係を修復する',kaigo:'親の介護・家族の絆'};
+var SP={
+  basic:'宿命的な相性・内面の共鳴・潜在的な力学の3つの観点から分析してください。相剋は「死角ゼロの最強チーム」として全肯定し、間に挟む第3のピース（色・食・場所・人物タイプ）を必ず具体的に提案してください。',
+  heart:'気持ちを伝えるという観点から：今日この相手に伝えるべき一言、どのタイミングで・どんな言葉で・どんな場所で伝えるか、相手の星の「動かし方」を踏まえた具体的なアプローチを含めてください。',
+  distance:'心地よい距離感を整えるという観点から：この二人が自然に保てる距離感、近づきすぎる時のサイン、適切に離れる方法、長く良い関係を保つための日常の習慣を含めてください。',
+  repair:'関係を修復するという観点から：すれ違いや摩擦が起きた本質的な理由、「ごめんなさい」「お願いします」の一言の力、具体的な修復のステップ、この二人が和解した後に得られる最強の補完関係を含めてください。',
+  kaigo:'親の介護・家族の絆という観点から：この二人の星から見える自然な関わり方、なぜぶつかるのかの本質的な理由、介護の中で心が穏やかになる具体的なアプローチ、感謝を伝える最善のタイミングと方法、そして今この関係で最も大切なことを含めてください。不安を煽らず、5000年の知恵として温かく伝えてください。'
+};
+
+var BRIDGE_ELEMENT={木:'土（二黒・五黄・八白）',土:'金（六白・七赤）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'};
+// 相剋の媒介
+var BRIDGE_SK={木:'火（九紫）',土:'金（六白・七赤）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'};
 var ELEMENT_ACTION={水:'透明感のある香り・静かな対話・白湯や水辺の時間',木:'ハーブや柑橘・散歩・新しい企画を書き出す時間',火:'明るい照明・赤や紫の小物・感謝や称賛を言葉にする時間',土:'温かい食事・黄色や茶色・安心できる場所づくり',金:'白や金の小物・ルール整理・短く明確な約束'};
+
 function relationCycle(star){return [1,7,4,2].includes(star)?'peace':[3,8,6,9].includes(star)?'passion':'center';}
 function niseiText(a,b){
-  if(a===5||b===5){return '五黄土星は中心に座る星です。二生の輪にそのまま収まるというより、二人の関係全体を一度中心へ戻し、余計な感情をリセットする役割を持ちます。勝ち負けではなく「この関係をどう再生するか」を問い直すと、縁が整いやすくなります。';}
+  if(a===5||b===5){return '五黄土星は中心に座る星です。二人の関係全体を一度中心へ戻し、余計な感情をリセットする役割を持ちます。勝ち負けではなく「この関係をどう再生するか」を問い直すと、縁が整いやすくなります。';}
   var ca=relationCycle(a),cb=relationCycle(b);
-  if(ca===cb&&ca==='peace') return '二人は「癒やし・喜び・縁結び・育成」の輪に属する関係です。激しく押すより、安心感・感謝・小さな約束を積み重ねるほど縁が深まります。';
-  if(ca===cb&&ca==='passion') return '二人は「行動・変革・完成・知恵」の輪に属する関係です。同じ目標や挑戦を持つと力が噛み合います。停滞した時は、共通のゴールを言葉に戻すことが鍵です。';
+  if(ca===cb&&ca==='peace') return '二人は「癒やし・喜び・縁結び・育成」の輪（1-7-4-2）に属する関係です。激しく押すより、安心感・感謝・小さな約束を積み重ねるほど縁が深まります。';
+  if(ca===cb&&ca==='passion') return '二人は「行動・変革・完成・知恵」の輪（3-8-6-9）に属する関係です。同じ目標や挑戦を持つと力が噛み合います。停滞した時は、共通のゴールを言葉に戻すことが鍵です。';
   return '二人は異なる二生の輪を持つ関係です。感じ方や動く速度に違いが出やすい一方で、片方だけでは見えない世界を見せ合える縁です。急いで同じにしようとせず、役割を分けるほど調和します。';
 }
 function bridgeText(myE,pE){
@@ -382,12 +506,17 @@ function bridgeText(myE,pE){
   var source='';
   if(sk[myE]===pE) source=myE;
   else if(sk[pE]===myE) source=pE;
-  if(!source){return '二人の五行は強い摩擦よりも、自然な共鳴や支え合いが出やすい関係です。媒介星を無理に探すより、今日の小さな習慣として「'+(ELEMENT_ACTION[myE]||'落ち着く時間')+'」を取り入れると、関係の流れが整います。';}
-  var bridge=BRIDGE_ELEMENT[source]||'土';
-  var elem=bridge.includes('水')?'水':bridge.includes('木')?'木':bridge.includes('火')?'火':bridge.includes('土')?'土':'金';
-  return '相剋は「合わない」という意味ではなく、互いの死角を照らす関係です。この組み合わせでは、間に '+bridge+' の要素を挟むと、摩擦が調律されやすくなります。実際には、'+(ELEMENT_ACTION[elem]||'場を整える小さな行動')+'を取り入れてください。人・色・食・香り・場所のどれか一つで十分です。';
+  if(!source){
+    var p=PIECE[pE]||{};
+    return '二人の五行は自然な共鳴・支え合いが出やすい関係です。今日は相手の五行（'+pE+'）のアイテムを意識して、色は「'+(p.color||EC[pE]||'')+'」、食は「'+(p.food||'')+'」を取り入れると関係の流れが整います。';
+  }
+  var bridgeEl=BRIDGE_SK[source]||'土';
+  var elem=bridgeEl.includes('水')?'水':bridgeEl.includes('木')?'木':bridgeEl.includes('火')?'火':bridgeEl.includes('土')?'土':'金';
+  var p2=PIECE[elem]||{};
+  return '相剋は「合わない」ではなく、互いの死角を照らす最強の関係です。間に【'+bridgeEl+'】の要素を挟むと摩擦が調律されます。\n\n具体的には：\n・色：'+(p2.color||'')+'を身につける\n・食：'+(p2.food||'')+'を一緒に食べる\n・場所：'+(p2.place||'')+'で話す\n\n人・色・食・香り・場所のどれか一つだけで十分です。';
 }
 
+/* カウント管理 */
 var FREE=3;
 function todayKey(){var d=new Date();return'krc_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
 function getCount(){return parseInt(localStorage.getItem(todayKey())||'0');}
@@ -407,7 +536,7 @@ function ckKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'}
 
 function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function sc(id,c){var e=document.getElementById(id);if(e)e.className=c;}
-function showScr(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');document.getElementById('backBtn').style.display=(id==='s0')?'none':'block';}
+function showScr(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');document.getElementById('backBtn').style.display=(id==='s0')?'none':'block';window.scrollTo(0,0);}
 function goBack(){if(document.getElementById('s2').classList.contains('on')){showScr('s1');}else{showScr('s0');}}
 function swTab(id,btn){document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('on');});document.querySelectorAll('.tbb').forEach(function(b){b.classList.remove('on');});document.getElementById('tab-'+id).classList.add('on');if(btn)btn.classList.add('on');}
 function tog(h){var b=h.nextElementSibling;var a=h.querySelector('.aa');b.classList.toggle('o');a.classList.toggle('o');}
@@ -427,20 +556,15 @@ function loadSaved(){
 }
 function fillSv(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var p=sv[i];document.getElementById('pName').value=p.name;document.getElementById('pY').value=p.year;document.getElementById('pM').value=p.month;document.getElementById('pD').value=p.day||'';}
 function delOne(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');sv.splice(i,1);localStorage.setItem('kitoku_relations',JSON.stringify(sv));loadSaved();}
-function delAll(){if(confirm('登録済みの人を全員削除しますか？')){localStorage.removeItem('kitoku_relations');loadSaved();}}
+function delAll(){if(confirm('登録済みの人をすべて削除しますか？')){localStorage.removeItem('kitoku_relations');loadSaved();}}
 
 function startReading(){
-  var mYv=parseInt(document.getElementById('mY').value)||0;
-  var mMv=parseInt(document.getElementById('mM').value)||0;
-  var mDv=parseInt(document.getElementById('mD').value)||1;
-  var nm=document.getElementById('pName').value.trim();
-  var pYv=parseInt(document.getElementById('pY').value)||0;
-  var pMv=parseInt(document.getElementById('pM').value)||0;
-  var pDv=parseInt(document.getElementById('pD').value)||1;
-  if(!mYv||!mMv){alert('あなたの生年月日（年・月）を入力してください');return;}
-  if(!nm){alert('相手のお名前を入力してください');return;}
-  if(!pYv||!pMv){alert('相手の生年月日（年・月）を入力してください');return;}
+  var mYv=parseInt(document.getElementById('mY').value),mMv=parseInt(document.getElementById('mM').value),mDv=parseInt(document.getElementById('mD').value);
+  var pYv=parseInt(document.getElementById('pY').value),pMv=parseInt(document.getElementById('pM').value),pDv=parseInt(document.getElementById('pD').value);
+  var nm=(document.getElementById('pName').value||'').trim();
+  if(!mYv||!mMv||!pYv||!pMv||!nm){alert('自分と相手の生年月日・名前を入力してください');return;}
   localStorage.setItem('kitoku-birth',mYv+'-'+mMv+'-'+mDv);
+  localStorage.setItem('kitoku_birth',mYv+'-'+mMv+'-'+mDv);
   var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');
   var isNew=!sv.find(function(p){return p.name===nm;});
   if(isNew&&sv.length>=5){alert('無料プランは5人まで登録可能です。');return;}
@@ -457,10 +581,13 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   var myKS=STARS[myKN]||STARS[1],pKS=STARS[pKN]||STARS[1];
   var myNa=calcNacchi(mYv),pNa=calcNacchi(pYv);
 
-  st('rName',nm+'さん');st('rStar',pS.k+'・'+pS.e+'のエネルギー');
-  document.getElementById('rBadge').textContent=PL[curP];document.getElementById('rBadge').className='badge '+curP;
+  st('rName',nm+'さん');
+  st('rStar',pS.k+'・'+pS.e+'のエネルギー');
+  document.getElementById('rBadge').textContent=PL[curP];
+  document.getElementById('rBadge').className='badge '+curP;
   st('pLbl',nm+'さん');
 
+  // 本命星
   st('myH',myS.k);st('myHE',myS.e);sc('myHE','se e'+myS.e);
   st('pH',pS.k);st('pHE',pS.e);sc('pHE','se e'+pS.e);
   var hk=ckKey(myS.e,pS.e);
@@ -468,6 +595,11 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   var hEl=document.getElementById('hC');hEl.textContent=hC.l;hEl.className='cp '+hC.t;
   st('hD',hC.d);st('hS',hC.s);st('hCa',hC.c);
 
+  // 裏性格
+  st('myUra',URA[myN]||'');
+  st('pUra',URA[pN]||'');
+
+  // 月命星
   st('myT',myTS.k);st('myTE',myTS.e);sc('myTE','se e'+myTS.e);
   st('pT',pTS.k);st('pTE',pTS.e);sc('pTE','se e'+pTS.e);
   var tk=ckKey(myTS.e,pTS.e);
@@ -475,11 +607,15 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   var tEl=document.getElementById('tC');tEl.textContent=tC.l;tEl.className='cp '+tC.t;
   st('tD',tC.d+'　内面では'+tC.s);
 
+  // 傾斜
   st('myK',myKS.k);st('myKE',myKS.e);sc('myKE','se e'+myKS.e);
   st('pK',pKS.k);st('pKE',pKS.e);sc('pKE','se e'+pKS.e);
   st('myKD',KEISHA[myKN]||KEISHA[myN]||'');
   st('pKD',KEISHA[pKN]||KEISHA[pN]||'');
+  // 操縦法（相手の本命星ベース）
+  st('pSouju',SOUJU[pN]||'');
 
+  // 納音
   st('myN',myNa.name);st('myNE',myNa.elem);sc('myNE','se e'+myNa.elem);
   st('pN',pNa.name);st('pNE',pNa.elem);sc('pNE','se e'+pNa.elem);
   st('myND',ND[myNa.name]||'');
@@ -487,23 +623,33 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   var nRel=myNa.name===pNa.name?'二人は同じ「'+myNa.name+'」の魂の音色を持つ稀な縁。魂の次元で完全に共鳴し合う、宇宙が用意した特別な関係です。':myNa.elem===pNa.elem?'二人の納音は同じ五行（'+myNa.elem+'）で共鳴しています。表面の相性を超えた魂レベルでの深い理解が自然に生まれます。':'「'+myNa.name+'」と「'+pNa.name+'」。異なる音色が重なることで、一人ではたどり着けない深みへと二人の縁は響き合います。';
   st('nD',nRel);
 
+  // 総合
   var sEl=document.getElementById('sogoC');sEl.textContent=hC.l;sEl.className='cp '+hC.t;
   st('sogoD','本命星では「'+hC.l+'」の関係。月命星の内面では「'+tC.l+'」という深みがあります。');
   st('sogoA',hC.s+'　'+hC.c);
   st('bridgeD',bridgeText(myS.e,pS.e));
   st('niseiD',niseiText(myN,pN));
 
+  // 今日
   var d2=new Date();var seed=d2.getFullYear()*10000+(d2.getMonth()+1)*100+d2.getDate();
   var acts=curP==='fam'?TFM:TLV;
   st('todayA',acts[seed%acts.length]);
-  st('todayC','今日は'+pS.e+'のエネルギーを意識して、'+(EC[pS.e]||'')+'の小物を一つ身につけましょう。');
+  var pp=PIECE[pS.e]||{};
+  st('todayC','今日は'+pS.k+'（'+pS.e+'）の星を意識して：\n・色：'+(pp.color||EC[pS.e]||'')+'の小物を一つ身につける\n・食：'+(pp.food||'')+'を取り入れる\n・場所：'+(pp.place||'')+'で会話する');
   st('todayH',curP==='fam'?'批判より感謝を先に。「いつもありがとう」から始めましょう。':curP==='friend'?'相手のペースに合わせながら、自分らしさも大切に。無理のない距離感が長い縁を育てます。':'相手の気持ちに寄り添うことを最優先に。共感が関係を深める近道です。');
 
-  RD={purpose:curP,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myNa:myNa.name,pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,pNa:pNa.name,compat:hC.l,bridge:bridgeText(myS.e,pS.e),nisei:niseiText(myN,pN)};
+  RD={
+    purpose:curP,nm:nm,
+    myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myNa:myNa.name,
+    myUra:URA[myN]||'',mySouju:SOUJU[myN]||'',
+    pH:pS.k,pE:pS.e,pT:pTS.k,pK:pKS.k,pNa:pNa.name,
+    pUra:URA[pN]||'',pSouju:SOUJU[pN]||'',
+    compat:hC.l,tsukiCompat:tC.l,bridge:bridgeText(myS.e,pS.e),nisei:niseiText(myN,pN)
+  };
 
   curC='kitoku';curT='basic';
   document.querySelectorAll('#c-kitoku,#c-confucius,#c-sunzi,#c-musashi,#c-saikon,#c-shibusawa,#c-jitsugokyo,#c-dojikyo').forEach(function(c,i){c.classList.toggle('on',i===0);});
-  document.querySelectorAll('#t-basic,#t-hire,#t-team,#t-partner,#t-deal,#t-project,#t-kaigo').forEach(function(c,i){c.classList.toggle('on',i===0);});
+  document.querySelectorAll('#t-basic,#t-heart,#t-distance,#t-repair,#t-kaigo').forEach(function(c,i){c.classList.toggle('on',i===0);});
   resetRpt();
   document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('on');});
   document.querySelectorAll('.tbb').forEach(function(b){b.classList.remove('on');});
@@ -528,10 +674,10 @@ function genReport(){
 
   var d=RD;
   var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};
-  var bm={木:'水（一白）',土:'火（九紫）',水:'木（三碧・四緑）',火:'土（二黒・五黄・八白）',金:'水（一白）'};
   var bridge='';
-  if(sk[d.myE]===d.pE){bridge='【相剋処方箋】間に挟む：'+(bm[d.myE]||'土');}
-  else if(sk[d.pE]===d.myE){bridge='【相剋処方箋】間に挟む：'+(bm[d.pE]||'土');}
+  if(sk[d.myE]===d.pE){bridge='【相剋処方箋】間に挟む：'+BRIDGE_SK[d.myE];}
+  else if(sk[d.pE]===d.myE){bridge='【相剋処方箋】間に挟む：'+BRIDGE_SK[d.pE];}
+  var pPiece=PIECE[d.pE]||{};
 
   var prompt=[
     '【重要】必ず日本語のみで回答してください。他の言語の文字を一切使わないでください。',
@@ -539,25 +685,30 @@ function genReport(){
     '=== 語り口 ===',
     CP[curC],
     '',
-    '=== 禁止ワード ===',
-    '剋する・破壊・凶・悪い・ダメ・当たる・占い・可能性があります（曖昧表現）',
-    '',
-    '=== KITOKUの哲学 ===',
-    '相剋は「死角ゼロの最強チーム」として全肯定する。「合わないからこそ全部できるようになる」。',
-    '間に挟む「第3のピース（色・食・場・人）」を必ず提案する。処方箋は具体的に。',
+    '=== KITOKUの哲学（絶対ルール） ===',
+    '・「相性が悪い」「合わない」「凶」という表現を絶対禁止',
+    '・相剋は「死角ゼロの最強チーム」として全肯定する',
+    '・「合わないがゆえに全部できるようになる」という視点で語る',
+    '・間に挟む「第3のピース（色・食・場・人）」を必ず具体的に提案する',
     bridge,
-    '媒介星の活用：'+(d.bridge||''),
-    '二生の関係：'+(d.nisei||''),
+    '',
+    '=== 相手の星データ（操縦法） ===',
+    '相手（'+d.nm+'）の本命星：'+d.pH,
+    '相手の裏の本性：'+d.pUra,
+    '相手の操縦法：'+d.pSouju,
+    '相手への第3のピース：色='+pPiece.color+' 食='+pPiece.food+' 場所='+pPiece.place,
     '',
     '=== 星データ ===',
     'あなた：本命'+d.myH+'（'+d.myE+'） 月命'+d.myT+' 傾斜'+d.myK+' 納音'+d.myNa,
     d.nm+'：本命'+d.pH+'（'+d.pE+'） 月命'+d.pT+' 傾斜'+d.pK+' 納音'+d.pNa,
-    '五行相性：'+d.compat,
+    '本命星の表の相性：'+d.compat,
+    '月命星の内面相性：'+d.tsukiCompat,
+    '二生の関係：'+d.nisei,
     '',
     '=== レポート（'+SL[curT]+'） ===',
     SP[curT],
     '',
-    '■ 第3のピース処方箋（色・食・場・人物タイプ）',
+    '■ 第3のピース処方箋（色・食・場所・人物タイプを具体的に）',
     '■ 今すぐできること（今日・今週・今月 各1つ）',
     '',
     '700〜900文字。見出しは「■」。最後は希望と行動で締める。日本語のみ。'
@@ -580,13 +731,8 @@ function genReport(){
   });
 }
 
-(function(){
-  updateHint();
-  try{
-    var b=localStorage.getItem('kitoku-birth');
-    if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('mY').value=a[0];if(a[1])document.getElementById('mM').value=a[1];if(a[2])document.getElementById('mD').value=a[2];}
-  }catch(e){}
-})();
+function openSettings(){document.getElementById('settingPanel').classList.add('open');}
+function closeSettings(){document.getElementById('settingPanel').classList.remove('open');}
 
 function setTheme(t){
   document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);
@@ -599,9 +745,13 @@ function setFontSize(s){
   try{localStorage.setItem('kitoku-fontsize',s);}catch(e){}
   ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
 }
-function openSettings(){const p=document.getElementById('settingPanel');if(p)p.style.display='flex';}
-function closeSettings(){const p=document.getElementById('settingPanel');if(p)p.style.display='none';}
+
 (function(){
+  updateHint();
+  try{
+    var b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+    if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('mY').value=a[0];if(a[1])document.getElementById('mM').value=a[1];if(a[2])document.getElementById('mD').value=a[2];}
+  }catch(e){}
   const t=localStorage.getItem('kitoku-theme')||'light';
   const fs=localStorage.getItem('kitoku-fontsize')||'s';
   document.addEventListener('DOMContentLoaded',function(){
@@ -612,7 +762,6 @@ function closeSettings(){const p=document.getElementById('settingPanel');if(p)p.
     ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===fs);});
   });
 })();
-
 </script>
 </body>
 </html>
