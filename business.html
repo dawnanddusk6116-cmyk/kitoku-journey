@@ -654,6 +654,9 @@ function showBusinessPreview(kind){
   if(kind==='deal') loadDealBirth();
   if(balanceTool)balanceTool.style.display=kind==='balance'?'block':'none';
   if(productTool)productTool.style.display=kind==='product'?'block':'none';
+  var previewGrid=document.querySelector('#s3 .preview-grid');
+  var activeTool=kind==='money'?moneyTool:kind==='deal'?dealTool:kind==='balance'?balanceTool:kind==='product'?productTool:null;
+  if(previewGrid&&activeTool)previewGrid.parentNode.insertBefore(activeTool,previewGrid);
   var mr=document.getElementById('moneyResult');if(mr)mr.style.display='none';
   var dr=document.getElementById('dealResult');if(dr)dr.style.display='none';
   var br=document.getElementById('balanceResult');if(br)br.style.display='none';
