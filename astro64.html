@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>星読みクロスチェック | KITOKU</title>
+<title>私の設計図を重ねて読む | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -36,6 +36,13 @@ h1{font-size:1.4rem;color:var(--goldlt);font-weight:500;margin-top:8px;letter-sp
 .concept-item{background:var(--card);border:1px solid var(--rim);border-radius:12px;padding:10px 6px;text-align:center;}
 .concept-num{font-size:.95rem;color:var(--gold);font-weight:700;line-height:1;}
 .concept-text{font-size:.6rem;color:var(--mist);line-height:1.55;margin-top:4px;}
+.flow-box{margin:12px 18px 0;background:#fff;border:1px solid rgba(138,104,32,.16);border-radius:14px;padding:12px 13px;}
+.flow-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:7px;}
+.flow-steps{display:grid;gap:7px;}
+.flow-step{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;font-size:.66rem;color:var(--mist);line-height:1.75;}
+.flow-num{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:999px;background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.22);color:var(--goldlt);font-size:.68rem;font-weight:800;}
+.ai-link-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.ai-link{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;border:1px solid rgba(138,104,32,.25);border-radius:10px;background:rgba(138,104,32,.07);color:var(--goldlt);font-size:.66rem;font-weight:800;padding:9px 7px;line-height:1.5;}
 .section{margin:14px 18px 0;background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:15px;}
 .label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:700;margin-bottom:8px;}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
@@ -76,6 +83,15 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   background:linear-gradient(135deg,rgba(126,98,180,.14),rgba(18,21,42,.96));
   border-color:rgba(196,160,67,.28);
   color:rgba(232,238,255,.76);
+}
+[data-theme="dark"] .flow-box{
+  background:rgba(18,21,42,.96);
+  border-color:rgba(196,160,67,.24);
+}
+[data-theme="dark"] .ai-link{
+  background:rgba(196,160,67,.08);
+  border-color:rgba(196,160,67,.24);
+  color:var(--goldlt);
 }
 [data-theme="dark"] input,
 [data-theme="dark"] select,
@@ -135,36 +151,49 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 
 <header>
   <div class="logo">KITOKU STAR READING</div>
-  <h1>星読みクロスチェック</h1>
-  <div class="lead">太陽・月・金星・火星などの星の位置を、KITOKU解釈で自己理解の相談文に整えるページです。</div>
+  <h1>私の設計図を重ねて読む</h1>
+  <div class="lead">太陽・月・金星などを重ねて、表の自分・本音・惹かれるものを立体的に見るページです。結果はAIに貼れる相談文になります。</div>
 </header>
 
 <div class="notice">
-  これはKITOKU独自の補助レイヤーです。天文計算式と黄道64分割ルールを使い、自分を知るための言葉を整えます。結果は「決めつけ」ではなく、自分の感覚と照らし合わせるための鏡として使います。現在の天体計算は依存なしの簡易モデルです。
+  九星は「人生の幹」を見ます。星読みクロスチェックは、太陽・月・金星・火星などを重ねて、日常の感情・好きなもの・動き方を補助的に見る多面鏡です。結果は決めつけではなく、自分の感覚と照らし合わせるための材料として使います。現在の天体計算は依存なしの簡易モデルです。
 </div>
 
 <div class="concept">
-  <div class="concept-item"><div class="concept-num">1</div><div class="concept-text">自分を知る</div></div>
-  <div class="concept-item"><div class="concept-num">2</div><div class="concept-text">自分を責めない</div></div>
-  <div class="concept-item"><div class="concept-num">3</div><div class="concept-text">今日の一手へ</div></div>
+  <div class="concept-item"><div class="concept-num">太陽</div><div class="concept-text">表に出る自分</div></div>
+  <div class="concept-item"><div class="concept-num">月</div><div class="concept-text">安心する本音</div></div>
+  <div class="concept-item"><div class="concept-num">金星</div><div class="concept-text">惹かれるもの</div></div>
+</div>
+
+<div class="flow-box">
+  <div class="flow-title">使い方は3ステップです</div>
+  <div class="flow-steps">
+    <div class="flow-step"><div class="flow-num">1</div><div>生年月日を入れて、太陽・月・金星などの結果を出します。</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>上にできた相談文をコピーします。結果とKITOKU星情報がまとめて入ります。</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>ChatGPT・Claude・Gemini、または気学先生に貼り付けて、自分の悩みに合わせて深掘りします。</div></div>
+  </div>
+  <div class="ai-link-row">
+    <a class="ai-link" href="ai.html">AI相談の入口へ</a>
+    <a class="ai-link" href="premium.html">気学先生へ</a>
+  </div>
 </div>
 
 <section class="section">
-  <div class="label">AIに渡す相談文</div>
+  <div class="label">AIに貼る相談文</div>
   <div class="prompt-guide">
-    <div class="prompt-guide-title">まずここをコピーしてAIに貼り付けます</div>
-    下の生年月日・KITOKU OS DATA・RESULTは、この相談文に自動で反映されます。下の情報は確認と調整用です。
+    <div class="prompt-guide-title">ここをコピーすれば、そのままAIに相談できます</div>
+    生年月日・KITOKU OS DATA・星読み結果が、この相談文に自動で入ります。AIには「強み・迷いやすい点・恋愛や仕事での使い方」を聞ける形に整えます。
   </div>
-  <textarea id="prompt" readonly>計算後、AIに渡す相談文がここに表示されます。</textarea>
-  <button class="copy" onclick="copyPrompt()">① まず相談文をコピー</button>
-  <div class="deep-note">お好きなAIに、まず①の相談文を貼り付けてください。</div>
+  <textarea id="prompt" readonly>計算後、AIに貼る相談文がここに表示されます。</textarea>
+  <button class="copy" onclick="copyPrompt()">① AIに貼る相談文をコピー</button>
+  <div class="deep-note">コピーしたら、ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。</div>
   <div class="deep-dive">
     <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
     <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
     <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
     <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
   </div>
-  <div class="deep-note">続けて知りたいテーマがあれば、②の深掘り文をコピーして同じAIの会話に貼ると、会話が進めやすくなります。</div>
+  <div class="deep-note">続けて知りたいテーマがあれば、②の深掘り文を同じAIの会話に貼ります。最初の結果を土台に、恋愛・仕事・行動計画まで広げられます。</div>
 </section>
 
 <section class="section">
@@ -183,7 +212,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <input id="offset" type="number" value="0" step="0.1">
     <div class="hint">結果照合用の調整値です。後でサンプルと合わせながら検証します。</div>
   </div>
-  <button onclick="runAstro64(true)">64象意を計算する</button>
+  <button onclick="runAstro64(true)">星を重ねて相談文を作る</button>
 </section>
 
 <section class="section">
@@ -199,7 +228,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   <div class="label">RESULT</div>
   <div class="plain-guide">
     <strong>ここは計算結果です。</strong><br>
-    太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。上の「AIに渡す相談文」に、この結果が自動で反映されます。
+    太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。上の「AIに貼る相談文」に、この結果が自動で反映されます。
   </div>
   <div id="results" class="results">
     <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
@@ -293,8 +322,8 @@ function buildKitokuOsText(input){
 function runAstro64(updateKitoku=true){
   const input=getInput();
   if(!input.year || !input.month || !input.day){
-    document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「64象意を計算する」を押すと、ここに天体ごとの64象意が表示されます。</div>';
-    document.getElementById('prompt').value='生年月日を入力して計算すると、AIに渡す相談文がここに表示されます。';
+    document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「星を重ねて相談文を作る」を押すと、ここに天体ごとの64象意が表示されます。</div>';
+    document.getElementById('prompt').value='生年月日を入力して計算すると、AIに貼る相談文がここに表示されます。';
     return;
   }
   if(!document.getElementById('hour').value){
@@ -350,7 +379,7 @@ function loadSavedBirthData(){
 
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
-  navigator.clipboard.writeText(text).then(()=>alert('① 相談文をコピーしました\nまず、お好きなAIに貼り付けてください！'));
+  navigator.clipboard.writeText(text).then(()=>alert('① 相談文をコピーしました\nChatGPT・Claude・Gemini、または気学先生に貼り付けてください。'));
 }
 
 const DEEP_DIVE_PROMPTS={
@@ -363,7 +392,7 @@ const DEEP_DIVE_PROMPTS={
 function copyDeepDive(type){
   const text=DEEP_DIVE_PROMPTS[type]||'';
   if(!text)return;
-  navigator.clipboard.writeText(text).then(()=>alert('② 深掘り用の相談文をコピーしました\n①の続きとして、同じAIの会話に貼り付けてください！'));
+  navigator.clipboard.writeText(text).then(()=>alert('② 深掘り用の相談文をコピーしました\n①の続きとして、同じAIの会話に貼り付けてください。'));
 }
 
 function setTheme(t){
@@ -409,8 +438,8 @@ const hasSavedBirth=loadSavedBirthData();
 if(hasSavedBirth){
   runAstro64();
 }else{
-  document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「64象意を計算する」を押すと、ここに天体ごとの64象意が表示されます。</div>';
-  document.getElementById('prompt').value='生年月日を入力して計算すると、AIに渡す相談文がここに表示されます。';
+  document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「星を重ねて相談文を作る」を押すと、ここに天体ごとの64象意が表示されます。</div>';
+  document.getElementById('prompt').value='生年月日を入力して計算すると、AIに貼る相談文がここに表示されます。';
 }
 </script>
 </body>
