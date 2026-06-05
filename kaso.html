@@ -190,7 +190,7 @@ body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;mi
 
   <div class="menu-card warn" onclick="showPage('s9')">
     <div class="menu-icon">🤖</div>
-    <div><div class="menu-name">AI気学先生に相談</div><div class="menu-desc">間取りの状況を伝えて深掘り処方箋<br>気学先生と連携して相談する</div></div>
+    <div><div class="menu-name">AI気学先生に相談</div><div class="menu-desc">間取りの状況を伝えて深掘り処方箋<br>気学に特化した専属AIに相談する</div></div>
   </div>
 </div>
 
@@ -476,17 +476,35 @@ body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;mi
 <div class="page" id="s9">
   <div class="tool-header">
     <div class="tool-title">🤖 AI気学先生に相談</div>
-    <div class="tool-desc">家相の診断結果をAI気学先生に伝えて、深掘りの処方箋をもらいましょう。</div>
+    <div class="tool-desc">家相の診断結果を、気学に特化した専属AIに渡して深掘りします。通常のAIにも相談できますが、読み違いやハルシネーションに注意しながら使ってください。</div>
   </div>
+
+  <div style="background:linear-gradient(135deg,rgba(72,105,140,.08),rgba(255,255,255,.55));border:1px solid rgba(72,105,140,.2);border-radius:var(--r);padding:14px 15px;margin-bottom:14px;">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(72,105,140,.08);border:1px solid rgba(72,105,140,.2);border-radius:999px;padding:4px 10px;color:#315d86;font-size:.6rem;font-weight:800;margin-bottom:9px;">プレミアム機能</div>
+    <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">気学先生を使う意味</div>
+    <div style="font-size:.64rem;color:var(--mist);line-height:1.9;">
+      気学先生は、KITOKUの家相・九星・方位の前提に合わせて相談できる専属AIです。中心・張り欠け・玄関・水漏れ・地相などを、怖がらせるためではなく「どう整えるか」に翻訳します。<br><br>
+      通常のAIに貼ることもできますが、一般的な風水・占い情報と混ざったり、もっともらしい誤回答が出ることがあります。通常AIを使う場合は、結果をそのまま信じ切らず、判断材料として扱ってください。
+    </div>
+  </div>
+
   <div style="background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.2);border-radius:var(--r);padding:14px 15px;margin-bottom:14px;">
     <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">✦ 使い方</div>
     <div style="font-size:.64rem;color:var(--mist);line-height:1.9;">
       ① 上のツールで気になる診断を実行する<br>
       ② 診断結果をコピーする<br>
       ③ 下のボタンから気学先生を開く<br>
-      ④ 診断結果を貼り付けて「この家相について処方箋を教えてください」と相談する
+      ④ 診断結果を貼り付けて「この家相について、注意点と整え方を教えてください」と相談する
     </div>
   </div>
+
+  <div style="background:#fff;border:1px solid rgba(138,104,32,.16);border-radius:var(--r);padding:13px 14px;margin-bottom:14px;">
+    <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);margin-bottom:7px;">通常のAIに相談する場合</div>
+    <div style="font-size:.63rem;color:var(--mist);line-height:1.85;">
+      ChatGPT・Claude・Geminiなどに貼る場合は、最初に「KITOKUの家相診断結果を材料にして、断定せず、現実的な整え方を提案してください」と書くと安全です。健康・法律・不動産契約などの最終判断は、専門家や現実の状況も合わせて確認してください。
+    </div>
+  </div>
+
   <a href="premium.html" style="display:block;width:100%;background:linear-gradient(135deg,rgba(100,80,40,.18),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.45);border-radius:12px;color:var(--goldlt);font-size:.9rem;padding:16px;text-align:center;letter-spacing:.16em;font-weight:700;text-decoration:none;margin-bottom:10px;">✦ 気学先生に相談する</a>
   <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
 </div>
