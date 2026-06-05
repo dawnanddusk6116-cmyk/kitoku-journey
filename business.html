@@ -454,9 +454,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
-  <div class="free-tool" id="moneyTool" style="display:none;">
-    <div class="tool-title">お金・事業適性チェック</div>
-    <div class="preview-card-body" style="margin-bottom:12px;">生年月日から九星を出し、事業家型・投資家型・短期判断・長期育成など、お金に関する判断傾向を整理します。売買判断ではなく、自分の向き不向きを見る入口です。</div>
+  <div class="free-tool" id="moneyTool" style="display:none;border:1px solid rgba(154,106,18,.38);box-shadow:0 10px 24px rgba(80,55,18,.08);background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,250,240,.9));">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="width:25px;height:25px;border-radius:999px;background:rgba(154,106,18,.12);border:1px solid rgba(154,106,18,.3);display:inline-flex;align-items:center;justify-content:center;color:var(--goldlt);font-weight:800;font-size:.7rem;">1</span>
+      <div class="tool-title" style="margin-bottom:0;">ここからチェックする</div>
+    </div>
+    <div class="preview-card-body" style="margin-bottom:12px;">生年月日と名前の音から、事業家型・投資家型・短期判断・長期育成など、お金に関する判断傾向を整理します。</div>
+    <div style="display:grid;gap:6px;margin-bottom:12px;padding:10px 12px;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.13);border-radius:10px;font-size:.62rem;color:var(--mist);line-height:1.65;">
+      <div><strong style="color:var(--goldlt);">流れ：</strong>生年月日を入れる → 結果を見る → AIに貼る相談文をコピーする</div>
+      <div>売買判断ではなく、自分の向き不向きと相談の軸を作る入口です。</div>
+    </div>
 
     <!-- 星バー（登録済みの場合） -->
     <div id="moneyStarBar" style="display:none;margin-bottom:12px;padding:9px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);border-radius:8px;font-size:.68rem;color:var(--goldlt);font-weight:700;"></div>
