@@ -303,10 +303,43 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
+  <div class="menu-card hire" onclick="showBusinessPreview('seats')">
+    <div class="menu-icon">🪑</div>
+    <div>
+      <div class="menu-name">店舗の空間バランス診断</div>
+      <div class="menu-desc">
+        座席数を単数化して店の星を診断<br>
+        経営者との相性から整え方を見る
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-card boss" onclick="showBusinessPreview('kikin')">
+    <div class="menu-icon">⚖️</div>
+    <div>
+      <div class="menu-name">今月の経営テーマ</div>
+      <div class="menu-desc">
+        木（拡大）と金（利益）のジレンマを解体<br>
+        今月集中すべきフェーズを整理する
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-card founder" onclick="showBusinessPreview('morning')">
+    <div class="menu-icon">🌅</div>
+    <div>
+      <div class="menu-name">今日の朝礼テーマ</div>
+      <div class="menu-desc">
+        経営者・店長の星から朝礼の指針を出す<br>
+        チームを今日最も活性化させる一言
+      </div>
+    </div>
+  </div>
+
   <div class="menu-card money" onclick="showBusinessPreview('money')">
     <div class="menu-icon">💴</div>
     <div>
-      <div class="menu-name">お金・事業適性を読む</div>
+      <div class="menu-name">あなたのお金の特性を考える</div>
       <div class="menu-desc">
         事業家型か投資家型かを見る<br>
         判断癖とお金の扱い方を整える
@@ -420,8 +453,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- お金・契約・事業バランス プレビュー画面 -->
 <div class="screen" id="s3">
   <div class="preview-lead">
-    <span class="cat-badge founder" id="previewBadge">💴 お金・事業適性</span>
-    <div class="preview-title" id="previewTitle">お金・事業適性</div>
+    <span class="cat-badge founder" id="previewBadge">💴 あなたのお金の特性</span>
+    <div class="preview-title" id="previewTitle">あなたのお金の特性</div>
     <div class="preview-body" id="previewLead">
       投資判断そのものではなく、自分の判断癖とリスク姿勢を整えるための入口です。
     </div>
@@ -569,6 +602,75 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <button class="main-btn" type="button" onclick="showPaidFeatureMessage('商品設計レポート')">✦ 商品設計レポートを準備中</button>
   </div>
 
+  <!-- 座席数チェック（店舗型ビジネス） -->
+  <div class="free-tool" id="seatsTool" style="display:none;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="width:25px;height:25px;border-radius:999px;background:rgba(154,106,18,.12);border:1px solid rgba(154,106,18,.3);display:inline-flex;align-items:center;justify-content:center;color:var(--goldlt);font-weight:800;font-size:.7rem;">🪑</span>
+      <div class="tool-title" style="margin-bottom:0;">店舗の空間バランス診断（座席数の星）</div>
+    </div>
+    <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:12px;">飲食店・サロン・教室など店舗型ビジネスは「座席数を単数化した星」から、店の気質を見ます。経営者の星と相剋になる場合は、人の定着・売上の伸び方・現場の空気を整える見直しサインとして扱います。</div>
+    <div class="form-card" style="margin-bottom:10px;">
+      <div class="form-label">✦ 正規の客席数（補助椅子・待合は含めない）</div>
+      <input class="form-input" type="number" id="seatsCount" placeholder="例：18" min="1" max="999">
+      <div style="font-size:.58rem;color:var(--mist);margin-top:4px;">美容室はシャンプー台・待合を除いたカット席数のみ</div>
+    </div>
+    <div class="form-card" style="margin-bottom:12px;">
+      <div class="form-label">✦ 経営者（店長）の生年月日</div>
+      <div class="date-row">
+        <div><input class="form-input" type="number" id="seatsYear" placeholder="1975"><div class="date-unit">年</div></div>
+        <div><input class="form-input" type="number" id="seatsMonth" placeholder="4"><div class="date-unit">月</div></div>
+        <div><input class="form-input" type="number" id="seatsDay" placeholder="1"><div class="date-unit">日</div></div>
+      </div>
+    </div>
+    <button class="main-btn" type="button" onclick="runSeatsCheck()">✦ 店舗の空間バランスを見る</button>
+    <div id="seatsResult" style="display:none;margin-top:14px;"></div>
+  </div>
+
+  <!-- 木金ジレンマ診断 -->
+  <div class="free-tool" id="kikinTool" style="display:none;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="width:25px;height:25px;border-radius:999px;background:rgba(154,106,18,.12);border:1px solid rgba(154,106,18,.3);display:inline-flex;align-items:center;justify-content:center;color:var(--goldlt);font-weight:800;font-size:.7rem;">⚖️</span>
+      <div class="tool-title" style="margin-bottom:0;">今月の経営テーマ（木と金のジレンマ解体）</div>
+    </div>
+    <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:14px;">「拡大・成長（木）」と「利益・回収（金）」は相剋関係にあり、同時には成立しません。今の事業フェーズを入力すると、今月集中すべき経営テーマを提示します。</div>
+    <div style="display:grid;gap:8px;margin-bottom:14px;">
+      <div style="font-size:.68rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">今の事業フェーズに近いのはどちら？</div>
+      <label style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1.5px solid rgba(58,138,58,.3);border-radius:10px;padding:12px;cursor:pointer;">
+        <input type="radio" name="kikin" value="wood" style="margin-top:3px;flex-shrink:0;">
+        <div><div style="font-size:.78rem;font-weight:700;color:#2a7a2a;margin-bottom:3px;">🌱 拡大・投資フェーズ（木）</div><div style="font-size:.62rem;color:var(--mist);line-height:1.7;">新規開拓・採用・設備投資・出店など、お金をかけて広げている段階。利益は後回しになっている。</div></div>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1.5px solid rgba(154,106,18,.3);border-radius:10px;padding:12px;cursor:pointer;">
+        <input type="radio" name="kikin" value="metal" style="margin-top:3px;flex-shrink:0;">
+        <div><div style="font-size:.78rem;font-weight:700;color:#8a5a10;margin-bottom:3px;">💰 利益・回収フェーズ（金）</div><div style="font-size:.62rem;color:var(--mist);line-height:1.7;">売上・粗利・回収を最優先にしている段階。拡大は止めて足元を固めている。</div></div>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1.5px solid rgba(100,100,180,.3);border-radius:10px;padding:12px;cursor:pointer;">
+        <input type="radio" name="kikin" value="both" style="margin-top:3px;flex-shrink:0;">
+        <div><div style="font-size:.78rem;font-weight:700;color:#3a3a9a;margin-bottom:3px;">🔀 両方やろうとして迷っている</div><div style="font-size:.62rem;color:var(--mist);line-height:1.7;">広げたいが利益も欲しい。どちらを優先するか決められていない状態。</div></div>
+      </label>
+    </div>
+    <button class="main-btn" type="button" onclick="runKikinDiagnosis()">✦ 今月の経営テーマを出す</button>
+    <div id="kikinResult" style="display:none;margin-top:14px;"></div>
+  </div>
+
+  <!-- 朝礼テーマ（同気の法則） -->
+  <div class="free-tool" id="morningTool" style="display:none;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="width:25px;height:25px;border-radius:999px;background:rgba(154,106,18,.12);border:1px solid rgba(154,106,18,.3);display:inline-flex;align-items:center;justify-content:center;color:var(--goldlt);font-weight:800;font-size:.7rem;">🌅</span>
+      <div class="tool-title" style="margin-bottom:0;">今日の朝礼テーマ（同気の法則）</div>
+    </div>
+    <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:12px;">経営者・店長の本命星が日盤のどの系列の上に乗るかで、今日チームを活性化させるテーマが変わります。</div>
+    <div class="form-card" style="margin-bottom:12px;">
+      <div class="form-label">✦ 経営者（店長）の生年月日</div>
+      <div class="date-row">
+        <div><input class="form-input" type="number" id="morningYear" placeholder="1975"><div class="date-unit">年</div></div>
+        <div><input class="form-input" type="number" id="morningMonth" placeholder="4"><div class="date-unit">月</div></div>
+        <div><input class="form-input" type="number" id="morningDay" placeholder="1"><div class="date-unit">日</div></div>
+      </div>
+    </div>
+    <button class="main-btn" type="button" onclick="runMorningTheme()">✦ 今日の朝礼テーマを出す</button>
+    <div id="morningResult" style="display:none;margin-top:14px;"></div>
+  </div>
+
   <div class="safe-note">
     ※ 投資・資金判断は損失を伴う可能性があります。KITOKUは銘柄選定や売買指示を行うものではありません。判断癖・タイミング・リスク姿勢を整理するための補助資料としてご利用ください。
   </div>
@@ -603,8 +705,8 @@ var curCat='hire', curC='kitoku', curT='basic';
 
 var BUSINESS_PREVIEWS={
   money:{
-    badge:'💴 お金・事業適性',
-    title:'お金・事業適性',
+    badge:'💴 あなたのお金の特性',
+    title:'あなたのお金の特性',
     lead:'投資判断そのものではなく、自分がどんなお金の扱い方に向きやすいかを整理する入口です。九星と名前の音から、事業家型、金融投資家型、短期判断、長期育成などの傾向を見ます。',
     free:['お金の判断タイプを知る','事業家型か投資家型かを見る','短期判断と長期育成の傾向を見る','名前の音から判断癖を深掘りする'],
     paid:['AI軍師によるお金の適性レポート','事業・投資・副業の向き不向き整理','姓名判断と九星を重ねた判断癖分析','問い→現状→理想→次の一手の整理'],
@@ -648,14 +750,20 @@ function showBusinessPreview(kind){
   var dealTool=document.getElementById('dealTool');
   var balanceTool=document.getElementById('balanceTool');
   var productTool=document.getElementById('productTool');
+  var seatsTool=document.getElementById('seatsTool');
+  var kikinTool=document.getElementById('kikinTool');
+  var morningTool=document.getElementById('morningTool');
   if(moneyTool)moneyTool.style.display=kind==='money'?'block':'none';
   if(kind==='money') loadMoneyStarBar();
   if(dealTool)dealTool.style.display=kind==='deal'?'block':'none';
   if(kind==='deal') loadDealBirth();
   if(balanceTool)balanceTool.style.display=kind==='balance'?'block':'none';
   if(productTool)productTool.style.display=kind==='product'?'block':'none';
+  if(seatsTool)seatsTool.style.display=kind==='seats'?'block':'none';
+  if(kikinTool)kikinTool.style.display=kind==='kikin'?'block':'none';
+  if(morningTool)morningTool.style.display=kind==='morning'?'block':'none';
   var previewGrid=document.querySelector('#s3 .preview-grid');
-  var activeTool=kind==='money'?moneyTool:kind==='deal'?dealTool:kind==='balance'?balanceTool:kind==='product'?productTool:null;
+  var activeTool=kind==='money'?moneyTool:kind==='deal'?dealTool:kind==='balance'?balanceTool:kind==='product'?productTool:kind==='seats'?seatsTool:kind==='kikin'?kikinTool:kind==='morning'?morningTool:null;
   if(previewGrid&&activeTool)previewGrid.parentNode.insertBefore(activeTool,previewGrid);
   var mr=document.getElementById('moneyResult');if(mr)mr.style.display='none';
   var dr=document.getElementById('dealResult');if(dr)dr.style.display='none';
@@ -1178,6 +1286,88 @@ function bizBalanceHowto(weak,dominant,total,count){
     +'<div><strong style="color:var(--goldlt);">使う場所：</strong>'+rx.place+'</div>'
     +'<div><strong style="color:var(--goldlt);">言葉で補う：</strong>'+rx.word+'</div>'
     +'<div><strong style="color:var(--goldlt);">事業で補う：</strong>'+rx.action+'</div>'
+    +'</div>';
+}
+
+// ── 座席数チェック ──
+function runSeatsCheck(){
+  var seats=parseInt(document.getElementById('seatsCount').value)||0;
+  var y=parseInt(document.getElementById('seatsYear').value)||0;
+  var m=parseInt(document.getElementById('seatsMonth').value)||0;
+  if(!seats){alert('座席数を入力してください');return;}
+  if(!y||!m){alert('経営者の生年月日を入力してください');return;}
+  var n=seats;while(n>9){var s=String(n).split('').reduce(function(a,c){return a+parseInt(c);},0);n=s;}
+  if(n===0)n=9;
+  var storeS=STARS[n]||STARS[1];
+  var ownerN=calcH(y,m);
+  var ownerS=STARS[ownerN];
+  var sk={木:'土',土:'水',水:'火',火:'金',金:'木'};
+  var isSK=(sk[ownerS.e]===storeS.e)||(sk[storeS.e]===ownerS.e);
+  var el=document.getElementById('seatsResult');
+  el.style.display='block';
+  var statusText=isSK?'⚠️ 見直しサインあり（相剋）':'✅ 安定しやすい組み合わせ（相生・比和）';
+  var statusColor=isSK?'#b04030':'#2a7a2a';
+  var borderColor=isSK?'rgba(176,64,48,.3)':'rgba(58,138,58,.3)';
+  var bgColor=isSK?'rgba(176,64,48,.06)':'rgba(58,138,58,.06)';
+  var advice=isSK?
+    '経営者（'+ownerS.k+'）と店の星（'+storeS.k+'）が相剋の関係です。人の定着、売上の伸び方、現場の空気に摩擦が出やすい組み合わせとして見ます。\n\n整え方：座席数を1席増減して相生の星に近づけるか、ロゴ・内装・ユニフォームの色を媒介星の色に変えることで、場の摩擦をやわらげます。':
+    '経営者（'+ownerS.k+'）と店の星（'+storeS.k+'）は安定しやすい組み合わせです。空間の気は比較的流れやすい状態として見ます。';
+  el.innerHTML='<div style="background:'+bgColor+';border:1px solid '+borderColor+';border-radius:12px;padding:14px 16px;">'
+    +'<div style="font-size:.62rem;color:var(--gold);letter-spacing:.12em;margin-bottom:8px;">KITOKU 店舗診断</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">'
+    +'<div style="background:var(--card);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:.58rem;color:var(--mist);margin-bottom:4px;">店の星（'+seats+'席→'+n+'）</div><div style="font-size:.88rem;font-weight:700;color:var(--snow);">'+storeS.k+'</div><div style="font-size:.62rem;color:var(--mist);">'+storeS.e+'</div></div>'
+    +'<div style="background:var(--card);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:.58rem;color:var(--mist);margin-bottom:4px;">経営者の星</div><div style="font-size:.88rem;font-weight:700;color:var(--snow);">'+ownerS.k+'</div><div style="font-size:.62rem;color:var(--mist);">'+ownerS.e+'</div></div>'
+    +'</div>'
+    +'<div style="font-size:.78rem;font-weight:700;color:'+statusColor+';margin-bottom:8px;">'+statusText+'</div>'
+    +'<div style="font-size:.68rem;color:var(--mist);line-height:1.85;white-space:pre-line;">'+advice+'</div>'
+    +'</div>';
+}
+
+// ── 木金ジレンマ診断 ──
+function runKikinDiagnosis(){
+  var sel=document.querySelector('input[name="kikin"]:checked');
+  if(!sel){alert('今の事業フェーズを選択してください');return;}
+  var phase=sel.value;
+  var results={
+    wood:{title:'今月のテーマ：足元を固める（土→金）',body:'今は木（拡大）フェーズです。しかし木と金は相剋——広げるほど利益が削られる構造です。\n\n今月は「土（基盤・人材育成）」か「金（利益回収・コスト見直し）」を経営テーマに。\n\n処方箋：\n・既存顧客への再アプローチで利益率を上げる\n・社内の仕組み（マニュアル・育成）を整える\n・効果測定できていない出費を1つ止める',color:'#8a5a10'},
+    metal:{title:'今月のテーマ：未来への投資（木）',body:'今は金（利益・回収）フェーズです。足元は固まっていますが、このままでは成長が止まります。\n\n今月は「木（人材育成・新規開拓・ネットワーク）」に時間とお金を使ってください。\n\n処方箋：\n・新しい出会いに時間を使う\n・スタッフへの教育投資を1つ決める\n・ブランド・発信・SNSに手を入れる',color:'#2a7a2a'},
+    both:{title:'今月のテーマ：どちらかを先に決める',body:'「拡大も利益も」を同時に追うと、木と金の相剋が強まり、エネルギーが分散しやすくなります。\n\n今月はどちらかを「今月の主役」として選んでください。\n\n①「木（拡大）を選ぶ」→ 利益は来月以降。新規1件を取りに行く\n②「金（回収）を選ぶ」→ 拡大は来月以降。未回収を全て片付ける\n\n集中した月が、次の大きな飛躍への踏み台になります。',color:'#3a3a9a'}
+  };
+  var r=results[phase];
+  var el=document.getElementById('kikinResult');
+  el.style.display='block';
+  el.innerHTML='<div style="background:var(--card);border:1px solid rgba(138,104,32,.2);border-radius:12px;padding:14px 16px;">'
+    +'<div style="font-size:.62rem;color:var(--gold);letter-spacing:.12em;margin-bottom:8px;">KITOKU 経営テーマ診断</div>'
+    +'<div style="font-size:.82rem;font-weight:700;color:'+r.color+';margin-bottom:10px;">'+r.title+'</div>'
+    +'<div style="font-size:.68rem;color:var(--mist);line-height:1.9;white-space:pre-line;">'+r.body+'</div>'
+    +'</div>';
+}
+
+// ── 朝礼テーマ（同気の法則）──
+function runMorningTheme(){
+  var y=parseInt(document.getElementById('morningYear').value)||0;
+  var m=parseInt(document.getElementById('morningMonth').value)||0;
+  if(!y||!m){alert('経営者の生年月日を入力してください');return;}
+  var honmei=calcH(y,m);
+  var ownerS=STARS[honmei];
+  var today=new Date();
+  var ty=today.getFullYear(),tm=today.getMonth()+1,td=today.getDate();
+  // 系列判定（本命星）
+  var group=([2,5,8].indexOf(honmei)>=0)?'chisuu':([3,6,9].indexOf(honmei)>=0)?'tensuu':'jinsuu';
+  // 今日の干支から系列も判定（日盤中宮を簡易計算）
+  var themes={
+    chisuu:{theme:'確実・着実・ミスをゼロに',detail:'今日はお釣りの間違い・オーダーミス・連絡漏れを徹底的になくす日です。「地道に、確実に、ひとつひとつ」を合言葉にしてください。',color:'#8a5a10'},
+    tensuu:{theme:'明るく・元気よく・活気を出す',detail:'今日は笑顔と声のトーンが最強の武器です。スタッフ全員が明るく動くだけで売上が変わります。「今日はテンションを上げていこう」と伝えてください。',color:'#b04030'},
+    jinsuu:{theme:'優しさ・調和・人間関係を大切に',detail:'今日は従業員同士・お客様との関係を最優先にしてください。小さな気遣いや声かけが、チームと顧客の信頼を一段高める日です。',color:'#2a6ab0'}
+  };
+  var t=themes[group];
+  var el=document.getElementById('morningResult');
+  el.style.display='block';
+  el.innerHTML='<div style="background:var(--card);border:1px solid rgba(138,104,32,.2);border-radius:12px;padding:14px 16px;">'
+    +'<div style="font-size:.62rem;color:var(--gold);letter-spacing:.12em;margin-bottom:8px;">KITOKU 朝礼テーマ（'+ty+'年'+tm+'月'+td+'日）</div>'
+    +'<div style="font-size:.7rem;color:var(--mist);margin-bottom:8px;">経営者：'+ownerS.k+'（'+(['地数系列','天数系列','人数系列'][['chisuu','tensuu','jinsuu'].indexOf(group)])+'）</div>'
+    +'<div style="font-size:.9rem;font-weight:700;color:'+t.color+';margin-bottom:10px;">「'+t.theme+'」</div>'
+    +'<div style="font-size:.68rem;color:var(--mist);line-height:1.85;">'+t.detail+'</div>'
     +'</div>';
 }
 
