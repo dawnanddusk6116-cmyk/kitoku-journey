@@ -217,12 +217,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="top-guide">
     <div class="top-guide-title">この画面でできること</div>
     <div class="top-guide-text">
-      売買の正解や人の良し悪しを決める画面ではありません。九星・五行・日取りの視点から、判断の癖、相手との距離感、チームの流れを整理するための仕事用メモです。
+      売買の正解や人の良し悪しを決める画面ではありません。九星・五行・日取りの視点から、判断の癖、相手との距離感、チームの流れを整理するための仕事用メモです。最終判断はユーザー自身が行い、KITOKUはそのための軸と根拠を示します。
     </div>
     <div class="top-guide-points">
       <div class="top-guide-point">・<strong>お金・契約</strong>は、迷い方と動くタイミングを整えます。</div>
       <div class="top-guide-point">・<strong>採用・リーダーとメンバー・協力者</strong>は、相性よりも役割分担と摩擦の扱い方を見ます。</div>
-      <div class="top-guide-point">・<strong>事業バランス</strong>は、成長・発信・基盤・利益・流動性の偏りを確認します。</div>
+      <div class="top-guide-point">・<strong>社名・商品名</strong>は、第一音・読み全体・総画数・色の根拠を見ながら、名前の使い方を確認します。</div>
     </div>
   </div>
 
@@ -255,12 +255,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="menu-card balance" onclick="showBusinessPreview('balance')">
     <div class="menu-icon">📊</div>
     <div>
-      <div class="menu-name">事業の五行バランス</div>
+      <div class="menu-name">社名・商品名を読む</div>
       <div class="menu-desc">
-        成長・発信・基盤・利益・流動性<br>
-        事業のお金と力の偏りを見る
+        社名・屋号・ブランド名の気質を見る<br>
+        命名・商品開発・色の参考に
       </div>
-      <div class="free-badge">無料：簡易診断</div><div class="paid-badge">有料予定：改善レポート</div>
+      <div class="free-badge">無料：名前チェック</div><div class="paid-badge">有料予定：命名・商品レポート</div>
     </div>
   </div>
 
@@ -488,11 +488,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 
   <div class="free-tool" id="balanceTool" style="display:none;">
-    <div class="tool-title">社名・屋号の気質を読む</div>
-    <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名の参考にしてください。</div>
+    <div class="tool-title">社名・商品名の気質を読む</div>
+    <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号・商品名・ブランド名の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名・商品開発の参考にしてください。</div>
 
     <div style="margin-bottom:10px;">
-      <div class="form-label">社名・屋号・ブランド名</div>
+      <div class="form-label">社名・屋号・商品名・ブランド名</div>
       <input class="form-input" type="text" id="bizName" placeholder="例：KITOKU JOURNEY / キトクジャーニー">
     </div>
     <div style="margin-bottom:10px;">
@@ -558,12 +558,12 @@ var BUSINESS_PREVIEWS={
     policy:'日付を絶対視せず、事業判断の補助線として使います。契約内容、法務、資金繰り、相手先の信用確認を優先した上で、タイミングを整えるための機能です。'
   },
   balance:{
-    badge:'📊 事業の五行バランス',
-    title:'事業の五行バランス',
-    lead:'事業を木・火・土・金・水で見ます。成長、発信、基盤、利益、流動性のどこが強く、どこが不足しているかを整理する入口です。',
-    free:['事業の五行を簡易チェック','強い領域と不足領域を見る','今月整えるべき経営テーマを出す','お金の流れを五行で言語化する'],
-    paid:['事業改善AIレポート','売上・利益・固定費・広告費の五行分析','月次の経営テーマ提案','保存・履歴・再比較'],
-    policy:'会計や税務の代替ではなく、経営状態を見直すための比喩的な整理法です。数字の正確な分析は会計資料と専門家確認を併用してください。'
+    badge:'📊 社名・商品名を読む',
+    title:'社名・商品名を読む',
+    lead:'社名・屋号・商品名・ブランド名の読みから、名前が持つ事業の気質を見ます。第一音、読み全体、総画数、色の根拠を示しながら、命名・改名・商品開発・ブランド整理の判断軸を作ります。',
+    free:['名前の事業エンジンを見る','読み全体の五行バランスを見る','なぜそう読むかの根拠を見る','ロゴや色の方向性を確認する'],
+    paid:['候補名の比較レポート','商品名とパッケージ色の相性','店舗名・座席数・開業日の確認','ロゴ・肩書き・ビジネスネーム提案'],
+    policy:'商標・法務・登記・販売成果を保証するものではありません。最終判断はユーザー自身で行い、KITOKUは第一音・五行・総画数・色などの根拠を示す補助資料として使ってください。正式な商号確認や権利確認は専門家・公的情報とあわせて確認してください。'
   }
 };
 
@@ -882,27 +882,7 @@ function runDealFree(){
     +'</div>';
 }
 
-// 音の五行マップ（business用）
-var ON_GYO_FULL={
-  'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土','あ':'土','い':'土','う':'土','え':'土','お':'土',
-  'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金','ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金','か':'金','き':'金','く':'金','け':'金','こ':'金',
-  'サ':'水','シ':'水','ス':'水','セ':'水','ソ':'水','ザ':'水','ジ':'水','ズ':'水','ゼ':'水','ゾ':'水','さ':'水','し':'水','す':'水','せ':'水','そ':'水',
-  'タ':'火','チ':'火','ツ':'火','テ':'火','ト':'火','ダ':'火','デ':'火','ド':'火','た':'火','ち':'火','つ':'火','て':'火','と':'火',
-  'ナ':'土','ニ':'土','ヌ':'土','ネ':'土','ノ':'土','な':'土','に':'土','ぬ':'土','ね':'土','の':'土',
-  'ハ':'木','ヒ':'木','フ':'木','ヘ':'木','ホ':'木','バ':'木','ビ':'木','ブ':'木','ベ':'木','ボ':'木','パ':'木','ピ':'木','プ':'木','ペ':'木','ポ':'木','は':'木','ひ':'木','ふ':'木','へ':'木','ほ':'木',
-  'マ':'土','ミ':'土','ム':'土','メ':'土','モ':'土','ヤ':'土','ユ':'土','ヨ':'土','ワ':'金','ヲ':'金','ン':'金',
-  'ラ':'金','リ':'金','ル':'金','レ':'金','ロ':'金','ら':'金','り':'金','る':'金','れ':'金','ろ':'金',
-  'ま':'土','み':'土','む':'土','め':'土','も':'土','や':'土','ゆ':'土','よ':'土'
-};
-var GG_COL_BIZ={木:'#5a8a3a',火:'#c05050',土:'#9a7a2a',金:'#4a8aa0',水:'#3a70a0'};
-var GG_BIZ_MEAN={
-  木:{key:'成長・発展・新規開拓',desc:'木のエネルギーが強い名前は、成長力・拡張力・新しい始まりを象徴します。スタートアップや新規事業に向いています。'},
-  火:{key:'発信・ブランド・認知',desc:'火のエネルギーが強い名前は、発信力・表現力・ブランド構築に向いています。SNS・メディア・教育系のビジネスに適しています。'},
-  土:{key:'安定・信頼・基盤',desc:'土のエネルギーが強い名前は、堅実さ・信頼・長期的な安定を象徴します。サービス業・コンサル・管理系のビジネスに向いています。'},
-  金:{key:'利益・契約・収穫',desc:'金のエネルギーが強い名前は、利益回収・契約・実績を象徴します。金融・不動産・製造業に向いています。'},
-  水:{key:'情報・流通・変化',desc:'水のエネルギーが強い名前は、情報収集・流通・柔軟な変化を象徴します。IT・物流・コンテンツ配信に向いています。'}
-};
-// 音の五行マップ（business用）
+// 音の五行マップ（business用・全体バランス）
 var ON_GYO_FULL={
   'ア':'土','イ':'土','ウ':'土','エ':'土','オ':'土','あ':'土','い':'土','う':'土','え':'土','お':'土',
   'カ':'金','キ':'金','ク':'金','ケ':'金','コ':'金','ガ':'金','ギ':'金','グ':'金','ゲ':'金','ゴ':'金','か':'金','き':'金','く':'金','け':'金','こ':'金',
@@ -923,11 +903,102 @@ var GG_BIZ_MEAN={
   水:{key:'情報・流通・変化',desc:'水のエネルギーが強い名前は、情報収集・流通・柔軟な変化を象徴します。IT・物流・コンテンツ配信に向いています。'}
 };
 var GYO_SOJO={木:'火',火:'土',土:'金',金:'水',水:'木'};
+var BIZ_FIRST_RULE=[
+  {re:/^[カキクケコガギグゲゴかきくけこがぎぐげご]/,gyo:'木',line:'カ行',logic:'成長・営業・ネットワークを伸ばす力'},
+  {re:/^[タチツテトダヂヅデドナニヌネノラリルレロたちつてとだぢづでどなにぬねのらりるれろ]/,gyo:'火',line:'タ・ナ・ラ行',logic:'発信・企画・ブランドを広げる力'},
+  {re:/^[ヤユヨワヲやゆよわを]/,gyo:'土',line:'ヤ・ワ行',logic:'土台・信用・専門性を蓄える力'},
+  {re:/^[サシスセソザジズゼゾさしすせそざじずぜぞ]/,gyo:'金',line:'サ行',logic:'利益・契約・成果を形にする力'},
+  {re:/^[マミムメモハヒフヘホバビブベボパピプペポまみむめもはひふへほばびぶべぼぱぴぷぺぽ]/,gyo:'水',line:'マ・ハ・パ・バ行',logic:'流通・共感・資金循環を動かす力'}
+];
+var BIZ_ENGINE={
+  木:{key:'成長・営業・拡大',desc:'伸ばす力が強い事業名です。新規開拓、紹介、営業導線、発信量を増やす場面で力が出ます。一方で、広げることが先行しやすいので、利益回収と管理の仕組みを同時に置くと安定します。'},
+  火:{key:'発信・企画・ブランド',desc:'人に伝える力が強い事業名です。企画、教育、SNS、イベント、見せ方づくりに向きます。一方で、熱量で走り切りやすいので、継続運用と数字確認の担当を決めておくと強くなります。'},
+  土:{key:'基盤・信用・専門性',desc:'信用を積み上げる力が強い事業名です。専門技術、店舗、会員制、長期契約、地域密着に向きます。一方で、動き出しが重くなりやすいので、告知や新規導線を意識すると広がります。'},
+  金:{key:'利益・契約・結果',desc:'成果を形にする力が強い事業名です。契約、単価設計、売上管理、金融・不動産・士業的な判断に向きます。一方で、短期成果に寄りやすいので、採用・育成・未来投資も残すと伸び続けます。'},
+  水:{key:'流通・共感・循環',desc:'情報と人の流れを作る力が強い事業名です。紹介、接客、物流、IT、コンテンツ、コミュニティに向きます。一方で、努力が流れやすい面があるので、商品化・価格・入金導線を明確にすると形になります。'}
+};
+var BIZ_COLOR_RX={
+  木:'緑・青緑を軸に、白・金を小さく足すと「広げる力」と「利益回収」の両方を整えやすくなります。',
+  火:'赤・紫・明るい暖色は発信力を上げます。長く続けたいサービスは、黄土・ベージュ系を足して運用の土台を作ると安定します。',
+  土:'黄土・茶・アイボリー系は信頼感を出しやすい色です。動きを出したい時は、緑を差し色にして新規導線を作ると良いです。',
+  金:'白・金・シルバーは成果や信用を見せやすい色です。未来投資を強めたい時は、緑を入れて育成・開発の気を補います。',
+  水:'紺・黒・青は流れや情報性を出します。努力を形にしたい時は、白・金で商品化、緑で成長導線を補うと整います。'
+};
+var BIZ_THEME_RX={
+  木:'今月は「広げた先で回収する仕組み」を整える月。見込み客、紹介、発信を増やしつつ、価格表・申込導線・請求までを一本につなげると良いです。',
+  火:'今月は「伝わる形に整える」月。サービス名、説明文、提案資料、SNSの見せ方を磨くと、熱量が売上や信用に変わりやすくなります。',
+  土:'今月は「土台を固める」月。規約、導線、予約、顧客管理、運用ルールを見直すと、長く続く事業の芯ができます。',
+  金:'今月は「利益と契約を見直す」月。単価、原価、契約条件、回収漏れを確認し、短期利益だけでなく次の投資枠も残すのが鍵です。',
+  水:'今月は「流れを形にする」月。問い合わせ、紹介、SNS、入金、納品までの流れを可視化し、曖昧な無料対応を商品メニューに変えると良いです。'
+};
+var BIZ_STROKE_WARN={
+  19:'発想力は強い反面、判断が極端になりやすい画数です。契約条件・資金繰り・撤退基準を先に決めておくと安定します。',
+  22:'人情や理想に寄りやすく、利益が残りにくいサインです。値引き・無料対応・曖昧な役割分担を見直すと整います。',
+  26:'大きく伸びる力と波の大きさが同居します。拡大前に固定費・採用・在庫の上限を決めておくと安心です。',
+  28:'責任や負荷を背負いやすい画数です。代表一人に判断が集中しないよう、相談役やチェック体制を置くと良いです。',
+  30:'勢いの後に迷いが出やすい画数です。新規施策は期間・予算・判断基準を決めてから始めるとぶれにくくなります。',
+  34:'成果を急ぐほど無理が出やすいサインです。契約・広告・借入など大きな判断は、第三者確認を入れると安全です。',
+  36:'面倒見の良さで抱え込みやすい画数です。協力者との責任範囲、報酬、納期を言葉にしておくと守りが固まります。',
+  44:'大きな転換が出やすい画数です。攻める時ほど、固定費・法務・税務・資金繰りを早めに確認すると安定します。'
+};
 
 function onGyoCount(kana){
   var c={木:0,火:0,土:0,金:0,水:0};
   [...(kana||'')].forEach(function(ch){var g=ON_GYO_FULL[ch];if(g)c[g]++;});
   return c;
+}
+function normalizeKanaText(text){
+  return (text||'').replace(/[A-Za-z0-9\s\-_/・@＠＆&.．]/g,'').trim();
+}
+function bizFirstEngine(text){
+  var src=normalizeKanaText(text);
+  var first=src.charAt(0);
+  for(var i=0;i<BIZ_FIRST_RULE.length;i++){
+    if(BIZ_FIRST_RULE[i].re.test(first))return Object.assign({first:first},BIZ_FIRST_RULE[i]);
+  }
+  return {first:first||'未入力',gyo:'土',line:'補助判定',logic:'入力された読みから補助的に基盤・信用の気として読みます'};
+}
+function bizWordParts(text){
+  return (text||'').split(/[\s　・\/／\-ー_@＠&＆]+/).map(function(v){return normalizeKanaText(v);}).filter(Boolean);
+}
+function bizSignals(name,kana,strokes,engine,count){
+  var src=normalizeKanaText(kana||name);
+  var parts=bizWordParts(kana||name);
+  var signals=[];
+  if(/^[ガギグゲゴザジズゼゾダヂヅデドバビブベボがぎぐげござじずぜぞだぢづでどばびぶべぼ]/.test(src)){
+    signals.push({title:'濁音スタート',body:'責任感や巻き込み力が出る一方、相手の課題まで背負いやすい名前です。契約範囲・納期・追加料金を先に言葉にしておくと守りが固まります。'});
+  }
+  if(/[ンん]$/.test(src)){
+    signals.push({title:'末尾が「ん」',body:'区切りをつける力が強く、短期決着や完了型サービスに向きます。長期運用にしたい場合は、継続プラン・次回予約・会員導線を足すと流れが続きます。'});
+  }
+  if(engine.gyo==='水'){
+    signals.push({title:'水の事業エンジン',body:'人・情報・お金の流れを作る力があります。ただし、善意の対応が流れやすいので、メニュー化・価格表・入金タイミングを明確にすると利益が残ります。'});
+  }
+  if(parts.length>=2){
+    var engines=parts.map(function(p){return bizFirstEngine(p).gyo;});
+    var unique=engines.filter(function(g,i){return engines.indexOf(g)===i;});
+    if(unique.length>=2){
+      signals.push({title:'複数語の五行差',body:'ブランド名の中に複数の気が混ざっています。強みが広がる反面、営業・制作・経理などの役割がぶつかりやすいので、担当と優先順位を決めると使いやすくなります。'});
+    }
+  }
+  if(count.木>=2&&count.金>=2){
+    signals.push({title:'木と金が強い',body:'拡大したい力と、利益・管理を固めたい力が同時に出ています。今は「広げる期」か「回収する期」かを決めると判断が速くなります。'});
+  }
+  if(strokes&&BIZ_STROKE_WARN[strokes]){
+    signals.push({title:strokes+'画の注意サイン',body:BIZ_STROKE_WARN[strokes]});
+  }
+  if(!signals.length){
+    signals.push({title:'大きな偏りは少なめ',body:'読みから見る限り、極端な注意サインは強くありません。次は不足している五行を、色・担当者・メニュー名で少し補うとさらに整います。'});
+  }
+  return signals;
+}
+function bizSignalHtml(signals){
+  return signals.map(function(s){
+    return '<div style="padding:10px 0;border-top:1px solid rgba(138,104,32,.12);">'
+      +'<div style="font-size:.62rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">'+s.title+'</div>'
+      +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+s.body+'</div>'
+      +'</div>';
+  }).join('');
 }
 
 // ── 社名鑑定 ──
@@ -935,14 +1006,17 @@ function runBizReading(){
   var name=document.getElementById('bizName').value.trim();
   var kana=document.getElementById('bizKana').value.trim();
   var strokes=parseInt(document.getElementById('bizStrokes').value)||0;
-  if(!name&&!kana){alert('社名・屋号を入力してください');return;}
+  if(!name&&!kana){alert('社名・屋号・商品名を入力してください');return;}
 
-  var count=onGyoCount(kana||name);
+  var inputText=kana||name;
+  var engine=bizFirstEngine(inputText);
+  var count=onGyoCount(inputText);
   var total=Object.values(count).reduce(function(a,b){return a+b;},0);
   var sorted=Object.keys(count).sort(function(a,b){return count[b]-count[a];});
   var dominant=sorted[0];
   var weak=sorted[sorted.length-1];
   var strokeGyo=strokes?['木','木','火','火','土','土','金','金','水','水'][strokes%10]:'';
+  var signals=bizSignals(name,kana,strokes,engine,count);
 
   // 五行カウント表示
   var bars=sorted.map(function(g){
@@ -957,7 +1031,6 @@ function runBizReading(){
   }).join('');
 
   // 処方箋
-  var nextGyo=GYO_SOJO[dominant]||'土';
   var rx='音の五行で「'+weak+'」が少ない傾向です。'
     +'読み方・略称・キャッチコピーに「'+
     ({木:'ハヒフヘホ・マミムメモ行',火:'タチツテト行',土:'アイウエオ・ナニヌネノ行',金:'カキクケコ・ラリルレロ行',水:'サシスセソ行'}[weak])+'」の音を取り入れると、'+weak+'の気を補えます。';
@@ -973,15 +1046,21 @@ function runBizReading(){
     +(kana?'<div style="font-size:.62rem;color:var(--mist);">'+kana+'</div>':'')
     +'</div>'
 
+    // 事業エンジン
+    +'<div style="padding:14px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 事業のメインエンジン：'+engine.gyo+'（'+BIZ_ENGINE[engine.gyo].key+'）</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.9;">第一音「'+engine.first+'」を'+engine.line+'として読み、'+engine.logic+'を中心に見ています。'+BIZ_ENGINE[engine.gyo].desc+'</div>'
+    +'</div>'
+
     // 音の五行
     +'<div style="padding:14px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:10px;">🔤 音の五行バランス</div>'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:10px;">🔤 読み全体の五行バランス</div>'
     +bars
     +'</div>'
 
     // 主気質
     +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.04);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 主たる気質：'+dominant+'（'+GG_BIZ_MEAN[dominant].key+'）</div>'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 読み全体で強い気：'+dominant+'（'+GG_BIZ_MEAN[dominant].key+'）</div>'
     +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+GG_BIZ_MEAN[dominant].desc+'</div>'
     +'</div>'
 
@@ -991,10 +1070,29 @@ function runBizReading(){
     +'<div style="font-size:.63rem;color:var(--mist);">音の五行と総画数の五行が同じ場合、その気質がより強調されます。</div>'
     +'</div>':'')
 
+    // 注意サイン
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(255,255,255,.78);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:2px;">🔎 なぜこの判定になるのか</div>'
+    +'<div style="font-size:.62rem;color:var(--mist);line-height:1.75;margin-bottom:4px;">第一音で事業の中心エンジンを見て、読み全体の五行・総画数・注意サインを重ねています。ここで出すのは決定ではなく、ユーザーが判断するための根拠です。</div>'
+    +bizSignalHtml(signals)
+    +'</div>'
+
+    // 今月テーマ
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">📅 今月の経営テーマ</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+BIZ_THEME_RX[engine.gyo]+'</div>'
+    +'</div>'
+
     // 処方箋
     +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">💡 補いたい五行：'+weak+'</div>'
     +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+rx+'</div>'
+    +'</div>'
+
+    // 色の処方箋
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.035);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🎨 ロゴ・カラー処方箋</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+BIZ_COLOR_RX[engine.gyo]+'</div>'
     +'</div>'
 
     // LIFEへ誘導
@@ -1004,7 +1102,7 @@ function runBizReading(){
     +'</div>'
 
     +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;">'
-    +'※ 商標・法務上の判断ではありません。名前が持つ気質を東洋の叡智で読む参考情報です。'
+    +'※ 商標・法務上の判断ではありません。名前が持つ気質を東洋の叡智で読み、ユーザー自身が判断するための参考情報です。'
     +'</div></div>';
 }
 
