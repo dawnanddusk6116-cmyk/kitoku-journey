@@ -22,6 +22,9 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--bg);min-height:100dvh;}
 body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;font-size:15px;padding-bottom:60px;}
+body[data-fontsize="s"]{font-size:15px;}
+body[data-fontsize="m"]{font-size:17px;}
+body[data-fontsize="l"]{font-size:19px;}
 
 /* ── ヘッダー ── */
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(12px);}
@@ -136,6 +139,10 @@ body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;mi
   <span class="tb-lbl">表示</span>
   <button class="tb-btn" id="tb-dark" onclick="setTheme('dark')">夜</button>
   <button class="tb-btn active" id="tb-light" onclick="setTheme('light')">昼</button>
+  <span class="tb-lbl" style="margin-left:8px;">文字</span>
+  <button class="tb-btn active" id="tb-s" onclick="setFontSize('s')">小</button>
+  <button class="tb-btn" id="tb-m" onclick="setFontSize('m')">中</button>
+  <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
 </div>
 
 <!-- ===== メニュー画面 ===== -->
@@ -746,11 +753,20 @@ function setTheme(t){
   ['dark','light'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
 }
 
+function setFontSize(s){
+  document.body.setAttribute('data-fontsize',s);
+  try{localStorage.setItem('kitoku-kaso-fontsize',s);}catch(e){}
+  ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
+}
+
 (function(){
   var t=localStorage.getItem('kitoku-theme')||'light';
+  var fs=localStorage.getItem('kitoku-kaso-fontsize')||'s';
   document.body.setAttribute('data-theme',t);
   document.documentElement.setAttribute('data-theme',t);
   ['dark','light'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
+  document.body.setAttribute('data-fontsize',fs);
+  ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===fs);});
 })();
 </script>
 </body>
