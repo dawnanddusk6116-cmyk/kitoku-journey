@@ -222,7 +222,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="top-guide-points">
       <div class="top-guide-point">・<strong>お金・契約</strong>は、迷い方と動くタイミングを整えます。</div>
       <div class="top-guide-point">・<strong>採用・リーダーとメンバー・協力者</strong>は、相性よりも役割分担と摩擦の扱い方を見ます。</div>
-      <div class="top-guide-point">・<strong>社名・商品名</strong>は、第一音・読み全体・総画数・色の根拠を見ながら、名前の使い方を確認します。</div>
+      <div class="top-guide-point">・<strong>社名・屋号</strong>は、第一音・読み全体・総画数・色の根拠を見ながら、名前の使い方を確認します。</div>
+      <div class="top-guide-point">・<strong>商品開発</strong>は、商品の五行・商品名・パッケージ色・形・売り場の見せ方を整理します。</div>
     </div>
   </div>
 
@@ -255,12 +256,24 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="menu-card balance" onclick="showBusinessPreview('balance')">
     <div class="menu-icon">📊</div>
     <div>
-      <div class="menu-name">社名・商品名を読む</div>
+      <div class="menu-name">社名・屋号を読む</div>
       <div class="menu-desc">
         社名・屋号・ブランド名の気質を見る<br>
-        命名・商品開発・色の参考に
+        命名・改名・色の参考に
       </div>
-      <div class="free-badge">無料：名前チェック</div><div class="paid-badge">有料予定：命名・商品レポート</div>
+      <div class="free-badge">無料：社名チェック</div><div class="paid-badge">有料予定：命名レポート</div>
+    </div>
+  </div>
+
+  <div class="menu-card balance" onclick="showBusinessPreview('product')">
+    <div class="menu-icon">📦</div>
+    <div>
+      <div class="menu-name">商品開発・パッケージ</div>
+      <div class="menu-desc">
+        商品の五行と見せ方を整える<br>
+        商品名・色・形・売り場の参考に
+      </div>
+      <div class="free-badge">無料：考え方を見る</div><div class="paid-badge">有料予定：商品設計レポート</div>
     </div>
   </div>
 
@@ -488,25 +501,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 
   <div class="free-tool" id="balanceTool" style="display:none;">
-    <div class="tool-title">社名・商品名の気質を読む</div>
-    <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号・商品名・ブランド名の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名・商品開発の参考にしてください。</div>
-
-    <div class="preview-card" style="margin-bottom:12px;background:rgba(255,255,255,.82);">
-      <div class="preview-card-title">商品開発での気学の使い方</div>
-      <div class="preview-card-body">
-        商品開発では、社名とは別に「商品そのものの五行」を見ます。そこに商品名、パッケージ色、形、売り場で相生する要素を足し、買う人に伝わりやすい見せ方を整えます。
-        <ul style="margin-top:8px;">
-          <li>商品そのものの五行を決める</li>
-          <li>商品名の音と陰陽のバランスを見る</li>
-          <li>パッケージ色が商品を生かすか確認する</li>
-          <li>形・素材・売り場の見せ方で不足を補う</li>
-        </ul>
-        <div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;line-height:1.75;">商品五行が分かりにくい場合は、気学先生に確認しながら判断できます。</div>
-      </div>
-    </div>
+    <div class="tool-title">社名・屋号の気質を読む</div>
+    <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号・ブランド名の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名・ブランド整理の参考にしてください。</div>
 
     <div style="margin-bottom:10px;">
-      <div class="form-label">社名・屋号・商品名・ブランド名</div>
+      <div class="form-label">社名・屋号・ブランド名</div>
       <input class="form-input" type="text" id="bizName" placeholder="例：KITOKU JOURNEY / キトクジャーニー">
     </div>
     <div style="margin-bottom:10px;">
@@ -520,6 +519,39 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
     <button class="main-btn" type="button" onclick="runBizReading()">✦ 社名の気質を読む</button>
     <div id="balanceResult" style="display:none;margin-top:14px;"></div>
+  </div>
+
+  <div class="free-tool" id="productTool" style="display:none;">
+    <div class="tool-title">商品開発での気学の使い方</div>
+    <div class="preview-card-body" style="margin-bottom:12px;">商品開発では、社名とは別に「商品そのものの五行」を見ます。そこに商品名、パッケージ色、形、素材、売り場で相生する要素を足し、買う人に伝わりやすい見せ方を整えます。</div>
+
+    <details class="preview-card" open style="margin-bottom:10px;background:rgba(255,255,255,.82);">
+      <summary class="preview-card-title" style="cursor:pointer;">基本ロジック</summary>
+      <div class="preview-card-body" style="margin-top:8px;">
+        <ul>
+          <li>まず商品そのものの五行を決める</li>
+          <li>商品名の音と陰陽のバランスを見る</li>
+          <li>パッケージ色が商品を生かすか確認する</li>
+          <li>形・素材・売り場の見せ方で不足を補う</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="preview-card" style="margin-bottom:10px;background:rgba(255,255,255,.82);">
+      <summary class="preview-card-title" style="cursor:pointer;">パッケージ色の考え方</summary>
+      <div class="preview-card-body" style="margin-top:8px;">
+        商品の五行を弱める色ではなく、商品を生かす色を使います。たとえば木の商品なら、木を育てる水や、木が生む火を差し色にするように、相生の流れで見せ方を整えます。
+      </div>
+    </details>
+
+    <details class="preview-card" style="margin-bottom:12px;background:rgba(255,255,255,.82);">
+      <summary class="preview-card-title" style="cursor:pointer;">判断に迷った時</summary>
+      <div class="preview-card-body" style="margin-top:8px;">
+        商品五行が分かりにくい場合は、素材・用途・味・香り・価格帯・売り場を整理して、気学先生に確認しながら判断できます。KITOKUは決定ではなく、商品を整えるための根拠を出す補助資料として使います。
+      </div>
+    </details>
+
+    <button class="main-btn" type="button" onclick="showPaidFeatureMessage('商品設計レポート')">✦ 商品設計レポートを準備中</button>
   </div>
 
   <div class="safe-note">
@@ -572,12 +604,20 @@ var BUSINESS_PREVIEWS={
     policy:'日付を絶対視せず、事業判断の補助線として使います。契約内容、法務、資金繰り、相手先の信用確認を優先した上で、タイミングを整えるための機能です。'
   },
   balance:{
-    badge:'📊 社名・商品名を読む',
-    title:'社名・商品名を読む',
-    lead:'社名・屋号・商品名・ブランド名の読みから、名前が持つ事業の気質を見ます。第一音、読み全体、総画数、色の根拠を示しながら、命名・改名・商品開発・ブランド整理の判断軸を作ります。',
-    free:['名前の事業エンジンを見る','読み全体の五行バランスを見る','なぜそう読むかの根拠を見る','ロゴや色の方向性を確認する'],
-    paid:['候補名の比較レポート','商品の五行とパッケージ色の相性','形・売り場・見せ方の調整','店舗名・座席数・開業日の確認'],
+    badge:'📊 社名・屋号を読む',
+    title:'社名・屋号を読む',
+    lead:'社名・屋号・ブランド名の読みから、名前が持つ事業の気質を見ます。第一音、読み全体、総画数、色の根拠を示しながら、命名・改名・ブランド整理の判断軸を作ります。',
+    free:['社名の事業エンジンを見る','読み全体の五行バランスを見る','なぜそう読むかの根拠を見る','ロゴや色の方向性を確認する'],
+    paid:['候補名の比較レポート','社名と代表者の相性チェック','ロゴ・肩書き・ビジネスネーム提案','店舗名・座席数・開業日の確認'],
     policy:'商標・法務・登記・販売成果を保証するものではありません。最終判断はユーザー自身で行い、KITOKUは第一音・五行・総画数・色などの根拠を示す補助資料として使ってください。正式な商号確認や権利確認は専門家・公的情報とあわせて確認してください。'
+  },
+  product:{
+    badge:'📦 商品開発・パッケージ',
+    title:'商品開発・パッケージ',
+    lead:'商品そのものの五行を見て、商品名・パッケージ色・形・素材・売り場の見せ方を整えるための入口です。気学を「売れると断定する道具」ではなく、買う人に伝わる設計軸として使います。',
+    free:['商品開発での気学の使い方を見る','商品五行と色の考え方を知る','形・素材・売り場の見方を確認する','気学先生に聞く前の整理軸を作る'],
+    paid:['商品五行の詳細レポート','商品名とパッケージ色の相性','形・素材・売り場の調整案','競合商品との見せ方比較'],
+    policy:'販売成果を保証するものではありません。商品そのものの五行、名前、色、形、売り場の根拠を整理し、ユーザー自身が商品設計を判断するための補助資料として使ってください。'
   }
 };
 
@@ -592,11 +632,13 @@ function showBusinessPreview(kind){
   var moneyTool=document.getElementById('moneyTool');
   var dealTool=document.getElementById('dealTool');
   var balanceTool=document.getElementById('balanceTool');
+  var productTool=document.getElementById('productTool');
   if(moneyTool)moneyTool.style.display=kind==='money'?'block':'none';
   if(kind==='money') loadMoneyStarBar();
   if(dealTool)dealTool.style.display=kind==='deal'?'block':'none';
   if(kind==='deal') loadDealBirth();
   if(balanceTool)balanceTool.style.display=kind==='balance'?'block':'none';
+  if(productTool)productTool.style.display=kind==='product'?'block':'none';
   var mr=document.getElementById('moneyResult');if(mr)mr.style.display='none';
   var dr=document.getElementById('dealResult');if(dr)dr.style.display='none';
   var br=document.getElementById('balanceResult');if(br)br.style.display='none';
@@ -1043,7 +1085,7 @@ function runBizReading(){
   var name=document.getElementById('bizName').value.trim();
   var kana=document.getElementById('bizKana').value.trim();
   var strokes=parseInt(document.getElementById('bizStrokes').value)||0;
-  if(!name&&!kana){alert('社名・屋号・商品名を入力してください');return;}
+  if(!name&&!kana){alert('社名・屋号・ブランド名を入力してください');return;}
 
   var inputText=kana||name;
   var engine=bizFirstEngine(inputText);
