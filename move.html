@@ -338,13 +338,13 @@ body{
 .p-cell.p-kichi{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);}
 .p-cell.p-daikichi{background:rgba(120,90,20,.18);border-color:rgba(120,90,20,.55);}
 .p-cell.p-kyo{background:rgba(100,80,40,.03);border-color:rgba(100,80,40,.08);opacity:.65;}
-.p-cell.p-dest{background:rgba(177,107,120,.18);border:2px solid rgba(177,107,120,.7);box-shadow:0 2px 8px rgba(177,107,120,.2);}
+.p-cell.p-dest{background:rgba(47,143,138,.14);border:2px solid rgba(47,143,138,.72);box-shadow:0 2px 8px rgba(47,143,138,.18);}
 .p-cell-num{font-family:'Cormorant Garamond',serif;font-size:1.25rem;line-height:1;color:var(--goldlt);}
 .p-cell.p-kichi .p-cell-num,.p-cell.p-daikichi .p-cell-num{color:#5a3e08;}
 .p-cell.p-kyo .p-cell-num{color:rgba(60,50,40,.4);}
-.p-cell.p-dest .p-cell-num{color:#8a2840;font-weight:700;}
+.p-cell.p-dest .p-cell-num{color:#1f6f6c;font-weight:700;}
 .p-cell-name{font-size:.58rem;color:var(--mist);margin-top:2px;}
-.p-dest-mark{font-size:.55rem;color:#e8748a;font-weight:700;margin-top:1px;}
+.p-dest-mark{font-size:.55rem;color:#1f7f7a;font-weight:800;margin-top:1px;}
 .p-dir-label{text-align:center;padding:3px 2px;line-height:1.4;overflow:hidden;}
 .p-dir-label.kyo .p-dir-name{color:#b04060;font-weight:700;}
 .p-dir-label.kichi .p-dir-name{color:#5a3e08;font-weight:600;}
@@ -385,9 +385,9 @@ body{
   border-color:rgba(138,104,32,.3);
 }
 .ban-cell.dest-dir{
-  background:rgba(232,116,138,.18);
-  border:2px solid rgba(232,116,138,.7);
-  box-shadow:0 2px 8px rgba(232,116,138,.2);
+  background:rgba(47,143,138,.14);
+  border:2px solid rgba(47,143,138,.72);
+  box-shadow:0 2px 8px rgba(47,143,138,.18);
 }
 .ban-cell.kichi{
   background:rgba(94,200,138,.1);
@@ -404,7 +404,7 @@ body{
 }
 .ban-star-name{font-size:.52rem;color:var(--mist);margin-top:2px;}
 .ban-dir-label{font-size:.5rem;color:var(--mist);opacity:.7;}
-.ban-dest-mark{font-size:.6rem;color:#e8748a;font-weight:700;}
+.ban-dest-mark{font-size:.6rem;color:#1f7f7a;font-weight:800;}
 .rank-5{color:#8a4c00;}
 .rank-4{color:#b16b78;}
 .rank-3{color:#8a6820;}
@@ -2014,7 +2014,7 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
       <div class="p-cell-num">${starN}</div>
       <div style="font-size:.62rem;font-weight:700;color:${dirColor};margin-top:3px;">${dirJP[d]}</div>
       ${badge}
-      ${isDest ? '<div class="p-dest-mark">▲目的</div>' : ''}
+      ${isDest ? '<div class="p-dest-mark">📍目的地</div>' : ''}
     </div>`;
   }
 
@@ -2201,7 +2201,7 @@ function calcAndShowDir() {
         <div class="ban-tab" id="banTabDay" style="display:none;" onclick="switchBan('day')">日盤（今日）</div>
       </div>
       <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;text-align:center;">
-        ▲ = 目的地の方向　南上（気学式）表示
+        📍 = 目的地の方向　南上（気学式）表示
       </div>
       <div style="font-size:.6rem;color:var(--goldlt);line-height:1.65;text-align:center;margin:0 0 10px;padding:7px 9px;border:1px solid rgba(138,104,32,.18);border-radius:8px;background:rgba(138,104,32,.06);font-weight:600;">
         ※ KITOKUは気学式の「正方位30度・斜方位60度」で判定します。Googleマップ等の45度均等表示とは境界が異なる場合があります。
