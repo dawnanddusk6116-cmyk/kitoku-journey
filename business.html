@@ -659,6 +659,67 @@ function showPreparingMessage(){
 function showPaidFeatureMessage(name){
   alert(name+'は準備中です。現在は「今日の商談姿勢」で入口を確認できます。');
 }
+function copyBusinessText(text,btn){
+  if(!text)return;
+  var done=function(){
+    if(btn){
+      var old=btn.textContent;
+      btn.textContent='✓ コピーしました';
+      setTimeout(function(){btn.textContent=old;},1600);
+    }
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){alert('コピーできませんでした。テキストを選択してコピーしてください。');});
+  }else{
+    var ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done();}catch(e){alert('コピーできませんでした。');}
+    document.body.removeChild(ta);
+  }
+}
+function buildMoneyGunshiPrompt(hs,ts,type,timingLabel,timingMsg){
+  return [
+    'あなたはKITOKUのAI軍師です。',
+    '以下のKITOKU結果をもとに、投資の売買判断ではなく、事業・副業・お金の扱い方を自分で決めるための判断材料を整理してください。',
+    '',
+    '【KITOKU結果】',
+    '本命星：'+hs.k,
+    '月命星：'+ts.k,
+    'お金の判断タイプ：'+type.t,
+    '向きやすい領域：'+type.apt,
+    '判断スタイル：'+type.style,
+    '注意しやすい判断癖：'+type.risk,
+    '今月のタイミング：'+timingLabel+' / '+timingMsg,
+    '今日の問い：'+type.q,
+    '',
+    '【相談したいこと】',
+    '事業・副業・金融投資のどこに力を置くとよいか。短期判断と長期育成のどちらを軸にすると安定しやすいか。',
+    '',
+    '【整理してほしい順番】',
+    '1. 問い',
+    '私が本当に向き合うべき問いを、背景を踏まえて再設定してください。',
+    '',
+    '2. 現状',
+    '今起きていること、私の行動・思考・感情を分けて整理してください。',
+    '',
+    '3. 理想',
+    '数字や結果だけでなく、私はどんな状態を得たいのかまで掘り下げてください。',
+    '',
+    '4. ボトルネック',
+    '行動を止めている思い込み・恐れ・ズレを、責めずに見つけてください。',
+    '',
+    '5. ネクストアクション',
+    '24時間以内にできる小さな一手、7日以内に整えること、今はやらないことを提案してください。',
+    '',
+    '【最後にマインドマップ化】',
+    '中心テーマ：私が本当に向き合う問い',
+    '枝：現状 / 感情 / 思い込み / 本当の望み / 使える資源 / 次の一手',
+    '',
+    '【大切な姿勢】',
+    '売買指示や銘柄推奨はしないでください。',
+    '不安を煽らず、でも甘やかしすぎず、最後は「自分で選ぶための判断材料」としてまとめてください。'
+  ].join('\n');
+}
 
 var MONEY_TYPE={
   1:{t:'情報を集めてから動くタイプ',apt:'金融・情報分析・相談業・流れを読む仕事に向きやすい傾向。短期売買より、情報を整理して判断材料を作る役割が合いやすいです。',style:'長期観察・分散・ルール型',risk:'調べすぎて機会を逃しやすい。出口条件を先に決めると安定します。',q:'この判断は、情報不足ではなく不安で止まっていませんか？'},
@@ -744,6 +805,8 @@ function runMoneyFree(){
   }
 
   var el=document.getElementById('moneyResult');
+  var gunshiPrompt=buildMoneyGunshiPrompt(hs,ts,type,timingLabel,timingMsg);
+  var gunshiPromptHtml=gunshiPrompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   el.style.display='block';
   el.innerHTML=`
     <div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">
@@ -783,14 +846,15 @@ function runMoneyFree(){
 
       <!-- AI軍師 -->
       <div style="padding:12px 16px;border-top:1px solid rgba(138,104,32,.12);background:rgba(255,255,255,.74);">
-        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🧩 AI軍師セッションで深掘り</div>
-        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">この結果をもとに、問い → 現状 → 理想 → 次の一手まで整理できます。投資の売買判断ではなく、事業・副業・お金の扱い方を自分で決めるための相談に使ってください。</div>
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🧩 AI軍師セッション用コピー</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">下のボタンで、AI軍師セッションの型まで入った相談文をコピーできます。コピーしたら、プレミアムの気学先生、または普段使っているAIの入力欄にそのまま貼り付けてください。</div>
         <div style="font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.12);border-radius:8px;padding:9px 10px;margin-bottom:8px;">
-          <strong style="color:var(--goldlt);">相談例：</strong><br>
-          私は${hs.k}・月命${ts.k}で、お金の判断タイプは「${type.t}」です。${type.apt} この傾向を踏まえて、事業・副業・金融投資のどこに力を置くとよいか、問い → 現状 → 理想 → 次の一手で整理してください。
+          <strong style="color:var(--goldlt);">コピーされる内容：</strong><br>
+          KITOKU結果、本命星・月命星、お金の判断タイプ、今日の問い、AI軍師セッションの「問い → 現状 → 理想 → 次の一手」まで含めます。
         </div>
-        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-bottom:8px;">プレミアムの気学先生なら、KITOKUの星情報を踏まえてより正確に相談できます。通常のAIでも、この相談例を貼れば方向性の整理はできますが、回答は参考として使ってください。</div>
-        <a href="ai.html" style="display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--goldlt);color:#fff;border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">✦ AI軍師セッションへ</a>
+        <button type="button" onclick="copyBusinessText(this.dataset.prompt,this)" data-prompt="${gunshiPromptHtml}" style="width:100%;border:1px solid rgba(138,104,32,.34);background:var(--goldlt);color:#fff;border-radius:9px;padding:10px 12px;font-size:.68rem;font-weight:800;font-family:inherit;cursor:pointer;">✦ AIに貼る相談文をコピー</button>
+        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;">プレミアムの気学先生なら、KITOKUの星情報を踏まえてより正確に相談できます。通常のAIでも貼り付ければ方向性の整理はできますが、回答は参考として使ってください。</div>
+        <a href="ai.html" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:8px 14px;background:rgba(138,104,32,.09);border:1px solid rgba(138,104,32,.22);color:var(--goldlt);border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">AI軍師セッション画面も見る</a>
       </div>
 
       <!-- 免責 -->
