@@ -210,7 +210,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="hero">
     <div class="hero-en">KITOKU for BUSINESS</div>
     <div class="hero-title">ビジネスに<br>5000年の知恵を</div>
-    <div class="hero-sub">採用・チーム・経営判断に<br>東洋の気の学問という視点を添える</div>
+    <div class="hero-sub">採用・チーム・協力関係・経営判断に<br>東洋の気の学問という視点を添える</div>
   </div>
 
   <div class="top-guide">
@@ -220,7 +220,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
     <div class="top-guide-points">
       <div class="top-guide-point">・<strong>お金・契約</strong>は、迷い方と動くタイミングを整えます。</div>
-      <div class="top-guide-point">・<strong>採用・上司部下・共同経営</strong>は、相性よりも役割分担と摩擦の扱い方を見ます。</div>
+      <div class="top-guide-point">・<strong>採用・リーダーとメンバー・協力者</strong>は、相性よりも役割分担と摩擦の扱い方を見ます。</div>
       <div class="top-guide-point">・<strong>事業バランス</strong>は、成長・発信・基盤・利益・流動性の偏りを確認します。</div>
     </div>
   </div>
@@ -281,11 +281,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="menu-card boss" onclick="selCat('boss')">
     <div class="menu-icon">👥</div>
     <div>
-      <div class="menu-name">上司×部下 関係を整える</div>
+      <div class="menu-name">リーダー×メンバー 関係を整える</div>
       <div class="menu-desc">
-        上司・部下の相性を読み解く<br>
+        指導する側・支える側の関係を読み解く<br>
         摩擦の原因と活かし方を知る<br>
-        育成・配属の判断材料にする
+        育成・配置・任せ方の判断材料にする
       </div>
       <div class="free-badge">🎁 1日1回無料</div>
     </div>
@@ -294,11 +294,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="menu-card founder" onclick="selCat('founder')">
     <div class="menu-icon">🤝</div>
     <div>
-      <div class="menu-name">経営者×右腕 補完関係</div>
+      <div class="menu-name">中核×補佐・協力者 補完関係</div>
       <div class="menu-desc">
-        経営者とNo.2の相性を読む<br>
+        中心人物と支える人の相性を読む<br>
         死角ゼロのチームが作れるか<br>
-        共同創業者・パートナー選定に
+        共同創業者・補佐役・外部パートナー選定に
       </div>
       <div class="free-badge">🎁 1日1回無料</div>
     </div>
@@ -314,7 +314,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <div class="usage-guide">
     <div class="usage-title">この画面の使い方</div>
-    <div class="usage-text">採用・上司部下・右腕選びなど、ビジネス上の関係を星の視点で整理する画面です。合否を決めるのではなく、面談・育成・配置の判断材料として使ってください。</div>
+    <div class="usage-text">採用・リーダーとメンバー・補佐役・協力者など、ビジネス上の関係を星の視点で整理する画面です。合否や上下を決めるのではなく、面談・育成・配置・任せ方の判断材料として使ってください。</div>
     <div class="usage-steps">
       <div class="usage-step"><span class="usage-num">1</span><span><strong>自分と相手の生年月日</strong>を入れます。</span></div>
       <div class="usage-step"><span class="usage-num">2</span><span><strong>賢者の言葉・使う場面</strong>を選びます。</span></div>
@@ -954,8 +954,8 @@ function runBalanceFree(){
 
 var CAT_LABELS={
   hire:{badge:'👤 採用判断',title:'採用判断',myLabel:'✦ あなたの生年月日（採用担当・経営者）',partnerName:'✦ 候補者のお名前',partnerBirth:'✦ 候補者の生年月日'},
-  boss:{badge:'👥 上司×部下',title:'上司×部下 関係を整える',myLabel:'✦ 上司の生年月日（あなた または 上司）',partnerName:'✦ 部下のお名前',partnerBirth:'✦ 部下の生年月日'},
-  founder:{badge:'🤝 経営者×右腕',title:'経営者×右腕 補完関係',myLabel:'✦ 経営者の生年月日',partnerName:'✦ 右腕・パートナーのお名前',partnerBirth:'✦ 右腕・パートナーの生年月日'}
+  boss:{badge:'👥 リーダー×メンバー',title:'リーダー×メンバー 関係を整える',myLabel:'✦ リーダー側の生年月日（あなた・上司・主催者など）',partnerName:'✦ 相手・メンバーのお名前',partnerBirth:'✦ 相手・メンバーの生年月日'},
+  founder:{badge:'🤝 中核×補佐・協力者',title:'中核×補佐・協力者 補完関係',myLabel:'✦ 中核になる人の生年月日',partnerName:'✦ 補佐役・協力者・パートナーのお名前',partnerBirth:'✦ 補佐役・協力者・パートナーの生年月日'}
 };
 
 var SCENES={
@@ -990,7 +990,7 @@ function selCat(cat){
   document.getElementById('myLabel').textContent=cl.myLabel;
   document.getElementById('partnerNameLabel').textContent=cl.partnerName;
   document.getElementById('partnerBirthLabel').textContent=cl.partnerBirth;
-  document.getElementById('candidateName').placeholder=cat==='hire'?'例：田中太郎':cat==='boss'?'例：鈴木一郎（部下）':'例：山田花子（右腕候補）';
+  document.getElementById('candidateName').placeholder=cat==='hire'?'例：田中太郎':cat==='boss'?'例：鈴木一郎（メンバー）':'例：山田花子（協力者）';
   // 場面グリッド更新
   renderScenes(cat);
   curT='basic';
@@ -1063,7 +1063,7 @@ var INTERVIEW_Q={
   3:['「これまでで最も大きな失敗と、そこから学んだことを教えてください」','「新しいアイデアが浮かんだ時、どのように実行に移しますか？」','「飽きずに継続できたことは何ですか？」'],
   4:['「社内外の人間関係を築く上で大切にしていることは？」','「意見が対立した時、どのように調整しますか？」','「自分で意思決定した経験を教えてください」'],
   5:['「これまで周囲に大きな影響を与えた経験を教えてください」','「逆境に立たされた時の対処法を教えてください」','「自分の強みと弱みを率直に教えてください」'],
-  6:['「仕事における最高の成果を出した経験を教えてください」','「妥協せざるを得なかった時、どのように決断しましたか？」','「部下や後輩を育てた経験はありますか？」'],
+  6:['「仕事における最高の成果を出した経験を教えてください」','「妥協せざるを得なかった時、どのように決断しましたか？」','「後輩やメンバーを育てた経験はありますか？」'],
   7:['「チームの雰囲気を良くするために取り組んだことは？」','「お客様や取引先との関係で工夫していることは？」','「モチベーションが下がった時、どのように立て直しましたか？」'],
   8:['「大きな変化や困難に直面した時の対応を教えてください」','「一度決めたことをやり遂げた経験を教えてください」','「過去を変えるとしたら何を変えますか？」'],
   9:['「自分の直感が正しかった経験を教えてください」','「美意識やこだわりが仕事に活きた場面はありますか？」','「批判を受けた時、どのように受け止めますか？」']
@@ -1202,8 +1202,8 @@ function genReport(){
   // カテゴリ別の視点
   var catGuide={
     hire:'採用判断の補助資料として。候補者の可能性・面談での引き出し方・育成視点を整理する。',
-    boss:'上司と部下の関係を整えるために。摩擦の原因・育成方針・最適な役割分担を示す。',
-    founder:'経営者と右腕の補完関係を読む。死角ゼロのチームを作るために何が必要かを整理する。'
+    boss:'リーダーとメンバー、指導する側と支える側の関係を整えるために。摩擦の原因・育成方針・最適な役割分担を示す。',
+    founder:'中核になる人と補佐役・協力者・パートナーの補完関係を読む。死角ゼロのチームを作るために何が必要かを整理する。'
   }[d.cat||'hire'];
 
   // 場面別の追加指示

@@ -65,6 +65,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .del-btn{background:none;border:none;color:var(--mist);font-size:1.1rem;cursor:pointer;padding:4px 8px;}
 .del-all{font-size:.6rem;color:var(--mist);background:none;border:1px solid var(--rim);border-radius:6px;padding:4px 10px;cursor:pointer;}
 .pn2{text-align:center;font-size:.6rem;color:var(--mist);margin-top:12px;line-height:2;}
+.next-note{font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.14);border-radius:9px;padding:10px 12px;margin-top:10px;}
+.report-guide{background:linear-gradient(135deg,rgba(138,104,32,.075),rgba(255,255,255,.72));border:1px solid rgba(138,104,32,.18);border-radius:var(--r);padding:13px 14px;margin:0 0 14px;}
+.report-guide-title{font-size:.76rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:7px;}
+.report-guide-text{font-size:.65rem;color:var(--mist);line-height:1.85;}
+.report-guide-steps{display:grid;gap:6px;margin-top:9px;}
+.report-guide-step{font-size:.62rem;color:var(--mist);line-height:1.7;padding-left:1em;text-indent:-1em;}
+.report-guide-step strong{color:var(--goldlt);}
 .rh{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:14px;}
 .rn{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.15em;color:var(--goldlt);margin-bottom:4px;}
 .rs{font-size:.7rem;color:var(--mist);}
@@ -234,6 +241,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
     <div class="fn">※生年月日は端末内にのみ保存されます</div>
     <button class="mb" onclick="startReading()">✦ 縁を読み解く</button>
+    <div class="next-note">まず二人の基本構造を表示します。その後の画面で「誰の言葉で語るか」と「どんな場面で使うか」を選ぶと、AI深掘りレポートを作れます。</div>
   </div>
   <div class="sl" id="svList" style="display:none;">
     <div class="st"><span>✦ 登録済みの人</span><button class="del-all" onclick="delAll()">全削除</button></div>
@@ -247,6 +255,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <span class="badge" id="rBadge">💼 ビジネス</span>
     <div class="rn" id="rName">—</div>
     <div class="rs" id="rStar">—</div>
+  </div>
+  <div class="report-guide">
+    <div class="report-guide-title">レポート作成までの流れ</div>
+    <div class="report-guide-text">この画面では、まず二人の関係の基本構造を確認できます。さらに下の「誰の言葉」「どんな場面」を選ぶと、恋愛・友人・家族それぞれの目的に合わせた深掘りレポートを作れます。</div>
+    <div class="report-guide-steps">
+      <div class="report-guide-step">・<strong>① 基本構造を見る</strong>：総合・本命星・月命星・傾斜・納音・今日の関わり方を確認します。</div>
+      <div class="report-guide-step">・<strong>② 語り口を選ぶ</strong>：格さん、孔子、孫子など、読みたい言葉の調子を選びます。</div>
+      <div class="report-guide-step">・<strong>③ 場面を選ぶ</strong>：気持ちを伝える、距離感を整える、関係を修復するなど、今使いたい目的を選びます。</div>
+      <div class="report-guide-step">・<strong>④ AI深掘りレポート</strong>：選んだ語り口と場面で、伝え方・距離感・活かし方を文章にします。</div>
+    </div>
   </div>
   <div class="tb">
     <button class="tbb on" onclick="swTab('sogo',this)">① 総合</button>
