@@ -491,6 +491,20 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="tool-title">社名・商品名の気質を読む</div>
     <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号・商品名・ブランド名の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名・商品開発の参考にしてください。</div>
 
+    <div class="preview-card" style="margin-bottom:12px;background:rgba(255,255,255,.82);">
+      <div class="preview-card-title">商品開発での気学の使い方</div>
+      <div class="preview-card-body">
+        商品開発では、社名とは別に「商品そのものの五行」を見ます。そこに商品名、パッケージ色、形、売り場で相生する要素を足し、買う人に伝わりやすい見せ方を整えます。
+        <ul style="margin-top:8px;">
+          <li>商品そのものの五行を決める</li>
+          <li>商品名の音と陰陽のバランスを見る</li>
+          <li>パッケージ色が商品を生かすか確認する</li>
+          <li>形・素材・売り場の見せ方で不足を補う</li>
+        </ul>
+        <div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;line-height:1.75;">商品五行が分かりにくい場合は、気学先生に確認しながら判断できます。</div>
+      </div>
+    </div>
+
     <div style="margin-bottom:10px;">
       <div class="form-label">社名・屋号・商品名・ブランド名</div>
       <input class="form-input" type="text" id="bizName" placeholder="例：KITOKU JOURNEY / キトクジャーニー">
@@ -562,7 +576,7 @@ var BUSINESS_PREVIEWS={
     title:'社名・商品名を読む',
     lead:'社名・屋号・商品名・ブランド名の読みから、名前が持つ事業の気質を見ます。第一音、読み全体、総画数、色の根拠を示しながら、命名・改名・商品開発・ブランド整理の判断軸を作ります。',
     free:['名前の事業エンジンを見る','読み全体の五行バランスを見る','なぜそう読むかの根拠を見る','ロゴや色の方向性を確認する'],
-    paid:['候補名の比較レポート','商品名とパッケージ色の相性','店舗名・座席数・開業日の確認','ロゴ・肩書き・ビジネスネーム提案'],
+    paid:['候補名の比較レポート','商品の五行とパッケージ色の相性','形・売り場・見せ方の調整','店舗名・座席数・開業日の確認'],
     policy:'商標・法務・登記・販売成果を保証するものではありません。最終判断はユーザー自身で行い、KITOKUは第一音・五行・総画数・色などの根拠を示す補助資料として使ってください。正式な商号確認や権利確認は専門家・公的情報とあわせて確認してください。'
   }
 };
@@ -931,6 +945,13 @@ var BIZ_THEME_RX={
   金:'今月は「利益と契約を見直す」月。単価、原価、契約条件、回収漏れを確認し、短期利益だけでなく次の投資枠も残すのが鍵です。',
   水:'今月は「流れを形にする」月。問い合わせ、紹介、SNS、入金、納品までの流れを可視化し、曖昧な無料対応を商品メニューに変えると良いです。'
 };
+var BIZ_BALANCE_RX={
+  木:{sound:'ハ行・マ行の音、または伸びる印象の言葉を足す',color:'緑・青緑・植物感のある色',place:'名刺の罫線、ロゴの差し色、Webのボタン、観葉植物、パッケージの帯',word:'成長、発展、新規、紹介、育成、広がり',action:'新規導線、紹介制度、育成メニュー、次の商品につながる導線を足す'},
+  火:{sound:'タ行の音、または明るく伝わる音を足す',color:'赤・紫・明るい暖色、光を感じる差し色',place:'名刺のワンポイント、SNS画像、商品ラベル、店頭POP、キャンペーン用バナー',word:'発信、注目、ブランド、情熱、見える化、ストーリー',action:'キャッチコピー、SNS投稿、商品説明、写真、店頭POPなど「伝える面」を強める'},
+  土:{sound:'ア行・ナ行の音、または落ち着く音を足す',color:'黄土・茶・アイボリー・ベージュ',place:'名刺の地色、Web背景、封筒、店舗内装、予約カード、保証書',word:'安心、基盤、定番、信頼、専門性、継続',action:'規約、予約、顧客管理、保証、定番メニューなど土台を整える'},
+  金:{sound:'カ行・ラ行の音、または締まりのある音を足す',color:'白・金・銀・上質感のある色',place:'ロゴの縁取り、名刺の箔、価格表、契約書テンプレート、上位商品のパッケージ',word:'利益、契約、品質、成果、完成、回収',action:'価格表、契約条件、請求導線、上位プラン、実績表示を整える'},
+  水:{sound:'サ行の音、または流れを感じる音を足す',color:'青・紺・黒・透明感のある色',place:'Webヘッダー、問い合わせボタン、案内パンフレット、制服・エプロン、小物や背景色',word:'流れ、情報、相談、循環、共感、紹介',action:'問い合わせ導線、FAQ、相談窓口、紹介、口コミ、配送や連絡フローを整える'}
+};
 var BIZ_STROKE_WARN={
   19:'発想力は強い反面、判断が極端になりやすい画数です。契約条件・資金繰り・撤退基準を先に決めておくと安定します。',
   22:'人情や理想に寄りやすく、利益が残りにくいサインです。値引き・無料対応・曖昧な役割分担を見直すと整います。',
@@ -1000,6 +1021,22 @@ function bizSignalHtml(signals){
       +'</div>';
   }).join('');
 }
+function bizBalanceHowto(weak,dominant,total,count){
+  var rx=BIZ_BALANCE_RX[weak]||BIZ_BALANCE_RX.土;
+  var pct=total?Math.round(count[weak]/total*100):0;
+  var domPct=total?Math.round(count[dominant]/total*100):0;
+  var level=pct===0?'かなり不足しています':pct<10?'不足気味です':pct<18?'やや少なめです':'大きな不足ではありません';
+  var domNote=domPct>=40?'一方で「'+dominant+'」が40%以上あり、かなり強く出ています。強い五行を削るより、弱い五行を少し足す方が整えやすいです。':'五行の目安は各20%前後です。弱い五行を少し足すと、名前の使い方が安定します。';
+  return '<div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:9px;">'
+    +'読み全体では「'+weak+'」が'+count[weak]+'音 / '+pct+'%で、'+level+' '+domNote+'</div>'
+    +'<div style="display:grid;gap:7px;">'
+    +'<div><strong style="color:var(--goldlt);">音で補う：</strong>'+rx.sound+'</div>'
+    +'<div><strong style="color:var(--goldlt);">色で補う：</strong>'+rx.color+'</div>'
+    +'<div><strong style="color:var(--goldlt);">使う場所：</strong>'+rx.place+'</div>'
+    +'<div><strong style="color:var(--goldlt);">言葉で補う：</strong>'+rx.word+'</div>'
+    +'<div><strong style="color:var(--goldlt);">事業で補う：</strong>'+rx.action+'</div>'
+    +'</div>';
+}
 
 // ── 社名鑑定 ──
 function runBizReading(){
@@ -1031,9 +1068,7 @@ function runBizReading(){
   }).join('');
 
   // 処方箋
-  var rx='音の五行で「'+weak+'」が少ない傾向です。'
-    +'読み方・略称・キャッチコピーに「'+
-    ({木:'ハヒフヘホ・マミムメモ行',火:'タチツテト行',土:'アイウエオ・ナニヌネノ行',金:'カキクケコ・ラリルレロ行',水:'サシスセソ行'}[weak])+'」の音を取り入れると、'+weak+'の気を補えます。';
+  var rx=bizBalanceHowto(weak,dominant,total,count);
 
   var el=document.getElementById('balanceResult');
   el.style.display='block';
@@ -1056,6 +1091,7 @@ function runBizReading(){
     +'<div style="padding:14px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:10px;">🔤 読み全体の五行バランス</div>'
     +bars
+    +'<div style="font-size:.56rem;color:var(--mist);line-height:1.65;margin-top:8px;opacity:.82;">目安：五行が均等なら各20%前後。40%以上は強め、10%未満は不足気味として見ます。</div>'
     +'</div>'
 
     // 主気質
@@ -1085,8 +1121,8 @@ function runBizReading(){
 
     // 処方箋
     +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
-    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">💡 補いたい五行：'+weak+'</div>'
-    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+rx+'</div>'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">💡 バランスの取り方：'+weak+'を補う</div>'
+    +rx
     +'</div>'
 
     // 色の処方箋
