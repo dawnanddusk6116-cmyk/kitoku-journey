@@ -434,6 +434,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <!-- 裏性格・操縦法 -->
   <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">🎭 裏の性格（つまずきと強み）</div><div class="accord-arr">▼</div></div><div class="accord-body" id="uraDesc">—</div></div>
   <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">⚙️ この人の動かし方</div><div class="accord-arr">▼</div></div><div class="accord-body" id="soujuDesc">—</div></div>
+  <!-- 系列別褒め方処方箋 -->
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">🗣️ この人の褒め方（系列処方箋）</div><div class="accord-arr">▼</div></div><div class="accord-body" id="praiseDesc">—</div></div>
+  <!-- 傾斜（潜在能力） -->
+  <div class="accord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">🌟 水面下の才能（傾斜）</div><div class="accord-arr">▼</div></div><div class="accord-body" id="keishaDesc">—</div></div>
+  <!-- 間の星（最大吉方）算出 -->
+  <div class="accord" id="bridgeAccord"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">⭐ 間の星（関係を成立させる第3の星）</div><div class="accord-arr">▼</div></div><div class="accord-body" id="bridgeDesc">—</div></div>
+  <!-- 接待ハック -->
+  <div class="accord" id="settaiAccord" style="display:none;"><div class="accord-head" onclick="tog(this)"><div class="accord-ttl">🍽️ 接待ハック（商談を通す食と場）</div><div class="accord-arr">▼</div></div><div class="accord-body" id="settaiDesc">—</div></div>
 
   <!-- AIレポート -->
   <div class="ai-section">
@@ -1565,6 +1573,82 @@ var SAGE_LABEL={
 /* ===== データ ===== */
 var STARS={1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
 
+/* ===== 間の星（最大吉方）算出関数 ===== */
+var GOGYOU_STARS={水:[1],木:[3,4],火:[9],土:[2,5,8],金:[6,7]};
+var SEISHO={水:'木',木:'火',火:'土',土:'金',金:'水'}; // 相生（生む）
+var SEIKOKU={水:'火',木:'土',火:'金',土:'水',金:'木'}; // 相剋（克す）
+var STAR_GYOU={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+
+// 五行から星番号リストを取得
+function gyouToStars(g){ return GOGYOU_STARS[g]||[]; }
+
+// 2つの星の間を繋ぐ最大吉方を算出（ナレッジ Algorithm）
+function calcBridgeStar(starA, starB){
+  var eA=STAR_GYOU[starA], eB=STAR_GYOU[starB];
+  if(!eA||!eB) return {stars:[],elem:'',pattern:'',desc:''};
+
+  var result={stars:[],elem:'',pattern:'',desc:''};
+
+  // パターンC: 同一五行
+  if(eA===eB){
+    var parent=Object.keys(SEISHO).find(function(k){return SEISHO[k]===eA;}); // eAを生む五行
+    var child=SEISHO[eA]; // eAが生む五行
+    var bridgeStars=gyouToStars(parent).concat(gyouToStars(child));
+    result.stars=bridgeStars;
+    result.elem=parent+'・'+child;
+    result.pattern='C';
+    result.desc='同じ五行（'+eA+'）同士。間に「'+parent+'（'+gyouToStars(parent).map(function(s){return STARS[s].k;}).join('・')+'）」か「'+child+'（'+gyouToStars(child).map(function(s){return STARS[s].k;}).join('・')+'）」を挟むと共鳴が深まります。';
+    return result;
+  }
+
+  // パターンA: 相剋関係
+  if(SEIKOKU[eA]===eB || SEIKOKU[eB]===eA){
+    var source=SEIKOKU[eA]===eB?eA:eB; // 剋している側の五行
+    // 間を繋ぐ星：剋する側が生む五行を媒介にする
+    var bridgeElem=SEISHO[source];
+    result.stars=gyouToStars(bridgeElem);
+    result.elem=bridgeElem;
+    result.pattern='A';
+    result.desc='相剋の関係。間に「'+bridgeElem+'（'+gyouToStars(bridgeElem).map(function(s){return STARS[s].k;}).join('・')+'）」を挟むと摩擦が調律されます。';
+    return result;
+  }
+
+  // パターンB: 相生関係
+  // 両者に関係する五行の集合から元の2つを除外
+  var allRelated=[];
+  // eAの親・子
+  var eAparent=Object.keys(SEISHO).find(function(k){return SEISHO[k]===eA;});
+  var eAchild=SEISHO[eA];
+  // eBの親・子
+  var eBparent=Object.keys(SEISHO).find(function(k){return SEISHO[k]===eB;});
+  var eBchild=SEISHO[eB];
+  [eAparent,eAchild,eBparent,eBchild].forEach(function(e){
+    if(e&&e!==eA&&e!==eB&&allRelated.indexOf(e)<0) allRelated.push(e);
+  });
+  var bridgeStarsB=[];
+  allRelated.forEach(function(e){ bridgeStarsB=bridgeStarsB.concat(gyouToStars(e)); });
+  result.stars=bridgeStarsB;
+  result.elem=allRelated.join('・');
+  result.pattern='B';
+  result.desc='相生の関係。さらに「'+allRelated.join('・')+'（'+bridgeStarsB.map(function(s){return STARS[s]?STARS[s].k:'';}).filter(Boolean).join('・')+'）」を加えることで関係が最大化します。';
+  return result;
+}
+
+// 間の星から食・色・場所処方箋を生成
+var BRIDGE_FOOD={
+  水:{color:'白・黒・紺',food:'お寿司・刺身・日本酒・塩辛・海産物',place:'寿司屋・水辺の店・静かな和食'},
+  木:{color:'青・緑',food:'サラダ・パスタ・柑橘類・レモン・野菜',place:'明るいカフェ・イタリアン・観葉植物のある店'},
+  火:{color:'赤・紫・オレンジ',food:'エビ・カニ・トマト料理・赤ワイン・コーヒー',place:'明るく華やかなレストラン・洗練された空間'},
+  土:{color:'黄・ベージュ・茶',food:'すき焼き・牛肉・鍋・おにぎり・発酵食品',place:'アットホームな和食・老舗・家族が集まる場所'},
+  金:{color:'白・金・銀・ピンク',food:'鶏肉・天ぷら・スイーツ・シャンパン・炭酸',place:'高級感のある場所・天ぷら店・洗練されたバー'}
+};
+function getBridgeRx(bridgeResult){
+  if(!bridgeResult||!bridgeResult.elem) return null;
+  // 最初の五行で処方箋を取得
+  var firstElem=bridgeResult.elem.split('・')[0];
+  return BRIDGE_FOOD[firstElem]||null;
+}
+
 var CHAR_DESC={
   1:'深い洞察力と共感力を持ち、人の痛みに静かに寄り添える人材です。情報収集と分析が得意で、縁の下の力持ちとして組織を支えます。表には出にくいが、信頼関係を築くと驚くほどの粘り強さを発揮します。',
   2:'コツコツと積み上げることが得意な誠実な人材です。縁の下の力持ちとして組織を支え、継続力と実行力が強みです。チームの調和を大切にし、長期的な信頼関係を築けます。',
@@ -1735,7 +1819,59 @@ function analyze(){
   st('uraDesc',URA_BIZ[cN]||'');
   st('soujuDesc',SOUJU_BIZ[cN]||'');
 
-  // 結果バッジ更新
+  // 系列別褒め方処方箋
+  var kr=getKeretsu(cN);
+  st('praiseDesc','【'+kr.name+'（'+kr.stars+'）】\n\n✦ 効く褒め言葉：\n'+kr.praise+'\n\n⚠ 逆効果になりやすい言葉：\n'+kr.ng+'\n\n💡 実践：\n'+kr.action);
+
+  // 傾斜（潜在能力）
+  var myKN=calcK(myN,myTN);var cKN=calcK(cN,cTN);
+  var myKS=STARS[myKN]||STARS[myN];var cKS=STARS[cKN]||STARS[cN];
+  var cKeisha=KEISHA_BIZ[cKN]||KEISHA_BIZ[cN]||{talent:'',coach:'',action:''};
+  st('keishaDesc','【'+cS.k+'（本命）× '+cKS.k+'（傾斜）】\n\n水面下に眠る才能：\n'+cKeisha.talent+'\n\n扉を開くコーチ・環境：\n'+cKeisha.coach+'\n\n才能を引き出す行動：\n'+cKeisha.action);
+
+  // 間の星（最大吉方）算出
+  var bridgeResult=calcBridgeStar(myN,cN);
+  var bridgeRx=getBridgeRx(bridgeResult);
+  var bridgeHtml=bridgeResult.desc;
+  if(bridgeRx){
+    bridgeHtml+='\n\n【処方箋：'+bridgeResult.elem+'の要素を挟む】\n・色：'+bridgeRx.color+'\n・食：'+bridgeRx.food+'\n・場所：'+bridgeRx.place;
+  }
+  st('bridgeDesc',bridgeHtml);
+
+  // 接待ハック（相剋の場合のみ表示）
+  var settaiData=getSettai(myS.e,cS.e);
+  var settaiAcc=document.getElementById('settaiAccord');
+  if(settaiData&&compat.t==='chui'){
+    settaiAcc.style.display='block';
+    st('settaiDesc','【'+myS.k+'×'+cS.k+' 商談を通す処方箋】\n\n絶対に契約を取りたい相手との間には「'+settaiData.bridge+'」の要素を挟むと意気投合しやすくなります。\n\n✦ 連れて行くべき店・料理：\n'+settaiData.food+'\n\n✦ 服・小物の色：\n'+settaiData.color+'\n\n✦ 場所の選び方：\n'+settaiData.place);
+  } else {
+    settaiAcc.style.display='none';
+  }
+
+  // 二生の関係チェック
+  var NISEI_GROUP1=[1,7,4,2],NISEI_GROUP2=[3,8,6,9];
+  var myGrp=NISEI_GROUP1.indexOf(myN)>=0?1:NISEI_GROUP2.indexOf(myN)>=0?2:0;
+  var cGrp=NISEI_GROUP1.indexOf(cN)>=0?1:NISEI_GROUP2.indexOf(cN)>=0?2:0;
+  var niseiText='';
+  if(myGrp>0&&myGrp===cGrp){
+    var gn=myGrp===1?'【平和と育成の輪：一白・七赤・四緑・二黒】':'【情熱と達成の輪：三碧・八白・六白・九紫】';
+    niseiText=gn+'\n\n二人は同じ魂の輪に属しています。過去からのつながりのようにツーカーで意志が通じ合いやすく、「永久に潰れない盤石なチーム」になれる最高の組み合わせです。';
+  } else {
+    niseiText='二人は異なる輪に属しています。感じ方やスピードに違いが出やすい一方、片方だけでは見えない世界を補い合える関係です。役割を明確に分けるほど力が発揮されます。';
+  }
+
+  // AIレポート用データ保存
+  rData={
+    cat:curCat,sage:curC,scene:curT,nm:nm,
+    myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,
+    cH:cS.k,cE:cS.e,cT:cTS.k,cK:cKS.k,
+    compat:compat.l,compatType:compat.t,
+    cUra:URA_BIZ[cN]||'',cSouju:SOUJU_BIZ[cN]||'',
+    cInterviewQ:INTERVIEW_Q[cN]||[],
+    cKeisha:cKeisha,cPraise:kr,
+    settai:settaiData,nisei:niseiText,
+    bridge:bridgeResult
+  };
   var resBadge=document.getElementById('resCatBadge');
   if(resBadge){
     var cl=CAT_LABELS[curCat];
@@ -1743,8 +1879,6 @@ function analyze(){
     resBadge.className='cat-badge '+curCat;
   }
 
-  // AIレポート用データ保存
-  rData={cat:curCat,sage:curC,scene:curT,nm:nm,myH:myS.k,myE:myS.e,myT:myTS.k,cH:cS.k,cE:cS.e,cT:cTS.k,compat:compat.l,compatType:compat.t,cUra:URA_BIZ[cN]||'',cSouju:SOUJU_BIZ[cN]||'',cInterviewQ:INTERVIEW_Q[cN]||[]};
   updateCount();
   document.getElementById('aiArea').style.display='none';
   document.getElementById('aiReport').style.display='none';

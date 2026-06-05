@@ -286,6 +286,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二人の関係の全体像</div><div class="aa o">▼</div></div><div class="ab o" id="sogoD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">関係を良くするアドバイス</div><div class="aa o">▼</div></div><div class="ab o" id="sogoA">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">媒介星の活用（第3のピース）</div><div class="aa o">▼</div></div><div class="ab o" id="bridgeD">—</div></div>
+    <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">⭐ 間の星（関係を最大化する第3の星）</div><div class="aa">▼</div></div><div class="ab" id="bridgeStarD">—</div></div>
     <div class="ac"><div class="ah" onclick="tog(this)"><div class="at">二生の関係</div><div class="aa o">▼</div></div><div class="ab o" id="niseiD">—</div></div>
 
     <!-- 語り口選択 -->
@@ -419,6 +420,52 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <script>
 /* ===== データ ===== */
 var STARS={1:{k:'一白水星',e:'水'},2:{k:'二黒土星',e:'土'},3:{k:'三碧木星',e:'木'},4:{k:'四緑木星',e:'木'},5:{k:'五黄土星',e:'土'},6:{k:'六白金星',e:'金'},7:{k:'七赤金星',e:'金'},8:{k:'八白土星',e:'土'},9:{k:'九紫火星',e:'火'}};
+
+/* ===== 間の星（最大吉方）算出関数 ===== */
+var GOGYOU_STARS_R={水:[1],木:[3,4],火:[9],土:[2,5,8],金:[6,7]};
+var SEISHO_R={水:'木',木:'火',火:'土',土:'金',金:'水'};
+var SEIKOKU_R={水:'火',木:'土',火:'金',土:'水',金:'木'};
+var STAR_GYOU_R={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+function gyouToStarsR(g){return GOGYOU_STARS_R[g]||[];}
+function calcBridgeStarR(starA,starB){
+  var eA=STAR_GYOU_R[starA],eB=STAR_GYOU_R[starB];
+  if(!eA||!eB) return {stars:[],elem:'',pattern:'',desc:''};
+  var result={stars:[],elem:'',pattern:'',desc:''};
+  if(eA===eB){
+    var parent=Object.keys(SEISHO_R).find(function(k){return SEISHO_R[k]===eA;});
+    var child=SEISHO_R[eA];
+    result.stars=gyouToStarsR(parent).concat(gyouToStarsR(child));
+    result.elem=parent+'・'+child;result.pattern='C';
+    result.desc='同じ五行（'+eA+'）同士。間に「'+parent+'・'+child+'」の要素を加えると共鳴が深まります。';
+    return result;
+  }
+  if(SEIKOKU_R[eA]===eB||SEIKOKU_R[eB]===eA){
+    var source=SEIKOKU_R[eA]===eB?eA:eB;
+    var bridgeElem=SEISHO_R[source];
+    result.stars=gyouToStarsR(bridgeElem);result.elem=bridgeElem;result.pattern='A';
+    result.desc='相剋の関係。間に「'+bridgeElem+'（'+gyouToStarsR(bridgeElem).map(function(s){return STARS[s].k;}).join('・')+'）」を挟むと摩擦が調律されます。';
+    return result;
+  }
+  var allRelated=[];
+  var eAparent=Object.keys(SEISHO_R).find(function(k){return SEISHO_R[k]===eA;});
+  var eAchild=SEISHO_R[eA];
+  var eBparent=Object.keys(SEISHO_R).find(function(k){return SEISHO_R[k]===eB;});
+  var eBchild=SEISHO_R[eB];
+  [eAparent,eAchild,eBparent,eBchild].forEach(function(e){if(e&&e!==eA&&e!==eB&&allRelated.indexOf(e)<0)allRelated.push(e);});
+  var bridgeStarsB=[];
+  allRelated.forEach(function(e){bridgeStarsB=bridgeStarsB.concat(gyouToStarsR(e));});
+  result.stars=bridgeStarsB;result.elem=allRelated.join('・');result.pattern='B';
+  result.desc='相生の関係。さらに「'+allRelated.join('・')+'」を加えることで関係が最大化します。';
+  return result;
+}
+var BRIDGE_FOOD_R={
+  水:{color:'白・黒・紺',food:'お寿司・刺身・日本酒・海産物',place:'寿司屋・水辺の店'},
+  木:{color:'青・緑',food:'サラダ・柑橘類・レモン',place:'明るいカフェ・イタリアン'},
+  火:{color:'赤・紫・オレンジ',food:'エビ・カニ・赤ワイン',place:'華やかなレストラン'},
+  土:{color:'黄・ベージュ・茶',food:'すき焼き・鍋・おにぎり',place:'アットホームな和食'},
+  金:{color:'白・金・銀',food:'鶏肉・スイーツ・シャンパン',place:'高級感のある場所'}
+};
+function getBridgeRxR(r){if(!r||!r.elem)return null;return BRIDGE_FOOD_R[r.elem.split('・')[0]]||null;}
 
 var DB={'水木':{t:'s',l:'水生木 ― 最高の相性',d:'水が木を育てる関係。サポートが成長を促します。',s:'相手のサポートを受けて力を発揮できます。',c:'甘えすぎず自立した姿勢も大切です。'},'木火':{t:'s',l:'木生火 ― 最高の相性',d:'木が火に燃料を与える関係。熱量が増幅します。',s:'共に取り組む仕事で大きな成果が出ます。',c:'熱くなりすぎず冷静さも大切に。'},'火土':{t:'s',l:'火生土 ― 最高の相性',d:'火が土を豊かにする関係。情熱が基盤を強固にします。',s:'情熱を地に足のついた形に変換できます。',c:'変化のペースを意識して進みましょう。'},'土金':{t:'s',l:'土生金 ― 最高の相性',d:'土が金を生み出す関係。安定が決断力を磨きます。',s:'積み重ねが確かな実力につながります。',c:'慎重になりすぎずタイミングを逃さないよう。'},'金水':{t:'s',l:'金生水 ― 最高の相性',d:'金が水を生み出す関係。決断力が柔軟な発想を引き出します。',s:'リードし調整する理想的な協力関係です。',c:'引っ張りすぎず相手のペースも尊重しましょう。'},'木土':{t:'c',l:'木剋土 ― 死角ゼロの最強チーム',d:'一方がリードしすぎると摩擦が生まれます。合わないからこそ全部できるようになります。',s:'違いを認め合うことで補完関係になれます。',c:'間に「火（九紫）」の要素を挟むと摩擦が調律されます。'},'土水':{t:'c',l:'土剋水 ― 死角ゼロの最強チーム',d:'安定志向が相手の柔軟性を制限しやすい。しかし異質な視点が問題解決能力を高めます。',s:'バランスが良い判断を生むことがあります。',c:'間に「金（六白・七赤）」の要素を挟むと調律されます。'},'水火':{t:'c',l:'水剋火 ― 死角ゼロの最強チーム',d:'行き過ぎた情熱を整える役割も担います。最も恋愛しやすい相手でもあります。',s:'冷静な判断力が暴走を防ぎます。',c:'間に「木（三碧・四緑）」の要素を挟むと永久機関になります。'},'火金':{t:'c',l:'火剋金 ― 死角ゼロの最強チーム',d:'情熱が判断力を揺さぶります。相手にないものを持っているため最大の成長源です。',s:'情熱が決断に勢いを与え大胆な行動ができます。',c:'間に「土（二黒・五黄・八白）」の要素を挟くと錬金術になります。'},'金木':{t:'c',l:'金剋木 ― 死角ゼロの最強チーム',d:'鋭い判断力が相手の成長を阻むことも。しかし互いの死角をなくす最強の組み合わせです。',s:'明確な基準でぶれない方向性を示せます。',c:'間に「水（一白）」の要素を挟むと刃が命を育む道具になります。'},'木木':{t:'y',l:'比和（木） ― 共鳴する関係',d:'価値観が似ているため深く共感できます。',s:'コミュニケーションがスムーズです。',c:'外からの新しい視点を積極的に取り入れましょう。'},'火火':{t:'y',l:'比和（火） ― 共鳴する関係',d:'情熱と行動力が共鳴し大きなエネルギーが生まれます。',s:'大きな目標に向かって一気に進めます。',c:'振り返りの時間を意識的に設けましょう。'},'土土':{t:'y',l:'比和（土） ― 共鳴する関係',d:'安定・継続・信頼が共鳴する関係です。',s:'長期的な信頼関係を築けます。',c:'時には大胆な一手も必要です。'},'金金':{t:'y',l:'比和（金） ― 共鳴する関係',d:'決断力と責任感が共鳴します。',s:'質の高いアウトプットを生み出せます。',c:'完璧主義が摩擦を生むことも。柔軟さを持ちましょう。'},'水水':{t:'y',l:'比和（水） ― 共鳴する関係',d:'柔軟性・適応力・知恵が共鳴します。',s:'深い理解と信頼が自然に生まれます。',c:'どちらかがリーダーシップを担う場面を作りましょう。'}};
 
@@ -628,6 +675,16 @@ function showResult(mYv,mMv,mDv,nm,pYv,pMv,pDv){
   st('sogoD','本命星では「'+hC.l+'」の関係。月命星の内面では「'+tC.l+'」という深みがあります。');
   st('sogoA',hC.s+'　'+hC.c);
   st('bridgeD',bridgeText(myS.e,pS.e));
+
+  // 間の星（最大吉方）算出
+  var bridgeStarResult=calcBridgeStarR(myN,pN);
+  var bridgeStarRx=getBridgeRxR(bridgeStarResult);
+  var bridgeStarHtml=bridgeStarResult.desc||'';
+  if(bridgeStarRx){
+    bridgeStarHtml+='\n\n✦ 処方箋：\n・色：'+bridgeStarRx.color+'\n・食：'+bridgeStarRx.food+'\n・場所：'+bridgeStarRx.place;
+  }
+  st('bridgeStarD',bridgeStarHtml);
+
   st('niseiD',niseiText(myN,pN));
 
   // 今日

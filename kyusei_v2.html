@@ -245,6 +245,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         </span>
         <span class="life-structure-arrow">›</span>
       </button>
+      <!-- 坎入アラート -->
+      <div id="kannyuuAlert" style="display:none;background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.3);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:.6rem;color:var(--gold);font-weight:800;letter-spacing:.12em;margin-bottom:6px;" id="kannyuuLabel">✦ 魂のアップデート時期</div>
+        <div style="font-size:.72rem;color:var(--snow);font-weight:700;margin-bottom:5px;" id="kannyuuTitle">—</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;" id="kannyuuDesc">—</div>
+      </div>
       <div class="mystar-grid">
         <div class="mystar-cell" id="cell-h" onclick="openModal('honmei')">
           <div class="mystar-cell-lbl">本命星 👆</div>
@@ -388,6 +394,36 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="modal-sec"><div class="modal-sec-lbl">✦ 本質・才能</div><div class="modal-text" id="mDesc">—</div></div>
     <div class="modal-sec"><div class="modal-sec-lbl">✦ キーワード</div><div class="modal-tags" id="mTags"></div></div>
     <div class="modal-sec"><div class="modal-sec-lbl">✦ 今日の色・食</div><div class="modal-text" id="mColor">—</div></div>
+    <!-- 傾斜専用セクション -->
+    <div id="mKeishaSection" style="display:none;">
+      <div class="modal-sec" style="background:linear-gradient(135deg,rgba(100,80,40,.07),rgba(255,255,255,.4));border:1px solid rgba(100,80,40,.18);border-radius:10px;padding:12px 14px;">
+        <div class="modal-sec-lbl">🌟 水面下に眠る才能（傾斜）</div>
+        <div class="modal-text" id="mKeishaTalent">—</div>
+      </div>
+      <div class="modal-sec" style="background:linear-gradient(135deg,rgba(42,106,176,.06),rgba(255,255,255,.4));border:1px solid rgba(42,106,176,.18);border-radius:10px;padding:12px 14px;margin-top:8px;">
+        <div class="modal-sec-lbl">🔑 才能の扉を開く方法</div>
+        <div class="modal-text" id="mKeishaOpen">—</div>
+      </div>
+      <div class="modal-sec" style="background:linear-gradient(135deg,rgba(58,138,58,.06),rgba(255,255,255,.4));border:1px solid rgba(58,138,58,.18);border-radius:10px;padding:12px 14px;margin-top:8px;">
+        <div class="modal-sec-lbl">⚡ 今すぐできる処方箋</div>
+        <div class="modal-text" id="mKeishaRx">—</div>
+      </div>
+    </div>
+    <!-- 同会専用セクション -->
+    <div id="mDokaiSection" style="display:none;">
+      <div class="modal-sec" style="background:linear-gradient(135deg,rgba(100,80,40,.07),rgba(255,255,255,.4));border:1px solid rgba(100,80,40,.18);border-radius:10px;padding:12px 14px;">
+        <div class="modal-sec-lbl">🎭 人生の舞台（同会）</div>
+        <div class="modal-text" id="mDokaiStage">—</div>
+      </div>
+      <div class="modal-sec" style="background:linear-gradient(135deg,rgba(176,64,96,.06),rgba(255,255,255,.4));border:1px solid rgba(176,64,96,.18);border-radius:10px;padding:12px 14px;margin-top:8px;">
+        <div class="modal-sec-lbl">🤝 右腕・味方にすべき人</div>
+        <div class="modal-text" id="mDokaiPerson">—</div>
+      </div>
+      <div class="modal-sec" style="background:linear-gradient(135deg,rgba(58,138,58,.06),rgba(255,255,255,.4));border:1px solid rgba(58,138,58,.18);border-radius:10px;padding:12px 14px;margin-top:8px;">
+        <div class="modal-sec-lbl">⚡ 舞台を広げる処方箋</div>
+        <div class="modal-text" id="mDokaiRx">—</div>
+      </div>
+    </div>
     <div id="mNouinSection" style="display:none;">
       <div class="modal-sec"><div class="modal-sec-lbl">✦ 年の納音</div><div class="modal-text" id="mNouinY">—</div></div>
       <div class="modal-sec"><div class="modal-sec-lbl">✦ 月の納音</div><div class="modal-text" id="mNouinM">—</div></div>
@@ -476,6 +512,32 @@ const STAR_REPORT = {
   7:{verb:'喜びを分かち合い、場を明るくする',care:'笑顔の奥の繊細さを無視しないでください。楽しいことは休息にもなります。',tone:'喜びを循環させる人'},
   8:{verb:'立ち止まり、次の山へ切り替える',care:'変わる前に止まる時間が必要です。焦らず節目を見極めてください。',tone:'山のように節目を守る人'},
   9:{verb:'真実を照らし、美しく表現する',care:'見えすぎる時ほど、相手に届く温度へ言葉を整えると才能が光ります。',tone:'炎のように本質を照らす人'}
+};
+
+/* ===== 傾斜（潜在能力）処方箋データ ===== */
+const KEISHA_DETAIL = {
+  1:{talent:'人の痛みの奥底まで届く共感力と、深く長く寄り添う力が眠っています。情報収集と分析が水面下で動く潜在能力。',open:'一白水星の師匠、カウンセラー気質の人のそばで才能が開きます。水に触れる・温泉・白湯の時間が才能を呼び覚ます。',rx:'「ごめんなさい」と素直に謝れた瞬間、あなたの周りの縁が魔法のように整い始めます。愚痴を聞いた後は必ず一人の時間を作ってください。'},
+  2:{talent:'大勢の人を自然に集め、育て、動かす天才的な包容力が水面下に眠っています。コツコツ積み重ねる継続力が最大の武器。',open:'二黒土星の先輩、実務の達人のそばで才能が開きます。土に触れる・農作業・丁寧な手仕事が才能を引き出します。',rx:'目の前の一人に誠実であること。人の4倍勉強したとき、あなたの才能は覚醒します。'},
+  3:{talent:'世界をあっと言わせる新しいアイデアと、人を動かす表現力・行動力が眠っています。完成させない自由が最大の推進力。',open:'口うるさくても情熱的な三碧木星の師匠のそばで才能が開きます。大きな声を出す・新しい場所に出かけることが才能のスイッチ。',rx:'レモンをかじるだけで脳のスイッチが入ります。新しいことを始めた瞬間、才能が目覚めます。'},
+  4:{talent:'人と人をつなぐブリッジ力と、みんなを自分の背中に乗せる器が眠っています。縁を結ぶことが天職。',open:'四緑木星の師匠、縁を大切にする人生の先輩のそばで才能が開きます。人の踏み台になる経験が器を大きくします。',rx:'「みんなの踏み台になる覚悟」を持った瞬間、あなたの縁が無限に広がり始めます。'},
+  5:{talent:'誰も解決できない問題を一瞬で片付ける突破力と、絶対君主の器が眠っています。逆境こそが才能を磨く砥石。',open:'腹の括り方を知る大物、五黄土星の師匠のそばで才能が開きます。汚れ役・縁の下を引き受けた時に覚醒します。',rx:'一歩引いて縁の下を引き受けた瞬間、周囲から自然な尊敬と信頼が集まり始めます。'},
+  6:{talent:'最高を追求する完成への意志と、天の理想を現実に降ろす力が眠っています。リーダーシップが本来の姿。',open:'本物の実力者、尊敬できる六白金星の先輩のそばで才能が開きます。見えない部分（引き出し・鞄の中）の整理整頓が鍵。',rx:'内側を整えると外の縁が美しく整い始めます。大げさに褒められた時に一番力を発揮します。'},
+  7:{talent:'場を明るくする喜びの才能と、人を引き付け幸せにする天賦の力が眠っています。笑顔が最強の武器。',open:'七赤金星の先輩、エンターテイナー気質の師匠のそばで才能が開きます。美味しいものを食べる・楽しむ時間が才能を磨きます。',rx:'人の批判をやめて褒めることを口癖にした瞬間、あなたの周りに笑顔が集まり始めます。'},
+  8:{talent:'一度決めたら折れない鋼の意志と、逆境の中でこそ輝く不屈の強さが眠っています。転んでも転んでも立ち上がる力。',open:'何度失敗しても諦めない八白土星の師匠のそばで才能が開きます。山登り・土に触れることが才能を強化します。',rx:'挫折の数だけ器が広がります。困難から逃げないことが最強の縁を育てます。'},
+  9:{talent:'真実を見抜く直感と、世界を変えるビジョン・天才的なクリエイティブ力が水面下に眠っています。',open:'心からひれ伏せる九紫火星の師匠に出会った瞬間、天才的な才能が一気に開花します。',rx:'自己流を手放し素直に教えを乞う。逆境の圧力が最高のバネになるため、困難な道を選ぶことで大成します。'}
+};
+
+/* ===== 同会（人生の舞台）処方箋データ ===== */
+const DOKAI_DETAIL = {
+  1:{stage:'人間関係と優しさの舞台。お酒の席・悩み相談・水の縁が人生を広げます。一白水星の人を右腕にすることで舞台が一気に拡大します。',person:'一白水星の人を右腕・パートナー・友人に。飲食業・悩み相談・水商売に縁のある人が最高の助っ人になります。',rx:'お酒の席や人と人をつなぐネットワークの場に顔を出してください。そこから口コミと縁が放射状に広がります。'},
+  2:{stage:'大衆と育成の舞台。コツコツ積み上げることで大きな信頼が集まります。二黒土星の人を右腕にすることで事業の基盤が安定します。',person:'二黒土星の人を右腕・縁の下の力持ちに。農業・食品・介護・教育に縁のある人が最高の助っ人になります。',rx:'地道な積み重ねを続けてください。目立たない誠実な仕事が最強の口コミを生みます。'},
+  3:{stage:'新しいことと発信の舞台。アイデアと行動力で時代の先端に立てます。三碧木星の人を右腕にすることで推進力が爆発します。',person:'三碧木星の人を右腕・共同創業者に。IT・音楽・新しい技術・スタートアップに縁のある人が最高の助っ人になります。',rx:'新しいことを始めてください。行動のスピードが舞台を広げる最短ルートです。'},
+  4:{stage:'縁結びとネットワークの舞台。人と人をつなぐことで自然と舞台が広がります。四緑木星の人を右腕にすることで縁が倍増します。',person:'四緑木星の人を右腕・コーディネーターに。旅行・貿易・メディア・コンサルに縁のある人が最高の助っ人になります。',rx:'紹介・橋渡し役を積極的に引き受けてください。縁をつなぐたびに舞台が広がります。'},
+  5:{stage:'中心と変革の舞台。どこに行っても自然と中心になる宿命があります。五黄土星の人を右腕にすることで問題解決力が最大化します。',person:'五黄土星の人を右腕・問題解決役に。重要な局面で最も頼れる存在になります。',rx:'あえて縁の下を引き受けてください。一歩引いた瞬間、周囲が自然と動き始めます。'},
+  6:{stage:'完成と権威の舞台。高い理想を掲げることで最高の人材が集まります。六白金星の人を右腕にすることで組織の質が一気に上がります。',person:'六白金星の人を右腕・リーダー格に。法律・金融・経営コンサル・リーダーシップに縁のある人が最高の助っ人になります。',rx:'尊敬できる師匠を見つけてください。その師匠のそばにいるだけで舞台が急速に広がります。'},
+  7:{stage:'喜びと収穫の舞台。楽しさを提供することで自然と人が集まります。七赤金星の人を右腕にすることで場が華やかになります。',person:'七赤金星の人を右腕・広報・営業に。飲食・エンターテインメント・接客に縁のある人が最高の助っ人になります。',rx:'楽しい場を作ってください。笑顔が集まる場所に必ず舞台が生まれます。'},
+  8:{stage:'変革と継承の舞台。困難を乗り越えるたびに器が大きくなります。八白土星の人を右腕にすることで組織が安定します。',person:'八白土星の人を右腕・番頭役に。不動産・建設・伝統産業・継承事業に縁のある人が最高の助っ人になります。',rx:'長期的な目標を掲げてください。10年先の山頂を見据えた時、最高の仲間が集まってきます。'},
+  9:{stage:'知恵と光の舞台。真実を示すことで多くの人が集まります。九紫火星の人を右腕にすることで発信力が爆発します。',person:'九紫火星の人を右腕・ブレイン・発信役に。メディア・芸術・教育・IT・クリエイティブに縁のある人が最高の助っ人になります。',rx:'本物の知恵を発信してください。真実の言葉が最強の集客力になります。'}
 };
 
 const NACHIN_REPORT = {
@@ -585,6 +647,60 @@ function init(){
   ksEl.textContent = '年：'+yn.ks+'　月：'+mn.ks+'　日：'+dn.ks;
   renderKitokuReport({SH,ST,SK,SD,h,t,k,d,yn,mn,dn});
 
+  // ===== 坎入（流年）アラート =====
+  (function checkKannyuu(){
+    const today = new Date();
+    const thisYear = today.getFullYear();
+    // 年盤中宮算出（立春年）
+    function yearCenter(y){
+      const ky=(new Date(y,1,4)<new Date(y,today.getMonth(),today.getDate())?y:y-1);
+      const ds=(ky%9+9)%9||9;
+      return ((11-ds-1)%9+9)%9+1;
+    }
+    // 後天定位（北=一白=坎）
+    const TEII={1:'北',2:'南西',3:'東',4:'東南',5:'中央',6:'北西',7:'西',8:'北東',9:'南'};
+    // 各星が年盤でどの位置に来るかを計算
+    function starPosition(star, center){
+      // 遁甲移動順：中→NW→W→NE→S→N→SW→E→SE→中
+      const ORDER=[5,6,7,8,9,1,2,3,4];
+      const basePos=ORDER.indexOf(center);
+      const starOffset=((star-center+9)%9);
+      return ORDER[(basePos+starOffset)%9];
+    }
+    // 本命星が今年・来年に「北（一白の定位＝坎）」に来るか
+    const thisCenter=yearCenter(thisYear);
+    const nextCenter=yearCenter(thisYear+1);
+    const thisPosOfH=starPosition(h, thisCenter);
+    const nextPosOfH=starPosition(h, nextCenter);
+    const isKannyuuThis=(thisPosOfH===1); // 一白水星の定位＝北
+    const isKannyuuNext=(nextPosOfH===1);
+
+    const alertEl=document.getElementById('kannyuuAlert');
+    const labelEl=document.getElementById('kannyuuLabel');
+    const titleEl=document.getElementById('kannyuuTitle');
+    const descEl=document.getElementById('kannyuuDesc');
+
+    if(isKannyuuThis){
+      alertEl.style.display='block';
+      alertEl.style.background='linear-gradient(135deg,rgba(176,64,48,.08),rgba(255,255,255,.5))';
+      alertEl.style.borderColor='rgba(176,64,48,.3)';
+      labelEl.textContent='⚠️ 今年は魂のアップデート時期（坎入）';
+      labelEl.style.color='#b04030';
+      titleEl.textContent=thisYear+'年は「坎入（かんにゅう）」の年です';
+      descEl.textContent='今年は本命星が北（坎）に回座する「魂の脱皮」の年。体調を崩しやすく、悩みが続くこともありますが、これは古い殻を脱ぎ捨てる準備です。今のうちに吉方を取り、心身を整えておくことが大切です。無理に押し切らず、内側を育てる時間として使いましょう。';
+    } else if(isKannyuuNext){
+      alertEl.style.display='block';
+      alertEl.style.background='linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5))';
+      alertEl.style.borderColor='rgba(138,104,32,.25)';
+      labelEl.textContent='✦ 来年は魂のアップデート準備年';
+      labelEl.style.color='var(--gold)';
+      titleEl.textContent=(thisYear+1)+'年は「坎入（かんにゅう）」の年が来ます';
+      descEl.textContent='来年は本命星が北（坎）に回座する「坎入」の年が来ます。今年のうちに吉方を取り、心身・環境・人間関係を整えておくことで、来年の変化期を最高の飛躍の踏み台にできます。今が最強の準備タイミングです。';
+    } else {
+      alertEl.style.display='none';
+    }
+  })();
+
   document.getElementById('noData').style.display='none';
   document.getElementById('personalWrap').style.display='block';
   document.getElementById('mainContent').style.display='block';
@@ -680,6 +796,10 @@ function openNouinModal(type){
 
 function openModal(type, n){
   let s, title, desc, tags, color_food, showNouin=false;
+  // 傾斜・同会専用セクションのリセット
+  document.getElementById('mKeishaSection').style.display='none';
+  document.getElementById('mDokaiSection').style.display='none';
+
   if(type==='star'){
     s = STARS[n];
   } else if(type==='honmei'){
@@ -740,6 +860,23 @@ function openModal(type, n){
   document.getElementById('mNouinSection').style.display='none';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
+
+  // 傾斜専用コンテンツ
+  if(type==='keisha'){
+    const kd = KEISHA_DETAIL[n]||{};
+    document.getElementById('mKeishaSection').style.display='block';
+    document.getElementById('mKeishaTalent').textContent = kd.talent||'';
+    document.getElementById('mKeishaOpen').textContent = kd.open||'';
+    document.getElementById('mKeishaRx').textContent = kd.rx||'';
+  }
+  // 同会専用コンテンツ
+  if(type==='dokai'){
+    const dd = DOKAI_DETAIL[n]||{};
+    document.getElementById('mDokaiSection').style.display='block';
+    document.getElementById('mDokaiStage').textContent = dd.stage||'';
+    document.getElementById('mDokaiPerson').textContent = dd.person||'';
+    document.getElementById('mDokaiRx').textContent = dd.rx||'';
+  }
 }
 
 function closeModal(e){
