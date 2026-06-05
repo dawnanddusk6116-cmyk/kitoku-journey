@@ -457,6 +457,36 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div id="moneyResult" style="display:none;margin-top:14px;"></div>
   </div>
 
+  <div class="free-tool" id="dealTool" style="display:none;">
+    <div class="tool-title">無料版｜今日の商談姿勢</div>
+    <div class="preview-card-body" style="margin-bottom:12px;">生年月日から本命星を出し、今日が「押す日」「整える日」「確認する日」のどれに近いかを表示します。</div>
+
+    <div class="tool-row" id="dealInputRow">
+      <div><input class="form-input" type="number" id="dealYear" placeholder="1967"><div class="date-unit">年</div></div>
+      <div><input class="form-input" type="number" id="dealMonth" placeholder="6"><div class="date-unit">月</div></div>
+      <div><input class="form-input" type="number" id="dealDay" placeholder="14"><div class="date-unit">日</div></div>
+    </div>
+
+    <button class="main-btn" type="button" onclick="runDealFree()">✦ 今日の商談姿勢を見る</button>
+    <div id="dealResult" style="display:none;margin-top:14px;"></div>
+
+    <div class="preview-card premium-card" style="margin-top:14px;">
+      <div class="preview-card-title">有料予定｜MY線路カレンダー</div>
+      <div class="preview-card-body">
+        自分専用の線路の日を月間表示し、商談・契約・初回連絡・提案書提出に向く日を整理します。
+      </div>
+      <button class="main-btn" type="button" onclick="showPaidFeatureMessage('MY線路カレンダー')" style="margin-top:10px;">✦ MY線路カレンダーを見る</button>
+    </div>
+
+    <div class="preview-card premium-card" style="margin-top:10px;">
+      <div class="preview-card-title">有料予定｜案件別 日程比較</div>
+      <div class="preview-card-body">
+        候補日を複数入れて、商談向き・契約向き・関係構築向きの違いを比較します。
+      </div>
+      <button class="main-btn" type="button" onclick="showPaidFeatureMessage('案件別 日程比較')" style="margin-top:10px;">✦ 候補日を比較する</button>
+    </div>
+  </div>
+
   <div class="free-tool" id="balanceTool" style="display:none;">
     <div class="tool-title">社名・屋号の気質を読む</div>
     <div class="preview-card-body" style="margin-bottom:12px;">社名・屋号の音の五行と総画数から、その名前が持つ気質と傾向を読み解きます。命名・改名の参考にしてください。</div>
@@ -546,17 +576,24 @@ function showBusinessPreview(kind){
   document.getElementById('previewPaid').innerHTML='<ul>'+data.paid.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul><div style="margin-top:8px;font-size:.62rem;color:var(--goldlt);font-weight:700;">現在準備中。無料版で入口を確認できる形から追加予定です。</div>';
   st('previewPolicy',data.policy);
   var moneyTool=document.getElementById('moneyTool');
+  var dealTool=document.getElementById('dealTool');
   var balanceTool=document.getElementById('balanceTool');
   if(moneyTool)moneyTool.style.display=kind==='money'?'block':'none';
   if(kind==='money') loadMoneyStarBar();
+  if(dealTool)dealTool.style.display=kind==='deal'?'block':'none';
+  if(kind==='deal') loadDealBirth();
   if(balanceTool)balanceTool.style.display=kind==='balance'?'block':'none';
   var mr=document.getElementById('moneyResult');if(mr)mr.style.display='none';
+  var dr=document.getElementById('dealResult');if(dr)dr.style.display='none';
   var br=document.getElementById('balanceResult');if(br)br.style.display='none';
   showScreen('s3');
 }
 
 function showPreparingMessage(){
   alert('簡易版は準備中です。まずは無料で入口を体験でき、詳細レポート・線路の日・日程比較は有料機能として追加予定です。');
+}
+function showPaidFeatureMessage(name){
+  alert(name+'は有料機能として準備中です。現在は無料版の「今日の商談姿勢」で入口を確認できます。');
 }
 
 var MONEY_TYPE={
@@ -699,6 +736,81 @@ function loadMoneyStarBar(){
       if(a[2])document.getElementById('moneyDay').value=a[2];
     }
   }catch(e){}
+}
+
+var DEAL_POSTURE={
+  push:{
+    title:'押す日',
+    lead:'提案・初回連絡・軽い打診に向きます。勢いは使えますが、契約条件の細部は別紙で確認しましょう。',
+    phrase:'本日は方向性の合意まで進め、細部は確認表で整えます。',
+    caution:'即断を求めすぎないこと。相手の不安を一つ拾うと商談が安定します。'
+  },
+  arrange:{
+    title:'整える日',
+    lead:'条件整理・見積もり調整・関係づくりに向きます。大きく決めるより、信頼の土台を固める日です。',
+    phrase:'次に進むために、懸念点を一度整理させてください。',
+    caution:'焦ってクロージングしないこと。相手の判断材料を増やすほど流れが良くなります。'
+  },
+  check:{
+    title:'確認する日',
+    lead:'契約書、支払い条件、責任範囲、納期、相手先の信用確認に向きます。守りを固めるほど後で強く動けます。',
+    phrase:'念のため、条件と役割分担を最終確認させてください。',
+    caution:'不安を無視しないこと。違和感がある場合は、今日中に決め切らず確認を優先しましょう。'
+  }
+};
+function dealPostureFor(h,date){
+  var v=(h+date.getDate()+date.getMonth()+1)%3;
+  return v===0?'push':v===1?'arrange':'check';
+}
+function loadDealBirth(){
+  try{
+    var b=localStorage.getItem('kitoku-birth');
+    if(!b)return;
+    var a=b.split('-').map(Number);
+    if(a[0])document.getElementById('dealYear').value=a[0];
+    if(a[1])document.getElementById('dealMonth').value=a[1];
+    if(a[2])document.getElementById('dealDay').value=a[2];
+  }catch(e){}
+}
+function runDealFree(){
+  var y=parseInt(document.getElementById('dealYear').value)||0;
+  var m=parseInt(document.getElementById('dealMonth').value)||0;
+  var d=parseInt(document.getElementById('dealDay').value)||1;
+  if(!y||!m){alert('生年月日を入力してください');return;}
+  localStorage.setItem('kitoku-birth',y+'-'+m+'-'+d);
+
+  var h=calcH(y,m), t=calcT(y,m);
+  var hs=STARS[h]||STARS[1], ts=STARS[t]||STARS[1];
+  var now=new Date();
+  var key=dealPostureFor(h,now);
+  var info=DEAL_POSTURE[key];
+  var senro={
+    1:'子・卯・午・酉',4:'子・卯・午・酉',7:'子・卯・午・酉',
+    2:'寅・巳・申・亥',5:'寅・巳・申・亥',8:'寅・巳・申・亥',
+    3:'辰・未・戌・丑',6:'辰・未・戌・丑',9:'辰・未・戌・丑'
+  }[h]||'';
+  var el=document.getElementById('dealResult');
+  el.style.display='block';
+  el.innerHTML='<div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">'
+    +'<div style="padding:14px 16px;background:linear-gradient(135deg,rgba(122,63,127,.1),rgba(255,255,255,.68));border-bottom:1px solid rgba(138,104,32,.15);">'
+    +'<div style="font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:4px;">DEAL TIMING</div>'
+    +'<div style="font-size:.92rem;font-weight:700;color:var(--goldlt);">'+hs.k+'｜今日の商談姿勢：'+info.title+'</div>'
+    +'<div style="font-size:.62rem;color:var(--mist);margin-top:3px;">月命：'+ts.k+' ／ MY線路：'+senro+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 今日の使い方</div>'
+    +'<div style="font-size:.66rem;color:var(--mist);line-height:1.9;">'+info.lead+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;background:rgba(138,104,32,.045);border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🗣 今日の一言</div>'
+    +'<div style="font-size:.72rem;color:var(--goldlt);font-weight:700;line-height:1.8;">'+info.phrase+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">⚠ 確認ポイント</div>'
+    +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+info.caution+'</div>'
+    +'</div>'
+    +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.72;border-top:1px solid rgba(138,104,32,.1);">※ 線路の日の月間表示・候補日比較は有料機能として準備中です。無料版では今日の姿勢だけ確認できます。</div>'
+    +'</div>';
 }
 
 // 音の五行マップ（business用）
