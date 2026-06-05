@@ -758,9 +758,53 @@ var DEAL_POSTURE={
     caution:'不安を無視しないこと。違和感がある場合は、今日中に決め切らず確認を優先しましょう。'
   }
 };
+var DEAL_STAR_GUIDE={
+  1:{work:'情報収集・調整・水面下の根回しに強い星です。商談では相手の不安を聞き出すほど流れが整います。',watch:'考えすぎて結論を先送りしやすいので、次の一手だけは必ず決めて終えると安定します。'},
+  2:{work:'信頼・継続・実務の積み上げに強い星です。商談では派手な押しより、実績・手順・安心材料が効きます。',watch:'慎重になりすぎると機会を逃しやすいので、小さな合意を積み重ねる設計が向きます。'},
+  3:{work:'提案・発信・新規開拓に強い星です。商談では明るい第一声とスピード感が相手の関心を動かします。',watch:'勢いで条件確認を飛ばしやすいので、最後に必ず確認表へ戻ると信用が残ります。'},
+  4:{work:'紹介・信頼形成・関係調整に強い星です。商談では相手の立場を汲みながら、自然に合意点を作れます。',watch:'相手に合わせすぎて自分の条件を曖昧にしやすいので、譲れない線を先に決めましょう。'},
+  5:{work:'中心に立つ判断・大きな決断・責任を背負う場面に強い星です。商談では覚悟と全体像を見せると説得力が出ます。',watch:'強く押しすぎると相手が身構えるため、理由と余白をセットで伝えると流れが整います。'},
+  6:{work:'基準・品質・契約条件・責任範囲を整えることに強い星です。商談では完成度と信頼性が武器になります。',watch:'正しさが強く出ると圧に見えやすいので、相手の事情を一度受け止めると通りやすくなります。'},
+  7:{work:'会話・収穫・場を和ませる力に強い星です。商談では相手が話しやすい空気を作るほど成果に近づきます。',watch:'楽観的に進めすぎると条件が甘くなりやすいので、数字と期限は最後に締めましょう。'},
+  8:{work:'長期案件・事業承継・大きな方針転換に強い星です。商談では腰を据えた提案と将来像が響きます。',watch:'一度決めると動きにくいので、変更条件と見直し日を先に入れておくと安定します。'},
+  9:{work:'企画・ブランド・プレゼン・見せ方に強い星です。商談では相手に未来の絵を見せることで理解が早まります。',watch:'見栄えや理想に寄りすぎると現実条件が抜けやすいので、数字と実行責任を添えましょう。'}
+};
+var DEAL_TSUKI_GUIDE={
+  1:'内面では慎重に情報を確かめたいタイプ。事前資料と確認時間があるほど安心して動けます。',
+  2:'内面では堅実さと安心感を重視します。急な変更より、段取りと根拠がある提案に強くなります。',
+  3:'内面では新しい可能性に反応します。短く明るい提案と、次のアクションがあると動きやすくなります。',
+  4:'内面では関係性と空気を重視します。誰にどう影響するかを説明すると納得が深まります。',
+  5:'内面では中心軸と覚悟を求めます。誰が責任を持つのかを明確にすると安心します。',
+  6:'内面では品質と筋の通った説明を求めます。基準・契約条件・責任範囲が整うほど力を発揮します。',
+  7:'内面では楽しさとメリットが動機になります。成果が見える形、喜びがある提案に反応します。',
+  8:'内面では長期の安定と納得感を求めます。将来像と見直し条件をセットにすると安心します。',
+  9:'内面では意味・美しさ・理念を求めます。数字だけでなく、なぜそれをするのかを語ると動きます。'
+};
 function dealPostureFor(h,date){
   var v=(h+date.getDate()+date.getMonth()+1)%3;
   return v===0?'push':v===1?'arrange':'check';
+}
+function dealPostureLogicText(h,date,key){
+  var day=date.getDate();
+  var month=date.getMonth()+1;
+  var sum=h+day+month;
+  var rem=sum%3;
+  var label=key==='push'?'押す日':key==='arrange'?'整える日':'確認する日';
+  return 'この無料版では、本命星の数字（'+h+'）に今日の月（'+month+'）と日（'+day+'）を重ね、商談の姿勢を3つに分けています。'
+    +'合計は '+h+' + '+month+' + '+day+' = '+sum+'。3で割った余りが '+rem+' なので、今日は「'+label+'」として表示しています。'
+    +'これは契約日を断定するものではなく、今日の動き方を整えるための簡易チェックです。線路の日・候補日比較・月間カレンダーは有料機能で詳しく見る設計です。';
+}
+function dealSenroGuide(h,senro){
+  var group=([1,4,7].indexOf(h)>=0)?'人数系列':([2,5,8].indexOf(h)>=0)?'地数系列':'天数系列';
+  return 'あなたの本命星は'+group+'に属するため、MY線路は「'+senro+'」です。線路の日は、契約・初回連絡・口座開設・提案書提出など、空間移動を伴わない始動のタイミングを見る時に使います。無料版では線路グループまで表示し、月間カレンダーと候補日比較は有料機能で詳しく見ます。';
+}
+function dealChecklistHtml(key){
+  var base={
+    push:['相手が次に何を判断すればよいか明確か','提案のメリットを一文で言えるか','契約条件の細部確認を後回しにしていないか'],
+    arrange:['見積もり・納期・役割分担に曖昧さがないか','相手の懸念点を聞く時間を取ったか','次回までの宿題を双方で分けたか'],
+    check:['支払い条件・責任範囲・解約条件を確認したか','相手先の信用・決裁者・契約主体を確認したか','今日決めることと持ち帰ることを分けたか']
+  }[key]||[];
+  return '<ul style="margin:0;padding-left:18px;">'+base.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
 }
 function loadDealBirth(){
   try{
@@ -784,11 +828,15 @@ function runDealFree(){
   var now=new Date();
   var key=dealPostureFor(h,now);
   var info=DEAL_POSTURE[key];
+  var logicText=dealPostureLogicText(h,now,key);
+  var starGuide=DEAL_STAR_GUIDE[h]||DEAL_STAR_GUIDE[1];
+  var tsukiGuide=DEAL_TSUKI_GUIDE[t]||DEAL_TSUKI_GUIDE[1];
   var senro={
     1:'子・卯・午・酉',4:'子・卯・午・酉',7:'子・卯・午・酉',
     2:'寅・巳・申・亥',5:'寅・巳・申・亥',8:'寅・巳・申・亥',
     3:'辰・未・戌・丑',6:'辰・未・戌・丑',9:'辰・未・戌・丑'
   }[h]||'';
+  var senroGuide=dealSenroGuide(h,senro);
   var el=document.getElementById('dealResult');
   el.style.display='block';
   el.innerHTML='<div style="background:var(--card,#fff);border:1px solid rgba(138,104,32,.2);border-radius:12px;overflow:hidden;">'
@@ -798,16 +846,37 @@ function runDealFree(){
     +'<div style="font-size:.62rem;color:var(--mist);margin-top:3px;">月命：'+ts.k+' ／ MY線路：'+senro+'</div>'
     +'</div>'
     +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🪬 あなたの商談タイプ</div>'
+    +'<div style="font-size:.66rem;color:var(--mist);line-height:1.9;">'+starGuide.work+'</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-top:7px;">'+starGuide.watch+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.035);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🌙 月命から見た内面の判断癖</div>'
+    +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+tsukiGuide+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">✦ 今日の使い方</div>'
     +'<div style="font-size:.66rem;color:var(--mist);line-height:1.9;">'+info.lead+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(255,255,255,.78);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🔎 なぜこの結果になるのか</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.9;">'+logicText+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🛤 MY線路の見方</div>'
+    +'<div style="font-size:.63rem;color:var(--mist);line-height:1.9;">'+senroGuide+'</div>'
     +'</div>'
     +'<div style="padding:12px 16px;background:rgba(138,104,32,.045);border-bottom:1px solid rgba(138,104,32,.12);">'
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🗣 今日の一言</div>'
     +'<div style="font-size:.72rem;color:var(--goldlt);font-weight:700;line-height:1.8;">'+info.phrase+'</div>'
     +'</div>'
-    +'<div style="padding:12px 16px;">'
+    +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);">'
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">⚠ 確認ポイント</div>'
     +'<div style="font-size:.65rem;color:var(--mist);line-height:1.85;">'+info.caution+'</div>'
+    +'</div>'
+    +'<div style="padding:12px 16px;">'
+    +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">📋 今日のチェックリスト</div>'
+    +'<div style="font-size:.64rem;color:var(--mist);line-height:1.8;">'+dealChecklistHtml(key)+'</div>'
     +'</div>'
     +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.72;border-top:1px solid rgba(138,104,32,.1);">※ 線路の日の月間表示・候補日比較は有料機能として準備中です。無料版では今日の姿勢だけ確認できます。</div>'
     +'</div>';
