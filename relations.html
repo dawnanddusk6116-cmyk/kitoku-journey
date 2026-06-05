@@ -23,6 +23,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .scr.on{display:block;}
 .big-t{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.2em;color:var(--goldlt);text-align:center;margin-bottom:4px;padding-top:8px;}
 .big-s{font-size:.63rem;letter-spacing:.16em;color:var(--mist);text-align:center;margin-bottom:24px;}
+.top-guide{background:linear-gradient(135deg,rgba(138,104,32,.075),rgba(255,255,255,.72));border:1px solid rgba(138,104,32,.18);border-radius:var(--r);padding:14px 15px;margin:0 0 16px;}
+.top-guide-title{font-size:.78rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:7px;}
+.top-guide-text{font-size:.67rem;color:var(--mist);line-height:1.9;}
+.top-guide-points{display:grid;gap:6px;margin-top:9px;}
+.top-guide-point{font-size:.64rem;color:var(--mist);line-height:1.7;padding-left:1em;text-indent:-1em;}
+.top-guide-point strong{color:var(--goldlt);}
 .pc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:16px;margin-bottom:12px;}
 .pc.biz{border-left:3px solid var(--biz);}
 .pc.love{border-left:3px solid var(--love);}
@@ -178,6 +184,17 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <div class="scr on" id="s0">
   <div class="big-t">大切な人との縁を知る</div>
   <div class="big-s">KITOKU @ RELATIONS</div>
+  <div class="top-guide">
+    <div class="top-guide-title">この画面でできること</div>
+    <div class="top-guide-text">
+      二人の関係を「良い・悪い」で決めるのではなく、星の違いから距離感、伝え方、摩擦の活かし方を整える画面です。
+    </div>
+    <div class="top-guide-points">
+      <div class="top-guide-point">・<strong>恋愛・パートナー</strong>は、深い縁、すれ違いやすい点、今日伝える一言を見ます。</div>
+      <div class="top-guide-point">・<strong>友人・知人</strong>は、近づき方、離れ方、摩擦を成長に変える視点を見ます。</div>
+      <div class="top-guide-point">・<strong>家族</strong>は、役割の違い、介護や親子関係、長い縁の整え方を見ます。</div>
+    </div>
+  </div>
   <div style="font-size:.68rem;color:var(--mist);margin-bottom:12px;">何のための鑑定ですか？</div>
   <div class="pc love" onclick="selP('love')"><div class="pi">💕</div><div><div class="pn">恋愛・パートナー</div><div class="pd">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
   <div class="pc friend" onclick="selP('friend')"><div class="pi">🤝</div><div><div class="pn">友人・知人</div><div class="pd">友人関係を整える<br>距離感・摩擦の活かし方</div></div></div>
