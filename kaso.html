@@ -20,7 +20,10 @@
   --warn:#b04030;--warn-bg:rgba(176,64,48,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html{background:var(--bg);min-height:100dvh;}
+html{background:var(--bg);min-height:100dvh;font-size:15px;}
+html[data-fontsize="s"]{font-size:15px;}
+html[data-fontsize="m"]{font-size:17px;}
+html[data-fontsize="l"]{font-size:19px;}
 body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;font-size:15px;padding-bottom:60px;}
 body[data-fontsize="s"]{font-size:15px;}
 body[data-fontsize="m"]{font-size:17px;}
@@ -900,6 +903,7 @@ function setTheme(t){
 
 function setFontSize(s){
   document.body.setAttribute('data-fontsize',s);
+  document.documentElement.setAttribute('data-fontsize',s);
   try{localStorage.setItem('kitoku-kaso-fontsize',s);}catch(e){}
   ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
 }
@@ -911,6 +915,7 @@ function setFontSize(s){
   document.documentElement.setAttribute('data-theme',t);
   ['dark','light'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
   document.body.setAttribute('data-fontsize',fs);
+  document.documentElement.setAttribute('data-fontsize',fs);
   ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===fs);});
 })();
 </script>
