@@ -312,6 +312,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
               <div class="report-text" id="reportAction">—</div>
               <div class="report-tags" id="reportTags"></div>
             </div>
+            <div class="report-block">
+              <div class="report-block-title">集中と回復のリズム</div>
+              <div class="report-text" id="reportRhythm">—</div>
+            </div>
           </div>
         </details>
         <div class="report-next">
@@ -720,10 +724,12 @@ function renderKitokuReport(ctx){
   const structure = `本命星の${ctx.SH.j}は「${hRep.verb || '自分の中心を育てる'}」力。月命星の${ctx.ST.j}は、安心感や素の反応に${tRep.tone || ctx.ST.j+'の響き'}を与えます。傾斜の${ctx.SK.j}は眠っている才能、同会の${ctx.SD.j}は社会から求められやすい役割です。`;
   const nacchin = `年の納音「${ctx.yn.n}」は、人生全体の響きです。${ynText}\n月の納音「${ctx.mn.n}」は、心の奥の響きです。${mnText}\n日の納音「${ctx.dn.n}」は、日常で出やすい響きです。${dnText}`;
   const action = `${hRep.care || '自分の星を決めつけにせず、扱い方のヒントとして使ってください。'} ${kRep.care ? '才能面では、'+kRep.care : ''} 今日は「自分の感覚を一つ信じる」「無理に急がない」「自分に合う色や香りで整える」の3つを意識してみてください。`;
+  const rhythm = buildSelfRhythmReport(ctx);
   document.getElementById('reportLead').textContent = oneLine;
   document.getElementById('reportStructure').textContent = structure;
   document.getElementById('reportNacchin').textContent = nacchin;
   document.getElementById('reportAction').textContent = action;
+  document.getElementById('reportRhythm').textContent = rhythm;
   document.getElementById('reportTags').innerHTML = [
     ctx.SH.j,
     ctx.ST.j,
@@ -731,6 +737,46 @@ function renderKitokuReport(ctx){
     ctx.mn.n,
     ctx.dn.n
   ].map(x=>`<span class="report-tag">${x}</span>`).join('');
+}
+
+function buildSelfRhythmReport(ctx){
+  const focusMap={
+    1:'静かな時間に深く潜るほど、考えがまとまりやすいタイプです。朝の静けさ、夜のひとり時間、誰にも急かされない環境で集中力が戻ります。',
+    2:'焦らず積み上げる時間に強いタイプです。午前中のルーティン、家事や整理のあと、手を動かしながら考える時間に判断が安定します。',
+    3:'朝や物事の始まりにスイッチが入りやすいタイプです。最初の一歩、声に出す、音を使う、短時間で一気に動くことで流れが生まれます。',
+    4:'風通しの良い時間に整いやすいタイプです。午前中の軽い移動、人と話したあと、机や空間を整えたあとにアイデアが広がります。',
+    5:'自分の中心が定まった時に強いタイプです。予定を詰めすぎず、ひとつの場所で腰を据えて考えると、周囲を動かす判断力が出ます。',
+    6:'頭が澄んだ時間に全体設計と決断が冴えるタイプです。朝から午前中に、判断・構造化・重要な決定を置くと力が出やすくなります。',
+    7:'気持ちがゆるんだ時に発想が出るタイプです。会話、食事、少し楽しい空気の中で、言葉や提案が自然にまとまりやすくなります。',
+    8:'切り替えのタイミングに強いタイプです。朝の始動、場所を変えた直後、一区切りをつけたあとに、大きな方向転換を考えやすくなります。',
+    9:'光が入る時間、頭が冴える時間にひらめきが出やすいタイプです。昼前後や明るい場所で、企画・表現・見せ方を考えると力が出ます。'
+  };
+  const workMap={
+    1:'向いている作業は、調査、文章化、深い相談、裏側の整理です。',
+    2:'向いている作業は、準備、整理、継続、実務の積み上げです。',
+    3:'向いている作業は、着手、発信、企画の初動、短時間の集中です。',
+    4:'向いている作業は、調整、連絡、関係づくり、広げる仕事です。',
+    5:'向いている作業は、全体の見直し、問題の中心を押さえる判断です。',
+    6:'向いている作業は、設計、決断、責任ある判断、仕組みづくりです。',
+    7:'向いている作業は、接客、言葉選び、見せ方、楽しさを作ることです。',
+    8:'向いている作業は、改善、方向転換、区切りをつける判断です。',
+    9:'向いている作業は、企画、表現、分析、見える形にすることです。'
+  };
+  const recoveryMap={
+    1:'回復は、静かな水のような時間を作ること。ひとりの時間、入浴、音を減らすことが効きます。',
+    2:'回復は、生活を整えること。睡眠、食事、掃除、土に触れるような地味な行動が効きます。',
+    3:'回復は、軽く動くこと。散歩、声を出す、朝日を浴びることで気が戻ります。',
+    4:'回復は、風を通すこと。換気、移動、信頼できる人との会話が効きます。',
+    5:'回復は、予定を減らして中心に戻ること。余白を作ると判断力が戻ります。',
+    6:'回復は、責任を一度下ろすこと。ひとりで静かに全体を見直す時間が効きます。',
+    7:'回復は、喜びを戻すこと。おいしいもの、会話、軽い楽しみが気を満たします。',
+    8:'回復は、場所や流れを切り替えること。片づけ、模様替え、小旅行が効きます。',
+    9:'回復は、明るさを取り戻すこと。光、香り、美しいもの、短い仮眠が効きます。'
+  };
+  const nacHint = (ctx.yn && ctx.mn && ctx.yn.n===ctx.mn.n)
+    ? `年と月の納音が同じなので、人生全体の響きと内面の響きが重なりやすい人です。調子の良い時間帯を見つけると、そのリズムがかなり強い味方になります。`
+    : `納音は、同じ九星でも人によって違う「響き」です。集中や回復の方法も、星だけで決めつけず、実際に自分が整う感覚と照らし合わせてください。`;
+  return `${focusMap[ctx.h] || focusMap[1]} 本命星のリズムとしては、${workMap[ctx.h] || workMap[1]}\n\n月命星の${ctx.ST.j}は、素の反応や安心する回復方法に出やすい星です。${recoveryMap[ctx.t] || recoveryMap[1]} 傾斜の${ctx.SK.j}は、疲れた時ほど無意識に出る才能でもあります。無理に頑張るより、「どの時間に何を置くと自分が動きやすいか」を観察してみてください。\n\n${nacHint}`;
 }
 
 function setCell(pfx, s, n){
