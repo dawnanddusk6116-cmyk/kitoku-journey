@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>色と香りAI先生 | KITOKU</title>
+<title>香りAI先生 | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -160,9 +160,9 @@ textarea{min-height:86px;resize:vertical;}
 
 <div class="hero">
   <div class="hero-box">
-    <div class="eyebrow">COLOR & SCENT AI TEACHER</div>
-    <div class="title">色と香りAI先生</div>
-    <div class="lead">人気やランキングだけではなく、<strong>自分の星・会う相手・場面・身につける色・手持ちの香り</strong>から、今日の整え方をAIに相談する入口です。</div>
+    <div class="eyebrow" id="consultEyebrow">SCENT AI TEACHER</div>
+    <div class="title" id="consultTitle">香りAI先生</div>
+    <div class="lead" id="consultLead">人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>から、香りの使い分けをAIに相談する入口です。</div>
     <div class="triad">
       <div class="pill"><b>High</b><span>香水<br>勝負</span></div>
       <div class="pill"><b>Mid</b><span>ボディケア<br>日常</span></div>
@@ -180,7 +180,7 @@ textarea{min-height:86px;resize:vertical;}
   <div class="howto-title">この画面の使い方</div>
   <div class="howto-steps">
     <div class="howto-step"><div class="howto-num">1</div><div><strong>相談モードを選ぶ</strong><br>自分用・手持ち香水・会う人・贈り物から選べます。</div></div>
-    <div class="howto-step"><div class="howto-num">2</div><div><strong>条件を選ぶ・書き足す</strong><br>シーン、気分、色の目的、香りの出方を選び、黄色い欄に補足を書きます。</div></div>
+    <div class="howto-step"><div class="howto-num">2</div><div><strong>条件を選ぶ・書き足す</strong><br>シーン、気分、目的、香りの出方を選び、黄色い欄に補足を書きます。</div></div>
     <div class="howto-step"><div class="howto-num">3</div><div><strong>AIに渡す相談文を使う</strong><br>できた相談文をコピーして、ChatGPT・Claude・Gemini・NotebookLMなどに貼り付けます。</div></div>
   </div>
 </div>
@@ -189,7 +189,7 @@ textarea{min-height:86px;resize:vertical;}
   <div class="sec-label"><span class="sec-num">1</span><span class="sec-label-text">相談モード</span></div>
   <div class="mode-grid">
     <div class="mode-card active" data-mode="self" onclick="selectMode('self')">
-      <div class="mode-icon">🌸</div><div><div class="mode-title">自分の色と香りを選ぶ</div><div class="mode-desc">九星・気分・シーンから、色とHigh/Mid/Lowの香りを提案</div></div>
+      <div class="mode-icon">🌸</div><div><div class="mode-title" id="selfModeTitle">自分の香りを選ぶ</div><div class="mode-desc" id="selfModeDesc">九星・気分・シーンから、High/Mid/Lowで香りを提案</div></div>
     </div>
     <div class="mode-card" data-mode="wardrobe" onclick="selectMode('wardrobe')">
       <div class="mode-icon">🧥</div><div><div class="mode-title">手持ち香水を使い分ける</div><div class="mode-desc">いま持っている香りを、五行・場面・タイミングで整理</div></div>
@@ -229,7 +229,7 @@ textarea{min-height:86px;resize:vertical;}
       </select>
     </div>
     <div class="field">
-      <label>色を使う目的</label>
+      <label id="colorPurposeLabel">色を使う目的</label>
       <select id="colorPurpose" onchange="buildPrompt()">
         <option>今日の自分を整えたい</option>
         <option>初対面で信頼されたい</option>
@@ -296,7 +296,7 @@ textarea{min-height:86px;resize:vertical;}
 <div class="section">
   <div class="sec-label"><span class="sec-num">3</span><span class="sec-label-text">AIに渡す相談文</span></div>
   <div class="prompt-card">
-    <div class="prompt-title" id="promptTitle">色と香りAI先生への相談</div>
+    <div class="prompt-title" id="promptTitle">香りAI先生への相談</div>
     <div class="prompt-box" id="promptBox">—</div>
     <button class="btn primary" onclick="copyPrompt()">📋 コピーして貼り付ける</button>
     <button class="btn secondary" onclick="sharePrompt()">📤 AIアプリに送る</button>
@@ -317,7 +317,7 @@ textarea{min-height:86px;resize:vertical;}
   </div>
 </div>
 
-<div class="footer">KITOKU ENGINE — 色と香りの調律<br>High / Mid / Lowで、自分の毎日を整える</div>
+<div class="footer" id="consultFooter">KITOKU ENGINE — 香りの調律<br>High / Mid / Lowで、自分の毎日を整える</div>
 
 <script>
 const NACHIN=['海中金','炉中火','大林木','路傍土','剣鋒金','山頭火','澗下水','城頭土','白蝋金','楊柳木','泉中水','屋上土','霹靂火','松柏木','長流水','砂中金','山下火','平地木','壁上土','金箔金','覆燈火','天河水','大駅土','釵釧金','桑柘木','大渓水','沙中土','天上火','石榴木','大海水'];
@@ -331,6 +331,36 @@ const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{
 const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
 let gInfo=null;
 let currentMode='self';
+let consultFocus=new URLSearchParams(location.search).get('focus')==='color'?'color':'scent';
+
+function applyConsultFocus(){
+  const isColor=consultFocus==='color';
+  const data=isColor
+    ? {
+        eyebrow:'COLOR AI TEACHER',
+        title:'色AI先生',
+        lead:'人気や流行色だけではなく、<strong>自分の星・会う相手・場面・身につける場所</strong>から、服・名刺・資料・小物の色をAIに相談する入口です。',
+        selfTitle:'自分の色を選ぶ',
+        selfDesc:'九星・気分・シーンから、今日使う色と差し色を提案',
+        footer:'KITOKU ENGINE — 色の調律<br>服・名刺・小物で、自分の毎日を整える'
+      }
+    : {
+        eyebrow:'SCENT AI TEACHER',
+        title:'香りAI先生',
+        lead:'人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>から、香りの使い分けをAIに相談する入口です。',
+        selfTitle:'自分の香りを選ぶ',
+        selfDesc:'九星・気分・シーンから、High/Mid/Lowで香りを提案',
+        footer:'KITOKU ENGINE — 香りの調律<br>High / Mid / Lowで、自分の毎日を整える'
+      };
+  document.title=`${data.title} | KITOKU`;
+  document.getElementById('consultEyebrow').textContent=data.eyebrow;
+  document.getElementById('consultTitle').textContent=data.title;
+  document.getElementById('consultLead').innerHTML=data.lead;
+  document.getElementById('selfModeTitle').textContent=data.selfTitle;
+  document.getElementById('selfModeDesc').textContent=data.selfDesc;
+  document.getElementById('consultFooter').innerHTML=data.footer;
+  document.getElementById('colorPurposeLabel').textContent=isColor?'色を使う目的':'色の補助テーマ';
+}
 
 function nc(idx){idx=((idx%60)+60)%60;return NACHIN[Math.floor(idx/2)];}
 function yIdx(y){return((y-1984)%60+600)%60;}
@@ -411,14 +441,20 @@ function buildPrompt(){
   const base=info?starLine(info):'私はまだ星情報を登録していません。一般的な九星気学の観点で、やさしく提案してください。';
   const star=info?`${info.honmei}（${AVATAR[info.h]}）`:'私の九星';
   const color=info?COLORS[info.h]:'星に合う色';
-  const modeTitle={self:'自分の色と香りを選ぶ',wardrobe:'手持ち香水を使い分ける',person:'会う人に合わせる',gift:'贈り物・救済モード'}[currentMode]||'色と香り相談';
+  const teacherName=consultFocus==='color'?'色AI先生':'香りAI先生';
+  const modeTitle={
+    self:consultFocus==='color'?'自分の色を選ぶ':'自分の香りを選ぶ',
+    wardrobe:'手持ち香水を使い分ける',
+    person:'会う人に合わせる',
+    gift:'贈り物・救済モード'
+  }[currentMode]||(consultFocus==='color'?'色相談':'香り相談');
   const targetLine=(currentMode==='person'||currentMode==='gift')?targetInfoLine():'';
-  document.getElementById('promptTitle').textContent=`色と香りAI先生への相談：${modeTitle}`;
+  document.getElementById('promptTitle').textContent=`${teacherName}への相談：${modeTitle}`;
 
   let body=`${base}
 
-あなたはKITOKUの「色と香りAI先生」です。
-九星気学を主役に、香り・色・シーン・相手との関係を統合して、押し付けではなく「自分で選ぶための色と香りの処方箋」を作ってください。
+あなたはKITOKUの「${teacherName}」です。
+九星気学を主役に、${consultFocus==='color'?'色・シーン・相手との関係':'香り・シーン・相手との関係'}を統合して、押し付けではなく「自分で選ぶための${consultFocus==='color'?'色の処方箋':'香りの処方箋'}」を作ってください。
 
 【今回の相談モード】
 ${modeTitle}
@@ -434,7 +470,13 @@ ${star}
 調律カラー：${color}
 `;
 
-  if(currentMode==='wardrobe'){
+  if(consultFocus==='color'){
+    body+=`
+お願い：
+今日の目的に合わせて、色だけを深掘りしてください。
+メインカラー、差し色、避けたい色、服・名刺・資料・小物・スマホケースでの使い方を分けて提案してください。
+会う相手がいる場合は、相手に圧をかけない色、信頼される色、印象に残る色の違いも整理してください。`;
+  }else if(currentMode==='wardrobe'){
     body+=`
 【手持ちの香り】
 ${wardrobe||'（ここに手持ちの香水・お香・ボディケアを書いてください）'}
@@ -468,7 +510,26 @@ ${person||'（ここに相手の星・状態・悩み・予算を書いてくだ
 自分を整えるための使い方、避けた方がよい香りの強さ、色の取り入れ方も教えてください。`;
   }
 
-  body+=`
+  if(consultFocus==='color'){
+    body+=`
+
+【補足】
+${free||'（苦手な色、避けたい印象、服装、名刺や資料の用途、会う相手などがあればここに書きます）'}
+
+【出力形式】
+1. 属性の肯定
+2. 今日のメインカラー：なぜその色が合うか
+3. 差し色：小さく入れるとよい色
+4. 避けたい色：今日の目的に対して強く出すぎる色
+5. 服での使い方：上半身・下半身・素材感
+6. 名刺・資料・小物での使い方：相手にどう見えるか
+7. 今日の一言：自分で選ぶための判断材料として、温かく締める
+
+【大切な条件】
+流行色や似合う色診断ではなく、九星気学の判断材料として提案してください。
+最終判断は本人が行う前提で、押し付けず、現実の服装・場面・相手との関係に合わせてください。`;
+  }else{
+    body+=`
 
 【補足】
 ${free||'（苦手な香り、予算、使いたい場面、Celesで少量から試したい等があればここに書きます）'}
@@ -488,13 +549,14 @@ ${free||'（苦手な香り、予算、使いたい場面、Celesで少量から
 2. High（勝負・魂）：香水、または少量で試せる候補
 3. Mid（日常・体）：ハンドクリーム、ボディケア、ヘアミスト等
 4. Low（浄化・空間）：お香、シャンプー、花、ルームフレグランス等
-5. 色の調律：メインカラー、差し色、避けたい色、服・名刺・資料・小物での使い方
+5. ${consultFocus==='color'?'色の調律：メインカラー、差し色、避けたい色、服・名刺・資料・小物での使い方':'色の補助：香りと一緒に使う差し色、小物、空間の色'}
 6. 今日の使い方：いつ、どこに、どのくらい使うか
 7. 最後に一言：自分で選ぶための判断材料として、温かく締める
 
 【大切な条件】
 商品名・価格・在庫・発売日は変わるため、断定しすぎず、購入前に公式ページで確認する前提で提案してください。
 高いものだけを良いとせず、100円から始められるLowの選択肢も必ず入れてください。`;
+  }
 
   setPromptBox(body);
 }
@@ -514,7 +576,7 @@ function copyPrompt(){
 async function sharePrompt(){
   const text=document.getElementById('promptBox').textContent;
   try{
-    if(navigator.share){await navigator.share({title:'KITOKU 色と香りAI先生',text});return;}
+    if(navigator.share){await navigator.share({title:`KITOKU ${consultFocus==='color'?'色AI先生':'香りAI先生'}`,text});return;}
   }catch(e){}
   try{await navigator.clipboard.writeText(text);}catch(e){}
   alert('共有に対応していないため、相談文をコピーしました。AIアプリに貼り付けてください。');
@@ -533,7 +595,7 @@ function setFontSize(s){
 document.addEventListener('DOMContentLoaded',()=>{
   const t=localStorage.getItem('kitoku-theme')||'light';
   const fs=localStorage.getItem('kitoku-fontsize')||'s';
-  setTheme(t);setFontSize(fs);showLifeElementBanner();loadInfo();
+  setTheme(t);setFontSize(fs);applyConsultFocus();showLifeElementBanner();loadInfo();
 });
 function showLifeElementBanner(){
   const el=document.getElementById('lifeElementBanner');
