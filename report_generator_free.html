@@ -248,15 +248,15 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
     <span class="fl" style="margin-top:8px;">✦ 読み方（カタカナ）</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div>
-        <input class="fi" type="text" id="inFuriSei" placeholder="サクライ" maxlength="20" oninput="toKatakana(this)">
+        <input class="fi" type="text" id="inFuriSei" placeholder="サクライ" maxlength="20" onblur="toKatakana(this)" onchange="toKatakana(this)" autocomplete="off">
         <div class="du">姓（カタカナ）</div>
       </div>
       <div>
-        <input class="fi" type="text" id="inFuriMei" placeholder="ハルナ" maxlength="20" oninput="toKatakana(this)">
+        <input class="fi" type="text" id="inFuriMei" placeholder="ハルナ" maxlength="20" onblur="toKatakana(this)" onchange="toKatakana(this)" autocomplete="off">
         <div class="du">名（カタカナ）</div>
       </div>
     </div>
-    <div style="font-size:.6rem;color:var(--mist);line-height:1.7;margin-top:2px;">※ カタカナを入力すると五行・音の判定がより正確になります</div>
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.7;margin-top:2px;">※ カタカナで入力してください（ひらがなは自動変換されます）。入力しなくてもレポートは生成できます。</div>
     <span class="fl" style="margin-top:8px;">✦ 生年月日</span>
     <div class="dr">
       <div><input class="fi" type="number" id="inY" placeholder="1992"><div class="du">年</div></div>
