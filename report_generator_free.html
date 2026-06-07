@@ -238,13 +238,25 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div>
         <input class="fi" type="text" id="inSei" placeholder="桜井" maxlength="10">
-        <div class="du">姓</div>
+        <div class="du">姓（漢字）</div>
       </div>
       <div>
         <input class="fi" type="text" id="inMei" placeholder="陽菜" maxlength="10">
-        <div class="du">名</div>
+        <div class="du">名（漢字）</div>
       </div>
     </div>
+    <span class="fl" style="margin-top:8px;">✦ 読み方（カタカナ）</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div>
+        <input class="fi" type="text" id="inFuriSei" placeholder="サクライ" maxlength="20" oninput="toKatakana(this)">
+        <div class="du">姓（カタカナ）</div>
+      </div>
+      <div>
+        <input class="fi" type="text" id="inFuriMei" placeholder="ハルナ" maxlength="20" oninput="toKatakana(this)">
+        <div class="du">名（カタカナ）</div>
+      </div>
+    </div>
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.7;margin-top:2px;">※ カタカナを入力すると五行・音の判定がより正確になります</div>
     <span class="fl" style="margin-top:8px;">✦ 生年月日</span>
     <div class="dr">
       <div><input class="fi" type="number" id="inY" placeholder="1992"><div class="du">年</div></div>
@@ -305,6 +317,10 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
       <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rim);padding-bottom:10px;">
         <div style="font-size:.68rem;color:var(--fog);">お名前</div>
         <div style="font-size:.88rem;font-weight:700;color:var(--golddk);" id="confName">—</div>
+      </div>
+      <div id="confFuriRow" style="display:none;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rim);padding-bottom:10px;">
+        <div style="font-size:.68rem;color:var(--fog);">読み方</div>
+        <div style="font-size:.78rem;color:var(--mist);" id="confFuri">—</div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rim);padding-bottom:10px;">
         <div style="font-size:.68rem;color:var(--fog);">生年月日</div>
@@ -1133,6 +1149,11 @@ function togOpt(id){
   if(selectedOpts.has(id)){selectedOpts.delete(id);el.classList.remove('on');}
   else{selectedOpts.add(id);el.classList.add('on');}
 }
+function toKatakana(el){
+  // ひらがな→カタカナ自動変換
+  el.value=el.value.replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
+}
+
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   const el=document.getElementById(id);if(el)el.classList.add('on');
@@ -1147,19 +1168,30 @@ function goBack(){
 function showConfirm(){
   const sei=document.getElementById('inSei').value.trim();
   const mei=document.getElementById('inMei').value.trim();
+  const furiSei=document.getElementById('inFuriSei').value.trim();
+  const furiMei=document.getElementById('inFuriMei').value.trim();
   const y=parseInt(document.getElementById('inY').value)||0;
   const m=parseInt(document.getElementById('inM').value)||0;
   const d=parseInt(document.getElementById('inD').value)||0;
   if(!sei||!mei){alert('姓名を入力してください');return;}
   if(!y||!m||!d){alert('生年月日を入力してください');return;}
 
-  // 本命星・月命星を計算して表示
   const {kY,kM}=getKD(y,m,d);
   const h=calcHonmei(kY);
   const t=calcTsukimei(h,kM);
   const STARS_K={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
 
   document.getElementById('confName').textContent=`${sei} ${mei}`;
+  // フリガナがあれば表示
+  const furiRow=document.getElementById('confFuriRow');
+  if(furiRow){
+    if(furiSei||furiMei){
+      furiRow.style.display='flex';
+      document.getElementById('confFuri').textContent=`${furiSei||'—'}　${furiMei||'—'}`;
+    } else {
+      furiRow.style.display='none';
+    }
+  }
   document.getElementById('confBirth').textContent=`${y}年${m}月${d}日`;
   document.getElementById('confGender').textContent=selectedGender==='f'?'女性':'男性';
   document.getElementById('confHonmei').textContent=STARS_K[h]||'—';
@@ -1192,6 +1224,8 @@ function saveSelfProfile(sei,mei,y,m,d,h,t,k,dok,nac){
 async function generateReport(){
   const sei=document.getElementById('inSei').value.trim();
   const mei=document.getElementById('inMei').value.trim();
+  const furiSei=document.getElementById('inFuriSei').value.trim();
+  const furiMei=document.getElementById('inFuriMei').value.trim();
   const y=parseInt(document.getElementById('inY').value)||0;
   const m=parseInt(document.getElementById('inM').value)||0;
   const d=parseInt(document.getElementById('inD').value)||0;
@@ -1224,7 +1258,7 @@ async function generateReport(){
   const seiK=sumStrokes(sei)||0;
   const meiK=sumStrokes(mei)||0;
   const ten=seiK,chi=meiK,jin=((sei.length?getStroke(sei[sei.length-1])||0:0)+(getStroke(mei[0])||0)),so=ten+chi,gai=so-jin;
-  const nameScore=calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so);
+  const nameScore=calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so,furiSei,furiMei);
 
   // 年盤（本命星が座る宮番号でテーマを決定）
   const yearData=[];
@@ -1244,9 +1278,11 @@ async function generateReport(){
   const html=buildReportHTML({
     sei,mei,y,m,d,h,t,k,dok,nac,seiK,meiK,ten,chi,jin,gai,so,nameScore,
     yearData,thisYearPos,thisYearCenter,houiMonths,
-    opts:new Set(['future','houi','scent','health','timing','move']), // FREE版は全オプションをぼかしで表示
+    opts:new Set(['future','houi','scent','health','timing','move']),
     gender:selectedGender,
-    isFreeMode:true
+    isFreeMode:true,
+    furiSei:furiSei,
+    furiMei:furiMei
   });
 
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
@@ -1257,30 +1293,63 @@ async function generateReport(){
   window.scrollTo(0,0);
 }
 
-function calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so){
-  let score=0,details=[];
-  // 読み下し（30点）
-  score+=30;details.push({n:'読み下し',s:30,max:30});
-  // 五行（20点）
-  const ggs=[gogyoOf(ten),gogyoOf(jin),gogyoOf(chi),gogyoOf(gai),gogyoOf(so)];
-  const ggCounts={};ggs.forEach(g=>{ggCounts[g]=(ggCounts[g]||0)+1;});
-  const maxCount=Math.max(...Object.values(ggCounts));
-  const gogyoScore=maxCount>=4?8:maxCount===3?14:20;
-  score+=gogyoScore;details.push({n:'五行',s:gogyoScore,max:20});
-  // 陰陽（20点）
-  const allStr=[...sei,...mei];const allSt=allStr.map(c=>getStroke(c)||0).filter(s=>s>0);
-  const yang=allSt.filter(s=>s%2!==0).length,yin=allSt.length-yang;
-  const diff=Math.abs(yang-yin);
-  const iyScore=diff<=1?20:diff<=2?15:diff<=3?10:5;
-  score+=iyScore;details.push({n:'陰陽',s:iyScore,max:20});
-  // 天地（20点）
-  const tcScore=(gogyoOf(ten)===gogyoOf(so))||(gogyoOf(chi)===gogyoOf(so))?20:15;
-  score+=tcScore;details.push({n:'天地の配合',s:tcScore,max:20});
-  // 画数（10点）
-  const badNums=[4,9,13,14,19,20,22,23,26,28,32,34,36,37,40,44,45,46];
-  const kakuScore=badNums.includes(jin)?5:10;
-  score+=kakuScore;details.push({n:'画数',s:kakuScore,max:10});
-  return{score:Math.min(100,score),details};
+function calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so,furiSei,furiMei){
+  let score=100;
+  const details=[];
+
+  // ① 読み下し（最大-30点）
+  let yd=0;
+  // 一文字名ペナルティ（-15点）
+  if([...mei].length===1){
+    yd+=15;
+    details.push({n:'一文字名',s:-15,note:'名が一文字の場合、孤独感や波乱が出やすいとされます。'});
+  }
+  // フリガナがある場合の追加チェック
+  if(furiMei){
+    // 水性始まり（マ・ハ・バ行）チェック
+    if(/^[まみむめもはひふへほばびぶべぼぱぴぷぺぽマミムメモハヒフヘホバビブベボパピプペポ]/.test(furiMei)){
+      yd+=15;
+      details.push({n:'水性始まり',s:-15,note:'名の頭が水性の音の場合、努力が実りにくいとされます。'});
+    }
+    // 「ん」で終わるチェック
+    if(/[んン]$/.test(furiMei)){
+      yd+=10;
+      details.push({n:'ん終わり',s:-10,note:'名が「ん」で終わる場合、物事の終焉が早く来やすいとされます。'});
+    }
+  }
+  score-=Math.min(yd,30);
+  details.push({n:'読み下し',s:Math.max(0,30-Math.min(yd,30)),max:30});
+
+  // ② 五行（最大-20点）
+  const gkElems=[ten,jin,chi,gai,so].map(n=>gogyoOf(n));
+  const ggC={};gkElems.forEach(g=>{ggC[g]=(ggC[g]||0)+1;});
+  const maxG=Math.max(...Object.values(ggC));
+  const gyd=maxG>=4?12:maxG===3?6:0;
+  score-=gyd;
+  details.push({n:'五行',s:Math.max(0,20-gyd),max:20});
+
+  // ③ 陰陽（最大-20点）
+  const allStrokes=[...sei,...mei].map(c=>getStroke(c)||0).filter(s=>s>0);
+  const yangCnt=allStrokes.filter(s=>s%2!==0).length;
+  const yinCnt=allStrokes.length-yangCnt;
+  let iyd=0;
+  if(yangCnt===0||yinCnt===0){iyd=20;}
+  else{const diff=Math.abs(yangCnt-yinCnt);iyd=diff<=1?0:diff<=2?5:diff<=3?10:15;}
+  score-=iyd;
+  details.push({n:'陰陽',s:Math.max(0,20-iyd),max:20,note:yangCnt===0?'黒寄り（全陰）':yinCnt===0?'白寄り（全陽）':''});
+
+  // ④ 天地の配合（最大-5点）
+  const tcOk=(gogyoOf(ten)===gogyoOf(so))||(gogyoOf(chi)===gogyoOf(so));
+  score-=(tcOk?0:5);
+  details.push({n:'天地の配合',s:tcOk?20:15,max:20});
+
+  // ⑤ 画数（最大-10点）
+  const badNums=[4,9,10,12,14,19,20,22,26,28,30,34,36,44];
+  const badCount=[jin,gai,so].filter(n=>badNums.includes(n)).length;
+  score-=(badCount>=2?10:badCount===1?5:0);
+  details.push({n:'画数',s:Math.max(0,10-(badCount>=2?10:badCount===1?5:0)),max:10});
+
+  return{score:Math.max(0,Math.min(100,score)),details,yangCnt,yinCnt,ggC};
 }
 
 function calcHouiMonths(h,t,by,bm,bd,thisYear){
