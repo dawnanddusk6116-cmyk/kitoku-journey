@@ -1412,100 +1412,52 @@ body.theme-night .philosophy-list{
 <!-- ════════════ 初回画面 ════════════ -->
 <div class="screen" id="screenFirst">
 
-  <!-- ヒーロー：問いかけから始まる -->
-  <div class="first-hero" style="padding:44px 24px 28px;background:radial-gradient(ellipse at 50% 0%,rgba(138,104,32,.09),transparent 65%);">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.4em;color:var(--goldlt);opacity:.7;margin-bottom:16px;">KITOKU @ JOURNEY</div>
-
-    <!-- メインコピー -->
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:400;letter-spacing:.06em;color:var(--goldlt);line-height:1.4;margin-bottom:12px;">
-      あなたは<br>どんな人ですか？
-    </div>
-    <div style="font-size:.72rem;color:var(--mist);line-height:2;letter-spacing:.06em;margin-bottom:24px;">
-      生年月日を入れるだけで、5000年の知恵が<br>
-      「あなたという人」を読み解きます。
-    </div>
-
-    <!-- 体験できること（問いかけ形式） -->
-    <div style="display:grid;gap:8px;margin-bottom:28px;text-align:left;">
-      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
-        <div style="font-size:1.1rem;flex-shrink:0;">🎭</div>
-        <div>
-          <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;">表に出ない「本当のあなた」</div>
-          <div style="font-size:.62rem;color:var(--mist);line-height:1.6;">隠れた才能・裏の本性・なぜうまくいかないのかの本当の理由</div>
-        </div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
-        <div style="font-size:1.1rem;flex-shrink:0;">🌸</div>
-        <div>
-          <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;">あなたを最高に見せる処方箋</div>
-          <div style="font-size:.62rem;color:var(--mist);line-height:1.6;">女性：魅力・愛され方・色と香り　男性：強み・勝負どころ</div>
-        </div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
-        <div style="font-size:1.1rem;flex-shrink:0;">🧭</div>
-        <div>
-          <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;">今年・これからの流れ</div>
-          <div style="font-size:.62rem;color:var(--mist);line-height:1.6;">今年のテーマ・吉方位・人生の変化が来るタイミング</div>
-        </div>
-      </div>
-    </div>
+  <div class="first-hero">
+    <div class="first-symbol">✦</div>
+    <div class="first-title">KITOKU</div>
+    <div class="first-sub">自分を知り、自分で動く羅針盤</div>
+    <div class="first-tagline">Inspired by 5000 Years of Eastern Wisdom</div>
   </div>
 
-  <!-- 入力カード -->
   <div class="input-card">
-    <span class="input-label">✦ まず生年月日を入力してください</span>
-    <div class="input-help">30秒で「あなたという人」がわかります。</div>
+    <span class="input-label">生年月日を入力してください</span>
+    <div class="input-help">まずは生年月日を入力して、自分の九星を確認してください。</div>
     <input type="date" id="birthInput" max="2010-12-31">
     <div class="gender-row">
-      <button class="gender-btn active" id="genderMale" onclick="setGender('male')">👨 男性</button>
-      <button class="gender-btn" id="genderFemale" onclick="setGender('female')">👩 女性</button>
+      <button class="gender-btn active" id="genderMale" onclick="setGender('male')">男性</button>
+      <button class="gender-btn" id="genderFemale" onclick="setGender('female')">女性</button>
     </div>
   </div>
 
   <button class="start-btn" onclick="startKITOKU()">
-    ✦ あなたの星を見る
+    あなたの星を見る →
   </button>
-  <div class="privacy-note">🔒 生年月日はこの端末のみに保存。サーバーには送信しません。</div>
-
-  <!-- 無料レポートへの誘導 -->
-  <div style="margin:20px 16px 0;background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(255,255,255,.5));border:1px solid rgba(58,122,78,.25);border-radius:12px;padding:16px 18px;">
-    <div style="font-size:.6rem;letter-spacing:.15em;color:#3a7a4e;font-weight:700;margin-bottom:6px;">✦ 名前も一緒に診断する（無料）</div>
-    <div style="font-size:.68rem;color:var(--mist);line-height:1.8;margin-bottom:10px;">名前と生年月日を入れると、姓名鑑定・名前が持つ旅路・今年の香りと色の処方箋まで含んだ詳しいレポートが出ます。</div>
-    <a href="report_generator_free.html" style="display:block;background:linear-gradient(135deg,rgba(58,122,78,.15),rgba(58,122,78,.06));border:1px solid rgba(58,122,78,.35);border-radius:8px;color:#2a6038;font-size:.78rem;padding:12px;text-align:center;letter-spacing:.12em;font-weight:700;text-decoration:none;">📄 無料パーソナルレポートを作る</a>
+  <div class="privacy-note">
+    🔒 生年月日はこの端末のみに保存されます。サーバーには送信しません。
   </div>
 
-  <!-- 実績・信頼 -->
-  <div style="margin:16px 16px 0;text-align:center;">
-    <div style="font-size:.6rem;color:var(--mist);opacity:.7;line-height:2;letter-spacing:.08em;">
-      九星気学 × 姓名判断 × AI<br>
-      5000年の東洋の知恵を、今日から使える形に。<br>
-      <span style="opacity:.5;">Inspired by 5000 Years of Eastern Celestial Wisdom</span>
-    </div>
-  </div>
-
-  <!-- 使い方ステップ（シンプル版） -->
-  <div class="first-guide" style="margin-bottom:24px;">
-    <div class="first-guide-title">✦ KITOKUの使い方</div>
+  <div class="first-guide">
+    <div class="first-guide-title">✦ KITOKUでできること</div>
     <div class="first-guide-steps">
       <div class="first-guide-step">
         <div class="fgs-num">1</div>
-        <div class="fgs-text">生年月日を<br>入れる</div>
+        <div class="fgs-text">九星・名前で<br>自分を知る</div>
       </div>
       <div class="first-guide-step">
         <div class="fgs-num">2</div>
-        <div class="fgs-text">自分の星と<br>才能を知る</div>
-      </div>
-      <div class="first-guide-step">
-        <div class="fgs-num">3</div>
         <div class="fgs-text">吉方位で<br>日々を整える</div>
       </div>
       <div class="first-guide-step">
-        <div class="fgs-num">4</div>
+        <div class="fgs-num">3</div>
         <div class="fgs-text">AI相談で<br>次の一手を見る</div>
       </div>
       <div class="first-guide-step">
-        <div class="fgs-num">5</div>
+        <div class="fgs-num">4</div>
         <div class="fgs-text">人間関係を<br>調律する</div>
+      </div>
+      <div class="first-guide-step">
+        <div class="fgs-num">5</div>
+        <div class="fgs-text">仕事・面談に<br>活かす</div>
       </div>
       <div class="first-guide-step">
         <div class="fgs-num">6</div>
