@@ -37,6 +37,10 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 .gender-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .gender-btn{background:var(--card);border:1.5px solid var(--rim);border-radius:8px;padding:11px;text-align:center;cursor:pointer;font-size:.8rem;color:var(--mist);}
 .gender-btn.on{background:rgba(138,104,32,.1);border-color:var(--gold);color:var(--golddk);font-weight:700;}
+.self-save-box{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(135deg,rgba(58,122,78,.06),rgba(255,255,255,.62));border:1px solid rgba(58,122,78,.18);border-radius:10px;padding:11px 12px;margin-top:13px;}
+.self-save-box input{width:18px;height:18px;margin-top:2px;accent-color:#3a7a4e;flex-shrink:0;}
+.self-save-title{font-size:.68rem;color:#2a6b3d;font-weight:800;letter-spacing:.06em;margin-bottom:3px;}
+.self-save-text{font-size:.58rem;color:var(--mist);line-height:1.75;}
 
 /* オプション選択 */
 .opt-section{margin-bottom:12px;}
@@ -252,6 +256,13 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
       <div class="gender-btn on" id="gb-f" onclick="selGender('f')">👩 女性</div>
       <div class="gender-btn" id="gb-m" onclick="selGender('m')">👨 男性</div>
     </div>
+    <label class="self-save-box">
+      <input type="checkbox" id="saveAsSelf" checked>
+      <span>
+        <span class="self-save-title">本人として保存する</span>
+        <span class="self-save-text">オンにすると、九星・方位盤・今日を整える等でこの生年月日を引き継ぎます。他の人のレポートを作る時は外してください。</span>
+      </span>
+    </label>
   </div>
 
   <!-- ベース項目（固定） -->
@@ -1158,6 +1169,26 @@ function showConfirm(){
 }
 
 // ===== レポート生成 =====
+function saveSelfProfile(sei,mei,y,m,d,h,t,k,dok,nac){
+  const saveEl=document.getElementById('saveAsSelf');
+  if(saveEl && !saveEl.checked) return;
+  const birth=`${y}-${m}-${d}`;
+  const genderForApp=selectedGender==='f'?'female':'male';
+  try{
+    localStorage.setItem('kitoku-birth',birth);
+    localStorage.setItem('kitoku_birth',birth);
+    localStorage.setItem('kitoku-self-birth',birth);
+    localStorage.setItem('kitoku-gender',genderForApp);
+    localStorage.setItem('kitoku-self-gender',genderForApp);
+    localStorage.setItem('kitoku_honmei',String(h));
+    localStorage.setItem('kitoku_tsukimei',String(t));
+    localStorage.setItem('kitoku_keisha',String(k));
+    localStorage.setItem('kitoku_dokai',String(dok));
+    if(nac&&nac.n)localStorage.setItem('kitoku_nain',nac.n);
+    localStorage.setItem('kitoku-vessel-name',JSON.stringify({sei,mei,furi:''}));
+  }catch(e){}
+}
+
 async function generateReport(){
   const sei=document.getElementById('inSei').value.trim();
   const mei=document.getElementById('inMei').value.trim();
@@ -1186,6 +1217,8 @@ async function generateReport(){
   const dok=calcDokai(h,t);
   const nac=calcNayin(y);
   const thisYear=new Date().getFullYear();
+
+  saveSelfProfile(sei,mei,y,m,d,h,t,k,dok,nac);
 
   // 姓名計算
   const seiK=sumStrokes(sei)||0;
