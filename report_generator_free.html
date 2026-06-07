@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>KITOKU パーソナルレポート</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);
+  --gold:#8a6820;--goldlt:#c4a050;--golddk:#5c3e10;
+  --snow:#1c1208;--mist:#4a3820;--fog:#8a7060;
+  --green:#3a7a4e;--warn:#b04030;--r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:15px;line-height:1.8;min-height:100dvh;}
+body{max-width:480px;margin:0 auto;padding-bottom:60px;}
+
+/* ヘッダー */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(10px);}
+.hdr-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.25em;color:var(--gold);}
+.back-btn{background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);color:var(--golddk);font-size:.72rem;padding:8px 13px;border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;}
+
+/* 入力画面 */
+.page{display:none;padding:20px 16px;}
+.page.on{display:block;}
+.pg-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.15em;color:var(--golddk);text-align:center;margin-bottom:4px;}
+.pg-sub{font-size:.62rem;letter-spacing:.15em;color:var(--mist);text-align:center;margin-bottom:20px;}
+
+/* フォームカード */
+.fc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+.fl{font-size:.68rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:8px;}
+.fi{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:11px 13px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;}
+.fi:focus{border-color:var(--gold);}
+.dr{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
+.du{font-size:.6rem;color:var(--mist);text-align:center;margin-top:3px;}
+.gender-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.gender-btn{background:var(--card);border:1.5px solid var(--rim);border-radius:8px;padding:11px;text-align:center;cursor:pointer;font-size:.8rem;color:var(--mist);}
+.gender-btn.on{background:rgba(138,104,32,.1);border-color:var(--gold);color:var(--golddk);font-weight:700;}
+
+/* オプション選択 */
+.opt-section{margin-bottom:12px;}
+.opt-title{font-size:.72rem;font-weight:700;color:var(--golddk);margin-bottom:4px;letter-spacing:.08em;}
+.opt-desc{font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.7;}
+.opt-grid{display:grid;gap:8px;}
+.opt-item{display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1.5px solid var(--rim);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;}
+.opt-item.on{background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.6));border-color:var(--gold);}
+.opt-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--rim);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;background:var(--bg);}
+.opt-item.on .opt-check{background:var(--gold);border-color:var(--gold);}
+.opt-check svg{display:none;}
+.opt-item.on .opt-check svg{display:block;}
+.opt-name{font-size:.78rem;font-weight:700;color:var(--snow);margin-bottom:2px;}
+.opt-item.on .opt-name{color:var(--golddk);}
+.opt-detail{font-size:.62rem;color:var(--mist);line-height:1.6;}
+.opt-badge{display:inline-block;font-size:.55rem;padding:1px 7px;border-radius:8px;font-weight:700;margin-left:6px;background:rgba(138,104,32,.1);color:var(--golddk);border:1px solid rgba(138,104,32,.2);}
+
+/* ベース必須バッジ */
+.base-badge{display:inline-block;font-size:.55rem;padding:1px 7px;border-radius:8px;font-weight:700;background:rgba(58,122,78,.12);color:var(--green);border:1px solid rgba(58,122,78,.25);}
+
+/* 生成ボタン */
+.gen-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.2),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.45);border-radius:12px;color:var(--golddk);font-size:.95rem;padding:18px;cursor:pointer;letter-spacing:.2em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ローディング */
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.loading-wrap{text-align:center;padding:60px 20px;}
+.loading-dot{width:14px;height:14px;border-radius:50%;background:var(--gold);margin:0 auto 16px;animation:pulse 1.2s infinite;}
+.loading-text{font-size:.78rem;color:var(--mist);letter-spacing:.1em;}
+
+/* ── レポート画面 ── */
+#reportOutput{background:var(--bg);}
+
+/* 表紙 */
+.cover{background:linear-gradient(160deg,#1a1208,#2a1e10);padding:56px 28px;text-align:center;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 30% 30%,rgba(196,160,80,.08),transparent 60%),radial-gradient(ellipse 40% 60% at 70% 70%,rgba(192,72,40,.06),transparent 60%);}
+.cv-brand{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.5em;color:rgba(196,160,80,.6);margin-bottom:12px;position:relative;}
+.cv-line{width:50px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,160,80,.4),transparent);margin:16px auto;}
+.cv-name{font-size:2.4rem;font-weight:300;letter-spacing:.3em;color:rgba(255,250,235,.92);margin-bottom:6px;position:relative;}
+.cv-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:rgba(196,160,80,.55);position:relative;margin-bottom:40px;}
+.cv-date{font-size:.58rem;letter-spacing:.2em;color:rgba(196,160,80,.3);position:relative;}
+
+/* セクション */
+.rpt-sec{padding:28px 16px;border-bottom:1px solid var(--rim);}
+.rs-label{font-family:'Cormorant Garamond',serif;font-size:.66rem;letter-spacing:.38em;color:var(--goldlt);margin-bottom:5px;display:flex;align-items:center;gap:10px;}
+.rs-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(196,160,80,.3),transparent);}
+.rs-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;letter-spacing:.1em;color:var(--golddk);margin-bottom:18px;}
+.note-box{background:linear-gradient(135deg,rgba(58,122,78,.07),rgba(255,255,255,.62));border:1px solid rgba(58,122,78,.2);border-radius:var(--r);padding:15px 16px;font-size:.72rem;color:var(--mist);line-height:1.95;}
+.next-links{display:grid;gap:8px;margin-top:14px;}
+.next-link{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(255,255,255,.68));border:1px solid rgba(138,104,32,.22);border-radius:11px;padding:12px 13px;}
+.next-link-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(138,104,32,.1);font-size:1rem;flex-shrink:0;}
+.next-link-body{flex:1;min-width:0;}
+.next-link-title{font-size:.72rem;font-weight:800;color:var(--golddk);letter-spacing:.04em;margin-bottom:2px;}
+.next-link-desc{font-size:.6rem;color:var(--mist);line-height:1.6;}
+.next-link-arrow{font-size:.82rem;color:rgba(100,80,40,.38);flex-shrink:0;}
+
+/* キャラカード */
+.char-card{background:linear-gradient(135deg,rgba(138,96,32,.07),rgba(255,255,255,.6));border:1px solid var(--rim);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.cc-star{font-size:.6rem;letter-spacing:.2em;color:var(--goldlt);margin-bottom:8px;}
+.cc-name{font-size:1.2rem;font-weight:700;color:var(--golddk);margin-bottom:4px;}
+.cc-elem{display:inline-block;font-size:.62rem;font-weight:700;padding:2px 10px;border-radius:12px;margin-bottom:10px;}
+.cc-body{font-size:.72rem;color:var(--mist);line-height:1.9;}
+
+/* グリッド */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.mini-card{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:13px 14px;}
+.mc-label{font-size:.56rem;letter-spacing:.12em;color:var(--fog);margin-bottom:4px;}
+.mc-title{font-size:.82rem;font-weight:700;color:var(--golddk);margin-bottom:5px;}
+.mc-body{font-size:.66rem;color:var(--mist);line-height:1.8;}
+
+/* 裏性格ボックス */
+.ura-box{background:linear-gradient(135deg,rgba(26,18,8,.04),rgba(255,255,255,.6));border:1px solid rgba(154,120,48,.18);border-left:3px solid var(--goldlt);border-radius:8px;padding:13px 15px;margin-bottom:8px;}
+.ub-lbl{font-size:.58rem;letter-spacing:.12em;color:var(--goldlt);font-weight:700;margin-bottom:5px;}
+.ub-body{font-size:.7rem;color:var(--mist);line-height:1.9;}
+.souju-box{background:linear-gradient(135deg,rgba(42,88,136,.04),rgba(255,255,255,.6));border:1px solid rgba(42,88,136,.18);border-left:3px solid #2a5888;border-radius:8px;padding:13px 15px;margin-bottom:8px;}
+
+/* 名前カード */
+.name-score-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.score-ring{width:76px;height:76px;border-radius:50%;position:relative;flex-shrink:0;}
+.score-ring svg{transform:rotate(-90deg);}
+.sr-bg{fill:none;stroke:rgba(154,120,48,.1);stroke-width:7;}
+.sr-fill{fill:none;stroke:var(--goldlt);stroke-width:7;stroke-linecap:round;stroke-dasharray:220;}
+.sr-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.sr-n{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--golddk);line-height:1;}
+.sr-u{font-size:.5rem;color:var(--fog);}
+.name-msg{font-size:.72rem;color:var(--mist);line-height:2;border-left:2px solid rgba(192,72,40,.3);padding-left:12px;font-style:italic;}
+
+/* 五格 */
+.gogaku-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0;}
+.gk-cell{text-align:center;background:var(--card);border:1px solid var(--rim);border-radius:8px;padding:9px 4px;}
+.gk-lbl{font-size:.5rem;color:var(--fog);margin-bottom:3px;line-height:1.3;}
+.gk-num{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--golddk);line-height:1;margin-bottom:3px;}
+.gk-elem{font-size:.55rem;font-weight:700;}
+
+/* 年タイムライン */
+.year-cards{display:grid;gap:10px;}
+.yc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);overflow:hidden;display:grid;grid-template-columns:72px 1fr;}
+.yc.best{border-color:rgba(154,120,48,.4);}
+.yc.warn{border-color:rgba(176,64,48,.25);}
+.yc-l{padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.yc.best .yc-l{background:linear-gradient(180deg,rgba(154,120,48,.12),rgba(154,120,48,.05));}
+.yc.good .yc-l{background:linear-gradient(180deg,rgba(58,122,78,.08),rgba(58,122,78,.03));}
+.yc.steady .yc-l{background:linear-gradient(180deg,rgba(96,112,128,.08),rgba(96,112,128,.03));}
+.yc.prep .yc-l{background:linear-gradient(180deg,rgba(138,120,48,.08),rgba(138,120,48,.03));}
+.yc.warn .yc-l{background:linear-gradient(180deg,rgba(176,64,48,.08),rgba(176,64,48,.03));}
+.yc-year{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--golddk);}
+.yc-badge{font-size:.5rem;letter-spacing:.08em;padding:2px 7px;border-radius:8px;font-weight:700;}
+.yc-r{padding:12px 14px;}
+.yc-theme{font-size:.8rem;font-weight:700;color:var(--golddk);margin-bottom:5px;}
+.yc-body{font-size:.66rem;color:var(--mist);line-height:1.85;}
+.yc-action{margin-top:7px;background:rgba(154,120,48,.05);border-radius:6px;padding:7px 9px;}
+.ya-lbl{font-size:.54rem;letter-spacing:.1em;color:var(--goldlt);font-weight:700;margin-bottom:3px;}
+.ya-body{font-size:.64rem;color:var(--mist);line-height:1.7;}
+
+/* 処方箋グリッド */
+.rx-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.rx-card{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 13px;}
+.rx-icon{font-size:1.2rem;margin-bottom:5px;}
+.rx-lbl{font-size:.56rem;letter-spacing:.12em;color:var(--goldlt);font-weight:700;margin-bottom:4px;}
+.rx-body{font-size:.67rem;color:var(--mist);line-height:1.8;}
+.rx-full{grid-column:span 2;}
+
+/* 香りカード */
+.scent-card{background:linear-gradient(135deg,rgba(138,96,32,.06),rgba(255,240,220,.4));border:1px solid rgba(154,120,48,.2);border-radius:10px;padding:14px 15px;margin-top:10px;}
+.sc-lbl{font-size:.58rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:8px;}
+.sc-notes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.sc-note{font-size:.6rem;padding:3px 9px;border-radius:12px;font-weight:700;}
+.n-top{background:rgba(192,72,40,.1);color:#902818;border:1px solid rgba(192,72,40,.2);}
+.n-mid{background:rgba(138,96,32,.1);color:#6a4810;border:1px solid rgba(138,96,32,.2);}
+.n-base{background:rgba(96,112,128,.1);color:#405060;border:1px solid rgba(96,112,128,.2);}
+.sc-body{font-size:.67rem;color:var(--mist);line-height:1.85;}
+
+/* 健康カード */
+.health-card{background:linear-gradient(135deg,rgba(176,64,48,.05),rgba(255,255,255,.6));border:1px solid rgba(176,64,48,.15);border-radius:10px;padding:13px 15px;margin-bottom:8px;}
+.hc-lbl{font-size:.58rem;letter-spacing:.12em;color:var(--warn);font-weight:700;margin-bottom:5px;}
+.hc-body{font-size:.7rem;color:var(--mist);line-height:1.9;}
+
+/* 流年 */
+.age-row{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0;}
+.age-tag{background:rgba(154,120,48,.1);border:1px solid rgba(154,120,48,.25);border-radius:20px;padding:3px 11px;font-size:.64rem;color:var(--golddk);font-weight:700;}
+.age-now{background:linear-gradient(135deg,rgba(192,72,40,.12),rgba(192,72,40,.06));border-color:rgba(192,72,40,.35);color:var(--warn);}
+
+/* 吉方位タイムライン */
+.houi-months{display:grid;gap:7px;margin-top:10px;}
+.hm-card{background:var(--card);border:1px solid var(--rim);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:12px;}
+.hm-month{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--golddk);flex-shrink:0;width:36px;text-align:center;}
+.hm-dir{font-size:.78rem;font-weight:700;color:var(--golddk);margin-bottom:2px;}
+.hm-body{font-size:.62rem;color:var(--mist);line-height:1.7;}
+
+/* フッター */
+.rpt-footer{padding:28px 16px;text-align:center;background:linear-gradient(135deg,rgba(26,18,8,.97),rgba(42,30,16,.99));}
+.rf-logo{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.4em;color:rgba(196,160,80,.5);margin-bottom:6px;}
+.rf-note{font-size:.58rem;color:rgba(196,160,80,.25);line-height:2;letter-spacing:.08em;}
+
+/* PDF保存バー */
+.save-bar{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:var(--bg);border-top:1px solid var(--rim);padding:10px 16px;display:none;z-index:100;}
+.save-bar.on{display:block;}
+.save-btn{width:100%;background:linear-gradient(135deg,#2a1e10,#1a1208);border:1px solid rgba(196,160,80,.4);color:rgba(196,160,80,.85);font-family:'Noto Serif JP',serif;font-size:.78rem;letter-spacing:.15em;padding:14px;border-radius:10px;cursor:pointer;}
+.edit-btn{width:100%;background:none;border:1px solid var(--rim);color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:10px;border-radius:8px;cursor:pointer;margin-top:6px;}
+
+@media print{.no-print{display:none!important;}.page{display:none!important;}#reportOutput{display:block!important;}body{max-width:100%!important;}}
+
+/* ぼかし有料セクション */
+.paid-section{position:relative;overflow:hidden;border-radius:var(--r);}
+.paid-blur{filter:blur(5px);pointer-events:none;user-select:none;opacity:.6;}
+.paid-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(247,244,239,.55);backdrop-filter:blur(2px);z-index:10;padding:24px 20px;text-align:center;}
+.paid-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(138,104,32,.14),rgba(255,255,255,.7));border:1px solid rgba(138,104,32,.3);border-radius:20px;padding:6px 16px;font-size:.65rem;color:var(--goldlt);font-weight:700;letter-spacing:.12em;}
+.paid-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;letter-spacing:.1em;color:var(--golddk);}
+.paid-desc{font-size:.63rem;color:var(--mist);line-height:1.7;max-width:260px;}
+.paid-btn{background:linear-gradient(135deg,rgba(100,80,40,.12),rgba(100,80,40,.05));border:1.5px solid rgba(100,80,40,.3);border-radius:10px;color:var(--fog);font-size:.73rem;padding:11px 22px;cursor:default;letter-spacing:.14em;font-weight:700;font-family:'Noto Serif JP',serif;}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="hdr no-print">
+  <div class="hdr-logo">✦ KITOKU</div>
+  <button class="back-btn" onclick="window.location.href='index.html'">← TOP</button>
+</div>
+
+<!-- ===== 入力画面 s0 ===== -->
+<div class="page on" id="s0">
+  <div class="pg-title">パーソナルレポート</div>
+  <div class="pg-sub">KITOKU PERSONAL REPORT — FREE</div>
+
+  <div style="background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(255,255,255,.5));border:1px solid rgba(58,122,78,.25);border-radius:var(--r);padding:13px 15px;margin-bottom:16px;">
+    <div style="font-size:.7rem;font-weight:700;color:#3a7a4e;margin-bottom:5px;">✦ KITOKUを知るための無料入口です</div>
+    <div style="font-size:.63rem;color:var(--mist);line-height:1.85;">忙しい方でも短時間で体験できるよう、名前と生年月日だけで「あなただけの入口レポート」を生成します。女性版は魅力・愛され方・美の処方箋、男性版は強み・勝負どころを中心に、読み方を変えています。</div>
+    <div style="font-size:.58rem;color:var(--fog);line-height:1.75;margin-top:7px;">※ 課金前のお試しというより、KITOKUの考え方をまず知ってもらうための名刺のようなレポートです。深く見たい項目はプレビューとして表示されます。</div>
+  </div>
+
+  <!-- 基本情報 -->
+  <div class="fc">
+    <span class="fl">✦ 名前（漢字フルネーム）</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div>
+        <input class="fi" type="text" id="inSei" placeholder="桜井" maxlength="10">
+        <div class="du">姓</div>
+      </div>
+      <div>
+        <input class="fi" type="text" id="inMei" placeholder="陽菜" maxlength="10">
+        <div class="du">名</div>
+      </div>
+    </div>
+    <span class="fl" style="margin-top:8px;">✦ 生年月日</span>
+    <div class="dr">
+      <div><input class="fi" type="number" id="inY" placeholder="1992"><div class="du">年</div></div>
+      <div><input class="fi" type="number" id="inM" placeholder="4"><div class="du">月</div></div>
+      <div><input class="fi" type="number" id="inD" placeholder="8"><div class="du">日</div></div>
+    </div>
+    <span class="fl" style="margin-top:12px;">✦ 性別</span>
+    <div class="gender-row">
+      <div class="gender-btn on" id="gb-f" onclick="selGender('f')">👩 女性</div>
+      <div class="gender-btn" id="gb-m" onclick="selGender('m')">👨 男性</div>
+    </div>
+  </div>
+
+  <!-- ベース項目（固定） -->
+  <div class="fc">
+    <div style="font-size:.65rem;letter-spacing:.14em;color:var(--goldlt);font-weight:700;margin-bottom:10px;">✦ 生成されるレポート内容</div>
+    <div style="display:grid;gap:6px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
+        <span style="color:#3a7a4e;">✓</span> あなたという人（星・裏読み・声かけ処方箋）
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
+        <span style="color:#3a7a4e;">✓</span> 名前が持つ旅路（姓名鑑定）
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
+        <span style="color:#3a7a4e;">✓</span> 人生の変化が来やすいタイミング
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
+        <span style="color:#3a7a4e;">✓</span> 今年のテーマと吉方位
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
+        <span style="color:#3a7a4e;">✓</span> 女性：魅力・愛され方・美の処方箋 / 男性：強み・勝負どころ
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--fog);">
+        <span>🔒</span> <span style="text-decoration:line-through;opacity:.6;">未来5年・吉方位・香り・健康・線路の日・引越し（有料プレビューあり）</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="gen-btn" id="genBtn" onclick="showConfirm()">✦ 入力内容を確認する</button>
+  <div style="font-size:.6rem;color:var(--mist);text-align:center;margin-top:8px;line-height:1.8;">※ このレポートは東洋の気の学問をもとにした参考資料です。</div>
+</div>
+
+<!-- 確認画面 -->
+<div class="page" id="sConfirm">
+  <div class="pg-title">入力内容の確認</div>
+  <div class="pg-sub">この内容でレポートを生成します</div>
+
+  <div style="background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.6));border:1px solid rgba(138,104,32,.25);border-radius:var(--r);padding:20px;margin-bottom:16px;">
+    <div style="font-size:.62rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:14px;">✦ 入力した内容</div>
+    <div style="display:grid;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rim);padding-bottom:10px;">
+        <div style="font-size:.68rem;color:var(--fog);">お名前</div>
+        <div style="font-size:.88rem;font-weight:700;color:var(--golddk);" id="confName">—</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rim);padding-bottom:10px;">
+        <div style="font-size:.68rem;color:var(--fog);">生年月日</div>
+        <div style="font-size:.88rem;font-weight:700;color:var(--golddk);" id="confBirth">—</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:.68rem;color:var(--fog);">性別</div>
+        <div style="font-size:.88rem;font-weight:700;color:var(--golddk);" id="confGender">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,rgba(26,18,8,.05),rgba(255,255,255,.6));border:1px solid var(--rim);border-radius:var(--r);padding:20px;margin-bottom:20px;">
+    <div style="font-size:.62rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:14px;">✦ 生年月日から算出した星</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:13px;text-align:center;">
+        <div style="font-size:.58rem;color:var(--fog);margin-bottom:5px;">本命星（表の顔・宿命）</div>
+        <div style="font-size:.92rem;font-weight:700;color:var(--golddk);" id="confHonmei">—</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:13px;text-align:center;">
+        <div style="font-size:.58rem;color:var(--fog);margin-bottom:5px;">月命星（内側の本音）</div>
+        <div style="font-size:.92rem;font-weight:700;color:var(--golddk);" id="confTsuki">—</div>
+      </div>
+    </div>
+    <div style="font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(138,104,32,.04);border-radius:8px;padding:10px 12px;">
+      本命星・月命星が正しいか確認してください。生年月日の入力ミスがある場合は「修正する」で戻ってください。
+    </div>
+  </div>
+
+  <div style="display:grid;gap:8px;">
+    <button class="gen-btn" onclick="generateReport()">✦ この内容でレポートを生成する</button>
+    <button onclick="goBack()" style="width:100%;background:none;border:1px solid var(--rim);border-radius:10px;color:var(--mist);font-size:.78rem;padding:14px;cursor:pointer;font-family:'Noto Serif JP',serif;">← 修正する</button>
+  </div>
+</div>
+
+<!-- ローディング -->
+<div class="page" id="sLoading">
+  <div class="loading-wrap">
+    <div class="loading-dot"></div>
+    <div class="loading-text" id="loadingMsg">命の設計図を読み解いています…</div>
+  </div>
+</div>
+
+<!-- レポート出力 -->
+<div id="reportOutput" style="display:none;"></div>
+
+<!-- 保存バー -->
+<div class="save-bar no-print" id="saveBar">
+  <button class="save-btn" onclick="window.print()">📄 PDFで保存する</button>
+  <button class="edit-btn" onclick="goBack()">← 入力画面に戻る</button>
+</div>
+
+<script src="kitoku-engine.js"></script>
+<script>
+// ===== 辞書データ（life.htmlと完全同期） =====
+const STROKE={
+  '一':1,'乙':1,'二':2,'人':2,'八':2,'力':2,'三':3,'山':3,'川':3,'土':3,'大':3,'小':3,'子':3,'女':3,'工':3,'久':3,'千':3,'万':13,
+  '四':4,'中':4,'日':4,'月':4,'木':4,'水':4,'火':4,'心':4,'文':4,'元':4,'仁':4,'天':4,'夫':4,'太':4,'友':4,'手':4,'公':4,'内':4,'化':4,'午':4,
+  '五':4,'石':5,'白':5,'本':5,'正':5,'生':5,'田':5,'代':5,'玉':5,'古':5,'台':5,'外':5,'市':5,'平':5,'由':5,'甲':5,'申':5,'目':5,'以':5,'加':5,'右':5,'弘':5,'矢':5,
+  '六':4,'西':6,'年':6,'先':6,'光':6,'会':13,'名':6,'多':6,'安':6,'好':6,'地':6,'百':6,'色':6,'各':6,'合':6,'吉':6,'同':6,'有':6,'次':6,'竹':6,'米':6,'早':6,'旭':6,'江':6,'池':6,'守':6,'宅':6,
+  '七':2,'村':7,'花':8,'男':7,'来':8,'形':7,'作':7,'里':7,'見':7,'言':7,'足':7,'谷':7,'赤':7,'近':8,'局':7,'志':7,'位':7,'住':7,'佐':7,'克':7,'利':7,'君':7,'坂':7,'妙':7,'完':7,'宏':7,'寿':14,'尚':7,'岡':7,'希':7,'弟':7,
+  '八':2,'林':8,'和':8,'学':16,'長':8,'金':8,'青':8,'事':8,'京':8,'典':8,'依':8,'佳':8,'命':8,'固':8,'奈':8,'季':8,'宗':8,'実':14,'定':8,'岩':8,'幸':8,'念':8,'拓':8,'明':8,'昌':8,'昇':8,'松':8,'武':8,'河':8,'波':8,'注':8,'芽':8,'茂':8,'虎':8,'郁':13,
+  '九':2,'美':9,'春':9,'南':9,'星':9,'海':11,'風':9,'香':9,'保':9,'信':9,'勇':9,'亮':9,'俊':9,'咲':9,'哉':9,'城':9,'奏':9,'威':9,'姫':9,'宣':9,'建':9,'思':9,'映':9,'柳':9,'栄':14,'泰':9,'洋':9,'洞':9,'津':9,'科':9,'秋':9,'紀':9,'紅':9,'若':9,'茜':10,
+  '十':2,'高':10,'家':10,'真':10,'島':10,'原':10,'時':10,'桜':21,'根':10,'桂':10,'案':10,'格':10,'校':10,'梅':11,'流':10,'特':10,'益':10,'祥':11,'素':10,'航':10,'記':10,'透':10,'郎':10,'郡':14,'部':15,'那':11,'者':9,'邦':11,'郊':9,'郷':15,'銀':14,'彦':9,'斗':4,'翔':12,'浜':17,'達':13,'也':3,'靖':13,'永':5,'直':8,'修':10,'靖':13,'克':7,'夏':10,'冬':5,'井':4,'祐':10,'鶴':21,'啓':11,'藤':19,'斎':11,'橋':16,'宮':10,'渡':12,'辺':6,'遊':13,'関':19,'北':5,'後':9,'今':4,'雪':11,'空':8,'翼':17,'匠':6,'凛':15,'菜':12,'沙':7,'紗':10,'麻':11,'夕':3,'介':4,'助':7,'司':5,'史':5,'士':3,'勝':12,'剛':10,'豪':14,'鳳':14,'蒼':14,'朱':6,'丈':3,'伝':13,'兆':6,'功':5,'協':8,'周':8,'基':11,'声':17,'夢':14,'宝':20,'富':12,'寛':13,'展':10,'岳':17,'帝':9,'常':11,'幹':13,'広':5,'忠':8,'恭':10,'悠':11,'想':13,'意':13,'愛':13,'感':13,'慈':13,'慎':14,'成':6,'才':3,'技':8,'操':17,'晃':10,'晴':12,'暁':12,'朗':11,'未':5,'東':8,'業':13,'楼':13,'機':16,'比':4,'気':10,'浪':10,'涼':11,'淳':12,'満':15,'準':13,'烈':10,'爽':11,'玄':5,'珠':10,'発':12,'登':12,'瞳':17,'知':8,'研':11,'礼':5,'秀':7,'竜':10,'純':10,'結':12,'絹':13,'維':14,'総':14,'聖':13,'興':16,'良':7,'芳':8,'英':9,'荘':9,'菊':11,'裕':12,'観':25,'詩':13,'謙':17,'豊':18,'貞':9,'賀':12,'身':7,'進':12,'道':12,'静':16,'順':12,'颯':14,'鷹':24,'麗':19,'龍':16,'音':9,'兼':10,'浦':10,'濱':17,'屋':9,'葉':13,'都':16,
+  '野':11,'望':11,'清':11,'笑':11,'陽':16,'健':11,'将':11,'崎':11,'康':11,'彩':11,'深':11,'梨':11,'梢':11,'球':12,'章':11,'紫':11,'萌':12,
+  '喜':12,'善':12,'創':12,'博':12,'惠':12,'晶':12,'景':12,'朝':12,'森':12,'智':12,'温':14,'湖':12,'琳':13,'絵':19,'葵':13,'隆':12,'雄':12,'雅':12,
+  '義':13,'新':13,'楓':13,'照':13,'福':14,'睦':13,'碧':14,'稔':13,'綾':14,'鈴':13,
+  '翠':14,'誠':13,'恵':12,'塩':13,'薫':18,'徳':15,'寧':14,'嘉':14,'精':14,
+  '慶':15,'賢':15,'蓮':15,'潤':15,'穂':15,'霞':15,'輝':15,
+  '優':17,'璃':15,'樹':16,'橘':16,'憲':16,'貴':12,'上':3,'下':3,
+
+  '与':14,
+  '及':4,
+  '円':13,
+  '区':11,
+  '仏':7,
+  '収':6,
+  '双':18,
+  '予':16,
+  '欠':10,
+  '込':6,
+  '当':13,
+  '両':8,
+  '争':8,
+  '灯':16,
+  '仮':11,
+  '団':14,
+  '尽':14,
+  '弐':12,
+  '壮':7,
+  '缶':24,
+  '毎':7,
+  '図':14,
+  '体':23,
+  '売':15,
+  '麦':11,
+  '医':18,
+  '対':14,
+  '囲':12,
+  '児':8,
+  '労':12,
+  '応':17,
+  '状':8,
+  '条':11,
+  '乱':13,
+  '壱':12,
+  '却':9,
+  '即':9,
+  '沢':17,
+  '抜':9,
+  '択':17,
+  '励':17,
+  '亜':8,
+  '戻':8,
+  '余':16,
+  '芸':19,
+  '芯':8,
+  '投':8,
+  '折':8,
+  '批':8,
+  '抗':8,
+  '抑':8,
+  '抄':8,
+  '把':8,
+  '扶':8,
+  '肝':9,
+  '肖':9,
+  '肘':9,
+  '返':8,
+  '迎':8,
+  '快':8,
+  '狂':8,
+  '社':8,
+  '初':8,
+  '防':11,
+  '阪':11,
+  '没':8,
+  '画':12,
+  '国':11,
+  '径':11,
+  '参':11,
+  '価':15,
+  '歩':7,
+  '苦':9,
+  '育':10,
+  '効':10,
+  '拡':18,
+  '担':17,
+  '拠':17,
+  '欧':15,
+  '殴':15,
+  '炉':20,
+  '茎':13,
+  '枢':15,
+  '斉':14,
+  '弥':17,
+  '指':10,
+  '持':10,
+  '拾':10,
+  '送':10,
+  '追':10,
+  '逆':10,
+  '退':10,
+  '迷':10,
+  '草':10,
+  '茶':10,
+  '荒':10,
+  '神':10,
+  '祝':10,
+  '祖':10,
+  '級':10,
+  '胃':11,
+  '肺':11,
+  '背':11,
+  '狭':11,
+  '限':13,
+  '変':23,
+  '点':17,
+  '独':17,
+  '県':16,
+  '単':12,
+  '為':12,
+  '昼':11,
+  '浅':11,
+  '専':11,
+  '乗':10,
+  '巻':8,
+  '蚕':24,
+  '党':20,
+  '帰':18,
+  '挙':17,
+  '剤':16,
+  '剣':15,
+  '残':12,
+  '殺':11,
+  '帯':11,
+  '従':11,
+  '通':11,
+  '速':11,
+  '連':11,
+  '造':11,
+  '院':14,
+  '除':14,
+  '陛':14,
+  '降':13,
+  '胸':12,
+  '脂':12,
+  '脈':11,
+  '消':12,
+  '振':11,
+  '荷':11,
+  '訳':20,
+  '転':18,
+  '断':18,
+  '済':17,
+  '険':16,
+  '経':13,
+  '悪':12,
+  '黒':12,
+  '黄':12,
+  '理':12,
+  '現':12,
+  '菓':12,
+  '週':12,
+  '採':12,
+  '授':12,
+  '接':12,
+  '捨':12,
+  '推':12,
+  '探':12,
+  '掘':12,
+  '視':12,
+  '情':12,
+  '陸':15,
+  '郵':15,
+  '陰':15,
+  '脚':15,
+  '脳':13,
+  '著':12,
+  '惨':15,
+  '属':30,
+  '暑':13,
+  '着':13,
+  '煮':13,
+  '飯':13,
+  '飲':13,
+  '畳':22,
+  '覚':20,
+  '証':19,
+  '営':17,
+  '検':17,
+  '階':16,
+  '隊':16,
+  '焼':16,
+  '歯':15,
+  '軽':14,
+  '落':14,
+  '電':13,
+  '農':13,
+  '路':13,
+  '置':13,
+  '働':13,
+  '暖':13,
+  '賃':13,
+  '裏':13,
+  '跳':13,
+  '殿':15,
+  '雷':13,
+  '鉄':21,
+  '楽':15,
+  '数':15,
+  '辞':19,
+  '戦':16,
+  '続':21,
+  '鉱':23,
+  '勧':20,
+  '継':20,
+  '触':20,
+  '誉':21,
+  '嘆':15,
+  '寝':14,
+  '鉛':15,
+  '損':14,
+  '搬':14,
+  '遠':14,
+  '蒸':14,
+  '蓄':14,
+  '罪':14,
+  '飼':14,
+  '飾':14,
+  '墓':14,
+  '幕':14,
+  '僧':14,
+  '漢':15,
+  '腸':15,
+  '腹':15,
+  '腰':15,
+  '署':14,
+  '節':15,
+  '慨':15,
+  '隔':17,
+  '蜜':26,
+  '駅':22,
+  '読':22,
+  '駆':21,
+  '雑':18,
+  '際':18,
+  '障':18,
+  '隠':17,
+  '膜':17,
+  '歴':16,
+  '暦':16,
+  '銭':16,
+  '憎':16,
+  '寡':16,
+  '髪':15,
+  '稲':15,
+  '練':15,
+  '徴':15,
+  '瑠':15,
+  '適':15,
+  '遭':15,
+  '遮':15,
+  '慣':15,
+  '慢':15,
+  '摘':15,
+  '暮':15,
+  '蔑':15,
+  '慕':15,
+  '増':15,
+  '層':15,
+  '模':15,
+  '緒':15,
+  '罰':15,
+  '様':15,
+  '複':15,
+  '磁':15,
+  '誓':15,
+  '墨':15,
+  '獄':15,
+  '概':15,
+  '霊':24,
+  '権':22,
+  '歓':22,
+  '鋳':22,
+  '縄':19,
+  '遷':19,
+  '賛':19,
+  '蔵':18,
+  '戯':17,
+  '撃':17,
+  '選':16,
+  '導':16,
+  '勲':16,
+  '黙':16,
+  '器':16,
+  '潜':16,
+  '諸':16,
+  '箸':16,
+  '餓':16,
+  '撮':16,
+  '撲':16,
+  '遺':16,
+  '遵':16,
+  '憤':16,
+  '憬':16,
+  '憧':16,
+  '罷':16,
+  '罵':16,
+  '蔽':16,
+  '横':16,
+  '慮':16,
+  '諾':16,
+  '謁':16,
+  '膝':17,
+  '餅':17,
+  '墜':19,
+  '嘱':24,
+  '嬢':20,
+  '壌':20,
+  '懐':20,
+  '麺':20,
+  '壊':19,
+  '薬':19,
+  '獣':19,
+  '隣':19,
+  '穏':19,
+  '膨':18,
+  '膳':18,
+  '擁':17,
+  '還':17,
+  '縫':17,
+  '憶':17,
+  '憾':17,
+  '薄':17,
+  '薪':17,
+  '薦':17,
+  '錬':17,
+  '館':17,
+  '繊':23,
+  '聴':22,
+  '覧':21,
+  '厳':20,
+  '犠':20,
+  '齢':20,
+  '環':18,
+  '擦':18,
+  '擬':18,
+  '謹':18,
+  '臆':19,
+  '爵':18,
+  '頻':16,
+  '顕':23,
+  '験':23,
+  '騒':20,
+  '闘':20,
+  '類':19,
+  '難':19,
+  '贈':19,
+  '離':19,
+  '穫':19,
+  '藩':19,
+  '襟':19,
+  '懲':19,
+  '臨':17,
+  '韓':17,
+  '臓':24,
+  '艶':24,
+  '髄':23,
+  '覇':21,
+  '鶏':21,
+  '警':20,
+  '藻':20,
+  '羅':20,
+  '譲':24,
+  '醸':24,
+  '響':22,
+  '護':21,
+  '欄':21,
+  '騰':22,
+  '驚':23,'乃':2,'卜':2,'叉':3,'之':3,'巳':3,'勺':3,'已':3,'丑':4,'廿':4,'壬':4,'巴':4,'勿':4,'匁':4,'允':4,'云':4,'尤':4,'汀':6,'禾':5,'叶':5,'乎':5,'凧':5,'仔':5,'只':5,'疋':5,'戊':5,'卯':5,'瓜':6,'匡':6,'圭':6,'亙':6,'亘':6,'辻':6,'凪':6,'丞':6,'庄':6,'收':6,'此':6,'而':6,'尖':6,'牟':6,'伊':6,'夷':6,'曳':6,'亦':6,'亥':6,'伍':6,'弛':6,'汝':7,'汐':7,'托':7,'肋':8,'杏':7,'伽':7,'汲':7,'灸':7,'亨':7,'冴':7,'吾':7,'杜':7,'佃':7,'辿':7,'李':7,'伶':7,'吞':7,'坐':7,'孜':7,'灼':7,'杖':7,'宋':7,'壯':7,'庇':7,'甫':7,'巫':7,'佛':7,'每':7,'佑':7,'邑':7,'芦':8,'芭':8,'芹':8,'芙':8,'芥':8,'沌':8,'玖':8,'步':8,'苑':9,'茄':9,'苔':9,'茅':9,'茉':9,'苺':9,'迪':9,'怜':9,'拔':9,'拂':9,'侃':8,'函':8,'其':8,'欣':8,'昂':8,'杭':8,'肴':8,'昊':8,'穹':8,'卷':8,'帖':8,'坦':8,'宕':8,'來':8,'些':8,'竺':8,'杵':8,'狀':8,'杷':8,'朋':8,'孟':8,'於':8,'侑':8,'亞':8,'兒':8,'阿':13,'陀':13,'祁':12,'尭':12,'迦':9,'俄':9,'竿':9,'頁':9,'勁':9,'奎':9,'俠':9,'姪':9,'俐':9,'突':9,'祉':9,'卽':9,'毘':9,'俣':9,'勉':9,'娃':9,'宥':9,'耶':13,'洲':10,'洛':10,'洸':10,'洵':10,'珂':10,'珊':10,'玲':10,'珈':10,'珀':10,'恢':10,'恰':10,'恆':10,'按':10,'祢':10,'衿':10,'茸':10,'峨':10,'桧':10,'桔':10,'笈':10,'矩':10,'倖':10,'紘':10,'栞':10,'赳':10,'氣':10,'俱':10,'砥':10,'紐':10,'砧':10,'套':10,'桐':10,'哩':10,'栗':10,'凉':10,'晒':10,'柴':10,'栖':10,'朔':10,'峻':10,'恕':10,'哨':10,'秤':10,'晋':10,'秦':10,'訊':10,'晟':10,'乘':10,'畠':10,'娩':10,'圃':10,'峯':10,'倭':10,'晏':10,'眞':10,'晄':10,'郞':14,'涉':12,'莞':11,'荻':11,'莉':11,'莊':11,'莫':11,'浩':11,'浬':11,'挽':11,'挺':11,'悌':11,'悔':11,'袈':11,'牽':11,'絃':11,'皐':11,'圈':11,'國':11,'兜':11,'梶':11,'毬':11,'椛':11,'砦':11,'舵':11,'梯':11,'琢':11,'紬':11,'桶':11,'帶':11,'從':11,'徠':11,'笹':11,'偲':11,'梓':11,'埴':11,'釧':11,'晨':11,'脩':11,'笙':11,'專':11,'敍':11,'畢':11,'彪':11,'彬':11,'冨':11,'庵':11,'凰':11,'埜':11,'崚':11,'梛':11,'絆':11,'眸':11,'條':11,'晝':11,'陷':16,'菫':13,'菩':13,'渚':12,'淀':12,'淋':12,'淨':12,'淚':12,'菅':12,'菖':12,'菱':12,'萠':12,'萄':12,'萊':12,'掬':12,'捲':12,'捷':12,'捺':12,'捧':12,'掠':12,'惟':12,'惚':12,'惇':12,'猪':12,'袴':12,'祷':12,'凱':12,'堺':12,'筈':12,'稀':12,'卿':12,'喬':12,'欽':12,'寓':12,'硯':12,'絢':12,'堯':12,'黑':12,'黃':12,'敦':12,'筑':12,'註':12,'斯':12,'惹':12,'竣':12,'閏':12,'疏':12,'甥':12,'厨':12,'棲':12,'惣':12,'巽':12,'單':12,'逸':12,'曾':12,'琶':12,'斐':12,'琵':12,'萬':12,'淵':12,'遥':12,'爲':12,'椀':12,'隈':17,'腔':14,'脹':14,'渥':13,'湘':13,'湊':13,'湛':13,'渾':13,'渴':13,'萱':13,'萩':13,'葡':13,'董':13,'瑛':13,'琥':13,'揃':13,'搜':13,'揭':13,'禄':13,'惺':13,'塙':13,'幌':13,'煌':13,'暉':13,'楯':13,'牒':13,'鼎':13,'楕':13,'碓':13,'稜':13,'煉':13,'祿':13,'傳':13,'詢':13,'嵯':13,'裟':13,'馳':13,'嵩':13,'裝':13,'頌':13,'稟':13,'碑':13,'碗':13,'圓':13,'奧':13,'搖':13,'與':13,'溫':13,'椰':17,'廊':17,'溢':14,'溜':14,'滉':14,'蓑':14,'蒔':14,'蒐':14,'蒲':14,'蓉':14,'蒙':14,'瑚':14,'瑞':14,'瑶':14,'禎':14,'愼':14,'獅':14,'魁':14,'閤':14,'寬':14,'爾':14,'暢':14,'肇':14,'嶋':14,'綸':14,'榮':14,'遙':14,'團':14,'壽':14,'嘗':14,'碩':14,'銑':14,'綜':14,'聡':14,'實':14,'奬':14,'齊':14,'粹':14,'箔':14,'輔':14,'鞄':14,'窪':14,'斡':14,'裳':14,'蔭':20,'蔦':15,'蔓':15,'蓬':15,'蔣':15,'漕':15,'漣':15,'漱':15,'滯':15,'摺':15,'摑':15,'瑳':15,'駕':15,'嬉':15,'毅':15,'誼':15,'駈':15,'價':15,'儉':15,'廣':15,'熙':15,'樋':15,'諒':15,'遼':15,'凜':15,'黎':15,'樂':15,'德':15,'諏':15,'醇':15,'噌':15,'諄':15,'澁':15,'彈':15,'穀':15,'增':15,'幡':15,'磐':15,'廟':15,'賣':15,'髮':15,'鞍':15,'慧':15,'樣':15,'緣':15,'鄭':19,'撒':16,'撰':16,'撞':16,'播':16,'撫':16,'蕎':16,'蕨':16,'蕉':16,'蕃':16,'蕪':16,'諺':16,'醐':16,'縞':16,'曉':16,'勳':16,'縣':16,'曆':16,'樽':16,'醍':16,'燈':16,'錫':16,'輯':16,'靜':16,'錄':16,'黛':16,'歷':16,'謂':16,'叡':16,'衞':16,'橫':16,'險':21,'賴':18,'薗':17,'薙':17,'蕗':17,'蕾':17,'澪':17,'徽':17,'檢':17,'磯':17,'嶺':17,'縱':17,'鍊':17,'燦':17,'禪':17,'謠':17,'彌':17,'穗':17,'輿':17,'應':17,'薩':23,'濡':18,'濕':18,'藁':18,'薰':18,'擢':18,'櫂':18,'鎭':18,'轉':18,'壘':18,'禮':18,'蹟':18,'藏':18,'醬':18,'襖':18,'麿':18,'燿':18,'穣':22,'藥':19,'藝':19,'儲':17,'繫':19,'寵':19,'禰':19,'簾':19,'櫓':19,'禱':19,'繡':19,'蘭':21,'瀕':20,'瀧':20,'蘇':20,'懷':20,'巌':20,'馨':20,'嚴':20,'纂':20,'孃':20,'騷':20,'耀':20,'轟':21,'饗':22,'讃':22,'驍':22,'鑄':22,'聽':22,'穰':22,'覽':22,'顯':23,'纖':23,'驗':23,'釀':24,'讓':24,'廳':25,'口':3,'丸':3,'弓':3,'干':3,'己':3,'巾':3,'乞':3,'牛':4,'戸':4,'刈':4,'凶':4,'互':4,'斤':4,'幻':4,'孔':4,'牙':4,'勾':4,'兄':5,'去':5,'可':5,'刊':5,'句':5,'穴':5,'甘':5,'丘':5,'巨':5,'巧':5,'瓦':5,'尻':5,'休':6,'回':6,'交':6,'考':6,'行':6,'曲':6,'血':6,'向':6,'共':6,'件':6,'灰':6,'危':6,'机':6,'吸':6,'后':6,'朽':6,'叫':6,'仰':6,'企':6,'刑':6,'伎':6,'臼':6,'何':7,'角':7,'究':7,'決':7,'改':7,'求':7,'告':7,'均':7,'我':7,'系':7,'孝':7,'困':7,'戒':7,'含':7,'更':7,'攻':7,'忌':7,'岐':7,'坑':7,'吟':7,'呉':7,'串':7,'岸':8,'具':8,'果':8,'官':8,'泣':8,'活':9,'計':9,'界':9,'客':9,'急':9,'係':9,'軍':9,'型':9,'故':9,'厚':9,'革':9,'看':9,'皇':9,'皆':9,'枯':9,'起':10,'庫':10,'害':10,'訓':10,'候':10,'個':10,'耕':10,'骨':10,'鬼':10,'恐':10,'軒':10,'魚':11,'教':11,'強':11,'貨':11,'械':11,'救':11,'眼':11,'規':11,'寄':11,'許':11,'混':11,'乾':11,'婚':11,'間':12,'開':12,'寒':12,'期':12,'港':12,'給':12,'減':12,'割':12,'筋':12,'敬':12,'幾':12,'距':12,'御':12,'項':12,'堅':12,'街':12,'解':13,'禁':13,'群':13,'源':13,'暇':13,'較':13,'詰':13,'傾':13,'遣':13,'誇':13,'鼓':13,'嫁':13,'塊':13,'該':13,'滑':13,'棄':13,'愚':13,'課':15,'確':15,'潔':15,'劇':15,'監':15,'稿':15,'緩':15,'緊':15,'窮':15,'稼':15,'潰':15,'畿':15,'稽':15,'駒':15,'激':16,'鋼':16,'獲':16,'凝':16,'憩':16,'墾':16,'衡':16,'諧':16,'骸':16,'錦':16,'講':17,'購':17,'懇':17,'顔':18,'額':18,'簡':18,'騎':18,'顎':18,'願':19,'鏡':19,'鯨':19,'議':20,'競':20,'懸':20,'顧':21,'艦':21,'歌':14,'語':14,'肌':8,'汽':7,'拘':8,'拐':8,'拒':8,'怪':8,'苛':8,'邪':8,'肯':8,'管':14,'旗':14,'箇':14,'綱':14,'酵':14,'酷':14,'閣':14,'疑':14,'誤':14,'構':14,'漁':14,'境':14,'魂':14,'頰':16,'刀':2,'了':2,'立':5,'他':5,'打':5,'令':5,'奴':5,'凸':5,'尼':5,'旦':5,'肉':6,'仲':6,'老':6,'任':6,'吐':6,'劣':6,'吏':6,'列':6,'町':7,'低':7,'努':7,'冷':7,'卵':7,'沖':7,'沈':7,'尿':7,'妥':7,'但':7,'呈':7,'廷':7,'忍':7,'妊':7,'汰':7,'呂':7,'弄':7,'店':8,'底':8,'的':8,'毒':8,'例':8,'柱':9,'待':9,'炭':9,'度':9,'段':9,'律':9,'庭':10,'旅':10,'徒':10,'料':10,'能':10,'留':10,'値':10,'討':10,'納':10,'鳥':11,'第':11,'帳':11,'笛':11,'動':11,'停':11,'堂':11,'得':11,'張':11,'略':11,'頂':11,'率':11,'答':12,'短':12,'等':12,'湯':12,'童':12,'量':12,'貸':12,'程':12,'統':12,'痛':12,'貯':12,'鳴':14,'緑':14,'態':14,'銅':14,'端':14,'滴':14,'駄':14,'嫡':14,'僚':14,'綻':14,'辣':14,'漏':14,'奪':14,'領':14,'認':14,'談':15,'調':15,'誕':15,'熱':15,'輪':15,'敵':15,'潮':15,'論':15,'踏':15,'駐':15,'締':15,'徹':15,'撤':15,'履':15,'寮':15,'嘲':15,'澄':15,'頭':16,'築':16,'燃':16,'録':16,'糖':16,'濁':16,'曇':16,'濃':16,'頼':16,'隷':16,'壇':16,'篤':16,'緻':16,'諦':16,'賭':16,'療':17,'鍛':17,'濯':17,'謄':17,'戴':17,'瞭':17,'題':18,'鎮':18,'糧':18,'鎌':18,'藍':18,'濫':18,'瀬':19,'麓':19,'露':21,'籠':22,'寸':3,'刃':3,'止':4,'少':4,'切':4,'氏':4,'支':4,'尺':4,'升':4,'冗':4,'爪':4,'左':5,'出':5,'仕':5,'主':5,'世':5,'失':5,'札':5,'示':5,'冊':5,'召':5,'占':5,'斥':5,'且':5,'囚':5,'仙':5,'糸':6,'字':6,'耳':6,'寺':6,'自':6,'死':6,'式':6,'州':6,'全':6,'再':6,'在':6,'舌':6,'至':6,'存':6,'旨':6,'舟':6,'旬':6,'如':6,'充':6,'車':7,'走':7,'豆':7,'材':7,'臣':7,'束':7,'災':7,'似':7,'序':7,'私':7,'伺':7,'床':7,'吹':7,'伸':7,'辛':7,'杉':7,'姉':8,'始':8,'使':8,'昔':8,'取':8,'受':8,'所':8,'刷':8,'卒':8,'治':8,'室':9,'首':9,'食':9,'前':9,'重':9,'昭':9,'相':9,'昨':9,'省':9,'査':9,'政':9,'則':9,'砂':9,'姿':9,'染':9,'泉':9,'洗':9,'柔':9,'盾':9,'侵':9,'紙':10,'弱':10,'書':10,'酒':10,'息':10,'差':10,'借':10,'席':10,'倉':10,'孫':10,'財':10,'師':10,'株':10,'座':10,'射':10,'針':10,'浸':10,'細':11,'船':11,'組':11,'祭':11,'習':11,'終':11,'宿':11,'商':11,'族':11,'産':11,'唱':11,'巣':11,'側':11,'術':11,'責':11,'設':11,'盛':11,'窓':11,'場':12,'集':12,'植':12,'最':12,'散':12,'象':12,'然':12,'税':12,'絶':12,'測':12,'裁':12,'策':12,'詞':12,'衆':12,'就':12,'尊':12,'試':13,'資':13,'勢':13,'傷':13,'歳':13,'載':13,'詳':13,'跡':13,'算':14,'察':14,'種':14,'説':14,'酸':14,'製':14,'像':14,'誌':14,'雌':14,'需':14,'銃':14,'塾':14,'彰':14,'漸':14,'箋':14,'遡':14,'遜':14,'線':15,'箱':15,'賞':15,'質':15,'趣':15,'震':15,'暫':15,'衝':15,'審':15,'請':15,'賜':15,'槽':15,'摯':15,'踪':15,'親':16,'整':16,'積':16,'諮':16,'儒':16,'醒':16,'謝':17,'績':17,'縮':17,'鮮':17,'燥':17,'醜':17,'償':17,'礁':17,'霜':17,'職':18,'織':18,'鎖':18,'瞬':18,'繕':18,'礎':18,'識':19,'繰':19,'蹴':19,'璽':19,'鐘':20,'籍':20,'襲':22,'汁':5,'漆':14,'漬':14,'誰':15,'亡':3,'凡':3,'父':4,'分':4,'方':4,'毛':4,'反':4,'不':4,'匹':4,'乏':4,'片':4,'半':5,'母':5,'皿':5,'皮':5,'氷':5,'必':5,'付':5,'包':5,'末':5,'民':5,'犯':5,'布':5,'矛':5,'丙':5,'伐':6,'帆':6,'伏':6,'妃':6,'朴':6,'妄':6,'貝':7,'兵':7,'別':7,'判':7,'否':7,'忘':7,'尾':7,'坊':7,'伴':7,'妨':7,'伯':7,'妹':8,'門':8,'板':8,'表':8,'服':8,'物':8,'放':8,'味':8,'府':8,'法':8,'牧':8,'秒':9,'品':9,'負':9,'面':9,'飛':9,'便':9,'派':9,'畑':9,'馬':10,'配':10,'倍':10,'病':10,'粉':10,'破':10,'俵':10,'俳':10,'班':10,'秘':10,'問':11,'敗':11,'票':11,'副':11,'貧':11,'婦':11,'務':11,'閉':11,'訪':11,'密':11,'買':12,'番':12,'悲':12,'筆':12,'費':12,'無':12,'備':12,'評':12,'復':12,'報':12,'晩':12,'棒':12,'聞':14,'鼻':14,'綿':14,'漫':14,'腐':14,'網':14,'漂':14,'閥':14,'僕':14,'貌':14,'銘':14,'標':15,'編':15,'暴':15,'輩':15,'範':15,'盤':15,'膚':15,'敷':15,'賦':15,'舞':15,'噴':15,'舗':15,'墳':15,'魅':15,'賠':15,'賓':15,'弊':15,'褒':15,'摩':15,'奮':16,'繁':16,'避':16,'壁':16,'縛':16,'磨':16,'謎':17,'覆':18,'癖':18,'翻':18,'璧':18,'爆':19,'霧':19,'簿':19,'譜':19,'魔':21,'微':13,'盟':13,'王':4,'引':4,'厄':4,'用':5,'央':5,'幼':5,'凹':5,'羽':6,'羊':6,'衣':6,'印':6,'因':6,'宇':6,'汚':6,'役':7,'冶':7,'妖':7,'沃':7,'雨':8,'夜':8,'委':8,'泳':8,'油':8,'易':8,'往':8,'約':9,'要':9,'員':10,'浴':10,'恩':10,'容':10,'移':11,'液':11,'異':11,'域':11,'翌':11,'欲':11,'偉':12,'越':12,'奥':12,'雲':12,'園':13,'暗':13,'預':13,'違':13,'煙':13,'溶':13,'話':13,'演':14,'踊':14,'瘍':14,'熊':14,'誘':14,'億':15,'養':15,'影':15,'縁':15,'閲':15,'憂':15,'窯':15,'衛':16,'輸':16,'諭':16,'融':16,'曖':17,'闇':17,'曜':18,'癒':18,'韻':19,'躍':21,'泊':8,'柏':9,'魄':15,'あ':3,'い':2,'う':2,'え':2,'お':3,'か':3,'き':3,'く':2,'け':3,'こ':2,'が':5,'ぎ':5,'ぐ':4,'げ':5,'ご':4,'さ':3,'し':3,'す':3,'せ':3,'そ':2,'ざ':5,'じ':5,'ず':5,'ぜ':5,'ぞ':4,'た':3,'ち':3,'つ':3,'て':2,'と':2,'だ':5,'ぢ':5,'づ':5,'で':4,'ど':4,'な':4,'に':3,'ぬ':3,'ね':4,'の':1,'は':3,'ひ':2,'ふ':3,'へ':1,'ほ':4,'ば':5,'び':4,'ぶ':5,'べ':3,'ぼ':6,'ぱ':4,'ぴ':3,'ぷ':4,'ぺ':2,'ぽ':5,'ま':3,'み':3,'む':3,'め':2,'も':3,'や':2,'ゆ':2,'よ':2,'ゃ':2,'ゅ':2,'ょ':2,'ら':2,'り':2,'る':3,'れ':3,'ろ':3,'わ':2,'を':3,'ん':1,'っ':3,'ぁ':3,'ぃ':2,'ぅ':2,'ぇ':2,'ぉ':3,'ア':3,'イ':2,'ウ':2,'エ':2,'オ':3,'カ':3,'キ':3,'ク':2,'ケ':3,'コ':2,'ガ':5,'ギ':5,'グ':4,'ゲ':5,'ゴ':4,'サ':3,'シ':3,'ス':3,'セ':3,'ソ':2,'ザ':5,'ジ':5,'ズ':5,'ゼ':5,'ゾ':4,'タ':3,'チ':3,'ツ':3,'テ':2,'ト':2,'ダ':5,'ヂ':5,'ヅ':5,'デ':4,'ド':4,'ナ':4,'ニ':3,'ヌ':3,'ネ':4,'ノ':1,'ハ':3,'ヒ':2,'フ':3,'ヘ':1,'ホ':4,'バ':5,'ビ':4,'ブ':5,'ベ':3,'ボ':6,'パ':4,'ピ':3,'プ':4,'ペ':2,'ポ':5,'マ':3,'ミ':3,'ム':3,'メ':2,'モ':3,'ヤ':2,'ユ':2,'ヨ':2,'ャ':2,'ュ':2,'ョ':2,'ラ':2,'リ':2,'ル':3,'レ':3,'ロ':3,'ワ':2,'ヲ':3,'ン':1,'ッ':3,'ァ':3,'ィ':2,'ゥ':2,'ェ':2,'ォ':3,'ー':1,'鐡':21,'鐵':21,'鎧':18,'齋':17,'齊':14,'斎':11};
+function getStroke(ch){return STROKE[ch]||null;}
+function sumStrokes(str){let t=0;for(const c of str){const s=getStroke(c);if(s===null)return null;t+=s;}return t;}
+;
+function getStroke(ch){return STROKE[ch]||null;}
+function sumStrokes(str){let t=0;for(const c of str){const s=getStroke(c);if(s===null)return null;t+=s;}return t;}
+
+
+const KANJI_ON_GYO={
+  河:'木',花:'木',賀:'木',格:'木',寛:'木',幹:'木',完:'木',感:'木',観:'木',菊:'木',気:'木',記:'木',紀:'木',貴:'木',輝:'木',希:'木',喜:'木',基:'木',機:'木',光:'木',公:'木',康:'木',高:'木',幸:'木',好:'木',広:'木',功:'木',剛:'木',健:'木',謙:'木',賢:'木',研:'木',憲:'木',玄:'木',雅:'木',学:'木',岳:'木',義:'木',技:'木',業:'木',
+  京:'木',恭:'木',協:'木',橘:'木',宮:'木',結:'木',絹:'木',興:'木',彦:'木',晃:'木',葵:'木',海:'木',薫:'木',啓:'木',銀:'木',克:'木',夏:'木',鶴:'木',橋:'木',原:'木',吉:'木',関:'木',近:'木',後:'木',岡:'木',谷:'木',金:'木',今:'木',五:'木',九:'木',月:'木',空:'木',菜:'木',介:'木',豪:'木',虎:'木',紅:'木',及:'木',下:'木',口:'木',
+  丸:'木',弓:'木',工:'木',久:'木',干:'木',己:'木',巾:'木',乞:'木',火:'木',犬:'木',牛:'木',元:'木',戸:'木',午:'木',化:'木',刈:'木',凶:'木',互:'木',斤:'木',幻:'木',孔:'木',牙:'木',勾:'木',区:'木',欠:'木',玉:'木',外:'木',兄:'木',古:'木',去:'木',加:'木',可:'木',刊:'木',句:'木',穴:'木',甘:'木',丘:'木',巨:'木',甲:'木',巧:'木',
+  瓦:'木',尻:'木',込:'木',会:'木',仮:'木',缶:'木',休:'木',回:'木',交:'木',考:'木',行:'木',合:'木',曲:'木',血:'木',向:'木',各:'木',共:'木',件:'木',灰:'木',危:'木',机:'木',吸:'木',后:'木',朽:'木',叫:'木',仰:'木',企:'木',刑:'木',江:'木',伎:'木',臼:'木',却:'木',芸:'木',見:'木',何:'木',角:'木',形:'木',言:'木',究:'木',局:'木',
+  君:'木',決:'木',改:'木',求:'木',告:'木',均:'木',我:'木',系:'木',孝:'木',困:'木',戒:'木',含:'木',更:'木',攻:'木',忌:'木',岐:'木',坑:'木',吟:'木',呉:'木',串:'木',画:'木',国:'木',径:'木',価:'木',苦:'木',効:'木',拡:'木',拠:'木',茎:'木',岩:'木',岸:'木',具:'木',果:'木',芽:'木',官:'木',季:'木',泣:'木',固:'木',県:'木',巻:'木',
+  科:'木',活:'木',計:'木',界:'木',客:'木',急:'木',係:'木',軍:'木',型:'木',建:'木',故:'木',厚:'木',革:'木',看:'木',皇:'木',皆:'木',枯:'木',香:'木',帰:'木',挙:'木',剣:'木',校:'木',家:'木',起:'木',庫:'木',根:'木',害:'木',訓:'木',候:'木',航:'木',個:'木',耕:'木',骨:'木',鬼:'木',恐:'木',兼:'木',軒:'木',険:'木',経:'木',黒:'木',
+  黄:'木',魚:'木',教:'木',強:'木',貨:'木',械:'木',救:'木',眼:'木',規:'木',寄:'木',許:'木',混:'木',乾:'木',婚:'木',覚:'木',絵:'木',検:'木',階:'木',軽:'木',間:'木',開:'木',寒:'木',期:'木',湖:'木',港:'木',給:'木',景:'木',減:'木',割:'木',筋:'木',敬:'木',幾:'木',距:'木',御:'木',項:'木',堅:'木',街:'木',解:'木',禁:'木',群:'木',
+  源:'木',暇:'木',較:'木',詰:'木',傾:'木',遣:'木',誇:'木',鼓:'木',嫁:'木',塊:'木',該:'木',滑:'木',棄:'木',愚:'木',課:'木',確:'木',潔:'木',劇:'木',監:'木',稿:'木',緩:'木',緊:'木',窮:'木',慶:'木',稼:'木',潰:'木',畿:'木',稽:'木',駒:'木',激:'木',鋼:'木',獲:'木',凝:'木',憩:'木',墾:'木',錯:'木',衡:'木',諧:'木',骸:'木',錦:'木',
+  講:'木',嚇:'木',轄:'木',矯:'木',購:'木',懇:'木',鍵:'木',鍋:'木',顔:'木',額:'木',簡:'木',騎:'木',顎:'木',願:'木',鏡:'木',鯨:'木',議:'木',競:'木',懸:'木',顧:'木',艦:'木',鑑:'木',歌:'木',語:'木',号:'木',旧:'木',汗:'木',肌:'木',汽:'木',抗:'木',肝:'木',迎:'木',快:'木',狂:'木',拘:'木',拐:'木',拒:'木',怪:'木',若:'木',苛:'木',
+  邪:'木',肯:'木',股:'木',肩:'木',郊:'木',峡:'木',茨:'木',栃:'木',架:'木',冠:'木',軌:'木',虐:'木',契:'木',弧:'木',孤:'木',糾:'木',洪:'木',侯:'木',虹:'木',郡:'木',降:'木',胸:'木',荷:'木',核:'木',桁:'木',拳:'木',貢:'木',姫:'木',理:'木',球:'木',現:'木',菓:'木',視:'木',郷:'木',惨:'木',勘:'木',貫:'木',偶:'木',紺:'木',患:'木',
+  菌:'木',崎:'木',舷:'木',梗:'木',頃:'木',痕:'木',埼:'木',過:'木',揮:'木',極:'木',勤:'木',圏:'木',敢:'木',喚:'木',棋:'木',欺:'木',喫:'木',雇:'木',硬:'木',絞:'木',渦:'木',棺:'木',堪:'木',款:'木',閑:'木',喉:'木',楽:'木',鉱:'木',勧:'木',継:'木',楷:'木',毀:'木',嗅:'木',僅:'木',窟:'木',詣:'木',傲:'木',靴:'木',頑:'木',嫌:'木',
+  碁:'木',溝:'木',管:'木',旗:'木',箇:'木',綱:'木',酵:'木',酷:'木',閣:'木',疑:'木',誤:'木',穀:'木',構:'木',漁:'木',境:'木',魂:'木',駆:'木',寡:'木',練:'木',慣:'木',獄:'木',概:'木',権:'木',歓:'木',戯:'木',撃:'木',勲:'木',器:'木',諸:'木',箸:'木',憬:'木',蔽:'木',横:'木',諾:'木',謁:'木',錮:'木',頰:'木',懐:'木',壊:'木',擁:'木',
+  還:'木',憾:'木',薪:'木',薦:'木',錬:'木',館:'木',厳:'木',犠:'木',擬:'木',謹:'木',爵:'木',繭:'木',顕:'木',験:'木',穫:'木',襟:'木',韓:'木',鶏:'木',警:'木',響:'木',護:'木',禾:'木',叶:'木',弘:'木',乎:'木',瓜:'木',匡:'木',旭:'木',圭:'木',亙:'木',亘:'木',杏:'木',伽:'木',汲:'木',灸:'木',亨:'木',冴:'木',吾:'木',宏:'木',芹:'木',
+  芥:'木',玖:'木',茄:'木',侃:'木',函:'木',其:'木',欣:'木',昂:'木',杭:'木',肴:'木',昊:'木',穹:'木',卷:'木',祁:'木',尭:'木',迦:'木',俄:'木',竿:'木',頁:'木',勁:'木',奎:'木',俠:'木',洸:'木',珂:'木',珈:'木',恢:'木',恰:'木',恆:'木',衿:'木',峨:'木',桧:'木',桔:'木',笈:'木',矩:'木',桂:'木',倖:'木',紘:'木',栞:'木',赳:'木',氣:'木',
+  俱:'木',晄:'木',神:'木',莞:'木',浩:'木',袈:'木',牽:'木',絃:'木',皐:'木',圈:'木',國:'木',兜:'木',梶:'木',毬:'木',椛:'木',陷:'木',菫:'木',菅:'木',掬:'木',捲:'木',惚:'木',袴:'木',凱:'木',堺:'木',筈:'木',稀:'木',卿:'木',喬:'木',欽:'木',寓:'木',硯:'木',絢:'木',堯:'木',惠:'木',黑:'木',黃:'木',隈:'木',腔:'木',渾:'木',渴:'木',
+  萱:'木',琥:'木',揭:'木',塙:'木',幌:'木',煌:'木',暉:'木',滉:'木',瑚:'木',嘉:'木',魁:'木',閤:'木',寬:'木',漢:'木',摑:'木',駕:'木',嬉:'木',毅:'木',誼:'木',駈:'木',價:'木',儉:'木',廣:'木',熙:'木',蕎:'木',諺:'木',醐:'木',縞:'木',曉:'木',勳:'木',縣:'木',曆:'木',險:'木',徽:'木',檢:'木',磯:'木',薰:'木',櫂:'木',藝:'木',儲:'木',
+  繫:'木',懷:'木',巌:'木',馨:'木',嚴:'木',轟:'木',饗:'木',驍:'木',顯:'木',驗:'木',
+  貞:'火',大:'火',太:'火',多:'火',達:'火',知:'火',竹:'火',直:'火',忠:'火',長:'火',朝:'火',兆:'火',徳:'火',登:'火',東:'火',道:'火',冬:'火',同:'火',天:'火',定:'火',帝:'火',典:'火',展:'火',伝:'火',奈:'火',南:'火',二:'火',日:'火',寧:'火',良:'火',竜:'火',龍:'火',凛:'火',琳:'火',礼:'火',蓮:'火',麗:'火',烈:'火',郎:'火',朗:'火',
+  浪:'火',楼:'火',瞳:'火',渡:'火',田:'火',中:'火',斗:'火',鈴:'火',林:'火',都:'火',地:'火',男:'火',智:'火',藤:'火',池:'火',島:'火',柳:'火',六:'火',代:'火',葉:'土',入:'火',力:'火',刀:'火',丁:'火',了:'火',土:'火',内:'火',弔:'火',屯:'火',匂:'火',立:'火',他:'火',打:'火',令:'火',奴:'火',凸:'火',尼:'火',旦:'火',両:'火',当:'火',
+  灯:'火',団:'火',乱:'火',年:'火',肉:'火',仲:'火',老:'火',任:'火',宅:'火',吐:'火',劣:'火',吏:'火',列:'火',体:'火',来:'木',対:'火',労:'火',沢:'火',択:'火',励:'火',戻:'火',町:'火',弟:'火',里:'火',低:'火',努:'火',利:'火',冷:'火',卵:'火',沖:'火',沈:'火',尿:'火',妥:'火',但:'火',呈:'火',廷:'火',忍:'火',妊:'火',汰:'火',呂:'火',
+  弄:'火',担:'火',炉:'火',店:'火',注:'火',底:'火',的:'火',毒:'火',念:'火',例:'火',点:'火',独:'火',単:'火',昼:'火',柱:'火',待:'火',炭:'火',度:'火',段:'火',律:'火',党:'火',帯:'火',庭:'火',旅:'火',流:'火',徒:'火',特:'火',料:'火',能:'火',留:'火',値:'火',討:'火',納:'火',転:'火',断:'火',鳥:'火',第:'火',帳:'火',笛:'火',動:'火',
+  停:'火',堂:'火',得:'火',張:'火',略:'火',頂:'火',率:'火',着:'火',隊:'火',落:'火',答:'火',短:'火',等:'火',湯:'火',童:'火',量:'火',貸:'火',程:'火',統:'火',痛:'火',貯:'火',電:'火',農:'火',路:'火',置:'火',働:'火',暖:'火',賃:'火',裏:'火',跳:'火',殿:'火',雷:'火',鳴:'火',緑:'火',態:'火',銅:'火',端:'火',滴:'火',駄:'火',嫡:'火',
+  僚:'火',綻:'火',辣:'火',漏:'火',奪:'火',領:'火',認:'火',談:'火',調:'火',誕:'火',熱:'火',輪:'火',敵:'火',潮:'火',論:'火',踏:'火',駐:'火',締:'火',徹:'火',撤:'火',履:'火',寮:'火',嘲:'火',澄:'火',頭:'火',築:'火',燃:'火',録:'火',糖:'火',濁:'火',曇:'火',濃:'火',頼:'火',隷:'火',壇:'火',篤:'火',緻:'火',諦:'火',賭:'火',療:'火',
+  鍛:'火',濯:'火',謄:'火',戴:'火',瞭:'火',題:'火',鎮:'火',糧:'火',鎌:'火',藍:'火',濫:'火',瀬:'火',麓:'火',露:'火',籠:'火',鉄:'火',台:'火',庁:'火',虫:'火',弐:'火',投:'火',肘:'火',那:'火',拉:'火',迭:'火',苗:'火',胆:'火',勅:'火',珍:'火',逃:'火',胎:'火',耐:'火',怒:'火',怠:'火',訂:'火',厘:'火',亭:'火',洞:'火',侶:'火',峠:'火',
+  通:'火',連:'火',唐:'火',桃:'火',倒:'火',畜:'火',凍:'火',匿:'火',泰:'火',朕:'火',酎:'火',致:'火',恥:'火',陸:'火',脳:'火',著:'火',淡:'火',添:'火',袋:'火',窒:'火',彫:'火',軟:'火',眺:'火',釣:'火',偵:'火',梨:'火',粒:'火',唾:'火',堆:'火',貪:'火',鹿:'火',粘:'火',提:'火',替:'火',堤:'火',塔:'火',鈍:'火',痘:'火',裂:'火',筒:'火',
+  棟:'火',痢:'火',硫:'火',嵐:'火',貼:'火',椎:'火',絡:'火',超:'火',塚:'火',嘆:'火',稚:'火',塗:'火',零:'火',廉:'火',艇:'火',督:'火',酪:'火',虜:'火',頓:'火',溺:'火',賂:'火',塡:'火',読:'火',歴:'火',暦:'火',稲:'火',徴:'火',璃:'火',瑠:'火',暮:'火',霊:'火',鋳:'火',導:'火',憧:'火',墜:'火',隣:'火',聴:'火',覧:'火',齢:'火',臆:'火',
+  闘:'火',難:'火',離:'火',懲:'火',臨:'火',羅:'火',欄:'火',騰:'火',乃:'火',丑:'火',凧:'火',辻:'火',凪:'火',汀:'火',杜:'火',佃:'火',辿:'火',李:'火',伶:'火',吞:'火',芦:'火',沌:'火',苔:'火',迪:'火',怜:'火',帖:'火',坦:'火',宕:'火',來:'火',陀:'火',姪:'火',俐:'火',突:'火',洛:'火',玲:'火',祢:'火',砥:'火',紐:'火',砧:'火',套:'火',
+  桐:'火',哩:'火',栗:'火',凉:'火',郞:'火',荻:'火',莉:'火',浬:'火',挺:'火',悌:'火',砦:'火',舵:'火',梯:'火',琢:'火',紬:'火',桶:'火',帶:'火',徠:'火',崚:'火',梛:'火',晝:'火',淀:'火',淋:'火',淚:'火',菱:'火',萄:'火',萊:'火',捺:'火',掠:'火',惇:'火',猪:'火',祷:'火',敦:'火',筑:'火',註:'火',脹:'火',湛:'火',董:'火',禄:'火',楯:'火',
+  牒:'火',稔:'火',鼎:'火',楕:'火',碓:'火',稜:'火',煉:'火',祿:'火',傳:'火',廊:'火',溜:'火',禎:'火',爾:'火',暢:'火',肇:'火',嶋:'火',綾:'火',綸:'火',榮:'火',遙:'火',團:'火',蔦:'火',漣:'火',滯:'火',樋:'火',諒:'火',遼:'火',凜:'火',黎:'火',樂:'火',德:'火',鄭:'火',撞:'火',樽:'火',醍:'火',燈:'火',賴:'火',薙:'火',嶺:'火',縱:'火',
+  鍊:'火',鎭:'火',轉:'火',壘:'火',禮:'火',寵:'火',禰:'火',簾:'火',櫓:'火',禱:'火',蘭:'火',瀧:'火',鑄:'火',聽:'火',覽:'火',廳:'火',
+  三:'金',才:'金',作:'金',咲:'金',祥:'金',志:'金',司:'金',詩:'金',紫:'金',慈:'金',実:'金',純:'金',順:'金',潤:'金',淳:'金',準:'金',上:'金',常:'金',丈:'金',城:'金',静:'金',正:'金',尚:'金',将:'金',章:'金',昌:'金',昇:'金',勝:'金',成:'金',清:'金',晴:'金',聖:'金',誠:'金',精:'金',星:'金',青:'金',生:'金',声:'金',奏:'金',蒼:'金',
+  颯:'金',爽:'金',総:'金',素:'金',宗:'金',想:'金',荘:'金',春:'金',修:'金',珠:'金',周:'金',秀:'金',俊:'金',進:'金',信:'金',拓:'金',仁:'金',松:'金',真:'金',身:'金',山:'金',翔:'金',操:'金',村:'金',次:'金',子:'金',靖:'金',新:'金',慎:'金',守:'金',秋:'金',井:'金',石:'金',川:'金',佐:'金',小:'金',斎:'金',森:'金',西:'金',四:'金',
+  七:'金',十:'金',雪:'金',匠:'金',彩:'金',沙:'金',紗:'金',夕:'金',助:'金',史:'金',士:'金',翠:'金',朱:'金',千:'金',人:'金',女:'金',寸:'金',刃:'金',手:'金',水:'金',止:'金',少:'金',心:'金',切:'金',氏:'金',支:'金',尺:'金',升:'金',冗:'金',爪:'金',収:'金',双:'金',左:'金',出:'金',矢:'金',市:'金',仕:'金',主:'金',申:'金',世:'金',
+  失:'金',札:'金',示:'金',冊:'金',召:'金',占:'金',斥:'金',且:'金',囚:'金',仙:'金',丹:'金',丼:'金',糸:'金',字:'金',耳:'金',先:'金',早:'金',寺:'金',自:'金',色:'金',死:'金',式:'金',州:'金',全:'金',再:'金',在:'金',舌:'金',至:'金',存:'金',旨:'金',舟:'金',旬:'金',如:'金',充:'金',図:'金',児:'金',状:'金',条:'金',即:'金',寿:'金',
+  車:'金',赤:'金',足:'金',走:'金',住:'金',豆:'金',材:'金',臣:'金',束:'金',災:'金',似:'金',序:'金',私:'金',伺:'金',床:'金',吹:'金',伸:'金',辛:'金',杉:'金',芯:'金',参:'金',者:'金',枢:'金',斉:'金',姉:'金',始:'金',使:'金',事:'金',昔:'金',取:'金',受:'金',所:'金',刷:'金',卒:'金',治:'金',浅:'金',専:'金',乗:'金',室:'金',首:'金',
+  食:'金',前:'金',重:'金',昭:'金',相:'金',昨:'金',省:'金',査:'金',政:'金',則:'金',砂:'金',姿:'金',宣:'金',染:'金',泉:'金',洗:'金',柔:'金',盾:'金',侵:'金',蚕:'金',剤:'金',称:'金',残:'金',殺:'金',従:'金',紙:'金',時:'金',弱:'金',書:'金',酒:'金',息:'金',差:'金',借:'金',笑:'金',席:'金',倉:'金',孫:'金',財:'金',師:'金',株:'金',
+  座:'金',射:'金',針:'金',浸:'金',済:'金',細:'金',船:'金',組:'金',祭:'金',習:'金',終:'金',宿:'金',商:'金',深:'金',族:'金',産:'金',唱:'金',巣:'金',側:'金',術:'金',責:'金',設:'金',盛:'金',窓:'金',属:'金',暑:'金',煮:'金',畳:'金',証:'金',焼:'金',歯:'金',場:'金',集:'金',植:'金',最:'金',散:'金',象:'金',然:'金',税:'金',絶:'金',
+  測:'金',裁:'金',策:'金',詞:'金',衆:'金',就:'金',善:'金',創:'金',尊:'金',試:'金',資:'金',勢:'金',傷:'金',歳:'金',載:'金',詳:'金',跡:'金',照:'金',算:'金',察:'金',種:'金',説:'金',酸:'金',製:'金',像:'金',誌:'金',雌:'金',需:'金',銃:'金',塾:'金',彰:'金',漸:'金',箋:'金',遡:'金',遜:'金',線:'金',箱:'金',賞:'金',質:'金',趣:'金',
+  震:'金',暫:'金',衝:'金',審:'金',穂:'金',請:'金',賜:'金',槽:'金',摯:'金',踪:'金',親:'金',整:'金',積:'金',樹:'金',諮:'金',儒:'金',醒:'金',謝:'金',績:'金',縮:'金',鮮:'金',燥:'金',醜:'金',償:'金',礁:'金',霜:'金',職:'金',織:'金',鎖:'金',瞬:'金',繕:'金',礎:'金',識:'金',繰:'金',蹴:'金',璽:'金',鐘:'金',籍:'金',襲:'金',争:'金',
+  汁:'金',写:'金',処:'金',尽:'金',壮:'金',扱:'金',芝:'金',巡:'金',迅:'金',折:'金',抄:'金',肖:'金',社:'金',初:'金',招:'金',押:'金',抽:'金',拙:'金',述:'金',性:'金',祈:'金',祉:'金',狙:'金',阻:'金',肢:'金',窃:'金',砕:'金',浄:'金',叙:'金',臭:'金',括:'金',拷:'金',挑:'金',拶:'金',拭:'金',削:'金',挟:'金',是:'金',俗:'金',卸:'金',
+  施:'金',牲:'金',促:'金',津:'金',甚:'金',帥:'金',柿:'金',柵:'金',思:'金',速:'金',造:'金',除:'金',脂:'金',消:'金',振:'金',疾:'金',殊:'金',徐:'金',辱:'金',衰:'金',隻:'金',桑:'金',唆:'金',栽:'金',宰:'金',索:'金',酌:'金',准:'金',殉:'金',症:'金',娠:'金',唇:'金',栓:'金',租:'金',秩:'金',娘:'金',凄:'金',脊:'金',恣:'金',週:'金',
+  採:'金',授:'金',接:'金',捨:'金',推:'金',探:'金',掘:'金',情:'金',脚:'金',執:'金',斜:'金',寂:'金',紹:'金',赦:'金',粗:'金',淑:'金',庶:'金',訟:'金',紳:'金',崇:'金',旋:'金',曹:'金',斬:'金',戚:'金',装:'金',殖:'金',尋:'金',訴:'金',軸:'金',晶:'金',掌:'金',焦:'金',婿:'金',詐:'金',酢:'金',傘:'金',滋:'金',循:'金',粧:'金',詔:'金',
+  診:'金',疎:'金',喪:'金',須:'金',数:'金',辞:'金',戦:'金',続:'金',触:'金',寝:'金',催:'金',債:'金',賊:'金',嗣:'金',酬:'金',愁:'金',睡:'金',塑:'金',塞:'金',嫉:'金',煎:'金',羨:'金',詮:'金',漆:'金',漬:'金',雑:'金',際:'金',障:'金',銭:'金',憎:'金',適:'金',遭:'金',遮:'金',摘:'金',緒:'金',磁:'金',誓:'金',誰:'金',潟:'金',縄:'金',
+  遷:'金',賛:'金',蔵:'金',選:'金',潜:'金',撮:'金',遵:'金',慮:'金',膝:'金',嘱:'金',嬢:'金',壌:'金',獣:'金',膳:'金',繊:'金',擦:'金',騒:'金',贈:'金',臓:'金',髄:'金',藻:'金',譲:'金',醸:'金',叉:'金',之:'金',巳:'金',勺:'金',廿:'金',壬:'金',仔:'金',只:'金',疋:'金',丞:'金',庄:'金',收:'金',此:'金',而:'金',尖:'金',坐:'金',孜:'金',
+  灼:'金',杖:'金',宋:'金',壯:'金',些:'金',竺:'金',杵:'金',狀:'金',哉:'金',卽:'金',洲:'金',洵:'金',珊:'金',茸:'金',茜:'金',晒:'金',柴:'金',栖:'金',朔:'金',峻:'金',恕:'金',哨:'金',秤:'金',晋:'金',秦:'金',訊:'金',晟:'金',乘:'金',祝:'金',涉:'金',莊:'金',從:'金',笹:'金',偲:'金',梓:'金',梢:'金',埴:'金',釧:'金',晨:'金',脩:'金',
+  笙:'金',專:'金',敍:'金',條:'金',渚:'金',淨:'金',菖:'金',捷:'金',斯:'金',惹:'金',竣:'金',閏:'金',疏:'金',甥:'金',厨:'金',棲:'金',惣:'金',巽:'金',單:'金',曾:'金',湘:'金',湊:'金',萩:'金',揃:'金',搜:'金',惺:'金',詢:'金',嵯:'金',裟:'金',馳:'金',嵩:'金',裝:'金',頌:'金',蓑:'金',蒔:'金',蒐:'金',瑞:'金',愼:'金',獅:'金',壽:'金',
+  嘗:'金',碩:'金',銑:'金',綜:'金',聡:'金',實:'金',奬:'金',齊:'金',粹:'金',僧:'金',署:'金',蔣:'金',漕:'金',漱:'金',摺:'金',瑳:'金',諏:'金',醇:'金',噌:'金',諄:'金',澁:'金',彈:'金',節:'金',增:'金',撒:'金',撰:'金',蕉:'金',錫:'金',輯:'金',靜:'金',錄:'金',燦:'金',禪:'金',薩:'金',濕:'金',擢:'金',蹟:'金',藏:'金',醬:'金',穣:'金',
+  繡:'金',蘇:'金',纂:'金',孃:'金',騷:'金',讃:'金',穰:'金',纖:'金',釀:'金',讓:'金',
+  名:'水',博:'水',八:'水',発:'水',波:'水',比:'水',福:'水',富:'水',風:'水',文:'水',豊:'水',宝:'水',芳:'水',万:'水',満:'水',未:'水',睦:'水',萌:'水',望:'水',美:'水',夢:'水',浜:'水',明:'水',本:'水',木:'水',坂:'水',北:'水',麻:'水',武:'水',鳳:'水',碧:'水',浦:'水',濱:'水',亡:'水',凡:'水',父:'水',分:'水',方:'水',毛:'水',反:'水',
+  不:'水',夫:'水',匹:'水',乏:'水',片:'水',仏:'水',白:'水',目:'水',半:'水',母:'水',皿:'水',皮:'水',氷:'水',平:'水',必:'水',付:'水',包:'水',末:'水',民:'水',犯:'水',布:'水',矛:'水',丙:'水',百:'水',米:'水',伐:'水',帆:'水',伏:'水',妃:'水',朴:'水',妄:'水',売:'水',麦:'水',抜:'水',貝:'水',兵:'水',別:'水',判:'水',否:'水',忘:'水',
+  尾:'水',坊:'水',妙:'水',伴:'水',妨:'水',伯:'水',歩:'水',弥:'水',妹:'水',門:'水',板:'水',表:'水',服:'水',物:'水',放:'水',味:'水',命:'水',府:'水',法:'水',牧:'水',変:'水',秒:'水',品:'水',負:'水',面:'水',飛:'水',便:'水',保:'水',派:'水',畑:'水',馬:'水',配:'水',倍:'水',病:'水',勉:'水',粉:'水',破:'水',俵:'水',俳:'水',班:'水',
+  秘:'水',問:'水',敗:'水',票:'水',副:'水',貧:'水',婦:'水',務:'水',閉:'水',訪:'水',密:'水',飯:'水',買:'水',番:'水',悲:'水',筆:'水',費:'水',無:'水',備:'水',評:'水',復:'水',報:'水',晩:'水',棒:'水',聞:'水',鼻:'水',綿:'水',漫:'水',腐:'水',網:'水',漂:'水',閥:'水',僕:'水',貌:'水',碑:'水',銘:'水',標:'水',編:'水',暴:'水',輩:'水',
+  範:'水',盤:'水',膚:'水',敷:'水',賦:'水',舞:'水',噴:'水',舗:'水',墳:'水',魅:'水',賠:'水',賓:'水',弊:'水',褒:'水',摩:'水',奮:'水',繁:'水',避:'水',壁:'水',縛:'水',磨:'水',謎:'水',覆:'水',癖:'水',翻:'水',璧:'水',爆:'水',霧:'水',簿:'水',譜:'水',魔:'水',微:'水',盟:'水',氾:'水',払:'水',辺:'水',弁:'水',汎:'水',毎:'水',忙:'水',
+  批:'水',把:'水',扶:'水',返:'水',防:'水',邦:'水',阪:'水',没:'水',抵:'水',拍:'水',抱:'水',披:'水',抹:'水',迫:'水',怖:'水',茂:'水',拝:'水',侮:'水',邸:'水',附:'水',肥:'水',肪:'水',恨:'水',衷:'水',胞:'水',悔:'水',柄:'水',冒:'水',盆:'水',卑:'水',赴:'水',封:'水',某:'水',眉:'水',訃:'水',勃:'水',昧:'水',陛:'水',脈:'水',梅:'水',
+  般:'水',疲:'水',浮:'水',峰:'水',砲:'水',眠:'水',紋:'水',紛:'水',倣:'水',埋:'水',畔:'水',畝:'水',俸:'水',剖:'水',紡:'水',耗:'水',唄:'水',哺:'水',冥:'水',剝:'水',部:'水',郵:'水',販:'水',符:'水',崩:'水',培:'水',舶:'水',偏:'水',堀:'水',婆:'水',補:'水',普:'水',幅:'水',傍:'水',帽:'水',媒:'水',扉:'水',雰:'水',貿:'水',棚:'水',
+  鉢:'水',煩:'水',頒:'水',蜜:'水',膜:'水',髪:'水',慢:'水',蔑:'水',慕:'水',模:'水',罰:'水',複:'水',墨:'水',黙:'水',餓:'水',撲:'水',憤:'水',罷:'水',罵:'水',餅:'水',麺:'水',膨:'水',薄:'水',藩:'水',覇:'水',卜:'水',巴:'水',勿:'水',匁:'水',戊:'水',卯:'水',牟:'水',庇:'水',甫:'水',巫:'水',佛:'水',每:'水',芭:'水',芙:'水',步:'水',
+  茅:'水',茉:'水',苺:'水',拔:'水',拂:'水',杷:'水',朋:'水',孟:'水',毘:'水',俣:'水',珀:'水',畠:'水',娩:'水',圃:'水',峯:'水',眞:'水',莫:'水',挽:'水',畢:'水',彪:'水',彬:'水',冨:'水',絆:'水',眸:'水',菩:'水',萠:'水',捧:'水',琶:'水',斐:'水',琵:'水',萬:'水',葡:'水',稟:'水',蒲:'水',蒙:'水',箔:'水',輔:'水',鞄:'水',蔓:'水',蓬:'水',
+  幡:'水',磐:'水',廟:'水',賣:'水',髮:'水',播:'水',撫:'水',蕨:'水',蕃:'水',蕪:'水',黛:'水',歷:'水',薗:'水',蕗:'水',蕾:'水',澪:'水',彌:'水',穗:'水',濡:'水',藁:'水',襖:'水',麿:'水',瀕:'水',
+  涼:'土',一:'土',愛:'土',安:'土',亮:'土',暁:'土',以:'土',意:'土',維:'土',依:'土',英:'土',栄:'土',永:'土',恵:'土',映:'土',雄:'土',勇:'土',悠:'土',裕:'土',由:'土',和:'土',也:'土',桜:'土',祐:'土',野:'土',翼:'土',有:'土',友:'土',優:'土',鷹:'土',音:'土',郁:'土',屋:'土',乙:'土',又:'土',与:'土',王:'土',引:'土',厄:'土',円:'土',
+  予:'土',右:'土',用:'土',央:'土',幼:'土',凹:'土',羽:'土',羊:'土',衣:'土',印:'土',因:'土',宇:'土',汚:'土',医:'土',囲:'土',応:'土',壱:'土',亜:'土',余:'土',役:'土',位:'土',冶:'土',妖:'土',沃:'土',育:'土',欧:'土',殴:'土',雨:'土',夜:'土',委:'土',泳:'土',油:'土',易:'土',往:'土',為:'土',洋:'土',約:'土',要:'土',威:'土',員:'土',
+  案:'土',浴:'土',益:'土',恩:'土',容:'土',訳:'土',悪:'土',移:'土',液:'土',異:'土',域:'土',翌:'土',欲:'土',飲:'土',営:'土',陽:'土',温:'土',偉:'土',越:'土',奥:'土',雲:'土',園:'土',暗:'土',塩:'土',預:'土',違:'土',煙:'土',溶:'土',話:'土',演:'土',踊:'土',瘍:'土',熊:'土',誘:'土',億:'土',養:'土',影:'土',縁:'土',閲:'土',憂:'土',
+  窯:'土',衛:'土',輸:'土',諭:'土',融:'土',曖:'土',闇:'土',曜:'土',癒:'土',韻:'土',躍:'土',鬱:'土',圧:'土',芋:'土',抑:'土',哀:'土',幽:'土',姻:'土',疫:'土',垣:'土',畏:'土',咽:'土',怨:'土',院:'土',俺:'土',宴:'土',翁:'土',陰:'土',尉:'土',涯:'土',唯:'土',庸:'土',累:'土',淫:'土',崖:'土',運:'土',遊:'土',握:'土',援:'土',詠:'土',
+  椅:'土',媛:'土',喩:'土',湧:'土',惑:'土',誉:'土',鉛:'土',賄:'土',彙:'土',駅:'土',隠:'土',増:'土',層:'土',様:'土',遺:'土',薬:'土',穏:'土',憶:'土',環:'土',類:'土',艶:'土',已:'土',允:'土',云:'土',尤:'土',伊:'土',夷:'土',曳:'土',亦:'土',亥:'土',伍:'土',弛:'土',佑:'土',邑:'土',苑:'土',於:'土',侑:'土',亞:'土',兒:'土',阿:'土',
+  娃:'土',宥:'土',耶:'土',按:'土',倭:'土',晏:'土',祖:'土',庵:'土',凰:'土',埜:'土',惟:'土',逸:'土',淵:'土',遥:'土',爲:'土',椀:'土',渥:'土',瑛:'土',碗:'土',圓:'土',奧:'土',搖:'土',與:'土',溫:'土',椰:'土',溢:'土',蓉:'土',瑶:'土',窪:'土',斡:'土',裳:'土',蔭:'土',鞍:'土',慧:'土',樣:'土',緣:'土',謂:'土',叡:'土',衞:'土',橫:'土',
+  謠:'土',輿:'土',應:'土',燿:'土',藥:'土',耀:'土',
+
+  泊:'水',柏:'水',魄:'水',
+  あ:'土',い:'土',う:'土',え:'土',お:'土',ア:'土',イ:'土',ウ:'土',エ:'土',オ:'土',ぁ:'土',ぃ:'土',ぅ:'土',ぇ:'土',ぉ:'土',ァ:'土',ィ:'土',ゥ:'土',ェ:'土',ォ:'土',か:'木',き:'木',く:'木',け:'木',こ:'木',が:'木',ぎ:'木',ぐ:'木',げ:'木',ご:'木',カ:'木',キ:'木',ク:'木',ケ:'木',コ:'木',ガ:'木',ギ:'木',グ:'木',ゲ:'木',ゴ:'木',さ:'金',し:'金',す:'金',せ:'金',そ:'金',ざ:'金',じ:'金',ず:'金',ぜ:'金',ぞ:'金',サ:'金',シ:'金',ス:'金',セ:'金',ソ:'金',ザ:'金',ジ:'金',ズ:'金',ゼ:'金',ゾ:'金',た:'火',ち:'火',つ:'火',て:'火',と:'火',だ:'火',ぢ:'火',づ:'火',で:'火',ど:'火',タ:'火',チ:'火',ツ:'火',テ:'火',ト:'火',ダ:'火',ヂ:'火',ヅ:'火',デ:'火',ド:'火',っ:'火',ッ:'火',な:'火',に:'火',ぬ:'火',ね:'火',の:'火',ナ:'火',ニ:'火',ヌ:'火',ネ:'火',ノ:'火',は:'水',ひ:'水',ふ:'水',へ:'水',ほ:'水',ば:'水',び:'水',ぶ:'水',べ:'水',ぼ:'水',ぱ:'水',ぴ:'水',ぷ:'水',ぺ:'水',ぽ:'水',ハ:'水',ヒ:'水',フ:'水',ヘ:'水',ホ:'水',バ:'水',ビ:'水',ブ:'水',ベ:'水',ボ:'水',パ:'水',ピ:'水',プ:'水',ペ:'水',ポ:'水',ま:'水',み:'水',む:'水',め:'水',も:'水',マ:'水',ミ:'水',ム:'水',メ:'水',モ:'水',や:'土',ゆ:'土',よ:'土',ゃ:'土',ゅ:'土',ょ:'土',ヤ:'土',ユ:'土',ヨ:'土',ャ:'土',ュ:'土',ョ:'土',ら:'火',り:'火',る:'火',れ:'火',ろ:'火',ラ:'火',リ:'火',ル:'火',レ:'火',ロ:'火',わ:'土',を:'土',ん:'土',ワ:'土',ヲ:'土',ン:'土',ー:'土',鐡:'火',鐵:'火',鎧:'木',齋:'金',齊:'金',斎:'金'};
+
+
+
+// ── フリガナベース五行判定（訓読み対応）──
+function kanaToGyo(kana){
+  if(!kana)return null;
+  const ch=kana[0];
+  if('かきくけこがぎぐげごカキクケコガギグゲゴ'.includes(ch))return '木';
+  if('さしすせそざじずぜぞサシスセソザジズゼゾ'.includes(ch))return '金';
+  if('たちつてとだぢづでどなにぬねのらりるれろタチツテトダヂヅデドナニヌネノラリルレロ'.includes(ch))return '火';
+  if('はひふへほばびぶべぼぱぴぷぺぽまみむめもハヒフヘホバビブベボパピプペポマミムメモ'.includes(ch))return '水';
+  if('あいうえおやゆよわをんアイウエオヤユヨワヲン'.includes(ch))return '土';
+  return null;
+}
+// 姓フリガナから最後の文字の読みを推定
+function getSeiLastFuri(furiSei, seiStr){
+  if(!furiSei||!seiStr)return '';
+  const f=furiSei.trim();
+  const sl=seiStr.length;
+  if(sl<=1)return f; // 一字姓：フリガナ全体
+  const fl=f.length;
+  // fl=sl+1 の場合（やまじ=3、山地=2など）
+  // 最後の漢字が1文字読みのケース → 最後の1文字を使用
+  // 誤判定より見逃しの方がユーザー体験が良いため
+  if(fl===sl+1) return f[fl-1];
+  // 通常：均等分割
+  const startIdx=Math.floor(fl*(sl-1)/sl);
+  return f.slice(startIdx);
+}
+// 姓と名の接点を見る時は、姓の最後の漢字の主音を使う。
+// 例：河上（カワカミ）→ 上（カミ）→ 主音カ（木）。フリガナ末尾のミは使わない。
+function getSeiTailSound(furiSei, seiStr){
+  if(!furiSei)return '';
+  const lastFuri=getSeiLastFuri(furiSei, seiStr);
+  return lastFuri ? lastFuri[0] : '';
+}
+
+function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; };
+
+
+
+// ── フリガナベース五行判定（訓読み対応）──
+function kanaToGyo(kana){
+  if(!kana)return null;
+  const ch=kana[0];
+  if('かきくけこがぎぐげごカキクケコガギグゲゴ'.includes(ch))return '木';
+  if('さしすせそざじずぜぞサシスセソザジズゼゾ'.includes(ch))return '金';
+  if('たちつてとだぢづでどなにぬねのらりるれろタチツテトダヂヅデドナニヌネノラリルレロ'.includes(ch))return '火';
+  if('はひふへほばびぶべぼぱぴぷぺぽまみむめもハヒフヘホバビブベボパピプペポマミムメモ'.includes(ch))return '水';
+  if('あいうえおやゆよわをんアイウエオヤユヨワヲン'.includes(ch))return '土';
+  return null;
+}
+// 姓フリガナから最後の文字の読みを推定
+function getSeiLastFuri(furiSei, seiStr){
+  if(!furiSei||!seiStr)return '';
+  const f=furiSei.trim();
+  const sl=seiStr.length;
+  if(sl<=1)return f; // 一字姓：フリガナ全体
+  const fl=f.length;
+  // fl=sl+1 の場合（やまじ=3、山地=2など）
+  // 最後の漢字が1文字読みのケース → 最後の1文字を使用
+  // 誤判定より見逃しの方がユーザー体験が良いため
+  if(fl===sl+1) return f[fl-1];
+  // 通常：均等分割
+  const startIdx=Math.floor(fl*(sl-1)/sl);
+  return f.slice(startIdx);
+}
+// 姓と名の接点を見る時は、姓の最後の漢字の主音を使う。
+// 例：河上（カワカミ）→ 上（カミ）→ 主音カ（木）。フリガナ末尾のミは使わない。
+function getSeiTailSound(furiSei, seiStr){
+  if(!furiSei)return '';
+  const lastFuri=getSeiLastFuri(furiSei, seiStr);
+  return lastFuri ? lastFuri[0] : '';
+}
+
+function getOnGyo(ch){ return KANJI_ON_GYO[ch]||null; }
+
+function getStroke(ch){return STROKE[ch]||null;}
+function sumStrokes(str){let t=0;for(const c of str){const s=getStroke(c);if(s===null)return null;t+=s;}return t;}
+function getOnGyo(ch){return KANJI_ON_GYO[ch]||null;}
+function gogyoOf(n){const r=n%10;if(r===1||r===2)return '木';if(r===3||r===4)return '火';if(r===5||r===6)return '土';if(r===7||r===8)return '金';return '水';}
+
+const GG_ELEM_COLOR={木:'#3a7848',火:'#c04828',土:'#8a6020',金:'#607080',水:'#2a5888'};
+const STARS_K={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const STARS_E={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+
+// ===== キャラクターデータ =====
+const CHAR_DATA={
+  1:{name:'深い共感の人',elem:'水',elemColor:'#2a5888',desc:'水のように静かに、しかし深く人の心に入り込む力があります。人の話をじっくり聞き、気づいたら相談される存在になっています。感受性が豊かで、見えないものを察知する直感力があります。急いで答えを出すより、ゆっくり観察してから動く方が本来の力が出ます。',ura:'情報を集めすぎて決断を先送りにする癖があります。人の苦労に敏感すぎて疲弊しやすい。悪い縁をズルズル引きずるのが最大の弱点。ただし信頼関係が生まれると驚くほどの粘り強さを発揮します。',awaken:'信頼できる環境で、じっくり時間をかけた時に本当の力が出ます。人の4倍情報を集めた時、誰も気づかなかった本質を見抜く天才になります。',souju:'アドバイスより「じっくり話を聞く」ことが有効。定期的に話す場を作り、内に抱えさせないこと。急かさず、相談形式で接すると動きやすくなります。',keretsu:'人数系列（一白・四緑・七赤）',praise:'「優しいですね」「一緒にいると安心します」「あなたがいるだけで場が和む」',ng:'「もっと積極的に」「はっきり言って」'},
+  2:{name:'大地の人',elem:'土',elemColor:'#8a6020',desc:'大地のように人を受け止め、育て、支え続けます。縁の下の力持ちで、コツコツ積み上げることで圧倒的な信頼を築きます。決断は遅くても、一度動き出すと誰よりも着実に前進する大器晩成の星です。',ura:'決断が異常に遅い。安全を重視しすぎて機会コストを逃しやすい。「まだ早い」という思考が癖になっている場合は要注意。人の愚痴を引き受けすぎて疲弊することも。',awaken:'一度動き出したら誰よりも着実に、誰よりも遠くまで行けます。若い頃は目立たなくても、40代・50代で圧倒的な存在感を放つ大器晩成のパターンを持っています。',souju:'決断を急かさないこと。高すぎる目標を一緒に掲げながら、着実な歩みを信じて待つことが最大のサポートになります。',keretsu:'地数系列（二黒・五黄・八白）',praise:'「頼りになります」「あなたがいると安心できる」「ずっとそばにいてくれてありがとう」',ng:'「もっと元気出して」「変わらなきゃ」「早く決めてよ」'},
+  3:{name:'夜明けの人',elem:'木',elemColor:'#3a7848',desc:'新しいことを始める力と、停滞を破る行動力が持ち味です。アイデアが次々と湧き出て、周りを動かす言葉と熱量があります。完成させることより、始めることに本来の喜びがあります。',ura:'飽きっぽく熱しやすく冷めやすい。過去を振り返らず同じ失敗を繰り返す傾向も。嘘が多く遅刻が多い時は運勢が落ちているサイン。',awaken:'「完成しない自由」を認めてくれる環境で才能が爆発します。新しいことを始めた数だけ、人生の可能性が広がります。',souju:'過度な指示を避け自由に動かして見守ること。短期と長期のプロジェクトをバランスよく与えると飽きずに走り続けます。',keretsu:'天数系列（三碧・六白・九紫）',praise:'「頭の回転が速い」「元気をもらえます」「その発想すごい」',ng:'「落ち着いてください」「もっとコツコツやりましょう」'},
+  4:{name:'縁結びの人',elem:'木',elemColor:'#3a7848',desc:'人と人をつなぐことが自然にできる天賦の才能があります。信頼のネットワークを広げ、みんなを自分の背中に乗せる包容力があります。縁を大切にするほど、人生が豊かになっていきます。',ura:'人に合わせすぎて決断を先延ばしにするバグがあります。内心は計算高く、不機嫌になると周囲の空気を一変させる力があります。',awaken:'「みんなの踏み台になる覚悟」を持った瞬間、縁が無限に広がり始めます。紹介・橋渡しを積極的に引き受けることが最速の覚醒です。',souju:'「あなたの意見を聞かせてほしい」と主体性を引き出す声かけが効果的。決断を強制せず、時間と選択肢を与えると力を発揮します。',keretsu:'人数系列（一白・四緑・七赤）',praise:'「優しいですね」「一緒にいると安心します」「あなたがつないでくれるから助かる」',ng:'「なんでそんなに時間かかるの」「もっとはっきりして」'},
+  5:{name:'中心の人',elem:'土',elemColor:'#8a6020',desc:'誰も解決できない問題を一瞬で片付ける突破力と、絶対君主の器を持ちます。どこに行っても自然と中心になる宿命があります。逆境こそが才能を磨く最高の砥石です。',ura:'言葉が極端に少なく理由を言わない。上から目線に見られやすい。機嫌が良い時は体調不良のサインであることも。',awaken:'一歩引いて縁の下を引き受けた瞬間、周囲から自然な尊敬と信頼が集まり始めます。どこに行っても主役になる力があります。',souju:'汚れ役や縁の下を引き受けた時に才能が開花します。明確な目標があれば自走します。本音を言わせるには長い時間と信頼が必要です。',keretsu:'地数系列（二黒・五黄・八白）',praise:'「頼りになります」「あなたがいると安心できる」「さすがです」',ng:'「元気ですね」「もっと発信しましょう」'},
+  6:{name:'天の志士',elem:'金',elemColor:'#607080',desc:'高い理想を掲げ、完成へと突き進む力があります。リーダーシップと完璧主義が持ち味で、尊敬できる師匠に出会った瞬間、圧倒的な実力を発揮します。',ura:'「なぜ他人ができないのか全く理解できない」という無意識の圧が出ることがあります。完璧主義が周囲を疲弊させることも。',awaken:'尊敬できる師匠を見つけた時、才能が一気に開花します。見えない部分（引き出し・鞄の中）を整理整頓すると外の縁が美しく整い始めます。',souju:'大げさに褒め称えること。目上の引き立てを意識させるとベストパフォーマンスが出ます。',keretsu:'天数系列（三碧・六白・九紫）',praise:'「頭の回転が速い」「完成度が高い」「さすが、こだわりが違う」',ng:'「落ち着いて」「そこまでしなくていいよ」'},
+  7:{name:'喜びの人',elem:'金',elemColor:'#607080',desc:'場を明るくし、人を楽しませることに天賦の才能があります。笑顔と会話で縁を引き寄せ、収穫と喜びを循環させます。',ura:'失敗すると「悪いのは向こうです」と他責にする傾向。土台が弱く愚痴が多い時は要注意。',awaken:'人の批判をやめて褒めることを口癖にした瞬間、周りに笑顔が集まり始めます。美味しいものを食べる・楽しむ時間が才能を磨きます。',souju:'大げさに褒め称え、楽しさや意義を伝えることで動機付けする。愚痴には視点を反転させる一言が効きます。',keretsu:'人数系列（一白・四緑・七赤）',praise:'「優しいですね」「あなたがいると場が明るくなる」「センスがいい」',ng:'「もっとまじめにやって」「愚痴ばかりですね」'},
+  8:{name:'山の人',elem:'土',elemColor:'#8a6020',desc:'一度決めたら折れない鋼の意志と、逆境の中でこそ輝く不屈の強さを持ちます。変革期に真価を発揮し、転んでも転んでも立ち上がる力があります。',ura:'本音は絶対に言わない。腹に一物を抱えて動く。無自覚な上から目線で意見対立が起きやすい。',awaken:'明確な遠い目標（山頂）があると自走します。挫折の数だけ器が広がります。何度倒れても諦めない先に、本当の力が開きます。',souju:'「遥か先の巨大な目標」を提示すること。本音を言わせるには長い時間と深い信頼が必要。変化を提案する際は過去の成功体験と結びつけると受け入れやすい。',keretsu:'地数系列（二黒・五黄・八白）',praise:'「頼りになります」「あなたに任せると安心」「着実ですね」',ng:'「元気ですね」「もっと発信しましょう」'},
+  9:{name:'炎の人',elem:'火',elemColor:'#c04828',desc:'真実を見抜く直感と、世界を変えるビジョンがあります。美意識と知性で周囲を照らし、天才的なクリエイティブ力が潜在的な才能です。',ura:'自分が一番頭がいいという無意識の確信がある。自己流を貫いて孤立することも。見栄えは良いが中はグズグズになりやすい時期に注意。',awaken:'心からひれ伏す師匠に出会った瞬間、天才的な才能が一気に開花します。逆境の圧力が最高のバネになるため、困難から逃げないことが鍵。',souju:'心からひれ伏す尊敬できる師匠に出会わせること。頭ごなしの命令はNG。適度な距離を保ちながら励ます。',keretsu:'天数系列（三碧・六白・九紫）',praise:'「頭の回転が速い」「センスが違う」「あなたの視点はすごい」',ng:'「落ち着いて」「自己流はダメ」'},
+};
+
+// ===== 女性版データ =====
+const FEMALE_DATA={
+  1:{
+    miryoku:'水のように静かで深い魅力があります。押しつけない優しさと、話を最後まで聞いてくれる包容力が、気づいたら周りの人を引き寄せています。「いるだけで安心する」と言われる存在です。',
+    mirareru:'第一印象は「穏やか・優しそう・話しかけやすい」。ただし内側の深さはなかなか見えないため、最初は「掴みどころがない」と思われることも。時間をかけるほど、本当の魅力が伝わります。',
+    aisare:'「一緒にいると楽」「話しやすい」という安心感で愛される星です。感情をため込まず、素直に「助けて」「寂しい」と言える人が、この星の愛を最大限に引き出します。',
+    beauty:'白・黒・紺の清潔感あるベースカラーに、ワンポイントで差し色を。ナチュラルメイクで透明感を出すと本来の魅力が際立ちます。',
+    scent:'ホワイトムスク・ホワイトティー・ウォータリー系。清潔感と深みのある香りが、あなたの本質的な魅力を引き出します。重すぎる香りは逆効果。',
+    love:'焦らないこと。縁が深まるのに時間がかかりますが、一度つながった縁は長く深くなります。お酒の席・水辺・雨の日の出会いに強い縁があります。'
+  },
+  2:{
+    miryoku:'大地のように温かく、人を包み込む母性的な魅力があります。「この人のそばにいると落ち着く」という安心感が、自然と人を集めます。コツコツと積み上げてきた誠実さが本当の魅力です。',
+    mirareru:'第一印象は「誠実・しっかりしている・頼りになる」。華やかさより信頼感で勝負する星です。時間をかけるほど「やっぱりこの人だ」と思われます。',
+    aisare:'長く一緒にいることで深まる愛を持つ星です。「ずっとそばにいてくれてありがとう」という言葉で最も愛を感じます。急いで関係を深めようとせず、丁寧に積み重ねることが最強の愛され方です。',
+    beauty:'黄・ベージュ・茶系の温かみのある色が本来の魅力を引き出します。ナチュラルで清潔感のあるスタイルが最も輝きます。',
+    scent:'サンダルウッド・バニラ・ゼラニウム系。温かみと安心感のある香りがあなたの包容力をさらに引き出します。',
+    love:'焦らず、ゆっくり育てる愛が向いています。気づいたらそばにいる、という自然な流れが最強の縁を生みます。食事を一緒にする・家の近くで会うことで縁が深まります。'
+  },
+  3:{
+    miryoku:'明るくエネルギッシュで、そこにいるだけで場が華やぐ魅力があります。新しいものへの好奇心と行動力が、周りをワクワクさせます。「この人と一緒にいると楽しいことが起きる」と思われる存在です。',
+    mirareru:'第一印象は「明るい・元気・話しやすい」。エネルギーに圧倒される人もいますが、その輝きに惹かれる人が自然と集まります。',
+    aisare:'一緒にいて楽しい、新しい世界を見せてくれる、という魅力で愛される星です。感情を素直に表現するほど愛されます。「好き」「楽しい」を言葉にすることが最強の愛され方です。',
+    beauty:'青・緑・オレンジの活発な色が魅力を引き出します。ラフでおしゃれなスタイルが似合います。髪型は動きのあるスタイルが◎。',
+    scent:'シトラス・グリーン・フルーティー系。明るくフレッシュな香りがあなたの輝きをさらに増幅します。',
+    love:'出会いは突然やってきます。新しい場所・初めての体験の中に縁があります。好きになったら行動が早い。その行動力が最大の魅力です。'
+  },
+  4:{
+    miryoku:'人と人をつなぐ天才的な社交性と、風のような柔らかさが魅力です。誰とでも自然に打ち解け、気づいたら「あなたがいないと寂しい」と言われる存在になっています。',
+    mirareru:'第一印象は「感じがいい・話しやすい・気遣いができる」。八方美人に見られることもありますが、本当は深く人を思いやっている星です。',
+    aisare:'縁を大切にすることで愛が深まる星です。「あなたのことをちゃんと見ていた」という細やかな気づきで愛されます。人の話をよく聞き、橋渡し役になることが最強の愛され方です。',
+    beauty:'青・緑・ラベンダーの柔らかい色が魅力を引き出します。ふわっとした素材・シルエットが似合います。',
+    scent:'フローラル・グリーン・ローズ系。優雅で自然な香りがあなたの社交性と縁結び力をさらに高めます。',
+    love:'紹介・共通の友人・旅先での出会いに強い縁があります。縁をつなぐ役割を引き受けているうちに、自然と最高の縁が生まれます。'
+  },
+  5:{
+    miryoku:'圧倒的な存在感と、問題を解決する突破力が最大の魅力です。どこにいても自然と中心になり、「この人についていきたい」と思わせるカリスマ性があります。',
+    mirareru:'第一印象は「強そう・迫力がある・頼りになる」。近寄りがたく見られることもありますが、一度信頼を得ると絶対的な存在になります。',
+    aisare:'強さの中にある優しさと脆さで愛される星です。完璧に見せようとせず、「実は不安」「助けてほしい」と素直に言える瞬間が最大の愛され力を発揮します。',
+    beauty:'黒・深みのある赤・ゴールドの強さのある色が魅力を最大化します。シンプルで質の高いアイテムが似合います。',
+    scent:'オリエンタル・ウード・アンバー系。存在感のある深みのある香りがあなたのカリスマ性を引き出します。',
+    love:'縁の下を引き受けた時に最高の愛が引き寄せられます。強さを見せるより、一歩引いて相手を立てることで、真の愛が集まってきます。'
+  },
+  6:{
+    miryoku:'高い品格と完璧主義が生み出す洗練された魅力があります。「この人は本物だ」と感じさせる知性と美意識が、質の高い縁を引き寄せます。',
+    mirareru:'第一印象は「品がある・しっかりしている・完璧そう」。近寄りがたく見られることもありますが、実は深く人を思いやっています。',
+    aisare:'「あなたは特別」と感じさせる特別扱いで愛される星です。大げさなくらい褒められると力を発揮します。尊敬できるパートナーとの関係で最大の幸せを感じます。',
+    beauty:'白・金・シルバーの品格ある色が魅力を最大化します。シンプルで上質なスタイルが最も輝きます。アクセサリーは「一点豪華主義」が正解。',
+    scent:'ローズ・アイリス・ホワイトムスク系。品格と洗練さのある香りがあなたの本質的な美しさを引き出します。',
+    love:'尊敬できる相手との関係で本当の幸せを感じます。見えない部分（部屋・バッグの中）を整えると、理想の縁が引き寄せられます。'
+  },
+  7:{
+    miryoku:'場を明るくし、一緒にいると幸せになれる喜びの魅力があります。センスの良さと笑顔が人を引き寄せ、「あなたといると楽しい」と言われる存在です。',
+    mirareru:'第一印象は「明るい・楽しそう・センスがいい」。華やかで人気者に見られます。その笑顔の奥にある繊細さに気づいてくれる人との縁が深まります。',
+    aisare:'楽しさと喜びを分かち合うことで愛が深まる星です。「あなたがいると幸せ」という言葉が最も力を与えます。楽しい場所・美味しいものを一緒に体験する縁が最強です。',
+    beauty:'白・ピンク・ゴールドの華やかな色が魅力を最大化します。トレンドを取り入れたおしゃれなスタイルが似合います。',
+    scent:'フルーティー・フローラル・スイーツ系。華やかで幸せな気持ちになる香りがあなたの魅力をさらに輝かせます。',
+    love:'楽しい場所・美味しいお店・華やかなイベントに縁があります。笑顔で楽しんでいる時に最高の縁が引き寄せられます。'
+  },
+  8:{
+    miryoku:'一度決めたら折れない意志と、時間をかけて深まる本物の誠実さが魅力です。最初はわかりにくくても、時間が経つほど「この人しかいない」と思われる星です。',
+    mirareru:'第一印象は「落ち着いている・頑固そう・芯がある」。感情を表に出さないため、最初は距離を感じさせることも。でも一度心を開くと、深い信頼が生まれます。',
+    aisare:'長い時間をかけて積み上げた信頼で愛される星です。変化する姿・成長する姿が最大の魅力です。転んでも立ち上がる姿に、深く愛を感じる人が現れます。',
+    beauty:'アースカラー・テラコッタ・ブラウン系の落ち着いた色が魅力を引き出します。素材感のあるナチュラルなスタイルが似合います。',
+    scent:'ウッディ・パチュリ・アーシー系。大地のような深みのある香りがあなたの不屈の魅力をさらに引き出します。',
+    love:'長い時間をかけた縁・幼馴染・繰り返し会う縁から深まります。一目惚れより、じっくり育てる愛が本来のスタイルです。'
+  },
+  9:{
+    miryoku:'真実を見抜く直感と、美意識から生まれる独自の輝きが最大の魅力です。「この人は普通じゃない」と感じさせるオーラと知性が、特別な縁を引き寄せます。',
+    mirareru:'第一印象は「独特・おしゃれ・頭が良さそう」。個性的な存在感があり、一度会うと忘れられない印象を残します。',
+    aisare:'「あなたのことが特別好き」という情熱で愛される星です。心からひれ伏す相手・尊敬できる相手との関係で最大の幸せを感じます。自己流を手放した瞬間に最高の縁が引き寄せられます。',
+    beauty:'赤・紫・ゴールドの印象的な色が魅力を最大化します。個性的でアーティスティックなスタイルが最も輝きます。',
+    scent:'フランキンセンス・ローズ・スモーキー系。深みと個性のある香りがあなたの唯一無二の輝きをさらに際立たせます。',
+    love:'逆境の中・困難を乗り越えた先に最高の縁があります。師匠と弟子のような関係から深まる愛に最も幸せを感じる星です。'
+  }
+};
+
+// ===== 男性版データ =====
+const MALE_DATA={
+  1:{
+    tsuyomi:'深い情報収集力と洞察力が最大の武器です。表面では見えないものを静かに観察し、正確な判断を下す力があります。人の話をじっくり聞く力が最強の営業力になります。',
+    katsu:'情報・人脈・信頼のネットワークが蓄積されるほど強くなります。焦らず、じっくり積み上げる仕事が向いています。水商売・飲食・カウンセリング・情報系に縁があります。',
+    kane:'コツコツと信頼を積み上げることでお金が集まる星です。一発逆転より、長期的な関係構築が正解。副業・複数の収入源が向いています。',
+    leader:'情報を制する者がリーダーになれる星です。感情ではなく、データと洞察で判断することが強みです。',
+    kotoshi:'今年は人間関係・縁・ネットワークを整える年。水辺への吉方取りが運気を整えます。'
+  },
+  2:{
+    tsuyomi:'コツコツと積み上げる継続力と、大勢を動かす育成力が最大の武器です。地道な積み重ねが、やがて誰も追いつけない圧倒的な信頼になります。',
+    katsu:'農業・食品・不動産・介護・教育など、人の生活に根ざした仕事で力を発揮します。大器晩成型なので、30代・40代以降に本当の強さが現れます。',
+    kane:'安定した収入を着実に積み上げる星です。へそくり・定期預金・不動産投資など、目に見えない資産を積み上げることが得意です。',
+    leader:'縁の下の力持ちとして組織を支えるリーダーシップが持ち味です。自ら目立つより、チームを育てることで真価を発揮します。',
+    kotoshi:'今年は育成・積み上げ・信頼構築の年。誠実な行動の継続が最大の投資になります。'
+  },
+  3:{
+    tsuyomi:'新しいことを始める突破力と、人を動かす言葉の力が最大の武器です。スピードと行動力で、先頭を走り続けることができます。',
+    katsu:'IT・スタートアップ・メディア・音楽・エンターテインメントで力を発揮します。新規開拓・プレゼン・営業など「最初の一手」を打つ仕事が向いています。',
+    kane:'スピード感のある取引・新しいビジネスモデルでお金が動く星です。長期保有より、タイミングを見て動く投資スタイルが向いています。',
+    leader:'ビジョンを示し、チームを鼓舞するカリスマリーダーシップが持ち味です。「やってみよう」という熱量でチームを動かします。',
+    kotoshi:'今年は新しいことを始める最高のタイミング。始めたかったことを今年スタートすると大きな流れに乗れます。'
+  },
+  4:{
+    tsuyomi:'人と人をつなぐネットワーク力と、信頼の縁を広げる社交性が最大の武器です。人脈が財産になる星で、紹介・口コミが最強の営業ツールになります。',
+    katsu:'コンサルティング・旅行・貿易・メディア・ブライダルなど、人と人をつなぐ仕事で力を発揮します。',
+    kane:'縁から収入が生まれる星です。紹介料・コミッション・代理業など、人脈を活かした収益モデルが向いています。',
+    leader:'チームの空気を整え、メンバーを適材適所に配置するコーディネーター型リーダーシップが持ち味です。',
+    kotoshi:'今年は縁とネットワークが最大化する年。旅行・外出・新しい出会いに積極的になってください。'
+  },
+  5:{
+    tsuyomi:'誰も解決できない問題を突破する力と、カリスマ的な存在感が最大の武器です。逆境でこそ真価を発揮し、不可能を可能にする突破力があります。',
+    katsu:'経営者・起業家・政治家・問題解決コンサルなど、中心に立って采配を振る仕事で真価を発揮します。',
+    kane:'大きな仕事・大きなお金を動かす星です。小さくまとめようとすると力が出ません。スケールを大きく設定することが正解です。',
+    leader:'絶対君主型のリーダーシップが持ち味。一歩引いて縁の下を引き受けた瞬間、本当のカリスマが発揮されます。',
+    kotoshi:'今年は内側を整える充電年。大きな変化は来年以降に。今年の準備が来年の爆発につながります。'
+  },
+  6:{
+    tsuyomi:'高い基準と完璧主義から生まれる本物の品質が最大の武器です。「これが正しい」という強い信念と判断力が、信頼を生みます。',
+    katsu:'法律・金融・経営コンサル・医療・高品質なものづくりなど、質と権威が問われる仕事で力を発揮します。',
+    kane:'高単価・高品質のサービスでお金が集まる星です。安売りは本来の力を削ぎます。価格を上げるほど本来の魅力が際立ちます。',
+    leader:'高い理想を掲げ、組織全体の基準を引き上げるリーダーシップが持ち味です。',
+    kotoshi:'今年は積み上げてきたものが形になる完成期。これまでの努力を言葉にして外に出す年です。'
+  },
+  7:{
+    tsuyomi:'場を明るくする表現力と、人を楽しませる天賦のセンスが最大の武器です。笑顔と会話で縁を引き寄せ、自然と人が集まる求心力があります。',
+    katsu:'飲食・エンターテインメント・販売・接客・クリエイティブなど、人を喜ばせる仕事で力を発揮します。',
+    kane:'楽しさ・体験・感情に価値を見出すビジネスでお金が集まる星です。収穫期に一気に刈り取る行動力が財を生みます。',
+    leader:'チームを楽しませながら引っ張るエンターテイナー型リーダーシップが持ち味です。',
+    kotoshi:'今年は収穫と喜びの年。これまでに動いたことの結果が実り始めます。楽しむことに集中してください。'
+  },
+  8:{
+    tsuyomi:'一度決めたら折れない鋼の意志と、変革期に真価を発揮する逆境力が最大の武器です。転んでも転んでも立ち上がる力が、最終的に誰も追いつけない高みに連れて行きます。',
+    katsu:'不動産・建設・伝統産業・継承ビジネス・山に関わる仕事で力を発揮します。長期プロジェクト・事業継承・組織の立て直しが向いています。',
+    kane:'長期投資・不動産・事業承継でお金が動く星です。短期で結果を求めず、10年単位で考えることが正解。',
+    leader:'何度倒れても立ち上がる不屈のリーダーシップが持ち味。明確な目標（山頂）を示すことでチームが動きます。',
+    kotoshi:'今年は次の大きな変化への助走期。手放す決断をして、来年の飛躍に備える年です。'
+  },
+  9:{
+    tsuyomi:'真実を見抜く直感と、天才的なクリエイティブ力が最大の武器です。「なぜ誰も気づかないのか」という視点で、時代の一歩先を行く発想ができます。',
+    katsu:'メディア・芸術・IT・教育・研究など、知性と美意識が問われる仕事で力を発揮します。自己流より、師匠のもとで学んだ方が圧倒的な成果が出ます。',
+    kane:'知識・情報・コンテンツでお金が動く星です。発信するほど収入が増える構造になっています。自分の知恵を商品化することが正解。',
+    leader:'真実を示し、組織に知恵と光を与えるビジョナリー型リーダーシップが持ち味です。',
+    kotoshi:'今年は知恵と光が輝く発展の年。発信・表現の機会を積極的に作ってください。'
+  }
+}; // MALE_DATA終了
+
+// 傾斜データ
+const KEISHA_DATA={
+  1:{talent:'人の痛みの奥底まで届く共感力と、深く長く寄り添う力が眠っています。',rx:'「ごめんなさい」「お願いします」が言えた瞬間、あなたの周りの縁が魔法のように整い始めます。'},
+  2:{talent:'大勢の人を自然に集め、育て、動かす天才的な包容力が水面下に眠っています。',rx:'目の前の一人に誠実であること。コツコツと積み重ねた信頼が最強の縁を引き寄せます。'},
+  3:{talent:'世界をあっと言わせる新しいアイデアと表現力が眠っています。',rx:'新しいことを始めた瞬間、才能が目覚めます。レモンをかじるだけで脳のスイッチが入ります。'},
+  4:{talent:'人と人をつなぐブリッジ力と、みんなを自分の背中に乗せる器が眠っています。',rx:'「みんなの踏み台になる覚悟」を持った瞬間、縁が無限に広がります。'},
+  5:{talent:'誰も解決できない問題を一瞬で片付ける突破力と、絶対君主の器が眠っています。',rx:'一歩引いて縁の下を引き受けた瞬間、尊敬と信頼が集まります。'},
+  6:{talent:'最高を追求する完成への意志と、天の理想を現実に降ろす力が眠っています。',rx:'見えない部分（引き出し・鞄の中）を整理整頓する。内側を整えると外の縁が美しく整います。'},
+  7:{talent:'場を明るくする喜びの才能と、人を引き付け幸せにする天賦の力が眠っています。',rx:'人の批判をやめて褒めることを口癖にした瞬間、笑顔が集まり始めます。'},
+  8:{talent:'一度決めたら折れない鋼の意志と、逆境の中でこそ輝く不屈の強さが眠っています。',rx:'挫折の数だけ器が広がります。困難から逃げないことが最強の縁を育てます。'},
+  9:{talent:'真実を見抜く直感と、世界を変えるビジョンが水面下に眠っています。',rx:'自己流を手放し素直に教えを乞う。逆境の圧力が最高のバネになります。'},
+};
+
+// 年間テーマ（本命星が座る「宮の番号」で判定）
+// 1=北(坎入),2=南西,3=東,4=東南,5=中央,6=北西,7=西,8=北東,9=南
+const YEAR_THEME={
+  1:{cls:'warn',badge:'充電期',theme:'魂の脱皮・内側を整える年',body:'本命星が北（坎）に座る「坎入」の年です。体調を崩しやすく、気持ちが揺れることもありますが、これは古い殻を脱ぎ捨てる準備です。無理に押し切らず「内側を育てる年」として使うことが最善です。',action:'健康を最優先にする。手放す決断をする。吉方取りで内側のエネルギーを補充する。大きな決断は来年以降に。'},
+  2:{cls:'steady',badge:'安定期',theme:'育成と信頼を積み上げる年',body:'安定したエネルギーが流れる年です。コツコツと積み上げることで大きな信頼が育まれます。急いで成果を求めず、誠実な行動の継続が最大の投資になります。',action:'感謝を伝える。今あるご縁を深める。大きな決断より小さな誠実さを積み重ねる。'},
+  3:{cls:'good',badge:'始動期',theme:'新しいことを始める最高のタイミング',body:'行動力とアイデアが高まる年です。始めたかったことを今年スタートすると、大きな流れに乗れます。新しい出会いと縁が活発になります。',action:'新しい場所に出かける。会いたかった人に連絡する。ずっと迷っていたことを始める。'},
+  4:{cls:'good',badge:'縁の年',theme:'縁とネットワークが最大化する年',body:'人と人をつなぐことで、思いがけないチャンスが生まれます。旅行・外出・新しい出会いに積極的になってください。東南の吉方が特に効果的です。',action:'紹介・橋渡し役を引き受ける。旅行に出かける。新しいコミュニティに参加する。'},
+  5:{cls:'best',badge:'中央・変革期',theme:'人生の大きな変革と中心への帰還',body:'中央（五黄の座）に入る特別な年です。大きな変化と変革のエネルギーが動きます。内外ともに整える意識を持ちながら、慎重かつ大胆に動くことが鍵です。',action:'これまでの積み上げを棚卸しする。新しいステージへの移行を具体的に計画する。'},
+  6:{cls:'best',badge:'完成期',theme:'積み上げてきたものが社会的な形になる年',body:'これまでの努力が信頼・形・権威として現れ始めます。新しい縁が広がりやすく、人脈が仕事や人生に直結する展開が起きやすい年です。',action:'積み上げてきたものを言葉にして人に伝える。SNS・対話・発表の機会を作る。新しい人に会いに行く。'},
+  7:{cls:'steady',badge:'収穫期',theme:'収穫と喜びを受け取る年',body:'これまでに動いたことの結果が実り始めます。焦って新しいことを始めるより、今あるものを丁寧に育て、受け取ることに集中してください。',action:'感謝を伝える。楽しむことに罪悪感を持たない。今あるご縁を深める。'},
+  8:{cls:'prep',badge:'準備年',theme:'次の大きな変化への助走期',body:'何かが終わり、新しいものが始まる予感がある時期です。焦って動こうとすると空回りしやすいので「内を整える年」と意識してください。',action:'手放す決断をする。読書・学び・自分と向き合う時間を作る。健康診断を受ける。'},
+  9:{cls:'good',badge:'発展期',theme:'知恵と光が輝く発展の年',body:'南（九紫の座）に入る発展の年です。人間関係が豊かになりやすく、口コミや縁が自然に広がります。発信力と知性が高まり、新しいつながりが動き出します。',action:'悩みを聞いてもらえる人に会いに行く。発信・表現の機会を作る。南の吉方への旅が運気を整えます。'},
+};
+
+// 吉方位の意味
+const HOUI_MEANING={
+  N:'人間関係・縁・信頼を深める方向',S:'目標達成・知性・発信の方向',E:'発展・活気・新しい始動の方向',W:'喜び・収穫・楽しみを取り込む方向',NE:'変革・変化・不動産・継承の方向',SW:'育成・大衆・コツコツ積み上げの方向',SE:'縁・信用・発展の最強の方向',NW:'完成・権威・完璧への志の方向'};
+const HOUI_RX={
+  N:'水辺の場所・寿司屋・静かなカフェへ。白・黒・紺の小物を持って行くと効果倍増です。',S:'明るく華やかな場所・コーヒー・赤い食べ物。赤・紫の差し色がポイント。',E:'音楽が流れる明るい場所・イタリアン・柑橘系の食事。青・緑の色がポイント。',W:'喜びを感じられる場所・スイーツ・美味しいもの。白・金・ピンクの色がポイント。',NE:'山・温泉・土のある場所。黄・茶・ベージュの色がポイント。鍋料理・牛肉も吉。',SW:'アットホームな場所・鍋料理・家族が集まる食事。黄色の食材・発酵食品がポイント。',SE:'縁が生まれる場所・新しい人との食事・お茶。青・緑の色がポイント。',NW:'高品質な場所・白いもの・鶏料理・天ぷら。白・金・銀がポイント。'};
+
+// 健康データ
+const HEALTH_DATA={
+  水:{organ:'腎臓・膀胱・生殖器・耳・骨・歯',issue:'冷え・むくみ・腰痛・耳鳴り・頻尿',rx:'体を冷やさない。白湯を飲む習慣を作る。耳の健康診断を定期的に。塩分の取りすぎに注意。'},
+  木:{organ:'肝臓・胆のう・目・筋肉・神経',issue:'目の疲れ・イライラ・筋肉の緊張・頭痛',rx:'目を休める。酸っぱいもの（柑橘類・酢）を適度に取る。怒りの感情を溜め込まない。'},
+  火:{organ:'心臓・小腸・舌・血管・脳',issue:'動悸・不眠・ほてり・血圧変動',rx:'苦いもの（コーヒー・ゴーヤ）を適度に。笑う習慣を作る。夜更かしに注意。'},
+  土:{organ:'胃・脾臓・膵臓・口・筋肉',issue:'胃痛・消化不良・食欲不振・口内炎',rx:'甘いものの取りすぎに注意。規則正しい食事時間を守る。土や自然に触れる時間を作る。'},
+  金:{organ:'肺・大腸・皮膚・鼻・気管支',issue:'咳・皮膚トラブル・便秘・鼻炎',rx:'深呼吸の習慣を作る。辛いものを適度に。皮膚の保湿を丁寧に。空気の良い場所に出かける。'},
+};
+
+// 引越しテーマ
+const MOVE_YEAR={
+  1:{ok:false,msg:'引越しには少し注意が必要な年です。どうしても動く場合は、月盤で吉となる月を選んでください。'},
+  2:{ok:true,msg:'引越しに適した安定したエネルギーの年です。北・南西・北東の吉方位を年盤で確認してから動くとベストです。'},
+  3:{ok:true,msg:'新しいスタートにふさわしい年。東・北西方向に吉方位がある場合は特に推奨です。'},
+  4:{ok:true,msg:'縁と発展の年。東南・北方向への引越しが縁を広げます。'},
+  5:{ok:false,msg:'引越しは難しい年です。できれば翌年以降に延期することをおすすめします。'},
+  6:{ok:true,msg:'完成の年。北西・西への引越しは権威と信頼をさらに高めます。'},
+  7:{ok:true,msg:'収穫の年。今の場所を丁寧に整えることが第一です。移動する場合は西・北西が吉。'},
+  8:{ok:false,msg:'変革の前夜。大きな移動は来年以降にしたほうが無難です。'},
+  9:{ok:true,msg:'最盛期。吉方位への引越しは人生の大きな飛躍につながります。南・東方向が特に吉。'},
+};
+
+// ===== UI制御 =====
+let selectedGender='f';
+let selectedOpts=new Set(['future']);
+
+function selGender(g){
+  selectedGender=g;
+  document.getElementById('gb-f').classList.toggle('on',g==='f');
+  document.getElementById('gb-m').classList.toggle('on',g==='m');
+}
+function togOpt(id){
+  const el=document.getElementById('opt-'+id);
+  if(selectedOpts.has(id)){selectedOpts.delete(id);el.classList.remove('on');}
+  else{selectedOpts.add(id);el.classList.add('on');}
+}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const el=document.getElementById(id);if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function goBack(){
+  document.getElementById('reportOutput').style.display='none';
+  document.getElementById('saveBar').classList.remove('on');
+  showPage('s0');
+}
+
+function showConfirm(){
+  const sei=document.getElementById('inSei').value.trim();
+  const mei=document.getElementById('inMei').value.trim();
+  const y=parseInt(document.getElementById('inY').value)||0;
+  const m=parseInt(document.getElementById('inM').value)||0;
+  const d=parseInt(document.getElementById('inD').value)||0;
+  if(!sei||!mei){alert('姓名を入力してください');return;}
+  if(!y||!m||!d){alert('生年月日を入力してください');return;}
+
+  // 本命星・月命星を計算して表示
+  const {kY,kM}=getKD(y,m,d);
+  const h=calcHonmei(kY);
+  const t=calcTsukimei(h,kM);
+  const STARS_K={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+
+  document.getElementById('confName').textContent=`${sei} ${mei}`;
+  document.getElementById('confBirth').textContent=`${y}年${m}月${d}日`;
+  document.getElementById('confGender').textContent=selectedGender==='f'?'女性':'男性';
+  document.getElementById('confHonmei').textContent=STARS_K[h]||'—';
+  document.getElementById('confTsuki').textContent=STARS_K[t]||'—';
+
+  showPage('sConfirm');
+}
+
+// ===== レポート生成 =====
+async function generateReport(){
+  const sei=document.getElementById('inSei').value.trim();
+  const mei=document.getElementById('inMei').value.trim();
+  const y=parseInt(document.getElementById('inY').value)||0;
+  const m=parseInt(document.getElementById('inM').value)||0;
+  const d=parseInt(document.getElementById('inD').value)||0;
+  if(!sei||!mei){alert('姓名を入力してください');return;}
+  if(!y||!m||!d){alert('生年月日を入力してください');return;}
+
+  showPage('sLoading');
+
+  const msgs=['命の設計図を読み解いています…','名前のエネルギーを確認しています…','未来の流れを整えています…','レポートを作成しています…'];
+  let mi=0;
+  const interval=setInterval(()=>{
+    document.getElementById('loadingMsg').textContent=msgs[mi%msgs.length];mi++;
+  },800);
+
+  await new Promise(r=>setTimeout(r,2400));
+  clearInterval(interval);
+
+  // 計算
+  const {kY,kM}=getKD(y,m,d);
+  const h=calcHonmei(kY);
+  const t=calcTsukimei(h,kM);
+  const k=calcKeisha(h,t);
+  const dok=calcDokai(h,t);
+  const nac=calcNayin(y);
+  const thisYear=new Date().getFullYear();
+
+  // 姓名計算
+  const seiK=sumStrokes(sei)||0;
+  const meiK=sumStrokes(mei)||0;
+  const ten=seiK,chi=meiK,jin=((sei.length?getStroke(sei[sei.length-1])||0:0)+(getStroke(mei[0])||0)),so=ten+chi,gai=so-jin;
+  const nameScore=calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so);
+
+  // 年盤（本命星が座る宮番号でテーマを決定）
+  const yearData=[];
+  for(let yr=thisYear;yr<=thisYear+4;yr++){
+    const c=yearCenter(yr);
+    // 本命星が年盤のどの宮に座るか（pal関数相当）
+    const pos=((h-c+4)%9+9)%9+1||9;
+    yearData.push({year:yr,center:c,pos:pos,theme:YEAR_THEME[pos]||YEAR_THEME[9]});
+  }
+  const thisYearPos=yearData[0].pos;
+  const thisYearCenter=yearData[0].center;
+
+  // 月盤吉方（今年の残り月）
+  const houiMonths=calcHouiMonths(h,t,y,m,d,thisYear);
+
+  // レポートHTML生成
+  const html=buildReportHTML({
+    sei,mei,y,m,d,h,t,k,dok,nac,seiK,meiK,ten,chi,jin,gai,so,nameScore,
+    yearData,thisYearPos,thisYearCenter,houiMonths,
+    opts:new Set(['future','houi','scent','health','timing','move']), // FREE版は全オプションをぼかしで表示
+    gender:selectedGender,
+    isFreeMode:true
+  });
+
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const out=document.getElementById('reportOutput');
+  out.style.display='block';
+  out.innerHTML=html;
+  document.getElementById('saveBar').classList.add('on');
+  window.scrollTo(0,0);
+}
+
+function calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so){
+  let score=0,details=[];
+  // 読み下し（30点）
+  score+=30;details.push({n:'読み下し',s:30,max:30});
+  // 五行（20点）
+  const ggs=[gogyoOf(ten),gogyoOf(jin),gogyoOf(chi),gogyoOf(gai),gogyoOf(so)];
+  const ggCounts={};ggs.forEach(g=>{ggCounts[g]=(ggCounts[g]||0)+1;});
+  const maxCount=Math.max(...Object.values(ggCounts));
+  const gogyoScore=maxCount>=4?8:maxCount===3?14:20;
+  score+=gogyoScore;details.push({n:'五行',s:gogyoScore,max:20});
+  // 陰陽（20点）
+  const allStr=[...sei,...mei];const allSt=allStr.map(c=>getStroke(c)||0).filter(s=>s>0);
+  const yang=allSt.filter(s=>s%2!==0).length,yin=allSt.length-yang;
+  const diff=Math.abs(yang-yin);
+  const iyScore=diff<=1?20:diff<=2?15:diff<=3?10:5;
+  score+=iyScore;details.push({n:'陰陽',s:iyScore,max:20});
+  // 天地（20点）
+  const tcScore=(gogyoOf(ten)===gogyoOf(so))||(gogyoOf(chi)===gogyoOf(so))?20:15;
+  score+=tcScore;details.push({n:'天地の配合',s:tcScore,max:20});
+  // 画数（10点）
+  const badNums=[4,9,13,14,19,20,22,23,26,28,32,34,36,37,40,44,45,46];
+  const kakuScore=badNums.includes(jin)?5:10;
+  score+=kakuScore;details.push({n:'画数',s:kakuScore,max:10});
+  return{score:Math.min(100,score),details};
+}
+
+function calcHouiMonths(h,t,by,bm,bd,thisYear){
+  const curMonth=new Date().getMonth()+1;
+  const results=[];
+  for(let mo=curMonth;mo<=12;mo++){
+    const mc=getMonthCenter(thisYear,mo,15);
+    const board=buildBoardFromCenter(mc);
+    // 吉方位リスト（簡易）
+    const kichiDirs=[];
+    const aisei=AISEI[h]||[];
+    for(const[dir,star] of Object.entries(board)){
+      if(aisei.includes(star)&&dir!=='C'){kichiDirs.push({dir:JP[dir]||dir,star:STARS_K[star],eng:dir});}
+    }
+    if(kichiDirs.length>0){
+      results.push({month:mo,dirs:kichiDirs.slice(0,2)});
+    }
+  }
+  return results.slice(0,4);
+}
+
+function buildReportHTML(d){
+  const {sei,mei,y,m,mo,day,h,t,k,dok,nac,seiK,meiK,ten,chi,jin,gai,so,nameScore,yearData,thisYearPos,thisYearCenter,houiMonths,opts}=d;
+  const isFemale = d.gender === 'f';
+  const isFree = d.isFreeMode === true;
+  const cd=CHAR_DATA[h]||CHAR_DATA[2];
+  const kd=KEISHA_DATA[k]||KEISHA_DATA[h];
+  const fd=FEMALE_DATA[h]||FEMALE_DATA[2];
+  const md=MALE_DATA[h]||MALE_DATA[2];
+
+  // ぼかしラッパー関数
+  function paidSection(title, desc, content){
+    if(!isFree) return content;
+    return `<div class="paid-section">
+      <div class="paid-blur">${content}</div>
+      <div class="paid-overlay">
+        <div class="paid-badge">🔒 有料オプション</div>
+        <div class="paid-title">${title}</div>
+        <div class="paid-desc">${desc}</div>
+        <button class="paid-btn">✦ 準備中 — まもなく公開</button>
+      </div>
+    </div>`;
+  }
+  function nextLink(icon,title,desc,href){
+    return `<a class="next-link" href="${href}">
+      <div class="next-link-icon">${icon}</div>
+      <div class="next-link-body">
+        <div class="next-link-title">${title}</div>
+        <div class="next-link-desc">${desc}</div>
+      </div>
+      <div class="next-link-arrow">›</div>
+    </a>`;
+  }
+  const thisYearTheme=yearData[0].theme;
+  const nameFull=`${sei} ${mei}`;
+  const nowYear=new Date().getFullYear();
+
+  // 流年計算（名前の画数から）
+  const ryunen=[];
+  for(let age=5;age<=77;age+=9){ryunen.push(age);}
+
+  // 五格の五行色
+  const gkElems=[
+    {lbl:'家系の力',n:ten,e:gogyoOf(ten)},
+    {lbl:'あなたの核心',n:jin,e:gogyoOf(jin)},
+    {lbl:'若い頃の環境',n:chi,e:gogyoOf(chi)},
+    {lbl:'社会での縁',n:gai,e:gogyoOf(gai)},
+    {lbl:'一生の方向性',n:so,e:gogyoOf(so)},
+  ];
+
+  const nachinDesc={
+    '海中金':'深海に眠る秘められた才能。時間をかけて磨かれるほど本物の輝きを放つ晩成型。',
+    '炉中火':'炉の中で燃え続ける持続する情熱。育てることと創造することに天賦の才。',
+    '大林木':'大きな森のような包容力とネットワーク。多くの命を育み共生することが使命。',
+    '路傍土':'道端の土のような忍耐と誠実さ。踏まれるほどに強くなる不屈の大地。',
+    '剣鋒金':'剣の刃先のような切れ味と決断力。真理を守り本質を見抜く知性。',
+    '山頭火':'山頂に立つカリスマの炎。孤高の道標として多くの人を導く使命。',
+    '澗下水':'岩間を流れる清廉な水。継続力と不屈の精神で深い知性を磨き続ける。',
+    '城頭土':'城の頂上に立つ守護の土。高い視座から誠実に人と組織を守る。',
+    '白蝋金':'柔軟に形を変える美意識の金。環境の中で最も美しく輝く変容の才能。',
+    '楊柳木':'柳のようにしなやかな強さと適応力。深い根を持ちながら柔軟な木。',
+    '井泉水':'井戸から湧き続ける純粋な水。枯れることなく誰かを潤し続ける慈しみ。',
+    '屋上土':'高潔な土。高いところから世を俯瞰し守護し続ける孤独な盾。',
+    '霹靂火':'天の雷のような覚醒と瞬間の変革力。一撃で時代を動かす天の電撃。',
+    '松柏木':'松と柏のように年輪を刻む品格と一貫性。どんな季節にも緑を保つ不変の木。',
+    '長流水':'止まらない大河のような継続力と影響力。多くの命を潤しながら大海へ向かう水。',
+    '沙中金':'砂の中に隠れた砂金のような隠れた才能。洗われるほどに本物の輝きを放つ晩成。',
+    '山下火':'山の麓の夕暮れのような洗練された美意識。深まるほどに美しくなる夜の才能。',
+    '平地木':'平地に広がる安心感の木。社会の基盤として人々に木陰と安らぎを与える。',
+    '壁上土':'高い壁のような高潔と秩序。清潔な美しさで場を守り整える土。',
+    '金箔金':'審美眼とプロデュース力。場を聖域に変える価値の証明の金。',
+    '覆燈火':'覆いに守られた消えない知性の灯火。嵐の中でも燃え続ける羅針盤の火。',
+    '天河水':'銀河から降り注ぐ慈雨のような博愛と高い視座。すべての命を平等に潤す天の水。',
+    '大駅土':'四方八方に道が延びるターミナルの土。人・物・情報を循環させる夢の実現力。',
+    '釵釧金':'完成された装飾品のような品格と不変の美。磨き抜かれた魂の宝飾の金。',
+    '桑柘木':'変容する木。他者のために価値を織りなす利他の知恵。',
+    '大渓水':'急流のような突破力と意志ある流れ。目標に向かって一直線に進む水。',
+    '沙中土':'フィルタリングと柔軟な受容力。隠れた価値を見抜く蒸留の土。',
+    '天上火':'天上に輝く太陽のような公明正大と博愛。すべてを平等に照らす慈愛の火。',
+    '柘榴木':'逆転と晩成の木。内に秘めた情熱の宝石が時を経て輝く木。',
+    '大海水':'大海のような包摂と無限の器。宇宙的な調和で全てを受け止める大海水。',
+  };
+
+  // 今年の吉方位（年盤）
+  const thisYearBoard=buildBoardFromCenter(thisYearCenter);
+  const aisei=AISEI[h]||[];
+  const thisYearKichi=[];
+  for(const[dir,star] of Object.entries(thisYearBoard)){
+    if(aisei.includes(star)&&dir!=='C'){thisYearKichi.push({dir:JP[dir]||dir,star:STARS_K[star]});}
+  }
+
+  // 健康データ（本命・月命の五行から）
+  const hElem=STARS_E[h];const tElem=STARS_E[t];
+  const h1=HEALTH_DATA[hElem]||HEALTH_DATA['土'];
+  const h2=HEALTH_DATA[tElem]||HEALTH_DATA['水'];
+
+  // 今年の処方箋（五行ベース）
+  const elemColors={'水':'#2a5888','木':'#3a7848','火':'#c04828','土':'#8a6020','金':'#607080'};
+  const rx_color_map={水:'白・黒・紺',木:'青・緑',火:'赤・紫・オレンジ',土:'黄・ベージュ・茶',金:'白・金・銀・ピンク'};
+  const rx_food_map={水:'お寿司・刺身・日本酒・海産物',木:'サラダ・パスタ・柑橘類・レモン',火:'エビ・カニ・赤ワイン・コーヒー',土:'すき焼き・牛肉・鍋・発酵食品',金:'鶏肉・天ぷら・スイーツ・シャンパン'};
+  const rx_scent_map={
+    水:{top:'シトラス・ウォータリー',mid:'ホワイトティー・ムスク',base:'シダーウッド・アンバー',body:'清潔感と静けさのある香り。深い信頼と共感力を引き出します。ミニマルで透明感のある香水を選ぶと今年のエネルギーと共鳴します。'},
+    木:{top:'グリーン・レモン・ベルガモット',mid:'ローズ・フリージア',base:'ウッディ・サンダルウッド',body:'新鮮さと成長のエネルギーを纏う香り。新しいことを始めたい時、この香りが背中を押してくれます。'},
+    火:{top:'ベルガモット・ネロリ',mid:'ローズ・ジャスミン',base:'サンダルウッド・ムスク',body:'情熱と輝きを引き出す香り。人前に出る時・大切な場面にふさわしい華やかさと深みのある香りです。'},
+    土:{top:'スパイス・カルダモン',mid:'ローズ・ゼラニウム',base:'バニラ・パチュリ・ウッド',body:'温かさと安心感を包み込む香り。信頼と包容力を高め、人が自然に集まってくる空気感を作ります。'},
+    金:{top:'シトラス・グレープフルーツ',mid:'ローズ・ピオニー',base:'ホワイトムスク・アイリス',body:'品格と完成への意志を纏う香り。清潔感と洗練さがあり、ここ一番の場面での存在感を高めます。'},
+  };
+
+  // 引越し判定
+  const moveData=MOVE_YEAR[thisYearPos]||MOVE_YEAR[2];
+
+  let html=`
+  <div class="cover">
+    <div class="cv-brand">KITOKU PERSONAL REPORT</div>
+    <div class="cv-line"></div>
+    <div class="cv-name">${sei} ${mei}</div>
+    <div class="cv-sub">命の設計図と${nowYear}年の羅針盤</div>
+    <div class="cv-date">KITOKU @ JOURNEY — ${nowYear}</div>
+  </div>
+
+  <div class="rpt-sec">
+    <div class="rs-label">FREE REPORT</div>
+    <div class="rs-title">このレポートについて</div>
+    <div class="note-box">
+      これは、忙しい方にもKITOKUを短時間で体験していただくための無料パーソナルレポートです。名前と生年月日から、まず知っておきたい自分の星・名前・今年の流れをコンパクトにまとめています。${isFemale?'女性版として、魅力・愛され方・美の処方箋を中心に読み解きます。':'男性版として、強み・勝負どころ・動くタイミングを中心に読み解きます。'}より深い未来年表・吉方位・香り・健康・線路の日などは、次に見るためのプレビューとして表示しています。
+    </div>
+    <div class="next-links">
+      ${nextLink('⭐','もっと詳しく：自分の星を見る','本命星・月命・傾斜・同会・納音を詳しく確認します。','../kyusei_v2.html')}
+      ${nextLink('🤖','AIに相談する','このレポートで気になったことを、AI相談文にして深掘りできます。','../ai.html')}
+    </div>
+  </div>
+
+  <!-- 01 あなたという人 -->
+  <div class="rpt-sec">
+    <div class="rs-label">01</div>
+    <div class="rs-title">あなたという人</div>
+
+    <div class="char-card">
+      <div class="cc-star">生まれ持った星 — 宿命のエネルギー</div>
+      <div class="cc-name">${cd.name}</div>
+      <div class="cc-elem" style="background:${cd.elemColor}22;color:${cd.elemColor};border:1px solid ${cd.elemColor}44;">${cd.elem}のエネルギー</div>
+      <div class="cc-body">${cd.desc}</div>
+    </div>
+
+    <div class="two-col">
+      <div class="mini-card">
+        <div class="mc-label">内側の本音</div>
+        <div class="mc-title">${STARS_K[t]}</div>
+        <div class="mc-body">${CHAR_DATA[t]?CHAR_DATA[t].desc.substring(0,60)+'…':''}
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mc-label">眠っている才能</div>
+        <div class="mc-title">${STARS_K[k]}</div>
+        <div class="mc-body">${kd.talent.substring(0,60)}…</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(154,120,48,.07),rgba(255,255,255,.5));border:1px solid var(--rim);border-radius:10px;padding:13px 15px;margin-bottom:10px;">
+      <div style="font-size:.58rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:5px;">魂の音色 — ${nac.n}</div>
+      <div style="font-size:.72rem;color:var(--mist);line-height:1.85;">${nachinDesc[nac.n]||nac.n+'の魂の音色を持ちます。'}</div>
+    </div>
+
+    <div class="ura-box">
+      <div class="ub-lbl">🎭 本当のあなた（表に出にくい部分）</div>
+      <div class="ub-body">${cd.ura}</div>
+    </div>
+    <div class="ura-box">
+      <div class="ub-lbl">✦ 覚醒するとどうなるか</div>
+      <div class="ub-body">${cd.awaken}
+      <br><br>眠っている才能の扉：${kd.rx}</div>
+    </div>
+    <div class="souju-box">
+      <div class="ub-lbl" style="color:#2a5888;">💡 あなたと上手に関わる方法</div>
+      <div class="ub-body">${cd.souju}</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:13px 15px;margin-top:10px;">
+      <div style="font-size:.6rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:8px;">🗣️ あなたに響く言葉・響かない言葉</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <div style="font-size:.6rem;color:#3a7a4e;font-weight:700;margin-bottom:5px;">✅ 刺さる言葉</div>
+          <div style="font-size:.66rem;color:var(--mist);line-height:1.85;">${cd.praise.split('」').map(s=>s.trim()+'」').filter(s=>s.length>2).join('<br>')}</div>
+        </div>
+        <div>
+          <div style="font-size:.6rem;color:#b04030;font-weight:700;margin-bottom:5px;">⚠ 逆効果な言葉</div>
+          <div style="font-size:.66rem;color:var(--mist);line-height:1.85;">${cd.ng.split('」').map(s=>s.trim()+'」').filter(s=>s.length>2).join('<br>')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="next-links">
+      ${nextLink('⭐','もっと詳しく：星の設計図を見る','自分の星を分解して、役割・才能・内面を深く読みます。','../kyusei_v2.html')}
+      ${nextLink('🧭','今日の方位盤を見る','今日・今月の盤から、動く方向と避ける方向を確認します。','../direction_v2.html')}
+    </div>
+  </div>
+
+  ${isFemale ? `
+  <div class="rpt-sec">
+    <div class="rs-label">02</div>
+    <div class="rs-title">あなたの魅力と愛され方</div>
+    <div class="char-card" style="margin-bottom:12px;">
+      <div class="cc-star">✨ あなたの本当の魅力</div>
+      <div class="cc-body">${fd.miryoku}</div>
+    </div>
+    <div class="char-card" style="margin-bottom:12px;background:linear-gradient(135deg,rgba(176,64,96,.05),rgba(255,255,255,.6));border-color:rgba(176,64,96,.2);">
+      <div class="cc-star">👁️ 周りからどう見られているか</div>
+      <div class="cc-body">${fd.mirareru}</div>
+    </div>
+    <div class="ura-box" style="border-left-color:#b04060;background:linear-gradient(135deg,rgba(176,64,96,.05),rgba(255,255,255,.5));">
+      <div class="ub-lbl" style="color:#b04060;">💗 どうすれば愛されるか</div>
+      <div class="ub-body">${fd.aisare}</div>
+    </div>
+    <div class="ura-box" style="border-left-color:#b04060;background:linear-gradient(135deg,rgba(176,64,96,.05),rgba(255,255,255,.5));margin-top:8px;">
+      <div class="ub-lbl" style="color:#b04060;">🌸 恋愛・縁の引き寄せ方</div>
+      <div class="ub-body">${fd.love}</div>
+    </div>
+    <div class="next-links">
+      ${nextLink('🔗','もっと詳しく：人との縁を見る','恋愛・家族・友人・仕事相手との関係性を読み解きます。','../relations.html')}
+    </div>
+  </div>
+  <div class="rpt-sec">
+    <div class="rs-label">03</div>
+    <div class="rs-title">あなたを最高に見せる処方箋</div>
+    <div class="rx-grid">
+      <div class="rx-card">
+        <div class="rx-icon">🎨</div>
+        <div class="rx-lbl">あなたに合う色・スタイル</div>
+        <div class="rx-body">${fd.beauty}</div>
+      </div>
+      <div class="rx-card">
+        <div class="rx-icon">🌸</div>
+        <div class="rx-lbl">あなたに合う香り</div>
+        <div class="rx-body">${fd.scent}</div>
+      </div>
+    </div>
+    <div class="scent-card" style="margin-top:10px;">
+      <div class="sc-lbl">✦ 今年のあなたに合う香りの方向性</div>
+      <div class="sc-body" style="font-size:.7rem;color:var(--mist);line-height:1.9;">${(rx_scent_map[hElem]||{}).body||''}</div>
+    </div>
+    <div class="next-links">
+      ${nextLink('🎨','もっと詳しく：色を相談する','服・名刺・小物の色を、今日の目的や会う相手に合わせて相談します。','../scent.html?focus=color')}
+      ${nextLink('🌸','もっと詳しく：香りを相談する','香水・ボディケア・空間の香りを、シーン別に相談します。','../scent.html?focus=scent')}
+    </div>
+  </div>` : `
+  <div class="rpt-sec">
+    <div class="rs-label">02</div>
+    <div class="rs-title">あなたの強みと勝負どころ</div>
+    <div class="char-card" style="margin-bottom:12px;">
+      <div class="cc-star">⚔️ 仕事・ビジネスでの最大の武器</div>
+      <div class="cc-body">${md.tsuyomi}</div>
+    </div>
+    <div class="ura-box">
+      <div class="ub-lbl">🎯 活躍できる舞台・向いている仕事</div>
+      <div class="ub-body">${md.katsu}</div>
+    </div>
+    <div class="ura-box" style="margin-top:8px;">
+      <div class="ub-lbl">💴 お金との向き合い方</div>
+      <div class="ub-body">${md.kane}</div>
+    </div>
+    <div class="souju-box" style="margin-top:8px;">
+      <div class="ub-lbl" style="color:#2a5888;">👑 リーダーシップのスタイル</div>
+      <div class="ub-body">${md.leader}</div>
+    </div>
+    <div class="next-links">
+      ${nextLink('💼','もっと詳しく：仕事の判断を見る','採用・面談・チーム・契約・お金の扱いを仕事用に整理します。','../business.html')}
+      ${nextLink('🤖','AIに仕事相談をする','今の悩みを相談文にして、次の一手を整理できます。','../ai.html')}
+    </div>
+  </div>`}
+
+  <!-- 名前が持つ旅路 -->
+  <div class="rpt-sec">
+    <div class="rs-label">${isFemale?'04':'03'}</div>
+    <div class="rs-title">名前が持つ旅路</div>
+
+    <div style="background:linear-gradient(135deg,rgba(138,96,32,.07),rgba(255,255,255,.6));border:1px solid var(--rim);border-radius:var(--r);padding:16px;margin-bottom:14px;">
+      <div class="name-score-row">
+        <div class="score-ring">
+          <svg viewBox="0 0 76 76" width="76" height="76">
+            <circle class="sr-bg" cx="38" cy="38" r="32"/>
+            <circle class="sr-fill" cx="38" cy="38" r="32" style="stroke-dashoffset:${220-(220*nameScore.score/100)};"/>
+          </svg>
+          <div class="sr-inner"><div class="sr-n">${nameScore.score}</div><div class="sr-u">/ 100</div></div>
+        </div>
+        <div>
+          <div style="font-size:.62rem;color:var(--fog);margin-bottom:5px;">名前の構造バランス</div>
+          <div style="font-size:.76rem;font-weight:700;color:var(--golddk);margin-bottom:4px;">${nameScore.score>=85?'とても整った名前です':nameScore.score>=70?'バランスの取れた名前です':'個性的な構造の名前です'}</div>
+          <div style="font-size:.66rem;color:var(--mist);line-height:1.8;">${nameScore.score>=85?`星（${STARS_K[h]}）と名前のエネルギーが深く共鳴しています。`:`独自のエネルギーを持つ名前です。`}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gogaku-row">
+      ${gkElems.map(g=>`<div class="gk-cell">
+        <div class="gk-lbl">${g.lbl}</div>
+        <div class="gk-num">${g.n}</div>
+        <div class="gk-elem" style="color:${GG_ELEM_COLOR[g.e]||'#888'};">${g.e}</div>
+      </div>`).join('')}
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(192,72,40,.05),rgba(255,255,255,.6));border:1px solid rgba(192,72,40,.15);border-radius:10px;padding:13px 15px;margin-top:10px;">
+      <div style="font-size:.6rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ この名前があなたに伝えること</div>
+      <div style="font-size:.72rem;color:var(--mist);line-height:1.9;font-style:italic;">「${gogyoOf(so)}」の一生の方向性は「${gogyoOf(so)==='火'?'情熱と輝き・照らす力':gogyoOf(so)==='土'?'包容と安定・育てる力':gogyoOf(so)==='水'?'深い共感・つなぐ力':gogyoOf(so)==='木'?'成長と発展・始める力':'完成と決断・整える力'}」です。あなたの核心（${gogyoOf(jin)}）が持つ「${CHAR_DATA[h].name.replace('の人','')}」としての力と、この一生の方向性が組み合わさって、独自のストーリーが生まれます。</div>
+    </div>
+
+    ${nameScore.score<90?`<div style="background:rgba(192,72,40,.04);border:1px solid rgba(192,72,40,.18);border-radius:8px;padding:11px 13px;margin-top:8px;">
+      <div style="font-size:.58rem;color:#b04030;font-weight:700;letter-spacing:.1em;margin-bottom:5px;">⚠ 知っておくこと — 人生に波が出やすいパターン</div>
+      <div style="font-size:.68rem;color:var(--mist);line-height:1.85;">この名前は良い時期と難しい時期がはっきりしやすい構造を持っています。良い波が来た時に仕込み、難しい波の時に内を整える意識があるだけで、同じ波でも全く違う結果になります。</div>
+    </div>`:''}
+    <div class="next-links">
+      ${nextLink('🌱','もっと詳しく：姓名鑑定で見る','名前の五行・画数・九星との関係をLIFEで詳しく確認します。','../life.html')}
+    </div>
+  </div>
+
+  <!-- 03 人生の変化のタイミング -->
+  <div class="rpt-sec">
+    <div class="rs-label">03</div>
+    <div class="rs-title">人生の変化が来やすいタイミング</div>
+    <div style="font-size:.7rem;color:var(--mist);line-height:1.85;background:linear-gradient(135deg,rgba(154,120,48,.05),rgba(255,255,255,.5));border:1px solid var(--rim);border-radius:8px;padding:11px 13px;margin-bottom:12px;">名前の構造から読み取れる「大きな変化が起きやすい年齢」です。これは「悪いことが起きる」ではなく、人生の節目・転換点になりやすいタイミングです。この時期を意識的に動くことで、変化を追い風にできます。</div>
+    <div class="age-row">
+      ${ryunen.map(age=>{
+        const currentAge=new Date().getFullYear()-y;
+        const isNow=Math.abs(currentAge-age)<=2;
+        const cls=isNow?' age-now':'';
+        const suffix=isNow?' ← 今':'';
+        return '<span class="age-tag'+cls+'">'+age+'歳'+suffix+'</span>';
+      }).join('')}
+    </div>
+    <div class="next-links">
+      ${nextLink('🌱','もっと詳しく：名前と人生の流れを見る','姓名鑑定で、名前が持つ流れや注意点をさらに確認します。','../life.html')}
+      ${nextLink('🤖','AIに節目の相談をする','気になる年齢や今の状況を、相談文にして整理できます。','../ai.html')}
+    </div>
+  </div>
+
+  <!-- 04 今年のテーマ -->
+  <div class="rpt-sec">
+    <div class="rs-label">04</div>
+    <div class="rs-title">${nowYear}年 — 今年のあなたへ</div>
+    <div style="background:var(--card);border:1px solid ${thisYearTheme.cls==='best'?'rgba(154,120,48,.4)':thisYearTheme.cls==='warn'?'rgba(176,64,48,.25)':'var(--rim)'};border-radius:var(--r);overflow:hidden;margin-bottom:14px;">
+      <div style="padding:16px;background:${thisYearTheme.cls==='best'?'linear-gradient(135deg,rgba(154,120,48,.1),rgba(255,255,255,.6))':thisYearTheme.cls==='warn'?'linear-gradient(135deg,rgba(176,64,48,.06),rgba(255,255,255,.6))':'linear-gradient(135deg,rgba(58,122,78,.06),rgba(255,255,255,.6))'};">
+        <div style="font-size:.6rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:5px;">${nowYear}年 — ${thisYearTheme.badge}</div>
+        <div style="font-size:.88rem;font-weight:700;color:var(--golddk);margin-bottom:8px;">${thisYearTheme.theme}</div>
+        <div style="font-size:.7rem;color:var(--mist);line-height:1.85;">${thisYearTheme.body}</div>
+      </div>
+      <div style="padding:11px 16px;background:rgba(154,120,48,.04);border-top:1px solid var(--rim);">
+        <div style="font-size:.56rem;letter-spacing:.12em;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 今年やること</div>
+        <div style="font-size:.66rem;color:var(--mist);line-height:1.75;">${thisYearTheme.action}</div>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="font-size:.6rem;letter-spacing:.15em;color:var(--goldlt);font-weight:700;margin-bottom:6px;">✦ 今年の吉方位（年間）</div>
+      ${thisYearKichi.length?thisYearKichi.map(k=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.7rem;color:var(--mist);">
+        <span style="font-weight:700;color:var(--golddk);min-width:30px;">${k.dir}</span>
+        <span style="color:var(--fog);">${HOUI_MEANING[Object.keys(JP).find(key=>JP[key]===k.dir)]||''}</span>
+      </div>`).join(''):`<div style="font-size:.7rem;color:var(--mist);">今年は方位より内を整えることに集中する年です。</div>`}
+    </div>
+    <div class="next-links">
+      ${nextLink('🧭','もっと詳しく：今日の方位盤を見る','今日・今月の方位盤で、行く方向・避ける方向を確認します。','../direction_v2.html')}
+      ${nextLink('🌸','今日を整える','今日の色・香り・小さな行動で、一日を整えるヒントを見ます。','../today.html')}
+    </div>
+  </div>`;
+
+  // オプション: 未来5年
+  if(opts.has('future')){
+    const futureContent=`<div class="rpt-sec">
+      <div class="rs-label">05</div>
+      <div class="rs-title">これからの5年間</div>
+      <div class="year-cards">
+        ${yearData.map((yd,i)=>{
+          const th=yd.theme;
+          return `<div class="yc ${th.cls}">
+            <div class="yc-l">
+              <div class="yc-year">${yd.year}</div>
+              <span class="yc-badge" style="background:${th.cls==='best'?'rgba(154,120,48,.15)':th.cls==='good'?'rgba(58,122,78,.12)':th.cls==='steady'?'rgba(96,112,128,.12)':th.cls==='prep'?'rgba(138,120,48,.1)':'rgba(176,64,48,.1)'};color:${th.cls==='best'?'#5c3e10':th.cls==='good'?'#2a6038':th.cls==='steady'?'#405060':th.cls==='prep'?'#6a5810':'#902828'};">${th.badge}</span>
+            </div>
+            <div class="yc-r">
+              <div class="yc-theme">${th.theme}</div>
+              <div class="yc-body">${th.body}</div>
+              <div class="yc-action"><div class="ya-lbl">✦ やること</div><div class="ya-body">${th.action}</div></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+    html+=paidSection('未来5年ロードマップ','2026〜2030年の年ごとのテーマ・やること・注意点',futureContent);
+  }
+
+  // オプション: 吉方位・旅
+  // オプション: 吉方位・旅（ぼかし）
+  if(opts.has('houi')){
+    let secNum=opts.has('future')?6:5;
+    const houiContent=`<div class="rpt-sec">
+      <div class="rs-label">0${secNum}</div>
+      <div class="rs-title">今年の吉方位と旅のタイミング</div>
+      <div style="font-size:.7rem;color:var(--mist);line-height:1.85;background:linear-gradient(135deg,rgba(154,120,48,.05),rgba(255,255,255,.5));border:1px solid var(--rim);border-radius:8px;padding:11px 13px;margin-bottom:12px;">旅行や外出で吉方位を意識するだけで運気が整います。</div>
+      <div class="houi-months">
+        ${houiMonths.length?houiMonths.map(hm=>`<div class="hm-card">
+          <div class="hm-month">${hm.month}月</div>
+          <div><div class="hm-dir">${hm.dirs.map(d=>d.dir).join(' / ')}</div>
+          <div class="hm-body">${hm.dirs[0]?HOUI_RX[Object.keys(JP).find(k=>JP[k]===hm.dirs[0].dir)]||'吉方向への外出が運気を整えます。':''}</div></div>
+        </div>`).join(''): '<div style="font-size:.7rem;color:var(--mist);padding:8px;">方位ナビで詳細を確認してください。</div>'}
+      </div>
+    </div>`;
+    html+=paidSection('今年の吉方位・旅のタイミング','月ごとの吉方位と旅のタイミング・食・色の処方箋',houiContent);
+  }
+
+  // オプション: 香り・色彩（ぼかし）
+  if(opts.has('scent')){
+    let secNum=5+(opts.has('future')?1:0)+(opts.has('houi')?1:0);
+    const scentData=rx_scent_map[hElem]||rx_scent_map['土'];
+    const scentContent=`<div class="rpt-sec">
+      <div class="rs-label">0${secNum}</div>
+      <div class="rs-title">今年の香り・色彩処方箋</div>
+      <div class="rx-grid">
+        <div class="rx-card"><div class="rx-icon">🎨</div><div class="rx-lbl">今年の色</div><div class="rx-body">${rx_color_map[hElem]||''}</div></div>
+        <div class="rx-card"><div class="rx-icon">🍽️</div><div class="rx-lbl">今年の食材</div><div class="rx-body">${rx_food_map[hElem]||''}</div></div>
+      </div>
+      <div class="scent-card">
+        <div class="sc-lbl">🌸 今年に合う香り</div>
+        <div class="sc-notes">
+          <span class="sc-note n-top">トップ：${scentData.top}</span>
+          <span class="sc-note n-mid">ミドル：${scentData.mid}</span>
+          <span class="sc-note n-base">ベース：${scentData.base}</span>
+        </div>
+        <div class="sc-body">${scentData.body}</div>
+      </div>
+    </div>`;
+    html+=paidSection('香り・色彩処方箋','今年のあなたに合う香水・色・食材の完全ガイド',scentContent);
+  }
+
+  // オプション: 健康（ぼかし）
+  if(opts.has('health')){
+    let secNum=5+(opts.has('future')?1:0)+(opts.has('houi')?1:0)+(opts.has('scent')?1:0);
+    const healthContent=`<div class="rpt-sec">
+      <div class="rs-label">0${secNum}</div>
+      <div class="rs-title">健康の注意点</div>
+      <div class="health-card">
+        <div class="hc-lbl">本命星（${STARS_K[h]}・${hElem}）から見る注意点</div>
+        <div class="hc-body"><strong>気にかける部位：</strong>${h1.organ}<br><strong>処方箋：</strong>${h1.rx}</div>
+      </div>
+      <div class="health-card">
+        <div class="hc-lbl">内側の星（${STARS_K[t]}・${tElem}）から見る注意点</div>
+        <div class="hc-body"><strong>気にかける部位：</strong>${h2.organ}<br><strong>処方箋：</strong>${h2.rx}</div>
+      </div>
+    </div>`;
+    html+=paidSection('健康の注意点','五行から見る気にかけるべき体の部位と整え方',healthContent);
+  }
+
+  // オプション: 買い物タイミング（ぼかし）
+  if(opts.has('timing')){
+    let secNum=5+(opts.has('future')?1:0)+(opts.has('houi')?1:0)+(opts.has('scent')?1:0)+(opts.has('health')?1:0);
+    const star1Group=[1,4,7].includes(h)?0:[2,5,8].includes(h)?1:2;
+    const railBranches=['丑・辰・未・戌','子・卯・午・酉','寅・巳・申・亥'][star1Group];
+    const timingContent=`<div class="rpt-sec">
+      <div class="rs-label">0${secNum}</div>
+      <div class="rs-title">動くタイミング・買い物の吉日</div>
+      <div style="background:linear-gradient(135deg,rgba(154,120,48,.07),rgba(255,255,255,.5));border:1px solid var(--rim);border-radius:10px;padding:13px 15px;margin-bottom:12px;">
+        <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:5px;">✦ あなたの線路の日</div>
+        <div style="font-size:.88rem;font-weight:700;color:var(--golddk);margin-bottom:5px;">${railBranches}</div>
+        <div style="font-size:.7rem;color:var(--mist);">この干支が巡る日が大切な買い物・契約・スタートの最適日です。</div>
+      </div>
+    </div>`;
+    html+=paidSection('買い物・動くタイミング','線路の日・吉日カレンダーで最適なタイミングを知る',timingContent);
+  }
+
+  // オプション: 引越し（ぼかし）
+  if(opts.has('move')){
+    let secNum=5+(opts.has('future')?1:0)+(opts.has('houi')?1:0)+(opts.has('scent')?1:0)+(opts.has('health')?1:0)+(opts.has('timing')?1:0);
+    const moveContent=`<div class="rpt-sec">
+      <div class="rs-label">0${secNum}</div>
+      <div class="rs-title">引越し・移転のタイミング</div>
+      <div style="background:${moveData.ok?'linear-gradient(135deg,rgba(58,122,78,.07),rgba(255,255,255,.5))':'linear-gradient(135deg,rgba(176,64,48,.06),rgba(255,255,255,.5))'};border:1px solid ${moveData.ok?'rgba(58,122,78,.25)':'rgba(176,64,48,.25)'};border-radius:10px;padding:13px 15px;margin-bottom:12px;">
+        <div style="font-size:.62rem;font-weight:700;color:${moveData.ok?'#3a7a4e':'#b04030'};margin-bottom:5px;">${nowYear}年：${moveData.ok?'✅ 動けます':'⚠ 注意が必要'}</div>
+        <div style="font-size:.72rem;color:var(--mist);line-height:1.85;">${moveData.msg}</div>
+      </div>
+    </div>`;
+    html+=paidSection('引越し・移転のタイミング','いつ・どこへ移るべきか。吉方位と年盤で判定',moveContent);
+  }
+
+  // フッター
+  html+=`<div class="rpt-footer">
+    <div class="rf-logo">✦ KITOKU @ JOURNEY ✦</div>
+    <div class="rf-note">このレポートは東洋の気の学問（九星気学・姓名判断）をもとにKITOKUが生成した参考資料です。<br>人を決めつけるものではなく、自分を知り、人生の扱い方を覚えるための道具としてご活用ください。<br>さらに詳しく知りたい方は気学先生AIへ — journey6112.jp</div>
+  </div>`;
+
+  return html;
+}
+</script>
+</body>
+</html>
