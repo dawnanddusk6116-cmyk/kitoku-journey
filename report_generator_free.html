@@ -1395,8 +1395,8 @@ function buildReportHTML(d){
       これは、忙しい方にもKITOKUを短時間で体験していただくための無料パーソナルレポートです。名前と生年月日から、まず知っておきたい自分の星・名前・今年の流れをコンパクトにまとめています。${isFemale?'女性版として、魅力・愛され方・美の処方箋を中心に読み解きます。':'男性版として、強み・勝負どころ・動くタイミングを中心に読み解きます。'}より深い未来年表・吉方位・香り・健康・線路の日などは、次に見るためのプレビューとして表示しています。
     </div>
     <div class="next-links">
-      ${nextLink('⭐','もっと詳しく：自分の星を見る','本命星・月命・傾斜・同会・納音を詳しく確認します。','../kyusei_v2.html')}
-      ${nextLink('🤖','AIに相談する','このレポートで気になったことを、AI相談文にして深掘りできます。','../ai.html')}
+      ${nextLink('⭐','もっと詳しく：自分の星を見る','本命星・月命・傾斜・同会・納音を詳しく確認します。','kyusei_v2.html')}
+      ${nextLink('🤖','AIに相談する','このレポートで気になったことを、AI相談文にして深掘りできます。','ai.html')}
     </div>
   </div>
 
@@ -1459,8 +1459,8 @@ function buildReportHTML(d){
       </div>
     </div>
     <div class="next-links">
-      ${nextLink('⭐','もっと詳しく：星の設計図を見る','自分の星を分解して、役割・才能・内面を深く読みます。','../kyusei_v2.html')}
-      ${nextLink('🧭','今日の方位盤を見る','今日・今月の盤から、動く方向と避ける方向を確認します。','../direction_v2.html')}
+      ${nextLink('⭐','もっと詳しく：星の設計図を見る','自分の星を分解して、役割・才能・内面を深く読みます。','kyusei_v2.html')}
+      ${nextLink('🧭','今日の方位盤を見る','今日・今月の盤から、動く方向と避ける方向を確認します。','direction_v2.html')}
     </div>
   </div>
 
@@ -1485,7 +1485,7 @@ function buildReportHTML(d){
       <div class="ub-body">${fd.love}</div>
     </div>
     <div class="next-links">
-      ${nextLink('🔗','もっと詳しく：人との縁を見る','恋愛・家族・友人・仕事相手との関係性を読み解きます。','../relations.html')}
+      ${nextLink('🔗','もっと詳しく：人との縁を見る','恋愛・家族・友人・仕事相手との関係性を読み解きます。','relations.html')}
     </div>
   </div>
   <div class="rpt-sec">
@@ -1508,8 +1508,8 @@ function buildReportHTML(d){
       <div class="sc-body" style="font-size:.7rem;color:var(--mist);line-height:1.9;">${(rx_scent_map[hElem]||{}).body||''}</div>
     </div>
     <div class="next-links">
-      ${nextLink('🎨','もっと詳しく：色を相談する','服・名刺・小物の色を、今日の目的や会う相手に合わせて相談します。','../scent.html?focus=color')}
-      ${nextLink('🌸','もっと詳しく：香りを相談する','香水・ボディケア・空間の香りを、シーン別に相談します。','../scent.html?focus=scent')}
+      ${nextLink('🎨','もっと詳しく：色を相談する','服・名刺・小物の色を、今日の目的や会う相手に合わせて相談します。','scent.html?focus=color')}
+      ${nextLink('🌸','もっと詳しく：香りを相談する','香水・ボディケア・空間の香りを、シーン別に相談します。','scent.html?focus=scent')}
     </div>
   </div>` : `
   <div class="rpt-sec">
@@ -1532,8 +1532,8 @@ function buildReportHTML(d){
       <div class="ub-body">${md.leader}</div>
     </div>
     <div class="next-links">
-      ${nextLink('💼','もっと詳しく：仕事の判断を見る','採用・面談・チーム・契約・お金の扱いを仕事用に整理します。','../business.html')}
-      ${nextLink('🤖','AIに仕事相談をする','今の悩みを相談文にして、次の一手を整理できます。','../ai.html')}
+      ${nextLink('💼','もっと詳しく：仕事の判断を見る','採用・面談・チーム・契約・お金の扱いを仕事用に整理します。','business.html')}
+      ${nextLink('🤖','AIに仕事相談をする','今の悩みを相談文にして、次の一手を整理できます。','ai.html')}
     </div>
   </div>`}
 
@@ -1577,7 +1577,7 @@ function buildReportHTML(d){
       <div style="font-size:.68rem;color:var(--mist);line-height:1.85;">この名前は良い時期と難しい時期がはっきりしやすい構造を持っています。良い波が来た時に仕込み、難しい波の時に内を整える意識があるだけで、同じ波でも全く違う結果になります。</div>
     </div>`:''}
     <div class="next-links">
-      ${nextLink('🌱','もっと詳しく：姓名鑑定で見る','名前の五行・画数・九星との関係をLIFEで詳しく確認します。','../life.html')}
+      ${nextLink('🌱','もっと詳しく：姓名鑑定で見る','名前の五行・画数・九星との関係をLIFEで詳しく確認します。','life.html')}
     </div>
   </div>
 
@@ -1596,8 +1596,8 @@ function buildReportHTML(d){
       }).join('')}
     </div>
     <div class="next-links">
-      ${nextLink('🌱','もっと詳しく：名前と人生の流れを見る','姓名鑑定で、名前が持つ流れや注意点をさらに確認します。','../life.html')}
-      ${nextLink('🤖','AIに節目の相談をする','気になる年齢や今の状況を、相談文にして整理できます。','../ai.html')}
+      ${nextLink('🌱','もっと詳しく：名前と人生の流れを見る','姓名鑑定で、名前が持つ流れや注意点をさらに確認します。','life.html')}
+      ${nextLink('🤖','AIに節目の相談をする','気になる年齢や今の状況を、相談文にして整理できます。','ai.html')}
     </div>
   </div>
 
@@ -1624,8 +1624,8 @@ function buildReportHTML(d){
       </div>`).join(''):`<div style="font-size:.7rem;color:var(--mist);">今年は方位より内を整えることに集中する年です。</div>`}
     </div>
     <div class="next-links">
-      ${nextLink('🧭','もっと詳しく：今日の方位盤を見る','今日・今月の方位盤で、行く方向・避ける方向を確認します。','../direction_v2.html')}
-      ${nextLink('🌸','今日を整える','今日の色・香り・小さな行動で、一日を整えるヒントを見ます。','../today.html')}
+      ${nextLink('🧭','もっと詳しく：今日の方位盤を見る','今日・今月の方位盤で、行く方向・避ける方向を確認します。','direction_v2.html')}
+      ${nextLink('🌸','今日を整える','今日の色・香り・小さな行動で、一日を整えるヒントを見ます。','today.html')}
     </div>
   </div>`;
 
