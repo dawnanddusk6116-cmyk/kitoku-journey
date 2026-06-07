@@ -185,6 +185,47 @@ html.theme-night-root{
   background:linear-gradient(135deg,rgba(58,122,78,.08),var(--card));
 }
 .selector-card.s-free::before{background:#3a7a4e;}
+.selector-card.s-free.featured-report{
+  align-items:stretch;
+  border-width:2px;
+  border-color:rgba(58,122,78,.42);
+  background:
+    radial-gradient(circle at 92% 18%,rgba(58,122,78,.12),transparent 34%),
+    linear-gradient(135deg,rgba(58,122,78,.12),rgba(255,255,255,.92));
+  box-shadow:0 10px 30px rgba(58,122,78,.12);
+}
+.selector-card.s-free.featured-report::before{width:7px;}
+.featured-report .selector-icon{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(58,122,78,.1);
+  border:1px solid rgba(58,122,78,.2);
+  margin-top:2px;
+}
+.featured-report .selector-en{color:#2a6b3d;}
+.featured-report .selector-title{
+  font-size:1.08rem;
+  line-height:1.55;
+}
+.featured-report .selector-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:30px;
+  margin-top:9px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:#3a7a4e;
+  color:#fff;
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  box-shadow:0 5px 14px rgba(58,122,78,.18);
+}
 .selector-card.s-pilgrimage{
   border-color:rgba(123,94,167,.32);
   background:linear-gradient(135deg,rgba(123,94,167,.07),var(--card));
@@ -228,6 +269,10 @@ html.theme-night-root{
 .selector-card.s-business .selector-chip{color:#1a3c70;border-color:rgba(42,106,176,.2);background:rgba(42,106,176,.06);}
 .selector-card.s-journey .selector-chip{color:var(--goldlt);border-color:rgba(138,104,32,.22);background:rgba(138,104,32,.07);}
 .selector-card.s-free .selector-chip{color:#2a6b3d;border-color:rgba(58,122,78,.22);background:rgba(58,122,78,.07);}
+.featured-report .selector-chip{
+  background:rgba(255,255,255,.8);
+  border-color:rgba(58,122,78,.24);
+}
 .selector-en{
   display:inline-block;
   font-size:.74rem;letter-spacing:.2em;color:var(--mist);
@@ -256,6 +301,13 @@ html.theme-night-root{
   .selector-card{gap:12px;padding:18px 14px;}
   .selector-side{width:78px;gap:4px;}
   .selector-chip{font-size:.52rem;min-height:23px;padding:4px 5px;}
+  .selector-card.s-free.featured-report{
+    padding:20px 14px;
+  }
+  .featured-report .selector-icon{
+    width:46px;height:46px;font-size:1.35rem;
+  }
+  .featured-report .selector-title{font-size:1rem;}
 }
 
 /* ── 画面内の目次バー ── */
@@ -1180,16 +1232,17 @@ body.theme-night .philosophy-list{
   <div class="selector-cards">
 
     <!-- FREE REPORT -->
-    <a class="selector-card s-free" data-purpose="daily self" data-search="無料 パーソナルレポート personal report free 入口 体験 名前 生年月日 男性 女性 魅力 強み KITOKU" href="report_generator_free.html">
+    <a class="selector-card s-free featured-report" data-purpose="daily self" data-search="無料 パーソナルレポート personal report free 入口 体験 名前 生年月日 男性 女性 魅力 強み KITOKU" href="report_generator_free.html">
       <div class="selector-icon">📜</div>
       <div class="selector-info">
         <div class="selector-en">KITOKU PERSONAL REPORT</div>
-        <div class="selector-title">まず無料で、自分の入口を読む</div>
-        <div class="selector-desc">名前と生年月日だけで、忙しい人にも読みやすいKITOKUの入口レポートを作ります。</div>
+        <div class="selector-title">自分を知るレポートを見る</div>
+        <div class="selector-desc">名前と生年月日だけで、あなたの星・名前・今年の流れを一枚の入口レポートにまとめます。</div>
+        <div class="selector-cta">まずここから読む</div>
       </div>
       <div class="selector-side" aria-hidden="true">
-        <div class="selector-chip">無料</div>
-        <div class="selector-chip">3分</div>
+        <div class="selector-chip">入口</div>
+        <div class="selector-chip">レポート</div>
         <div class="selector-chip">男女別</div>
       </div>
       <div class="selector-arrow">›</div>
@@ -1452,9 +1505,9 @@ body.theme-night .philosophy-list{
     <div class="cards-grid">
       <a class="app-card tone-daily" href="report_generator_free.html">
         <div class="card-icon">📜</div>
-        <div class="card-num">① 無料レポート</div>
-        <div class="card-title">まず自分の入口を読む</div>
-        <div class="card-desc">名前と生年月日だけで、KITOKUを短時間で体験するパーソナルレポート。</div>
+        <div class="card-num">① 入口レポート</div>
+        <div class="card-title">自分を知るレポートを見る</div>
+        <div class="card-desc">名前と生年月日だけで、星・名前・今年の流れをまとめて確認する。</div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="kyusei_v2.html">
