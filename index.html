@@ -180,6 +180,11 @@ html.theme-night-root{
   background:linear-gradient(135deg,rgba(138,104,32,.07),var(--card));
 }
 .selector-card.s-journey::before{background:var(--gold);}
+.selector-card.s-free{
+  border-color:rgba(58,122,78,.34);
+  background:linear-gradient(135deg,rgba(58,122,78,.08),var(--card));
+}
+.selector-card.s-free::before{background:#3a7a4e;}
 .selector-card.s-pilgrimage{
   border-color:rgba(123,94,167,.32);
   background:linear-gradient(135deg,rgba(123,94,167,.07),var(--card));
@@ -222,12 +227,14 @@ html.theme-night-root{
 }
 .selector-card.s-business .selector-chip{color:#1a3c70;border-color:rgba(42,106,176,.2);background:rgba(42,106,176,.06);}
 .selector-card.s-journey .selector-chip{color:var(--goldlt);border-color:rgba(138,104,32,.22);background:rgba(138,104,32,.07);}
+.selector-card.s-free .selector-chip{color:#2a6b3d;border-color:rgba(58,122,78,.22);background:rgba(58,122,78,.07);}
 .selector-en{
   display:inline-block;
   font-size:.74rem;letter-spacing:.2em;color:var(--mist);
   margin-bottom:7px;font-weight:800;line-height:1.35;
 }
 .selector-card.s-journey .selector-en,
+.selector-card.s-free .selector-en,
 .selector-card.s-life .selector-en,
 .selector-card.s-pilgrimage .selector-en,
 .selector-card.s-business .selector-en,
@@ -238,6 +245,7 @@ html.theme-night-root{
   margin-bottom:4px;letter-spacing:.04em;
 }
 .selector-card.s-pilgrimage .selector-title{color:#4a2a78;}
+.selector-card.s-free .selector-title{color:#2a6b3d;}
 .selector-card.s-life .selector-title{color:#2a5c38;}
 .selector-card.s-business .selector-title{color:#1a3c70;}
 .selector-card.s-relations .selector-title{color:#7a321b;}
@@ -856,12 +864,14 @@ body.theme-night .pwa-banner{
   border-color:rgba(229,190,85,.24);
 }
 body.theme-night .selector-card.s-journey{background:linear-gradient(135deg,rgba(224,184,75,.14),var(--card));}
+body.theme-night .selector-card.s-free{background:linear-gradient(135deg,rgba(58,122,78,.16),var(--card));}
 body.theme-night .selector-card.s-life{background:linear-gradient(135deg,rgba(79,139,93,.14),var(--card));}
 body.theme-night .selector-card.s-relations{background:linear-gradient(135deg,rgba(211,111,66,.14),var(--card));}
 body.theme-night .selector-card.s-business{background:linear-gradient(135deg,rgba(70,139,218,.14),var(--card));}
 body.theme-night .selector-card.s-pilgrimage{background:linear-gradient(135deg,rgba(149,113,210,.14),var(--card));}
 body.theme-night .selector-card.s-english{background:linear-gradient(135deg,rgba(95,139,184,.14),var(--card));}
 body.theme-night .selector-card .selector-title,
+body.theme-night .selector-card.s-free .selector-title,
 body.theme-night .selector-card.s-life .selector-title,
 body.theme-night .selector-card.s-pilgrimage .selector-title,
 body.theme-night .selector-card.s-business .selector-title,
@@ -1169,6 +1179,22 @@ body.theme-night .philosophy-list{
 
   <div class="selector-cards">
 
+    <!-- FREE REPORT -->
+    <a class="selector-card s-free" data-purpose="daily self" data-search="無料 パーソナルレポート personal report free 入口 体験 名前 生年月日 男性 女性 魅力 強み KITOKU" href="レポートジェネレーター無料版.html">
+      <div class="selector-icon">📜</div>
+      <div class="selector-info">
+        <div class="selector-en">KITOKU PERSONAL REPORT</div>
+        <div class="selector-title">まず無料で、自分の入口を読む</div>
+        <div class="selector-desc">名前と生年月日だけで、忙しい人にも読みやすいKITOKUの入口レポートを作ります。</div>
+      </div>
+      <div class="selector-side" aria-hidden="true">
+        <div class="selector-chip">無料</div>
+        <div class="selector-chip">3分</div>
+        <div class="selector-chip">男女別</div>
+      </div>
+      <div class="selector-arrow">›</div>
+    </a>
+
     <!-- JOURNEY -->
     <div class="selector-card s-journey" data-purpose="daily self" data-search="今日 日盤 方位盤 吉方位 凶方位 九星 月命 納音 AI 相談 香り 色 食べ物 整える 羅針盤" onclick="showHome()">
       <div class="selector-icon">✦</div>
@@ -1424,30 +1450,37 @@ body.theme-night .philosophy-list{
   <!-- まずはここ（ゴールド） -->
   <div class="section-block tone-daily" id="sec1">
     <div class="cards-grid">
+      <a class="app-card tone-daily" href="レポートジェネレーター無料版.html">
+        <div class="card-icon">📜</div>
+        <div class="card-num">① 無料レポート</div>
+        <div class="card-title">まず自分の入口を読む</div>
+        <div class="card-desc">名前と生年月日だけで、KITOKUを短時間で体験するパーソナルレポート。</div>
+        <div class="card-arrow">›</div>
+      </a>
       <a class="app-card tone-daily" href="kyusei_v2.html">
         <div class="card-icon">⭐</div>
-        <div class="card-num">① 自分を知る</div>
+        <div class="card-num">② 自分を知る</div>
         <div class="card-title">自分の星を見る</div>
         <div class="card-desc">本命星・月命・傾斜・同会・納音から、自分の役割と才能を読む入口。</div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="direction_v2.html">
         <div class="card-icon">🧭</div>
-        <div class="card-num">② 今日の羅針盤</div>
+        <div class="card-num">③ 今日の羅針盤</div>
         <div class="card-title">今日の方位盤</div>
         <div class="card-desc">今日・今月の盤を見て、行く方向・避ける方向の判断材料にする。</div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="today.html">
         <div class="card-icon">🌸</div>
-        <div class="card-num">③ 今日の整え方</div>
+        <div class="card-num">④ 今日の整え方</div>
         <div class="card-title">今日を整える</div>
         <div class="card-desc">今日の星に合う色・香り・小さな行動で、一日を整えるヒント。</div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="scent.html">
         <div class="card-icon">✿</div>
-        <div class="card-num">④ 五感で整える</div>
+        <div class="card-num">⑤ 五感で整える</div>
         <div class="card-title">色と香りで整える</div>
         <div class="card-desc">服・名刺・小物の色、手持ち香水、会う人・場面から選ぶ。</div>
         <div class="card-arrow">›</div>
