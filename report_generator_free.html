@@ -1690,8 +1690,10 @@ function buildReportHTML(d){
     <div style="font-size:.7rem;color:var(--mist);line-height:1.85;background:linear-gradient(135deg,rgba(154,120,48,.05),rgba(255,255,255,.5));border:1px solid var(--rim);border-radius:8px;padding:11px 13px;margin-bottom:12px;">名前の構造から読み取れる「大きな変化が起きやすい年齢」です。これは「悪いことが起きる」ではなく、人生の節目・転換点になりやすいタイミングです。この時期を意識的に動くことで、変化を追い風にできます。</div>
     <div class="age-row">
       ${ryunen.map(age=>{
-        const currentAge=new Date().getFullYear()-y;
-        const isNow=Math.abs(currentAge-age)<=2;
+        const today=new Date();
+        const birthDate=new Date(y,m-1,d);
+        const currentAge=today.getFullYear()-y-(today<new Date(today.getFullYear(),m-1,d)?1:0);
+        const isNow=Math.abs(currentAge-age)<=1;
         const cls=isNow?' age-now':'';
         const suffix=isNow?' ← 今':'';
         return '<span class="age-tag'+cls+'">'+age+'歳'+suffix+'</span>';
