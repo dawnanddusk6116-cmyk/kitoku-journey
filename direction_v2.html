@@ -1854,6 +1854,22 @@ function buildBoardFromCenter(c){const p2s={};for(let s=1;s<=9;s++){const d=star
 function getNodeMonthIdx(year,month,day){const sd=getSekkiDay(year,month);let m=day>=sd?month:(month===1?12:month-1);if(m===2)return 0;if(m>=3)return m-2;return 11;}
 function getMonthCenter(year,month,day){const ni=getNodeMonthIdx(year,month,day);const cycleYear=(ni===11&&month<=2)?year-1:year;const c=yearCenter(cycleYear);const grp=[1,4,7].includes(c)?'A':[3,6,9].includes(c)?'B':'C';return TSUKI_MATRIX[grp][ni];}
 function getMonthBranch(year,month,day){return(getNodeMonthIdx(year,month,day)+2)%12;}
+
+// 月盤の有効期間を返す（節入り日ベース）
+function getMonthPeriod(year, month) {
+  // 当月の節入り日（開始）
+  const startDay = getSekkiDay(year, month);
+  // 翌月の節入り日（終了の前日）
+  const nextM = month === 12 ? 1 : month + 1;
+  const nextY = month === 12 ? year + 1 : year;
+  const endDay = getSekkiDay(nextY, nextM) - 1;
+  const endActualM = nextM;
+  const endActualY = nextY;
+  return {
+    start: `${year}年${month}月${startDay}日`,
+    end: `${endActualY}年${endActualM}月${endDay}日`
+  };
+}
 const NICHIBAN_ANCHORS={2025:{yoto:{ref:new Date(2025,2,6),stem:1,branch:0,star:9,endDate:new Date(2025,5,21)},into:{ref:new Date(2025,5,22),stem:2,branch:1,star:8}},2026:{yoto:{ref:new Date(2026,2,4),stem:3,branch:1,star:2,endDate:new Date(2026,5,20)},into:{ref:new Date(2026,5,21),stem:2,branch:2,star:7}},2027:{yoto:{ref:new Date(2027,2,6),stem:5,branch:3,star:9,endDate:new Date(2027,5,21)},into:{ref:new Date(2027,5,22),stem:6,branch:4,star:8}},2028:{yoto:{ref:new Date(2028,2,5),stem:7,branch:5,star:7,endDate:new Date(2028,5,20)},into:{ref:new Date(2028,5,21),stem:8,branch:6,star:6}}};
 function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS[y];if(!a)return null;const useY=t<=a.yoto.endDate;const anc=useY?a.yoto:a.into;const diff=Math.round((t-anc.ref)/86400000);const stem=((anc.stem+diff)%10+10)%10;const branch=((anc.branch+diff)%12+12)%12;const star=useY?(((anc.star-1+diff)%9)+9)%9+1:(((anc.star-1-diff)%9)+9)%9+1;return{stem,branch,star};}
 function getDayCenter(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return(((2-1+diff)%9)+9)%9+1;}return dd.star;}
@@ -2647,14 +2663,17 @@ function updateBanNavLabel(){
   const sub=document.getElementById('banNavSub');
   if(!lbl)return;
   if(type==='year'){
+    // 年盤の有効期間：立春（2月4日）〜翌年立春前日（2月3日）
     lbl.textContent=`${y}年`;
-    sub.textContent='年盤 — 年間の大きな流れ';
+    sub.textContent=`年盤 — ${y}年2月4日〜${y+1}年2月3日`;
   }else if(type==='month'){
+    // 月盤の有効期間：節入り日を計算
+    const {start,end}=getMonthPeriod(y,m);
     lbl.textContent=`${y}年 ${m}月`;
-    sub.textContent='月盤 — 月の流れ';
+    sub.textContent=`月盤 — ${start}〜${end}`;
   }else{
     lbl.textContent=`${y}年 ${m}月 ${d}日`;
-    sub.textContent='日盤 — 今日の方位';
+    sub.textContent='日盤 — 今日の方位（翌日の節入り時刻まで有効）';
   }
 }
 
@@ -2749,7 +2768,7 @@ function renderBan(type){
         if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
-      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
+      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
       else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
       const dirEl=document.createElement('div');
@@ -2781,7 +2800,7 @@ function renderBan(type){
       if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
     else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
-    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方';}
+    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
     else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
     else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
     const dirEl=document.createElement('div');
