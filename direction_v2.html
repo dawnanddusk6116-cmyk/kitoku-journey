@@ -1095,12 +1095,14 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           </label>
         </div>
         <div id="child-age-row" style="display:none;padding:10px 14px;border-top:1px solid var(--rim);">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="flex:1;font-size:.82rem;color:var(--snow);">お子様の年齢</div>
-            <select id="child-age" style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:5px 8px;font-size:.78rem;">
-              <option>1歳</option><option>2歳</option><option>3歳</option><option>4歳</option><option>5歳</option>
-              <option>6歳</option><option>7歳</option><option>8歳</option><option>9歳</option><option>10歳</option>
-            </select>
+          <div style="display:grid;gap:8px;">
+            <div style="font-size:.72rem;color:var(--snow);font-weight:700;">お子様の生年月日</div>
+            <input type="date" id="child-birth"
+              style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:6px 8px;font-size:.78rem;width:100%;"
+              max="2024-12-31" onchange="updateChildInfo()">
+            <div id="child-info" style="font-size:.65rem;color:var(--mist);line-height:1.6;display:none;">
+              <!-- 生年支・年齢・小児殺対象方位が表示される -->
+            </div>
           </div>
         </div>
       </div>
@@ -1926,17 +1928,56 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
       else items.push({name:'月命的殺',dir:tmTDir});
     }
   }
-  // 小児殺（月盤のみ・お子様モードON・10歳未満の場合）
+  // 小児殺（月盤のみ・お子様モードON・10歳以下の場合）
+  // 生年支から正しい小児殺の星を判定
   const childEl=document.getElementById('sw-child');
   const childOn=childEl&&childEl.checked;
-  const childAgeEl=document.getElementById('child-age');
-  const childAge=childAgeEl?parseInt(childAgeEl.value)||0:0;
-  if(childOn&&childAge<10&&banType==='month'){
-    const shoniDir=Object.keys(p2s).find(d=>p2s[d]===8)||null;
-    if(shoniDir&&shoniDir!=='C'){
-      const existing=items.find(i=>i.dir===shoniDir);
-      if(existing)existing.name+='・小児殺';
-      else items.push({name:'小児殺',dir:shoniDir});
+  if(childOn&&banType==='month'){
+    const childBirthEl=document.getElementById('child-birth');
+    const childBirthVal=childBirthEl?childBirthEl.value:'';
+    if(childBirthVal){
+      const childBirthDate=new Date(childBirthVal);
+      const childBirthYear=childBirthDate.getFullYear();
+      const childBirthMonth=childBirthDate.getMonth()+1;
+      const childBirthDay=childBirthDate.getDate();
+      // 年齢計算（誕生日考慮）
+      const today=new Date();
+      const childAge=today.getFullYear()-childBirthYear-(today<new Date(today.getFullYear(),childBirthDate.getMonth(),childBirthDay)?1:0);
+      if(childAge<=10){
+        // 生年支を算出（立春考慮の簡易版）
+        // 立春（2月4日前後）前は前年の支として計算
+        const adjYear=(childBirthMonth===1||(childBirthMonth===2&&childBirthDay<4))?childBirthYear-1:childBirthYear;
+        const shiIdx=((adjYear-4)%12+12)%12; // 子=0,丑=1,...
+        // 小児殺の対応表（ハンドブック正式基準）
+        // 子年・午年→八白、丑年・未年→九紫、寅年・申年→二黒
+        // 卯年・酉年→三碧、辰年・戌年→五黄、巳年・亥年→六白
+        const SHONISATSU_MAP={
+          0:8,  // 子→八白
+          6:8,  // 午→八白
+          1:9,  // 丑→九紫
+          7:9,  // 未→九紫
+          2:2,  // 寅→二黒
+          8:2,  // 申→二黒
+          3:3,  // 卯→三碧
+          9:3,  // 酉→三碧
+          4:5,  // 辰→五黄
+          10:5, // 戌→五黄
+          5:6,  // 巳→六白
+          11:6  // 亥→六白
+        };
+        const SHI_NAMES=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+        const STARS_K={1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
+        const shoniStar=SHONISATSU_MAP[shiIdx];
+        if(shoniStar){
+          const shoniDir=Object.keys(p2s).find(d=>p2s[d]===shoniStar)||null;
+          if(shoniDir&&shoniDir!=='C'){
+            const existing=items.find(i=>i.dir===shoniDir);
+            const shoniLabel=`小児殺（${SHI_NAMES[shiIdx]}年・${STARS_K[shoniStar]}水星方位）`;
+            if(existing)existing.name+='・'+shoniLabel;
+            else items.push({name:shoniLabel,dir:shoniDir});
+          }
+        }
+      }
     }
   }
   const kyouSet=new Set(items.map(i=>i.dir));
@@ -2967,6 +3008,24 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
         <div class="gogyou-title">五行の知恵 — ${s.elem}のエネルギー</div>
         <div class="gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}</div>
       </div>
+      ${(function(){
+        // 三合吉方の目的別ブースター
+        const z=getZodiac(ty);
+        const sangoInfo=SANGO_MAP[z.k]||{group:'',dirs:[]};
+        const isSango=sangoInfo.dirs.includes(dir);
+        if(!isSango)return '';
+        const SANGO_PURPOSE={
+          '木局':'発展・成長・教育・営業活動に最適。新しいことを始めるのにも吉。',
+          '火局':'知的・芸術・文化活動に最適。学問・発明・争いの調停にも吉。',
+          '金局':'経済活動が盛ん。人生の悦びを得て、感動と恋愛が成就。',
+          '水局':'健康回復・家庭内の人間関係回復。社会的人間関係が完成する。',
+        };
+        const purpose=SANGO_PURPOSE[sangoInfo.group]||'';
+        return `<div style="margin-top:10px;padding:10px 12px;background:linear-gradient(135deg,rgba(154,120,48,.1),rgba(255,255,255,.5));border:1px solid rgba(154,120,48,.25);border-radius:8px;font-size:.72rem;line-height:1.8;">
+          <div style="font-weight:700;color:var(--goldlt);margin-bottom:4px;">🔥 三合吉方（${sangoInfo.group}）の後押し</div>
+          <div style="color:var(--snow);">${purpose}</div>
+        </div>`;
+      })()}
       <div class="ai-hint" style="margin-top:14px;">
         <div class="ai-hint-title">🤖 AIに聞いてみよう！</div>
         <div class="ai-prompt-box" style="font-size:.65rem;">${aiPrompt}</div>
@@ -2975,8 +3034,31 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
       </div>
       ` : isKyo?`
       <div class="popup-kyo-text" style="font-size:.88rem;line-height:2;">
-        この方向は今日の星の配置上、注意が必要です。<br>
-        外出や重要な行動は避けることをおすすめします。<br><br>
+        この方向は今日の星の配置上、注意が必要な方向です。<br>
+        どうしても出かける必要がある場合は、心構えを持って行動してください。<br><br>
+        ${(function(){
+          // 暗剣殺の星別現象メッセージ（柔らかいトーン）
+          const ANKENJATSU_MSG = {
+            1: '足元が滑りやすい・物事がてこずりやすい・男女間のトラブルに巻き込まれやすい・うまい話には慎重に',
+            2: '大切なものを失くしやすい・訪問先に空振りが出やすい・気難しい人と会いやすい・食べ物に注意',
+            3: '言葉の行き違いが起きやすい・足元に注意・まとまりかけた話が戻りやすい・感情的になりやすい',
+            4: '物事のすれ違いで気持ちを害しやすい・書類や連絡にミスが出やすい・移動中の怪我に注意',
+            6: '移動中の事故に注意・予想外の出費が出やすい・目上の人との意見の食い違いに注意',
+            7: '言葉によるトラブルが起きやすい・刃物や鋭いものに注意・財布や持ち物の紛失に注意',
+            8: '手足の怪我に注意・腰や関節を痛めやすい・身内との関係でもやもやしやすい',
+            9: '感情的な衝突が起きやすい・思い込みや見込み違いに注意・火気や熱いものに注意',
+          };
+          const kyoNames = items.filter(i=>i.dir===dir).map(i=>i.name).join('・');
+          const isAnken = kyoNames.includes('暗剣殺');
+          const boardStar = p2s[dir];
+          const ankenMsg = isAnken && ANKENJATSU_MSG[boardStar]
+            ? `<div style="margin-top:12px;padding:10px 12px;background:rgba(176,64,48,.06);border:1px solid rgba(176,64,48,.15);border-radius:8px;font-size:.73rem;color:var(--mist);line-height:1.85;"><strong style="display:block;margin-bottom:4px;color:#8a3020;font-size:.7rem;letter-spacing:.1em;">⚠ この方位で起きやすいこと</strong>${ANKENJATSU_MSG[boardStar]}</div>`
+            : '';
+          return ankenMsg;
+        })()}
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(154,120,48,.06);border-radius:8px;font-size:.72rem;color:var(--gold);line-height:1.8;">
+          ✦ 心構え：①相手を責めない ②感謝の言葉を伝える ③一時停止・赤信号に気をつける
+        </div><br>
         <em style="color:var(--gold)">流派によって解釈が異なる場合があります。</em><br>
         他のアプリとも比較しながら、ご自身で判断してください。
       </div>
@@ -3499,6 +3581,44 @@ function toggleChildMode(el){
   if(row)row.style.display=el.checked?'block':'none';
   if(track)track.style.background=el.checked?'#1D9E75':'rgba(255,255,255,.15)';
   if(thumb)thumb.style.transform=el.checked?'translateX(18px)':'translateX(0)';
+}
+
+function updateChildInfo(){
+  const childBirthEl=document.getElementById('child-birth');
+  const infoEl=document.getElementById('child-info');
+  if(!childBirthEl||!infoEl||!childBirthEl.value)return;
+
+  const d=new Date(childBirthEl.value);
+  const y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
+
+  // 年齢計算
+  const today=new Date();
+  const age=today.getFullYear()-y-(today<new Date(today.getFullYear(),d.getMonth(),day)?1:0);
+
+  // 生年支（立春考慮）
+  const adjY=(m===1||(m===2&&day<4))?y-1:y;
+  const shiIdx=((adjY-4)%12+12)%12;
+  const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const SHONISATSU_MAP={0:8,6:8,1:9,7:9,2:2,8:2,3:3,9:3,4:5,10:5,5:6,11:6};
+  const STARS_K={2:'二黒',3:'三碧',5:'五黄',6:'六白',8:'八白',9:'九紫'};
+  const shoniStar=SHONISATSU_MAP[shiIdx];
+
+  if(age>10){
+    infoEl.style.display='block';
+    infoEl.innerHTML=`<span style="color:var(--goldlt);">⚠ ${age}歳：小児殺の対象外（11歳以上）</span>`;
+    return;
+  }
+
+  infoEl.style.display='block';
+  infoEl.innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div>年齢：<strong>${age}歳</strong>　生年支：<strong>${SHI[shiIdx]}年</strong></div>
+      <div style="color:var(--warn);">⚠ 小児殺：<strong>${STARS_K[shoniStar]||''}水星</strong>の方位（月盤）に注意</div>
+      <div style="color:var(--mist);">病院・引越しの方位として避けてください。</div>
+    </div>
+  `;
+  // 再計算をトリガー
+  try{renderAll();}catch(e){}
 }
 function toggleHeroImage(el){
   const wrap=document.getElementById('heroImgWrap');
