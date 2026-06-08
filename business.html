@@ -72,6 +72,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .preview-card li{margin:4px 0;}
 .premium-card{background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(255,255,255,.62));border:1px solid rgba(138,104,32,.26);}
 .safe-note{font-size:.62rem;color:var(--mist);line-height:1.85;background:rgba(100,80,40,.055);border:1px solid rgba(100,80,40,.12);border-radius:10px;padding:11px 13px;margin-top:12px;}
+.amber-action{margin-top:10px;padding:11px 12px;background:linear-gradient(135deg,rgba(138,104,32,.09),rgba(255,255,255,.62));border:1px solid rgba(138,104,32,.22);border-radius:10px;}
+.amber-action-title{font-size:.62rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:5px;}
+.amber-action-text{font-size:.63rem;color:var(--mist);line-height:1.8;margin-bottom:8px;}
+.amber-action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.amber-action-btn{border:1px solid rgba(138,104,32,.25);background:rgba(255,255,255,.58);color:var(--goldlt);border-radius:8px;padding:9px 6px;font-family:inherit;font-size:.62rem;font-weight:800;}
+.amber-action-note{font-size:.52rem;color:var(--mist);opacity:.75;text-align:center;line-height:1.7;margin-top:7px;}
 .free-tool{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);padding:16px;margin:12px 0;}
 .tool-title{font-size:.82rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:10px;}
 .tool-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
@@ -606,6 +612,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         商品五行が分かりにくい場合は、素材・用途・味・香り・価格帯・売り場を整理して、気学先生に確認しながら判断できます。KITOKUは決定ではなく、商品を整えるための根拠を出す補助資料として使います。
       </div>
     </details>
+
+    <div class="amber-action">
+      <div class="amber-action-title">💊 琥珀色の処方箋</div>
+      <div class="amber-action-text">商品名・色・形の方向性が見えたら、次はパッケージや販促物でどう見せるかを整えます。</div>
+      <div class="amber-action-row">
+        <button class="amber-action-btn" type="button" disabled>パッケージ相談（準備中）</button>
+        <button class="amber-action-btn" type="button" disabled>印刷・制作を探す（準備中）</button>
+      </div>
+      <div class="amber-action-note">アフィリエイトID取得後にリンクを差し替えます</div>
+    </div>
 
     <button class="main-btn" type="button" onclick="showPaidFeatureMessage('商品設計レポート')">✦ 商品設計レポートを準備中</button>
   </div>
@@ -1470,6 +1486,15 @@ function runBizReading(){
     +'<div style="padding:12px 16px;border-bottom:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.035);">'
     +'<div style="font-size:.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;">🎨 ロゴ・カラー処方箋</div>'
     +'<div style="font-size:.63rem;color:var(--mist);line-height:1.85;">'+BIZ_COLOR_RX[engine.gyo]+'</div>'
+    +'<div class="amber-action">'
+    +'<div class="amber-action-title">💊 琥珀色の処方箋</div>'
+    +'<div class="amber-action-text">足りない五行が見えたら、ロゴの差し色・名刺・肩書き・Webボタンなどで環境側から補えます。</div>'
+    +'<div class="amber-action-row">'
+    +'<button class="amber-action-btn" type="button" disabled>ロゴ相談（準備中）</button>'
+    +'<button class="amber-action-btn" type="button" disabled>名刺印刷（準備中）</button>'
+    +'</div>'
+    +'<div class="amber-action-note">アフィリエイトID取得後にリンクを差し替えます</div>'
+    +'</div>'
     +'</div>'
 
     // LIFEへ誘導
@@ -1480,6 +1505,7 @@ function runBizReading(){
 
     +'<div style="padding:8px 16px;font-size:.55rem;color:var(--mist);opacity:.7;">'
     +'※ 商標・法務上の判断ではありません。名前が持つ気質を東洋の叡智で読み、ユーザー自身が判断するための参考情報です。'
+    +'<br>※一部リンクにはアフィリエイト広告が含まれる場合があります。'
     +'</div></div>';
 }
 

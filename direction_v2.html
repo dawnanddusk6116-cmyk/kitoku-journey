@@ -2956,6 +2956,27 @@ function toggleKyo(){
 }
 
 // ── 方位ポップアップ ──
+function buildAmberActionPlaceholder(star){
+  const map={
+    1:{title:'温泉宿・水辺の宿を探す',sub:'一白の水で休息とリセットを整える'},
+    2:{title:'土地の味・発酵食を探す',sub:'二黒の土で体をゆっくり整える'},
+    3:{title:'朝出発の旅・新しい体験を探す',sub:'三碧の勢いで行動のスイッチを入れる'},
+    4:{title:'遠方のリゾート・風を感じる旅を探す',sub:'四緑の縁と信用を広げる'},
+    5:{title:'中心を整える滞在先を探す',sub:'五黄の日は無理なく場を整える'},
+    6:{title:'格式あるホテル・神社仏閣を探す',sub:'六白の格と責任感を磨く'},
+    7:{title:'食事・スイーツ・楽しみの場を探す',sub:'七赤の悦びで人間関係をやわらげる'},
+    8:{title:'山・高層階・静かな宿を探す',sub:'八白の変化と蓄積を整える'},
+    9:{title:'美術館・学び・眺めの良い場所を探す',sub:'九紫の知性と美意識を灯す'}
+  };
+  const d=map[star]||{title:'今日の吉方に合う場所を探す',sub:'星の象意に合わせて行き先を選ぶ'};
+  return `<div style="margin-top:12px;padding:11px 12px;background:linear-gradient(135deg,rgba(154,120,48,.13),rgba(255,255,255,.48));border:1px solid rgba(154,120,48,.28);border-radius:9px;">
+    <div style="font-size:.62rem;letter-spacing:.12em;color:var(--goldlt);font-weight:800;margin-bottom:5px;">💊 琥珀色の処方箋</div>
+    <div style="font-size:.72rem;color:var(--snow);line-height:1.75;margin-bottom:8px;">${d.sub}</div>
+    <button type="button" disabled style="width:100%;border:1px solid rgba(154,120,48,.3);background:rgba(255,255,255,.42);color:var(--goldlt);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:.68rem;font-weight:800;opacity:.78;">${d.title}（準備中）</button>
+    <div style="font-size:.52rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:6px;">リンク先はアフィリエイトID取得後に差し替えます</div>
+  </div>`;
+}
+
 function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
   haptic('light');
   // stateから再計算
@@ -3008,6 +3029,7 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
         <div class="gogyou-title">五行の知恵 — ${s.elem}のエネルギー</div>
         <div class="gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}</div>
       </div>
+      ${buildAmberActionPlaceholder(starN)}
       ${(function(){
         // 三合吉方の目的別ブースター
         const z=getZodiac(ty);

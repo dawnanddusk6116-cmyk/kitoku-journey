@@ -66,6 +66,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .affiliate-btn{border-radius:8px;padding:10px 8px;text-align:center;font-size:.68rem;font-weight:700;font-family:'Noto Serif JP',serif;border:1px solid;position:relative;overflow:hidden;}
 .affiliate-btn.celes{background:rgba(232,112,160,.08);border-color:rgba(232,112,160,.3);color:#c04080;}
 .affiliate-btn.amazon{background:rgba(255,153,0,.08);border-color:rgba(255,153,0,.3);color:#c07000;}
+.affiliate-btn.prepare{background:rgba(154,120,48,.06);border-color:rgba(154,120,48,.24);color:var(--goldlt);}
 .affiliate-badge{position:absolute;top:0;right:0;background:rgba(100,80,40,.15);font-size:.44rem;padding:2px 5px;color:var(--mist);}
 
 /* リトライボタン */
@@ -190,6 +191,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div style="font-size:.58rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;">
         今日の色をもとに、服・名刺・資料・小物・会う相手に合わせた使い方を相談できます。
       </div>
+      <div class="affiliate-row">
+        <button class="affiliate-btn prepare" type="button" disabled><span class="affiliate-badge">準備中</span>今日の色の小物を探す</button>
+        <button class="affiliate-btn prepare" type="button" disabled><span class="affiliate-badge">準備中</span>花・差し色を探す</button>
+      </div>
     </div>
   </div>
 
@@ -217,6 +222,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div style="font-size:.58rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;">
         今日の提案をもとに、シーン・相手・手持ちの香りまで相談できます。
       </div>
+      <div class="affiliate-row">
+        <button class="affiliate-btn prepare" type="button" disabled><span class="affiliate-badge">準備中</span>香りを少量で試す</button>
+        <button class="affiliate-btn prepare" type="button" disabled><span class="affiliate-badge">準備中</span>アロマ・日用品を探す</button>
+      </div>
     </div>
   </div>
 
@@ -232,7 +241,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div style="height:16px;"></div>
 </div>
 
-<div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
+<div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom<br><span style="font-size:.52rem;opacity:.72;">※一部リンクにはアフィリエイト広告が含まれる場合があります</span></div>
 
 <script>
 // ============================================================
