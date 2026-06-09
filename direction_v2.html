@@ -1758,23 +1758,31 @@ function drawDirectionLines(lat, lng) {
       color = '#94a3b8'; weight = 1; opacity = 0.35; dashArray = '2,4';
     }
 
-    // 方位角から終点を計算（簡易版）
-    const rad = (angle - 0) * Math.PI / 180; // 北が0度
-    const dlat = Math.cos(rad) * (LINE_LENGTH / 111);
-    const dlng = Math.sin(rad) * (LINE_LENGTH / (111 * Math.cos(lat * Math.PI / 180)));
-    const endLat = lat + dlat;
-    const endLng = lng + dlng;
+    // 方位角から終点を計算
+    const drawLine = (deg, w, op, dash) => {
+      const rad = deg * Math.PI / 180;
+      const dlat = Math.cos(rad) * (LINE_LENGTH / 111);
+      const dlng = Math.sin(rad) * (LINE_LENGTH / (111 * Math.cos(lat * Math.PI / 180)));
+      const opts = { color, weight: w, opacity: op };
+      if (dash) opts.dashArray = dash;
+      const line = L.polyline([[lat, lng], [lat + dlat, lng + dlng]], opts);
+      line.addTo(dirMapInstance);
+      dirMapLines.push(line);
+    };
 
-    const lineOpts = { color, weight, opacity };
-    if (dashArray) lineOpts.dashArray = dashArray;
+    // メイン方位線
+    drawLine(angle, weight, opacity, dashArray);
 
-    const line = L.polyline([[lat, lng], [endLat, endLng]], lineOpts);
-    line.addTo(dirMapInstance);
-    dirMapLines.push(line);
+    // 吉方のみ±15度の補助線を追加（30度・60度相当）
+    if (!isKyo && dd.rank >= 2) {
+      drawLine(angle - 15, weight * 0.5, opacity * 0.5, '3,5');
+      drawLine(angle + 15, weight * 0.5, opacity * 0.5, '3,5');
+    }
 
     // 方位ラベル
-    const midLat = lat + dlat * 0.15;
-    const midLng = lng + dlng * 0.15;
+    const midRad = angle * Math.PI / 180;
+    const midLat = lat + Math.cos(midRad) * (LINE_LENGTH / 111) * 0.15;
+    const midLng = lng + Math.sin(midRad) * (LINE_LENGTH / (111 * Math.cos(lat * Math.PI / 180))) * 0.15;
     const JP_DIR = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
     const starNames = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
     const label = L.divIcon({
