@@ -1773,10 +1773,10 @@ function drawDirectionLines(lat, lng) {
     // メイン方位線
     drawLine(angle, weight, opacity, dashArray);
 
-    // 吉方のみ±15度の補助線を追加（30度・60度相当）
+    // 吉方のみ±15度の補助線を追加
     if (!isKyo && dd.rank >= 2) {
-      drawLine(angle - 15, weight * 0.5, opacity * 0.5, '3,5');
-      drawLine(angle + 15, weight * 0.5, opacity * 0.5, '3,5');
+      drawLine(angle - 15, Math.max(weight * 0.7, 1.2), opacity * 0.75, '5,4');
+      drawLine(angle + 15, Math.max(weight * 0.7, 1.2), opacity * 0.75, '5,4');
     }
 
     // 方位ラベル
