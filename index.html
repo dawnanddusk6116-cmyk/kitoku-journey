@@ -1548,6 +1548,43 @@ body.theme-night .philosophy-list{
     </div>
   </div>
 
+  <!-- 星情報をAIに渡すアコーディオン -->
+  <div style="margin:0 0 4px;" id="starCopyAccordion">
+    <button onclick="toggleStarCopy()" style="
+      width:100%;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));
+      border:none;border-bottom:1px solid var(--rim);
+      padding:11px 16px;cursor:pointer;
+      display:flex;align-items:center;gap:10px;
+      font-family:'Noto Serif JP',serif;text-align:left;
+    ">
+      <span style="font-size:.75rem;color:var(--goldlt);">🤖</span>
+      <div style="flex:1;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);">あなたの星情報をAIに渡す</div>
+        <div style="font-size:.6rem;color:var(--mist);">ChatGPT・Gemini・Claudeなど好きなAIで使えます</div>
+      </div>
+      <span id="starCopyArrow" style="font-size:.65rem;color:var(--mist);">▼</span>
+    </button>
+    <div id="starCopyPanel" style="display:none;padding:14px 16px;background:linear-gradient(135deg,rgba(138,104,32,.04),rgba(255,255,255,.4));border-bottom:1px solid var(--rim);">
+      <div style="font-size:.68rem;color:var(--mist);line-height:1.85;margin-bottom:12px;">
+        下の星情報をコピーして、ChatGPT・Gemini・Claudeなどお好きなAIに貼り付けてください。<br>
+        あなたの星・納音・方位の情報が入った状態で相談できます。<br>
+        <span style="color:var(--goldlt);">KITOKUの気学先生を使わない時でも、星情報を持ち歩いてどこでも使えます。</span>
+      </div>
+      <div id="starCopyText" style="
+        background:var(--card);border:1px solid var(--rim);border-radius:8px;
+        padding:12px;font-size:.7rem;color:var(--snow);line-height:1.9;
+        margin-bottom:10px;word-break:break-all;
+      ">—</div>
+      <button onclick="copyStarInfoFromIndex()" style="
+        width:100%;background:linear-gradient(135deg,rgba(138,104,32,.15),rgba(138,104,32,.06));
+        border:1.5px solid rgba(138,104,32,.35);border-radius:8px;
+        color:var(--goldlt);font-size:.78rem;padding:11px;
+        cursor:pointer;letter-spacing:.12em;font-weight:700;
+        font-family:'Noto Serif JP',serif;
+      " id="starCopyBtn">📋 星情報をコピー</button>
+    </div>
+  </div>
+
   <!-- まずはここ（ゴールド） -->
   <div class="section-block tone-daily" id="sec1">
     <div class="cards-grid">
@@ -2109,6 +2146,68 @@ function startKITOKU() {
   localStorage.setItem('kitoku-gender', gGender);
   localStorage.setItem('kitoku-self-gender', gGender);
   showSelector();
+}
+
+// ============================================================
+// 星情報コピー（アコーディオン）
+// ============================================================
+function toggleStarCopy(){
+  const panel=document.getElementById('starCopyPanel');
+  const arrow=document.getElementById('starCopyArrow');
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  arrow.textContent=isOpen?'▼':'▲';
+  if(!isOpen) buildStarCopyText();
+}
+
+function buildStarCopyText(){
+  const birth=localStorage.getItem('kitoku-birth')||'';
+  if(!birth){document.getElementById('starCopyText').textContent='生年月日を設定してください。';return;}
+  const [by,bm,bd]=birth.split('-').map(Number);
+  const {kY,kM}=getKD(by,bm,bd);
+  const h=calcHonmei(kY);
+  const t=calcTsukimei(h,kM);
+  const k=calcKeisha(h,t);
+  const dok=calcDokai(h,t);
+  const nac=calcNayin(by);
+  const nacM=calcNayin(by-(by%2===0?1:0));
+  const STARS={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+  const now=new Date();
+  const y=now.getFullYear(),m=now.getMonth()+1,d=now.getDate();
+  const dayCenter=getDayCenter(y,m,d);
+
+  const text=`【私の星情報（KITOKU @ JOURNEY）】
+本命星：${STARS[h]||''}
+月命星：${STARS[t]||''}
+傾斜：${STARS[k]||''}
+同会：${STARS[dok]||''}
+納音（年）：${nac?.n||''}
+生年月日：${by}年${bm}月${bd}日
+
+【今日（${y}年${m}月${d}日）の情報】
+今日の中宮：${STARS[dayCenter]||''}
+
+この情報をもとに相談に乗ってください。`;
+
+  document.getElementById('starCopyText').textContent=text;
+}
+
+function copyStarInfoFromIndex(){
+  const text=document.getElementById('starCopyText').textContent;
+  if(!text||text==='—') return;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById('starCopyBtn');
+    btn.textContent='✅ コピーしました';
+    btn.style.color='#3a7a4e';
+    setTimeout(()=>{btn.textContent='📋 星情報をコピー';btn.style.color='';},2000);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    const btn=document.getElementById('starCopyBtn');
+    btn.textContent='✅ コピーしました';
+    setTimeout(()=>{btn.textContent='📋 星情報をコピー';},2000);
+  });
 }
 
 // ============================================================
