@@ -1251,23 +1251,59 @@ body.theme-night .philosophy-list{
         <span style="color:var(--goldlt);">あなたの本命星は今の時代の流れとどう重なっていますか？</span>
       </div>
 
-      <div style="font-size:.6rem;color:var(--mist);font-weight:700;margin-bottom:6px;">時代を読む5つのサイクル</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-        <div style="background:rgba(154,48,32,.08);border:1px solid rgba(154,48,32,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-          <div style="color:#9a3020;font-weight:700;margin-bottom:2px;">180年</div>三元九運
+      <div style="font-size:.6rem;color:var(--mist);font-weight:700;margin-bottom:6px;">時代を読む5つのサイクル（タップで詳細）</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
+
+        <div onclick="toggleCycle('c180')" style="background:rgba(154,48,32,.08);border:1px solid rgba(154,48,32,.2);border-radius:8px;padding:8px 12px;cursor:pointer;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:.68rem;color:var(--snow);"><span style="color:#9a3020;font-weight:700;">180年 ／ 三元九運</span></div>
+            <span id="c180arrow" style="font-size:.6rem;color:var(--mist);">▼</span>
+          </div>
+          <div id="c180" style="display:none;margin-top:8px;font-size:.65rem;color:var(--mist);line-height:1.8;">
+            180年を上元・中元・下元（各60年）に分け、さらに各20年を1運として9つに分けます。現在は<strong style="color:#9a3020;">下元九運（2024〜2043年）</strong>。風水・暦学で使われる大きな時代の流れを読む周期です。
+          </div>
         </div>
-        <div style="background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-          <div style="color:var(--goldlt);font-weight:700;margin-bottom:2px;">60年</div>干支大サイクル
+
+        <div onclick="toggleCycle('c60')" style="background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:8px;padding:8px 12px;cursor:pointer;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:.68rem;color:var(--snow);"><span style="color:var(--goldlt);font-weight:700;">60年 ／ 干支大サイクル</span></div>
+            <span id="c60arrow" style="font-size:.6rem;color:var(--mist);">▼</span>
+          </div>
+          <div id="c60" style="display:none;margin-top:8px;font-size:.65rem;color:var(--mist);line-height:1.8;">
+            十干（10）×十二支（12）の最小公倍数60年で一巡するサイクル。現在は<strong style="color:var(--goldlt);">丙午（2026年）</strong>。歴史的に見ると戦争・革命・産業革命など大きな変化が60年周期で繰り返す傾向があります。
+          </div>
         </div>
-        <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-          <div style="color:var(--goldlt);font-weight:700;margin-bottom:2px;">12年</div>干支小サイクル
+
+        <div onclick="toggleCycle('c12')" style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.15);border-radius:8px;padding:8px 12px;cursor:pointer;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:.68rem;color:var(--snow);"><span style="color:var(--goldlt);font-weight:700;">12年 ／ 干支小サイクル</span></div>
+            <span id="c12arrow" style="font-size:.6rem;color:var(--mist);">▼</span>
+          </div>
+          <div id="c12" style="display:none;margin-top:8px;font-size:.65rem;color:var(--mist);line-height:1.8;">
+            十二支（子・丑・寅…）が12年で一巡するサイクル。現在は<strong style="color:var(--goldlt);">午年（2026年）</strong>。経済・社会のリズムと重なることが多く、木星の公転周期（約12年）とも対応します。
+          </div>
         </div>
-        <div style="background:rgba(48,100,154,.08);border:1px solid rgba(48,100,154,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-          <div style="color:#4a6a9a;font-weight:700;margin-bottom:2px;">9年</div>個人の年運・月運
+
+        <div onclick="toggleCycle('c9')" style="background:rgba(48,100,154,.08);border:1px solid rgba(48,100,154,.2);border-radius:8px;padding:8px 12px;cursor:pointer;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:.68rem;color:var(--snow);"><span style="color:#4a6a9a;font-weight:700;">9年 ／ 個人の年運・月運</span></div>
+            <span id="c9arrow" style="font-size:.6rem;color:var(--mist);">▼</span>
+          </div>
+          <div id="c9" style="display:none;margin-top:8px;font-size:.65rem;color:var(--mist);line-height:1.8;">
+            九星気学の中核。本命星が9年周期で盤面を一巡し、その年の運勢の流れが決まります。坎入（北に回座する年）は充電期・魂の脱皮の時期。あなたの今年の位置はKITOKU @ JOURNEYで確認できます。
+          </div>
         </div>
-        <div style="background:rgba(60,140,80,.06);border:1px solid rgba(60,140,80,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-          <div style="color:#3a7a4e;font-weight:700;margin-bottom:2px;">経済</div>コンドラチェフ波
+
+        <div onclick="toggleCycle('ckon')" style="background:rgba(60,140,80,.06);border:1px solid rgba(60,140,80,.15);border-radius:8px;padding:8px 12px;cursor:pointer;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:.68rem;color:var(--snow);"><span style="color:#3a7a4e;font-weight:700;">経済 ／ コンドラチェフ波</span></div>
+            <span id="ckonarrow" style="font-size:.6rem;color:var(--mist);">▼</span>
+          </div>
+          <div id="ckon" style="display:none;margin-top:8px;font-size:.65rem;color:var(--mist);line-height:1.8;">
+            約40〜60年周期で繰り返す経済の長期波動。技術革新（蒸気機関→鉄道→電力→IT→AI）と連動します。現在はAI・再生可能エネルギーを牽引役とする第6波の入口とされ、三元九運の九運（離火）と時代の流れが重なります。
+          </div>
         </div>
+
       </div>
 
       <div style="background:rgba(0,0,0,.03);border-radius:8px;padding:10px 12px;margin-bottom:10px;">
@@ -2212,6 +2248,14 @@ function startKITOKU() {
 // ============================================================
 // 星情報コピー（アコーディオン）
 // ============================================================
+function toggleCycle(id){
+  const el=document.getElementById(id);
+  const arrow=document.getElementById(id+'arrow');
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  if(arrow)arrow.textContent=isOpen?'▼':'▲';
+}
+
 function toggleSangen(){
   const panel=document.getElementById('sangenPanel');
   const arrow=document.getElementById('sangenArrow');
