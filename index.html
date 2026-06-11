@@ -1229,8 +1229,21 @@ body.theme-night .philosophy-list{
 
   <!-- 三元九運セクション -->
   <div style="margin:16px 16px 0;">
-    <div style="background:linear-gradient(135deg,rgba(154,48,32,.06),rgba(255,200,50,.04));border:1px solid rgba(154,48,32,.15);border-radius:14px;padding:16px;">
-      <div style="font-size:.6rem;letter-spacing:.18em;color:#9a3020;font-weight:800;margin-bottom:8px;">✦ 今は何運？ — 三元九運</div>
+    <button onclick="toggleSangen()" style="
+      width:100%;background:linear-gradient(135deg,rgba(154,48,32,.08),rgba(255,200,50,.04));
+      border:1px solid rgba(154,48,32,.15);border-radius:14px;
+      padding:12px 16px;cursor:pointer;
+      display:flex;align-items:center;gap:10px;
+      font-family:'Noto Serif JP',serif;text-align:left;
+    ">
+      <span style="font-size:.8rem;">🔥</span>
+      <div style="flex:1;">
+        <div style="font-size:.72rem;font-weight:700;color:#9a3020;">今は何運？ — 三元九運</div>
+        <div style="font-size:.6rem;color:var(--mist);">九運（離火運）2024〜2043年・AI・発信・個人ブランドの時代</div>
+      </div>
+      <span id="sangenArrow" style="font-size:.65rem;color:#9a3020;">▼</span>
+    </button>
+    <div id="sangenPanel" style="display:none;background:linear-gradient(135deg,rgba(154,48,32,.04),rgba(255,200,50,.02));border:1px solid rgba(154,48,32,.12);border-top:none;border-radius:0 0 14px 14px;padding:14px 16px;">
       <div style="font-size:.88rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;">🔥 九運（離火運）2024〜2043年</div>
       <div style="font-size:.72rem;color:var(--snow);line-height:1.85;margin-bottom:12px;">
         AI・情報・発信力・個人ブランドが強まる時代。<br>
@@ -1238,37 +1251,39 @@ body.theme-night .philosophy-list{
         <span style="color:var(--goldlt);">あなたの本命星は今の時代の流れとどう重なっていますか？</span>
       </div>
 
-      <!-- 5つのサイクル -->
-      <div style="display:grid;gap:6px;margin-bottom:12px;">
-        <div style="font-size:.6rem;letter-spacing:.12em;color:var(--mist);font-weight:700;margin-bottom:2px;">時代を読む5つのサイクル</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          <div style="background:rgba(154,48,32,.08);border:1px solid rgba(154,48,32,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-            <div style="color:#9a3020;font-weight:700;margin-bottom:2px;">180年</div>三元九運
-          </div>
-          <div style="background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-            <div style="color:var(--goldlt);font-weight:700;margin-bottom:2px;">60年</div>干支大サイクル
-          </div>
-          <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-            <div style="color:var(--goldlt);font-weight:700;margin-bottom:2px;">12年</div>干支小サイクル
-          </div>
-          <div style="background:rgba(48,100,154,.08);border:1px solid rgba(48,100,154,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-            <div style="color:#4a6a9a;font-weight:700;margin-bottom:2px;">9年</div>個人の年運・月運
-          </div>
-          <div style="background:rgba(60,140,80,.06);border:1px solid rgba(60,140,80,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
-            <div style="color:#3a7a4e;font-weight:700;margin-bottom:2px;">経済</div>コンドラチェフ波
-          </div>
+      <div style="font-size:.6rem;color:var(--mist);font-weight:700;margin-bottom:6px;">時代を読む5つのサイクル</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+        <div style="background:rgba(154,48,32,.08);border:1px solid rgba(154,48,32,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
+          <div style="color:#9a3020;font-weight:700;margin-bottom:2px;">180年</div>三元九運
+        </div>
+        <div style="background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
+          <div style="color:var(--goldlt);font-weight:700;margin-bottom:2px;">60年</div>干支大サイクル
+        </div>
+        <div style="background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
+          <div style="color:var(--goldlt);font-weight:700;margin-bottom:2px;">12年</div>干支小サイクル
+        </div>
+        <div style="background:rgba(48,100,154,.08);border:1px solid rgba(48,100,154,.2);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
+          <div style="color:#4a6a9a;font-weight:700;margin-bottom:2px;">9年</div>個人の年運・月運
+        </div>
+        <div style="background:rgba(60,140,80,.06);border:1px solid rgba(60,140,80,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;color:var(--snow);line-height:1.6;">
+          <div style="color:#3a7a4e;font-weight:700;margin-bottom:2px;">経済</div>コンドラチェフ波
         </div>
       </div>
 
-      <!-- 九運の象徴 -->
-      <div style="background:rgba(0,0,0,.03);border-radius:8px;padding:10px 12px;">
+      <div style="background:rgba(0,0,0,.03);border-radius:8px;padding:10px 12px;margin-bottom:10px;">
         <div style="font-size:.62rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">九運（離火）が象徴するもの</div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;">
-          ${['🤖 AI・テクノロジー','📡 情報・発信力','🎨 美容・アート','👩 女性リーダー','🔥 個人ブランド','🧘 精神性・内面','💡 コミュニティ'].map(t=>`<span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">${t}</span>`).join('')}
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">🤖 AI・テクノロジー</span>
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">📡 情報・発信力</span>
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">🎨 美容・アート</span>
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">👩 女性リーダー</span>
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">🔥 個人ブランド</span>
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">🧘 精神性・内面</span>
+          <span style="background:rgba(154,48,32,.07);border:1px solid rgba(154,48,32,.12);border-radius:6px;padding:3px 8px;font-size:.6rem;color:var(--snow);">💡 コミュニティ</span>
         </div>
       </div>
 
-      <div style="margin-top:10px;font-size:.6rem;color:var(--mist);line-height:1.7;">
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.7;">
         ※ 三元九運は風水・暦学の考え方です。KITOKUは多角的な視点を情報として開示します。どう活用するかはあなた自身が決めてください。
       </div>
     </div>
@@ -2197,6 +2212,14 @@ function startKITOKU() {
 // ============================================================
 // 星情報コピー（アコーディオン）
 // ============================================================
+function toggleSangen(){
+  const panel=document.getElementById('sangenPanel');
+  const arrow=document.getElementById('sangenArrow');
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  arrow.textContent=isOpen?'▼':'▲';
+}
+
 function toggleStarCopy(){
   const panel=document.getElementById('starCopyPanel');
   const arrow=document.getElementById('starCopyArrow');
