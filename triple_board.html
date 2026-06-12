@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KITOKU — 三盤比較</title>
+<meta name="theme-color" content="#f7f4ef">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;
+  --card:#ffffff;
+  --rim:rgba(100,80,40,.15);
+  --gold:#8a6820;
+  --goldlt:#5c4010;
+  --snow:#1c1208;
+  --mist:#6a5030;
+  --radius:12px;
+}
+html,body{background:var(--bg);min-height:100dvh;color:var(--snow);font-family:'Noto Serif JP',serif;}
+
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:env(safe-area-inset-top,12px) 16px 12px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.96);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-brand{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
+.header-back{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(120,90,20,.08);border:1px solid rgba(120,90,20,.3);
+  color:var(--goldlt);font-size:.72rem;padding:7px 12px;border-radius:8px;
+  cursor:pointer;letter-spacing:.06em;text-decoration:none;
+}
+.page-hero{
+  text-align:center;padding:20px 16px 14px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(120,90,20,.06),transparent 70%);
+  border-bottom:1px solid var(--rim);
+}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.2em;color:#5c3a08;}
+.page-sub{font-size:.65rem;letter-spacing:.15em;color:var(--mist);margin-top:4px;}
+
+/* 入力 */
+.input-section{margin:14px 16px;padding:16px;background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);}
+.input-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.input-row:last-child{margin-bottom:0;}
+.input-lbl{font-size:.72rem;letter-spacing:.12em;color:var(--gold);min-width:60px;font-weight:600;}
+input[type="date"]{flex:1;background:rgba(0,0,0,.03);border:1px solid rgba(100,80,40,.2);border-radius:6px;padding:8px 12px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.82rem;outline:none;}
+input[type="date"]:focus{border-color:rgba(120,90,20,.5);}
+.calc-btn{display:block;width:100%;margin-top:14px;background:linear-gradient(135deg,rgba(120,90,20,.15),rgba(120,90,20,.08));border:1px solid rgba(120,90,20,.4);border-radius:8px;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:1rem;letter-spacing:.2em;padding:13px;cursor:pointer;transition:all .3s;}
+.calc-btn:active{transform:scale(.98);}
+.settings-note{margin-top:12px;padding:10px 12px;background:rgba(120,90,20,.045);border:1px solid rgba(120,90,20,.14);border-radius:9px;font-size:.62rem;color:var(--mist);line-height:1.8;}
+.settings-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:9px;padding-top:9px;border-top:1px solid rgba(120,90,20,.1);}
+.settings-title{font-size:.68rem;color:var(--goldlt);font-weight:700;letter-spacing:.08em;margin-bottom:2px;}
+.settings-sub{font-size:.58rem;color:rgba(106,80,48,.78);line-height:1.6;}
+.settings-select{background:rgba(255,255,255,.7);border:1px solid rgba(120,90,20,.22);border-radius:7px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.66rem;padding:6px 8px;min-width:112px;}
+
+/* 南上/北上 */
+.orient-row{display:flex;justify-content:center;gap:8px;margin:0 16px 10px;}
+.orient-btn{padding:7px 20px;border-radius:20px;font-size:.72rem;letter-spacing:.1em;border:1px solid rgba(100,80,40,.2);background:rgba(0,0,0,.03);color:var(--mist);cursor:pointer;transition:all .2s;font-family:'Noto Serif JP',serif;}
+.orient-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.4);color:var(--goldlt);font-weight:700;}
+
+/* 星情報バー */
+.star-bar{margin:0 16px 8px;padding:10px 14px;background:rgba(120,90,20,.05);border:1px solid rgba(120,90,20,.15);border-radius:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.star-bar-item{font-size:.72rem;color:var(--mist);}
+.star-bar-item strong{color:#5c3a08;}
+
+/* 輪重バナー */
+.rincho-check-banner{margin:0 16px 8px;padding:12px 14px;background:rgba(120,70,0,.05);border:1px solid rgba(120,70,0,.2);border-radius:10px;display:none;}
+.rincho-check-banner.show{display:block;}
+.rincho-check-title{font-size:.72rem;letter-spacing:.12em;color:#7a4800;margin-bottom:6px;font-weight:700;}
+.rincho-check-dirs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.rincho-dir-tag{padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;background:rgba(120,70,0,.1);border:1px solid rgba(120,70,0,.3);color:#7a4800;}
+.rincho-dir-tag.kyo{background:rgba(184,40,64,.08);border-color:rgba(184,40,64,.3);color:#b82840;}
+
+/* 三盤 */
+.boards-container{display:flex;flex-direction:column;gap:12px;padding:0 16px 24px;}
+.board-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);overflow:hidden;}
+.board-card-head{padding:10px 14px;background:rgba(120,90,20,.04);border-bottom:1px solid var(--rim);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.board-type-badge{font-size:.65rem;letter-spacing:.1em;padding:3px 10px;border-radius:10px;font-weight:700;}
+.badge-year{background:rgba(80,120,200,.1);border:1px solid rgba(80,120,200,.25);color:#3a5a9a;}
+.badge-month{background:rgba(120,90,20,.12);border:1px solid rgba(120,90,20,.3);color:#7a5010;}
+.badge-day{background:rgba(184,40,64,.08);border:1px solid rgba(184,40,64,.25);color:#b82840;}
+.board-nav{display:flex;align-items:center;gap:6px;}
+.board-nav-btn{background:rgba(100,80,40,.06);border:1px solid rgba(100,80,40,.18);border-radius:5px;color:var(--mist);font-size:.85rem;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.board-nav-btn:active{transform:scale(.9);}
+.board-nav-label{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:#5c3a08;letter-spacing:.08em;}
+.board-nav-sub{font-size:.5rem;color:var(--mist);}
+.board-body{padding:10px 8px;}
+.compass-outer-wrap{max-width:340px;margin:0 auto;}
+
+/* 盤面グリッド */
+.compass-grid{
+  display:grid;grid-template-columns:1fr 1.4fr 1fr;
+  grid-template-rows:1fr 1.4fr 1fr;
+  gap:2px;width:100%;aspect-ratio:1;
+  padding:3px;
+  border:1px solid rgba(100,80,40,.18);border-radius:8px;
+  background:rgba(100,80,40,.02);
+}
+.cell{border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;border:1px solid transparent;transition:all .15s;padding:1px;gap:0;}
+.cell:active{transform:scale(.95);}
+.cell-center{border-radius:50%;background:rgba(120,90,20,.08);border:1px solid rgba(120,90,20,.22);}
+.cell-kichi{background:rgba(140,100,10,.08);border-color:rgba(140,100,10,.32);}
+.cell-daikichi{background:rgba(140,100,10,.14);border-color:rgba(140,100,10,.5);}
+.cell-saikokichi{background:rgba(140,100,10,.2);border-color:rgba(140,100,10,.6);animation:glowG 2.5s ease-in-out infinite;}
+@keyframes glowG{0%,100%{box-shadow:0 0 8px rgba(140,100,10,.2);}50%{box-shadow:0 0 16px rgba(140,100,10,.4);}}
+.cell-kyo{background:rgba(184,40,64,.06);border-color:rgba(184,40,64,.28);}
+.cell-normal{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.07);}
+.cell-rincho{background:rgba(120,70,0,.16)!important;border-color:rgba(120,70,0,.55)!important;animation:glowR 2s ease-in-out infinite!important;}
+@keyframes glowR{0%,100%{box-shadow:0 0 10px rgba(120,70,0,.25);}50%{box-shadow:0 0 20px rgba(120,70,0,.48);}}
+
+.cell-num{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;line-height:1;}
+.cell-center .cell-num{color:#5c3a08;font-size:1.25rem;}
+.cell-kichi .cell-num,.cell-daikichi .cell-num,.cell-saikokichi .cell-num{color:#7a5008;}
+.cell-rincho .cell-num{color:#7a4000!important;}
+.cell-kyo .cell-num{color:#b82840;}
+.cell-normal .cell-num{color:rgba(40,28,10,.5);}
+.cell-name{font-size:.32rem;letter-spacing:.01em;line-height:1;color:rgba(40,28,10,.35);}
+.cell-kichi .cell-name,.cell-daikichi .cell-name,.cell-saikokichi .cell-name{color:rgba(120,80,8,.5);}
+.cell-kyo .cell-name{color:rgba(184,40,64,.45);}
+
+/* ★ 方位ラベル（盤の外周）さらに大きく */
+.dir-label-text{font-size:1rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dir-label-text.normal{color:rgba(40,28,10,.6);}
+.dir-label-text.kyo{color:rgba(40,28,10,.55);}
+.dir-label-text.kichi{color:#4a2e00;font-weight:800;}
+.dir-label-text.rincho{color:#7a4000;font-weight:800;}
+.dir-badge{font-size:.62rem;margin-top:3px;padding:2px 6px;border-radius:4px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;}
+.dir-badge.kichi{background:rgba(140,100,10,.1);border:1px solid rgba(140,100,10,.35);color:#4a2e00;}
+.dir-badge.dai{background:rgba(140,100,10,.16);border:1px solid rgba(140,100,10,.45);color:#3a2000;}
+.dir-badge.kyo{background:rgba(184,40,64,.06);border:1px solid rgba(184,40,64,.25);color:#b82840;}
+.dir-badge.rincho{background:rgba(120,70,0,.12);border:1px solid rgba(120,70,0,.4);color:#7a4000;}
+
+/* 凶方サマリー */
+.kyo-summary{margin-top:8px;padding:7px 10px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07);border-radius:7px;font-size:.6rem;color:rgba(40,28,10,.5);line-height:1.9;}
+
+/* ポップアップ */
+.popup-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;}
+.popup-overlay.open{display:flex;}
+.popup-sheet{background:#f7f4ef;border-radius:20px 20px 0 0;border-top:1px solid rgba(120,90,20,.3);width:100%;max-width:480px;max-height:80dvh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom,20px);animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;background:rgba(0,0,0,.12);border-radius:2px;margin:12px auto 0;}
+.sheet-head{padding:14px 20px 10px;border-bottom:1px solid rgba(120,90,20,.12);}
+.sheet-dir{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#5c3a08;letter-spacing:.1em;}
+.sheet-body{padding:14px 20px;}
+.sheet-close{display:block;width:calc(100% - 40px);margin:12px 20px 0;background:rgba(120,90,20,.08);border:1px solid rgba(120,90,20,.25);border-radius:8px;color:var(--gold);font-size:.82rem;padding:11px;cursor:pointer;letter-spacing:.1em;}
+.popup-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.78rem;}
+.popup-row:last-child{border-bottom:none;}
+.popup-lbl{color:var(--gold);min-width:46px;font-size:.63rem;letter-spacing:.06em;padding-top:2px;}
+.popup-val{color:var(--snow);flex:1;line-height:1.8;}
+
+footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;color:var(--mist);opacity:.6;}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-brand">✦ 三盤比較</div>
+  <a href="direction_v2.html" class="header-back">← 方位盤へ</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-title">年盤 · 月盤 · 日盤</div>
+  <div class="page-sub">旅行・引越し・重要行動の徹底確認ツール</div>
+</div>
+
+<div class="input-section">
+  <div class="input-row">
+    <span class="input-lbl">生年月日</span>
+    <input type="date" id="inputBirth">
+  </div>
+  <div class="input-row">
+    <span class="input-lbl">確認日</span>
+    <input type="date" id="inputDate">
+  </div>
+  <button class="calc-btn" onclick="compute()">✦ 三盤を表示する</button>
+  <div class="settings-note">
+    この三盤比較は、通常の方位盤と同じ判定設定を使います。設定を変更すると、direction_v2.html の方位盤にも同じ見方が反映されます。
+    <div class="settings-row">
+      <div>
+        <div class="settings-title">月の影響度</div>
+        <div class="settings-sub">月命殺・月命的殺を含めるか</div>
+      </div>
+      <select class="settings-select" id="settingTsukimei" onchange="setDirectionSetting('tsukimei',this.value)">
+        <option value="on">詳細</option>
+        <option value="off">簡易</option>
+      </select>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-title">定位対冲</div>
+        <div class="settings-sub">表は常時表示。ONで裏も含める</div>
+      </div>
+      <select class="settings-select" id="settingTeii" onchange="setDirectionSetting('teii',this.value)">
+        <option value="off">標準</option>
+        <option value="on">裏も含める</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="orient-row" id="orientRow" style="display:none;">
+  <button class="orient-btn active" id="btn-south" onclick="setOrient('south')">南上（気学式）</button>
+  <button class="orient-btn" id="btn-north" onclick="setOrient('north')">北上（地図式）</button>
+</div>
+
+<div class="star-bar" id="starBar" style="display:none;">
+  <div class="star-bar-item">本命星：<strong id="sb-honmei">—</strong></div>
+  <div class="star-bar-item">月命星：<strong id="sb-tsukimei">—</strong></div>
+  <div class="star-bar-item">確認日：<strong id="sb-kanshi">—</strong></div>
+</div>
+
+<div class="rincho-check-banner" id="rinchoCheckBanner">
+  <div class="rincho-check-title">🌟 輪重チェック結果</div>
+  <div style="font-size:.62rem;color:rgba(120,70,0,.65);margin-bottom:5px;">年盤・月盤・日盤で吉凶が一致する方位</div>
+  <div class="rincho-check-dirs" id="rinchoCheckDirs"></div>
+</div>
+
+<div class="boards-container" id="boardsContainer" style="display:none;">
+
+  <!-- 年盤 -->
+  <div class="board-card">
+    <div class="board-card-head">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="board-type-badge badge-year">年盤</span>
+        <div>
+          <div class="board-nav-label" id="lbl-year">—</div>
+          <div class="board-nav-sub" id="sub-year">—</div>
+        </div>
+      </div>
+      <div class="board-nav">
+        <button class="board-nav-btn" onclick="navBoard('year',-1)">◀</button>
+        <button class="board-nav-btn" onclick="navBoard('year',1)">▶</button>
+      </div>
+    </div>
+    <div class="board-body">
+      <div id="compassWrap-year"></div>
+      <div class="kyo-summary" id="kyo-year" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- 月盤 -->
+  <div class="board-card">
+    <div class="board-card-head">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="board-type-badge badge-month">月盤</span>
+        <div>
+          <div class="board-nav-label" id="lbl-month">—</div>
+          <div class="board-nav-sub" id="sub-month">—</div>
+        </div>
+      </div>
+      <div class="board-nav">
+        <button class="board-nav-btn" onclick="navBoard('month',-1)">◀</button>
+        <button class="board-nav-btn" onclick="navBoard('month',1)">▶</button>
+      </div>
+    </div>
+    <div class="board-body">
+      <div id="compassWrap-month"></div>
+      <div class="kyo-summary" id="kyo-month" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- 日盤 -->
+  <div class="board-card">
+    <div class="board-card-head">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="board-type-badge badge-day">日盤</span>
+        <div>
+          <div class="board-nav-label" id="lbl-day">—</div>
+          <div class="board-nav-sub" id="sub-day">—</div>
+        </div>
+      </div>
+      <div class="board-nav">
+        <button class="board-nav-btn" onclick="navBoard('day',-1)">◀</button>
+        <button class="board-nav-btn" onclick="navBoard('day',1)">▶</button>
+      </div>
+    </div>
+    <div class="board-body">
+      <div id="compassWrap-day"></div>
+      <div class="kyo-summary" id="kyo-day" style="display:none;"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ポップアップ -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div class="sheet-dir" id="popDir">—</div>
+      <div style="font-size:.78rem;color:var(--mist);margin-top:4px;" id="popBanType">—</div>
+    </div>
+    <div class="sheet-body" id="popBody"></div>
+    <button class="sheet-close" onclick="closePopup()">閉じる</button>
+  </div>
+</div>
+
+<footer>KITOKU @ JOURNEY — journey6112.jp</footer>
+
+<script>
+// ══ 定数 ══
+const STARS={1:{j:'一白水星',k:'一白',elem:'水'},2:{j:'二黒土星',k:'二黒',elem:'土'},3:{j:'三碧木星',k:'三碧',elem:'木'},4:{j:'四緑木星',k:'四緑',elem:'木'},5:{j:'五黄土星',k:'五黄',elem:'土'},6:{j:'六白金星',k:'六白',elem:'金'},7:{j:'七赤金星',k:'七赤',elem:'金'},8:{j:'八白土星',k:'八白',elem:'土'},9:{j:'九紫火星',k:'九紫',elem:'火'}};
+const HP={1:'N',2:'SW',3:'E',4:'SE',5:'C',6:'NW',7:'W',8:'NE',9:'S'};
+const OPP={N:'S',S:'N',E:'W',W:'E',NE:'SW',SW:'NE',SE:'NW',NW:'SE',C:'C'};
+const ALL8=['N','NE','E','SE','S','SW','W','NW'];
+const LAYOUT_S=[['SE','S','SW'],['E','C','W'],['NE','N','NW']];
+const LAYOUT_N=[['NW','N','NE'],['W','C','E'],['SW','S','SE']];
+const JP={N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+const ZODIAC=[{k:'子',d:'N'},{k:'丑',d:'NE'},{k:'寅',d:'NE'},{k:'卯',d:'E'},{k:'辰',d:'SE'},{k:'巳',d:'SE'},{k:'午',d:'S'},{k:'未',d:'SW'},{k:'申',d:'SW'},{k:'酉',d:'W'},{k:'戌',d:'NW'},{k:'亥',d:'NW'}];
+const BRANCH_DIR=['N','NE','NE','E','SE','SE','S','SW','SW','W','NW','NW'];
+const SANGO_MAP={子:{dirs:['N','SE','SW']},丑:{dirs:['SE','W','NE']},寅:{dirs:['NE','S','NW']},卯:{dirs:['NW','E','SW']},辰:{dirs:['N','SE','SW']},巳:{dirs:['SE','W','NE']},午:{dirs:['NE','S','NW']},未:{dirs:['NW','E','SW']},申:{dirs:['N','SE','SW']},酉:{dirs:['SE','W','NE']},戌:{dirs:['NE','S','NW']},亥:{dirs:['NW','E','SW']}};
+const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
+const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+const SEKKI_DB={2020:{1:6,2:4,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2021:{1:5,2:3,3:5,4:5,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2022:{1:5,2:4,3:6,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2023:{1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:8,9:8,10:8,11:8,12:7},2024:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:8,11:7,12:7},2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}};
+const NICHIBAN_ANCHORS={2025:{yoto:{ref:new Date(2025,2,6),stem:1,branch:0,star:9,endDate:new Date(2025,5,21)},into:{ref:new Date(2025,5,22),stem:2,branch:1,star:8}},2026:{yoto:{ref:new Date(2026,2,4),stem:3,branch:1,star:2,endDate:new Date(2026,5,20)},into:{ref:new Date(2026,5,21),stem:2,branch:2,star:7}},2027:{yoto:{ref:new Date(2027,2,6),stem:5,branch:3,star:9,endDate:new Date(2027,5,21)},into:{ref:new Date(2027,5,22),stem:6,branch:4,star:8}},2028:{yoto:{ref:new Date(2028,2,5),stem:7,branch:5,star:7,endDate:new Date(2028,5,20)},into:{ref:new Date(2028,5,21),stem:8,branch:6,star:6}}};
+
+// ══ 計算関数 ══
+function ds9(y){let s=0;String(Math.abs(y)).split('').forEach(d=>s+=+d);return s>9?ds9(s):s;}
+function m9(n){return((n-1)%9+9)%9+1;}
+function red(n){return((n-1)%9+9)%9+1;}
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];return{1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7}[m];}
+function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
+function starPos(s,c){return HP[((s-c+4)%9+9)%9+1];}
+function buildBoard(c){const p={};for(let s=1;s<=9;s++){p[starPos(s,c)]=s;}return p;}
+function getNodeMonthIdx(y,m,d){const sd=getSekkiDay(y,m);let mo=d>=sd?m:(m===1?12:m-1);if(mo===2)return 0;if(mo>=3)return mo-2;return 11;}
+function getMonthCenter(y,m,d){const ni=getNodeMonthIdx(y,m,d);const cy=(ni===11&&m<=2)?y-1:y;const c=yearCenter(cy);const g=[1,4,7].includes(c)?'A':[3,6,9].includes(c)?'B':'C';return TSUKI_MATRIX[g][ni];}
+function getMonthBranch(y,m,d){return(getNodeMonthIdx(y,m,d)+2)%12;}
+function getZodiac(y){return ZODIAC[((y-2020)%12+12)%12];}
+function getMonthPeriod(y,m){const sd=getSekkiDay(y,m);let ny=y,nm=m+1;if(nm>12){nm=1;ny++;}const ed=getSekkiDay(ny,nm)-1;return{start:`${y}年${m}月${sd}日`,end:`${ny}年${nm}月${ed}日`};}
+function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS[y];if(!a)return null;const useY=t<=a.yoto.endDate;const anc=useY?a.yoto:a.into;const diff=Math.round((t-anc.ref)/86400000);const stem=((anc.stem+diff)%10+10)%10;const branch=((anc.branch+diff)%12+12)%12;const star=useY?(((anc.star-1+diff)%9)+9)%9+1:(((anc.star-1-diff)%9)+9)%9+1;return{stem,branch,star};}
+function getDayCenter(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return(((2-1+diff)%9)+9)%9+1;}return dd.star;}
+function getDayBranch(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return((1+diff)%12+12)%12;}return dd.branch;}
+function getDayStem(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 0;return dd.stem;}
+function getTendoDir(y,m,d){const TENDO=[6,7,8,9,1,2,3,4,5,6,7,8];const ni=getNodeMonthIdx(y,m,d);const ts=TENDO[ni];const p=buildBoard(getMonthCenter(y,m,d));return Object.keys(p).find(dir=>p[dir]===ts&&dir!=='C')||null;}
+const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
+function aiseiList(s,tsukimei){
+  if(s===5&&tsukimei===5){return new Set([2,6,7,8,9]);}
+  return new Set((AISEI[s]||[]).filter(x=>x!==5&&x!==s));
+}
+function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
+  if(dir==='C')return{rank:0,badges:[]};
+  const gender=localStorage.getItem('kitoku-gender')||'male';
+  const is55=(honmei===5&&tsukimei===5);
+  const bonus55=is55?(gender==='female'?6:7):null;
+  const honList=aiseiList(honmei,tsukimei);
+  const tsukiList=is55?honList:aiseiList(tsukimei);
+  const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
+  const inTendo=tendoDir&&dir===tendoDir;
+  const inBonus55=is55&&bonus55&&starN===bonus55;
+  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['本命・月命・三合']};
+  if(inHon&&inTsuki)return{rank:4,badges:['本命・月命 吉']};
+  if(inBonus55)return{rank:3,badges:['特大ボーナス']};
+  if(inHon&&inSango)return{rank:3,badges:['吉方・三合']};
+  if(inHon)return{rank:2,badges:['吉方',(inTendo?'天道':null)].filter(Boolean)};
+  if(inTendo)return{rank:1,badges:['天道']};
+  return{rank:0,badges:[]};
+}
+function getKyouDirs(center,honmei,breakDir,tsukimei,banType){
+  const p=buildBoard(center);
+  const goDir=Object.keys(p).find(d=>p[d]===5)||null;
+  const anDir=goDir?OPP[goDir]:null;
+  const hmDir=Object.keys(p).find(d=>p[d]===honmei)||null;
+  const hmTDir=hmDir?OPP[hmDir]:null;
+  const tiDir=Object.keys(p).find(function(d){var s=p[d];return d!=='C'&&s!==5&&HP[s]&&HP[s]!=='C'&&OPP[HP[s]]===d;})||null;
+  const tiTDir=tiDir?OPP[tiDir]:null;
+  const items=[];
+  if(goDir&&goDir!=='C')items.push({name:'五黄殺',dir:goDir});
+  if(anDir&&anDir!=='C')items.push({name:'暗剣殺',dir:anDir});
+  const bn=banType==='year'?'歳破':banType==='month'?'月破':'日破';
+  if(breakDir&&breakDir!=='C')items.push({name:bn,dir:breakDir});
+  if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
+  if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
+  if(tiDir&&tiDir!=='C')items.push({name:'定位対冲',dir:tiDir});
+  if(gState.teiiAsKyo&&tiTDir&&tiTDir!=='C')items.push({name:'定位対冲（裏）',dir:tiTDir});
+  if(gState.tsukimeiSatsu==='on'&&tsukimei&&tsukimei!==honmei){
+    const tmDir=Object.keys(p).find(d=>p[d]===tsukimei)||null;
+    const tmTDir=tmDir?OPP[tmDir]:null;
+    if(tmDir&&tmDir!=='C'){const ex=items.find(i=>i.dir===tmDir);if(ex)ex.name+='・月命殺';else items.push({name:'月命殺',dir:tmDir});}
+    if(tmTDir&&tmTDir!=='C'){const ex=items.find(i=>i.dir===tmTDir);if(ex)ex.name+='・月命的殺';else items.push({name:'月命的殺',dir:tmTDir});}
+  }
+  return{items,kyouSet:new Set(items.map(i=>i.dir))};
+}
+
+// ══ 状態 ══
+let gState={honmei:0,tsukimei:0,by:0,bm:0,bd:0,orient:'south',tsukimeiSatsu:'on',teiiAsKyo:false,yearNav:{y:2026},monthNav:{y:2026,m:6,d:12},dayNav:{y:2026,m:6,d:12},dirData:{year:null,month:null,day:null}};
+
+// ══ 初期化 ══
+(function(){
+  const now=new Date(),jst=new Date(now.getTime()+9*3600000);
+  const y=jst.getUTCFullYear(),m=String(jst.getUTCMonth()+1).padStart(2,'0'),d=String(jst.getUTCDate()).padStart(2,'0');
+  document.getElementById('inputDate').value=`${y}-${m}-${d}`;
+  const o=localStorage.getItem('kitoku-orient')||'south';
+  gState.orient=o;
+  document.getElementById('btn-south').classList.toggle('active',o==='south');
+  document.getElementById('btn-north').classList.toggle('active',o==='north');
+  syncDirectionSettingsFromStorage();
+  const saved=localStorage.getItem('kitoku-birth');
+  if(saved){document.getElementById('inputBirth').value=saved;setTimeout(()=>compute(),100);}
+})();
+
+function syncDirectionSettingsFromStorage(){
+  gState.tsukimeiSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
+  gState.teiiAsKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
+  const ts=document.getElementById('settingTsukimei');
+  const te=document.getElementById('settingTeii');
+  if(ts)ts.value=gState.tsukimeiSatsu;
+  if(te)te.value=gState.teiiAsKyo?'on':'off';
+}
+
+function setDirectionSetting(kind,value){
+  if(kind==='tsukimei'){
+    const v=value==='off'?'off':'on';
+    gState.tsukimeiSatsu=v;
+    try{localStorage.setItem('kitoku-tsukimei-satsu',v);}catch(e){}
+  }
+  if(kind==='teii'){
+    const on=value==='on';
+    gState.teiiAsKyo=on;
+    try{localStorage.setItem('kitoku-teii-kyo',on?'1':'0');}catch(e){}
+  }
+  if(gState.honmei){renderBoard('year');renderBoard('month');renderBoard('day');setTimeout(checkRincho,50);}
+}
+
+function setOrient(o){
+  gState.orient=o;
+  try{localStorage.setItem('kitoku-orient',o);}catch(e){}
+  document.getElementById('btn-south').classList.toggle('active',o==='south');
+  document.getElementById('btn-north').classList.toggle('active',o==='north');
+  if(gState.honmei){renderBoard('year');renderBoard('month');renderBoard('day');setTimeout(checkRincho,50);}
+}
+
+function compute(){
+  const bv=document.getElementById('inputBirth').value,dv=document.getElementById('inputDate').value;
+  if(!bv||!dv)return alert('生年月日と確認日を入力してください');
+  const [by,bm,bd]=bv.split('-').map(Number),[ty,tm,td]=dv.split('-').map(Number);
+  const {kY,kM}=getKD(by,bm,bd);
+  const honmei=calcHonmei(kY),tsukimei=calcTsukimei(honmei,kM);
+  gState.honmei=honmei;gState.tsukimei=tsukimei;gState.by=by;gState.bm=bm;gState.bd=bd;
+  gState.yearNav={y:ty};gState.monthNav={y:ty,m:tm,d:td};gState.dayNav={y:ty,m:tm,d:td};
+  document.getElementById('sb-honmei').textContent=STARS[honmei].j;
+  document.getElementById('sb-tsukimei').textContent=STARS[tsukimei].j;
+  document.getElementById('sb-kanshi').textContent=`${KAN[getDayStem(ty,tm,td)]}${SHI[getDayBranch(ty,tm,td)]}の日`;
+  document.getElementById('starBar').style.display='flex';
+  document.getElementById('orientRow').style.display='flex';
+  document.getElementById('boardsContainer').style.display='flex';
+  renderBoard('year');renderBoard('month');renderBoard('day');checkRincho();
+}
+
+// ══ 盤面描画 ══
+function renderBoard(type){
+  syncDirectionSettingsFromStorage();
+  const {honmei,tsukimei}=gState;
+  let y,m,d,center,breakDir,lbl,sub;
+  if(type==='year'){
+    y=gState.yearNav.y;m=6;d=1;center=yearCenter(y);breakDir=OPP[getZodiac(y).d];
+    lbl=`${y}年`;sub=`${y}年2月4日〜${y+1}年2月3日`;
+  }else if(type==='month'){
+    ({y,m,d}=gState.monthNav);center=getMonthCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
+    const p=getMonthPeriod(y,m);lbl=`${y}年 ${m}月`;sub=`${p.start}〜${p.end}`;
+  }else{
+    ({y,m,d}=gState.dayNav);center=getDayCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
+    lbl=`${y}年${m}月${d}日`;sub=`${KAN[getDayStem(y,m,d)]}${SHI[getDayBranch(y,m,d)]}の日`;
+  }
+  document.getElementById(`lbl-${type}`).textContent=lbl;
+  document.getElementById(`sub-${type}`).textContent=sub;
+
+  const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,tsukimei,type);
+  let branchName=getZodiac(y).k;
+  if(type==='month')branchName=SHI[getMonthBranch(y,m,d)];
+  if(type==='day')branchName=SHI[getDayBranch(y,m,d)];
+  const sangoSet=new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
+  const tendoDir=(type!=='year')?getTendoDir(y,m,d):null;
+  const p2s=buildBoard(center);
+
+  const dirData={};
+  ALL8.forEach(dir=>{
+    const starN=p2s[dir],r=rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir);
+    dirData[dir]={starN,rank:r.rank,badges:r.badges,isKyo:kyouSet.has(dir)};
+  });
+  dirData['C']={starN:center,rank:0,badges:[],isKyo:false};
+  gState.dirData[type]=dirData;
+
+  const isSouth=gState.orient!=='north';
+  const LAYOUT=isSouth?LAYOUT_S:LAYOUT_N;
+  const topRow=   isSouth?['SE','S','SW']:['NW','N','NE'];
+  const bottomRow=isSouth?['NE','N','NW']:['SW','S','SE'];
+  const leftDir=  isSouth?'E':'W';
+  const rightDir= isSouth?'W':'E';
+
+  const wrap=document.getElementById(`compassWrap-${type}`);
+  wrap.innerHTML='';
+  const outerWrap=document.createElement('div');
+  outerWrap.className='compass-outer-wrap';
+  wrap.appendChild(outerWrap);
+
+  // ── グリッド ──
+  const gridDiv=document.createElement('div');
+  gridDiv.className='compass-grid';
+  LAYOUT.forEach(row=>{
+    row.forEach(dir=>{
+      const cell=document.createElement('div');
+      const isC=(dir==='C');
+      const dd=dirData[dir];
+      let cls='cell ';
+      if(isC)cls+='cell-center';
+      else if(dd.isKyo)cls+='cell-kyo';
+      else if(dd.rank>=4)cls+='cell-saikokichi';
+      else if(dd.rank>=3)cls+='cell-daikichi';
+      else if(dd.rank>=2)cls+='cell-kichi';
+      else cls+='cell-normal';
+      cell.className=cls;
+      if(!isC)cell.onclick=()=>openPopup(dir,type,dirData,kyouItems);
+      const numEl=document.createElement('div');numEl.className='cell-num';numEl.textContent=dd.starN||'';cell.appendChild(numEl);
+      if(!isC){const nameEl=document.createElement('div');nameEl.className='cell-name';nameEl.textContent=STARS[dd.starN]?.k||'';cell.appendChild(nameEl);}
+      gridDiv.appendChild(cell);
+    });
+  });
+
+  // ── 方位ラベル生成関数 ──
+  function makeDirCell(dir){
+    const div=document.createElement('div');
+    div.style.cssText='text-align:center;overflow:hidden;line-height:1.3;padding:2px 1px;';
+    if(!dir)return div;
+    const dd=dirData[dir];
+    let labelCls='dir-label-text normal',subText='',badgeCls='kichi';
+    if(dd.isKyo){
+      labelCls='dir-label-text kyo';badgeCls='kyo';
+      const kns=kyouItems.filter(k=>k.dir===dir);
+      if(kns.length)subText=kns.map(k=>k.name).join('・');
+    }else if(dd.rank>=5){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'本命・月命・三合';}
+    else if(dd.rank>=4){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'本命・月命 吉';}
+    else if(dd.rank>=3){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'吉方・三合';}
+    else if(dd.rank>=2){labelCls='dir-label-text kichi';badgeCls='kichi';subText=dd.badges[0]||'吉方';}
+    else if(dd.rank>=1){labelCls='dir-label-text kichi';badgeCls='kichi';subText='天道';}
+    const dirEl=document.createElement('div');dirEl.className=labelCls;dirEl.style.cssText='font-size:1rem;font-weight:700;white-space:nowrap;';dirEl.textContent=JP[dir];div.appendChild(dirEl);
+    if(subText){const badge=document.createElement('div');badge.className='dir-badge '+badgeCls;badge.style.cssText='font-size:.62rem;margin-top:3px;';badge.textContent=subText;div.appendChild(badge);}
+    return div;
+  }
+
+  function makeSideLabel(dir){
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2px;flex-shrink:0;width:38px;';
+    const dd=dirData[dir];
+    let labelCls='dir-label-text normal',subText='',badgeCls='kichi';
+    if(dd.isKyo){
+      labelCls='dir-label-text kyo';badgeCls='kyo';
+      const kns=kyouItems.filter(k=>k.dir===dir);
+      if(kns.length)subText=kns.map(k=>k.name).join('・');
+    }else if(dd.rank>=5){labelCls='dir-label-text kichi';badgeCls='dai';subText='本命・月命・三合';}
+    else if(dd.rank>=4){labelCls='dir-label-text kichi';badgeCls='dai';subText='本命・月命 吉';}
+    else if(dd.rank>=3){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'三合';}
+    else if(dd.rank>=2){labelCls='dir-label-text kichi';badgeCls='kichi';subText='吉方';}
+    else if(dd.rank>=1){labelCls='dir-label-text kichi';badgeCls='kichi';subText='天道';}
+    const dirEl=document.createElement('div');dirEl.className=labelCls;dirEl.style.cssText='font-size:1rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.08em;';dirEl.textContent=JP[dir];div.appendChild(dirEl);
+    if(subText){const badge=document.createElement('div');badge.className='dir-badge '+badgeCls;badge.style.cssText='font-size:.5rem;margin-top:4px;padding:2px 3px;writing-mode:vertical-rl;white-space:nowrap;';badge.textContent=subText;div.appendChild(badge);}
+    return div;
+  }
+
+  const gridStyle='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:3px;';
+
+  // 上段ラベル
+  const topDiv=document.createElement('div');topDiv.style.cssText=gridStyle+'margin-bottom:3px;';
+  topRow.forEach(dir=>topDiv.appendChild(makeDirCell(dir)));
+  outerWrap.appendChild(topDiv);
+
+  // 中段（左ラベル＋盤面＋右ラベル）
+  const midWrap=document.createElement('div');midWrap.style.cssText='display:flex;align-items:center;';
+  const leftLabel=makeSideLabel(leftDir);leftLabel.style.cssText+='min-width:38px;max-width:38px;';
+  const rightLabel=makeSideLabel(rightDir);rightLabel.style.cssText+='min-width:38px;max-width:38px;';
+  gridDiv.style.flex='1';gridDiv.style.minWidth='0';
+  midWrap.appendChild(leftLabel);midWrap.appendChild(gridDiv);midWrap.appendChild(rightLabel);
+  outerWrap.appendChild(midWrap);
+
+  // 下段ラベル
+  const bottomDiv=document.createElement('div');bottomDiv.style.cssText=gridStyle+'margin-top:3px;';
+  bottomRow.forEach(dir=>bottomDiv.appendChild(makeDirCell(dir)));
+  outerWrap.appendChild(bottomDiv);
+
+  // 凶方サマリー
+  const kyoEl=document.getElementById(`kyo-${type}`);
+  if(kyouItems.length>0){kyoEl.innerHTML='⚠ 凶方：'+kyouItems.map(k=>`${JP[k.dir]}（${k.name}）`).join('　');kyoEl.style.display='block';}
+  else kyoEl.style.display='none';
+}
+
+// ══ 輪重チェック ══
+function checkRincho(){
+  const yD=gState.dirData.year,mD=gState.dirData.month,dD=gState.dirData.day;
+  if(!yD||!mD||!dD)return;
+  const banner=document.getElementById('rinchoCheckBanner'),dirsEl=document.getElementById('rinchoCheckDirs');
+  dirsEl.innerHTML='';
+  document.querySelectorAll('.cell-rincho').forEach(c=>c.classList.remove('cell-rincho'));
+  const results=[];
+  ALL8.forEach(dir=>{
+    const y=yD[dir],m=mD[dir],d=dD[dir];if(!y||!m||!d)return;
+    const allKichi=!y.isKyo&&!m.isKyo&&!d.isKyo&&(y.rank>=2||m.rank>=2||d.rank>=2);
+    const allKyo=y.isKyo&&m.isKyo&&d.isKyo;
+    if(allKichi||allKyo)results.push({dir,allKichi,allKyo,rankSum:(y.rank||0)+(m.rank||0)+(d.rank||0)});
+  });
+  if(!results.length){banner.classList.remove('show');return;}
+  results.sort((a,b)=>b.rankSum-a.rankSum);
+  results.forEach(r=>{
+    const tag=document.createElement('div');tag.className='rincho-dir-tag'+(r.allKyo?' kyo':'');
+    tag.textContent=JP[r.dir]+(r.allKichi?' ✦ 3盤吉':' ⚠ 3盤凶');dirsEl.appendChild(tag);
+  });
+  // 吉一致をハイライト
+  const LAYOUT=gState.orient==='north'?LAYOUT_N:LAYOUT_S;
+  results.filter(r=>r.allKichi).forEach(r=>{
+    ['year','month','day'].forEach(type=>{
+      const outerWrap=document.querySelector(`#compassWrap-${type} .compass-outer-wrap`);
+      if(!outerWrap)return;
+      const grid=outerWrap.querySelector('.compass-grid');if(!grid)return;
+      const cells=grid.querySelectorAll('.cell');
+      LAYOUT.flat().forEach((dir,i)=>{if(dir===r.dir&&cells[i])cells[i].classList.add('cell-rincho');});
+    });
+  });
+  banner.classList.add('show');
+}
+
+// ══ ナビゲーション ══
+function navBoard(type,delta){
+  if(type==='year')gState.yearNav.y+=delta;
+  else if(type==='month'){
+    let {y,m}=gState.monthNav;m+=delta;if(m>12){m=1;y++;}if(m<1){m=12;y--;}
+    gState.monthNav={y,m,d:getSekkiDay(y,m)};
+  }else{
+    const cur=new Date(gState.dayNav.y,gState.dayNav.m-1,gState.dayNav.d);cur.setDate(cur.getDate()+delta);
+    gState.dayNav={y:cur.getFullYear(),m:cur.getMonth()+1,d:cur.getDate()};
+  }
+  renderBoard(type);setTimeout(checkRincho,50);
+}
+
+// ══ ポップアップ ══
+function openPopup(dir,type,dirData,kyouItems){
+  const dd=dirData[dir],star=STARS[dd.starN]||{};
+  const typeLabel={year:'年盤',month:'月盤',day:'日盤'}[type];
+  document.getElementById('popDir').textContent=JP[dir];
+  document.getElementById('popBanType').textContent=`${typeLabel} — ${star.j||''}`;
+  let html=`<div class="popup-row"><span class="popup-lbl">星</span><span class="popup-val">${star.j||''}（${star.elem||''}）</span></div>`;
+  if(dd.isKyo){
+    const names=kyouItems.filter(k=>k.dir===dir).map(k=>k.name).join('・');
+    html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#b82840;">⚠ 凶方<br><span style="font-size:.75rem;">${names}</span></span></div>`;
+  }else if(dd.rank>=2){
+    html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#7a5008;">✦ 吉方（ランク${dd.rank}）</span></div>`;
+    if(dd.badges.length)html+=`<div class="popup-row"><span class="popup-lbl">理由</span><span class="popup-val">${dd.badges.join('・')}</span></div>`;
+  }else{
+    html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:var(--mist);">普通</span></div>`;
+  }
+  let triStatus='';
+  [{k:'year',l:'年盤'},{k:'month',l:'月盤'},{k:'day',l:'日盤'}].forEach(({k,l})=>{
+    const s=gState.dirData[k]?.[dir];if(!s)return;
+    const icon=s.isKyo?'⚠':s.rank>=2?'✦':'—';
+    const col=s.isKyo?'#b82840':s.rank>=2?'#7a5008':'var(--mist)';
+    triStatus+=`<span style="color:${col};margin-right:8px;">${icon}${l}</span>`;
+  });
+  if(triStatus)html+=`<div class="popup-row"><span class="popup-lbl">三盤</span><span class="popup-val">${triStatus}</span></div>`;
+  document.getElementById('popBody').innerHTML=html;
+  document.getElementById('popupOverlay').classList.add('open');
+}
+function closePopup(){document.getElementById('popupOverlay').classList.remove('open');}
+document.getElementById('popupOverlay').addEventListener('click',function(e){if(e.target===this)closePopup();});
+</script>
+</body>
+</html>
