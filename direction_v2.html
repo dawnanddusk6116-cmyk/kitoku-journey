@@ -3833,6 +3833,8 @@ function toggleChildMode(el){
   if(row)row.style.display=el.checked?'block':'none';
   if(track)track.style.background=el.checked?'#1D9E75':'rgba(255,255,255,.15)';
   if(thumb)thumb.style.transform=el.checked?'translateX(18px)':'translateX(0)';
+  // トグルON/OFF時に盤面を即時再計算
+  try{renderAll();}catch(e){}
 }
 
 function updateChildInfo(){
