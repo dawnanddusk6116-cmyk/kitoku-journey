@@ -795,14 +795,21 @@ function getBreakDirForDate(){
   if(state.banType==='month')return OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
   return OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
 }
+function getSangoSetForPremiumDate(){
+  const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  let branchName=getZodiac(y).k;
+  if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(y,m,d)];
+  if(state.banType==='day')branchName=BRANCH_NAME_P[getDayBranch(y,m,d)];
+  return new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
+}
 function buildDirData(center){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   const p2s=buildBoardFromCenter(center);
-  const sangoSet=new Set((SANGO_MAP[getZodiac(y).k]||{dirs:[]}).dirs);
+  const sangoSet=getSangoSetForPremiumDate();
   const tendoDir=state.banType==='year'?null:getTendoDir(y,m,d);
   // direction_v2.htmlと設定を共有
   const _teiiKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
-  const _tmSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'off';
+  const _tmSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
   const _soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
   const kyou=getKyouDirs(center,state.info.honmei,getBreakDirForDate(),state.info.tsukimei,state.banType,{teiiAsKyo:_teiiKyo,tsukimeiSatsu:_tmSatsu});
   const dirData={};
@@ -822,6 +829,7 @@ function dirInfo(dir,dirData){
   if(dd.isKyo)return {nameClass:'kyo',badgeClass:'kyo',sub:dd.kyoNames.join('・')||'凶方'};
   if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'最高吉方'};
   if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:'本命・月命 吉'};
+  if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方・三合'};
   if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方'};
   if(dd.rank>=1)return {nameClass:'kichi',badgeClass:'kichi',sub:'天道'};
   return {nameClass:'',badgeClass:'',sub:''};

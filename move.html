@@ -1364,8 +1364,9 @@ html.font-large .font-btn{font-size:.8rem;}
       <div style="background:rgba(60,100,60,.04);border:1px solid rgba(60,100,60,.2);border-radius:10px;padding:14px;">
         <div style="font-size:.7rem;font-weight:700;color:#3a6e3a;margin-bottom:6px;">💬 もっと詳しく知りたい場合</div>
         <div style="font-size:.63rem;color:var(--mist);line-height:1.85;">
-          家相は間取り・方角・建物の形によって個別性が高く、このナビでは判断基準のみをお伝えしています。<br>
-          詳しい診断が必要な場合は、気学鑑定士に間取り図を見てもらうことをお勧めします。<br>
+          MOVEでは引越しの方位・距離・時期を中心に見ます。家相は間取り・方角・建物の形によって個別性が高いため、このナビでは簡易的な判断基準のみをお伝えしています。<br>
+          中心・張り欠け・玄関・温度差・地相まで確認したい場合は、KITOKU @ HOMEの家相診断を使ってください。<br>
+          <a href="kaso.html" style="display:inline-block;margin-top:8px;color:#3a6e3a;font-weight:700;text-decoration:none;">✦ 家相診断を開く</a><br>
           KITOKUの判断基準は東洋の叡智とY理論に基づく独自解釈です。
         </div>
       </div>
@@ -1647,7 +1648,7 @@ let gState = {
 function getSharedKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType) {
   const opts = {
     teiiAsKyo: localStorage.getItem('kitoku-teii-kyo') === '1',
-    tsukimeiSatsu: localStorage.getItem('kitoku-tsukimei-satsu') || 'off'
+    tsukimeiSatsu: localStorage.getItem('kitoku-tsukimei-satsu') || 'on'
   };
   return getKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType, opts);
 }
@@ -1963,12 +1964,12 @@ function openExternalMap(url) {
 const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
 const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
 
-function calcRankMap(boardCenter, kyouSetX) {
+function calcRankMap(boardCenter, kyouSetX, sangoSet) {
   const board = buildBoardFromCenter(boardCenter);
   const map = {};
   ['SE','S','SW','E','W','NE','N','NW'].forEach(d => {
     const starN = board[d] || 5;
-    const r = rankDir(d, starN, gState.honmei, gState.tsukimei, new Set(), null);
+    const r = rankDir(d, starN, gState.honmei, gState.tsukimei, sangoSet || new Set(), null);
     map[d] = kyouSetX && kyouSetX.has(d) ? 0 : r.rank;
   });
   return map;
@@ -2006,6 +2007,8 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
       badge = `<div style="font-size:.6rem;color:#b04060;line-height:1.3;margin-top:2px;font-weight:700;text-align:center;">${kyoNames}</div>`;
     } else if (rank >= 4) {
       badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:700;">本命・月命</div>`;
+    } else if (rank >= 3) {
+      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:700;">吉方・三合</div>`;
     } else if (rank >= 2) {
       badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:600;">吉方</div>`;
     }
@@ -2137,9 +2140,9 @@ function calcAndShowDir() {
 
   // 方位盤生成（direction_v2.htmlと同じ表示方式）
   // makeBanGrid: グローバル関数として定義済み（calcAndShowDir外）
-  const yearRankMap  = calcRankMap(yearCenterN, yKyouSet);
-  const monthRankMap = calcRankMap(monthCenter,  mKyouSet);
-  const dayRankMap   = calcRankMap(dayCenter,    dKyouSet);
+  const yearRankMap  = calcRankMap(yearCenterN, yKyouSet, ySangoSet);
+  const monthRankMap = calcRankMap(monthCenter,  mKyouSet, mSangoSet);
+  const dayRankMap   = calcRankMap(dayCenter,    dKyouSet, dSangoSet);
 
   const yKyoItemsForGrid = getSharedKyouDirs(yearCenterN, gState.honmei, yearBreakDir, gState.tsukimei, 'year').items;
 
@@ -2621,7 +2624,7 @@ function showDayDetail(y, m, d) {
 
     // 日盤グリッドをmakeBanGrid（グローバル）で生成
     const dayBoardD = buildBoardFromCenter(dayCenter);
-    const dayRankMapD = calcRankMap(dayCenter, dKyouSetDD);
+    const dayRankMapD = calcRankMap(dayCenter, dKyouSetDD, dSangoSet);
     const { items: dKyoItemsDD } = getSharedKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
     const html = makeBanGrid(dayBoardD, dir, dKyoItemsDD, dKyouSetDD, dayRankMapD);
 
