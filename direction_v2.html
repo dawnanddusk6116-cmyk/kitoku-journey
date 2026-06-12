@@ -1173,7 +1173,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
                   <span style="font-size:.58rem;padding:1px 7px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--rim);color:var(--mist);">他流派</span>
                 </div>
                 <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">定位対冲（上位対沖）</div>
-                <div style="font-size:.65rem;color:var(--mist);">KITOKUでは運勢の現象として別に扱います</div>
+                <div style="font-size:.65rem;color:var(--mist);">ONにすると定位対冲（裏）も凶方に追加。KITOKUは定位対冲（表）のみ表示が標準です</div>
               </div>
               <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
                 <input type="checkbox" id="sw-teii" onchange="setTeiiMode(this.checked)" style="opacity:0;width:0;height:0;position:absolute;">
@@ -1196,11 +1196,11 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           <div style="flex:1;">
             <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">月の影響度</div>
             <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">月命殺・月命的殺 / 小児殺</div>
-            <div style="font-size:.65rem;color:var(--mist);">大人の日常行動では本命星を優先します</div>
+            <div style="font-size:.65rem;color:var(--mist);">本命星＋月命星の両方で、より正確な吉凶を判定します</div>
           </div>
           <select id="sw-tsukimei-satsu" onchange="setTsukimeiSatsu(this.value)" style="background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:5px 8px;font-size:.72rem;">
-            <option value="off">大人（本命星のみ）</option>
-            <option value="on">詳細（月命的殺も表示）</option>
+            <option value="on">詳細（本命＋月命）</option>
+            <option value="off">簡易（本命星のみ）</option>
           </select>
         </div>
       </div>
@@ -2106,24 +2106,12 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
   const inBonus55=is55&&bonus55&&starN===bonus55;
-
-  // 輪重吉方の判定（年盤と月盤の星が一致する方位）
-  const yearP2s=buildBoardFromCenter(gState.yearCent||1);
-  const monthP2s=buildBoardFromCenter(gState.monthCenter||1);
-  const isRinju=yearP2s[dir]!==undefined&&yearP2s[dir]===monthP2s[dir];
-
-  if(inHon&&inTsuki&&inSango&&isRinju)return{rank:6,badges:['🌟 輪重吉方（60倍）','✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
-  if(inHon&&inTsuki&&isRinju)return{rank:5,badges:['🌟 輪重吉方（60倍）','✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inBonus55)return{rank:3,badges:['✦ 特大ボーナス方位','⭐ 5-5特例',(inTendo?'☀️ 天道':null)].filter(Boolean)};
-  if(inHon&&inSango&&isRinju)return{rank:4,badges:['🌟 輪重吉方（60倍）','✦ 吉方・三合',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
-  if(inHon&&isRinju)return{rank:3,badges:['🌟 輪重吉方（60倍）','✦ 吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon)return{rank:2,badges:['✦ 吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inTendo)return{rank:1,badges:['☀️ 天道']};
-  // 凶方位に輪重が重なる場合（警告）
-  if(isRinju){const kyouBadges=['⚠️ 輪重凶方（作用が増幅）'];return{rank:-1,badges:kyouBadges,isRinju:true};}
   return{rank:0,badges:[]};
 }
 function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
@@ -2143,12 +2131,13 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
   if(teiiDir&&teiiDir!=='C'){
-    // 定位対冲：「宇宙のブレーキを方位に含める」がONの場合のみ凶に追加
+    // 定位対冲（表）：「宇宙のブレーキを方位に含める」がOFFでもデフォルト表示
     if(gState.teiiAsKyo)items.push({name:'定位対冲',dir:teiiDir});
+    else items.push({name:'定位対冲',dir:teiiDir}); // 表は常に表示
   }
   if(teiiTDir&&teiiTDir!=='C'){
+    // 定位対冲（裏）：「宇宙のブレーキを方位に含める」がONの場合のみ表示
     if(gState.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiTDir});
-    else items.push({name:'定位対冲（裏）',dir:teiiTDir}); // 裏は常に表示
   }
   // 月命的殺（設定がonの場合のみ）
   const showTsukimei=gState.tsukimeiSatsu==='on';
@@ -2258,11 +2247,11 @@ let gState={};
   updateCompassLabels(savedOrient);
   // 月命的殺設定を読み込む
   try{
-    const savedTm=localStorage.getItem('kitoku-tsukimei-satsu')||'off';
+    const savedTm=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
     gState.tsukimeiSatsu=savedTm;
     const sel=document.getElementById('sw-tsukimei-satsu');
     if(sel)sel.value=savedTm;
-  }catch(e){gState.tsukimeiSatsu='off';}
+  }catch(e){gState.tsukimeiSatsu='on';}
   // 相剋・定位対冲設定を読み込む
   try{
     const soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
@@ -2502,8 +2491,7 @@ async function openDaily(){
       var s=STARS[dd.starN];
       if(!s)return;
       var db=KITOKU_DAILY_DB[s.elem]||KITOKU_DAILY_DB['土'];
-      var rankLabel=dd.rank>=6?'🌟 輪重吉方（60倍）本命・月命・三合'
-        :dd.rank>=5?'本命・月命・三合　最高の吉方'
+      var rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方'
         :dd.rank>=4?'本命・月命　ともに吉方'
         :dd.rank>=3?'吉方（三合の後押しあり）'
         :'吉方（人に与える日）';
@@ -2954,7 +2942,6 @@ function renderBan(type){
       if(isCenter)cls+='cell-center';
       else if(dd.isKyo)cls+='cell-kyo';
       else if(dd.rank>=5)cls+='cell-saikokichi';
-      else if(dd.rank>=6)cls+='cell-saikokichi';
       else if(dd.rank>=4)cls+='cell-saikokichi';
       else if(dd.rank>=3)cls+='cell-daikichi';
       else if(dd.rank>=2)cls+='cell-kichi';
@@ -2991,7 +2978,6 @@ function renderBan(type){
         const kns=kyouItems.filter(k=>k.dir===dir);
         if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
-      else if(dd.rank>=6){labelClass='dir-label-text kichi';subText='🌟 輪重吉方（60倍）';}
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
       else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
@@ -3274,26 +3260,6 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
         <div class="gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}</div>
       </div>
       ${buildAmberActionPlaceholder(starN)}
-      ${(function(){
-        // 輪重吉方の説明ボックス
-        const yearP2s=buildBoardFromCenter(gState.yearCent||1);
-        const monthP2s=buildBoardFromCenter(gState.monthCenter||1);
-        const isRinju=yearP2s[dir]!==undefined&&yearP2s[dir]===monthP2s[dir];
-        if(!isRinju)return '';
-        const isKichiDir=dd.rank>=2;
-        if(isKichiDir){
-          return `<div style="margin-top:10px;padding:12px;background:linear-gradient(135deg,rgba(255,200,50,.12),rgba(255,255,255,.6));border:1.5px solid rgba(220,170,30,.4);border-radius:10px;font-size:.72rem;line-height:1.85;">
-            <div style="font-weight:800;color:#b8860b;margin-bottom:5px;font-size:.75rem;letter-spacing:.08em;">🌟 輪重吉方（りんじゅうきっぽう）</div>
-            <div style="color:var(--snow);">年盤と月盤の星が完全に一致する、稀な吉方位です。通常の<strong>60倍</strong>の吉作用があるとされ、過去に取った凶方位のバグもリセットする力があります。</div>
-            <div style="margin-top:6px;font-size:.65rem;color:var(--goldlt);">⚠️ 同時に凶の作用も増幅するため、五黄殺・暗剣殺に重なる方位は特に注意してください。</div>
-          </div>`;
-        } else {
-          return `<div style="margin-top:10px;padding:10px 12px;background:rgba(176,64,48,.06);border:1px solid rgba(176,64,48,.2);border-radius:8px;font-size:.72rem;line-height:1.8;">
-            <div style="font-weight:700;color:#8a3020;margin-bottom:4px;">⚠️ 輪重凶方（りんじゅうきょうほう）</div>
-            <div style="color:var(--mist);">年盤と月盤の星が一致する方位に凶が重なっています。この方位は凶の作用が通常より強く出やすいため、特に注意が必要です。</div>
-          </div>`;
-        }
-      })()}
       ${(function(){
         // 三合吉方の目的別ブースター
         const z=getZodiac(ty);
@@ -4774,7 +4740,7 @@ function copyAIPrompt(){
       var btnN=document.getElementById('orient-n');
       if(btnS)btnS.classList.toggle('active',so==='south');
       if(btnN)btnN.classList.toggle('active',so==='north');
-      gState.tsukimeiSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'off';
+      gState.tsukimeiSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
       gState.teiiAsKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
       gState.soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
       gState.kichakuWarn=localStorage.getItem('kitoku-kichaku-warn')==='1';
