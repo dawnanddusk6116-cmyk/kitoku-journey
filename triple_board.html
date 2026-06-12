@@ -649,16 +649,33 @@ function checkRincho(){
 }
 
 // ══ ナビゲーション ══
+function updateKanshiBarFromDayNav(){
+  const {y,m,d}=gState.dayNav;
+  document.getElementById('sb-kanshi').textContent=`${KAN[getDayStem(y,m,d)]}${SHI[getDayBranch(y,m,d)]}の日`;
+}
+
 function navBoard(type,delta){
-  if(type==='year')gState.yearNav.y+=delta;
-  else if(type==='month'){
+  if(type==='year'){
+    gState.yearNav.y+=delta;
+    const y=gState.yearNav.y;
+    const m=gState.monthNav.m||6;
+    const d=getSekkiDay(y,m);
+    gState.monthNav={y,m,d};
+    gState.dayNav={y,m,d};
+    renderBoard('year');renderBoard('month');renderBoard('day');
+  }else if(type==='month'){
     let {y,m}=gState.monthNav;m+=delta;if(m>12){m=1;y++;}if(m<1){m=12;y--;}
-    gState.monthNav={y,m,d:getSekkiDay(y,m)};
+    const d=getSekkiDay(y,m);
+    gState.monthNav={y,m,d};
+    gState.dayNav={y,m,d};
+    renderBoard('month');renderBoard('day');
   }else{
     const cur=new Date(gState.dayNav.y,gState.dayNav.m-1,gState.dayNav.d);cur.setDate(cur.getDate()+delta);
     gState.dayNav={y:cur.getFullYear(),m:cur.getMonth()+1,d:cur.getDate()};
+    renderBoard('day');
   }
-  renderBoard(type);setTimeout(checkRincho,50);
+  updateKanshiBarFromDayNav();
+  setTimeout(checkRincho,50);
 }
 
 // ══ ポップアップ ══
