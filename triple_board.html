@@ -77,7 +77,8 @@ input[type="date"]:focus{border-color:rgba(120,90,20,.5);}
 .rincho-dir-tag.kyo{background:rgba(184,40,64,.08);border-color:rgba(184,40,64,.3);color:#b82840;}
 
 /* 三盤 */
-.boards-container{display:flex;flex-direction:column;gap:12px;padding:0 16px 24px;}
+.boards-container{display:none;flex-direction:column;gap:12px;padding:0 16px 24px;}
+.boards-container.show{display:flex;}
 .board-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--radius);overflow:hidden;}
 .board-card-head{padding:10px 14px;background:rgba(120,90,20,.04);border-bottom:1px solid var(--rim);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .board-type-badge{font-size:.65rem;letter-spacing:.1em;padding:3px 10px;border-radius:10px;font-weight:700;}
@@ -91,6 +92,27 @@ input[type="date"]:focus{border-color:rgba(120,90,20,.5);}
 .board-nav-sub{font-size:.5rem;color:var(--mist);}
 .board-body{padding:10px 8px;}
 .compass-outer-wrap{max-width:340px;margin:0 auto;}
+
+@media (min-width: 760px){
+  .boards-container.show{
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    align-items:start;
+    gap:12px;
+  }
+  .board-card{min-width:0;}
+  .board-card-head{min-height:58px;padding:10px 12px;align-items:flex-start;}
+  .board-nav-label{font-size:.88rem;}
+  .board-nav-sub{font-size:.48rem;}
+  .board-body{padding:9px 6px;}
+  .compass-outer-wrap{max-width:min(100%,320px);}
+  .kyo-summary{max-height:48px;overflow:auto;}
+}
+
+@media (min-width: 1280px){
+  .boards-container.show{gap:14px;padding-left:18px;padding-right:18px;}
+  .compass-outer-wrap{max-width:360px;}
+}
 
 /* 盤面グリッド */
 .compass-grid{
@@ -220,7 +242,7 @@ footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;colo
   <div class="rincho-check-dirs" id="rinchoCheckDirs"></div>
 </div>
 
-<div class="boards-container" id="boardsContainer" style="display:none;">
+<div class="boards-container" id="boardsContainer">
 
   <!-- 年盤 -->
   <div class="board-card">
@@ -452,7 +474,7 @@ function compute(){
   document.getElementById('sb-kanshi').textContent=`${KAN[getDayStem(ty,tm,td)]}${SHI[getDayBranch(ty,tm,td)]}の日`;
   document.getElementById('starBar').style.display='flex';
   document.getElementById('orientRow').style.display='flex';
-  document.getElementById('boardsContainer').style.display='flex';
+  document.getElementById('boardsContainer').classList.add('show');
   renderBoard('year');renderBoard('month');renderBoard('day');checkRincho();
 }
 
