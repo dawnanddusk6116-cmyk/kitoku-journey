@@ -203,6 +203,21 @@ body[data-fontsize="l"]{font-size:19px;}
     <div><div class="menu-name">地相チェック（立地診断）</div><div class="menu-desc">周囲の環境・立地の特徴を確認<br>四神相応・袋小路・丘の上の孤立感</div></div>
   </div>
 
+  <div class="menu-card ok" onclick="showPage('s10')">
+    <div class="menu-icon">🏗️</div>
+    <div><div class="menu-name">1階の基盤チェック</div><div class="menu-desc">ガレージ・店舗・柱だけの1階は要注意<br>地下室は大吉の逆転ロジック</div><span class="menu-badge free">チェックシート</span></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s11')">
+    <div class="menu-icon">🗄️</div>
+    <div><div class="menu-name">収納・タンスの位置チェック</div><div class="menu-desc">東南〜南の収納は感情抑圧のバグ<br>今日すぐ動かせる処方箋付き</div><span class="menu-badge free">チェックシート</span></div>
+  </div>
+
+  <div class="menu-card ok" onclick="showPage('s12')">
+    <div class="menu-icon">🛏️</div>
+    <div><div class="menu-name">寝室・部屋の帖数チェック</div><div class="menu-desc">帖数と自分の星が一致すると最高の充電空間<br>生年月日でパーソナライズ</div><span class="menu-badge ai">パーソナル</span></div>
+  </div>
+
   <div class="menu-card gold" onclick="showPage('s8')">
     <div class="menu-icon">🌿</div>
     <div><div class="menu-name">リカバリー処方箋</div><div class="menu-desc">気になる点があっても整えられる<br>花・植物・光・手入れで補う方法</div></div>
@@ -500,6 +515,133 @@ body[data-fontsize="l"]{font-size:19px;}
 これが自らの運勢を守る必須のパッチ（修正）です。</div>
   </div>
 
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s10: 1階の基盤チェック ===== -->
+<div class="page" id="s10">
+  <div class="tool-header">
+    <div class="tool-title">🏗️ 1階の基盤チェック</div>
+    <div class="tool-desc">家相において運勢の基盤は「1階の平面図」で決まります。1階の状態を確認してください。</div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 1階の状態を選んでください</span>
+    <div style="display:grid;gap:8px;">
+      <label class="check-item" id="f1-normal" onclick="selF1('normal')"><div class="check-box" id="c1-normal"></div><div><div class="check-text">1階に居住スペースがある（通常の住宅）</div><div class="check-sub">✅ 大地の気と接続されています</div></div></label>
+      <label class="check-item" id="f1-garage" onclick="selF1('garage')"><div class="check-box" id="c1-garage"></div><div><div class="check-text">1階がビルトインガレージ（駐車場）になっている</div><div class="check-sub">⚠ 下駄履き住宅・大地の気が根付きにくい</div></div></label>
+      <label class="check-item" id="f1-shop" onclick="selF1('shop')"><div class="check-box" id="c1-shop"></div><div><div class="check-text">1階が店舗・事務所（靴を脱がない空間）</div><div class="check-sub">⚠ 居住スペースが2階以上の場合は要注意</div></div></label>
+      <label class="check-item" id="f1-pillar" onclick="selF1('pillar')"><div class="check-box" id="c1-pillar"></div><div><div class="check-text">1階が柱だけの駐車場（ピロティ形式）</div><div class="check-sub">⚠ 大地との接続が最も弱い状態</div></div></label>
+      <label class="check-item" id="f1-basement" onclick="selF1('basement')"><div class="check-box" id="c1-basement"></div><div><div class="check-text">地下室がある</div><div class="check-sub">✅ 地下室はすべて「張り（大吉）」として計算される</div></div></label>
+      <label class="check-item" id="f1-mansion" onclick="selF1('mansion')"><div class="check-box" id="c1-mansion"></div><div><div class="check-text">マンション・集合住宅（1階が店舗・駐車場）</div><div class="check-sub">居住階と1階の距離を確認してください</div></div></label>
+    </div>
+  </div>
+
+  <!-- マンション階数 -->
+  <div class="fc" id="mansionFloorArea" style="display:none;">
+    <span class="fl">✦ 居住している階数</span>
+    <select class="fi fi-select" id="mansionFloor">
+      <option value="1">1〜2階（1階店舗の直上）</option>
+      <option value="3">3〜4階</option>
+      <option value="5">5〜7階</option>
+      <option value="8">8階以上</option>
+    </select>
+  </div>
+
+  <button class="mb" onclick="runF1Check()">✦ 1階の基盤を診断する</button>
+  <div id="f1Result" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s11: 収納・タンスの位置チェック ===== -->
+<div class="page" id="s11">
+  <div class="tool-header">
+    <div class="tool-title">🗄️ 収納・タンスの位置チェック</div>
+    <div class="tool-desc">収納・タンス・コート掛けの場所は、感情や体調に影響します。今の配置を確認してください。</div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 大きな収納・タンスがある方位（複数可）</span>
+    <div class="houi-grid">
+      <div class="houi-btn" id="sb-NW" onclick="togStorage('NW')">北西</div>
+      <div class="houi-btn" id="sb-N" onclick="togStorage('N')">北</div>
+      <div class="houi-btn" id="sb-NE" onclick="togStorage('NE')">北東</div>
+      <div class="houi-btn" id="sb-W" onclick="togStorage('W')">西</div>
+      <div class="houi-btn center">中央</div>
+      <div class="houi-btn" id="sb-E" onclick="togStorage('E')">東</div>
+      <div class="houi-btn" id="sb-SW" onclick="togStorage('SW')">南西</div>
+      <div class="houi-btn" id="sb-S" onclick="togStorage('S')">南</div>
+      <div class="houi-btn" id="sb-SE" onclick="togStorage('SE')">東南</div>
+    </div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ コート掛け・下駄箱の方位</span>
+    <select class="fi fi-select" id="coatDir">
+      <option value="">選択してください</option>
+      <option value="N">北</option>
+      <option value="NE">北東</option>
+      <option value="E">東</option>
+      <option value="SE">東南</option>
+      <option value="S">南</option>
+      <option value="SW">南西</option>
+      <option value="W">西</option>
+      <option value="NW">北西</option>
+    </select>
+  </div>
+
+  <button class="mb" onclick="runStorageCheck()">✦ 収納の配置を診断する</button>
+  <div id="storageResult" style="display:none;margin-top:14px;"></div>
+  <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
+</div>
+
+<!-- ===== s12: 寝室・部屋の帖数チェック ===== -->
+<div class="page" id="s12">
+  <div class="tool-header">
+    <div class="tool-title">🛏️ 寝室・部屋の帖数チェック</div>
+    <div class="tool-desc">部屋の広さ（帖数）の1の位が、あなたの最大吉方の星と一致すると、その空間は最高のエネルギーチャージ空間になります。</div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 生年月日（本命星の算出に使用）</span>
+    <input type="date" class="fi" id="s12Birth" max="2010-12-31">
+    <div style="font-size:.6rem;color:var(--mist);margin-top:6px;">設定済みの生年月日を使用する場合は空欄のままでOKです</div>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 確認したい部屋の帖数</span>
+    <select class="fi fi-select" id="roomSize">
+      <option value="">選択してください</option>
+      <option value="4.5">4.5帖</option>
+      <option value="6">6帖</option>
+      <option value="6.5">6.5帖</option>
+      <option value="7">7帖</option>
+      <option value="7.5">7.5帖</option>
+      <option value="8">8帖</option>
+      <option value="8.5">8.5帖</option>
+      <option value="9">9帖</option>
+      <option value="10">10帖</option>
+      <option value="12">12帖</option>
+      <option value="14">14帖</option>
+      <option value="16">16帖</option>
+      <option value="17">17帖</option>
+      <option value="18">18帖</option>
+      <option value="20">20帖</option>
+    </select>
+  </div>
+
+  <div class="fc">
+    <span class="fl">✦ 用途</span>
+    <select class="fi fi-select" id="roomUse">
+      <option value="sleep">寝室</option>
+      <option value="work">書斎・仕事部屋</option>
+      <option value="living">リビング</option>
+      <option value="child">子供部屋</option>
+    </select>
+  </div>
+
+  <button class="mb" onclick="runRoomCheck()">✦ 部屋の相性を診断する</button>
+  <div id="roomResult" style="display:none;margin-top:14px;"></div>
   <button class="back-tool-btn" onclick="showPage('s0')">← メニューへ戻る</button>
 </div>
 
@@ -906,6 +1048,140 @@ function setFontSize(s){
   document.documentElement.setAttribute('data-fontsize',s);
   try{localStorage.setItem('kitoku-kaso-fontsize',s);}catch(e){}
   ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===s);});
+}
+
+/* ===== s10: 1階の基盤チェック ===== */
+var selectedF1='';
+function selF1(v){
+  selectedF1=v;
+  ['normal','garage','shop','pillar','basement','mansion'].forEach(function(x){
+    document.getElementById('f1-'+x).classList.toggle('active',x===v);
+    document.getElementById('c1-'+x).textContent=x===v?'✓':'';
+  });
+  document.getElementById('mansionFloorArea').style.display=v==='mansion'?'block':'none';
+}
+function runF1Check(){
+  if(!selectedF1){alert('1階の状態を選んでください');return;}
+  var res=document.getElementById('f1Result');
+  res.style.display='block';
+  var html='';
+  if(selectedF1==='normal'){
+    html='<div class="result-box ok"><div class="result-label ok">✅ 問題なし</div><div class="result-title">1階に居住スペースあり — 大地との接続は正常です</div><div class="result-text">1階に居住スペースがあり、大地の気とのつながりは良好です。この状態を維持してください。\n\n家相において「気」は大地から立ち上がるため、1階に住居があることが最も安定した基盤です。</div></div>';
+  }else if(selectedF1==='basement'){
+    html='<div class="result-box ok"><div class="result-label ok">✅ 大吉の空間</div><div class="result-title">地下室あり — すべて「張り（吉）」として計算されます</div><div class="result-text">地下室は家相において全て「張り（大吉相）」として計算される特別な空間です。\n\n地下室があることで：\n・人生の基盤力が劇的に強化される\n・健康面での底力が増す\n・経済的な安定基盤が整う\n\n地下室を書斎・収納・趣味スペースとして活用することで、そのエネルギーをさらに活かせます。</div></div>';
+  }else if(selectedF1==='garage'){
+    html='<div class="result-box warn"><div class="result-label warn">⚠️ 注意あり</div><div class="result-title">1階ビルトインガレージ（下駄履き住宅）— 基盤の弱さに注意</div><div class="result-text">1階がガレージになっている「下駄履き住宅」は、大地の気との接続が弱くなりやすい配置です。\n\n出やすい現象：\n・人生の基盤が浮ついて安定しにくい\n・経済的な波が大きくなりやすい\n\n処方箋：\n・ガレージの壁をなくして柱だけの開放構造にし、風が通り抜けるようにする\n・階段を外階段にすることでエネルギーの循環が改善する\n・植物を1階に置いて大地とのつながりを補う</div></div>';
+  }else if(selectedF1==='pillar'){
+    html='<div class="result-box warn"><div class="result-label warn">⚠️ 要注意</div><div class="result-title">ピロティ（柱だけ）— 大地との接続が最も弱い状態</div><div class="result-text">1階が柱だけの駐車場（ピロティ形式）は、大地の気が根付きにくい最も注意が必要な配置です。\n\n処方箋：\n・柱の間に観葉植物を置いて大地とのつながりを補う\n・風が通り抜ける状態を保つ（壁で塞がない）\n・1階に人の出入りを増やして気の循環を促す\n・マンション等ならなるべく上の階（5階以上）に住む</div></div>';
+  }else if(selectedF1==='shop'){
+    html='<div class="result-box amber"><div class="result-label amber">✦ 確認事項</div><div class="result-title">1階店舗・事務所 — 居住と仕事の気の分離を意識する</div><div class="result-text">1階が靴を脱がない空間（店舗・事務所）で、その上に居住スペースがある場合、仕事と生活の気が混ざりやすくなります。\n\n処方箋：\n・居住スペースへの入口を店舗とは完全に分ける\n・居住スペースの玄関に植物（2つ以上）を置いて切り替えの場をつくる\n・できれば居住部分を高層階（5階以上）にすると影響が薄まる</div></div>';
+  }else if(selectedF1==='mansion'){
+    var floor=document.getElementById('mansionFloor').value;
+    if(floor==='1'){
+      html='<div class="result-box warn"><div class="result-label warn">⚠️ 注意あり</div><div class="result-title">1〜2階居住（店舗・駐車場の直上）— 影響を受けやすい</div><div class="result-text">1階の店舗・駐車場の直上（1〜2階）は、下層からの凶作用の影響を受けやすい状態です。\n\n処方箋：\n・居住スペースの玄関に植物（2つ以上）を置く\n・部屋の明るさと温度を均一に保つ\n・可能であれば上の階への引越しを検討する</div></div>';
+    }else if(floor==='3'){
+      html='<div class="result-box amber"><div class="result-label amber">✦ 要確認</div><div class="result-title">3〜4階居住 — 影響は残るが軽減されます</div><div class="result-text">3〜4階はある程度の距離があるため影響は軽減されますが、完全には無効化されません。\n\n処方箋：\n・玄関に植物（2つ以上）を置いて気のバリアをつくる\n・定期的な換気と掃除で気の流れを整える</div></div>';
+    }else if(floor==='5'){
+      html='<div class="result-box amber"><div class="result-label amber">✦ ほぼ問題なし</div><div class="result-title">5〜7階居住 — 影響はほぼ無効化されています</div><div class="result-text">5階以上になると、1階からの凶作用は大幅に薄まります。KITOKUでは「5階以上で影響がほぼ消滅する」としています。\n\n引き続き部屋の間取り（自分の部屋を1階の平面図として見立てる）を整えることで、より良い空間になります。</div></div>';
+    }else{
+      html='<div class="result-box ok"><div class="result-label ok">✅ 問題なし</div><div class="result-title">8階以上居住 — 1階からの影響は完全に無効化</div><div class="result-text">8階以上になると、1階の店舗・駐車場からの凶作用は完全に無効化されます。\n\nあとは自分の部屋の間取りを「1階の平面図」として見立てて、玄関の方位・水回りの配置・中心の状態を確認することで、最良の住環境になります。</div></div>';
+    }
+  }
+  res.innerHTML=html;
+}
+
+/* ===== s11: 収納・タンスの位置チェック ===== */
+var selectedStorageDirs=[];
+function togStorage(dir){
+  var btn=document.getElementById('sb-'+dir);
+  var idx=selectedStorageDirs.indexOf(dir);
+  if(idx>=0){selectedStorageDirs.splice(idx,1);btn.classList.remove('active');}
+  else{selectedStorageDirs.push(dir);btn.classList.add('active');}
+}
+function runStorageCheck(){
+  var coat=document.getElementById('coatDir').value;
+  var res=document.getElementById('storageResult');
+  res.style.display='block';
+  var msgs=[];
+
+  // 東南〜南の収納チェック
+  var badStorage=selectedStorageDirs.filter(function(d){return d==='SE'||d==='S';});
+  if(badStorage.length>0){
+    var dirNames=badStorage.map(function(d){return d==='SE'?'東南':'南';}).join('・');
+    msgs.push('<div class="result-box warn"><div class="result-label warn">⚠️ 見直しサイン</div><div class="result-title">'+dirNames+'の大きな収納 — 感情抑圧のバグ</div><div class="result-text">東南〜南は太陽の光と活気を取り入れるべき方位です。この方位に大きな収納・タンスがあると、自分の感情を素直に出せずに抑圧しやすくなり、人間関係のトラブルや激しい別れを引き起こしやすくなります。\n\n処方箋：\n・収納家具を別の方位へ移動させる\n・移動が難しい場合は、扉を開け放って風を通す\n・「暗がり（秘密・抑圧）」の空間にしないことが最重要</div></div>');
+  }
+
+  // コート掛け・下駄箱の位置チェック
+  var badCoat=['N','E','SE'];
+  if(coat&&badCoat.indexOf(coat)>=0){
+    var coatNames={N:'北',E:'東',SE:'東南'};
+    msgs.push('<div class="result-box amber"><div class="result-label amber">✦ 確認事項</div><div class="result-title">'+coatNames[coat]+'のコート掛け・下駄箱 — 関節・腰の注意サイン</div><div class="result-text">コート掛け・下駄箱などの「引っ掛けるもの・積み重ねるもの」は八白土星（関節・腰）の管轄です。八白と相剋となる北・東・東南への配置は、腰痛や関節痛・肩こりを引き起こしやすいサインになります。\n\n処方箋：\n・コート掛けや下駄箱を南西・北西・西など相生方位へ移動させる\n・移動が難しい場合は、その場所をこまめに掃除・整理して気の滞りを防ぐ</div></div>');
+  }
+
+  // 吉の配置
+  var goodStorage=selectedStorageDirs.filter(function(d){return d==='NW'||d==='W'||d==='SW';});
+  if(goodStorage.length>0){
+    msgs.push('<div class="result-box ok"><div class="result-label ok">✅ 良い配置</div><div class="result-title">北西・西・南西の収納 — 安定した配置です</div><div class="result-text">北西・西・南西への収納配置は気の流れを妨げにくい安定した配置です。この方位への収納は問題ありません。</div></div>');
+  }
+
+  if(msgs.length===0){
+    msgs.push('<div class="result-box ok"><div class="result-label ok">✅ 問題なし</div><div class="result-title">収納・タンスの配置に大きな問題は見られません</div><div class="result-text">現在の収納配置は家相的に大きな問題はありません。東南〜南を明るく開放した状態を維持することを意識してください。</div></div>');
+  }
+  res.innerHTML=msgs.join('');
+}
+
+/* ===== s12: 寝室・帖数チェック ===== */
+function ds9r(y){var s=0;String(Math.abs(y)).split('').forEach(function(d){s+=parseInt(d);});return s>9?ds9r(s):s;}
+function calcHonmeiR(ky){return((11-ds9r(ky)-1)%9+9)%9+1;}
+function getKDr(y,m,d){
+  var SEKKI={1:6,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7};
+  var KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+  var sd=SEKKI[m]||6;
+  if(d<sd){var pm=m===1?12:m-1;return{kY:m<=2?y-1:y,kM:KM[pm]};}
+  return{kY:m===1?y-1:y,kM:KM[m]};
+}
+var STARS_ROOM={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+var AISEI_ROOM={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
+
+function runRoomCheck(){
+  var birthVal=document.getElementById('s12Birth').value||localStorage.getItem('kitoku-birth')||'';
+  var roomSize=parseFloat(document.getElementById('roomSize').value);
+  var roomUse=document.getElementById('roomUse').value;
+  if(!birthVal){alert('生年月日を入力するか、今日の羅針盤で生年月日を登録してください');return;}
+  if(!roomSize){alert('部屋の帖数を選んでください');return;}
+
+  var parts=birthVal.split('-').map(Number);
+  var by=parts[0],bm=parts[1],bd=parts[2];
+  var kd=getKDr(by,bm,bd);
+  var honmei=calcHonmeiR(kd.kY);
+  var useNames={sleep:'寝室',work:'書斎・仕事部屋',living:'リビング',child:'子供部屋'};
+
+  // 帖数の1の位
+  var ones=Math.round(roomSize)%10;
+  if(ones===0)ones=10;
+
+  // 相性チェック
+  var aisei=AISEI_ROOM[honmei]||[];
+  var isMatch=(ones===honmei);
+  var isAisei=aisei.indexOf(ones)>=0;
+
+  var res=document.getElementById('roomResult');
+  res.style.display='block';
+
+  var type=isMatch?'ok':isAisei?'ok':'amber';
+  var matchText=isMatch
+    ?'【最高の相性】帖数の1の位（'+ones+'）があなたの本命星（'+STARS_ROOM[honmei]+'）と完全一致しています！'
+    :isAisei
+    ?'【良い相性】帖数の1の位（'+ones+'）はあなたの本命星（'+STARS_ROOM[honmei]+'）と相生関係にあります。'
+    :'帖数の1の位（'+ones+'）とあなたの本命星（'+STARS_ROOM[honmei]+'）は直接の相性ではありません。';
+
+  var bestSizes='あなた（'+STARS_ROOM[honmei]+'）に最適な帖数の例：';
+  var bestNums=[honmei];
+  aisei.forEach(function(s){bestNums.push(s);});
+  bestNums=bestNums.slice(0,3);
+  bestSizes+=bestNums.map(function(n){return n+'帖・'+( n+9)+'帖・'+(n+18)+'帖';}).join('、');
+
+  res.innerHTML='<div class="result-box '+type+'"><div class="result-label '+(isMatch||isAisei?'ok':'amber')+'">'+(isMatch?'✅ 最高の相性':isAisei?'✅ 良い相性':'✦ 参考情報')+'</div><div class="result-title">'+useNames[roomUse]+'（'+roomSize+'帖）× '+STARS_ROOM[honmei]+'</div><div class="result-text">'+matchText+'\n\n'+bestSizes+'\n\nこの帖数の部屋を'+useNames[roomUse]+'にすると、機体（あなた）のエネルギーが最も充電されやすい空間になります。現在の部屋が一致しない場合も、家具の配置や照明・植物で気を補うことができます。</div></div>';
 }
 
 (function(){
