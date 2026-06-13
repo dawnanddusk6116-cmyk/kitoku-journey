@@ -11,6 +11,24 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<script>
+// top.html系以外からの直接アクセスはtop.htmlへリダイレクト
+(function(){
+  try{
+    const ref=document.referrer;
+    const isFromTop=ref&&(
+      ref.includes('top.html')||
+      ref.includes('my_kitoku.html')||
+      ref.includes('guide.html')||
+      ref.includes('index.html')
+    );
+    const hasParam=location.search.includes('direct=1');
+    if(!isFromTop&&!hasParam){
+      location.replace('top.html');
+    }
+  }catch(e){}
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="kitoku-engine.js"></script>
 <style>

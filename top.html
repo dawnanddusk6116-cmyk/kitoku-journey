@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KITOKU @ JOURNEY</title>
+<meta name="theme-color" content="#f7f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;
+  --card:#ffffff;
+  --rim:rgba(100,80,40,.15);
+  --gold:#8a6820;
+  --goldlt:#5c4010;
+  --snow:#1c1208;
+  --mist:#5e503d;
+  --radius:14px;
+}
+html{background:var(--bg);min-height:100dvh;}
+body{
+  background:var(--bg);color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  min-height:100dvh;max-width:480px;margin:0 auto;
+  padding-bottom:48px;
+}
+
+/* ── ヘッダー ── */
+.app-header{
+  display:flex;align-items:center;justify-content:center;
+  padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 16px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.96);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+  flex-direction:column;gap:4px;
+}
+.header-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;letter-spacing:.35em;color:var(--gold);
+}
+.header-tagline{
+  font-size:.6rem;letter-spacing:.2em;color:var(--mist);
+}
+
+/* ── ヒーロー ── */
+.hero{
+  text-align:center;
+  padding:28px 20px 20px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(120,90,20,.07),transparent 65%);
+  border-bottom:1px solid var(--rim);
+}
+.hero-en{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.75rem;letter-spacing:.28em;color:var(--mist);
+  margin-bottom:10px;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;letter-spacing:.12em;color:var(--goldlt);
+  line-height:1.5;margin-bottom:10px;
+}
+.hero-sub{
+  font-size:.68rem;color:var(--mist);line-height:2;
+  letter-spacing:.06em;
+}
+
+/* ── 入口カード ── */
+.entry-section{
+  padding:20px 16px 0;
+}
+.entry-label{
+  font-size:.6rem;letter-spacing:.2em;color:var(--gold);
+  font-weight:700;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.entry-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+
+.entry-card{
+  background:var(--card);border-radius:var(--radius);
+  border:1.5px solid var(--rim);
+  display:flex;align-items:center;gap:14px;
+  padding:18px 16px;margin-bottom:12px;
+  cursor:pointer;transition:all .2s;
+  text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;
+}
+.entry-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:5px;
+}
+.entry-card:active{transform:scale(.98);}
+
+/* 各カラー */
+.entry-card.e-today{
+  border-color:rgba(138,104,32,.35);
+  background:linear-gradient(135deg,rgba(138,104,32,.07),var(--card));
+}
+.entry-card.e-today::before{background:var(--gold);}
+
+.entry-card.e-my{
+  border-color:rgba(42,106,176,.3);
+  background:linear-gradient(135deg,rgba(42,106,176,.08),var(--card));
+}
+.entry-card.e-my::before{background:#2a6ab0;}
+
+.entry-card.e-guide{
+  border-color:rgba(58,122,78,.34);
+  background:linear-gradient(135deg,rgba(58,122,78,.08),var(--card));
+}
+.entry-card.e-guide::before{background:#3a7a4e;}
+
+.entry-card.e-academy{
+  border-color:rgba(123,94,167,.32);
+  background:linear-gradient(135deg,rgba(123,94,167,.07),var(--card));
+}
+.entry-card.e-academy::before{background:#7b5ea7;}
+
+.entry-icon{font-size:2rem;flex-shrink:0;width:46px;text-align:center;}
+.entry-info{flex:1;}
+.entry-en{
+  font-size:.62rem;letter-spacing:.18em;color:var(--mist);
+  margin-bottom:5px;font-weight:700;
+}
+.entry-card.e-today .entry-en{color:var(--goldlt);}
+.entry-card.e-my .entry-en{color:#1a3c70;}
+.entry-card.e-guide .entry-en{color:#2a6b3d;}
+.entry-card.e-academy .entry-en{color:#4a2a78;}
+
+.entry-title{
+  font-size:1.05rem;font-weight:700;
+  margin-bottom:4px;letter-spacing:.04em;
+}
+.entry-card.e-today .entry-title{color:var(--goldlt);}
+.entry-card.e-my .entry-title{color:#1a3c70;}
+.entry-card.e-guide .entry-title{color:#2a6b3d;}
+.entry-card.e-academy .entry-title{color:#4a2a78;}
+
+.entry-desc{font-size:.65rem;color:var(--mist);line-height:1.75;}
+.entry-arrow{font-size:.9rem;color:rgba(100,80,40,.3);flex-shrink:0;}
+
+/* 今日の日付バッジ */
+.today-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.25);
+  border-radius:20px;padding:3px 10px;
+  font-size:.6rem;color:var(--goldlt);font-weight:700;
+  margin-bottom:6px;letter-spacing:.06em;
+}
+
+/* 自分専用バッジ */
+.my-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(42,106,176,.1);border:1px solid rgba(42,106,176,.22);
+  border-radius:20px;padding:3px 10px;
+  font-size:.6rem;color:#1a3c70;font-weight:700;
+  margin-bottom:6px;letter-spacing:.06em;
+}
+.new-badge{
+  display:inline-block;
+  background:#e05555;color:#fff;
+  font-size:.48rem;font-weight:800;
+  padding:1px 5px;border-radius:4px;letter-spacing:.04em;
+  vertical-align:middle;margin-left:4px;
+}
+
+/* ── すべてのツール ── */
+.all-tools-wrap{margin-top:4px;}
+.all-tools-btn{
+  width:100%;background:rgba(100,80,40,.06);
+  border:1.5px solid rgba(100,80,40,.18);
+  border-radius:var(--radius);
+  padding:15px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Serif JP',serif;font-size:.82rem;
+  color:var(--goldlt);font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;
+}
+.all-tools-btn:active{transform:scale(.98);}
+.tools-section-label{
+  font-size:.6rem;letter-spacing:.18em;color:var(--gold);
+  font-weight:700;padding:14px 4px 6px;
+  display:flex;align-items:center;gap:8px;
+}
+.tools-section-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.tool-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 8px;border-radius:10px;
+  text-decoration:none;color:inherit;
+  transition:background .15s;
+  border-bottom:1px solid rgba(100,80,40,.07);
+}
+.tool-item:last-child{border-bottom:none;}
+.tool-item:active{background:rgba(100,80,40,.05);}
+.tool-icon{font-size:1.3rem;width:32px;text-align:center;flex-shrink:0;}
+.tool-info{flex:1;display:flex;flex-direction:column;gap:2px;}
+.tool-name{font-size:.82rem;font-weight:700;color:var(--goldlt);}
+.tool-desc{font-size:.6rem;color:var(--mist);}
+.tool-arrow{font-size:.8rem;color:rgba(100,80,40,.3);flex-shrink:0;}
+
+/* ── 区切り ── */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  margin:20px 16px 0;
+  font-size:.6rem;color:var(--mist);letter-spacing:.12em;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--rim);}
+
+/* ── フッター ── */
+.footer{
+  text-align:center;margin-top:28px;
+  padding:0 16px;
+  font-size:.6rem;letter-spacing:.14em;color:var(--mist);
+  line-height:2.2;
+}
+.footer a{color:var(--mist);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="app-header">
+  <div class="header-logo">KITOKU</div>
+  <div class="header-tagline">自分で決めるための東洋OS</div>
+</div>
+
+<!-- ヒーロー -->
+<div class="hero">
+  <div class="hero-en">KITOKU @ JOURNEY</div>
+  <div class="hero-title">どこから始めますか？</div>
+  <div class="hero-sub">
+    九星・方位・姓名・家相・納音<br>
+    5000年の知恵を、今日の一手へ。
+  </div>
+</div>
+
+<!-- 入口カード -->
+<div class="entry-section">
+  <div class="entry-label">入口を選ぶ</div>
+
+  <!-- ① 今日の羅針盤 -->
+  <a class="entry-card e-today" href="index.html?direct=1">
+    <div class="entry-icon">🧭</div>
+    <div class="entry-info">
+      <div class="today-badge" id="todayBadge">今日を整える</div>
+      <div class="entry-title">今日の羅針盤</div>
+      <div class="entry-desc">今日の方位・色・香り・姓名・AI相談。<br>毎日ここから始める人向け。</div>
+    </div>
+    <div class="entry-arrow">›</div>
+  </a>
+
+  <!-- ② 自分専用KITOKUを作る -->
+  <a class="entry-card e-my" href="my_kitoku.html">
+    <div class="entry-icon">⚙️</div>
+    <div class="entry-info">
+      <div class="my-badge">自分専用<span class="new-badge">NEW</span></div>
+      <div class="entry-title">自分専用KITOKUを作る</div>
+      <div class="entry-desc">よく使う機能だけを選んで、あなただけの入口を作る。日盤吉方・線路・方位線など自由に組み合わせ。</div>
+    </div>
+    <div class="entry-arrow">›</div>
+  </a>
+
+  <!-- ③ 悩みから探す -->
+  <a class="entry-card e-guide" href="guide.html">
+    <div class="entry-icon">🔍</div>
+    <div class="entry-info">
+      <div class="entry-en">FIND YOUR ANSWER</div>
+      <div class="entry-title">悩みから探す</div>
+      <div class="entry-desc">仕事・人間関係・引越し・体調・名前…<br>悩みの入口から使う機能を見つける。</div>
+    </div>
+    <div class="entry-arrow">›</div>
+  </a>
+
+<!-- ④ KITOKU Academy -->
+  <div class="entry-card e-academy" style="opacity:.6;cursor:default;">
+    <div class="entry-icon">📖</div>
+    <div class="entry-info">
+      <div class="entry-en">KITOKU ACADEMY</div>
+      <div class="entry-title">気学を学ぶ</div>
+      <div class="entry-desc">九星・方位・姓名・家相・納音を基礎から。知識を深めて、判断力を育てる。</div>
+    </div>
+    <div style="font-size:.6rem;padding:3px 10px;border-radius:8px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.3);color:#4a2a78;font-weight:700;flex-shrink:0;">準備中</div>
+  </div>
+
+  <!-- すべてのツール -->
+  <div class="all-tools-wrap">
+    <button class="all-tools-btn" onclick="toggleAllTools()">
+      <span id="allToolsLabel">✦ すべてのツールを見る</span>
+      <span id="allToolsArrow" style="transition:transform .3s;">›</span>
+    </button>
+    <div id="allToolsPanel" style="display:none;">
+
+      <div class="tools-section-label">🧭 方位・移動</div>
+      <a class="tool-item" href="direction_v2.html">
+        <span class="tool-icon">🧭</span>
+        <span class="tool-info"><span class="tool-name">方位盤</span><span class="tool-desc">日盤・月盤・年盤・吉凶判定</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="triple_board.html">
+        <span class="tool-icon">📊</span>
+        <span class="tool-info"><span class="tool-name">三盤比較</span><span class="tool-desc">年盤・月盤・日盤を同時確認</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="travel.html">
+        <span class="tool-icon">✈️</span>
+        <span class="tool-info"><span class="tool-name">旅行吉方位ナビ</span><span class="tool-desc">旅行日程・目的地を選ぶ</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="move.html">
+        <span class="tool-icon">🏡</span>
+        <span class="tool-info"><span class="tool-name">引越しナビ</span><span class="tool-desc">年盤・月盤で引越し先を選ぶ</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="pilgrimage.html">
+        <span class="tool-icon">⛩️</span>
+        <span class="tool-info"><span class="tool-name">聖地巡礼ナビ</span><span class="tool-desc">吉方位×線路の日で日程を選ぶ</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+
+      <div class="tools-section-label">⭐ 星・自分を知る</div>
+      <a class="tool-item" href="kyusei_v2.html">
+        <span class="tool-icon">⭐</span>
+        <span class="tool-info"><span class="tool-name">九星・本命星</span><span class="tool-desc">本命星・月命星・傾斜・同会</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="report_generator_free.html">
+        <span class="tool-icon">📋</span>
+        <span class="tool-info"><span class="tool-name">無料レポート</span><span class="tool-desc">あなたの星を詳しく読み解く</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="premium.html">
+        <span class="tool-icon">✨</span>
+        <span class="tool-info"><span class="tool-name">気学先生AI</span><span class="tool-desc">象意・深義・AI相談</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+
+      <div class="tools-section-label">📝 姓名・ビジネス・人間関係</div>
+      <a class="tool-item" href="life.html">
+        <span class="tool-icon">📝</span>
+        <span class="tool-info"><span class="tool-name">姓名鑑定</span><span class="tool-desc">画数・五行・陰陽・響きを見る</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="relations.html">
+        <span class="tool-icon">🤝</span>
+        <span class="tool-info"><span class="tool-name">相性・人間関係</span><span class="tool-desc">恋愛・家族・仕事相手</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="business.html">
+        <span class="tool-icon">💼</span>
+        <span class="tool-info"><span class="tool-name">ビジネス鑑定</span><span class="tool-desc">採用・商談・社名鑑定</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+
+      <div class="tools-section-label">🏠 家・空間</div>
+      <a class="tool-item" href="kaso.html">
+        <span class="tool-icon">🏠</span>
+        <span class="tool-info"><span class="tool-name">家相診断</span><span class="tool-desc">中心・玄関・水回り・欠け張り</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- 区切り -->
+<div class="divider">KITOKU @ JOURNEY</div>
+
+<!-- フッター -->
+<div class="footer">
+  自分で決めるための東洋OS<br>
+  Inspired by 5000 Years of Eastern Celestial Wisdom<br>
+  <a href="mailto:kitoku@journey6112.jp">kitoku@journey6112.jp</a>
+</div>
+
+<script>
+// 今日の日付をバッジに表示
+(function(){
+  const now=new Date();
+  const jst=new Date(now.getTime()+9*3600000);
+  const m=jst.getUTCMonth()+1;
+  const d=jst.getUTCDate();
+  const weeks=['日','月','火','水','木','金','土'];
+  const w=weeks[jst.getUTCDay()];
+  const badge=document.getElementById('todayBadge');
+  if(badge)badge.textContent=`今日 ${m}月${d}日（${w}）`;
+})();
+
+// すべてのツール開閉
+function toggleAllTools(){
+  const panel=document.getElementById('allToolsPanel');
+  const label=document.getElementById('allToolsLabel');
+  const arrow=document.getElementById('allToolsArrow');
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  label.textContent=isOpen?'✦ すべてのツールを見る':'✦ 閉じる';
+  arrow.style.transform=isOpen?'rotate(0deg)':'rotate(90deg)';
+}
+</script>
+</body>
+</html>

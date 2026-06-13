@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KITOKU — 自分専用</title>
+<meta name="theme-color" content="#f7f4ef">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;
+  --card:#ffffff;
+  --rim:rgba(100,80,40,.15);
+  --gold:#8a6820;
+  --goldlt:#5c4010;
+  --snow:#1c1208;
+  --mist:#5e503d;
+  --radius:14px;
+}
+html{background:var(--bg);min-height:100dvh;}
+body{
+  background:var(--bg);color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  min-height:100dvh;max-width:480px;margin:0 auto;
+  padding-bottom:48px;
+}
+
+/* ── ヘッダー ── */
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 14px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.96);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);}
+.header-edit{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(42,106,176,.08);border:1px solid rgba(42,106,176,.25);
+  color:#1a3c70;font-size:.72rem;padding:7px 12px;border-radius:8px;
+  cursor:pointer;letter-spacing:.06em;
+}
+
+/* ── 画面 ── */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ══════════════════
+   セットアップ画面
+══════════════════ */
+.setup-hero{
+  text-align:center;padding:28px 20px 20px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(42,106,176,.07),transparent 65%);
+  border-bottom:1px solid var(--rim);
+}
+.setup-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.55rem;letter-spacing:.1em;color:var(--goldlt);margin-bottom:8px;
+}
+.setup-sub{font-size:.68rem;color:var(--mist);line-height:1.9;letter-spacing:.06em;}
+
+.setup-section{padding:20px 16px 0;}
+.setup-label{
+  font-size:.6rem;letter-spacing:.2em;color:var(--gold);font-weight:700;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.setup-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+
+/* 機能カード */
+.feature-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.feature-card{
+  background:var(--card);border:1.5px solid var(--rim);
+  border-radius:var(--radius);padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all .18s;
+  position:relative;
+}
+.feature-card:active{transform:scale(.98);}
+.feature-card.selected{
+  border-color:rgba(42,106,176,.5);
+  background:linear-gradient(135deg,rgba(42,106,176,.08),var(--card));
+}
+.feature-check{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid rgba(100,80,40,.25);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;transition:all .18s;
+}
+.feature-card.selected .feature-check{
+  background:#2a6ab0;border-color:#2a6ab0;color:#fff;
+}
+.feature-icon{font-size:1.6rem;flex-shrink:0;width:38px;text-align:center;}
+.feature-info{flex:1;}
+.feature-name{font-size:.88rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;}
+.feature-card.selected .feature-name{color:#1a3c70;}
+.feature-desc{font-size:.62rem;color:var(--mist);line-height:1.6;}
+.feature-badge{
+  font-size:.5rem;padding:2px 7px;border-radius:8px;
+  background:rgba(42,106,176,.1);border:1px solid rgba(42,106,176,.25);
+  color:#1a3c70;font-weight:700;flex-shrink:0;
+}
+.feature-badge.paid{
+  background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);
+  color:var(--goldlt);
+}
+.feature-badge.free{
+  background:rgba(58,122,78,.1);border:1px solid rgba(58,122,78,.3);
+  color:#2a6b3d;
+}
+
+.setup-done-btn{
+  display:block;width:calc(100% - 32px);margin:0 16px 20px;
+  background:linear-gradient(135deg,rgba(42,106,176,.18),rgba(42,106,176,.1));
+  border:1.5px solid rgba(42,106,176,.4);border-radius:10px;
+  color:#1a3c70;font-family:'Noto Serif JP',serif;font-size:1rem;
+  letter-spacing:.18em;padding:14px;cursor:pointer;transition:all .3s;
+  font-weight:700;
+}
+.setup-done-btn:active{transform:scale(.98);}
+
+/* ══════════════════
+   マイページ画面
+══════════════════ */
+
+/* 今日のヘッダーバー */
+.today-bar{
+  padding:14px 16px;
+  background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(138,104,32,.04));
+  border-bottom:1px solid rgba(138,104,32,.18);
+}
+.today-bar-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:6px;
+}
+.today-bar-date{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;letter-spacing:.1em;color:var(--goldlt);
+}
+.today-bar-kanshi{font-size:.65rem;color:var(--mist);}
+.today-bar-stars{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.today-star-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.7);border:1px solid var(--rim);
+  border-radius:20px;padding:3px 10px;font-size:.6rem;color:var(--goldlt);
+}
+.today-star-chip strong{font-weight:700;color:var(--goldlt);}
+
+/* 正式方位盤カード */
+.official-direction-wrap{
+  padding:12px 16px;
+  background:rgba(255,255,255,.48);
+  border-bottom:1px solid var(--rim);
+}
+.official-direction-card{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,rgba(23,139,120,.08),var(--card));
+  border:1.5px solid rgba(23,139,120,.28);
+  border-radius:14px;
+  padding:13px 14px;
+  color:inherit;text-decoration:none;
+}
+.official-direction-icon{font-size:1.5rem;flex-shrink:0;width:34px;text-align:center;}
+.official-direction-info{flex:1;min-width:0;}
+.official-direction-kicker{font-size:.55rem;letter-spacing:.14em;color:#0f766e;font-weight:800;margin-bottom:4px;}
+.official-direction-title{font-size:.86rem;color:var(--goldlt);font-weight:800;margin-bottom:3px;}
+.official-direction-desc{font-size:.6rem;color:var(--mist);line-height:1.6;}
+.official-direction-arrow{font-size:1rem;color:#0f766e;opacity:.75;}
+
+/* マイ機能リスト */
+.my-section{padding:16px 16px 0;}
+.my-section-label{
+  font-size:.6rem;letter-spacing:.2em;color:var(--gold);font-weight:700;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.my-section-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.my-feature-list{display:flex;flex-direction:column;gap:8px;}
+.my-feature-item{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1.5px solid var(--rim);
+  border-radius:var(--radius);padding:16px;
+  text-decoration:none;color:inherit;
+  transition:all .18s;cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.my-feature-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:rgba(42,106,176,.35);
+}
+.my-feature-item:active{transform:scale(.98);background:rgba(42,106,176,.04);}
+.mf-icon{font-size:1.6rem;flex-shrink:0;width:38px;text-align:center;}
+.mf-info{flex:1;}
+.mf-name{font-size:.9rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;}
+.mf-desc{font-size:.62rem;color:var(--mist);line-height:1.6;}
+.mf-arrow{font-size:.9rem;color:rgba(100,80,40,.3);}
+
+footer{text-align:center;margin-top:28px;padding:0 16px;font-size:.6rem;letter-spacing:.12em;color:var(--mist);}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="app-header">
+  <div class="header-logo">KITOKU</div>
+  <div class="header-edit" id="headerEdit" style="display:none;" onclick="showSetup()">⚙ 編集</div>
+  <a href="top.html" id="headerBack" class="header-edit" style="background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.25);color:var(--goldlt);">← もどる</a>
+</div>
+
+<!-- ══ セットアップ画面 ══ -->
+<div class="screen active" id="screenSetup">
+  <div class="setup-hero">
+    <div class="setup-title">あなただけのKITOKUを作る</div>
+    <div class="setup-sub">
+      よく使う機能を選んでください。<br>
+      選んだ機能だけが毎日の入口になります。
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-label">機能を選ぶ（複数OK）</div>
+    <div class="feature-grid" id="featureGrid"></div>
+  </div>
+
+  <button class="setup-done-btn" onclick="saveAndShow()">✦ 自分専用KITOKUを完成させる</button>
+</div>
+
+<!-- ══ マイページ画面 ══ -->
+<div class="screen" id="screenMy">
+
+  <!-- 今日のバー -->
+  <div class="today-bar">
+    <div class="today-bar-top">
+      <div class="today-bar-date" id="myDate">—</div>
+      <div class="today-bar-kanshi" id="myKanshi">—</div>
+    </div>
+    <div class="today-bar-stars" id="myStars"></div>
+  </div>
+
+  <!-- 正式方位盤 -->
+  <div class="official-direction-wrap">
+    <a class="official-direction-card" href="direction_v2.html">
+      <div class="official-direction-icon">🧭</div>
+      <div class="official-direction-info">
+        <div class="official-direction-kicker">OFFICIAL DIRECTION</div>
+        <div class="official-direction-title">正式な方位盤で確認する</div>
+        <div class="official-direction-desc">今日の吉方・凶方・月命・定位対冲・小児殺まで正式判定で確認します。</div>
+      </div>
+      <div class="official-direction-arrow">›</div>
+    </a>
+  </div>
+
+  <!-- マイ機能リスト -->
+  <div class="my-section">
+    <div class="my-section-label">あなたの機能</div>
+    <div class="my-feature-list" id="myFeatureList"></div>
+  </div>
+
+  <footer>KITOKU @ JOURNEY — journey6112.jp</footer>
+</div>
+
+<script>
+// ══ 機能マスター ══
+const FEATURES=[
+  {id:'direction',icon:'🧭',name:'日盤吉方',desc:'今日の吉凶方位を確認する。毎日の基本。',href:'direction_v2.html',badge:null},
+  {id:'triple',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時確認。旅行・引越しの徹底確認。',href:'triple_board.html',badge:null},
+  {id:'mapline',icon:'🗺️',name:'方位線マップ',desc:'吉方位の方位線を地図で確認する。',href:'direction_v2.html',badge:null},
+  {id:'travel',icon:'✈️',name:'旅行・聖地巡礼',desc:'吉方旅行・聖地巡礼の日程を組む。',href:'travel.html',badge:null},
+  {id:'pilgrimage',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
+  {id:'life',icon:'📝',name:'姓名鑑定',desc:'名前・屋号・SNS名の画数と五行を確認。',href:'life.html',badge:null},
+  {id:'kyusei',icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
+  {id:'report',icon:'📋',name:'無料レポート',desc:'自分の星を詳しく読み解いたレポートを見る。',href:'report_generator_free.html',badge:null},
+  {id:'relations',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
+  {id:'business',icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名鑑定。仕事に使う。',href:'business.html',badge:null},
+  {id:'kaso',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
+  {id:'premium',icon:'✨',name:'気学先生AI',desc:'象意・深義・AI相談。KITOKUの深義まで学習済み。',href:'premium.html',badge:'有料'},
+  {id:'free_ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'index.html?direct=1',badge:'無料'},
+];
+
+// ══ 計算関数（最小セット）══
+const SEKKI_DB={2024:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:8,11:7,12:7},2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}};
+const NICHIBAN_ANCHORS={2025:{yoto:{ref:new Date(2025,2,6),stem:1,branch:0,star:9,endDate:new Date(2025,5,21)},into:{ref:new Date(2025,5,22),stem:2,branch:1,star:8}},2026:{yoto:{ref:new Date(2026,2,4),stem:3,branch:1,star:2,endDate:new Date(2026,5,20)},into:{ref:new Date(2026,5,21),stem:2,branch:2,star:7}},2027:{yoto:{ref:new Date(2027,2,6),stem:5,branch:3,star:9,endDate:new Date(2027,5,21)},into:{ref:new Date(2027,5,22),stem:6,branch:4,star:8}},2028:{yoto:{ref:new Date(2028,2,5),stem:7,branch:5,star:7,endDate:new Date(2028,5,20)},into:{ref:new Date(2028,5,21),stem:8,branch:6,star:6}}};
+const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const STARS_JP={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const HP={1:'N',2:'SW',3:'E',4:'SE',5:'C',6:'NW',7:'W',8:'NE',9:'S'};
+const OPP={N:'S',S:'N',E:'W',W:'E',NE:'SW',SW:'NE',SE:'NW',NW:'SE'};
+const JP={N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+const ZODIAC=[{k:'子',d:'N'},{k:'丑',d:'NE'},{k:'寅',d:'NE'},{k:'卯',d:'E'},{k:'辰',d:'SE'},{k:'巳',d:'SE'},{k:'午',d:'S'},{k:'未',d:'SW'},{k:'申',d:'SW'},{k:'酉',d:'W'},{k:'戌',d:'NW'},{k:'亥',d:'NW'}];
+const BRANCH_DIR=['N','NE','NE','E','SE','SE','S','SW','SW','W','NW','NW'];
+const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
+
+function ds9(y){let s=0;String(Math.abs(y)).split('').forEach(d=>s+=+d);return s>9?ds9(s):s;}
+function m9(n){return((n-1)%9+9)%9+1;}
+function red(n){return((n-1)%9+9)%9+1;}
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];return{1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7}[m];}
+function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
+function starPos(s,c){return HP[((s-c+4)%9+9)%9+1];}
+function buildBoard(c){const p={};for(let s=1;s<=9;s++){p[starPos(s,c)]=s;}return p;}
+function getNodeMonthIdx(y,m,d){const sd=getSekkiDay(y,m);let mo=d>=sd?m:(m===1?12:m-1);if(mo===2)return 0;if(mo>=3)return mo-2;return 11;}
+function getMonthCenter(y,m,d){const ni=getNodeMonthIdx(y,m,d);const cy=(ni===11&&m<=2)?y-1:y;const c=yearCenter(cy);const g=[1,4,7].includes(c)?'A':[3,6,9].includes(c)?'B':'C';return TSUKI_MATRIX[g][ni];}
+function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS[y];if(!a)return null;const useY=t<=a.yoto.endDate;const anc=useY?a.yoto:a.into;const diff=Math.round((t-anc.ref)/86400000);const stem=((anc.stem+diff)%10+10)%10;const branch=((anc.branch+diff)%12+12)%12;const star=useY?(((anc.star-1+diff)%9)+9)%9+1:(((anc.star-1-diff)%9)+9)%9+1;return{stem,branch,star};}
+function getDayCenter(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 3;return dd.star;}
+function getDayBranch(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 1;return dd.branch;}
+function getDayStem(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 0;return dd.stem;}
+function getZodiac(y){return ZODIAC[((y-2020)%12+12)%12];}
+function getMonthBranch(y,m,d){return(getNodeMonthIdx(y,m,d)+2)%12;}
+
+function getKichiDirs(y,m,d,honmei,tsukimei){
+  const dayC=getDayCenter(y,m,d);
+  const p2s=buildBoard(dayC);
+  const goDir=Object.keys(p2s).find(dir=>p2s[dir]===5);
+  const anDir=goDir?OPP[goDir]:null;
+  const hmDir=Object.keys(p2s).find(dir=>p2s[dir]===honmei);
+  const hmTDir=hmDir?OPP[hmDir]:null;
+  const kyouSet=new Set([goDir,anDir,hmDir,hmTDir].filter(Boolean));
+  const aisei=new Set((AISEI[honmei]||[]).filter(x=>x!==5));
+  const aisei2=new Set((AISEI[tsukimei]||[]).filter(x=>x!==5));
+  // 三合
+  const z=getZodiac(y);
+  const SANGO={子:['N','SE','SW'],丑:['SE','W','NE'],寅:['NE','S','NW'],卯:['NW','E','SW'],辰:['N','SE','SW'],巳:['SE','W','NE'],午:['NE','S','NW'],未:['NW','E','SW'],申:['N','SE','SW'],酉:['SE','W','NE'],戌:['NE','S','NW'],亥:['NW','E','SW']};
+  const sangoSet=new Set(SANGO[z.k]||[]);
+  const result=[];
+  ['N','NE','E','SE','S','SW','W','NW'].forEach(dir=>{
+    if(kyouSet.has(dir))return;
+    const sn=p2s[dir];if(!sn||sn===5)return;
+    let rank=0;
+    if(aisei.has(sn)&&aisei2.has(sn)&&sangoSet.has(dir))rank=5;
+    else if(aisei.has(sn)&&aisei2.has(sn))rank=4;
+    else if(aisei.has(sn)&&sangoSet.has(dir))rank=3;
+    else if(aisei.has(sn))rank=2;
+    if(rank>=2)result.push({dir,rank});
+  });
+  result.sort((a,b)=>b.rank-a.rank);
+  return result.slice(0,4);
+}
+
+// ══ 状態管理 ══
+let selectedFeatures=[];
+
+function loadSelected(){
+  try{return JSON.parse(localStorage.getItem('kitoku-my-features')||'[]');}catch(e){return[];}
+}
+function saveSelected(){
+  try{localStorage.setItem('kitoku-my-features',JSON.stringify(selectedFeatures));}catch(e){}
+}
+
+// ══ 初期化 ══
+(function init(){
+  renderFeatureGrid();
+  selectedFeatures=loadSelected();
+  // 選択状態を復元
+  selectedFeatures.forEach(id=>{
+    const card=document.querySelector(`.feature-card[data-id="${id}"]`);
+    if(card)card.classList.add('selected');
+    const check=card?.querySelector('.feature-check');
+    if(check)check.textContent='✓';
+  });
+  if(selectedFeatures.length>0){
+    showMyPage();
+  }
+})();
+
+function renderFeatureGrid(){
+  const grid=document.getElementById('featureGrid');
+  FEATURES.forEach(f=>{
+    const card=document.createElement('div');
+    card.className='feature-card';
+    card.dataset.id=f.id;
+    card.innerHTML=`
+      <div class="feature-check"></div>
+      <div class="feature-icon">${f.icon}</div>
+      <div class="feature-info">
+        <div class="feature-name">${f.name}</div>
+        <div class="feature-desc">${f.desc}</div>
+      </div>
+      ${f.badge?`<div class="feature-badge ${f.badge==='有料'?'paid':f.badge==='無料'?'free':''}">${f.badge}</div>`:''}
+    `;
+    card.onclick=()=>toggleFeature(card,f.id);
+    grid.appendChild(card);
+  });
+}
+
+function toggleFeature(card,id){
+  const isSelected=card.classList.contains('selected');
+  const check=card.querySelector('.feature-check');
+  if(isSelected){
+    card.classList.remove('selected');
+    check.textContent='';
+    selectedFeatures=selectedFeatures.filter(x=>x!==id);
+  }else{
+    card.classList.add('selected');
+    check.textContent='✓';
+    if(!selectedFeatures.includes(id))selectedFeatures.push(id);
+  }
+}
+
+function saveAndShow(){
+  if(selectedFeatures.length===0){
+    alert('機能を1つ以上選んでください。');return;
+  }
+  saveSelected();
+  showMyPage();
+}
+
+function showSetup(){
+  document.getElementById('screenSetup').classList.add('active');
+  document.getElementById('screenMy').classList.remove('active');
+  document.getElementById('headerEdit').style.display='none';
+  document.getElementById('headerBack').style.display='inline-flex';
+}
+
+function showMyPage(){
+  document.getElementById('screenSetup').classList.remove('active');
+  document.getElementById('screenMy').classList.add('active');
+  document.getElementById('headerEdit').style.display='inline-flex';
+  document.getElementById('headerBack').style.display='none';
+  renderMyPage();
+}
+
+function renderMyPage(){
+  // 今日の情報
+  const now=new Date();
+  const jst=new Date(now.getTime()+9*3600000);
+  const y=jst.getUTCFullYear(),m=jst.getUTCMonth()+1,d=jst.getUTCDate();
+  const weeks=['日','月','火','水','木','金','土'];
+  const w=weeks[jst.getUTCDay()];
+  const stem=getDayStem(y,m,d);
+  const branch=getDayBranch(y,m,d);
+  document.getElementById('myDate').textContent=`${y}年${m}月${d}日（${w}）`;
+  document.getElementById('myKanshi').textContent=`${KAN[stem]}${SHI[branch]}の日`;
+
+  // 星情報
+  const birth=localStorage.getItem('kitoku-birth');
+  const starsEl=document.getElementById('myStars');
+  starsEl.innerHTML='';
+  let honmei=0,tsukimei=0;
+  if(birth){
+    const [by,bm,bd]=birth.split('-').map(Number);
+    const {kY,kM}=getKD(by,bm,bd);
+    honmei=calcHonmei(kY);
+    tsukimei=calcTsukimei(honmei,kM);
+    const chips=[
+      {label:'本命',val:STARS_JP[honmei]},
+      {label:'月命',val:STARS_JP[tsukimei]},
+    ];
+    chips.forEach(c=>{
+      const chip=document.createElement('div');
+      chip.className='today-star-chip';
+      chip.innerHTML=`<span>${c.label}</span><strong>${c.val}</strong>`;
+      starsEl.appendChild(chip);
+    });
+  }else{
+    const chip=document.createElement('div');
+    chip.className='today-star-chip';
+    chip.innerHTML='<a href="index.html?direct=1" style="color:var(--goldlt);text-decoration:none;">生年月日を設定する →</a>';
+    starsEl.appendChild(chip);
+  }
+
+  // 選択した機能
+  const list=document.getElementById('myFeatureList');
+  list.innerHTML='';
+  const featureMap=Object.fromEntries(FEATURES.map(f=>[f.id,f]));
+  selectedFeatures.forEach(id=>{
+    const f=featureMap[id];
+    if(!f)return;
+    const item=document.createElement('a');
+    item.className='my-feature-item';
+    item.href=f.href;
+    item.innerHTML=`
+      <div class="mf-icon">${f.icon}</div>
+      <div class="mf-info">
+        <div class="mf-name">${f.name}${f.badge?` <span style="font-size:.48rem;padding:1px 6px;border-radius:6px;background:${f.badge==='有料'?'rgba(138,104,32,.1)':'rgba(58,122,78,.1)'};border:1px solid ${f.badge==='有料'?'rgba(138,104,32,.3)':'rgba(58,122,78,.3)'};color:${f.badge==='有料'?'var(--goldlt)':'#2a6b3d'};font-weight:700;vertical-align:middle;">${f.badge}</span>`:''}</div>
+        <div class="mf-desc">${f.desc}</div>
+      </div>
+      <div class="mf-arrow">›</div>
+    `;
+    list.appendChild(item);
+  });
+}
+</script>
+</body>
+</html>

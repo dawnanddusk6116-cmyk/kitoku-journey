@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KITOKU — 悩みから探す</title>
+<meta name="theme-color" content="#f7f4ef">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f7f4ef;
+  --card:#ffffff;
+  --rim:rgba(100,80,40,.15);
+  --gold:#8a6820;
+  --goldlt:#5c4010;
+  --snow:#1c1208;
+  --mist:#5e503d;
+  --radius:14px;
+}
+html{background:var(--bg);min-height:100dvh;}
+body{
+  background:var(--bg);color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  min-height:100dvh;max-width:480px;margin:0 auto;
+  padding-bottom:48px;
+}
+
+/* ── ヘッダー ── */
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 14px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(247,244,239,.96);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);}
+.header-back{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(120,90,20,.08);border:1px solid rgba(120,90,20,.25);
+  color:var(--goldlt);font-size:.72rem;padding:7px 12px;border-radius:8px;
+  cursor:pointer;letter-spacing:.06em;text-decoration:none;
+}
+
+/* ── ヒーロー ── */
+.hero{
+  text-align:center;padding:24px 20px 20px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(58,122,78,.06),transparent 65%);
+  border-bottom:1px solid var(--rim);
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.55rem;letter-spacing:.1em;color:var(--goldlt);
+  margin-bottom:8px;
+}
+.hero-sub{font-size:.68rem;color:var(--mist);line-height:1.9;letter-spacing:.06em;}
+
+/* ── 悩みグリッド ── */
+.worry-section{padding:20px 16px 0;}
+.section-label{
+  font-size:.6rem;letter-spacing:.2em;color:var(--gold);font-weight:700;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.worry-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:10px;margin-bottom:8px;
+}
+.worry-btn{
+  background:var(--card);border:1.5px solid var(--rim);
+  border-radius:var(--radius);padding:16px 12px;
+  text-align:center;cursor:pointer;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.worry-btn:active{transform:scale(.96);}
+.worry-btn.active{
+  border-color:rgba(58,122,78,.55);
+  background:linear-gradient(135deg,rgba(58,122,78,.1),var(--card));
+  box-shadow:0 4px 16px rgba(58,122,78,.12);
+}
+.worry-icon{font-size:1.6rem;}
+.worry-label{font-size:.75rem;font-weight:700;color:var(--goldlt);line-height:1.4;}
+.worry-btn.active .worry-label{color:#2a6b3d;}
+.worry-sub{font-size:.55rem;color:var(--mist);line-height:1.5;}
+
+/* ── 回答パネル ── */
+.answer-panel{
+  display:none;
+  margin:16px 16px 0;
+  background:var(--card);border:1.5px solid rgba(58,122,78,.3);
+  border-radius:var(--radius);overflow:hidden;
+  animation:fadeIn .3s ease;
+}
+.answer-panel.show{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.answer-head{
+  padding:14px 16px 12px;
+  background:linear-gradient(135deg,rgba(58,122,78,.1),rgba(58,122,78,.04));
+  border-bottom:1px solid rgba(58,122,78,.15);
+}
+.answer-title{
+  font-size:1rem;font-weight:700;color:#2a6b3d;
+  margin-bottom:4px;letter-spacing:.04em;
+}
+.answer-lead{font-size:.68rem;color:var(--mist);line-height:1.8;}
+.answer-body{padding:14px 16px;}
+
+/* ── 処方箋 ── */
+.prescription{
+  background:rgba(58,122,78,.05);border:1px solid rgba(58,122,78,.2);
+  border-radius:10px;padding:12px 14px;margin-bottom:12px;
+}
+.prescription-label{
+  font-size:.58rem;letter-spacing:.14em;color:#2a6b3d;font-weight:700;
+  margin-bottom:8px;
+}
+.prescription-text{font-size:.72rem;color:var(--snow);line-height:1.9;}
+
+/* ── ツールリンク ── */
+.tool-links{display:flex;flex-direction:column;gap:8px;}
+.tool-link{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.8);border:1.5px solid var(--rim);
+  border-radius:10px;padding:12px 14px;
+  text-decoration:none;color:inherit;transition:all .18s;
+  cursor:pointer;
+}
+.tool-link:active{transform:scale(.98);background:rgba(58,122,78,.06);}
+.tl-icon{font-size:1.3rem;flex-shrink:0;}
+.tl-info{flex:1;}
+.tl-name{font-size:.82rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;}
+.tl-desc{font-size:.6rem;color:var(--mist);}
+.tl-arrow{font-size:.8rem;color:rgba(100,80,40,.3);}
+
+/* ── 今日の一手 ── */
+.one-move{
+  margin-top:12px;padding:12px 14px;
+  background:linear-gradient(135deg,rgba(138,104,32,.1),rgba(138,104,32,.04));
+  border:1px solid rgba(138,104,32,.3);border-radius:10px;
+}
+.one-move-label{
+  font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:6px;
+}
+.one-move-text{font-size:.75rem;color:var(--goldlt);line-height:1.9;font-weight:700;}
+
+/* ── フッター ── */
+.footer{text-align:center;margin-top:28px;padding:0 16px;font-size:.6rem;letter-spacing:.1em;color:var(--mist);}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="app-header">
+  <div class="header-logo">KITOKU</div>
+  <a href="top.html" class="header-back">← もどる</a>
+</div>
+
+<!-- ヒーロー -->
+<div class="hero">
+  <div class="hero-title">今、何に悩んでいますか？</div>
+  <div class="hero-sub">
+    悩みを選ぶと、使う機能と<br>今日の一手をお伝えします。
+  </div>
+</div>
+
+<!-- 悩みグリッド -->
+<div class="worry-section">
+  <div class="section-label">悩みを選ぶ</div>
+  <div class="worry-grid">
+    <button class="worry-btn" onclick="showAnswer('work')">
+      <span class="worry-icon">💼</span>
+      <span class="worry-label">仕事・ビジネス</span>
+      <span class="worry-sub">商談・採用・タイミング</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('relation')">
+      <span class="worry-icon">🤝</span>
+      <span class="worry-label">人間関係</span>
+      <span class="worry-sub">家族・恋愛・職場</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('move')">
+      <span class="worry-icon">🧭</span>
+      <span class="worry-label">旅行・引越し・巡礼</span>
+      <span class="worry-sub">方位・吉日・聖地巡礼</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('self')">
+      <span class="worry-icon">🪞</span>
+      <span class="worry-label">自分を知りたい</span>
+      <span class="worry-sub">性格・強み・使命</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('name')">
+      <span class="worry-icon">✏️</span>
+      <span class="worry-label">名前・屋号</span>
+      <span class="worry-sub">画数・五行・響き</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('health')">
+      <span class="worry-icon">🌿</span>
+      <span class="worry-label">体調・疲れ</span>
+      <span class="worry-sub">不調・回復・整える</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('home')">
+      <span class="worry-icon">🏠</span>
+      <span class="worry-label">家・空間</span>
+      <span class="worry-sub">家相・玄関・水回り</span>
+    </button>
+    <button class="worry-btn" onclick="showAnswer('today')">
+      <span class="worry-icon">☀️</span>
+      <span class="worry-label">今日を整えたい</span>
+      <span class="worry-sub">方位・色・香り・一手</span>
+    </button>
+  </div>
+</div>
+
+<!-- 回答パネル -->
+<div class="answer-panel" id="answerPanel">
+  <div class="answer-head">
+    <div class="answer-title" id="answerTitle">—</div>
+    <div class="answer-lead" id="answerLead">—</div>
+  </div>
+  <div class="answer-body">
+    <div class="prescription">
+      <div class="prescription-label">💊 KITOKUの見方</div>
+      <div class="prescription-text" id="answerDesc">—</div>
+    </div>
+    <div class="tool-links" id="toolLinks"></div>
+    <div class="one-move">
+      <div class="one-move-label">✦ 今日の一手</div>
+      <div class="one-move-text" id="oneMove">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">KITOKU @ JOURNEY — journey6112.jp</div>
+
+<script>
+const ANSWERS={
+  work:{
+    title:'仕事・ビジネスの悩み',
+    lead:'商談がまとまらない。採用がうまくいかない。タイミングが読めない。気学はビジネス判断の補助線として使えます。',
+    desc:'縁日（自分の星が輝く日）を押さえ、右腕になる人（同会人）を見極め、社名・屋号・ロゴ色を整える。この3つがビジネス気学の核心です。',
+    tools:[
+      {icon:'📅',name:'方位盤・三盤比較',desc:'商談日・契約日の吉凶を確認する',href:'direction_v2.html'},
+      {icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名・ロゴ色を見る',href:'business.html'},
+      {icon:'📝',name:'姓名鑑定',desc:'社名・屋号・商品名の画数と五行を確認',href:'life.html'},
+    ],
+    move:'今日、商談があるなら確認日の方位盤を開いて吉方を確かめてから向かう。',
+  },
+  relation:{
+    title:'人間関係の悩み',
+    lead:'相性が悪い。距離感がつかめない。話がかみ合わない。気学は相手との関わり方を読む補助線です。',
+    desc:'良い・悪いで決めつけず「どう関わると縁が活きるか」を見る。間の星（最大吉方）を使った伝え方・場所・色が関係を変えます。',
+    tools:[
+      {icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手の縁を読む',href:'relations.html'},
+      {icon:'✨',name:'気学先生AI',desc:'関係改善のアドバイスをAIに相談',href:'premium.html'},
+    ],
+    move:'相手の本命星を調べて、今日の方位盤でその星がいる方位を確認する。会う場所の参考にする。',
+  },
+  move:{
+    title:'引越し・旅行・聖地巡礼の悩み',
+    lead:'どこへ引越せばいい？ どの日に旅行・巡礼に行く？ 方位は、移動によって受け取る気を見るものです。伊勢神宮も、ハワイも、吉方で行くと受け取るものが違います。',
+    desc:'年盤・月盤・日盤の3盤を揃えて吉方を確認するのが鉄則。三盤比較で年月日が一致する輪重吉方は60倍の効果があります。聖地巡礼は「その聖地の星の象意」と自分の吉方が重なる日が最高の巡礼日です。',
+    tools:[
+      {icon:'🧭',name:'方位盤',desc:'今日・今月・今年の吉凶方位を確認',href:'direction_v2.html'},
+      {icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に確認',href:'triple_board.html'},
+      {icon:'✈️',name:'旅行吉方位ナビ',desc:'目的地への方位と吉日を選ぶ',href:'travel.html'},
+      {icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を組む',href:'pilgrimage.html'},
+      {icon:'🏡',name:'引越しナビ',desc:'引越し先の方位を年盤・月盤で判定',href:'move.html'},
+    ],
+    move:'まず方位盤を開いて今日の吉方位を確認する。近所でいいので吉方へ一歩出かけてみる。',
+  },
+  self:{
+    title:'自分を知りたい',
+    lead:'自分の強みが分からない。なぜ同じ失敗を繰り返すのか。九星は性格を決めつけるものではなく、動き方・疲れ方・伸びる環境を知る入口です。',
+    desc:'本命星・月命星・傾斜・同会・納音の5つを揃えると「自分の設計図」が見えます。強みだけでなく、繰り返しやすい悩みのパターンも分かります。',
+    tools:[
+      {icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会を見る',href:'kyusei_v2.html'},
+      {icon:'📋',name:'無料レポート',desc:'あなたの星を詳しく読み解く',href:'report_generator_free.html'},
+      {icon:'✨',name:'気学先生AI',desc:'自分の星についてAIに相談する',href:'premium.html'},
+    ],
+    move:'まず九星ページで本命星・月命星・傾斜・同会を確認する。「なるほど」と思う部分を一つ見つける。',
+  },
+  name:{
+    title:'名前・屋号の悩み',
+    lead:'名前の画数は大丈夫？ 屋号や商品名はどうすればいい？ 姓名は、呼ばれ続ける音と形の設計図です。',
+    desc:'画数だけでなく、五行バランス・陰陽・読みの響きを見ます。不足している五行を名前で補うことで、自分の気質が整います。',
+    tools:[
+      {icon:'📝',name:'姓名鑑定',desc:'本名・通名・屋号・SNS名を鑑定',href:'life.html'},
+      {icon:'💼',name:'ビジネス鑑定',desc:'社名・ブランド名の五行バランスを確認',href:'business.html'},
+    ],
+    move:'自分の名前を姓名鑑定ページに入力して、五行バランスを確認する。',
+  },
+  health:{
+    title:'体調・疲れの悩み',
+    lead:'疲れが取れない。体調が安定しない。気学は病気を診断するものではなく、体調が崩れやすい流れを見直す補助線です。',
+    desc:'九星ごとに関わりやすい体の部位や不調パターンがあります。吉方位の移動・色・香り・食べ物で日々の気を整えることが基本の処方箋です。医療判断は専門家に。',
+    tools:[
+      {icon:'🧭',name:'方位盤',desc:'今日の吉方位で気を整える',href:'direction_v2.html'},
+      {icon:'⭐',name:'九星・本命星',desc:'自分の星の体質・傾向を知る',href:'kyusei_v2.html'},
+      {icon:'✨',name:'気学先生AI',desc:'体調の悩みをAIに相談する',href:'premium.html'},
+    ],
+    move:'今日の吉方位を確認して、その方位のコンビニで星の属性の飲み物を買って飲む。',
+  },
+  home:{
+    title:'家・空間の悩み',
+    lead:'家族の仲が悪い。なんとなく家が落ち着かない。家相は怖がるためではなく、住む人の気を整える環境チェックです。',
+    desc:'中心・水回り・玄関・明暗差・欠け張りを見直すだけで、家の気の流れが変わります。掃除・照明・植物・修理という小さな行動から始められます。',
+    tools:[
+      {icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断',href:'kaso.html'},
+      {icon:'✨',name:'気学先生AI',desc:'家・空間の悩みをAIに相談する',href:'premium.html'},
+    ],
+    move:'まず玄関と水回りを掃除する。それだけで家の気の流れが変わり始める。',
+  },
+  today:{
+    title:'今日を整えたい',
+    lead:'毎日の小さな調律が、長い目で見て大きな差になります。今日の方位・色・香りを確認して、一手を決める。',
+    desc:'大きな開運より、毎日の微量チャージが積み重なります。今日の吉方位のコンビニでお茶を買う。吉の色を身につける。それだけで十分です。',
+    tools:[
+      {icon:'🧭',name:'今日の方位盤',desc:'今日の日盤吉凶方位を確認する',href:'direction_v2.html'},
+      {icon:'🏠',name:'今日の羅針盤',desc:'今日の色・香り・一言を確認する',href:'index.html?direct=1'},
+      {icon:'✨',name:'気学先生AI',desc:'今日の悩みをAIに相談する',href:'premium.html'},
+    ],
+    move:'方位盤を開いて今日の吉方位を一つ確認する。出かける時にその方向へ一歩踏み出す。',
+  },
+};
+
+let currentWorry=null;
+
+function showAnswer(key){
+  // ボタンのアクティブ状態
+  document.querySelectorAll('.worry-btn').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  const d=ANSWERS[key];
+  if(!d)return;
+  currentWorry=key;
+
+  document.getElementById('answerTitle').textContent=d.title;
+  document.getElementById('answerLead').textContent=d.lead;
+  document.getElementById('answerDesc').textContent=d.desc;
+  document.getElementById('oneMove').textContent=d.move;
+
+  // ツールリンク
+  const tl=document.getElementById('toolLinks');
+  tl.innerHTML='';
+  d.tools.forEach(t=>{
+    const a=document.createElement('a');
+    a.className='tool-link';
+    a.href=t.href;
+    a.innerHTML=`
+      <span class="tl-icon">${t.icon}</span>
+      <span class="tl-info">
+        <span class="tl-name">${t.name}</span>
+        <span class="tl-desc">${t.desc}</span>
+      </span>
+      <span class="tl-arrow">›</span>
+    `;
+    tl.appendChild(a);
+  });
+
+  // パネル表示
+  const panel=document.getElementById('answerPanel');
+  panel.classList.add('show');
+  // スクロール
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+</script>
+</body>
+</html>
