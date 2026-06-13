@@ -1300,7 +1300,10 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <button id="smode-basic" onclick="setSettingMode('basic')" style="flex:1;padding:10px;border:1.5px solid rgba(196,160,67,.5);border-radius:8px;background:rgba(196,160,67,.15);color:var(--goldlt);font-size:.82rem;cursor:pointer;font-weight:700;">かんたんモード</button>
         <button id="smode-expert" onclick="setSettingMode('expert')" style="flex:1;padding:10px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.03);color:var(--mist);font-size:.82rem;cursor:pointer;">くわしいモード</button>
       </div>
-      <div id="smode-hint" style="font-size:.7rem;color:var(--mist);background:rgba(196,160,67,.05);border:1px solid rgba(196,160,67,.12);border-radius:6px;padding:8px 12px;margin-bottom:14px;line-height:1.8;">KITOKUの推奨設定で、安心してスタートできます。設定を変えなくても大丈夫です。</div>
+      <div id="smode-hint" style="font-size:.7rem;color:var(--mist);background:rgba(196,160,67,.05);border:1px solid rgba(196,160,67,.12);border-radius:6px;padding:8px 12px;margin-bottom:10px;line-height:1.8;">KITOKUの推奨設定で、安心してスタートできます。設定を変えなくても大丈夫です。</div>
+      <div style="font-size:.66rem;color:var(--mist);background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.18);border-radius:8px;padding:9px 12px;margin-bottom:14px;line-height:1.8;">
+        はじめての方は、標準設定のままで大丈夫です。ここは流派差や詳しい見方を確認したい方向けの調整欄です。迷った時はKITOKU推奨のまま使ってください。
+      </div>
 
       <!-- 表示設定 -->
       <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:6px;font-weight:600;">お子様の設定</div>
@@ -1336,8 +1339,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           <div style="flex:1;">
             <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">季節の変わり目アラート（旅行のみ）</div>
             <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">土用殺</div>
-            <div style="font-size:.65rem;color:var(--mist);line-height:1.6;">土用期間中の月建方向への旅行のみ注意。引越し（定住）は問題ありません。</div>
-            <div style="font-size:.65rem;color:var(--mist);">旅行のタイミングでそっとお知らせします</div>
+            <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">ONにすると、土用期間中だけ下に季節アラートを表示します。月建方向への旅行は注意。引越し・定住は問題ありません。</div>
+            <div style="font-size:.62rem;color:rgba(196,160,67,.72);line-height:1.6;margin-top:4px;">旅行や短期移動のタイミング確認用です。</div>
           </div>
           <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
             <input type="checkbox" id="sw-season" onchange="setSeasonMode(this.checked)" checked style="opacity:0;width:0;height:0;position:absolute;">
@@ -1354,7 +1357,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           <div style="flex:1;">
             <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">帰着日の日盤凶を警告する</div>
             <div style="font-size:.6rem;color:rgba(196,160,67,.6);margin-bottom:2px;">他流派設定</div>
-            <div style="font-size:.65rem;color:var(--mist);line-height:1.6;">KITOKUでは年盤・月盤が吉なら帰着日の日盤凶は無視してOK。OFFを推奨します。</div>
+            <div style="font-size:.65rem;color:var(--mist);line-height:1.7;">ONにすると、旅行や引越しから帰る日の「日盤の凶」も注意として扱います。KITOKUでは年盤・月盤が吉なら、帰着日の日盤凶は気にしすぎなくてOK。OFFを推奨します。</div>
+            <div style="font-size:.62rem;color:rgba(196,160,67,.72);line-height:1.6;margin-top:4px;">長期旅行・引越しを細かく見る流派向けの設定です。</div>
           </div>
           <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
             <input type="checkbox" id="sw-kichaku" onchange="setKichakuMode(this.checked)" style="opacity:0;width:0;height:0;position:absolute;">
@@ -1405,7 +1409,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         </div>
 
         <div style="font-size:.7rem;color:var(--mist);background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.12);border-radius:6px;padding:10px 14px;line-height:1.8;">
-          これらは流派によって解釈が異なります。KITOKUの推奨は「5000年の知恵」に基づいた設定です。自由に試して、あなた自身で確かめてください。
+          ここは詳しい人向けの設定です。通常はKITOKU推奨のままで問題ありません。流派によって解釈が異なるため、必要な方だけ切り替えて、ご自身の判断材料として確認してください。
         </div>
       </div>
 
@@ -1751,7 +1755,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   </div>
 
   <!-- 土用アラート -->
-  <div id="doyoAlert" style="display:block;margin:8px 16px 0;padding:10px 14px;background:rgba(232,160,40,.08);border:1px solid rgba(232,160,40,.25);border-radius:8px;font-size:.68rem;color:rgba(200,130,20,.9);line-height:1.8;">
+  <div id="doyoAlert" style="display:none;margin:8px 16px 0;padding:10px 14px;background:rgba(232,160,40,.08);border:1px solid rgba(232,160,40,.25);border-radius:8px;font-size:.68rem;color:rgba(200,130,20,.9);line-height:1.8;">
     🌿 <strong>土用期間中です。</strong>月建方向への旅行は注意。引越し（定住）は問題ありません。
   </div>
 
@@ -3026,6 +3030,18 @@ function showBanGuide(){
           盤面の外側ラベルやマスをタップすると、理由と処方箋を確認できます。
         </div>
       </div>
+      <div class="gogyou-box" style="margin-bottom:14px;">
+        <div class="gogyou-title">🚦 5大凶方 — 赤信号として見る方位</div>
+        <div class="gogyou-text">
+          KITOKUでは、注意が必要な方位を「怖がらせるため」ではなく、無理を避けるための赤信号として表示します。<br><br>
+          <strong style="color:var(--goldlt);">五黄殺</strong>：自分から崩れやすい方位。無理・強引さに注意。<br>
+          <strong style="color:var(--goldlt);">暗剣殺</strong>：外から予想外のことが起きやすい方位。事故・もらい事故・急な変更に注意。<br>
+          <strong style="color:var(--goldlt);">破れ</strong>：予定が崩れやすい方位。約束・契約・時間の確認を丁寧に。<br>
+          <strong style="color:var(--goldlt);">本命殺</strong>：自分の本命星がいる方位。体力や判断の消耗に注意。<br>
+          <strong style="color:var(--goldlt);">本命的殺</strong>：本命星の反対側。思い違い・焦り・裏目に注意。<br><br>
+          月の影響を「詳細」にすると、月命殺・月命的殺や小児殺もあわせて確認できます。
+        </div>
+      </div>
       <div class="gogyou-box">
         <div class="gogyou-title">🧭 南上 vs 北上について</div>
         <div class="gogyou-text">気学では<em style="color:var(--goldlt);">南が上</em>が正式。太陽が南中する方角を上とする東洋の伝統から。地図に慣れた方は北上でも確認できます。どちらも計算結果は同じです。</div>
@@ -3433,7 +3449,7 @@ function renderKyoList(kyouItems,type){
   if(type==='day'){
     var doyo=document.getElementById('doyoAlert');
     if(doyo){
-      var show=gState.ty&&gState.tm&&gState.td&&isDoyoPeriod(gState.ty,gState.tm,gState.td);
+      var show=gState.seasonAlert!==false&&gState.ty&&gState.tm&&gState.td&&isDoyoPeriod(gState.ty,gState.tm,gState.td);
       doyo.style.display=show?'block':'none';
     }
   }
@@ -3964,6 +3980,7 @@ function setSeasonMode(checked){
   gState.seasonAlert=checked;
   try{localStorage.setItem('kitoku-season-alert',checked?'1':'0');}catch(e){}
   _updateToggleUI('sw-season',checked);
+  updateDoyoAlert();
 }
 
 // 土用期間判定（立春・立夏・立秋・立冬の前18日間）
@@ -3978,6 +3995,13 @@ function isDoyoPeriod(y,m,d){
     if(diffDays>=0&&diffDays<18)return true;
   }
   return false;
+}
+
+function updateDoyoAlert(){
+  const doyo=document.getElementById('doyoAlert');
+  if(!doyo)return;
+  const show=!!(gState.seasonAlert!==false&&gState.ty&&gState.tm&&gState.td&&isDoyoPeriod(gState.ty,gState.tm,gState.td));
+  doyo.style.display=show?'block':'none';
 }
 
 function setKichakuMode(checked){
@@ -5054,13 +5078,9 @@ function copyAIPrompt(){
 
     computeAndRender(by,bm,bd,ty,tm,td,tStr);
 
-    // 土用アラートを強制表示（2026年5月は土用期間）
+    // 土用アラートを設定に合わせて表示
     try{
-      var doyo=document.getElementById('doyoAlert');
-      if(doyo && typeof isDoyoPeriod==='function'){
-        var show=isDoyoPeriod(ty,tm,td);
-        doyo.style.display=show?'block':'none';
-      }
+      if(typeof updateDoyoAlert==='function') updateDoyoAlert();
     }catch(e){}
 
     window.scrollTo(0,0);
