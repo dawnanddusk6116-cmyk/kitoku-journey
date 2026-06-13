@@ -29,13 +29,14 @@ body{
 /* ── ヘッダー ── */
 .app-header{
   display:flex;align-items:center;justify-content:space-between;
+  gap:8px;
   padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 14px;
   border-bottom:1px solid var(--rim);
   background:rgba(247,244,239,.96);
   position:sticky;top:0;z-index:100;
   backdrop-filter:blur(12px);
 }
-.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);}
+.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;letter-spacing:.25em;color:var(--gold);margin-right:auto;}
 .header-edit{
   display:inline-flex;align-items:center;gap:5px;
   background:rgba(42,106,176,.08);border:1px solid rgba(42,106,176,.25);
@@ -424,7 +425,7 @@ function showMyPage(){
   document.getElementById('screenSetup').classList.remove('active');
   document.getElementById('screenMy').classList.add('active');
   document.getElementById('headerEdit').style.display='inline-flex';
-  document.getElementById('headerBack').style.display='none';
+  document.getElementById('headerBack').style.display='inline-flex';
   renderMyPage();
 }
 
