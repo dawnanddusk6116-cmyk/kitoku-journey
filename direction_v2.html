@@ -908,6 +908,27 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 .cell-kyo .cell-name{
   color:rgba(220,150,160,.48)!important;
 }
+.dir-label-text.caution,
+.dir-label.caution{
+  color:#c08a2c!important;
+  font-weight:800!important;
+}
+.dir-badge.caution{
+  background:rgba(192,138,44,.12)!important;
+  border:1px solid rgba(192,138,44,.38)!important;
+  color:#c08a2c!important;
+  font-weight:700!important;
+}
+.cell-caution{
+  background:rgba(192,138,44,.035)!important;
+  border-color:rgba(192,138,44,.22)!important;
+}
+.cell-caution .cell-num{
+  color:rgba(192,138,44,.72)!important;
+}
+.cell-caution .cell-name{
+  color:rgba(192,138,44,.56)!important;
+}
 [data-theme="light"] .dir-label-text.kyo,
 [data-theme="light"] .dir-label.kyo{
   color:#a33b4f!important;
@@ -929,6 +950,28 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 }
 [data-theme="light"] .cell-kyo .cell-name{
   color:rgba(120,55,65,.5)!important;
+}
+[data-theme="light"] .dir-label-text.caution,
+[data-theme="light"] .dir-label.caution{
+  color:#8a5f12!important;
+  font-weight:900!important;
+}
+[data-theme="light"] .dir-badge.caution{
+  background:rgba(154,105,20,.1)!important;
+  border-color:rgba(154,105,20,.35)!important;
+  color:#8a5f12!important;
+  font-weight:800!important;
+}
+[data-theme="light"] .cell-caution{
+  background:#fffaf0!important;
+  border-color:rgba(154,105,20,.22)!important;
+}
+[data-theme="light"] .cell-caution .cell-num{
+  color:rgba(110,75,16,.72)!important;
+  font-weight:600!important;
+}
+[data-theme="light"] .cell-caution .cell-name{
+  color:rgba(110,75,16,.56)!important;
 }
 
 
@@ -2207,8 +2250,11 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
       }
     }
   }
-  const kyouSet=new Set(items.map(i=>i.dir));
-  return{items,kyouSet};
+  const cautionItems=items.filter(i=>i.name.includes('定位対冲'));
+  const strictKyouItems=items.filter(i=>!i.name.includes('定位対冲'));
+  const kyouSet=new Set(strictKyouItems.map(i=>i.dir));
+  const cautionSet=new Set(cautionItems.map(i=>i.dir));
+  return{items,kyouSet,cautionItems,cautionSet};
 }
 
 // ══ アプリ状態 ══
@@ -2906,7 +2952,7 @@ function renderBan(type){
   else if(type==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
   else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
 
-  const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
+  const {items:kyouItems,kyouSet,cautionSet=new Set()}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
 
   // 天道：月盤・日盤のみ表示（年盤は不要）
   const tendoDir=(type!=='year')?getTendoDir(ty,tm,td):null;
@@ -2917,9 +2963,10 @@ function renderBan(type){
     const starN=p2s[dir];
     const r=rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir);
     const isKyo=kyouSet.has(dir);
-    dirData[dir]={starN,rank:r.rank,badges:r.badges,isKyo};
+    const isCaution=cautionSet.has(dir);
+    dirData[dir]={starN,rank:r.rank,badges:r.badges,isKyo,isCaution};
   });
-  dirData['C']={starN:p2s['C']||center,rank:0,badges:[],isKyo:false};
+  dirData['C']={starN:p2s['C']||center,rank:0,badges:[],isKyo:false,isCaution:false};
 
   // DAILYで使えるよう日盤のdirDataをgStateに保存
   if(type==='day'){ gState.dayDirData=dirData; if(typeof renderRxAiMap==='function') setTimeout(renderRxAiMap,0); }
@@ -2941,6 +2988,7 @@ function renderBan(type){
       let cls='cell ';
       if(isCenter)cls+='cell-center';
       else if(dd.isKyo)cls+='cell-kyo';
+      else if(dd.isCaution)cls+='cell-caution';
       else if(dd.rank>=5)cls+='cell-saikokichi';
       else if(dd.rank>=4)cls+='cell-saikokichi';
       else if(dd.rank>=3)cls+='cell-daikichi';
@@ -2978,6 +3026,12 @@ function renderBan(type){
         const kns=kyouItems.filter(k=>k.dir===dir);
         if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
+      else if(dd.isCaution){
+        labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
+        const kns=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲'));
+        const cautionLabel=kns.length?kns.map(k=>k.name.split('/')[0]).join('・'):'定位注意';
+        subText=dd.rank>=2?'吉方・定位注意':cautionLabel;
+      }
       else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
       else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
@@ -2989,7 +3043,7 @@ function renderBan(type){
       div.appendChild(dirEl);
       if(subText){
         const badge=document.createElement('div');
-        badge.className='dir-badge '+(dd.isKyo?'kyo':dd.rank>=4?'dai':'kichi');
+        badge.className='dir-badge '+(dd.isKyo?'kyo':dd.isCaution?'caution':dd.rank>=4?'dai':'kichi');
         badge.style.cssText='font-size:.44rem;margin-top:2px;padding:1px 3px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;';
         badge.textContent=subText;
         div.appendChild(badge);
@@ -3010,6 +3064,12 @@ function renderBan(type){
       const kns=kyouItems.filter(k=>k.dir===dir);
       if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
+    else if(dd.isCaution){
+      labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
+      const kns=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲'));
+      const cautionLabel=kns.length?kns.map(k=>k.name.split('/')[0]).join('・'):'定位注意';
+      subText=dd.rank>=2?'吉方・定位注意':cautionLabel;
+    }
     else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
     else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
     else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
@@ -3021,7 +3081,7 @@ function renderBan(type){
     div.appendChild(dirEl);
     if(subText){
       const badge=document.createElement('div');
-      badge.className='dir-badge '+(dd.isKyo?'kyo':dd.rank>=4?'dai':'kichi');
+      badge.className='dir-badge '+(dd.isKyo?'kyo':dd.isCaution?'caution':dd.rank>=4?'dai':'kichi');
       badge.style.cssText='font-size:.38rem;margin-top:4px;padding:2px 3px;border-radius:3px;display:inline-block;writing-mode:vertical-rl;white-space:nowrap;';
       badge.textContent=subText;
       div.appendChild(badge);
@@ -3227,6 +3287,7 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
   }
 
   const isKyo=kyouSet?kyouSet.has(dir):(dirData&&dirData[dir]?dirData[dir].isKyo:false);
+  const isCaution=dirData&&dirData[dir]?dirData[dir].isCaution:false;
   const rankLabel=rankInfo.rank>=5?'本命・月命・三合　最高の吉方':rankInfo.rank>=4?'本命・月命　ともに吉方':rankInfo.rank>=3?'吉方（三合の後押しあり）':rankInfo.rank>=2?'吉方（人に与える日）':'吉方情報なし';
 
   // 飲食提案
@@ -3249,7 +3310,7 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
     <div class="sheet-head">
       <div class="sheet-dir">${JP[dir]} ${rankInfo.badges.length?'✦':''}</div>
       <div class="sheet-star">${s.j}（${s.elem}）の方向</div>
-      <div class="sheet-rank" style="color:${isKyo?'var(--kyo)':rankInfo.rank>=4?'#e8c840':'var(--kichi)'}">${isKyo?'⚠️ 注意が必要な方向':rankLabel}</div>
+      <div class="sheet-rank" style="color:${isKyo?'var(--kyo)':isCaution?'#c08a2c':rankInfo.rank>=4?'#e8c840':'var(--kichi)'}">${isKyo?'⚠️ 注意が必要な方向':isCaution?(rankInfo.rank>=2?'✦ 吉方ですが定位対冲の注意あり':'🔸 定位対冲の注意あり'):rankLabel}</div>
     </div>
     <div class="sheet-body">
       ${!isKyo&&rankInfo.rank>=2?`
@@ -3259,6 +3320,11 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
         <div class="gogyou-title">五行の知恵 — ${s.elem}のエネルギー</div>
         <div class="gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}</div>
       </div>
+      ${isCaution?`
+      <div style="margin-top:10px;padding:10px 12px;background:rgba(192,138,44,.08);border:1px solid rgba(192,138,44,.25);border-radius:8px;font-size:.72rem;line-height:1.8;">
+        <div style="font-weight:700;color:#c08a2c;margin-bottom:4px;">🔸 定位対冲の注意</div>
+        <div style="color:var(--snow);">五大凶方のように一律で避ける扱いではありません。吉を取りながらも、慢心・過去の不調の再発・突発的な予定変更には気を配ってください。</div>
+      </div>`:''}
       ${buildAmberActionPlaceholder(starN)}
       ${(function(){
         // 三合吉方の目的別ブースター
@@ -3300,7 +3366,7 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
             8: '手足の怪我に注意・腰や関節を痛めやすい・身内との関係でもやもやしやすい',
             9: '感情的な衝突が起きやすい・思い込みや見込み違いに注意・火気や熱いものに注意',
           };
-          const kyoNames = items.filter(i=>i.dir===dir).map(i=>i.name).join('・');
+          const kyoNames = kyouItems.filter(i=>i.dir===dir).map(i=>i.name).join('・');
           const isAnken = kyoNames.includes('暗剣殺');
           const boardStar = p2s[dir];
           const ankenMsg = isAnken && ANKENJATSU_MSG[boardStar]
@@ -3313,6 +3379,14 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
         </div><br>
         <em style="color:var(--gold)">流派によって解釈が異なる場合があります。</em><br>
         他のアプリとも比較しながら、ご自身で判断してください。
+      </div>
+      `: isCaution?`
+      <div class="popup-kyo-text" style="font-size:.88rem;line-height:2;">
+        この方向には定位対冲の注意フラグがあります。<br>
+        五大凶方のように一律で避ける扱いではありませんが、慢心・過去の不調の再発・突発的な予定変更には気を配ってください。<br><br>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(192,138,44,.08);border:1px solid rgba(192,138,44,.22);border-radius:8px;font-size:.72rem;color:var(--gold);line-height:1.8;">
+          🔸 心構え：足元確認・健康管理・同行者への配慮をいつもより丁寧に。
+        </div>
       </div>
       `:`
       <div class="popup-kyo-text" style="font-size:.88rem;line-height:2;">

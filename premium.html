@@ -66,9 +66,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .dir-name{font-size:.76rem;font-weight:800;color:rgba(60,40,10,.58);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .dir-name.kichi{color:#8a6820;}
 .dir-name.kyo{color:#a33b4f;font-weight:900;}
+.dir-name.caution{color:#8a5f12;font-weight:900;}
 .dir-badge{display:inline-block;margin-top:2px;padding:1px 4px;border-radius:4px;font-size:.42rem;max-width:100%;overflow:hidden;white-space:nowrap;}
 .dir-badge.kichi{background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.35);color:#7a5715;}
 .dir-badge.kyo{background:rgba(185,55,78,.1);border:1px solid rgba(185,55,78,.38);color:#a33b4f;font-weight:800;}
+.dir-badge.caution{background:rgba(190,135,35,.1);border:1px solid rgba(190,135,35,.32);color:#8a5f12;font-weight:800;}
 .mid-row{display:flex;align-items:center;justify-content:center;max-width:330px;margin:0 auto;}
 .side-label{width:31px;flex:0 0 31px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:224px;padding:0 2px;}
 .side-label .dir-name{writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.08em;}
@@ -79,6 +81,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .cell.kichi{border-color:rgba(183,131,24,.58);background:rgba(183,131,24,.12);color:var(--goldlt);font-weight:800;}
 .cell.kyo{border-color:rgba(185,55,78,.18);background:#fffafa;color:rgba(120,55,65,.68);}
 .cell.kyo .star-num{color:rgba(120,55,65,.72);font-weight:600;}
+.cell.caution{border-color:rgba(190,135,35,.28);background:#fffaf0;color:#8a5f12;}
+.cell.caution .star-num{color:#8a5f12;font-weight:700;}
 .cell.kyo .star-name{color:rgba(120,55,65,.52);}
 .star-num{font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1;}
 .star-name{font-size:.55rem;}
@@ -812,6 +816,10 @@ function buildDirData(center){
   const _tmSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
   const _soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
   const kyou=getKyouDirs(center,state.info.honmei,getBreakDirForDate(),state.info.tsukimei,state.banType,{teiiAsKyo:_teiiKyo,tsukimeiSatsu:_tmSatsu});
+  const cautionItems=(kyou.items||[]).filter(x=>x.name.includes('定位対冲'));
+  const strictItems=(kyou.items||[]).filter(x=>!x.name.includes('定位対冲'));
+  const strictKyouSet=new Set(strictItems.map(x=>x.dir));
+  const cautionSet=new Set(cautionItems.map(x=>x.dir));
   const dirData={};
   ALL8.forEach(dir=>{
     const starN=p2s[dir];
@@ -819,14 +827,22 @@ function buildDirData(center){
     let rank=rankObj.rank;
     // 相剋OFF（出会いの摩擦を活かす）
     if(_soukouOff && rank===1) rank=2;
-    dirData[dir]={starN,rank,isKyo:kyou.kyouSet.has(dir),kyoNames:kyou.items.filter(x=>x.dir===dir).map(x=>x.name.split('/')[0])};
+    dirData[dir]={
+      starN,
+      rank,
+      isKyo:strictKyouSet.has(dir),
+      isCaution:cautionSet.has(dir),
+      kyoNames:strictItems.filter(x=>x.dir===dir).map(x=>x.name.split('/')[0]),
+      cautionNames:cautionItems.filter(x=>x.dir===dir).map(x=>x.name.split('/')[0])
+    };
   });
-  dirData.C={starN:p2s.C||center,rank:0,isKyo:false,kyoNames:[]};
+  dirData.C={starN:p2s.C||center,rank:0,isKyo:false,isCaution:false,kyoNames:[],cautionNames:[]};
   return {p2s,dirData,kyouItems:kyou.items};
 }
 function dirInfo(dir,dirData){
   const dd=dirData[dir]||{};
   if(dd.isKyo)return {nameClass:'kyo',badgeClass:'kyo',sub:dd.kyoNames.join('・')||'凶方'};
+  if(dd.isCaution)return {nameClass:dd.rank>=2?'kichi':'caution',badgeClass:'caution',sub:dd.rank>=2?'吉方・定位注意':(dd.cautionNames||[]).join('・')||'定位注意'};
   if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'最高吉方'};
   if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:'本命・月命 吉'};
   if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方・三合'};
@@ -856,7 +872,7 @@ function renderBoard(){
   const gridHtml=layout.flat().map(dir=>{
     const dd=dirData[dir];
     const n=dd.starN;
-    const cls=dir==='C'?'center':dd.isKyo?'kyo':dd.rank>=2?'kichi':'';
+    const cls=dir==='C'?'center':dd.isKyo?'kyo':dd.isCaution?'caution':dd.rank>=2?'kichi':'';
     return `<div class="cell ${cls}">
       <div class="star-num">${n||''}</div>
       <div class="star-name">${STARS[n]?.k||''}</div>
@@ -1918,6 +1934,8 @@ function evaluateDestinationPrem(dest){
   const dd=data.dirData[dest.dir];
   let resultText='― 中性';
   if(dd&&dd.isKyo) resultText='⚠️ 注意方位';
+  else if(dd&&dd.isCaution&&dd.rank>=2) resultText='✅ 吉方位（定位注意）';
+  else if(dd&&dd.isCaution) resultText='🔸 定位注意';
   else if(dd&&dd.rank>=2) resultText='✅ 吉方位';
   else if(dd&&dd.rank<=0) resultText='― 中性';
   const label=DIR_LABEL_P[dest.dir]||dest.dir;
