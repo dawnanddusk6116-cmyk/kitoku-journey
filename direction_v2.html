@@ -1036,6 +1036,85 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .ai-template-btn .btn-title{color:#3a2a08;}
 [data-theme="light"] .ai-template-btn .btn-desc{color:#5a4020;}
 
+/* 信号色の方位表現：吉方＝青緑、注意＝琥珀、凶方＝赤系 */
+:root{
+  --kichi:#178b78;
+  --kichi-bg:rgba(23,139,120,.12);
+}
+.cell-kichi{
+  background:rgba(23,139,120,.08)!important;
+  border-color:rgba(23,139,120,.34)!important;
+}
+.cell-daikichi{
+  background:rgba(23,139,120,.12)!important;
+  border-color:rgba(23,139,120,.46)!important;
+}
+.cell-saikokichi{
+  background:rgba(14,165,164,.16)!important;
+  border-color:rgba(14,165,164,.58)!important;
+}
+.cell-kichi .cell-num,
+.cell-daikichi .cell-num,
+.cell-saikokichi .cell-num{
+  color:#0f766e!important;
+  font-weight:800!important;
+}
+.cell-kichi .cell-name,
+.cell-daikichi .cell-name,
+.cell-saikokichi .cell-name{
+  color:rgba(15,118,110,.68)!important;
+}
+.dir-label-text.kichi,
+.dir-label.kichi,
+.dir-label.daikichi{
+  color:#0f766e!important;
+  font-weight:900!important;
+}
+.dir-badge.kichi,
+.dir-badge.dai{
+  background:rgba(23,139,120,.1)!important;
+  border-color:rgba(23,139,120,.35)!important;
+  color:#0f766e!important;
+  font-weight:800!important;
+}
+.kichi-item{
+  border-color:rgba(23,139,120,.25)!important;
+  background:rgba(23,139,120,.045)!important;
+}
+.kichi-item.dai,
+.kichi-item.saiko{
+  border-color:rgba(14,165,164,.36)!important;
+  background:rgba(14,165,164,.07)!important;
+}
+.kichi-dir,
+.kichi-rank,
+.kichi-item.dai .kichi-dir,
+.kichi-item.saiko .kichi-dir,
+.kichi-item.dai .kichi-rank,
+.kichi-item.saiko .kichi-rank{
+  color:#0f766e!important;
+}
+.kichi-dir-badge{
+  background:rgba(23,139,120,.1)!important;
+  border-color:rgba(23,139,120,.28)!important;
+}
+[data-theme="light"] .cell-kichi,
+[data-theme="light"] .cell-daikichi,
+[data-theme="light"] .cell-saikokichi{
+  background:rgba(23,139,120,.09)!important;
+  border-color:rgba(23,139,120,.36)!important;
+}
+[data-theme="light"] .cell-kichi .cell-num,
+[data-theme="light"] .cell-daikichi .cell-num,
+[data-theme="light"] .cell-saikokichi .cell-num,
+[data-theme="light"] .dir-label-text.kichi,
+[data-theme="light"] .dir-label.kichi,
+[data-theme="light"] .dir-label.daikichi,
+[data-theme="light"] .kichi-rank,
+[data-theme="light"] .kichi-dir{
+  color:#0f766e!important;
+}
+
 /* フィードバックボタンとの差別化：説明テキストは枠なし */
 .info-text-block{
   font-size:.72rem;color:var(--mist);line-height:1.9;

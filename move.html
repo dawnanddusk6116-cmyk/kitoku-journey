@@ -827,6 +827,39 @@ html.font-large .font-btn{font-size:.8rem;}
   line-height: 1.8;
   font-weight: 600;
 }
+/* 信号色の方位表現：吉方＝青緑、注意＝琥珀、凶方＝赤系 */
+.p-cell.p-kichi{
+  background:rgba(23,139,120,.08)!important;
+  border-color:rgba(23,139,120,.34)!important;
+}
+.p-cell.p-daikichi{
+  background:rgba(14,165,164,.13)!important;
+  border-color:rgba(14,165,164,.5)!important;
+}
+.p-cell.p-kichi .p-cell-num,
+.p-cell.p-daikichi .p-cell-num{
+  color:#0f766e!important;
+}
+.p-dir-label.kichi .p-dir-name{
+  color:#0f766e!important;
+  font-weight:800!important;
+}
+.p-dir-badge.kichi{
+  background:rgba(23,139,120,.1)!important;
+  color:#0f766e!important;
+  border-color:rgba(23,139,120,.32)!important;
+  font-weight:800!important;
+}
+.ban-cell.kichi,
+.cal-cell.kichi-day{
+  background:rgba(23,139,120,.08)!important;
+  border-color:rgba(23,139,120,.32)!important;
+}
+.tag-kichi{
+  background:rgba(23,139,120,.1)!important;
+  border-color:rgba(23,139,120,.34)!important;
+  color:#0f766e!important;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
