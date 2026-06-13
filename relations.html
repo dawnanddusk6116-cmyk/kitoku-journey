@@ -173,8 +173,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
   <div style="display:flex;gap:8px;">
-    <button class="header-reset" id="backBtn" onclick="goBack()" style="display:none;">← 戻る</button>
-    <button class="header-reset" onclick="window.location.href='index.html'" style="display:block;">← TOPへ戻る</button>
+    <button class="header-reset" id="backBtn" onclick="goBack()" style="display:block;">← 戻る</button>
+    <button class="header-reset" onclick="window.location.href='top.html'" style="display:block;">TOPへ戻る</button>
   </div>
 </div>
 
@@ -583,8 +583,9 @@ function ckKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'}
 
 function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function sc(id,c){var e=document.getElementById(id);if(e)e.className=c;}
-function showScr(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');document.getElementById('backBtn').style.display=(id==='s0')?'none':'block';window.scrollTo(0,0);}
-function goBack(){if(document.getElementById('s2').classList.contains('on')){showScr('s1');}else{showScr('s0');}}
+function showScr(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');document.getElementById('backBtn').style.display='block';window.scrollTo(0,0);}
+function goBack(){if(document.getElementById('s0').classList.contains('on')){goPreviousOrTop();}else if(document.getElementById('s2').classList.contains('on')){showScr('s1');}else{showScr('s0');}}
+function goPreviousOrTop(){if(window.history.length>1){window.history.back();}else{window.location.href='top.html';}}
 function swTab(id,btn){document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('on');});document.querySelectorAll('.tbb').forEach(function(b){b.classList.remove('on');});document.getElementById('tab-'+id).classList.add('on');if(btn)btn.classList.add('on');}
 function tog(h){var b=h.nextElementSibling;var a=h.querySelector('.aa');b.classList.toggle('o');a.classList.toggle('o');}
 function resetRpt(){document.getElementById('rptArea').style.display='none';document.getElementById('rptText').style.display='none';document.getElementById('rptText').textContent='';var btn=document.getElementById('aiBtn');if(btn){btn.disabled=false;btn.textContent='✦ AI深掘りレポートを生成する';}}

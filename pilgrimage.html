@@ -66,6 +66,12 @@ body{
   border-radius:6px;cursor:pointer;letter-spacing:.08em;
   font-family:'Noto Serif JP',serif;
 }
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+@media(max-width:380px){
+  .back-btn{font-size:.66rem;padding:7px 9px;letter-spacing:.03em;}
+  .header-logo{font-size:1rem;}
+  .header-sub{font-size:.54rem;}
+}
 
 /* ── セクション共通 ── */
 .section{
@@ -924,7 +930,10 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="header-logo">✦ KITOKU<span style="opacity:.5;margin:0 2px;">@</span>JOURNEY</div>
     <div class="header-sub">聖地巡礼 吉方位ナビ</div>
   </div>
-  <button class="back-btn" onclick="window.location.href='index.html'">← TOPへ戻る</button>
+  <div class="header-actions">
+    <button class="back-btn" onclick="if(window.history.length>1){window.history.back();}else{window.location.href='top.html';}">← 戻る</button>
+    <button class="back-btn" onclick="window.location.href='top.html'">TOPへ</button>
+  </div>
 </div>
 
 <!-- 表示設定 -->

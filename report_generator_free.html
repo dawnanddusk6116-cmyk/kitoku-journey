@@ -218,7 +218,10 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 <!-- ヘッダー -->
 <div class="hdr no-print">
   <div class="hdr-logo">✦ KITOKU</div>
-  <button class="back-btn" onclick="window.location.href='index.html'">← TOP</button>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button class="back-btn" onclick="if(window.history.length>1){window.history.back();}else{window.location.href='top.html';}">← 戻る</button>
+    <button class="back-btn" onclick="window.location.href='top.html'">TOP</button>
+  </div>
 </div>
 
 <!-- ===== 入力画面 s0 ===== -->
