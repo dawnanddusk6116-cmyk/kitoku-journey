@@ -132,6 +132,12 @@ body{
 .tl-name{font-size:.82rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;}
 .tl-desc{font-size:.6rem;color:var(--mist);}
 .tl-arrow{font-size:.8rem;color:rgba(100,80,40,.3);}
+.tl-badge{
+  display:inline-flex;align-items:center;margin-left:6px;
+  font-size:.48rem;padding:1px 6px;border-radius:7px;
+  background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);
+  color:var(--goldlt);font-weight:700;vertical-align:middle;
+}
 
 /* ── 今日の一手 ── */
 .one-move{
@@ -251,7 +257,7 @@ const ANSWERS={
     desc:'良い・悪いで決めつけず「どう関わると縁が活きるか」を見る。間の星（最大吉方）を使った伝え方・場所・色が関係を変えます。',
     tools:[
       {icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手の縁を読む',href:'relations.html'},
-      {icon:'✨',name:'気学先生AI',desc:'関係改善のアドバイスをAIに相談',href:'premium.html'},
+      {icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'関係改善をAIに相談。課金開始後に利用できます。',href:'premium.html',badge:'有料',locked:true},
     ],
     move:'相手の本命星を調べて、今日の方位盤でその星がいる方位を確認する。会う場所の参考にする。',
   },
@@ -275,7 +281,7 @@ const ANSWERS={
     tools:[
       {icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会を見る',href:'kyusei_v2.html'},
       {icon:'📋',name:'無料レポート',desc:'あなたの星を詳しく読み解く',href:'report_generator_free.html'},
-      {icon:'✨',name:'気学先生AI',desc:'自分の星についてAIに相談する',href:'premium.html'},
+      {icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'自分の星をAIに相談。課金開始後に利用できます。',href:'premium.html',badge:'有料',locked:true},
     ],
     move:'まず九星ページで本命星・月命星・傾斜・同会を確認する。「なるほど」と思う部分を一つ見つける。',
   },
@@ -296,7 +302,7 @@ const ANSWERS={
     tools:[
       {icon:'🧭',name:'方位盤',desc:'今日の吉方位で気を整える',href:'direction_v2.html'},
       {icon:'⭐',name:'九星・本命星',desc:'自分の星の体質・傾向を知る',href:'kyusei_v2.html'},
-      {icon:'✨',name:'気学先生AI',desc:'体調の悩みをAIに相談する',href:'premium.html'},
+      {icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'体調の悩みをAIに相談。課金開始後に利用できます。',href:'premium.html',badge:'有料',locked:true},
     ],
     move:'今日の吉方位を確認して、その方位のコンビニで星の属性の飲み物を買って飲む。',
   },
@@ -306,7 +312,7 @@ const ANSWERS={
     desc:'中心・水回り・玄関・明暗差・欠け張りを見直すだけで、家の気の流れが変わります。掃除・照明・植物・修理という小さな行動から始められます。',
     tools:[
       {icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断',href:'kaso.html'},
-      {icon:'✨',name:'気学先生AI',desc:'家・空間の悩みをAIに相談する',href:'premium.html'},
+      {icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'家・空間の悩みをAIに相談。課金開始後に利用できます。',href:'premium.html',badge:'有料',locked:true},
     ],
     move:'まず玄関と水回りを掃除する。それだけで家の気の流れが変わり始める。',
   },
@@ -317,7 +323,7 @@ const ANSWERS={
     tools:[
       {icon:'🧭',name:'今日の方位盤',desc:'今日の日盤吉凶方位を確認する',href:'direction_v2.html'},
       {icon:'🏠',name:'今日の羅針盤',desc:'今日の色・香り・一言を確認する',href:'index.html?direct=1'},
-      {icon:'✨',name:'気学先生AI',desc:'今日の悩みをAIに相談する',href:'premium.html'},
+      {icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'今日の悩みをAIに相談。課金開始後に利用できます。',href:'premium.html',badge:'有料',locked:true},
     ],
     move:'方位盤を開いて今日の吉方位を一つ確認する。出かける時にその方向へ一歩踏み出す。',
   },
@@ -345,11 +351,17 @@ function showAnswer(key){
   d.tools.forEach(t=>{
     const a=document.createElement('a');
     a.className='tool-link';
-    a.href=t.href;
+    a.href=t.locked?'javascript:void(0)':t.href;
+    if(t.locked){
+      a.onclick=(e)=>{
+        e.preventDefault();
+        alert('PREMIUM機能は課金開始後に使えるようになります。KIGAKU先生AI・線路の日・詳細相談をまとめて開く入口です。');
+      };
+    }
     a.innerHTML=`
       <span class="tl-icon">${t.icon}</span>
       <span class="tl-info">
-        <span class="tl-name">${t.name}</span>
+        <span class="tl-name">${t.name}${t.badge?`<span class="tl-badge">${t.badge}</span>`:''}</span>
         <span class="tl-desc">${t.desc}</span>
       </span>
       <span class="tl-arrow">›</span>
