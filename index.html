@@ -2066,9 +2066,14 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('DOMContentLoaded', () => {
   applyDisplayMode(getDisplayMode());
   applyFontSize(getFontSize());
+  const params = new URLSearchParams(location.search);
   const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (birth) {
-    showSelector();
+    if (params.get('home') === '1') {
+      showHome(birth);
+    } else {
+      showSelector();
+    }
   } else {
     showScreenFirst();
   }
