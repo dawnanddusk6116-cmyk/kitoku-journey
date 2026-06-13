@@ -1685,8 +1685,8 @@ body.theme-night .philosophy-list{
 
   <!-- ホーム操作バー -->
   <div class="home-control-row">
-    <button class="back-to-selector" onclick="showSelector()">
-      ← 入口
+    <button class="back-to-selector" onclick="goPreviousOrSelector()">
+      ← 戻る
     </button>
 
     <div class="nav-bar" aria-label="画面内の目次">
@@ -2101,6 +2101,14 @@ function showSelector() {
   document.getElementById('screenSelector').classList.add('active');
   document.getElementById('screenHome').classList.remove('active');
   document.body.classList.remove('home-active');
+}
+
+function goPreviousOrSelector() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    showSelector();
+  }
 }
 
 
