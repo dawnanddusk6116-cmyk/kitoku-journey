@@ -1160,6 +1160,91 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 [data-theme="light"] .dir-label-text.kyo{color:rgba(30,20,5,.55)!important;font-size:.88rem!important;}
 [data-theme="light"] .dir-label-text.kichi{color:#4a2e00!important;font-size:.95rem!important;}
 .dir-badge{font-size:.52rem!important;padding:2px 6px!important;}
+.dir-clickable{
+  cursor:pointer;
+  border-radius:8px;
+  transition:background .16s,transform .16s,box-shadow .16s;
+  position:relative;
+}
+.dir-clickable:active{
+  transform:scale(.97);
+  background:rgba(23,139,120,.08);
+}
+.dir-clickable.has-info{
+  box-shadow:0 0 0 1px rgba(23,139,120,.08);
+}
+.dir-clickable.has-info::after{
+  content:'詳細';
+  display:inline-block;
+  margin-top:3px;
+  padding:1px 5px;
+  border-radius:999px;
+  font-size:.42rem;
+  line-height:1.4;
+  letter-spacing:.04em;
+  color:#0f766e;
+  background:rgba(23,139,120,.08);
+  border:1px solid rgba(23,139,120,.22);
+  white-space:nowrap;
+}
+.dir-clickable.side.has-info::after{
+  writing-mode:vertical-rl;
+  padding:4px 1px;
+  margin-top:4px;
+}
+.rank-meter{
+  margin:10px 0 12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(23,139,120,.09),rgba(255,255,255,.42));
+  border:1px solid rgba(23,139,120,.25);
+}
+.rank-meter-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  color:#0f766e;
+  font-size:.74rem;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.rank-meter-label{
+  font-size:.86rem;
+  letter-spacing:.08em;
+}
+.rank-meter-status{
+  font-size:.62rem;
+  color:#0f766e;
+  background:rgba(23,139,120,.08);
+  border:1px solid rgba(23,139,120,.22);
+  border-radius:999px;
+  padding:2px 8px;
+  white-space:nowrap;
+}
+.rank-dots{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+  margin-top:8px;
+}
+.rank-dot{
+  height:8px;
+  border-radius:999px;
+  background:rgba(23,139,120,.13);
+  border:1px solid rgba(23,139,120,.18);
+}
+.rank-dot.on{
+  background:#0f766e;
+  border-color:#0f766e;
+  box-shadow:0 0 8px rgba(15,118,110,.2);
+}
+.rank-meter-note{
+  font-size:.58rem;
+  color:var(--mist);
+  line-height:1.7;
+  margin-top:7px;
+}
 .life-element-banner{
   display:none;margin:12px 16px 0;
   background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.08));
@@ -2929,6 +3014,18 @@ function showBanGuide(){
         <div class="gogyou-title">☀️ 日盤 — 小さなギア</div>
         <div class="gogyou-text">毎日の行動。カフェ・コンビニ・散歩など日常の小さな吉方取りに。750m以上が目安。</div>
       </div>
+      <div class="gogyou-box" style="margin-bottom:14px;">
+        <div class="gogyou-title">🟢 吉方ランク — 数字が大きいほど条件が重なる</div>
+        <div class="gogyou-text">
+          ランクは、吉方の条件がどれだけ重なっているかを見るKITOKU内の目安です。運勢を点数化するものではなく、方位を選ぶ時の判断材料です。<br><br>
+          <strong style="color:var(--goldlt);">5/5</strong>：本命・月命・三合が重なる最高ランク<br>
+          <strong style="color:var(--goldlt);">4/5</strong>：本命・月命がともに吉方<br>
+          <strong style="color:var(--goldlt);">3/5</strong>：本命吉方に三合などの後押し<br>
+          <strong style="color:var(--goldlt);">2/5</strong>：本命吉方<br>
+          <strong style="color:var(--goldlt);">1/5</strong>：天道などの補助的な吉<br><br>
+          盤面の外側ラベルやマスをタップすると、理由と処方箋を確認できます。
+        </div>
+      </div>
       <div class="gogyou-box">
         <div class="gogyou-title">🧭 南上 vs 北上について</div>
         <div class="gogyou-text">気学では<em style="color:var(--goldlt);">南が上</em>が正式。太陽が南中する方角を上とする東洋の伝統から。地図に慣れた方は北上でも確認できます。どちらも計算結果は同じです。</div>
@@ -3128,6 +3225,12 @@ function renderBan(type){
       else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
       else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
       else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
+      div.className='dir-clickable '+(subText?'has-info':'');
+      div.setAttribute('role','button');
+      div.setAttribute('tabindex','0');
+      div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
+      div.onclick=()=>openDirPopup(dir,center,dirData,kyouItems,kyouSet);
+      div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDirPopup(dir,center,dirData,kyouItems,kyouSet);}};
       const dirEl=document.createElement('div');
       dirEl.className=labelClass;
       dirEl.style.cssText='font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
@@ -3166,6 +3269,12 @@ function renderBan(type){
     else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
     else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
     else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
+    div.className='dir-clickable side '+(subText?'has-info':'');
+    div.setAttribute('role','button');
+    div.setAttribute('tabindex','0');
+    div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
+    div.onclick=()=>openDirPopup(dir,center,dirData,kyouItems,kyouSet);
+    div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDirPopup(dir,center,dirData,kyouItems,kyouSet);}};
     const dirEl=document.createElement('div');
     dirEl.className=labelClass;
     dirEl.style.cssText='font-size:.78rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;';
@@ -3359,6 +3468,20 @@ function buildAmberActionPlaceholder(star){
   </div>`;
 }
 
+function buildRankMeter(rank){
+  const safe=Math.max(0,Math.min(5,Number(rank)||0));
+  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','最高ランク'];
+  const dots=Array.from({length:5},(_,i)=>`<span class="rank-dot ${i<safe?'on':''}"></span>`).join('');
+  return `<div class="rank-meter">
+    <div class="rank-meter-head">
+      <span class="rank-meter-label">吉方ランク ${safe}/5</span>
+      <span class="rank-meter-status">${labels[safe]}</span>
+    </div>
+    <div class="rank-dots" aria-hidden="true">${dots}</div>
+    <div class="rank-meter-note">数字が大きいほど、吉方条件が重なっています。方位を選ぶためのKITOKU内の目安です。</div>
+  </div>`;
+}
+
 function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
   haptic('light');
   // stateから再計算
@@ -3405,6 +3528,7 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
       <div class="sheet-rank" style="color:${isKyo?'var(--kyo)':isCaution?'#c08a2c':rankInfo.rank>=4?'#e8c840':'var(--kichi)'}">${isKyo?'⚠️ 注意が必要な方向':isCaution?(rankInfo.rank>=2?'✦ 吉方ですが定位対冲の注意あり':'🔸 定位対冲の注意あり'):rankLabel}</div>
     </div>
     <div class="sheet-body">
+      ${!isKyo&&rankInfo.rank>0?buildRankMeter(rankInfo.rank):''}
       ${!isKyo&&rankInfo.rank>=2?`
       <div class="food-title">✦ 今日の吉方取り処方箋</div>
       <div class="food-cards">${foodsHTML}</div>

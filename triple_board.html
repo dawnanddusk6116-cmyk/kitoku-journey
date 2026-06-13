@@ -218,6 +218,32 @@ input[type="date"]:focus{border-color:rgba(120,90,20,.5);}
 .popup-row:last-child{border-bottom:none;}
 .popup-lbl{color:var(--gold);min-width:46px;font-size:.63rem;letter-spacing:.06em;padding-top:2px;}
 .popup-val{color:var(--snow);flex:1;line-height:1.8;}
+.dir-clickable{cursor:pointer;border-radius:8px;transition:background .16s,transform .16s,box-shadow .16s;position:relative;}
+.dir-clickable:active{transform:scale(.97);background:rgba(23,139,120,.08);}
+.dir-clickable.has-info{box-shadow:0 0 0 1px rgba(23,139,120,.08);}
+.dir-clickable.has-info::after{
+  content:'詳細';
+  display:inline-block;
+  margin-top:3px;
+  padding:1px 5px;
+  border-radius:999px;
+  font-size:.42rem;
+  line-height:1.4;
+  letter-spacing:.04em;
+  color:#0f766e;
+  background:rgba(23,139,120,.08);
+  border:1px solid rgba(23,139,120,.22);
+  white-space:nowrap;
+}
+.dir-clickable.side.has-info::after{writing-mode:vertical-rl;padding:4px 1px;margin-top:4px;}
+.rank-meter{margin:4px 0 8px;padding:9px 10px;border-radius:9px;background:linear-gradient(135deg,rgba(23,139,120,.09),rgba(255,255,255,.48));border:1px solid rgba(23,139,120,.25);}
+.rank-meter-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#0f766e;font-size:.72rem;font-weight:900;}
+.rank-meter-label{font-size:.84rem;letter-spacing:.08em;}
+.rank-meter-status{font-size:.6rem;background:rgba(23,139,120,.08);border:1px solid rgba(23,139,120,.22);border-radius:999px;padding:2px 8px;white-space:nowrap;}
+.rank-dots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;}
+.rank-dot{height:8px;border-radius:999px;background:rgba(23,139,120,.13);border:1px solid rgba(23,139,120,.18);}
+.rank-dot.on{background:#0f766e;border-color:#0f766e;box-shadow:0 0 8px rgba(15,118,110,.2);}
+.rank-meter-note{font-size:.56rem;color:var(--mist);line-height:1.7;margin-top:7px;}
 
 footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;color:var(--mist);opacity:.6;}
 </style>
@@ -618,6 +644,12 @@ function renderBoard(type){
     else if(dd.rank>=3){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'吉方・三合';}
     else if(dd.rank>=2){labelCls='dir-label-text kichi';badgeCls='kichi';subText=dd.badges[0]||'吉方';}
     else if(dd.rank>=1){labelCls='dir-label-text kichi';badgeCls='kichi';subText='天道';}
+    div.className='dir-clickable '+(subText?'has-info':'');
+    div.setAttribute('role','button');
+    div.setAttribute('tabindex','0');
+    div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
+    div.onclick=()=>openPopup(dir,type,dirData,kyouItems);
+    div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPopup(dir,type,dirData,kyouItems);}};
     const dirEl=document.createElement('div');dirEl.className=labelCls;dirEl.style.cssText='font-size:1rem;font-weight:700;white-space:nowrap;';dirEl.textContent=JP[dir];div.appendChild(dirEl);
     if(subText){const badge=document.createElement('div');badge.className='dir-badge '+badgeCls;badge.style.cssText='font-size:.62rem;margin-top:3px;';badge.textContent=subText;div.appendChild(badge);}
     return div;
@@ -640,6 +672,12 @@ function renderBoard(type){
     else if(dd.rank>=3){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'三合';}
     else if(dd.rank>=2){labelCls='dir-label-text kichi';badgeCls='kichi';subText='吉方';}
     else if(dd.rank>=1){labelCls='dir-label-text kichi';badgeCls='kichi';subText='天道';}
+    div.className='dir-clickable side '+(subText?'has-info':'');
+    div.setAttribute('role','button');
+    div.setAttribute('tabindex','0');
+    div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
+    div.onclick=()=>openPopup(dir,type,dirData,kyouItems);
+    div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPopup(dir,type,dirData,kyouItems);}};
     const dirEl=document.createElement('div');dirEl.className=labelCls;dirEl.style.cssText='font-size:1rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.08em;';dirEl.textContent=JP[dir];div.appendChild(dirEl);
     if(subText){const badge=document.createElement('div');badge.className='dir-badge '+badgeCls;badge.style.cssText='font-size:.5rem;margin-top:4px;padding:2px 3px;writing-mode:vertical-rl;white-space:nowrap;';badge.textContent=subText;div.appendChild(badge);}
     return div;
@@ -736,6 +774,20 @@ function navBoard(type,delta){
 }
 
 // ══ ポップアップ ══
+function buildRankMeter(rank){
+  const safe=Math.max(0,Math.min(5,Number(rank)||0));
+  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','最高ランク'];
+  const dots=Array.from({length:5},(_,i)=>`<span class="rank-dot ${i<safe?'on':''}"></span>`).join('');
+  return `<div class="rank-meter">
+    <div class="rank-meter-head">
+      <span class="rank-meter-label">吉方ランク ${safe}/5</span>
+      <span class="rank-meter-status">${labels[safe]}</span>
+    </div>
+    <div class="rank-dots" aria-hidden="true">${dots}</div>
+    <div class="rank-meter-note">数字が大きいほど、吉方条件が重なっています。方位を選ぶためのKITOKU内の目安です。</div>
+  </div>`;
+}
+
 function openPopup(dir,type,dirData,kyouItems){
   const dd=dirData[dir],star=STARS[dd.starN]||{};
   const typeLabel={year:'年盤',month:'月盤',day:'日盤'}[type];
@@ -749,11 +801,11 @@ function openPopup(dir,type,dirData,kyouItems){
     const names=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲')).map(k=>k.name).join('・')||'定位対冲';
     html+=`<div class="popup-row"><span class="popup-lbl">注意</span><span class="popup-val" style="color:#8a5f12;">🔸 ${names}<br><span style="font-size:.75rem;">五大凶方ではありません。慢心・過去の不調の再発・突発的な予定変更に注意してください。</span></span></div>`;
     if(dd.rank>=2){
-      html+=`<div class="popup-row"><span class="popup-lbl">吉方</span><span class="popup-val" style="color:#7a5008;">✦ 吉方（ランク${dd.rank}）</span></div>`;
+      html+=`<div class="popup-row"><span class="popup-lbl">吉方</span><span class="popup-val" style="color:#0f766e;">✦ 吉方ランク ${dd.rank}/5</span></div>${buildRankMeter(dd.rank)}`;
       if(dd.badges.length)html+=`<div class="popup-row"><span class="popup-lbl">理由</span><span class="popup-val">${dd.badges.join('・')}</span></div>`;
     }
   }else if(dd.rank>=2){
-    html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#7a5008;">✦ 吉方（ランク${dd.rank}）</span></div>`;
+    html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#0f766e;">✦ 吉方ランク ${dd.rank}/5</span></div>${buildRankMeter(dd.rank)}`;
     if(dd.badges.length)html+=`<div class="popup-row"><span class="popup-lbl">理由</span><span class="popup-val">${dd.badges.join('・')}</span></div>`;
   }else{
     html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:var(--mist);">普通</span></div>`;
