@@ -272,11 +272,14 @@ const FEATURES=[
   {id:'life',icon:'📝',name:'姓名鑑定',desc:'名前・屋号・SNS名の画数と五行を確認。',href:'life.html',badge:null},
   {id:'kyusei',icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
   {id:'report',icon:'📋',name:'無料レポート',desc:'自分の星を詳しく読み解いたレポートを見る。',href:'report_generator_free.html',badge:null},
+  {id:'scent',icon:'✤',name:'色と香りで整える',desc:'服・名刺・小物の色、香りを五行で整える。',href:'scent.html',badge:null},
+  {id:'astro64',icon:'🔭',name:'私の設計図を重ねて読む',desc:'太陽・月・金星から、自分の本質や惹かれるものを読む。',href:'astro64.html',badge:null},
   {id:'relations',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
   {id:'business',icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名鑑定。仕事に使う。',href:'business.html',badge:null},
   {id:'kaso',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
-  {id:'premium',icon:'✨',name:'気学先生AI',desc:'象意・深義・AI相談。KITOKUの深義まで学習済み。',href:'premium.html',badge:'有料'},
+  {id:'premium',icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'KIGAKU先生AI・線路の日・詳細相談をまとめて使う入口です。',href:'premium.html',badge:'有料',locked:true},
   {id:'free_ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'index.html?direct=1',badge:'無料'},
+  {id:'english',icon:'EN',name:'JAPAN OS — English Preview',desc:'英語でKITOKUを体験する入口。',href:'en/index.html',badge:null},
 ];
 
 // ══ 計算関数（最小セット）══
@@ -473,7 +476,13 @@ function renderMyPage(){
     if(!f)return;
     const item=document.createElement('a');
     item.className='my-feature-item';
-    item.href=f.href;
+    item.href=f.locked?'javascript:void(0)':f.href;
+    if(f.locked){
+      item.onclick=(e)=>{
+        e.preventDefault();
+        alert('PREMIUM機能は課金開始後に使えるようになります。KIGAKU先生AI・線路の日・詳細相談をまとめて開く入口です。');
+      };
+    }
     item.innerHTML=`
       <div class="mf-icon">${f.icon}</div>
       <div class="mf-info">
