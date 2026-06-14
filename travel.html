@@ -873,6 +873,35 @@ html.font-large .font-btn{font-size:.8rem;}
   background:rgba(255,255,255,.74);border:1px solid rgba(124,91,184,.28);
   border-radius:999px;padding:1px 6px;margin-top:3px;
 }
+.p-dest-info{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1px;
+  max-width:100%;
+  margin-top:1px;
+  line-height:1.18;
+}
+.p-dest-status{
+  max-width:100%;
+  font-size:.52rem;
+  line-height:1.18;
+  font-weight:900;
+  text-align:center;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+.p-dest-status.kyo{color:#a62d44;}
+.p-dest-status.caution{color:#8a5f12;}
+.p-dest-status.kichi{color:#0f766e;}
+.p-cell.p-dest .p-dest-mark{
+  font-size:.5rem;
+  margin-top:1px;
+  padding:1px 5px;
+}
 .ban-cell.dest-dir{
   border:2px solid rgba(124,91,184,.68)!important;
   box-shadow:0 0 0 3px rgba(124,91,184,.1),0 4px 10px rgba(124,91,184,.12)!important;
@@ -2243,12 +2272,16 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     } else if (rank >= 2) {
       badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:600;">吉方</div>`;
     }
+    const destStatusText = isKyo && kyoNames ? kyoNames : isCaution ? (rank>=2?'吉方・定位注意':'定位注意') : rank >= 4 ? '本命・月命' : rank >= 3 ? '吉方・三合' : rank >= 2 ? '吉方' : '';
+    const destStatusClass = isKyo ? 'kyo' : isCaution ? 'caution' : rank>=2 ? 'kichi' : '';
+    const destInfo = isDest
+      ? `<div class="p-dest-info">${destStatusText ? `<div class="p-dest-status ${destStatusClass}">${destStatusText}</div>` : ''}<div class="p-dest-mark">📍目的地</div></div>`
+      : badge;
 
     return `<div class="${cls}">
       <div class="p-cell-num">${starN}</div>
       <div style="font-size:.62rem;font-weight:700;color:${dirColor};margin-top:3px;">${dirJP[d]}</div>
-      ${badge}
-      ${isDest ? '<div class="p-dest-mark">📍目的地</div>' : ''}
+      ${destInfo}
     </div>`;
   }
 
