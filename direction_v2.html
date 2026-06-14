@@ -899,8 +899,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-weight:700!important;
 }
 .cell-kyo{
-  background:linear-gradient(135deg,rgba(217,86,112,.035),rgba(217,86,112,.105) 54%,rgba(255,255,255,.18))!important;
-  border-color:rgba(217,86,112,.24)!important;
+  background:rgba(217,86,112,.025)!important;
+  border-color:rgba(217,86,112,.16)!important;
 }
 .cell-kyo .cell-num{
   color:rgba(220,150,160,.62)!important;
@@ -941,8 +941,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-weight:800!important;
 }
 [data-theme="light"] .cell-kyo{
-  background:linear-gradient(135deg,rgba(185,55,78,.045),rgba(185,55,78,.12) 54%,rgba(255,255,255,.6))!important;
-  border-color:rgba(185,55,78,.25)!important;
+  background:#fffafa!important;
+  border-color:rgba(185,55,78,.18)!important;
 }
 [data-theme="light"] .cell-kyo .cell-num{
   color:rgba(120,55,65,.62)!important;
@@ -3247,7 +3247,7 @@ function renderBan(type){
       if(dd.isKyo){
         labelClass='dir-label-text kyo';
         const kns=kyouItems.filter(k=>k.dir===dir);
-        if(kns.length)subText=kns.map(formatKyoLabel).join('・');
+        if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
       }
       else if(dd.isCaution){
         labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
@@ -3291,7 +3291,7 @@ function renderBan(type){
     if(dd.isKyo){
       labelClass='dir-label-text kyo';
       const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(formatKyoLabel).join('・');
+      if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
     }
     else if(dd.isCaution){
       labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
@@ -3456,7 +3456,7 @@ function renderKyoList(kyouItems,type){
   const dirMap={};
   kyouItems.forEach(item=>{
     if(!dirMap[item.dir])dirMap[item.dir]=[];
-    dirMap[item.dir].push(formatKyoLabel(item));
+    dirMap[item.dir].push(item.name);
   });
   body.innerHTML=Object.entries(dirMap).map(([dir,names])=>`
     <div class="kyo-row">
