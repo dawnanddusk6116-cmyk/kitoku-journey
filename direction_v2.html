@@ -899,8 +899,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-weight:700!important;
 }
 .cell-kyo{
-  background:rgba(217,86,112,.025)!important;
-  border-color:rgba(217,86,112,.16)!important;
+  background:linear-gradient(135deg,rgba(217,86,112,.035),rgba(217,86,112,.105) 54%,rgba(255,255,255,.18))!important;
+  border-color:rgba(217,86,112,.24)!important;
 }
 .cell-kyo .cell-num{
   color:rgba(220,150,160,.62)!important;
@@ -941,8 +941,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-weight:800!important;
 }
 [data-theme="light"] .cell-kyo{
-  background:#fffafa!important;
-  border-color:rgba(185,55,78,.18)!important;
+  background:linear-gradient(135deg,rgba(185,55,78,.045),rgba(185,55,78,.12) 54%,rgba(255,255,255,.6))!important;
+  border-color:rgba(185,55,78,.25)!important;
 }
 [data-theme="light"] .cell-kyo .cell-num{
   color:rgba(120,55,65,.62)!important;
@@ -3171,6 +3171,11 @@ function renderBan(type){
   else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
 
   const {items:kyouItems,kyouSet,cautionSet=new Set()}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
+  let branchName=z.k;
+  if(type==='month')branchName=SHI[getMonthBranch(ty,tm,td)];
+  if(type==='day')branchName=SHI[getDayBranch(ty,tm,td)];
+  const breakName=type==='year'?'歳破':type==='month'?'月破':'日破';
+  annotateBreakItems(kyouItems,breakName,branchName);
 
   // 天道：月盤・日盤のみ表示（年盤は不要）
   const tendoDir=(type!=='year')?getTendoDir(ty,tm,td):null;
@@ -3242,7 +3247,7 @@ function renderBan(type){
       if(dd.isKyo){
         labelClass='dir-label-text kyo';
         const kns=kyouItems.filter(k=>k.dir===dir);
-        if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
+        if(kns.length)subText=kns.map(formatKyoLabel).join('・');
       }
       else if(dd.isCaution){
         labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
@@ -3286,7 +3291,7 @@ function renderBan(type){
     if(dd.isKyo){
       labelClass='dir-label-text kyo';
       const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
+      if(kns.length)subText=kns.map(formatKyoLabel).join('・');
     }
     else if(dd.isCaution){
       labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
@@ -3429,6 +3434,9 @@ function renderKichiList(dirData,p2s){
       else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
       const p2s=buildBoardFromCenter(center);
       const {items:kyouItems,kyouSet}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,currentBan);
+      const breakName=currentBan==='year'?'歳破':currentBan==='month'?'月破':'日破';
+      const branchName=currentBan==='year'?z.k:currentBan==='month'?SHI[getMonthBranch(ty,tm,td)]:SHI[getDayBranch(ty,tm,td)];
+      annotateBreakItems(kyouItems,breakName,branchName);
       const allDirData={};
       const tendoDir2=(currentBan!=='year')?getTendoDir(ty,tm,td):null;
       ALL8.forEach(d=>{const starN=p2s[d];const r=rankDir(d,starN,honmei,tsukimei,sangoSet,tendoDir2);allDirData[d]={starN,rank:r.rank,badges:r.badges,isKyo:kyouSet.has(d)};});
@@ -3448,7 +3456,7 @@ function renderKyoList(kyouItems,type){
   const dirMap={};
   kyouItems.forEach(item=>{
     if(!dirMap[item.dir])dirMap[item.dir]=[];
-    dirMap[item.dir].push(item.name);
+    dirMap[item.dir].push(formatKyoLabel(item));
   });
   body.innerHTML=Object.entries(dirMap).map(([dir,names])=>`
     <div class="kyo-row">
@@ -3508,6 +3516,30 @@ function buildRankMeter(rank){
     </div>
     <div class="rank-dots" aria-hidden="true">${dots}</div>
     <div class="rank-meter-note">数字が大きいほど、吉方条件が重なっています。方位を選ぶためのKITOKU内の目安です。</div>
+  </div>`;
+}
+
+function formatKyoLabel(item){
+  return item&&item.displayName?item.displayName:item.name;
+}
+
+function annotateBreakItems(items,breakName,branchName){
+  (items||[]).forEach(item=>{
+    if(item.name&&item.name.includes(breakName)){
+      item.branch=branchName;
+      item.breakKind=breakName;
+      item.displayName=item.name.replace(breakName,`${breakName}（${branchName}）`);
+    }
+  });
+}
+
+function buildBreakBranchNote(items){
+  const breaks=(items||[]).filter(item=>item&&item.breakKind&&item.branch);
+  if(!breaks.length)return '';
+  const labels=breaks.map(item=>`${item.breakKind}（${item.branch}）`).join('・');
+  return `<div style="margin-top:12px;padding:10px 12px;background:rgba(184,40,64,.055);border:1px solid rgba(184,40,64,.16);border-radius:8px;font-size:.72rem;color:var(--mist);line-height:1.85;">
+    <strong style="display:block;margin-bottom:4px;color:#a33b4f;font-size:.7rem;letter-spacing:.1em;">⚠ ${labels}について</strong>
+    年・月・日の干支の反対側に出る「破れ」です。正式には細かい方位幅がありますが、KITOKUの通常表示では判断しやすいよう八方位にまとめて表示しています。
   </div>`;
 }
 
@@ -3611,13 +3643,15 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
             8: '手足の怪我に注意・腰や関節を痛めやすい・身内との関係でもやもやしやすい',
             9: '感情的な衝突が起きやすい・思い込みや見込み違いに注意・火気や熱いものに注意',
           };
-          const kyoNames = kyouItems.filter(i=>i.dir===dir).map(i=>i.name).join('・');
+          const dirKyoItems = kyouItems.filter(i=>i.dir===dir);
+          const kyoNames = dirKyoItems.map(formatKyoLabel).join('・');
           const isAnken = kyoNames.includes('暗剣殺');
           const boardStar = p2s[dir];
+          const breakNote = buildBreakBranchNote(dirKyoItems);
           const ankenMsg = isAnken && ANKENJATSU_MSG[boardStar]
             ? `<div style="margin-top:12px;padding:10px 12px;background:rgba(176,64,48,.06);border:1px solid rgba(176,64,48,.15);border-radius:8px;font-size:.73rem;color:var(--mist);line-height:1.85;"><strong style="display:block;margin-bottom:4px;color:#8a3020;font-size:.7rem;letter-spacing:.1em;">⚠ この方位で起きやすいこと</strong>${ANKENJATSU_MSG[boardStar]}</div>`
             : '';
-          return ankenMsg;
+          return breakNote+ankenMsg;
         })()}
         <div style="margin-top:10px;padding:8px 12px;background:rgba(154,120,48,.06);border-radius:8px;font-size:.72rem;color:var(--gold);line-height:1.8;">
           ✦ 心構え：①相手を責めない ②感謝の言葉を伝える ③一時停止・赤信号に気をつける

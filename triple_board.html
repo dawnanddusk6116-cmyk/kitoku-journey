@@ -135,7 +135,10 @@ input[type="date"]:focus{border-color:rgba(120,90,20,.5);}
 .cell-daikichi{background:rgba(140,100,10,.14);border-color:rgba(140,100,10,.5);}
 .cell-saikokichi{background:rgba(140,100,10,.2);border-color:rgba(140,100,10,.6);animation:glowG 2.5s ease-in-out infinite;}
 @keyframes glowG{0%,100%{box-shadow:0 0 8px rgba(140,100,10,.2);}50%{box-shadow:0 0 16px rgba(140,100,10,.4);}}
-.cell-kyo{background:rgba(184,40,64,.06);border-color:rgba(184,40,64,.28);}
+.cell-kyo{
+  background:linear-gradient(135deg,rgba(184,40,64,.045),rgba(184,40,64,.13) 54%,rgba(255,255,255,.34))!important;
+  border-color:rgba(184,40,64,.36)!important;
+}
 .cell-caution{background:rgba(190,135,35,.08);border-color:rgba(190,135,35,.32);}
 .cell-normal{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.07);}
 .cell-rincho{background:rgba(120,70,0,.16)!important;border-color:rgba(120,70,0,.55)!important;animation:glowR 2s ease-in-out infinite!important;}
@@ -598,6 +601,14 @@ function renderBoard(type){
   let branchName=getZodiac(y).k;
   if(type==='month')branchName=SHI[getMonthBranch(y,m,d)];
   if(type==='day')branchName=SHI[getDayBranch(y,m,d)];
+  const breakName=type==='year'?'歳破':type==='month'?'月破':'日破';
+  kyouItems.forEach(item=>{
+    if(item.name&&item.name.includes(breakName)){
+      item.branch=branchName;
+      item.breakKind=breakName;
+      item.displayName=item.name.replace(breakName,`${breakName}（${branchName}）`);
+    }
+  });
   const sangoSet=new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
   const tendoDir=(type!=='year')?getTendoDir(y,m,d):null;
   const p2s=buildBoard(center);
@@ -657,7 +668,7 @@ function renderBoard(type){
     if(dd.isKyo){
       labelCls='dir-label-text kyo';badgeCls='kyo';
       const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(k=>k.name).join('・');
+      if(kns.length)subText=kns.map(formatKyoLabel).join('・');
     }else if(dd.isCaution){
       labelCls=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';badgeCls='caution';
       subText=dd.rank>=2?'吉方・定位注意':'定位注意';
@@ -685,7 +696,7 @@ function renderBoard(type){
     if(dd.isKyo){
       labelCls='dir-label-text kyo';badgeCls='kyo';
       const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(k=>k.name).join('・');
+      if(kns.length)subText=kns.map(formatKyoLabel).join('・');
     }else if(dd.isCaution){
       labelCls=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';badgeCls='caution';
       subText=dd.rank>=2?'吉方・定位注意':'定位注意';
@@ -727,7 +738,7 @@ function renderBoard(type){
 
   // 凶方サマリー
   const kyoEl=document.getElementById(`kyo-${type}`);
-  if(kyouItems.length>0){kyoEl.innerHTML='⚠ 凶方：'+kyouItems.map(k=>`${JP[k.dir]}（${k.name}）`).join('　');kyoEl.style.display='block';}
+  if(kyouItems.length>0){kyoEl.innerHTML='⚠ 凶方：'+kyouItems.map(k=>`${JP[k.dir]}（${formatKyoLabel(k)}）`).join('　');kyoEl.style.display='block';}
   else kyoEl.style.display='none';
 }
 
@@ -810,6 +821,19 @@ function buildRankMeter(rank){
   </div>`;
 }
 
+function formatKyoLabel(item){
+  return item&&item.displayName?item.displayName:item.name;
+}
+
+function buildBreakBranchNote(items){
+  const breaks=(items||[]).filter(item=>item&&item.breakKind&&item.branch);
+  if(!breaks.length)return '';
+  const labels=breaks.map(item=>`${item.breakKind}（${item.branch}）`).join('・');
+  return `<div class="popup-row"><span class="popup-lbl">破れ</span><span class="popup-val" style="color:#8a3a48;">
+    ${labels}<br><span style="font-size:.75rem;line-height:1.8;color:var(--mist);">年・月・日の干支の反対側に出る「破れ」です。正式には細かい方位幅がありますが、KITOKUの通常表示では判断しやすいよう八方位にまとめて表示しています。</span>
+  </span></div>`;
+}
+
 function openPopup(dir,type,dirData,kyouItems){
   const dd=dirData[dir],star=STARS[dd.starN]||{};
   const typeLabel={year:'年盤',month:'月盤',day:'日盤'}[type];
@@ -817,8 +841,10 @@ function openPopup(dir,type,dirData,kyouItems){
   document.getElementById('popBanType').textContent=`${typeLabel} — ${star.j||''}`;
   let html=`<div class="popup-row"><span class="popup-lbl">星</span><span class="popup-val">${star.j||''}（${star.elem||''}）</span></div>`;
   if(dd.isKyo){
-    const names=kyouItems.filter(k=>k.dir===dir).map(k=>k.name).join('・');
+    const dirKyoItems=kyouItems.filter(k=>k.dir===dir);
+    const names=dirKyoItems.map(formatKyoLabel).join('・');
     html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#b82840;">⚠ 凶方<br><span style="font-size:.75rem;">${names}</span></span></div>`;
+    html+=buildBreakBranchNote(dirKyoItems);
   }else if(dd.isCaution){
     const names=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲')).map(k=>k.name).join('・')||'定位対冲';
     html+=`<div class="popup-row"><span class="popup-lbl">注意</span><span class="popup-val" style="color:#8a5f12;">🔸 ${names}<br><span style="font-size:.75rem;">五大凶方ではありません。慢心・過去の不調の再発・突発的な予定変更に注意してください。</span></span></div>`;
