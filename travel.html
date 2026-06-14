@@ -1712,10 +1712,23 @@ let gState = {
   activeBanTab: 'year', // 現在選択中のタブ（year/month/day）
 };
 
+function getTeiiKyoSetting(){
+  try{
+    const migrationKey='kitoku-teii-standard-migrated-20260614';
+    if(localStorage.getItem(migrationKey)!=='1'){
+      localStorage.setItem('kitoku-teii-kyo','0');
+      localStorage.setItem(migrationKey,'1');
+    }
+    return localStorage.getItem('kitoku-teii-kyo')==='1';
+  }catch(e){
+    return false;
+  }
+}
+
 // direction_v2.html と凶方位の設定を共有する
 function getSharedKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType) {
   const opts = {
-    teiiAsKyo: localStorage.getItem('kitoku-teii-kyo') === '1',
+    teiiAsKyo: getTeiiKyoSetting(),
     tsukimeiSatsu: localStorage.getItem('kitoku-tsukimei-satsu') || 'on'
   };
   const res = getKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType, opts);

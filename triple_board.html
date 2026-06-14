@@ -501,6 +501,19 @@ function getKyouDirs(center,honmei,breakDir,tsukimei,banType){
 // ══ 状態 ══
 let gState={honmei:0,tsukimei:0,by:0,bm:0,bd:0,orient:'south',tsukimeiSatsu:'on',teiiAsKyo:false,yearNav:{y:2026},monthNav:{y:2026,m:6,d:12},dayNav:{y:2026,m:6,d:12},dirData:{year:null,month:null,day:null}};
 
+function getTeiiKyoSetting(){
+  try{
+    const migrationKey='kitoku-teii-standard-migrated-20260614';
+    if(localStorage.getItem(migrationKey)!=='1'){
+      localStorage.setItem('kitoku-teii-kyo','0');
+      localStorage.setItem(migrationKey,'1');
+    }
+    return localStorage.getItem('kitoku-teii-kyo')==='1';
+  }catch(e){
+    return false;
+  }
+}
+
 // ══ 初期化 ══
 (function(){
   const now=new Date(),jst=new Date(now.getTime()+9*3600000);
@@ -517,7 +530,7 @@ let gState={honmei:0,tsukimei:0,by:0,bm:0,bd:0,orient:'south',tsukimeiSatsu:'on'
 
 function syncDirectionSettingsFromStorage(){
   gState.tsukimeiSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
-  gState.teiiAsKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
+  gState.teiiAsKyo=getTeiiKyoSetting();
   const ts=document.getElementById('settingTsukimei');
   const te=document.getElementById('settingTeii');
   if(ts)ts.value=gState.tsukimeiSatsu;

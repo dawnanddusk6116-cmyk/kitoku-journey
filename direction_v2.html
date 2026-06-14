@@ -2441,6 +2441,19 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType){
 // ══ アプリ状態 ══
 let gState={};
 
+function getTeiiKyoSetting(){
+  try{
+    const migrationKey='kitoku-teii-standard-migrated-20260614';
+    if(localStorage.getItem(migrationKey)!=='1'){
+      localStorage.setItem('kitoku-teii-kyo','0');
+      localStorage.setItem(migrationKey,'1');
+    }
+    return localStorage.getItem('kitoku-teii-kyo')==='1';
+  }catch(e){
+    return false;
+  }
+}
+
 // 今日の日付をデフォルト設定（タイムゾーン補正）
 (function(){
   // UTC+9（日本時間）で正しい日付を取得
@@ -2485,7 +2498,7 @@ let gState={};
     gState.soukouOff=soukouOff;
     const swS=document.getElementById('sw-soukou');
     if(swS){swS.checked=!soukouOff;_updateToggleUI('sw-soukou',!soukouOff);}
-    const teiiKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
+    const teiiKyo=getTeiiKyoSetting();
     gState.teiiAsKyo=teiiKyo;
     const swT=document.getElementById('sw-teii');
     if(swT){swT.checked=teiiKyo;_updateToggleUI('sw-teii',teiiKyo);}
@@ -5057,7 +5070,7 @@ function copyAIPrompt(){
       if(btnS)btnS.classList.toggle('active',so==='south');
       if(btnN)btnN.classList.toggle('active',so==='north');
       gState.tsukimeiSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
-      gState.teiiAsKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
+      gState.teiiAsKyo=getTeiiKyoSetting();
       gState.soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
       gState.kichakuWarn=localStorage.getItem('kitoku-kichaku-warn')==='1';
       gState.seasonAlert=localStorage.getItem('kitoku-season-alert')!=='0';
