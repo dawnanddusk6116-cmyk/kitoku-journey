@@ -860,6 +860,41 @@ html.font-large .font-btn{font-size:.8rem;}
   border-color:rgba(23,139,120,.34)!important;
   color:#0f766e!important;
 }
+/* 目的地は吉凶とは別軸で特別に見せる */
+.p-cell.p-dest{
+  background:
+    radial-gradient(circle at 50% 42%,rgba(255,255,255,.86),rgba(47,143,138,.12) 58%,rgba(47,143,138,.22))!important;
+  border:2.5px solid #1f9a9a!important;
+  box-shadow:
+    0 0 0 3px rgba(31,154,154,.12),
+    0 8px 18px rgba(31,154,154,.18),
+    inset 0 0 0 1px rgba(255,255,255,.7)!important;
+  opacity:1!important;
+}
+.p-cell.p-dest::before{
+  content:'DESTINATION';
+  position:absolute;top:4px;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-size:.42rem;letter-spacing:.13em;
+  color:#0f766e;font-weight:700;opacity:.78;white-space:nowrap;
+}
+.p-cell.p-dest::after{
+  content:'';
+  position:absolute;inset:5px;border-radius:6px;
+  border:1px solid rgba(31,154,154,.28);pointer-events:none;
+}
+.p-cell.p-dest .p-cell-num{color:#0f766e!important;font-weight:800!important;}
+.p-cell.p-dest .p-cell-name{color:#0f766e!important;font-weight:700!important;}
+.p-dest-mark{
+  color:#0f766e!important;font-weight:900!important;
+  background:rgba(255,255,255,.72);border:1px solid rgba(31,154,154,.24);
+  border-radius:999px;padding:1px 6px;margin-top:3px;
+}
+.ban-cell.dest-dir{
+  background:linear-gradient(135deg,rgba(31,154,154,.16),rgba(255,255,255,.8))!important;
+  border:2px solid rgba(31,154,154,.65)!important;
+  box-shadow:0 0 0 3px rgba(31,154,154,.1),0 6px 14px rgba(31,154,154,.12)!important;
+}
+.ban-dest-mark{color:#0f766e!important;font-weight:900!important;}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
