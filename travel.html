@@ -881,6 +881,17 @@ html.font-large .font-btn{font-size:.8rem;}
   box-shadow:0 0 0 3px rgba(124,91,184,.11),0 6px 14px rgba(124,91,184,.14)!important;
 }
 .ban-dest-mark{color:#5b3f99!important;font-weight:900!important;}
+
+/* STEP3 方位チェックの色整理：普通の方位は背景と分けた紙白にする */
+.p-cell:not(.p-center):not(.p-kichi):not(.p-daikichi):not(.p-kyo):not(.p-caution):not(.p-dest),
+.ban-cell:not(.center):not(.kichi):not(.kyo):not(.dest-dir){
+  background:#fffdf8!important;
+  border-color:rgba(138,104,32,.16)!important;
+}
+.dir-panel{
+  background:#fffdf8!important;
+  border-color:rgba(138,104,32,.16)!important;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
