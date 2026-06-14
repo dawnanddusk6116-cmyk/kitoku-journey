@@ -337,12 +337,12 @@ function getKyouDirs(boardCenter,honmei,breakDir,tsukimei,banType,opts){
   if(hmDir&&hmDir!=='C')items.push({name:'本命殺',dir:hmDir});
   if(hmTDir&&hmTDir!=='C')items.push({name:'本命的殺',dir:hmTDir});
   if(teiiDir&&teiiDir!=='C'){
-    // 定位対冲：「宇宙のブレーキを方位に含める」がONの場合のみ凶に追加
-    if(opts.teiiAsKyo)items.push({name:'定位対冲',dir:teiiDir});
+    // 定位対冲（表）は標準表示。五大凶方とは分けて注意扱いにする。
+    items.push({name:'定位対冲',dir:teiiDir});
   }
   if(teiiTDir&&teiiTDir!=='C'){
+    // 定位対冲（裏）は詳しい設定ONの場合のみ表示する。
     if(opts.teiiAsKyo)items.push({name:'定位対冲（裏）',dir:teiiTDir});
-    else items.push({name:'定位対冲（裏）',dir:teiiTDir}); // 裏は常に表示
   }
   // 月命的殺（設定がonの場合のみ）
   const showTsukimei=opts.tsukimeiSatsu==='on';
@@ -710,4 +710,3 @@ function toggleKyo(){
 }
 
 // ── 方位ポップアップ ──
-

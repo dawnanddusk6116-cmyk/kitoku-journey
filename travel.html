@@ -1714,7 +1714,7 @@ let gState = {
 
 function getTeiiKyoSetting(){
   try{
-    const migrationKey='kitoku-teii-standard-migrated-20260614';
+    const migrationKey='kitoku-teii-standard-migrated-v2-20260614';
     if(localStorage.getItem(migrationKey)!=='1'){
       localStorage.setItem('kitoku-teii-kyo','0');
       localStorage.setItem(migrationKey,'1');
