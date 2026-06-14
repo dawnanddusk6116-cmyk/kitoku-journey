@@ -339,14 +339,14 @@ body{
 .p-cell.p-daikichi{background:rgba(120,90,20,.18);border-color:rgba(120,90,20,.55);}
 .p-cell.p-kyo{background:rgba(100,80,40,.03);border-color:rgba(100,80,40,.08);opacity:.65;}
 .p-cell.p-caution{background:rgba(190,135,35,.08);border-color:rgba(190,135,35,.28);}
-.p-cell.p-dest{background:rgba(47,143,138,.14);border:2px solid rgba(47,143,138,.72);box-shadow:0 2px 8px rgba(47,143,138,.18);}
+.p-cell.p-dest{background:rgba(124,91,184,.14);border:2px solid rgba(124,91,184,.72);box-shadow:0 2px 8px rgba(124,91,184,.18);}
 .p-cell-num{font-family:'Cormorant Garamond',serif;font-size:1.25rem;line-height:1;color:var(--goldlt);}
 .p-cell.p-kichi .p-cell-num,.p-cell.p-daikichi .p-cell-num{color:#5a3e08;}
 .p-cell.p-kyo .p-cell-num{color:rgba(60,50,40,.4);}
 .p-cell.p-caution .p-cell-num{color:#8a5f12;}
-.p-cell.p-dest .p-cell-num{color:#1f6f6c;font-weight:700;}
+.p-cell.p-dest .p-cell-num{color:#5b3f99;font-weight:700;}
 .p-cell-name{font-size:.58rem;color:var(--mist);margin-top:2px;}
-.p-dest-mark{font-size:.55rem;color:#1f7f7a;font-weight:800;margin-top:1px;}
+.p-dest-mark{font-size:.55rem;color:#5b3f99;font-weight:800;margin-top:1px;}
 .p-dir-label{text-align:center;padding:3px 2px;line-height:1.4;overflow:hidden;}
 .p-dir-label.kyo .p-dir-name{color:#b04060;font-weight:700;}
 .p-dir-label.kichi .p-dir-name{color:#5a3e08;font-weight:600;}
@@ -388,9 +388,9 @@ body{
   border-color:rgba(138,104,32,.3);
 }
 .ban-cell.dest-dir{
-  background:rgba(47,143,138,.14);
-  border:2px solid rgba(47,143,138,.72);
-  box-shadow:0 2px 8px rgba(47,143,138,.18);
+  background:rgba(124,91,184,.14);
+  border:2px solid rgba(124,91,184,.72);
+  box-shadow:0 2px 8px rgba(124,91,184,.18);
 }
 .ban-cell.kichi{
   background:rgba(94,200,138,.1);
@@ -407,7 +407,7 @@ body{
 }
 .ban-star-name{font-size:.52rem;color:var(--mist);margin-top:2px;}
 .ban-dir-label{font-size:.5rem;color:var(--mist);opacity:.7;}
-.ban-dest-mark{font-size:.6rem;color:#1f7f7a;font-weight:800;}
+.ban-dest-mark{font-size:.6rem;color:#5b3f99;font-weight:800;}
 .rank-5{color:#8a4c00;}
 .rank-4{color:#b16b78;}
 .rank-3{color:#8a6820;}
@@ -849,11 +849,11 @@ html.font-large .font-btn{font-size:.8rem;}
 /* 目的地は吉凶とは別軸で特別に見せる */
 .p-cell.p-dest{
   background:
-    radial-gradient(circle at 50% 42%,rgba(255,255,255,.86),rgba(47,143,138,.12) 58%,rgba(47,143,138,.22))!important;
-  border:2.5px solid #1f9a9a!important;
+    radial-gradient(circle at 50% 42%,rgba(255,255,255,.88),rgba(124,91,184,.12) 58%,rgba(124,91,184,.24))!important;
+  border:2.5px solid #7c5bb8!important;
   box-shadow:
-    0 0 0 3px rgba(31,154,154,.12),
-    0 8px 18px rgba(31,154,154,.18),
+    0 0 0 3px rgba(124,91,184,.13),
+    0 8px 18px rgba(124,91,184,.2),
     inset 0 0 0 1px rgba(255,255,255,.7)!important;
   opacity:1!important;
 }
@@ -861,26 +861,26 @@ html.font-large .font-btn{font-size:.8rem;}
   content:'DESTINATION';
   position:absolute;top:4px;left:50%;transform:translateX(-50%);
   font-family:'Cormorant Garamond',serif;font-size:.42rem;letter-spacing:.13em;
-  color:#0f766e;font-weight:700;opacity:.78;white-space:nowrap;
+  color:#5b3f99;font-weight:700;opacity:.8;white-space:nowrap;
 }
 .p-cell.p-dest::after{
   content:'';
   position:absolute;inset:5px;border-radius:6px;
-  border:1px solid rgba(31,154,154,.28);pointer-events:none;
+  border:1px solid rgba(124,91,184,.32);pointer-events:none;
 }
-.p-cell.p-dest .p-cell-num{color:#0f766e!important;font-weight:800!important;}
-.p-cell.p-dest .p-cell-name{color:#0f766e!important;font-weight:700!important;}
+.p-cell.p-dest .p-cell-num{color:#5b3f99!important;font-weight:800!important;}
+.p-cell.p-dest .p-cell-name{color:#5b3f99!important;font-weight:700!important;}
 .p-dest-mark{
-  color:#0f766e!important;font-weight:900!important;
-  background:rgba(255,255,255,.72);border:1px solid rgba(31,154,154,.24);
+  color:#5b3f99!important;font-weight:900!important;
+  background:rgba(255,255,255,.74);border:1px solid rgba(124,91,184,.28);
   border-radius:999px;padding:1px 6px;margin-top:3px;
 }
 .ban-cell.dest-dir{
-  background:linear-gradient(135deg,rgba(31,154,154,.16),rgba(255,255,255,.8))!important;
-  border:2px solid rgba(31,154,154,.65)!important;
-  box-shadow:0 0 0 3px rgba(31,154,154,.1),0 6px 14px rgba(31,154,154,.12)!important;
+  background:linear-gradient(135deg,rgba(124,91,184,.17),rgba(255,255,255,.82))!important;
+  border:2px solid rgba(124,91,184,.68)!important;
+  box-shadow:0 0 0 3px rgba(124,91,184,.11),0 6px 14px rgba(124,91,184,.14)!important;
 }
-.ban-dest-mark{color:#0f766e!important;font-weight:900!important;}
+.ban-dest-mark{color:#5b3f99!important;font-weight:900!important;}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
