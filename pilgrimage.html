@@ -920,12 +920,10 @@ html.font-large .font-btn{font-size:.8rem;}
 }
 /* 目的地は吉凶とは別軸で特別に見せる */
 .p-cell.p-dest{
-  background:
-    radial-gradient(circle at 50% 42%,rgba(255,255,255,.88),rgba(124,91,184,.12) 58%,rgba(124,91,184,.24))!important;
   border:2.5px solid #7c5bb8!important;
   box-shadow:
     0 0 0 3px rgba(124,91,184,.13),
-    0 8px 18px rgba(124,91,184,.2),
+    0 5px 12px rgba(124,91,184,.14),
     inset 0 0 0 1px rgba(255,255,255,.7)!important;
   opacity:1!important;
 }
@@ -940,17 +938,16 @@ html.font-large .font-btn{font-size:.8rem;}
   position:absolute;inset:5px;border-radius:6px;
   border:1px solid rgba(124,91,184,.32);pointer-events:none;
 }
-.p-cell.p-dest .p-cell-num{color:#5b3f99!important;font-weight:800!important;}
-.p-cell.p-dest .p-cell-name{color:#5b3f99!important;font-weight:700!important;}
+.p-cell.p-dest .p-cell-num{font-weight:800!important;}
+.p-cell.p-dest .p-cell-name{font-weight:700!important;}
 .p-dest-mark{
   color:#5b3f99!important;font-weight:900!important;
   background:rgba(255,255,255,.74);border:1px solid rgba(124,91,184,.28);
   border-radius:999px;padding:1px 6px;margin-top:3px;
 }
 .ban-cell.dest-dir{
-  background:linear-gradient(135deg,rgba(124,91,184,.17),rgba(255,255,255,.82))!important;
   border:2px solid rgba(124,91,184,.68)!important;
-  box-shadow:0 0 0 3px rgba(124,91,184,.11),0 6px 14px rgba(124,91,184,.14)!important;
+  box-shadow:0 0 0 3px rgba(124,91,184,.1),0 4px 10px rgba(124,91,184,.12)!important;
 }
 .ban-dest-mark{color:#5b3f99!important;font-weight:900!important;}
 
@@ -959,6 +956,10 @@ html.font-large .font-btn{font-size:.8rem;}
 .ban-cell:not(.center):not(.kichi):not(.kyo):not(.dest-dir){
   background:#fffdf8!important;
   border-color:rgba(138,104,32,.16)!important;
+}
+.p-cell.p-dest:not(.p-kichi):not(.p-daikichi):not(.p-kyo):not(.p-caution),
+.ban-cell.dest-dir:not(.kichi):not(.kyo){
+  background:#fffdf8!important;
 }
 .dir-panel{
   background:#fffdf8!important;
@@ -2200,11 +2201,11 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name).join('・') : '';
 
     let cls = 'p-cell';
-    if (isDest) cls += ' p-dest';
-    else if (isKyo) cls += ' p-kyo';
+    if (isKyo) cls += ' p-kyo';
     else if (isCaution) cls += ' p-caution';
     else if (rank >= 4) cls += ' p-daikichi';
     else if (rank >= 2) cls += ' p-kichi';
+    if (isDest) cls += ' p-dest';
 
     // 方位名の色
     const dirColor = isKyo ? '#b04060' : isCaution ? '#8a5f12' : rank>=2 ? '#5a3e08' : 'rgba(60,50,40,.5)';
