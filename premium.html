@@ -880,33 +880,87 @@ function renderBoard(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   const center=centerForDate();
   const {dirData}=buildDirData(center);
-  const layout=state.orient==='north'?NORTH_LAYOUT:SOUTH_LAYOUT;
-  const topRow=state.orient==='north'?['NW','N','NE']:['SE','S','SW'];
-  const bottomRow=state.orient==='north'?['SW','S','SE']:['NE','N','NW'];
-  const leftDir=state.orient==='north'?'W':'E';
-  const rightDir=state.orient==='north'?'E':'W';
   const wrap=document.getElementById('compassWrap');
   document.getElementById('banDateTitle').textContent=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年 ${m}月`:`${y}年 ${m}月 ${d}日`;
   document.getElementById('banDateSub').textContent=(state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤')+' — 中宮 '+(STARS[center]?.j||'');
-  const gridHtml=layout.flat().map(dir=>{
-    const dd=dirData[dir];
-    const n=dd.starN;
-    const cls=dir==='C'?'center':dd.isKyo?'kyo':dd.isCaution?'caution':dd.rank>=2?'kichi':'';
-    return `<div class="cell ${cls}">
-      <div class="star-num">${n||''}</div>
-      <div class="star-name">${STARS[n]?.k||''}</div>
-    </div>`;
-  }).join('');
-  wrap.innerHTML=`
-    <div class="compass-inner">
-      <div class="dir-row top">${topRow.map(dir=>dirCell(dir,dirData)).join('')}</div>
-      <div class="mid-row">
-        ${dirCell(leftDir,dirData,true)}
-        <div class="grid">${gridHtml}</div>
-        ${dirCell(rightDir,dirData,true)}
-      </div>
-      <div class="dir-row bottom">${bottomRow.map(dir=>dirCell(dir,dirData)).join('')}</div>
-    </div>`;
+  wrap.innerHTML='';
+  drawOctagonPremium(wrap,center,dirData);
+}
+
+// ══════════════════════════════
+// 八角形SVG方位盤（premium用・ライト固定）
+// ══════════════════════════════
+function octa_polarToXY(cx,cy,r,angleDeg){const rad=(angleDeg-90)*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};}
+function octa_getDirAngles(orient){
+  if(orient==='north'){
+    return {N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
+  }else{
+    return {S:{c:0,span:30},SW:{c:45,span:60},W:{c:90,span:30},NW:{c:135,span:60},N:{c:180,span:30},NE:{c:225,span:60},E:{c:270,span:30},SE:{c:315,span:60}};
+  }
+}
+function octa_svgEl(tag,attrs){const el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el;}
+function octa_svgText(text,attrs){const el=octa_svgEl('text',attrs);el.textContent=text;return el;}
+function octa_getColors(dd){
+  if(dd.isKyo)return{fill:'rgba(155,160,170,.4)',stroke:'rgba(120,125,135,.5)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)'};
+  if(dd.isCaution&&dd.rank<2)return{fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)'};
+  if(dd.rank>=5)return{fill:'rgba(245,200,212,.6)',stroke:'rgba(208,120,145,.65)',num:'#9a3050',name:'rgba(154,48,80,.7)'};
+  if(dd.rank>=4)return{fill:'rgba(246,206,217,.55)',stroke:'rgba(210,130,152,.6)',num:'#9a3050',name:'rgba(154,48,80,.68)'};
+  if(dd.rank>=3)return{fill:'rgba(248,216,224,.6)',stroke:'rgba(214,150,168,.55)',num:'#a04060',name:'rgba(160,64,96,.62)'};
+  if(dd.rank>=2)return{fill:'rgba(250,228,234,.6)',stroke:'rgba(220,170,185,.5)',num:'#b05070',name:'rgba(176,80,112,.56)'};
+  if(dd.rank>=1)return{fill:'rgba(252,236,240,.55)',stroke:'rgba(224,184,196,.45)',num:'#b86080',name:'rgba(184,96,128,.5)'};
+  return{fill:'rgba(255,255,255,.9)',stroke:'rgba(180,175,165,.42)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)'};
+}
+function drawOctagonPremium(wrap,center,dirData){
+  const orient=state.orient||'south';
+  const SVG=360;
+  const svg=octa_svgEl('svg',{viewBox:`0 0 ${SVG} ${SVG}`,xmlns:'http://www.w3.org/2000/svg',style:'width:100%;max-width:320px;height:auto;display:block;margin:0 auto;'});
+  const CX=180,CY=180,R_OUT=108,R_IN=40,R_LABEL=R_OUT+19,R_BADGE=R_OUT+34;
+  const angles=octa_getDirAngles(orient);
+
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const dd=dirData[dir];if(!dd)return;
+    const col=octa_getColors(dd);
+    const start=c-span/2,end=c+span/2;
+    const inStart=octa_polarToXY(CX,CY,R_IN,start);
+    const outStart=octa_polarToXY(CX,CY,R_OUT,start);
+    const outEnd=octa_polarToXY(CX,CY,R_OUT,end);
+    const inEnd=octa_polarToXY(CX,CY,R_IN,end);
+    const path=octa_svgEl('path',{d:`M ${inStart.x} ${inStart.y} L ${outStart.x} ${outStart.y} L ${outEnd.x} ${outEnd.y} L ${inEnd.x} ${inEnd.y} Z`,fill:col.fill,stroke:col.stroke,'stroke-width':'1.1'});
+    svg.appendChild(path);
+
+    const nr=(R_IN+R_OUT)/2+4;
+    const np=octa_polarToXY(CX,CY,nr,c);
+    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'17','font-family':"'Cormorant Garamond',serif",'font-weight':'600'}));
+    const kp=octa_polarToXY(CX,CY,nr-14,c);
+    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+7,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+
+    const lp=octa_polarToXY(CX,CY,R_LABEL,c);
+    let lColor='rgba(40,28,10,.62)';
+    if(dd.isKyo)lColor='rgba(90,95,105,.9)';
+    else if(dd.rank>=2)lColor='#a04060';
+    else if(dd.isCaution)lColor='#9a6810';
+    svg.appendChild(octa_svgText(JP[dir],{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle',fill:lColor,'font-size':'11','font-family':"'Noto Serif JP',serif",'font-weight':'700'}));
+
+    const meta=dirInfo(dir,dirData);
+    let subText=meta.sub||'';
+    if(subText){
+      const bp=octa_polarToXY(CX,CY,R_BADGE,c);
+      const bw=Math.min(subText.length*7.5+8,78),bh=12;
+      let bColor,bBg;
+      if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
+      else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
+      svg.appendChild(octa_svgEl('rect',{x:bp.x-bw/2,y:bp.y-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
+      svg.appendChild(octa_svgText(subText,{x:bp.x,y:bp.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+    }
+  });
+
+  const centerPts=[];
+  Object.values(angles).forEach(({c,span})=>{const p=octa_polarToXY(CX,CY,R_IN,c-span/2);centerPts.push(`${p.x},${p.y}`);});
+  svg.appendChild(octa_svgEl('polygon',{points:centerPts.join(' '),fill:'rgba(120,90,20,.06)',stroke:'rgba(120,90,20,.25)','stroke-width':'1.1'}));
+  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+2,'text-anchor':'middle','dominant-baseline':'middle',fill:'#5c3a08','font-size':'24','font-family':"'Cormorant Garamond',serif"}));
+
+  wrap.appendChild(svg);
 }
 // 本命星ごとの線路の日支インデックス
 const SENRO_IDX={1:[0,3,6,9],2:[1,4,7,10],3:[2,5,8,11],4:[2,5,8,11],5:[1,4,7,10],6:[1,4,7,10],7:[0,3,6,9],8:[1,4,7,10],9:[0,3,6,9]};
