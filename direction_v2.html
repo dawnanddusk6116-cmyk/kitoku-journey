@@ -2201,9 +2201,9 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
 
   // 破の支を特定
   const z = getZodiac(gState.ty || new Date().getFullYear());
-  let breakBranch = z.k, breakDir = OPP[z.d];
-  if (gState.currentBan === 'month') { breakBranch = SHI[getMonthBranch(gState.ty, gState.tm, gState.td)]; breakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]]; }
-  else if (gState.currentBan === 'day' || !gState.currentBan) { breakBranch = SHI[getDayBranch(gState.ty, gState.tm, gState.td)]; breakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]]; }
+  let breakBranch = SHI[(z.d+6)%12], breakDir = OPP[z.d];
+  if (gState.currentBan === 'month') { const mb=getMonthBranch(gState.ty, gState.tm, gState.td); breakBranch = SHI[(mb+6)%12]; breakDir = OPP[BRANCH_DIR[mb]]; }
+  else if (gState.currentBan === 'day' || !gState.currentBan) { const db=getDayBranch(gState.ty, gState.tm, gState.td); breakBranch = SHI[(db+6)%12]; breakDir = OPP[BRANCH_DIR[db]]; }
 
   const ETO_BY_DIR = {N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
   const STARS_KK = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
@@ -3295,7 +3295,7 @@ function showBanGuide(){
           KITOKUでは、注意が必要な方位を「怖がらせるため」ではなく、無理を避けるための赤信号として表示します。<br><br>
           <strong style="color:var(--goldlt);">五黄殺</strong>：自分から崩れやすい方位。無理・強引さに注意。<br>
           <strong style="color:var(--goldlt);">暗剣殺</strong>：外から予想外のことが起きやすい方位。事故・もらい事故・急な変更に注意。<br>
-          <strong style="color:var(--goldlt);">歳破・月破・日破</strong>：その年・月・日の「破れ」。予定が崩れやすい方位。約束・契約・時間の確認を丁寧に。<br>
+          <strong style="color:var(--goldlt);">歳破・月破・日破</strong>：その年・月・日の「破れ」。予定が崩れやすい方位。約束・契約・時間の確認を丁寧に。<span style="color:var(--mist);font-size:.92em;">（厳密には中宮の赤い十二支の方位。KITOKUは安全のため方位枠ごと表示）</span><br>
           <strong style="color:var(--goldlt);">本命殺</strong>：自分の本命星がいる方位。体力や判断の消耗に注意。<br>
           <strong style="color:var(--goldlt);">本命的殺</strong>：本命星の反対側。思い違い・焦り・裏目に注意。<br><br>
           月の影響を「詳細」にすると、月命殺・月命的殺や小児殺もあわせて確認できます。
@@ -3590,9 +3590,10 @@ function renderBan(type){
   const sangoSet=new Set(sangoInfo.dirs);
 
   let breakDir='C';
-  if(type==='year')breakDir=OPP[z.d];
-  else if(type==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
-  else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];}
+  let breakZodiacBranch=''; // 破にあたる支（その日の支の対冲）
+  if(type==='year'){breakDir=OPP[z.d];breakZodiacBranch=SHI[(z.d+6)%12];}
+  else if(type==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];breakZodiacBranch=SHI[(mb+6)%12];}
+  else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];breakZodiacBranch=SHI[(db+6)%12];}
 
   const {items:kyouItems,kyouSet,cautionSet=new Set()}=getKyouDirs(center,honmei,breakDir,gState.tsukimei,type);
   let branchName=z.k;
@@ -3621,7 +3622,7 @@ function renderBan(type){
   // コンパス盤描画（八角形SVG）
   const wrap=document.getElementById('compassWrap');
   wrap.innerHTML='';
-  drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet,{breakDir,branchName,type});
+  drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet,{breakDir,branchName:breakZodiacBranch,type});
 
   // 吉方リスト
   renderKichiList(dirData,p2s);
@@ -3801,7 +3802,7 @@ function buildBreakBranchNote(items){
   const labels=breaks.map(item=>`${item.breakKind}（${item.branch}）`).join('・');
   return `<div style="margin-top:12px;padding:10px 12px;background:rgba(184,40,64,.055);border:1px solid rgba(184,40,64,.16);border-radius:8px;font-size:.72rem;color:var(--mist);line-height:1.85;">
     <strong style="display:block;margin-bottom:4px;color:#a33b4f;font-size:.7rem;letter-spacing:.1em;">⚠ ${labels}について</strong>
-    年・月・日の干支の反対側に出る「破れ」です。正式には細かい方位幅がありますが、KITOKUの通常表示では判断しやすいよう八方位にまとめて表示しています。
+    年・月・日の干支の反対側に出る「破れ」です。破れは厳密には十二支の方位（約30度）にかかります。四隅（北東・南東・南西・北西）には十二支が2つ入るため、本来は片方の支だけが破れになります。KITOKUでは安全のため、その方位枠ごと「避ける」表示にしています。正確にどの支が破れかは、盤面中央（中宮）の<strong style="color:#c0304a;">赤い十二支</strong>でご確認いただけます。
   </div>`;
 }
 
