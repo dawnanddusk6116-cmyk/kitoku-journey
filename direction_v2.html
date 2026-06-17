@@ -2065,19 +2065,23 @@ function drawDirectionLines(lat, lng) {
   const {honmei, tsukimei} = gState;
   if (!honmei) return;
 
-  // 現在の盤面から吉凶判定
-  const center = gState.currentBan === 'day' ? gState.dayCenter
-    : gState.currentBan === 'month' ? gState.monthCenter : gState.yearCent;
+  // 地図表示用の日付（ナビした日付を優先・なければ今日）
+  const mvY = gState.mapViewY || gState.ty;
+  const mvM = gState.mapViewM || gState.tm;
+  const mvD = gState.mapViewD || gState.td;
+  // 地図用の中宮を計算
+  let center = gState.currentBan === 'day' ? getDayCenter(mvY, mvM, mvD)
+    : gState.currentBan === 'month' ? getMonthCenter(mvY, mvM, mvD) : yearCenter(mvY);
   if (!center) return;
 
   const p2s = buildBoardFromCenter(center);
-  const z = getZodiac(gState.ty || new Date().getFullYear());
+  const z = getZodiac(mvY);
   const sangoInfo = SANGO_MAP[z.k] || { dirs: [] };
   const sangoSet = new Set(sangoInfo.dirs);
   // 盤の種類に応じた破方位（日盤=日破、月盤=月破、年盤=歳破）
   let mapBreakDir = OPP[z.d];
-  if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]];
-  else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]];
+  if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(mvY, mvM, mvD)]];
+  else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(mvY, mvM, mvD)]];
   const {items: kyouItems} = getKyouDirs(center, honmei,
     mapBreakDir, gState.tsukimei, gState.currentBan || 'day');
   const kyouSet = new Set(kyouItems.map(k => k.dir));
@@ -2200,11 +2204,12 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
   const angles = {N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
   function pXY(r,a){const rad=(a-90)*Math.PI/180;return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)];}
 
-  // 破の支を特定
-  const z = getZodiac(gState.ty || new Date().getFullYear());
+  // 破の支を特定（地図表示用の日付）
+  const _mvY = gState.mapViewY || gState.ty, _mvM = gState.mapViewM || gState.tm, _mvD = gState.mapViewD || gState.td;
+  const z = getZodiac(_mvY);
   let breakBranch = SHI[(z.d+6)%12], breakDir = OPP[z.d];
-  if (gState.currentBan === 'month') { const mb=getMonthBranch(gState.ty, gState.tm, gState.td); breakBranch = SHI[(mb+6)%12]; breakDir = OPP[BRANCH_DIR[mb]]; }
-  else if (gState.currentBan === 'day' || !gState.currentBan) { const db=getDayBranch(gState.ty, gState.tm, gState.td); breakBranch = SHI[(db+6)%12]; breakDir = OPP[BRANCH_DIR[db]]; }
+  if (gState.currentBan === 'month') { const mb=getMonthBranch(_mvY, _mvM, _mvD); breakBranch = SHI[(mb+6)%12]; breakDir = OPP[BRANCH_DIR[mb]]; }
+  else if (gState.currentBan === 'day' || !gState.currentBan) { const db=getDayBranch(_mvY, _mvM, _mvD); breakBranch = SHI[(db+6)%12]; breakDir = OPP[BRANCH_DIR[db]]; }
 
   const ETO_BY_DIR = {N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
   const STARS_KK = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
@@ -3373,6 +3378,11 @@ function renderBanNav(){
   gState.ty=ty;gState.tm=tm;gState.td=td;
   gState.dayCenter=dayCenter;gState.monthCenter=monthCenter;gState.yearCent=yearCent;
   renderBan(type);
+  // 地図表示用の日付を更新して地図も連動再描画
+  gState.mapViewY=ty;gState.mapViewM=tm;gState.mapViewD=td;
+  if(dirMapInstance && dirMapCenter){
+    drawDirectionLines(dirMapCenter.lat, dirMapCenter.lng);
+  }
   // 元に戻す（gStateのnavYear/Month/Dayは保持）
   gState.ty=saved.ty;gState.tm=saved.tm;gState.td=saved.td;
   gState.dayCenter=saved.dayCenter;gState.monthCenter=saved.monthCenter;gState.yearCent=saved.yearCent;
