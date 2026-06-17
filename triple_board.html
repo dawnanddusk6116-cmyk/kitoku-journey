@@ -685,8 +685,9 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
     const kp=octa_polarToXY(CX,CY,nr-13,c);
     svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+7,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'6','font-family':"'Noto Serif JP',serif"}));
 
-    // 方位名
-    const lp=octa_polarToXY(CX,CY,R_LABEL,c);
+    // 方位名（東西は少し外に）
+    const isHoriz=(dir==='E'||dir==='W');
+    const lp=octa_polarToXY(CX,CY,R_LABEL+(isHoriz?5:0),c);
     let lColor='rgba(40,28,10,.62)';
     if(dd.rincho)lColor='#7a4000';
     else if(dd.isKyo)lColor='rgba(90,95,105,.9)';
@@ -706,15 +707,19 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
     else if(dd.rank>=1)subText='天道';
 
     if(subText){
-      const bp=octa_polarToXY(CX,CY,R_BADGE,c);
+      // 東西はバッジを方位名の下に
+      const isHorizontal=(dir==='E'||dir==='W');
+      const bpLabel=octa_polarToXY(CX,CY,R_LABEL+(isHorizontal?5:0),c);
+      const badgeX=isHorizontal?bpLabel.x:octa_polarToXY(CX,CY,R_BADGE,c).x;
+      const badgeY=isHorizontal?(bpLabel.y+12):octa_polarToXY(CX,CY,R_BADGE,c).y;
       const bw=Math.min(subText.length*7.5+8,76),bh=12;
       let bColor,bBg;
       if(dd.rincho){bColor='#7a4000';bBg='rgba(120,70,0,.14)';}
       else if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
       else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
-      svg.appendChild(octa_svgEl('rect',{x:bp.x-bw/2,y:bp.y-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
-      svg.appendChild(octa_svgText(subText,{x:bp.x,y:bp.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+      svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
+      svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
     }
   });
 
