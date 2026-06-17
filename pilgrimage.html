@@ -2259,6 +2259,11 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     const [kx,ky]=pXY(nr-13,c);
     const sname=(typeof STARS!=='undefined'&&STARS[starN])?STARS[starN].k:'';
     cells += `<text x="${kx.toFixed(1)}" y="${(ky+7).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.name}" font-size="6" font-family="'Noto Serif JP',serif">${sname}</text>`;
+    // 目的地に大きなピンを表示（セル外周寄り）
+    if(col.dest){
+      const [px,py]=pXY(R_OUT-13,c);
+      cells += `<text x="${px.toFixed(1)}" y="${py.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="20">📍</text>`;
+    }
     // 方位名
     const [lx,ly]=pXY(R_LABEL,c);
     let lColor = col.isKyo?'rgba(90,95,105,.9)':col.rank>=2?'#a04060':col.isCaution?'#9a6810':'rgba(40,28,10,.62)';
@@ -2275,9 +2280,9 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     if(col.dest){
       const [bx,by]=pXY(R_BADGE,c);
       const dt=subText||'';
-      const bw=Math.min((dt.length+4)*7.5+8,92),bh=12;
+      const bw=Math.min((dt.length+3)*7.5+12,96),bh=12;
       cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="rgba(106,75,168,.16)" stroke="rgba(106,75,168,.5)" stroke-width="0.8"/>`;
-      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e98" font-size="6.5" font-family="'Noto Serif JP',serif" font-weight="700">📍${dt}</text>`;
+      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e98" font-size="6.5" font-family="'Noto Serif JP',serif" font-weight="700">目的地${dt?'・'+dt:''}</text>`;
     } else if(subText){
       const [bx,by]=pXY(R_BADGE,c);
       const bw=Math.min(subText.length*7.5+8,76),bh=12;
