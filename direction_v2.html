@@ -1839,6 +1839,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
               <span style="color:#94a3b8;font-weight:700;margin-left:8px;">━</span> 普通
             </span>
             <button onclick="centerDirectionMap()" style="margin-left:auto;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:5px;color:var(--goldlt);font-size:.6rem;padding:4px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;">📍 現在地</button>
+            <button onclick="openFullscreenMap()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:5px;color:var(--goldlt);font-size:.6rem;padding:4px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;">⛶ 全画面</button>
           </div>
           <div style="padding:6px 12px;font-size:.58rem;color:var(--mist);line-height:1.7;background:rgba(0,0,0,.02);">📍 地図は<strong style="color:var(--goldlt);">北が上</strong>です（上の方位盤＝南上とは上下が逆になります）。実際の地図の方角に合わせて吉凶を確認できます。750m以上離れた場所への外出で吉方を取ることができます。</div>
         </div>
@@ -1865,6 +1866,114 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 
 </div><!-- /app-wrap -->
+
+<!-- 全画面地図モーダル -->
+<div id="fullscreenMapModal" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;">
+  <div id="fullscreenMap" style="width:100%;height:100%;"></div>
+  <button onclick="closeFullscreenMap()" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10000;background:rgba(255,255,255,.95);border:none;border-radius:50%;width:44px;height:44px;font-size:1.3rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);color:#333;">✕</button>
+  <div style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:12px;z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:6px 12px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.2);">📍 地図は北が上 ・ 緑＝吉方</div>
+  <div style="position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">緑の扇形が吉方位 ・ 750m以上で吉方取り</div>
+</div>
+
+<script>
+// 全画面地図
+let fsMapInstance = null;
+function openFullscreenMap() {
+  const modal = document.getElementById('fullscreenMapModal');
+  modal.style.display = 'block';
+  const c = dirMapCenter || { lat: 33.8416, lng: 132.7657 };
+  setTimeout(() => {
+    if (!fsMapInstance) {
+      fsMapInstance = L.map('fullscreenMap', { center: [c.lat, c.lng], zoom: 11, zoomControl: true });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap', maxZoom: 19
+      }).addTo(fsMapInstance);
+    } else {
+      fsMapInstance.setView([c.lat, c.lng], 11);
+    }
+    fsMapInstance.invalidateSize();
+    drawFullscreenContent(c.lat, c.lng);
+    fsMapInstance.off('zoomend').on('zoomend', () => drawFullscreenContent(c.lat, c.lng));
+  }, 100);
+}
+function closeFullscreenMap() {
+  document.getElementById('fullscreenMapModal').style.display = 'none';
+}
+
+let fsMapLayers = [];
+function drawFullscreenContent(lat, lng) {
+  if (!fsMapInstance) return;
+  fsMapLayers.forEach(l => fsMapInstance.removeLayer(l));
+  fsMapLayers = [];
+
+  const {honmei, tsukimei} = gState;
+  if (!honmei) return;
+  const center = gState.currentBan === 'day' ? gState.dayCenter
+    : gState.currentBan === 'month' ? gState.monthCenter : gState.yearCent;
+  if (!center) return;
+
+  const p2s = buildBoardFromCenter(center);
+  const z = getZodiac(gState.ty || new Date().getFullYear());
+  const sangoSet = new Set((SANGO_MAP[z.k] || { dirs: [] }).dirs);
+  let mapBreakDir = OPP[z.d];
+  if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]];
+  else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]];
+  const {items: kyouItems} = getKyouDirs(center, honmei, mapBreakDir, gState.tsukimei, gState.currentBan || 'day');
+  const kyouSet = new Set(kyouItems.map(k => k.dir));
+
+  // 中心マーカー
+  const cm = L.circleMarker([lat, lng], { radius: 7, fillColor: '#c4a043', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(fsMapInstance);
+  fsMapLayers.push(cm);
+
+  // 距離円
+  [[0.75,'rgba(196,160,67,.25)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.05)']].forEach(([r, fill]) => {
+    const circle = L.circle([lat, lng], { radius: r*1000, color: 'rgba(196,160,67,.3)', weight: 1, fill: true, fillColor: fill, fillOpacity: 0.3 }).addTo(fsMapInstance);
+    fsMapLayers.push(circle);
+  });
+
+  const LINE_LENGTH = 300; // 全画面はより遠くまで
+  Object.entries(DIR_ANGLES).forEach(([dir, angle]) => {
+    const starN = p2s[dir];
+    const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
+    const kns = kyouItems.filter(k => k.dir === dir);
+    const isKyo = kns.length > 0 || kyouSet.has(dir) || dd.isKyo;
+
+    // 吉方の扇形（遠くまで）
+    if (!isKyo && dd.rank >= 2) {
+      const isSeihou = ['N','E','S','W'].includes(dir);
+      const halfSpan = isSeihou ? 15 : 30;
+      const pts = [[lat, lng]];
+      for (let a = angle - halfSpan; a <= angle + halfSpan; a += 5) {
+        const rad = a * Math.PI / 180;
+        pts.push([lat + Math.cos(rad)*(LINE_LENGTH/111), lng + Math.sin(rad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))]);
+      }
+      const fanColor = dd.rank >= 4 ? '#22c55e' : dd.rank >= 3 ? '#4ade80' : '#86efac';
+      const fanOpacity = dd.rank >= 4 ? 0.2 : dd.rank >= 3 ? 0.15 : 0.11;
+      const fan = L.polygon(pts, { color: fanColor, weight: 1.5, opacity: 0.5, fillColor: fanColor, fillOpacity: fanOpacity });
+      fan.addTo(fsMapInstance);
+      fsMapLayers.push(fan);
+      // 吉方ラベル
+      const midRad = angle * Math.PI / 180;
+      const labLat = lat + Math.cos(midRad)*(LINE_LENGTH/111)*0.4;
+      const labLng = lng + Math.sin(midRad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))*0.4;
+      const STK = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
+      const JPD = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+      const lab = L.divIcon({ html: `<div style="background:rgba(34,197,94,.9);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);">✦ ${JPD[dir]} 吉方<br>${STK[starN]||''}</div>`, iconAnchor: [30, 12], className: '' });
+      const lm = L.marker([labLat, labLng], { icon: lab, interactive: false });
+      lm.addTo(fsMapInstance); fsMapLayers.push(lm);
+    }
+  });
+
+  // 方位盤オーバーレイ（既存の関数を流用するため一時的にdirMapInstanceを差し替え）
+  const savedInstance = dirMapInstance;
+  const savedLines = dirMapLines;
+  dirMapInstance = fsMapInstance;
+  dirMapLines = fsMapLayers;
+  drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei);
+  dirMapInstance = savedInstance;
+  dirMapLines = savedLines;
+}
+</script>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -2005,6 +2114,31 @@ function drawDirectionLines(lat, lng) {
       line.addTo(dirMapInstance);
       dirMapLines.push(line);
     };
+
+    // ── 吉方位だけ緑の扇形を遠くまで延長 ──
+    if (!isKyo && dd.rank >= 2) {
+      // 正方位30度・四隅60度の幅
+      const isSeihou = ['N','E','S','W'].includes(dir);
+      const halfSpan = isSeihou ? 15 : 30;
+      const FAN_LEN = 200; // km（遠くまで伸ばす）
+      const pts = [[lat, lng]];
+      // 扇形の弧を複数点で描く
+      for (let a = angle - halfSpan; a <= angle + halfSpan; a += 5) {
+        const rad = a * Math.PI / 180;
+        const dlat = Math.cos(rad) * (FAN_LEN / 111);
+        const dlng = Math.sin(rad) * (FAN_LEN / (111 * Math.cos(lat * Math.PI / 180)));
+        pts.push([lat + dlat, lng + dlng]);
+      }
+      // 吉方のランクで濃さを変える
+      const fanColor = dd.rank >= 4 ? '#22c55e' : dd.rank >= 3 ? '#4ade80' : '#86efac';
+      const fanOpacity = dd.rank >= 4 ? 0.18 : dd.rank >= 3 ? 0.14 : 0.1;
+      const fan = L.polygon(pts, {
+        color: fanColor, weight: 1, opacity: 0.4,
+        fillColor: fanColor, fillOpacity: fanOpacity
+      });
+      fan.addTo(dirMapInstance);
+      dirMapLines.push(fan);
+    }
 
     // メイン方位線
     drawLine(angle, weight, opacity, dashArray);
