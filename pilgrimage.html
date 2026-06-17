@@ -2278,13 +2278,21 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     else if(col.rank>=3)subText='吉方・三合';
     else if(col.rank>=2)subText='吉方';
     if(col.dest){
-      const [bx,by]=pXY(R_BADGE,c);
+      const isHorizontal=(d==='E'||d==='W');
+      const [labelX,labelY]=pXY(R_LABEL,c);
+      const [badgeBaseX,badgeBaseY]=pXY(R_BADGE,c);
+      const bx=isHorizontal?labelX:badgeBaseX;
+      const by=isHorizontal?labelY+16:badgeBaseY;
       const dt=subText||'';
       const bw=Math.min((dt.length+3)*8.7+14,108),bh=14;
       cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="rgba(106,75,168,.16)" stroke="rgba(106,75,168,.5)" stroke-width="0.8"/>`;
       cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e98" font-size="7.5" font-family="'Noto Serif JP',serif" font-weight="700">目的地${dt?'・'+dt:''}</text>`;
     } else if(subText){
-      const [bx,by]=pXY(R_BADGE,c);
+      const isHorizontal=(d==='E'||d==='W');
+      const [labelX,labelY]=pXY(R_LABEL,c);
+      const [badgeBaseX,badgeBaseY]=pXY(R_BADGE,c);
+      const bx=isHorizontal?labelX:badgeBaseX;
+      const by=isHorizontal?labelY+16:badgeBaseY;
       const bw=Math.min(subText.length*8.7+10,90),bh=14;
       let bColor,bBg;
       if(col.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
