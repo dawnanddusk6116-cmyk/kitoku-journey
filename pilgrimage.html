@@ -2212,67 +2212,82 @@ function calcRankMap(boardCenter, kyouSetX, sangoSet) {
 }
 
 function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
-  const LAYOUT = [['SE','S','SW'],['E','C','W'],['NE','N','NW']];
-  const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西',C:'中'};
+  // ── 八角形SVG版 ──
+  const dirJP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+  const orient = (typeof gState!=='undefined' && gState.orient==='north') ? 'north' : 'south';
+  const angles = (orient==='north')
+    ? {N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}}
+    : {S:{c:0,span:30},SW:{c:45,span:60},W:{c:90,span:30},NW:{c:135,span:60},N:{c:180,span:30},NE:{c:225,span:60},E:{c:270,span:30},SE:{c:315,span:60}};
 
-  function makeCell(d) {
-    if (d === 'C') {
-      const starN = board['C'] || 5;
-      return `<div class="p-cell p-center">
-        <div class="p-cell-num">${starN}</div>
-      </div>`;
-    }
-    const starN = board[d] || 5;
+  function pXY(r,a){const rad=(a-90)*Math.PI/180;return[170+r*Math.cos(rad),170+r*Math.sin(rad)];}
+  const CX=170,CY=170,R_OUT=104,R_IN=38,R_LABEL=R_OUT+18,R_BADGE=R_OUT+33;
+
+  function cellColors(d){
     const isKyo = kyouSet && kyouSet.has(d);
     const isCaution = kyouItems && kyouItems.some(i=>i.dir===d && i.name.includes('定位対冲'));
     const rank = rankMap ? (rankMap[d]||0) : 0;
     const isDest = d === destDir;
-    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name).join('・') : '';
-
-    let cls = 'p-cell';
-    if (isKyo) cls += ' p-kyo';
-    else if (isCaution) cls += ' p-caution';
-    else if (rank >= 4) cls += ' p-daikichi';
-    else if (rank >= 2) cls += ' p-kichi';
-    if (isDest) cls += ' p-dest';
-
-    // 方位名の色
-    const dirColor = isKyo ? '#b04060' : isCaution ? '#8a5f12' : rank>=2 ? '#5a3e08' : 'rgba(60,50,40,.5)';
-
-    // バッジ（凶殺名・吉方）
-    let badge = '';
-    if (isKyo && kyoNames) {
-      badge = `<div style="font-size:.62rem;color:#a62d44;line-height:1.35;margin-top:2px;font-weight:800;text-align:center;">${kyoNames}</div>`;
-    } else if (isCaution) {
-      badge = `<div style="font-size:.6rem;color:#8a5f12;line-height:1.3;margin-top:2px;font-weight:700;text-align:center;">${rank>=2?'吉方・定位注意':'定位注意'}</div>`;
-    } else if (rank >= 4) {
-      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:700;">本命・月命</div>`;
-    } else if (rank >= 3) {
-      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:700;">吉方・三合</div>`;
-    } else if (rank >= 2) {
-      badge = `<div style="font-size:.6rem;color:#5a3e08;line-height:1.3;margin-top:2px;font-weight:600;">吉方</div>`;
-    }
-    const destStatusText = isKyo && kyoNames ? kyoNames : isCaution ? (rank>=2?'吉方・定位注意':'定位注意') : rank >= 4 ? '本命・月命' : rank >= 3 ? '吉方・三合' : rank >= 2 ? '吉方' : '';
-    const destStatusClass = isKyo ? 'kyo' : isCaution ? 'caution' : rank>=2 ? 'kichi' : '';
-    const destInfo = isDest
-      ? `<div class="p-dest-info">${destStatusText ? `<div class="p-dest-status ${destStatusClass}">${destStatusText}</div>` : ''}<div class="p-dest-mark">📍目的地</div></div>`
-      : badge;
-
-    return `<div class="${cls}">
-      <div class="p-cell-num">${starN}</div>
-      <div style="font-size:.62rem;font-weight:700;color:${dirColor};margin-top:3px;">${dirJP[d]}</div>
-      ${destInfo}
-    </div>`;
+    if(isDest) return {fill:'rgba(120,90,20,.22)',stroke:'rgba(120,90,20,.85)',num:'#5a3e08',name:'#5a3e08',dest:true,isKyo,isCaution,rank};
+    if(isKyo) return {fill:'rgba(155,160,170,.4)',stroke:'rgba(120,125,135,.5)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)',isKyo,isCaution,rank};
+    if(isCaution&&rank<2) return {fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)',isKyo,isCaution,rank};
+    if(rank>=4) return {fill:'rgba(246,206,217,.55)',stroke:'rgba(210,130,152,.6)',num:'#9a3050',name:'rgba(154,48,80,.68)',isKyo,isCaution,rank};
+    if(rank>=3) return {fill:'rgba(248,216,224,.6)',stroke:'rgba(214,150,168,.55)',num:'#a04060',name:'rgba(160,64,96,.62)',isKyo,isCaution,rank};
+    if(rank>=2) return {fill:'rgba(250,228,234,.6)',stroke:'rgba(220,170,185,.5)',num:'#b05070',name:'rgba(176,80,112,.56)',isKyo,isCaution,rank};
+    return {fill:'rgba(255,255,255,.9)',stroke:'rgba(180,175,165,.42)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)',isKyo,isCaution,rank};
   }
 
-  return `<div style="
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:4px;
-    width:100%;
-  ">
-    ${LAYOUT.flat().map(makeCell).join('')}
-  </div>`;
+  let cells='';
+  Object.entries(angles).forEach(([d,{c,span}])=>{
+    const starN = board[d] || 5;
+    const col = cellColors(d);
+    const start=c-span/2, end=c+span/2;
+    const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
+    cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${col.fill}" stroke="${col.stroke}" stroke-width="1.1"/>`;
+    const nr=(R_IN+R_OUT)/2+4;
+    const [nx,ny]=pXY(nr,c);
+    cells += `<text x="${nx.toFixed(1)}" y="${(ny+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.num}" font-size="16" font-family="'Cormorant Garamond',serif" font-weight="600">${starN}</text>`;
+    const [kx,ky]=pXY(nr-13,c);
+    const sname=(typeof STARS!=='undefined'&&STARS[starN])?STARS[starN].k:'';
+    cells += `<text x="${kx.toFixed(1)}" y="${(ky+7).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.name}" font-size="6" font-family="'Noto Serif JP',serif">${sname}</text>`;
+    // 方位名
+    const [lx,ly]=pXY(R_LABEL,c);
+    let lColor = col.isKyo?'rgba(90,95,105,.9)':col.rank>=2?'#a04060':col.isCaution?'#9a6810':'rgba(40,28,10,.62)';
+    if(col.dest)lColor='#5a3e08';
+    cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${lColor}" font-size="10.5" font-family="'Noto Serif JP',serif" font-weight="700">${dirJP[d]}</text>`;
+    // バッジ
+    const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name.split('/')[0]).join('・') : '';
+    let subText='';
+    if(col.isKyo&&kyoNames)subText=kyoNames;
+    else if(col.isCaution)subText=col.rank>=2?'吉方・定位注意':'定位注意';
+    else if(col.rank>=4)subText='本命・月命';
+    else if(col.rank>=3)subText='吉方・三合';
+    else if(col.rank>=2)subText='吉方';
+    if(col.dest){
+      const [bx,by]=pXY(R_BADGE,c);
+      const dt=subText||'';
+      const bw=Math.min((dt.length+4)*7.5+8,90),bh=12;
+      cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="rgba(120,90,20,.18)"/>`;
+      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e08" font-size="6.5" font-family="'Noto Serif JP',serif" font-weight="700">📍${dt}</text>`;
+    } else if(subText){
+      const [bx,by]=pXY(R_BADGE,c);
+      const bw=Math.min(subText.length*7.5+8,76),bh=12;
+      let bColor,bBg;
+      if(col.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
+      else if(col.isCaution&&col.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
+      cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="${bBg}"/>`;
+      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${bColor}" font-size="6.5" font-family="'Noto Serif JP',serif">${subText}</text>`;
+    }
+  });
+
+  // 中央
+  let cpts='';
+  Object.values(angles).forEach(({c,span})=>{const [px,py]=pXY(R_IN,c-span/2);cpts+=`${px.toFixed(1)},${py.toFixed(1)} `;});
+  const centerStar = board['C'] || 5;
+  cells += `<polygon points="${cpts.trim()}" fill="rgba(120,90,20,.06)" stroke="rgba(120,90,20,.25)" stroke-width="1.1"/>`;
+  cells += `<text x="${CX}" y="${CY+2}" text-anchor="middle" dominant-baseline="middle" fill="#5c3a08" font-size="22" font-family="'Cormorant Garamond',serif">${centerStar}</text>`;
+
+  return `<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;height:auto;display:block;margin:0 auto;">${cells}</svg>`;
 }
 
 
