@@ -1920,7 +1920,8 @@ function drawFullscreenContent(lat, lng) {
   if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]];
   else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]];
   const {items: kyouItems} = getKyouDirs(center, honmei, mapBreakDir, gState.tsukimei, gState.currentBan || 'day');
-  const kyouSet = new Set(kyouItems.map(k => k.dir));
+  // 定位対冲は注意レベルなのでkyouSet（凶色判定）から除外
+  const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
 
   // 中心マーカー
   const cm = L.circleMarker([lat, lng], { radius: 7, fillColor: '#c4a043', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(fsMapInstance);
@@ -2084,7 +2085,8 @@ function drawDirectionLines(lat, lng) {
   else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(mvY, mvM, mvD)]];
   const {items: kyouItems} = getKyouDirs(center, honmei,
     mapBreakDir, gState.tsukimei, gState.currentBan || 'day');
-  const kyouSet = new Set(kyouItems.map(k => k.dir));
+  // 定位対冲は注意レベルなのでkyouSet（凶色判定）から除外
+  const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
 
   const LINE_LENGTH = 150; // km相当（度単位で近似）
 
