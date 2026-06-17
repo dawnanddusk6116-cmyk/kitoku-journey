@@ -1964,8 +1964,12 @@ function drawDirectionLines(lat, lng) {
   const z = getZodiac(gState.ty || new Date().getFullYear());
   const sangoInfo = SANGO_MAP[z.k] || { dirs: [] };
   const sangoSet = new Set(sangoInfo.dirs);
+  // 盤の種類に応じた破方位（日盤=日破、月盤=月破、年盤=歳破）
+  let mapBreakDir = OPP[z.d];
+  if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]];
+  else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]];
   const {items: kyouItems} = getKyouDirs(center, honmei,
-    OPP[z.d], gState.tsukimei, gState.currentBan || 'day');
+    mapBreakDir, gState.tsukimei, gState.currentBan || 'day');
   const kyouSet = new Set(kyouItems.map(k => k.dir));
 
   const LINE_LENGTH = 150; // km相当（度単位で近似）
