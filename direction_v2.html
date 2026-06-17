@@ -3195,15 +3195,16 @@ function octa_getColors(dd,isDark){
   return{fill:d?'rgba(248,248,250,.92)':'rgba(255,255,255,.85)',stroke:d?'rgba(210,205,195,.5)':'rgba(180,175,165,.38)',num:d?'rgba(50,45,38,.85)':'rgba(40,35,28,.8)',name:d?'rgba(90,82,68,.7)':'rgba(90,80,65,.55)'};
 }
 
-function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet){
+function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet,extra){
+  extra=extra||{};
   const themeAttr=document.documentElement.getAttribute('data-theme')||(document.getElementById('appWrap')?document.getElementById('appWrap').getAttribute('data-theme'):null)||'dark';
   const isDark=(themeAttr!=='light');
   const orient=gState.orient||'south';
 
   const SVG_SIZE=400;
-  const svg=octa_svgEl('svg',{viewBox:`0 0 ${SVG_SIZE} ${SVG_SIZE}`,xmlns:'http://www.w3.org/2000/svg',style:'width:100%;max-width:360px;height:auto;display:block;margin:0 auto;'});
+  const svg=octa_svgEl('svg',{viewBox:`0 0 ${SVG_SIZE} ${SVG_SIZE}`,xmlns:'http://www.w3.org/2000/svg',style:'width:100%;max-width:370px;height:auto;display:block;margin:0 auto;'});
 
-  const CX=200,CY=200,R_OUT=120,R_IN=44,R_LABEL=R_OUT+22,R_BADGE=R_OUT+39;
+  const CX=200,CY=200,R_OUT=110,R_IN=54,R_LABEL=R_OUT+15,R_BADGE=R_OUT+35;
   const angles=octa_getDirAngles(orient);
 
   // ラベル色
@@ -3273,7 +3274,7 @@ function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet){
     }
   });
 
-  // 中央八角形
+  // 中央八角形（十二支表示用に少し拡大）
   const centerPts=[];
   Object.values(angles).forEach(({c,span})=>{
     const p=octa_polarToXY(CX,CY,R_IN,c-span/2);
@@ -3281,10 +3282,45 @@ function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet){
   });
   svg.appendChild(octa_svgEl('polygon',{
     points:centerPts.join(' '),
-    fill:isDark?'rgba(196,160,67,.1)':'rgba(120,90,20,.06)',
+    fill:isDark?'rgba(196,160,67,.08)':'rgba(120,90,20,.05)',
     stroke:isDark?'rgba(196,160,67,.35)':'rgba(120,90,20,.25)','stroke-width':'1.2'
   }));
-  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+2,'text-anchor':'middle','dominant-baseline':'middle',fill:isDark?'#c4a043':'#5c3a08','font-size':'26','font-family':"'Cormorant Garamond',serif"}));
+
+  // ── 中宮に十二支を配置 ──
+  // 各方位の十二支（正方位1支・四隅2支）
+  const ETO_BY_DIR={
+    N:['子'], NE:['丑','寅'], E:['卯'], SE:['辰','巳'],
+    S:['午'], SW:['未','申'], W:['酉'], NW:['戌','亥']
+  };
+  // 日破/月破/歳破の支を特定
+  const breakBranch=extra.branchName||'';
+  const breakDir=extra.breakDir||'';
+  const etoColor=isDark?'rgba(215,195,155,.8)':'rgba(110,80,25,.72)';
+  const etoBreakColor=isDark?'#f08080':'#c0304a';
+  const R_ETO=R_IN-14; // 中宮の縁寄りに十二支配置
+
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const etoList=ETO_BY_DIR[dir]||[];
+    if(!etoList.length)return;
+    etoList.forEach((eto,idx)=>{
+      let offsetAngle=0;
+      if(etoList.length===2){
+        offsetAngle=(idx===0?-12:12);
+      }
+      const ep=octa_polarToXY(CX,CY,R_ETO,c+offsetAngle);
+      const isBreak=(eto===breakBranch && dir===breakDir);
+      svg.appendChild(octa_svgText(eto,{
+        x:ep.x,y:ep.y,'text-anchor':'middle','dominant-baseline':'middle',
+        fill:isBreak?etoBreakColor:etoColor,
+        'font-size':isBreak?'11.5':'10',
+        'font-family':"'Noto Serif JP',serif",
+        'font-weight':isBreak?'800':'600'
+      }));
+    });
+  });
+
+  // 中宮星（中心）
+  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:isDark?'#c4a043':'#5c3a08','font-size':'23','font-family':"'Cormorant Garamond',serif"}));
 
   wrap.appendChild(svg);
 }
@@ -3334,7 +3370,7 @@ function renderBan(type){
   // コンパス盤描画（八角形SVG）
   const wrap=document.getElementById('compassWrap');
   wrap.innerHTML='';
-  drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet);
+  drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet,{breakDir,branchName,type});
 
   // 吉方リスト
   renderKichiList(dirData,p2s);
