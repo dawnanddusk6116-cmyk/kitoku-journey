@@ -3097,6 +3097,14 @@ function openMapPicker() {
         maxZoom: 19
       }).addTo(mapPickerInstance);
 
+      // 自宅中心に方位盤オーバーレイ＋吉方扇形を描画
+      if (gState.homeLat && gState.honmei) {
+        drawPickerCompassOverlay(mapPickerInstance, gState.homeLat, gState.homeLon);
+        mapPickerInstance.on('zoomend', () => {
+          if (gState.homeLat && gState.honmei) drawPickerCompassOverlay(mapPickerInstance, gState.homeLat, gState.homeLon);
+        });
+      }
+
       mapPickerInstance.on('click', async (e) => {
         const { lat, lng } = e.latlng;
         if (mapPickerMarker) {
@@ -3145,6 +3153,119 @@ function openMapPicker() {
     }
     setTimeout(() => { setH(); mapPickerInstance.invalidateSize(); }, 100);
   }
+}
+
+
+// ══════════════════════════════
+// 地図用 方位盤オーバーレイ＋吉方扇形（move/travel/pilgrimage共通）
+// ══════════════════════════════
+let pickerCompassOverlay = null;
+let pickerFanLayers = [];
+function drawPickerCompassOverlay(mapInst, lat, lng) {
+  if (!mapInst || !gState.honmei) return;
+  // 既存を削除
+  if (pickerCompassOverlay) { try{mapInst.removeLayer(pickerCompassOverlay);}catch(e){} pickerCompassOverlay = null; }
+  pickerFanLayers.forEach(l => { try{mapInst.removeLayer(l);}catch(e){} });
+  pickerFanLayers = [];
+
+  // 日盤データを計算
+  const _SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const now = new Date();
+  const ty = now.getFullYear(), tm = now.getMonth()+1, td = now.getDate();
+  const center = getDayCenter(ty, tm, td);
+  const p2s = buildBoardFromCenter(center);
+  const dayBranchIdx = getDayBranch(ty, tm, td);
+  const dayBranchName = _SHI[dayBranchIdx];
+  const sangoSet = new Set(SANGO_MAP[dayBranchName]?.dirs || []);
+  const breakDir = OPP[BRANCH_DIR[dayBranchIdx]];
+  const breakBranch = _SHI[(dayBranchIdx+6)%12];
+  const tendo = (typeof getTendoDir==='function') ? getTendoDir(ty,tm,td) : null;
+  const { items: kyouItems } = getKyouDirs(center, gState.honmei, breakDir, gState.tsukimei, 'day', {});
+  const kyouSet = new Set(kyouItems.map(k=>k.dir));
+
+  const DIR_ANG = {N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
+
+  // ── 吉方の緑扇形（遠くまで）──
+  Object.entries(DIR_ANG).forEach(([dir, angle]) => {
+    const starN = p2s[dir];
+    const dd = rankDir(dir, starN, gState.honmei, gState.tsukimei, sangoSet, tendo);
+    const kns = kyouItems.filter(k=>k.dir===dir);
+    const isKyo = kns.length>0 || kyouSet.has(dir) || dd.isKyo;
+    if (!isKyo && dd.rank >= 2) {
+      const isSeihou = ['N','E','S','W'].includes(dir);
+      const halfSpan = isSeihou ? 15 : 30;
+      const FAN_LEN = 200;
+      const pts = [[lat, lng]];
+      for (let a = angle - halfSpan; a <= angle + halfSpan; a += 5) {
+        const rad = a * Math.PI / 180;
+        pts.push([lat + Math.cos(rad)*(FAN_LEN/111), lng + Math.sin(rad)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)))]);
+      }
+      const fanColor = dd.rank>=4 ? '#22c55e' : dd.rank>=3 ? '#4ade80' : '#86efac';
+      const fanOpacity = dd.rank>=4 ? 0.18 : dd.rank>=3 ? 0.14 : 0.1;
+      const fan = L.polygon(pts, { color: fanColor, weight: 1, opacity: 0.4, fillColor: fanColor, fillOpacity: fanOpacity });
+      fan.addTo(mapInst);
+      pickerFanLayers.push(fan);
+    }
+  });
+
+  // ── 方位盤オーバーレイ（北上固定）──
+  const centerPt = mapInst.latLngToContainerPoint([lat, lng]);
+  const northPt = mapInst.latLngToContainerPoint([lat + 0.75/111, lng]);
+  const radiusPx = Math.abs(centerPt.y - northPt.y);
+  if (radiusPx < 18) return;
+
+  const R_OUT = radiusPx, R_IN = R_OUT*0.34, PAD = 60;
+  const SVG = R_OUT*2 + PAD*2, cx = SVG/2, cy = SVG/2;
+  const angles = {N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
+  function pXY(r,a){const rad=(a-90)*Math.PI/180;return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)];}
+  const ETO_BY_DIR={N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
+
+  let cells = '';
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const starN = p2s[dir];
+    const dd = rankDir(dir, starN, gState.honmei, gState.tsukimei, sangoSet, tendo);
+    const kns = kyouItems.filter(k=>k.dir===dir);
+    const isKyo = kns.length>0 || kyouSet.has(dir) || dd.isKyo;
+    const start=c-span/2, end=c+span/2;
+    let fill = 'rgba(40,50,60,.4)';
+    if (isKyo) fill='rgba(190,55,55,.4)';
+    else if (dd.rank>=2) fill='rgba(50,150,75,.4)';
+    else if (dd.rank>=1) fill='rgba(196,160,67,.38)';
+    const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
+    cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+    const nr=(R_IN+R_OUT)/2, [nx,ny]=pXY(nr,c);
+    cells += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${Math.max(13,R_OUT*0.1).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
+    let kyoLabel = '';
+    if (kns.length) kyoLabel = kns[0].name.split('/')[0][0];
+    else if (!isKyo && dd.rank>=2) kyoLabel = '吉';
+    if (kyoLabel && R_OUT>40) {
+      const [lx,ly]=pXY(R_OUT*0.82,c);
+      const lcolor = isKyo ? '#e84545' : '#3aaa5e';
+      const rr = Math.max(8,R_OUT*0.06);
+      cells += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lcolor}"/>`;
+      cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
+    }
+  });
+  const centerPts = [];
+  Object.values(angles).forEach(({c,span})=>{const [px,py]=pXY(R_IN,c-span/2);centerPts.push(`${px.toFixed(1)},${py.toFixed(1)}`);});
+  cells += `<polygon points="${centerPts.join(' ')}" fill="rgba(28,38,48,.5)" stroke="rgba(255,255,255,.4)" stroke-width="1"/>`;
+  if (R_OUT>36) {
+    Object.entries(angles).forEach(([dir,{c,span}])=>{
+      (ETO_BY_DIR[dir]||[]).forEach((eto,idx)=>{
+        let off=0; if((ETO_BY_DIR[dir]||[]).length===2) off=(idx===0?-12:12);
+        const [ex,ey]=pXY(R_IN*0.68,c+off);
+        const isBreak=(eto===breakBranch && dir===breakDir);
+        const ecolor=isBreak?'#ff6060':'rgba(255,255,255,.7)';
+        const fs=isBreak?Math.max(10,R_OUT*0.06):Math.max(8,R_OUT*0.048);
+        cells += `<text x="${ex.toFixed(1)}" y="${ey.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${ecolor}" font-size="${fs.toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="${isBreak?'800':'500'}">${eto}</text>`;
+      });
+    });
+  }
+  cells += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="#ffd860" font-size="${Math.max(15,R_OUT*0.12).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2px">${center}</text>`;
+
+  const svgHtml = `<svg width="${SVG}" height="${SVG}" viewBox="0 0 ${SVG} ${SVG}" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
+  const icon = L.divIcon({ className:'picker-compass-overlay', html:svgHtml, iconSize:[SVG,SVG], iconAnchor:[SVG/2,SVG/2] });
+  pickerCompassOverlay = L.marker([lat,lng], { icon:icon, interactive:false, keyboard:false }).addTo(mapInst);
 }
 
 function closeMapPicker() {
