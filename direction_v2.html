@@ -1938,6 +1938,12 @@ function createDirMap(lat, lng) {
 
     drawDirectionLines(lat, lng);
     setTimeout(() => dirMapInstance.invalidateSize(), 200);
+
+    // ズーム時に方位盤オーバーレイを再描画（サイズを750m円に追従）
+    dirMapInstance.on('zoomend', () => {
+      const c = dirMapCenter || { lat, lng };
+      drawDirectionLines(c.lat, c.lng);
+    });
   }, 100);
 }
 
@@ -2027,6 +2033,105 @@ function drawDirectionLines(lat, lng) {
     }).addTo(dirMapInstance);
     dirMapLines.push(circle);
   });
+
+  // 方位盤オーバーレイを地図中心に重ねる
+  drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei);
+}
+
+// ══ 地図用 方位盤オーバーレイ ══
+let mapCompassOverlay = null;
+function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei) {
+  if (!dirMapInstance) return;
+  if (mapCompassOverlay) { dirMapInstance.removeLayer(mapCompassOverlay); mapCompassOverlay = null; }
+
+  // 750mが画面上で何pxかを計算
+  const centerPt = dirMapInstance.latLngToContainerPoint([lat, lng]);
+  const northPt = dirMapInstance.latLngToContainerPoint([lat + 0.75/111, lng]);
+  const radiusPx = Math.abs(centerPt.y - northPt.y);
+  if (radiusPx < 20) return; // 小さすぎる場合は描画しない
+
+  const R_OUT = radiusPx;
+  const R_IN = R_OUT * 0.34;
+  const PAD = 70;
+  const SVG = R_OUT * 2 + PAD * 2;
+  const cx = SVG / 2, cy = SVG / 2;
+
+  // 地図は常に北上。方位盤も北上で固定（地図と方位を一致させる）
+  const angles = {N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
+  function pXY(r,a){const rad=(a-90)*Math.PI/180;return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)];}
+
+  // 破の支を特定
+  const z = getZodiac(gState.ty || new Date().getFullYear());
+  let breakBranch = z.k, breakDir = OPP[z.d];
+  if (gState.currentBan === 'month') { breakBranch = SHI[getMonthBranch(gState.ty, gState.tm, gState.td)]; breakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]]; }
+  else if (gState.currentBan === 'day' || !gState.currentBan) { breakBranch = SHI[getDayBranch(gState.ty, gState.tm, gState.td)]; breakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]]; }
+
+  const ETO_BY_DIR = {N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
+  const STARS_KK = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
+
+  let cells = '';
+  Object.entries(angles).forEach(([dir, {c, span}]) => {
+    const starN = p2s[dir];
+    const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
+    const isKyo = kyouSet.has(dir) || dd.isKyo;
+    const start = c - span/2, end = c + span/2;
+
+    // 色（半透明で地図が透ける）
+    let fill = 'rgba(40,50,60,.4)';
+    if (isKyo) fill = 'rgba(190,55,55,.4)';
+    else if (dd.rank >= 2) fill = 'rgba(50,150,75,.4)';
+    else if (dd.rank >= 1) fill = 'rgba(196,160,67,.38)';
+
+    const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
+    cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+
+    // 星番号
+    const nr = (R_IN + R_OUT) / 2;
+    const [nx, ny] = pXY(nr, c);
+    const fsNum = Math.max(13, R_OUT * 0.1);
+    cells += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${fsNum.toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
+
+    // 凶ラベル（短縮）
+    let kyoLabel = '';
+    const kns = kyouItems.filter(k => k.dir === dir);
+    if (kns.length) kyoLabel = kns[0].name.split('/')[0][0]; // 1文字目
+    else if (dd.rank >= 2) kyoLabel = '吉';
+    if (kyoLabel && R_OUT > 40) {
+      const [lx, ly] = pXY(R_OUT * 0.82, c);
+      const lcolor = isKyo ? '#e84545' : '#3aaa5e';
+      const rr = Math.max(8, R_OUT * 0.06);
+      cells += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lcolor}"/>`;
+      cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
+    }
+  });
+
+  // 中宮
+  const centerPts = [];
+  Object.values(angles).forEach(({c, span}) => { const [px, py] = pXY(R_IN, c - span/2); centerPts.push(`${px.toFixed(1)},${py.toFixed(1)}`); });
+  cells += `<polygon points="${centerPts.join(' ')}" fill="rgba(28,38,48,.5)" stroke="rgba(255,255,255,.4)" stroke-width="1"/>`;
+
+  // 十二支
+  if (R_OUT > 36) {
+    Object.entries(angles).forEach(([dir, {c, span}]) => {
+      const etoList = ETO_BY_DIR[dir] || [];
+      etoList.forEach((eto, idx) => {
+        let off = 0; if (etoList.length === 2) off = (idx === 0 ? -12 : 12);
+        const [ex, ey] = pXY(R_IN * 0.68, c + off);
+        const isBreak = (eto === breakBranch && dir === breakDir);
+        const ecolor = isBreak ? '#ff6060' : 'rgba(255,255,255,.7)';
+        const fs = isBreak ? Math.max(10, R_OUT*0.06) : Math.max(8, R_OUT*0.048);
+        cells += `<text x="${ex.toFixed(1)}" y="${ey.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${ecolor}" font-size="${fs.toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="${isBreak?'800':'500'}">${eto}</text>`;
+      });
+    });
+  }
+
+  // 中宮星
+  cells += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="#ffd860" font-size="${Math.max(15,R_OUT*0.12).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2px">${center}</text>`;
+
+  const svgHtml = `<svg width="${SVG}" height="${SVG}" viewBox="0 0 ${SVG} ${SVG}" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
+  const icon = L.divIcon({ className: 'map-compass-overlay', html: svgHtml, iconSize: [SVG, SVG], iconAnchor: [SVG/2, SVG/2] });
+  mapCompassOverlay = L.marker([lat, lng], { icon: icon, interactive: false, keyboard: false }).addTo(dirMapInstance);
+  dirMapLines.push(mapCompassOverlay);
 }
 
 function centerDirectionMap() {
