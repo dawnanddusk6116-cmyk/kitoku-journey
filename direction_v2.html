@@ -1840,7 +1840,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
             </span>
             <button onclick="centerDirectionMap()" style="margin-left:auto;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:5px;color:var(--goldlt);font-size:.6rem;padding:4px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;">📍 現在地</button>
           </div>
-          <div style="padding:6px 12px;font-size:.58rem;color:var(--mist);line-height:1.7;background:rgba(0,0,0,.02);">750m以上離れた場所への外出で吉方を取ることができます</div>
+          <div style="padding:6px 12px;font-size:.58rem;color:var(--mist);line-height:1.7;background:rgba(0,0,0,.02);">📍 地図は<strong style="color:var(--goldlt);">北が上</strong>です（上の方位盤＝南上とは上下が逆になります）。実際の地図の方角に合わせて吉凶を確認できます。750m以上離れた場所への外出で吉方を取ることができます。</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -1973,7 +1973,8 @@ function drawDirectionLines(lat, lng) {
   Object.entries(DIR_ANGLES).forEach(([dir, angle]) => {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
-    const isKyo = kyouSet.has(dir) || dd.isKyo;
+    const knsLine = kyouItems.filter(k => k.dir === dir);
+    const isKyo = knsLine.length > 0 || kyouSet.has(dir) || dd.isKyo;
 
     // 色と太さを決定
     let color, weight, opacity, dashArray;
@@ -2073,7 +2074,9 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
   Object.entries(angles).forEach(([dir, {c, span}]) => {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
-    const isKyo = kyouSet.has(dir) || dd.isKyo;
+    // kyouItemsに該当があれば凶（日破・暗剣殺など全て拾う）
+    const kns = kyouItems.filter(k => k.dir === dir);
+    const isKyo = kns.length > 0 || kyouSet.has(dir) || dd.isKyo;
     const start = c - span/2, end = c + span/2;
 
     // 色（半透明で地図が透ける）
@@ -2091,11 +2094,10 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
     const fsNum = Math.max(13, R_OUT * 0.1);
     cells += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${fsNum.toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
 
-    // 凶ラベル（短縮）
+    // 凶/吉ラベル（短縮）
     let kyoLabel = '';
-    const kns = kyouItems.filter(k => k.dir === dir);
-    if (kns.length) kyoLabel = kns[0].name.split('/')[0][0]; // 1文字目
-    else if (dd.rank >= 2) kyoLabel = '吉';
+    if (kns.length) kyoLabel = kns[0].name.split('/')[0][0]; // 凶の1文字目
+    else if (!isKyo && dd.rank >= 2) kyoLabel = '吉';
     if (kyoLabel && R_OUT > 40) {
       const [lx, ly] = pXY(R_OUT * 0.82, c);
       const lcolor = isKyo ? '#e84545' : '#3aaa5e';
