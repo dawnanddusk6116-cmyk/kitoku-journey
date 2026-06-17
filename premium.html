@@ -884,7 +884,13 @@ function renderBoard(){
   document.getElementById('banDateTitle').textContent=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年 ${m}月`:`${y}年 ${m}月 ${d}日`;
   document.getElementById('banDateSub').textContent=(state.banType==='day'?'日盤':state.banType==='month'?'月盤':'年盤')+' — 中宮 '+(STARS[center]?.j||'');
   wrap.innerHTML='';
-  drawOctagonPremium(wrap,center,dirData);
+  // 破方位と破の支を計算
+  const _y=state.date.getFullYear(),_m=state.date.getMonth()+1,_d=state.date.getDate();
+  const breakDir=getBreakDirForDate();
+  let branchName=getZodiac(_y).k;
+  if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(_y,_m,_d)];
+  if(state.banType==='day')branchName=BRANCH_NAME_P[getDayBranch(_y,_m,_d)];
+  drawOctagonPremium(wrap,center,dirData,{breakDir,branchName});
 }
 
 // ══════════════════════════════
@@ -910,11 +916,12 @@ function octa_getColors(dd){
   if(dd.rank>=1)return{fill:'rgba(252,236,240,.55)',stroke:'rgba(224,184,196,.45)',num:'#b86080',name:'rgba(184,96,128,.5)'};
   return{fill:'rgba(255,255,255,.9)',stroke:'rgba(180,175,165,.42)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)'};
 }
-function drawOctagonPremium(wrap,center,dirData){
+function drawOctagonPremium(wrap,center,dirData,extra){
+  extra=extra||{};
   const orient=state.orient||'south';
   const SVG=360;
   const svg=octa_svgEl('svg',{viewBox:`0 0 ${SVG} ${SVG}`,xmlns:'http://www.w3.org/2000/svg',style:'width:100%;max-width:320px;height:auto;display:block;margin:0 auto;'});
-  const CX=180,CY=180,R_OUT=108,R_IN=40,R_LABEL=R_OUT+19,R_BADGE=R_OUT+34;
+  const CX=180,CY=180,R_OUT=100,R_IN=50,R_LABEL=R_OUT+15,R_BADGE=R_OUT+33;
   const angles=octa_getDirAngles(orient);
 
   Object.entries(angles).forEach(([dir,{c,span}])=>{
@@ -930,11 +937,13 @@ function drawOctagonPremium(wrap,center,dirData){
 
     const nr=(R_IN+R_OUT)/2+4;
     const np=octa_polarToXY(CX,CY,nr,c);
-    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'17','font-family':"'Cormorant Garamond',serif",'font-weight':'600'}));
-    const kp=octa_polarToXY(CX,CY,nr-14,c);
-    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+7,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'16','font-family':"'Cormorant Garamond',serif",'font-weight':'600'}));
+    const kp=octa_polarToXY(CX,CY,nr-13,c);
+    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+7,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'6','font-family':"'Noto Serif JP',serif"}));
 
-    const lp=octa_polarToXY(CX,CY,R_LABEL,c);
+    // 方位名（東西は少し外に）
+    const isHoriz=(dir==='E'||dir==='W');
+    const lp=octa_polarToXY(CX,CY,R_LABEL+(isHoriz?6:0),c);
     let lColor='rgba(40,28,10,.62)';
     if(dd.isKyo)lColor='rgba(90,95,105,.9)';
     else if(dd.rank>=2)lColor='#a04060';
@@ -944,21 +953,47 @@ function drawOctagonPremium(wrap,center,dirData){
     const meta=dirInfo(dir,dirData);
     let subText=meta.sub||'';
     if(subText){
-      const bp=octa_polarToXY(CX,CY,R_BADGE,c);
+      // 東西はバッジを方位名の下に
+      const isHorizontal=(dir==='E'||dir==='W');
+      const bp=octa_polarToXY(CX,CY,R_LABEL+(isHorizontal?6:0),c);
+      const badgeX=isHorizontal?bp.x:octa_polarToXY(CX,CY,R_BADGE,c).x;
+      const badgeY=isHorizontal?(bp.y+13):octa_polarToXY(CX,CY,R_BADGE,c).y;
       const bw=Math.min(subText.length*7.5+8,78),bh=12;
       let bColor,bBg;
       if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
       else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
-      svg.appendChild(octa_svgEl('rect',{x:bp.x-bw/2,y:bp.y-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
-      svg.appendChild(octa_svgText(subText,{x:bp.x,y:bp.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+      svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
+      svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
     }
   });
 
+  // 中央八角形
   const centerPts=[];
   Object.values(angles).forEach(({c,span})=>{const p=octa_polarToXY(CX,CY,R_IN,c-span/2);centerPts.push(`${p.x},${p.y}`);});
-  svg.appendChild(octa_svgEl('polygon',{points:centerPts.join(' '),fill:'rgba(120,90,20,.06)',stroke:'rgba(120,90,20,.25)','stroke-width':'1.1'}));
-  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+2,'text-anchor':'middle','dominant-baseline':'middle',fill:'#5c3a08','font-size':'24','font-family':"'Cormorant Garamond',serif"}));
+  svg.appendChild(octa_svgEl('polygon',{points:centerPts.join(' '),fill:'rgba(120,90,20,.05)',stroke:'rgba(120,90,20,.25)','stroke-width':'1.1'}));
+
+  // ── 中宮に十二支 ──
+  const ETO_BY_DIR={N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
+  const breakBranch=extra.branchName||'';
+  const breakDir=extra.breakDir||'';
+  const etoColor='rgba(110,80,25,.72)';
+  const etoBreakColor='#c0304a';
+  const R_ETO=R_IN-13;
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const etoList=ETO_BY_DIR[dir]||[];
+    if(!etoList.length)return;
+    etoList.forEach((eto,idx)=>{
+      let offsetAngle=0;
+      if(etoList.length===2)offsetAngle=(idx===0?-12:12);
+      const ep=octa_polarToXY(CX,CY,R_ETO,c+offsetAngle);
+      const isBreak=(eto===breakBranch && dir===breakDir);
+      svg.appendChild(octa_svgText(eto,{x:ep.x,y:ep.y,'text-anchor':'middle','dominant-baseline':'middle',fill:isBreak?etoBreakColor:etoColor,'font-size':isBreak?'10.5':'9','font-family':"'Noto Serif JP',serif",'font-weight':isBreak?'800':'600'}));
+    });
+  });
+
+  // 中宮星
+  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:'#5c3a08','font-size':'21','font-family':"'Cormorant Garamond',serif"}));
 
   wrap.appendChild(svg);
 }
