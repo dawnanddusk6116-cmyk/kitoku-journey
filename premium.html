@@ -976,9 +976,9 @@ function drawOctagonPremium(wrap,center,dirData,extra){
 
     const nr=(R_IN+R_OUT)/2+4;
     const np=octa_polarToXY(CX,CY,nr,c);
-    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'16','font-family':"'Cormorant Garamond',serif",'font-weight':'600'}));
+    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'19','font-family':"'Cormorant Garamond',serif",'font-weight':'600'}));
     const kp=octa_polarToXY(CX,CY,nr-13,c);
-    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+7,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'6','font-family':"'Noto Serif JP',serif"}));
+    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+8,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'7.4','font-family':"'Noto Serif JP',serif"}));
 
     // 方位名（東西は少し外に）
     const isHoriz=(dir==='E'||dir==='W');
@@ -987,7 +987,7 @@ function drawOctagonPremium(wrap,center,dirData,extra){
     if(dd.isKyo)lColor='rgba(90,95,105,.9)';
     else if(dd.rank>=2)lColor='#a04060';
     else if(dd.isCaution)lColor='#9a6810';
-    svg.appendChild(octa_svgText(JP[dir],{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle',fill:lColor,'font-size':'11','font-family':"'Noto Serif JP',serif",'font-weight':'700'}));
+    svg.appendChild(octa_svgText(JP[dir],{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle',fill:lColor,'font-size':'12.5','font-family':"'Noto Serif JP',serif",'font-weight':'700'}));
 
     const meta=dirInfo(dir,dirData);
     let subText=meta.sub||'';
@@ -997,13 +997,13 @@ function drawOctagonPremium(wrap,center,dirData,extra){
       const bp=octa_polarToXY(CX,CY,R_LABEL+(isHorizontal?6:0),c);
       const badgeX=isHorizontal?bp.x:octa_polarToXY(CX,CY,R_BADGE,c).x;
       const badgeY=isHorizontal?(bp.y+13):octa_polarToXY(CX,CY,R_BADGE,c).y;
-      const bw=Math.min(subText.length*7.5+8,78),bh=12;
+      const bw=Math.min(subText.length*8.8+10,92),bh=14;
       let bColor,bBg;
       if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
       else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
       svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
-      svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+      svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'7.6','font-family':"'Noto Serif JP',serif"}));
     }
   });
 

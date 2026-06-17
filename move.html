@@ -2152,10 +2152,10 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${col.fill}" stroke="${col.stroke}" stroke-width="${col.strokeW||1.1}"/>`;
     const nr=(R_IN+R_OUT)/2+4;
     const [nx,ny]=pXY(nr,c);
-    cells += `<text x="${nx.toFixed(1)}" y="${(ny+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.num}" font-size="16" font-family="'Cormorant Garamond',serif" font-weight="600">${starN}</text>`;
+    cells += `<text x="${nx.toFixed(1)}" y="${(ny+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.num}" font-size="18.5" font-family="'Cormorant Garamond',serif" font-weight="600">${starN}</text>`;
     const [kx,ky]=pXY(nr-13,c);
     const sname=(typeof STARS!=='undefined'&&STARS[starN])?STARS[starN].k:'';
-    cells += `<text x="${kx.toFixed(1)}" y="${(ky+7).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.name}" font-size="6" font-family="'Noto Serif JP',serif">${sname}</text>`;
+    cells += `<text x="${kx.toFixed(1)}" y="${(ky+8).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.name}" font-size="7.2" font-family="'Noto Serif JP',serif">${sname}</text>`;
     // 目的地に大きなピンを表示（セル外周寄り）
     if(col.dest){
       const [px,py]=pXY(R_OUT-13,c);
@@ -2165,7 +2165,7 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     const [lx,ly]=pXY(R_LABEL,c);
     let lColor = col.isKyo?'rgba(90,95,105,.9)':col.rank>=2?'#a04060':col.isCaution?'#9a6810':'rgba(40,28,10,.62)';
     if(col.dest)lColor='#5a3e98';
-    cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${lColor}" font-size="10.5" font-family="'Noto Serif JP',serif" font-weight="700">${dirJP[d]}</text>`;
+    cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${lColor}" font-size="12" font-family="'Noto Serif JP',serif" font-weight="700">${dirJP[d]}</text>`;
     // バッジ
     const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name.split('/')[0]).join('・') : '';
     let subText='';
@@ -2177,18 +2177,18 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     if(col.dest){
       const [bx,by]=pXY(R_BADGE,c);
       const dt=subText||'';
-      const bw=Math.min((dt.length+3)*7.5+12,96),bh=12;
+      const bw=Math.min((dt.length+3)*8.7+14,108),bh=14;
       cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="rgba(106,75,168,.16)" stroke="rgba(106,75,168,.5)" stroke-width="0.8"/>`;
-      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e98" font-size="6.5" font-family="'Noto Serif JP',serif" font-weight="700">目的地${dt?'・'+dt:''}</text>`;
+      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e98" font-size="7.5" font-family="'Noto Serif JP',serif" font-weight="700">目的地${dt?'・'+dt:''}</text>`;
     } else if(subText){
       const [bx,by]=pXY(R_BADGE,c);
-      const bw=Math.min(subText.length*7.5+8,76),bh=12;
+      const bw=Math.min(subText.length*8.7+10,90),bh=14;
       let bColor,bBg;
       if(col.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
       else if(col.isCaution&&col.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
       cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="${bBg}"/>`;
-      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${bColor}" font-size="6.5" font-family="'Noto Serif JP',serif">${subText}</text>`;
+      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${bColor}" font-size="7.5" font-family="'Noto Serif JP',serif">${subText}</text>`;
     }
   });
 
