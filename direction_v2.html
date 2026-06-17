@@ -409,8 +409,9 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   cursor:pointer;transition:all .2s;letter-spacing:.06em;
 }
 .tb-btn.active{background:rgba(196,160,67,.15);border-color:rgba(196,160,67,.5);color:var(--goldlt);font-weight:700;}
-[data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
-[data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
+[data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);color:#6a5230;}
+[data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);color:#5a3e08;}
+[data-theme="light"] .tb-label{color:#7a6440;}
 
 /* ── 自分の星カード（結果表示） ── */
 .mystar-card{
@@ -3152,6 +3153,142 @@ function updateBanNavLabel(){
   }
 }
 
+// ══════════════════════════════
+// 八角形SVG方位盤描画
+// ══════════════════════════════
+function octa_polarToXY(cx,cy,r,angleDeg){
+  const rad=(angleDeg-90)*Math.PI/180;
+  return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};
+}
+function octa_getDirAngles(orient){
+  // 正方位30度・四隅60度
+  if(orient==='north'){
+    return {
+      N:{c:0,span:30}, NE:{c:45,span:60}, E:{c:90,span:30}, SE:{c:135,span:60},
+      S:{c:180,span:30}, SW:{c:225,span:60}, W:{c:270,span:30}, NW:{c:315,span:60},
+    };
+  }else{
+    // 南上（気学式）
+    return {
+      S:{c:0,span:30}, SW:{c:45,span:60}, W:{c:90,span:30}, NW:{c:135,span:60},
+      N:{c:180,span:30}, NE:{c:225,span:60}, E:{c:270,span:30}, SE:{c:315,span:60},
+    };
+  }
+}
+function octa_svgEl(tag,attrs){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+function octa_svgText(text,attrs){const el=octa_svgEl('text',attrs);el.textContent=text;return el;}
+
+function octa_getColors(dd,isDark){
+  const d=isDark;
+  if(dd.isKyo)return{fill:d?'rgba(120,125,135,.4)':'rgba(155,160,170,.4)',stroke:d?'rgba(150,155,165,.6)':'rgba(120,125,135,.5)',num:d?'rgba(225,230,240,.85)':'rgba(70,75,85,.9)',name:d?'rgba(200,205,215,.55)':'rgba(90,95,105,.65)'};
+  if(dd.isCaution&&dd.rank<2)return{fill:d?'rgba(190,135,35,.16)':'rgba(190,135,35,.14)',stroke:d?'rgba(190,135,35,.5)':'rgba(190,135,35,.45)',num:d?'#e0b050':'#9a6810',name:d?'rgba(224,176,80,.6)':'rgba(154,104,16,.6)'};
+  if(dd.rank>=5)return{fill:d?'rgba(240,150,175,.5)':'rgba(245,200,212,.55)',stroke:d?'rgba(240,150,175,.9)':'rgba(208,120,145,.6)',num:d?'#ffe0e8':'#9a3050',name:d?'rgba(255,210,222,.9)':'rgba(154,48,80,.7)'};
+  if(dd.rank>=4)return{fill:d?'rgba(240,150,175,.44)':'rgba(246,206,217,.5)',stroke:d?'rgba(240,150,175,.82)':'rgba(210,130,152,.55)',num:d?'#ffe0e8':'#9a3050',name:d?'rgba(255,210,222,.88)':'rgba(154,48,80,.68)'};
+  if(dd.rank>=3)return{fill:d?'rgba(238,145,170,.38)':'rgba(248,216,224,.55)',stroke:d?'rgba(238,145,170,.72)':'rgba(214,150,168,.5)',num:d?'#ffe0e8':'#a04060',name:d?'rgba(255,205,218,.85)':'rgba(160,64,96,.62)'};
+  if(dd.rank>=2)return{fill:d?'rgba(236,140,168,.32)':'rgba(250,228,234,.55)',stroke:d?'rgba(236,140,168,.6)':'rgba(220,170,185,.45)',num:d?'#ffdce6':'#b05070',name:d?'rgba(255,200,214,.8)':'rgba(176,80,112,.56)'};
+  if(dd.rank>=1)return{fill:d?'rgba(234,138,165,.24)':'rgba(252,236,240,.5)',stroke:d?'rgba(234,138,165,.5)':'rgba(224,184,196,.4)',num:d?'#ffd6e2':'#b86080',name:d?'rgba(255,196,210,.72)':'rgba(184,96,128,.5)'};
+  // 普通＝白（夜も白っぽく）
+  return{fill:d?'rgba(248,248,250,.92)':'rgba(255,255,255,.85)',stroke:d?'rgba(210,205,195,.5)':'rgba(180,175,165,.38)',num:d?'rgba(50,45,38,.85)':'rgba(40,35,28,.8)',name:d?'rgba(90,82,68,.7)':'rgba(90,80,65,.55)'};
+}
+
+function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet){
+  const themeAttr=document.documentElement.getAttribute('data-theme')||(document.getElementById('appWrap')?document.getElementById('appWrap').getAttribute('data-theme'):null)||'dark';
+  const isDark=(themeAttr!=='light');
+  const orient=gState.orient||'south';
+
+  const SVG_SIZE=400;
+  const svg=octa_svgEl('svg',{viewBox:`0 0 ${SVG_SIZE} ${SVG_SIZE}`,xmlns:'http://www.w3.org/2000/svg',style:'width:100%;max-width:360px;height:auto;display:block;margin:0 auto;'});
+
+  const CX=200,CY=200,R_OUT=120,R_IN=44,R_LABEL=R_OUT+22,R_BADGE=R_OUT+39;
+  const angles=octa_getDirAngles(orient);
+
+  // ラベル色
+  const labKyo=isDark?'rgba(210,214,224,.85)':'rgba(90,95,105,.9)';
+  const labKichi=isDark?'#f0b8c8':'#a04060';
+  const labCaution=isDark?'#e0b050':'#9a6810';
+  const labNormal=isDark?'rgba(200,215,240,.7)':'rgba(40,28,10,.62)';
+
+  // 各セル
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const dd=dirData[dir];
+    if(!dd)return;
+    const col=octa_getColors(dd,isDark);
+    const start=c-span/2,end=c+span/2;
+    const inStart=octa_polarToXY(CX,CY,R_IN,start);
+    const outStart=octa_polarToXY(CX,CY,R_OUT,start);
+    const outEnd=octa_polarToXY(CX,CY,R_OUT,end);
+    const inEnd=octa_polarToXY(CX,CY,R_IN,end);
+
+    const path=octa_svgEl('path',{
+      d:`M ${inStart.x} ${inStart.y} L ${outStart.x} ${outStart.y} L ${outEnd.x} ${outEnd.y} L ${inEnd.x} ${inEnd.y} Z`,
+      fill:col.fill,stroke:col.stroke,'stroke-width':'1.2'
+    });
+    path.style.cursor='pointer';
+    path.addEventListener('click',()=>openDirPopup(dir,center,dirData,kyouItems,kyouSet));
+    svg.appendChild(path);
+
+    // 星番号
+    const nr=(R_IN+R_OUT)/2+5;
+    const np=octa_polarToXY(CX,CY,nr,c);
+    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'19','font-family':"'Cormorant Garamond',serif",'font-weight':'500'}));
+    // 星名
+    const kp=octa_polarToXY(CX,CY,nr-15,c);
+    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+8,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'7','font-family':"'Noto Serif JP',serif"}));
+
+    // 方位名ラベル
+    const lp=octa_polarToXY(CX,CY,R_LABEL,c);
+    let lColor=labNormal;
+    if(dd.isKyo)lColor=labKyo;
+    else if(dd.rank>=2)lColor=labKichi;
+    else if(dd.isCaution)lColor=labCaution;
+    svg.appendChild(octa_svgText(JP[dir],{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle',fill:lColor,'font-size':'12','font-family':"'Noto Serif JP',serif",'font-weight':'700'}));
+
+    // バッジ（吉凶名）
+    let subText='';
+    if(dd.isKyo){
+      const kns=kyouItems.filter(k=>k.dir===dir);
+      if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
+    }else if(dd.isCaution){
+      const kns=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲'));
+      subText=dd.rank>=2?'吉方・定位注意':(kns.length?kns.map(k=>k.name.split('/')[0]).join('・'):'定位注意');
+    }else if(dd.rank>=5)subText='本命・月命・三合';
+    else if(dd.rank>=4)subText='本命・月命 吉';
+    else if(dd.rank>=3)subText='吉方・三合';
+    else if(dd.rank>=2)subText='吉方';
+    else if(dd.rank>=1)subText='天道';
+
+    if(subText){
+      const bp=octa_polarToXY(CX,CY,R_BADGE,c);
+      const bw=Math.min(subText.length*8.5+10,84),bh=13;
+      let bColor,bBg;
+      if(dd.isKyo){bColor=isDark?'rgba(210,215,225,.9)':'#5a5f69';bBg=isDark?'rgba(120,125,135,.3)':'rgba(155,160,170,.25)';}
+      else if(dd.isCaution&&dd.rank<2){bColor=isDark?'#e0b050':'#9a6810';bBg=isDark?'rgba(190,135,35,.2)':'rgba(190,135,35,.14)';}
+      else{bColor=isDark?'#f0b8c8':'#a04060';bBg=isDark?'rgba(232,180,195,.25)':'rgba(245,205,215,.4)';}
+      svg.appendChild(octa_svgEl('rect',{x:bp.x-bw/2,y:bp.y-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
+      svg.appendChild(octa_svgText(subText,{x:bp.x,y:bp.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'7.5','font-family':"'Noto Serif JP',serif"}));
+    }
+  });
+
+  // 中央八角形
+  const centerPts=[];
+  Object.values(angles).forEach(({c,span})=>{
+    const p=octa_polarToXY(CX,CY,R_IN,c-span/2);
+    centerPts.push(`${p.x},${p.y}`);
+  });
+  svg.appendChild(octa_svgEl('polygon',{
+    points:centerPts.join(' '),
+    fill:isDark?'rgba(196,160,67,.1)':'rgba(120,90,20,.06)',
+    stroke:isDark?'rgba(196,160,67,.35)':'rgba(120,90,20,.25)','stroke-width':'1.2'
+  }));
+  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+2,'text-anchor':'middle','dominant-baseline':'middle',fill:isDark?'#c4a043':'#5c3a08','font-size':'26','font-family':"'Cormorant Garamond',serif"}));
+
+  wrap.appendChild(svg);
+}
+
 function renderBan(type){
   try {
   const {honmei,tsukimei,ty,tm,td,dayCenter,monthCenter,yearCent}=gState;
@@ -3194,172 +3331,10 @@ function renderBan(type){
   // DAILYで使えるよう日盤のdirDataをgStateに保存
   if(type==='day'){ gState.dayDirData=dirData; if(typeof renderRxAiMap==='function') setTimeout(renderRxAiMap,0); }
 
-  // コンパス盤描画
+  // コンパス盤描画（八角形SVG）
   const wrap=document.getElementById('compassWrap');
   wrap.innerHTML='';
-
-  // グリッド（向きに応じてLAYOUTを切り替え）
-  const LAYOUT_NORTH=[['NW','N','NE'],['W','C','E'],['SW','S','SE']];
-  const currentLayout=(gState.orient==='north')?LAYOUT_NORTH:LAYOUT;
-  const gridDiv=document.createElement('div');
-  gridDiv.className='compass-grid';
-  currentLayout.forEach(row=>{
-    row.forEach(dir=>{
-      const cell=document.createElement('div');
-      const isCenter=(dir==='C');
-      const dd=dirData[dir];
-      let cls='cell ';
-      if(isCenter)cls+='cell-center';
-      else if(dd.isKyo)cls+='cell-kyo';
-      else if(dd.isCaution)cls+='cell-caution';
-      else if(dd.rank>=5)cls+='cell-saikokichi';
-      else if(dd.rank>=4)cls+='cell-saikokichi';
-      else if(dd.rank>=3)cls+='cell-daikichi';
-      else if(dd.rank>=2)cls+='cell-kichi';
-      else cls+='cell-normal';
-      cell.className=cls;
-      if(!isCenter)cell.onclick=()=>openDirPopup(dir,center,dirData,kyouItems,kyouSet);
-
-      const numEl=document.createElement('div');
-      numEl.className='cell-num';
-      numEl.textContent=dd.starN||'';
-      cell.appendChild(numEl);
-
-      if(!isCenter){
-        const nameEl=document.createElement('div');
-        nameEl.className='cell-name';
-        nameEl.textContent=STARS[dd.starN]?.k||'';
-        cell.appendChild(nameEl);
-      }
-      gridDiv.appendChild(cell);
-    });
-  });
-  wrap.appendChild(gridDiv);
-
-
-  function makeDirCell(dir){
-    const div=document.createElement('div');
-    div.style.cssText='text-align:center;overflow:hidden;line-height:1.3;padding:2px 1px;';
-    if(dir&&dir!==''){
-      const dd=dirData[dir];
-      let subText='';
-      let labelClass='dir-label-text normal';
-      if(dd.isKyo){
-        labelClass='dir-label-text kyo';
-        const kns=kyouItems.filter(k=>k.dir===dir);
-        if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
-      }
-      else if(dd.isCaution){
-        labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
-        const kns=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲'));
-        const cautionLabel=kns.length?kns.map(k=>k.name.split('/')[0]).join('・'):'定位注意';
-        subText=dd.rank>=2?'吉方・定位注意':cautionLabel;
-      }
-      else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
-      else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
-      else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
-      else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
-      div.className='dir-clickable '+(subText?'has-info':'');
-      div.setAttribute('role','button');
-      div.setAttribute('tabindex','0');
-      div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
-      div.onclick=()=>openDirPopup(dir,center,dirData,kyouItems,kyouSet);
-      div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDirPopup(dir,center,dirData,kyouItems,kyouSet);}};
-      const dirEl=document.createElement('div');
-      dirEl.className=labelClass;
-      dirEl.style.cssText='font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
-      dirEl.textContent=JP[dir];
-      div.appendChild(dirEl);
-      if(subText){
-        const badge=document.createElement('div');
-        badge.className='dir-badge '+(dd.isKyo?'kyo':dd.isCaution?'caution':dd.rank>=4?'dai':'kichi');
-        badge.style.cssText='font-size:.44rem;margin-top:2px;padding:1px 3px;border-radius:3px;display:inline-block;max-width:100%;overflow:hidden;white-space:nowrap;';
-        badge.textContent=subText;
-        div.appendChild(badge);
-      }
-    }
-    return div;
-  }
-
-  // 東西の縦ラベル生成
-  function makeSideLabel(dir){
-    const div=document.createElement('div');
-    div.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2px;flex-shrink:0;width:24px;';
-    const dd=dirData[dir];
-    let labelClass='dir-label-text normal';
-    let subText='';
-    if(dd.isKyo){
-      labelClass='dir-label-text kyo';
-      const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');
-    }
-    else if(dd.isCaution){
-      labelClass=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';
-      const kns=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲'));
-      const cautionLabel=kns.length?kns.map(k=>k.name.split('/')[0]).join('・'):'定位注意';
-      subText=dd.rank>=2?'吉方・定位注意':cautionLabel;
-    }
-    else if(dd.rank>=4){labelClass='dir-label-text kichi';subText=dd.rank>=5?'本命・月命・三合':'本命・月命 吉';}
-    else if(dd.rank>=3){labelClass='dir-label-text kichi';subText='吉方・三合';}
-    else if(dd.rank>=2){labelClass='dir-label-text kichi';subText='吉方';}
-    else if(dd.rank>=1){labelClass='dir-label-text kichi';subText='天道';}
-    div.className='dir-clickable side '+(subText?'has-info':'');
-    div.setAttribute('role','button');
-    div.setAttribute('tabindex','0');
-    div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
-    div.onclick=()=>openDirPopup(dir,center,dirData,kyouItems,kyouSet);
-    div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDirPopup(dir,center,dirData,kyouItems,kyouSet);}};
-    const dirEl=document.createElement('div');
-    dirEl.className=labelClass;
-    dirEl.style.cssText='font-size:.78rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.1em;';
-    dirEl.textContent=JP[dir];
-    div.appendChild(dirEl);
-    if(subText){
-      const badge=document.createElement('div');
-      badge.className='dir-badge '+(dd.isKyo?'kyo':dd.isCaution?'caution':dd.rank>=4?'dai':'kichi');
-      badge.style.cssText='font-size:.38rem;margin-top:4px;padding:2px 3px;border-radius:3px;display:inline-block;writing-mode:vertical-rl;white-space:nowrap;';
-      badge.textContent=subText;
-      div.appendChild(badge);
-    }
-    return div;
-  }
-
-  const isSouth=gState.orient!=='north';
-  // 南上：盤面上段=SE/S/SW、下段=NE/N/NW
-  // 北上：盤面上段=NW/N/NE、下段=SW/S/SE
-  const topRow=   isSouth?['SE','S','SW']:['NW','N','NE'];
-  const bottomRow=isSouth?['NE','N','NW']:['SW','S','SE'];
-  const leftDir=  isSouth?'E':'W';
-  const rightDir= isSouth?'W':'E';
-
-  const gridStyle='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:4px;max-width:280px;margin-left:auto;margin-right:auto;';
-
-  // 上段ラベル（盤面の上）
-  const topDiv=document.createElement('div');
-  topDiv.style.cssText=gridStyle+'margin-bottom:4px;';
-  topRow.forEach(dir=>topDiv.appendChild(makeDirCell(dir)));
-  wrap.insertBefore(topDiv, gridDiv);
-
-  // 東西ラベルで盤面を挟む（盤面と同じ幅に収める）
-  const midWrap=document.createElement('div');
-  midWrap.style.cssText='display:flex;align-items:center;max-width:320px;margin:0 auto;';
-  // gridDivをmidWrapに移す
-  wrap.insertBefore(midWrap, gridDiv);
-  const leftLabel=makeSideLabel(leftDir);
-  leftLabel.style.cssText+='min-width:28px;max-width:28px;';
-  const rightLabel=makeSideLabel(rightDir);
-  rightLabel.style.cssText+='min-width:28px;max-width:28px;';
-  midWrap.appendChild(leftLabel);
-  gridDiv.style.flex='1';
-  gridDiv.style.minWidth='0';
-  midWrap.appendChild(gridDiv);
-  midWrap.appendChild(rightLabel);
-
-  // 下段ラベル（盤面の下）
-  const bottomDiv=document.createElement('div');
-  bottomDiv.style.cssText=gridStyle+'margin-top:4px;';
-  bottomRow.forEach(dir=>bottomDiv.appendChild(makeDirCell(dir)));
-  wrap.appendChild(bottomDiv);
+  drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet);
 
   // 吉方リスト
   renderKichiList(dirData,p2s);
@@ -4920,6 +4895,8 @@ function setTheme(t){
     const b=document.getElementById('tb-'+x);
     if(b)b.classList.toggle('active',x===t);
   });
+  // 八角形方位盤を再描画（色がテーマ依存のため）
+  if(gState&&gState.currentBan&&typeof renderBan==='function'){try{renderBan(gState.currentBan);}catch(e){}}
 }
 function setFontSize(s){
   document.documentElement.setAttribute('data-fontsize',s);

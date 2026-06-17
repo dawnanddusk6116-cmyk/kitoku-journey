@@ -618,125 +618,113 @@ function renderBoard(type){
   dirData['C']={starN:center,rank:0,badges:[],isKyo:false,isCaution:false};
   gState.dirData[type]=dirData;
 
-  const isSouth=gState.orient!=='north';
-  const LAYOUT=isSouth?LAYOUT_S:LAYOUT_N;
-  const topRow=   isSouth?['SE','S','SW']:['NW','N','NE'];
-  const bottomRow=isSouth?['NE','N','NW']:['SW','S','SE'];
-  const leftDir=  isSouth?'E':'W';
-  const rightDir= isSouth?'W':'E';
-
   const wrap=document.getElementById(`compassWrap-${type}`);
   wrap.innerHTML='';
-  const outerWrap=document.createElement('div');
-  outerWrap.className='compass-outer-wrap';
-  wrap.appendChild(outerWrap);
-
-  // ── グリッド ──
-  const gridDiv=document.createElement('div');
-  gridDiv.className='compass-grid';
-  LAYOUT.forEach(row=>{
-    row.forEach(dir=>{
-      const cell=document.createElement('div');
-      const isC=(dir==='C');
-      const dd=dirData[dir];
-      let cls='cell ';
-      if(isC)cls+='cell-center';
-      else if(dd.isKyo)cls+='cell-kyo';
-      else if(dd.isCaution)cls+='cell-caution';
-      else if(dd.rank>=4)cls+='cell-saikokichi';
-      else if(dd.rank>=3)cls+='cell-daikichi';
-      else if(dd.rank>=2)cls+='cell-kichi';
-      else cls+='cell-normal';
-      cell.className=cls;
-      if(!isC)cell.onclick=()=>openPopup(dir,type,dirData,kyouItems);
-      const numEl=document.createElement('div');numEl.className='cell-num';numEl.textContent=dd.starN||'';cell.appendChild(numEl);
-      if(!isC){const nameEl=document.createElement('div');nameEl.className='cell-name';nameEl.textContent=STARS[dd.starN]?.k||'';cell.appendChild(nameEl);}
-      gridDiv.appendChild(cell);
-    });
-  });
-
-  // ── 方位ラベル生成関数 ──
-  function makeDirCell(dir){
-    const div=document.createElement('div');
-    div.style.cssText='text-align:center;overflow:hidden;line-height:1.3;padding:2px 1px;';
-    if(!dir)return div;
-    const dd=dirData[dir];
-    let labelCls='dir-label-text normal',subText='',badgeCls='kichi';
-    if(dd.isKyo){
-      labelCls='dir-label-text kyo';badgeCls='kyo';
-      const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(k=>k.name).join('・');
-    }else if(dd.isCaution){
-      labelCls=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';badgeCls='caution';
-      subText=dd.rank>=2?'吉方・定位注意':'定位注意';
-    }else if(dd.rank>=5){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'本命・月命・三合';}
-    else if(dd.rank>=4){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'本命・月命 吉';}
-    else if(dd.rank>=3){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'吉方・三合';}
-    else if(dd.rank>=2){labelCls='dir-label-text kichi';badgeCls='kichi';subText=dd.badges[0]||'吉方';}
-    else if(dd.rank>=1){labelCls='dir-label-text kichi';badgeCls='kichi';subText='天道';}
-    div.className='dir-clickable '+(subText?'has-info':'');
-    div.setAttribute('role','button');
-    div.setAttribute('tabindex','0');
-    div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
-    div.onclick=()=>openPopup(dir,type,dirData,kyouItems);
-    div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPopup(dir,type,dirData,kyouItems);}};
-    const dirEl=document.createElement('div');dirEl.className=labelCls;dirEl.style.cssText='font-size:1rem;font-weight:700;white-space:nowrap;';dirEl.textContent=JP[dir];div.appendChild(dirEl);
-    if(subText){const badge=document.createElement('div');badge.className='dir-badge '+badgeCls;badge.style.cssText='font-size:.62rem;margin-top:3px;';badge.textContent=subText;div.appendChild(badge);}
-    return div;
-  }
-
-  function makeSideLabel(dir){
-    const div=document.createElement('div');
-    div.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2px;flex-shrink:0;width:38px;';
-    const dd=dirData[dir];
-    let labelCls='dir-label-text normal',subText='',badgeCls='kichi';
-    if(dd.isKyo){
-      labelCls='dir-label-text kyo';badgeCls='kyo';
-      const kns=kyouItems.filter(k=>k.dir===dir);
-      if(kns.length)subText=kns.map(k=>k.name).join('・');
-    }else if(dd.isCaution){
-      labelCls=dd.rank>=2?'dir-label-text kichi':'dir-label-text caution';badgeCls='caution';
-      subText=dd.rank>=2?'吉方・定位注意':'定位注意';
-    }else if(dd.rank>=5){labelCls='dir-label-text kichi';badgeCls='dai';subText='本命・月命・三合';}
-    else if(dd.rank>=4){labelCls='dir-label-text kichi';badgeCls='dai';subText='本命・月命 吉';}
-    else if(dd.rank>=3){labelCls='dir-label-text kichi';badgeCls='dai';subText=dd.badges[0]||'三合';}
-    else if(dd.rank>=2){labelCls='dir-label-text kichi';badgeCls='kichi';subText='吉方';}
-    else if(dd.rank>=1){labelCls='dir-label-text kichi';badgeCls='kichi';subText='天道';}
-    div.className='dir-clickable side '+(subText?'has-info':'');
-    div.setAttribute('role','button');
-    div.setAttribute('tabindex','0');
-    div.setAttribute('aria-label',`${JP[dir]}の詳細を開く`);
-    div.onclick=()=>openPopup(dir,type,dirData,kyouItems);
-    div.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPopup(dir,type,dirData,kyouItems);}};
-    const dirEl=document.createElement('div');dirEl.className=labelCls;dirEl.style.cssText='font-size:1rem;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.08em;';dirEl.textContent=JP[dir];div.appendChild(dirEl);
-    if(subText){const badge=document.createElement('div');badge.className='dir-badge '+badgeCls;badge.style.cssText='font-size:.5rem;margin-top:4px;padding:2px 3px;writing-mode:vertical-rl;white-space:nowrap;';badge.textContent=subText;div.appendChild(badge);}
-    return div;
-  }
-
-  const gridStyle='display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:3px;';
-
-  // 上段ラベル
-  const topDiv=document.createElement('div');topDiv.style.cssText=gridStyle+'margin-bottom:3px;';
-  topRow.forEach(dir=>topDiv.appendChild(makeDirCell(dir)));
-  outerWrap.appendChild(topDiv);
-
-  // 中段（左ラベル＋盤面＋右ラベル）
-  const midWrap=document.createElement('div');midWrap.style.cssText='display:flex;align-items:center;';
-  const leftLabel=makeSideLabel(leftDir);leftLabel.style.cssText+='min-width:38px;max-width:38px;';
-  const rightLabel=makeSideLabel(rightDir);rightLabel.style.cssText+='min-width:38px;max-width:38px;';
-  gridDiv.style.flex='1';gridDiv.style.minWidth='0';
-  midWrap.appendChild(leftLabel);midWrap.appendChild(gridDiv);midWrap.appendChild(rightLabel);
-  outerWrap.appendChild(midWrap);
-
-  // 下段ラベル
-  const bottomDiv=document.createElement('div');bottomDiv.style.cssText=gridStyle+'margin-top:3px;';
-  bottomRow.forEach(dir=>bottomDiv.appendChild(makeDirCell(dir)));
-  outerWrap.appendChild(bottomDiv);
+  drawOctagonBoard(wrap,type,center,dirData,kyouItems);
 
   // 凶方サマリー
   const kyoEl=document.getElementById(`kyo-${type}`);
   if(kyouItems.length>0){kyoEl.innerHTML='⚠ 凶方：'+kyouItems.map(k=>`${JP[k.dir]}（${k.name}）`).join('　');kyoEl.style.display='block';}
   else kyoEl.style.display='none';
+}
+
+// ══════════════════════════════
+// 八角形SVG盤面描画（triple_board用）
+// ══════════════════════════════
+function octa_polarToXY(cx,cy,r,angleDeg){
+  const rad=(angleDeg-90)*Math.PI/180;
+  return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};
+}
+function octa_getDirAngles(orient){
+  if(orient==='north'){
+    return {N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
+  }else{
+    return {S:{c:0,span:30},SW:{c:45,span:60},W:{c:90,span:30},NW:{c:135,span:60},N:{c:180,span:30},NE:{c:225,span:60},E:{c:270,span:30},SE:{c:315,span:60}};
+  }
+}
+function octa_svgEl(tag,attrs){const el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el;}
+function octa_svgText(text,attrs){const el=octa_svgEl('text',attrs);el.textContent=text;return el;}
+
+function octa_getColors(dd){
+  // ライトモードのみ（triple_boardはライト固定）
+  if(dd.rincho)return{fill:'rgba(120,70,0,.2)',stroke:'rgba(120,70,0,.65)',num:'#7a4000',name:'rgba(120,70,0,.6)'};
+  if(dd.isKyo)return{fill:'rgba(155,160,170,.4)',stroke:'rgba(120,125,135,.5)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)'};
+  if(dd.isCaution&&dd.rank<2)return{fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)'};
+  if(dd.rank>=5)return{fill:'rgba(245,200,212,.6)',stroke:'rgba(208,120,145,.65)',num:'#9a3050',name:'rgba(154,48,80,.7)'};
+  if(dd.rank>=4)return{fill:'rgba(246,206,217,.55)',stroke:'rgba(210,130,152,.6)',num:'#9a3050',name:'rgba(154,48,80,.68)'};
+  if(dd.rank>=3)return{fill:'rgba(248,216,224,.6)',stroke:'rgba(214,150,168,.55)',num:'#a04060',name:'rgba(160,64,96,.62)'};
+  if(dd.rank>=2)return{fill:'rgba(250,228,234,.6)',stroke:'rgba(220,170,185,.5)',num:'#b05070',name:'rgba(176,80,112,.56)'};
+  if(dd.rank>=1)return{fill:'rgba(252,236,240,.55)',stroke:'rgba(224,184,196,.45)',num:'#b86080',name:'rgba(184,96,128,.5)'};
+  return{fill:'rgba(255,255,255,.9)',stroke:'rgba(180,175,165,.42)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)'};
+}
+
+function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
+  const orient=gState.orient||'south';
+  const SVG=340;
+  const svg=octa_svgEl('svg',{viewBox:`0 0 ${SVG} ${SVG}`,xmlns:'http://www.w3.org/2000/svg',style:'width:100%;max-width:300px;height:auto;display:block;margin:0 auto;'});
+  svg.setAttribute('data-board-type',type);
+  const CX=170,CY=170,R_OUT=102,R_IN=38,R_LABEL=R_OUT+18,R_BADGE=R_OUT+33;
+  const angles=octa_getDirAngles(orient);
+
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const dd=dirData[dir];if(!dd)return;
+    const col=octa_getColors(dd);
+    const start=c-span/2,end=c+span/2;
+    const inStart=octa_polarToXY(CX,CY,R_IN,start);
+    const outStart=octa_polarToXY(CX,CY,R_OUT,start);
+    const outEnd=octa_polarToXY(CX,CY,R_OUT,end);
+    const inEnd=octa_polarToXY(CX,CY,R_IN,end);
+    const path=octa_svgEl('path',{d:`M ${inStart.x} ${inStart.y} L ${outStart.x} ${outStart.y} L ${outEnd.x} ${outEnd.y} L ${inEnd.x} ${inEnd.y} Z`,fill:col.fill,stroke:col.stroke,'stroke-width':'1.1','data-dir':dir});
+    path.style.cursor='pointer';
+    path.addEventListener('click',()=>openPopup(dir,type,dirData,kyouItems));
+    svg.appendChild(path);
+
+    const nr=(R_IN+R_OUT)/2+4;
+    const np=octa_polarToXY(CX,CY,nr,c);
+    svg.appendChild(octa_svgText(String(dd.starN||''),{x:np.x,y:np.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:col.num,'font-size':'16','font-family':"'Cormorant Garamond',serif",'font-weight':'600'}));
+    const kp=octa_polarToXY(CX,CY,nr-13,c);
+    svg.appendChild(octa_svgText(STARS[dd.starN]?.k||'',{x:kp.x,y:kp.y+7,'text-anchor':'middle','dominant-baseline':'middle',fill:col.name,'font-size':'6','font-family':"'Noto Serif JP',serif"}));
+
+    // 方位名
+    const lp=octa_polarToXY(CX,CY,R_LABEL,c);
+    let lColor='rgba(40,28,10,.62)';
+    if(dd.rincho)lColor='#7a4000';
+    else if(dd.isKyo)lColor='rgba(90,95,105,.9)';
+    else if(dd.rank>=2)lColor='#a04060';
+    else if(dd.isCaution)lColor='#9a6810';
+    svg.appendChild(octa_svgText(JP[dir],{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle',fill:lColor,'font-size':'10.5','font-family':"'Noto Serif JP',serif",'font-weight':'700'}));
+
+    // バッジ
+    let subText='';
+    if(dd.rincho)subText=dd.isKyo?'3盤凶':'3盤吉 ✦';
+    else if(dd.isKyo){const kns=kyouItems.filter(k=>k.dir===dir);if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');}
+    else if(dd.isCaution)subText=dd.rank>=2?'吉方・定位注意':'定位注意';
+    else if(dd.rank>=5)subText=dd.badges[0]||'本命・月命・三合';
+    else if(dd.rank>=4)subText=dd.badges[0]||'本命・月命 吉';
+    else if(dd.rank>=3)subText=dd.badges[0]||'吉方・三合';
+    else if(dd.rank>=2)subText=dd.badges[0]||'吉方';
+    else if(dd.rank>=1)subText='天道';
+
+    if(subText){
+      const bp=octa_polarToXY(CX,CY,R_BADGE,c);
+      const bw=Math.min(subText.length*7.5+8,76),bh=12;
+      let bColor,bBg;
+      if(dd.rincho){bColor='#7a4000';bBg='rgba(120,70,0,.14)';}
+      else if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
+      else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
+      svg.appendChild(octa_svgEl('rect',{x:bp.x-bw/2,y:bp.y-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
+      svg.appendChild(octa_svgText(subText,{x:bp.x,y:bp.y+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'6.5','font-family':"'Noto Serif JP',serif"}));
+    }
+  });
+
+  // 中央八角形
+  const centerPts=[];
+  Object.values(angles).forEach(({c,span})=>{const p=octa_polarToXY(CX,CY,R_IN,c-span/2);centerPts.push(`${p.x},${p.y}`);});
+  svg.appendChild(octa_svgEl('polygon',{points:centerPts.join(' '),fill:'rgba(120,90,20,.06)',stroke:'rgba(120,90,20,.25)','stroke-width':'1.1'}));
+  svg.appendChild(octa_svgText(String(center),{x:CX,y:CY+2,'text-anchor':'middle','dominant-baseline':'middle',fill:'#5c3a08','font-size':'22','font-family':"'Cormorant Garamond',serif"}));
+
+  wrap.appendChild(svg);
 }
 
 // ══ 輪重チェック ══
@@ -745,7 +733,8 @@ function checkRincho(){
   if(!yD||!mD||!dD)return;
   const banner=document.getElementById('rinchoCheckBanner'),dirsEl=document.getElementById('rinchoCheckDirs');
   dirsEl.innerHTML='';
-  document.querySelectorAll('.cell-rincho').forEach(c=>c.classList.remove('cell-rincho'));
+  // 既存のrinchoフラグをクリア
+  ['year','month','day'].forEach(t=>{const dd=gState.dirData[t];if(dd)ALL8.forEach(dir=>{if(dd[dir])dd[dir].rincho=false;});});
   const results=[];
   ALL8.forEach(dir=>{
     const y=yD[dir],m=mD[dir],d=dD[dir];if(!y||!m||!d)return;
@@ -759,18 +748,34 @@ function checkRincho(){
     const tag=document.createElement('div');tag.className='rincho-dir-tag'+(r.allKyo?' kyo':'');
     tag.textContent=JP[r.dir]+(r.allKichi?' ✦ 3盤吉':' ⚠ 3盤凶');dirsEl.appendChild(tag);
   });
-  // 吉一致をハイライト
-  const LAYOUT=gState.orient==='north'?LAYOUT_N:LAYOUT_S;
-  results.filter(r=>r.allKichi).forEach(r=>{
-    ['year','month','day'].forEach(type=>{
-      const outerWrap=document.querySelector(`#compassWrap-${type} .compass-outer-wrap`);
-      if(!outerWrap)return;
-      const grid=outerWrap.querySelector('.compass-grid');if(!grid)return;
-      const cells=grid.querySelectorAll('.cell');
-      LAYOUT.flat().forEach((dir,i)=>{if(dir===r.dir&&cells[i])cells[i].classList.add('cell-rincho');});
+  // 吉一致をrinchoフラグでハイライト→再描画
+  const kichiResults=results.filter(r=>r.allKichi);
+  if(kichiResults.length){
+    kichiResults.forEach(r=>{
+      ['year','month','day'].forEach(t=>{const dd=gState.dirData[t];if(dd&&dd[r.dir])dd[r.dir].rincho=true;});
     });
-  });
+    // 3盤を再描画（rinchoフラグ反映）
+    ['year','month','day'].forEach(t=>redrawBoardOnly(t));
+  }
   banner.classList.add('show');
+}
+
+// 盤面だけ再描画（rinchoフラグ反映用・計算はしない）
+function redrawBoardOnly(type){
+  const dirData=gState.dirData[type];
+  if(!dirData)return;
+  let center;
+  if(type==='year')center=yearCenter(gState.yearNav.y);
+  else if(type==='month'){const{y,m,d}=gState.monthNav;center=getMonthCenter(y,m,d);}
+  else{const{y,m,d}=gState.dayNav;center=getDayCenter(y,m,d);}
+  // kyouItems再取得
+  let y,m,d,breakDir;
+  if(type==='year'){y=gState.yearNav.y;breakDir=OPP[getZodiac(y).d];}
+  else if(type==='month'){({y,m,d}=gState.monthNav);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];}
+  else{({y,m,d}=gState.dayNav);breakDir=OPP[BRANCH_DIR[getDayBranch(y,m,d)]];}
+  const {items:kyouItems}=getKyouDirs(center,gState.honmei,breakDir,gState.tsukimei,type);
+  const wrap=document.getElementById(`compassWrap-${type}`);
+  if(wrap){wrap.innerHTML='';drawOctagonBoard(wrap,type,center,dirData,kyouItems);}
 }
 
 // ══ ナビゲーション ══
