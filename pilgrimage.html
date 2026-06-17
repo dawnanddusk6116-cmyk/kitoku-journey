@@ -2227,7 +2227,17 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     const isCaution = kyouItems && kyouItems.some(i=>i.dir===d && i.name.includes('定位対冲'));
     const rank = rankMap ? (rankMap[d]||0) : 0;
     const isDest = d === destDir;
-    if(isDest) return {fill:'rgba(120,90,20,.22)',stroke:'rgba(120,90,20,.85)',num:'#5a3e08',name:'#5a3e08',dest:true,isKyo,isCaution,rank};
+    if(isDest){
+      // 目的地は本来の吉凶色を保ち、枠だけ紫で強調
+      let base;
+      if(isKyo) base={fill:'rgba(155,160,170,.4)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)'};
+      else if(isCaution&&rank<2) base={fill:'rgba(190,135,35,.14)',num:'#9a6810',name:'rgba(154,104,16,.6)'};
+      else if(rank>=4) base={fill:'rgba(246,206,217,.55)',num:'#9a3050',name:'rgba(154,48,80,.68)'};
+      else if(rank>=3) base={fill:'rgba(248,216,224,.6)',num:'#a04060',name:'rgba(160,64,96,.62)'};
+      else if(rank>=2) base={fill:'rgba(250,228,234,.6)',num:'#b05070',name:'rgba(176,80,112,.56)'};
+      else base={fill:'rgba(255,255,255,.9)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)'};
+      return {fill:base.fill,stroke:'#6a4ba8',strokeW:2.5,num:base.num,name:base.name,dest:true,isKyo,isCaution,rank};
+    }
     if(isKyo) return {fill:'rgba(155,160,170,.4)',stroke:'rgba(120,125,135,.5)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)',isKyo,isCaution,rank};
     if(isCaution&&rank<2) return {fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)',isKyo,isCaution,rank};
     if(rank>=4) return {fill:'rgba(246,206,217,.55)',stroke:'rgba(210,130,152,.6)',num:'#9a3050',name:'rgba(154,48,80,.68)',isKyo,isCaution,rank};
@@ -2242,7 +2252,7 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     const col = cellColors(d);
     const start=c-span/2, end=c+span/2;
     const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
-    cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${col.fill}" stroke="${col.stroke}" stroke-width="1.1"/>`;
+    cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${col.fill}" stroke="${col.stroke}" stroke-width="${col.strokeW||1.1}"/>`;
     const nr=(R_IN+R_OUT)/2+4;
     const [nx,ny]=pXY(nr,c);
     cells += `<text x="${nx.toFixed(1)}" y="${(ny+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${col.num}" font-size="16" font-family="'Cormorant Garamond',serif" font-weight="600">${starN}</text>`;
@@ -2252,7 +2262,7 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     // 方位名
     const [lx,ly]=pXY(R_LABEL,c);
     let lColor = col.isKyo?'rgba(90,95,105,.9)':col.rank>=2?'#a04060':col.isCaution?'#9a6810':'rgba(40,28,10,.62)';
-    if(col.dest)lColor='#5a3e08';
+    if(col.dest)lColor='#5a3e98';
     cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${lColor}" font-size="10.5" font-family="'Noto Serif JP',serif" font-weight="700">${dirJP[d]}</text>`;
     // バッジ
     const kyoNames = kyouItems ? kyouItems.filter(i=>i.dir===d).map(i=>i.name.split('/')[0]).join('・') : '';
@@ -2265,9 +2275,9 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     if(col.dest){
       const [bx,by]=pXY(R_BADGE,c);
       const dt=subText||'';
-      const bw=Math.min((dt.length+4)*7.5+8,90),bh=12;
-      cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="rgba(120,90,20,.18)"/>`;
-      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e08" font-size="6.5" font-family="'Noto Serif JP',serif" font-weight="700">📍${dt}</text>`;
+      const bw=Math.min((dt.length+4)*7.5+8,92),bh=12;
+      cells += `<rect x="${(bx-bw/2).toFixed(1)}" y="${(by-bh/2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="4" fill="rgba(106,75,168,.16)" stroke="rgba(106,75,168,.5)" stroke-width="0.8"/>`;
+      cells += `<text x="${bx.toFixed(1)}" y="${(by+1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#5a3e98" font-size="6.5" font-family="'Noto Serif JP',serif" font-weight="700">📍${dt}</text>`;
     } else if(subText){
       const [bx,by]=pXY(R_BADGE,c);
       const bw=Math.min(subText.length*7.5+8,76),bh=12;
