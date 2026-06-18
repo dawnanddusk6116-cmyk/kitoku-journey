@@ -1942,7 +1942,9 @@ function drawFullscreenContent(lat, lng) {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
     const kns = kyouItems.filter(k => k.dir === dir);
-    const isKyo = kns.length > 0 || kyouSet.has(dir) || dd.isKyo;
+    // 定位対冲は注意レベルなので凶扱いしない（吉方を優先）
+    const realKns = kns.filter(k => !k.name.includes('定位対冲'));
+    const isKyo = realKns.length > 0 || kyouSet.has(dir) || dd.isKyo;
 
     // 吉方の扇形（遠くまで）
     if (!isKyo && dd.rank >= 2) {
