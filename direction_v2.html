@@ -1826,7 +1826,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           <div style="font-size:1.8rem;flex-shrink:0;">🗺</div>
           <div>
             <div style="font-size:.82rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;">方位線を地図で確認する</div>
-            <div style="font-size:.63rem;color:var(--mist);line-height:1.6;">現在地を中心に吉凶の方位線を地図上に表示します。<br>吉方は緑・凶方は赤で色分けされます。</div>
+            <div style="font-size:.63rem;color:var(--mist);line-height:1.6;">現在地を中心に吉凶の方位線を地図上に表示します。<br>吉方はピンク・凶方はグレーで色分けされます。</div>
           </div>
           <div id="mapLineArrow" style="margin-left:auto;font-size:.8rem;color:var(--goldlt);flex-shrink:0;">▼</div>
         </button>
@@ -1871,8 +1871,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 <div id="fullscreenMapModal" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;">
   <div id="fullscreenMap" style="width:100%;height:100%;"></div>
   <button onclick="closeFullscreenMap()" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10000;background:rgba(255,255,255,.95);border:none;border-radius:50%;width:44px;height:44px;font-size:1.3rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);color:#333;">✕</button>
-  <div style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">📍 地図は北が上 ・ 緑＝吉方</div>
-  <div style="position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">緑の扇形が吉方位 ・ 750m以上で吉方取り</div>
+  <div style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">📍 地図は北が上 ・ ピンク＝吉方</div>
+  <div style="position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">ピンクの扇形が吉方位 ・ 750m以上で吉方取り</div>
 </div>
 
 <script>
@@ -1909,16 +1909,18 @@ function drawFullscreenContent(lat, lng) {
 
   const {honmei, tsukimei} = gState;
   if (!honmei) return;
-  const center = gState.currentBan === 'day' ? gState.dayCenter
-    : gState.currentBan === 'month' ? gState.monthCenter : gState.yearCent;
+  // 地図表示用の日付（ナビした日付を優先）
+  const mvY = gState.mapViewY || gState.ty, mvM = gState.mapViewM || gState.tm, mvD = gState.mapViewD || gState.td;
+  const center = gState.currentBan === 'day' ? getDayCenter(mvY, mvM, mvD)
+    : gState.currentBan === 'month' ? getMonthCenter(mvY, mvM, mvD) : yearCenter(mvY);
   if (!center) return;
 
   const p2s = buildBoardFromCenter(center);
-  const z = getZodiac(gState.ty || new Date().getFullYear());
+  const z = getZodiac(mvY);
   const sangoSet = new Set((SANGO_MAP[z.k] || { dirs: [] }).dirs);
   let mapBreakDir = OPP[z.d];
-  if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(gState.ty, gState.tm, gState.td)]];
-  else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(gState.ty, gState.tm, gState.td)]];
+  if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(mvY, mvM, mvD)]];
+  else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(mvY, mvM, mvD)]];
   const {items: kyouItems} = getKyouDirs(center, honmei, mapBreakDir, gState.tsukimei, gState.currentBan || 'day');
   // 定位対冲は注意レベルなのでkyouSet（凶色判定）から除外
   const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
@@ -1949,7 +1951,7 @@ function drawFullscreenContent(lat, lng) {
         const rad = a * Math.PI / 180;
         pts.push([lat + Math.cos(rad)*(LINE_LENGTH/111), lng + Math.sin(rad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))]);
       }
-      const fanColor = dd.rank >= 4 ? '#22c55e' : dd.rank >= 3 ? '#4ade80' : '#86efac';
+      const fanColor = dd.rank >= 4 ? '#e84d80' : dd.rank >= 3 ? '#f06a98' : '#f5a8c0';
       const fanOpacity = dd.rank >= 4 ? 0.2 : dd.rank >= 3 ? 0.15 : 0.11;
       const fan = L.polygon(pts, { color: fanColor, weight: 1.5, opacity: 0.5, fillColor: fanColor, fillOpacity: fanOpacity });
       fan.addTo(fsMapInstance);
@@ -1960,7 +1962,7 @@ function drawFullscreenContent(lat, lng) {
       const labLng = lng + Math.sin(midRad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))*0.4;
       const STK = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
       const JPD = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
-      const lab = L.divIcon({ html: `<div style="background:rgba(34,197,94,.9);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);">✦ ${JPD[dir]} 吉方<br>${STK[starN]||''}</div>`, iconAnchor: [30, 12], className: '' });
+      const lab = L.divIcon({ html: `<div style="background:rgba(216,77,120,.92);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);">✦ ${JPD[dir]} 吉方<br>${STK[starN]||''}</div>`, iconAnchor: [30, 12], className: '' });
       const lm = L.marker([labLat, labLng], { icon: lab, interactive: false });
       lm.addTo(fsMapInstance); fsMapLayers.push(lm);
     }
@@ -2099,11 +2101,11 @@ function drawDirectionLines(lat, lng) {
     // 色と太さを決定
     let color, weight, opacity, dashArray;
     if (isKyo) {
-      color = '#ef4444'; weight = 1.5; opacity = 0.6; dashArray = '4,4';
+      color = '#9aa0aa'; weight = 1.5; opacity = 0.55; dashArray = '4,4';
     } else if (dd.rank >= 5) {
-      color = '#22c55e'; weight = 3; opacity = 0.85; dashArray = null;
+      color = '#e84d80'; weight = 3; opacity = 0.8; dashArray = null;
     } else if (dd.rank >= 3) {
-      color = '#86efac'; weight = 2; opacity = 0.7; dashArray = null;
+      color = '#f5a8c0'; weight = 2; opacity = 0.7; dashArray = null;
     } else if (dd.rank >= 1) {
       color = '#fbbf24'; weight = 1.5; opacity = 0.6; dashArray = null;
     } else {
@@ -2137,7 +2139,7 @@ function drawDirectionLines(lat, lng) {
         pts.push([lat + dlat, lng + dlng]);
       }
       // 吉方のランクで濃さを変える
-      const fanColor = dd.rank >= 4 ? '#22c55e' : dd.rank >= 3 ? '#4ade80' : '#86efac';
+      const fanColor = dd.rank >= 4 ? '#e84d80' : dd.rank >= 3 ? '#f06a98' : '#f5a8c0';
       const fanOpacity = dd.rank >= 4 ? 0.18 : dd.rank >= 3 ? 0.14 : 0.1;
       const fan = L.polygon(pts, {
         color: fanColor, weight: 1, opacity: 0.4,
@@ -2228,9 +2230,9 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
 
     // 色（半透明で地図が透ける）
     let fill = 'rgba(40,50,60,.4)';
-    if (isKyo) fill = 'rgba(190,55,55,.4)';
-    else if (dd.rank >= 2) fill = 'rgba(50,150,75,.4)';
-    else if (dd.rank >= 1) fill = 'rgba(196,160,67,.38)';
+    if (isKyo) fill = 'rgba(120,125,135,.55)';
+    else if (dd.rank >= 2) fill = 'rgba(232,140,165,.5)';
+    else if (dd.rank >= 1) fill = 'rgba(232,160,180,.4)';
 
     const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
     cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
@@ -2250,7 +2252,7 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
     else if (isKyo && realKyo.length === 0 && kns.length) kyoLabel = ''; // 定位対冲のみは無表示
     if (kyoLabel && R_OUT > 40) {
       const [lx, ly] = pXY(R_OUT * 0.82, c);
-      const lcolor = (kyoLabel === '吉') ? '#3aaa5e' : '#e84545';
+      const lcolor = (kyoLabel === '吉') ? '#d24a78' : '#888e98';
       const rr = Math.max(8, R_OUT * 0.06);
       cells += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lcolor}"/>`;
       cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
@@ -3388,6 +3390,11 @@ function renderBanNav(){
   gState.mapViewY=ty;gState.mapViewM=tm;gState.mapViewD=td;
   if(dirMapInstance && dirMapCenter){
     drawDirectionLines(dirMapCenter.lat, dirMapCenter.lng);
+  }
+  // 全画面が開いていれば全画面も再描画
+  if(fsMapInstance && document.getElementById('fullscreenMapModal').style.display==='block'){
+    const fc=dirMapCenter||{lat:33.8416,lng:132.7657};
+    drawFullscreenContent(fc.lat, fc.lng);
   }
   // 元に戻す（gStateのnavYear/Month/Dayは保持）
   gState.ty=saved.ty;gState.tm=saved.tm;gState.td=saved.td;
