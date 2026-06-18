@@ -2102,7 +2102,8 @@ function drawDirectionLines(lat, lng) {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
     const knsLine = kyouItems.filter(k => k.dir === dir);
-    const isKyo = knsLine.length > 0 || kyouSet.has(dir) || dd.isKyo;
+    const realKnsLine = knsLine.filter(k => !k.name.includes('定位対冲'));
+    const isKyo = realKnsLine.length > 0 || kyouSet.has(dir) || dd.isKyo;
 
     // 色と太さを決定
     let color, weight, opacity, dashArray;
