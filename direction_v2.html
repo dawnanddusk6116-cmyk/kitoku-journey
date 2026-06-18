@@ -1935,7 +1935,9 @@ function drawFullscreenContent(lat, lng) {
     fsMapLayers.push(circle);
   });
 
-  const LINE_LENGTH = 300; // 全画面はより遠くまで
+  // ズームレベルに応じて長さを調整
+  const _fsZoom = fsMapInstance.getZoom();
+  const LINE_LENGTH = Math.min(300, Math.max(3, 60000 / Math.pow(2, _fsZoom)));
   Object.entries(DIR_ANGLES).forEach(([dir, angle]) => {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
@@ -2090,7 +2092,9 @@ function drawDirectionLines(lat, lng) {
   // 定位対冲は注意レベルなのでkyouSet（凶色判定）から除外
   const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
 
-  const LINE_LENGTH = 150; // km相当（度単位で近似）
+  // ズームレベルに応じて線の長さを調整（SVG座標が巨大になりすぎる問題を回避）
+  const _zoom = dirMapInstance.getZoom();
+  const LINE_LENGTH = Math.min(150, Math.max(2, 40000 / Math.pow(2, _zoom)));
 
   Object.entries(DIR_ANGLES).forEach(([dir, angle]) => {
     const starN = p2s[dir];
@@ -2129,7 +2133,7 @@ function drawDirectionLines(lat, lng) {
       // 正方位30度・四隅60度の幅
       const isSeihou = ['N','E','S','W'].includes(dir);
       const halfSpan = isSeihou ? 15 : 30;
-      const FAN_LEN = 200; // km（遠くまで伸ばす）
+      const FAN_LEN = Math.min(200, Math.max(3, 55000 / Math.pow(2, _zoom))); // ズームに応じて調整
       const pts = [[lat, lng]];
       // 扇形の弧を複数点で描く
       for (let a = angle - halfSpan; a <= angle + halfSpan; a += 5) {
