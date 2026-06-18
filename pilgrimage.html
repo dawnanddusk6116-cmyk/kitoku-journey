@@ -3161,7 +3161,8 @@ function drawPickerCompassOverlay(mapInst, lat, lng) {
   const breakBranch = _SHI[(dayBranchIdx+6)%12];
   const tendo = (typeof getTendoDir==='function') ? getTendoDir(ty,tm,td) : null;
   const { items: kyouItems } = getKyouDirs(center, gState.honmei, breakDir, gState.tsukimei, 'day', {});
-  const kyouSet = new Set(kyouItems.map(k=>k.dir));
+  // 定位対冲は注意レベルなのでkyouSet（凶色判定）から除外
+  const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k=>k.dir));
 
   const DIR_ANG = {N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
 
@@ -3170,7 +3171,8 @@ function drawPickerCompassOverlay(mapInst, lat, lng) {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, gState.honmei, gState.tsukimei, sangoSet, tendo);
     const kns = kyouItems.filter(k=>k.dir===dir);
-    const isKyo = kns.length>0 || kyouSet.has(dir) || dd.isKyo;
+    const realKns = kns.filter(k => !k.name.includes('定位対冲'));
+    const isKyo = realKns.length>0 || kyouSet.has(dir) || dd.isKyo;
     if (!isKyo && dd.rank >= 2) {
       const isSeihou = ['N','E','S','W'].includes(dir);
       const halfSpan = isSeihou ? 15 : 30;
@@ -3180,7 +3182,7 @@ function drawPickerCompassOverlay(mapInst, lat, lng) {
         const rad = a * Math.PI / 180;
         pts.push([lat + Math.cos(rad)*(FAN_LEN/111), lng + Math.sin(rad)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)))]);
       }
-      const fanColor = dd.rank>=4 ? '#22c55e' : dd.rank>=3 ? '#4ade80' : '#86efac';
+      const fanColor = dd.rank>=4 ? '#e84d80' : dd.rank>=3 ? '#f06a98' : '#f5a8c0';
       const fanOpacity = dd.rank>=4 ? 0.18 : dd.rank>=3 ? 0.14 : 0.1;
       const fan = L.polygon(pts, { color: fanColor, weight: 1, opacity: 0.4, fillColor: fanColor, fillOpacity: fanOpacity });
       fan.addTo(mapInst);
@@ -3205,22 +3207,23 @@ function drawPickerCompassOverlay(mapInst, lat, lng) {
     const starN = p2s[dir];
     const dd = rankDir(dir, starN, gState.honmei, gState.tsukimei, sangoSet, tendo);
     const kns = kyouItems.filter(k=>k.dir===dir);
-    const isKyo = kns.length>0 || kyouSet.has(dir) || dd.isKyo;
+    const realKns = kns.filter(k => !k.name.includes('定位対冲'));
+    const isKyo = realKns.length>0 || kyouSet.has(dir) || dd.isKyo;
     const start=c-span/2, end=c+span/2;
     let fill = 'rgba(40,50,60,.4)';
-    if (isKyo) fill='rgba(190,55,55,.4)';
-    else if (dd.rank>=2) fill='rgba(50,150,75,.4)';
+    if (isKyo) fill='rgba(120,125,135,.55)';
+    else if (dd.rank>=2) fill='rgba(232,140,165,.5)';
     else if (dd.rank>=1) fill='rgba(196,160,67,.38)';
     const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
     cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
     const nr=(R_IN+R_OUT)/2, [nx,ny]=pXY(nr,c);
     cells += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${Math.max(13,R_OUT*0.1).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
     let kyoLabel = '';
-    if (kns.length) kyoLabel = kns[0].name.split('/')[0][0];
+    if (isKyo && realKns.length) kyoLabel = realKns[0].name.split('/')[0][0];
     else if (!isKyo && dd.rank>=2) kyoLabel = '吉';
     if (kyoLabel && R_OUT>40) {
       const [lx,ly]=pXY(R_OUT*0.82,c);
-      const lcolor = isKyo ? '#e84545' : '#3aaa5e';
+      const lcolor = (kyoLabel === '吉') ? '#d24a78' : '#888e98';
       const rr = Math.max(8,R_OUT*0.06);
       cells += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lcolor}"/>`;
       cells += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
