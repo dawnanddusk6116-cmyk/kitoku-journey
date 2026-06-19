@@ -4353,6 +4353,8 @@ function setKichakuMode(checked){
 }
 
 function setSoukouMode(checked){
+  // KITOKU哲学：相剋は凶にしない。このトグルは哲学表明（摩擦を活かす）。
+  // 実際の吉凶判定では相剋を一切凶にしないため、ONでもOFFでも凶方は増えない。
   gState.soukouOff=!checked;
   try{localStorage.setItem('kitoku-soukou-off',checked?'0':'1');}catch(e){}
   _updateToggleUI('sw-soukou',checked);

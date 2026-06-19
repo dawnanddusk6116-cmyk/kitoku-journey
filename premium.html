@@ -613,6 +613,23 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
             <input type="checkbox" id="setTeiiKyo" onchange="updateKyoSetting()" style="width:42px;height:24px;cursor:pointer;accent-color:#e84d80;">
           </label>
 
+          <label style="display:flex;align-items:center;justify-content:space-between;padding:9px 4px;border-bottom:1px solid rgba(138,104,32,.12);cursor:pointer;">
+            <div>
+              <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;">相剋（死気・殺気）を表示</div>
+              <div style="font-size:.54rem;color:var(--mist);">本命星と相剋する方位を<strong>参考</strong>として表示（凶にはしません）</div>
+            </div>
+            <input type="checkbox" id="setSoukokuShow" onchange="updateKyoSetting()" style="width:42px;height:24px;cursor:pointer;accent-color:#5b8def;">
+          </label>
+
+          <!-- KITOKUの相剋哲学 -->
+          <div style="margin-top:10px;padding:9px 11px;background:rgba(91,141,239,.06);border:1px solid rgba(91,141,239,.22);border-radius:9px;">
+            <div style="font-size:.6rem;color:#3f6fd6;font-weight:800;margin-bottom:4px;">なぜKITOKUは相剋を「凶」にしないのか</div>
+            <div style="font-size:.56rem;color:var(--mist);line-height:1.85;">
+              他の占術では相剋（五行がぶつかる方位）を凶として避けさせますが、KITOKUは違います。相剋は「ぶつかる関係」ではなく、<strong>互いの足りないものを補い合い、五行すべてのエネルギーを取り込める関係</strong>です。本当に警戒すべきは五黄殺・暗剣殺・破れ・本命殺・本命的殺の五大凶方だけ。相剋を恐れず使いこなすことが、KITOKUの「自分で決める」navigation です。<br>
+              この設定をONにしても、相剋方位は<strong>青色の参考表示</strong>になるだけで、吉方判定には影響しません。
+            </div>
+          </div>
+
           <div style="font-size:.54rem;color:var(--mist);margin-top:8px;line-height:1.6;">
             ※ 五黄殺・暗剣殺・破れ・本命殺・本命的殺は流派を問わず凶方位として常に判定されます。
           </div>
@@ -677,7 +694,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button onclick="mapZoom(-1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">－</button>
         <button onclick="openMapFullscreen()" style="padding:0 12px;height:36px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(138,104,32,.08);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">⛶ 全画面</button>
         <div style="flex:1;font-size:.58rem;color:var(--mist);line-height:1.6;text-align:right;">
-          凡例：<span style="color:#e84d80;font-weight:700;">■</span>吉方　<span style="color:#9aa0aa;font-weight:700;">■</span>凶方<br>
+          凡例：<span style="color:#e84d80;font-weight:700;">■</span>吉方　<span style="color:#be8723;font-weight:700;">■</span>注意　<span style="color:#9aa0aa;font-weight:700;">■</span>凶方<br>
           <span id="mapBanTypeLabel" style="color:var(--gold);font-weight:700;">日盤</span>連動中
         </div>
       </div>
@@ -3255,19 +3272,25 @@ async function sendChat(){
 function loadKyoSettings(){
   const tmSatsu = localStorage.getItem('kitoku-tsukimei-satsu');
   const teiiKyo = localStorage.getItem('kitoku-teii-kyo');
+  const soukokuShow = localStorage.getItem('kitoku-soukoku-show');
   const tmEl = document.getElementById('setTsukimeiSatsu');
   const teiiEl = document.getElementById('setTeiiKyo');
+  const skEl = document.getElementById('setSoukokuShow');
   // 月命殺はデフォルトON（'on'）、未設定時もON
   if(tmEl) tmEl.checked = (tmSatsu===null || tmSatsu==='on');
   // 定位対冲（裏）はデフォルトOFF
   if(teiiEl) teiiEl.checked = (teiiKyo==='1');
+  // 相剋表示はデフォルトOFF
+  if(skEl) skEl.checked = (soukokuShow==='1');
 }
 
 function updateKyoSetting(){
   const tmEl = document.getElementById('setTsukimeiSatsu');
   const teiiEl = document.getElementById('setTeiiKyo');
+  const skEl = document.getElementById('setSoukokuShow');
   if(tmEl) localStorage.setItem('kitoku-tsukimei-satsu', tmEl.checked ? 'on' : 'off');
   if(teiiEl) localStorage.setItem('kitoku-teii-kyo', teiiEl.checked ? '1' : '0');
+  if(skEl) localStorage.setItem('kitoku-soukoku-show', skEl.checked ? '1' : '0');
   // 方位盤・地図を即再描画
   if(typeof renderBoard==='function') renderBoard();
   if(typeof refreshDestinationPrem==='function') refreshDestinationPrem();
@@ -3276,6 +3299,40 @@ function updateKyoSetting(){
 }
 
 document.addEventListener('DOMContentLoaded', loadKyoSettings);
+
+// ── 相剋（死気・殺気）判定ロジック ────────────────────
+// 【KITOKUの哲学】相剋は「凶」ではなく「参考情報」。
+// 知恵の蔵テーマ㉖「相剋は凶ではない」および方位ルール3-2
+// （相剋は単体では吉凶なし・移動可）に基づき、相剋方位は
+// 吉凶判定には一切影響させず、参考として青色表示するのみ。
+// 本当に警戒すべきは五大凶方（五黄殺・暗剣殺・破れ・本命殺・本命的殺）。
+
+// 九星の五行（1=水, 2/5/8=土, 3/4=木, 6/7=金, 9=火）
+const STAR_GOGYO = {1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+// 相剋関係：剋す → 剋される（木剋土・土剋水・水剋火・火剋金・金剋木）
+const GOGYO_KOKU = {'木':'土','土':'水','水':'火','火':'金','金':'木'};
+
+// 本命星から見た相剋方位を返す（参考表示用）
+// 殺気＝本命が剋す五行の方位 / 死気＝本命を剋す五行の方位
+function getSoukokuDirs(p2s, honmei){
+  if(!honmei) return [];
+  const myGogyo = STAR_GOGYO[honmei];
+  const sakkiGogyo = GOGYO_KOKU[myGogyo];                 // 本命が剋す（殺気）
+  const shikiGogyo = Object.keys(GOGYO_KOKU).find(g=>GOGYO_KOKU[g]===myGogyo); // 本命を剋す（死気）
+  const result = [];
+  Object.keys(p2s).forEach(dir=>{
+    if(dir==='C') return;
+    const starN = p2s[dir];
+    const g = STAR_GOGYO[starN];
+    if(g===sakkiGogyo) result.push({dir, kind:'殺気', star:starN});
+    else if(g===shikiGogyo) result.push({dir, kind:'死気', star:starN});
+  });
+  return result;
+}
+
+function isSoukokuShowOn(){
+  return localStorage.getItem('kitoku-soukoku-show')==='1';
+}
 
 
 // ── 定数 ─────────────────────────────────────────────
@@ -3552,12 +3609,14 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
     const kns=kyouItems.filter(k=>k.dir===dir);
     const realKyoItems=kns.filter(k=>!k.name.includes('定位対冲'));
     const isKyo=realKyoItems.length>0||kyouSet.has(dir)||dd.isKyo;
+    const isCautionDir = !isKyo && kns.some(k=>k.name.includes('定位対冲')) && dd.rank<2;
     const start=c-span/2,end=c+span/2;
 
     let fill='rgba(40,50,60,.4)';
     if(isKyo) fill='rgba(120,125,135,.55)';
     else if(dd.rank>=2) fill='rgba(232,140,165,.5)';
     else if(dd.rank>=1) fill='rgba(232,160,180,.4)';
+    else if(isCautionDir) fill='rgba(190,135,35,.45)'; // 定位対冲＝注意（琥珀・中位）
 
     const[ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
     cells+=`<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
@@ -3570,9 +3629,10 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
     let kyoLabel='';
     if(isKyo&&realKyo.length) kyoLabel=realKyo[0].name.split('/')[0][0];
     else if(!isKyo&&dd.rank>=2) kyoLabel='吉';
+    else if(isCautionDir) kyoLabel='注';
     if(kyoLabel&&R_OUT>40){
       const[lx,ly]=pXY(R_OUT*0.82,c);
-      const lc=(kyoLabel==='吉')?'#d24a78':'#888e98';
+      const lc=(kyoLabel==='吉')?'#d24a78':(kyoLabel==='注')?'#be8723':'#888e98';
       const rr=Math.max(8,R_OUT*0.06);
       cells+=`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lc}"/>`;
       cells+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
@@ -3754,13 +3814,23 @@ function onKitokuMapTap(e){
   else if(j.kind==='tendo') meaning='天道です。吉方位ではありませんが、天が後押しする補助的な方位です。';
   else                      meaning='吉でも凶でもない方位です。';
 
+  // 相剋の参考表示（ONのときのみ・吉凶には影響しない）
+  let soukokuNote='';
+  if(isSoukokuShowOn() && state.info){
+    const skList=getSoukokuDirs(p2s, state.info.honmei);
+    const hit=skList.find(s=>s.dir===tapDir);
+    if(hit){
+      soukokuNote=`<div style="margin-top:5px;padding:5px 8px;background:rgba(91,141,239,.08);border:1px solid rgba(91,141,239,.22);border-radius:6px;color:#3f6fd6;font-size:.58rem;line-height:1.7;">🔵 参考：本命星と<strong>相剋（${hit.kind}）</strong>の方位です。KITOKUでは相剋を凶とは見なしません。第3の五行を挟めば、足りないものを補い合う関係になります。</div>`;
+    }
+  }
+
   document.getElementById('mapTapTitle').innerHTML=
     `<span style="color:${j.color};">${tapDirLabel}　${MAP_STAR_NAMES[starN]||''}　${j.label}</span>`;
   document.getElementById('mapTapDetail').innerHTML=
     `距離：約 ${fmt(dist)}${calcNote}　／　角度：${bearing.toFixed(1)}°<br>`+
     (j.sub&&j.sub!==j.label?`内容：${j.sub}<br>`:'')+
     `判定基準：${banLabel}・${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日<br>`+
-    meaning;
+    meaning + soukokuNote;
   document.getElementById('mapTapInfo').style.display='block';
 }
 
@@ -3987,12 +4057,22 @@ function onFsMapTap(e){
   else if(j.kind==='tendo') meaning='天道です。吉方位ではありませんが、天が後押しする補助的な方位です。';
   else                      meaning='吉でも凶でもない方位です。';
 
+  // 相剋の参考表示（ONのときのみ・吉凶には影響しない）
+  let soukokuNote='';
+  if(isSoukokuShowOn() && state.info){
+    const skList=getSoukokuDirs(p2s, state.info.honmei);
+    const hit=skList.find(s=>s.dir===tapDir);
+    if(hit){
+      soukokuNote=`<div style="margin-top:5px;padding:5px 8px;background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.3);border-radius:6px;color:#3f6fd6;font-size:.6rem;line-height:1.6;">🔵 参考：本命星と相剋（${hit.kind}）の方位。KITOKUでは凶とは見なしません。</div>`;
+    }
+  }
+
   document.getElementById('fsTapTitle').innerHTML=`<span style="color:${j.color};">${tapDirLabel}　${MAP_STAR_NAMES[starN]||''}　${j.label}</span>`;
   document.getElementById('fsTapDetail').innerHTML=
     `距離：約 ${fmt(dist)} ${calcNote}　角度：${bearing.toFixed(1)}°<br>`+
     (j.sub&&j.sub!==j.label?`内容：${j.sub}<br>`:'')+
     `判定：${banLabel}・${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日<br>`+
-    meaning;
+    meaning + soukokuNote;
   document.getElementById('fsTapInfo').style.display='block';
 }
 
