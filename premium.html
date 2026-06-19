@@ -381,6 +381,16 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .leaflet-tile-pane,.leaflet-overlay-pane,.leaflet-shadow-pane,.leaflet-marker-pane,
 .leaflet-tooltip-pane,.leaflet-popup-pane{z-index:auto;}
 .leaflet-control{z-index:2;}
+/* ── 地図全画面モード ── */
+#mapPanel.map-fullscreen{
+  position:fixed!important;inset:0!important;z-index:9000!important;
+  border-radius:0!important;margin:0!important;padding:12px!important;
+  overflow-y:auto!important;background:var(--card)!important;
+}
+#mapPanel.map-fullscreen #kitokuMap{
+  height:calc(100vh - 320px)!important;
+  min-height:260px!important;
+}
 </style>
 </head>
 <body>
@@ -597,7 +607,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 
     <!-- ③ 方位地図 -->
     <div class="panel" id="mapPanel">
-      <div class="panel-title">③ 方位地図 <span style="font-size:.54rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span></div>
+      <div class="panel-title">③ 方位地図 <span style="font-size:.54rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span>
+        <button onclick="toggleMapFullscreen()" id="mapFullscreenBtn" title="全画面表示" style="float:right;border:1px solid rgba(138,104,32,.28);border-radius:6px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:.7rem;padding:4px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;">⛶ 全画面</button>
+      </div>
 
       <!-- モード切替タブ -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;" id="mapModeTabs">
@@ -3401,25 +3413,14 @@ function offsetLatLng(lat, lng, bearingDeg, distM){
 }
 
 // ── 吉凶セット取得 ────────────────────────────────────
+// buildDirData()を再利用して方位盤と完全同一の結果を得る
 function getKyouSetForMap(){
   try {
-    if(typeof getKyouDirs === 'function' && state.info){
+    if(typeof buildDirData === 'function' && state.info){
       const center = centerForDate();
-      const breakDir = getBreakDirForDate();
-      const _teiiKyo = localStorage.getItem('kitoku-teii-kyo') === '1';
-      const _tmSatsu = localStorage.getItem('kitoku-tsukimei-satsu') || 'on';
-      // 既存コードと完全に同じ引数順序で呼ぶ
-      // getKyouDirs(center, honmei, breakDir, tsukimei, banType, options)
-      const kyou = getKyouDirs(
-        center,
-        state.info.honmei,
-        breakDir,
-        state.info.tsukimei,
-        state.banType,
-        { teiiAsKyo: _teiiKyo, tsukimeiSatsu: _tmSatsu }
-      );
-      // 定位対冲を除外（方位盤と同じ strictItems ロジック）
-      const strictItems = (kyou.items||[]).filter(x => !x.name.includes('定位対冲'));
+      const { kyouItems } = buildDirData(center);
+      // 定位対冲を除外（方位盤のstrictItemsと同じロジック）
+      const strictItems = (kyouItems||[]).filter(x => !x.name.includes('定位対冲'));
       return new Set(strictItems.map(x => x.dir));
     }
   } catch(e){ console.warn('getKyouSetForMap error:', e); }
@@ -3661,7 +3662,31 @@ function savePlacesToStorage(){
   } catch(e){}
 }
 
-// ── 起動時の初期化呼び出し ─────────────────────────────
+// ── 全画面トグル ─────────────────────────────────────
+function toggleMapFullscreen(){
+  const panel = document.getElementById('mapPanel');
+  const btn = document.getElementById('mapFullscreenBtn');
+  const isFs = panel.classList.toggle('map-fullscreen');
+  btn.textContent = isFs ? '✕ 閉じる' : '⛶ 全画面';
+  document.body.style.overflow = isFs ? 'hidden' : '';
+  // Leafletはコンテナサイズ変更後にinvalidateSizeが必要
+  if(mapState.map){
+    setTimeout(() => {
+      mapState.map.invalidateSize();
+      drawCompassOverlay();
+    }, 150);
+  }
+}
+
+// ── 全画面中にESCで閉じる ──────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    const panel = document.getElementById('mapPanel');
+    if(panel && panel.classList.contains('map-fullscreen')){
+      toggleMapFullscreen();
+    }
+  }
+});
 // premium.htmlのDOMContentLoadedに相乗り（既存のinit関数の後ろで呼ぶ）
 document.addEventListener('DOMContentLoaded', () => {
   initMapSection();
