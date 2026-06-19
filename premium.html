@@ -381,6 +381,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .leaflet-tile-pane,.leaflet-overlay-pane,.leaflet-shadow-pane,
 .leaflet-marker-pane,.leaflet-tooltip-pane,.leaflet-popup-pane{z-index:auto;}
 .leaflet-control{z-index:2;}
+/* 全画面モーダル内のLeafletを装飾より下に抑える */
+#kitokuMapFullscreenModal .leaflet-pane,
+#kitokuMapFullscreenModal .leaflet-top,
+#kitokuMapFullscreenModal .leaflet-bottom{z-index:10!important;}
+#kitokuMapFullscreenModal .leaflet-control{z-index:20!important;}
 </style>
 </head>
 <body>
@@ -3198,19 +3203,19 @@ async function sendChat(){
 </script>
 
 <!-- ③ 方位地図 全画面モーダル -->
-<div id="kitokuMapFullscreenModal" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;">
-  <div id="kitokuMapFullscreen" style="width:100%;height:100%;"></div>
+<div id="kitokuMapFullscreenModal" style="display:none;position:fixed;inset:0;z-index:99999;background:#000;">
+  <div id="kitokuMapFullscreen" style="width:100%;height:100%;position:relative;z-index:1;"></div>
   <!-- 閉じるボタン -->
-  <button onclick="closeMapFullscreen()" style="position:fixed;top:calc(env(safe-area-inset-top,0px)+14px);right:14px;z-index:10001;background:#fff;border:2px solid #d83c70;border-radius:50%;width:50px;height:50px;font-size:1.5rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4);color:#d83c70;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
+  <button onclick="closeMapFullscreen()" style="position:fixed;top:14px;right:14px;z-index:100010;background:#fff;border:2px solid #d83c70;border-radius:50%;width:52px;height:52px;font-size:1.6rem;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.5);color:#d83c70;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
   <!-- 上部ラベル -->
-  <div style="position:absolute;top:calc(env(safe-area-inset-top,0px)+12px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">📍 北が上 ・ <span style="color:#e84d80;">■</span>ピンク＝吉方　<span style="color:#9aa0aa;">■</span>グレー＝凶方</div>
+  <div style="position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.95);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;">📍 北が上 ・ <span style="color:#e84d80;">■</span>吉方　<span style="color:#9aa0aa;">■</span>凶方</div>
   <!-- 下部タップ情報 -->
-  <div id="fsTapInfo" style="display:none;position:absolute;bottom:calc(env(safe-area-inset-bottom,0px)+70px);left:12px;right:12px;z-index:10000;background:rgba(255,255,255,.95);border-radius:10px;padding:10px 14px;font-size:.65rem;color:#5c4010;font-family:'Noto Serif JP',serif;box-shadow:0 2px 10px rgba(0,0,0,.25);">
-    <div id="fsTapTitle" style="font-weight:800;font-size:.75rem;margin-bottom:4px;"></div>
+  <div id="fsTapInfo" style="display:none;position:fixed;bottom:70px;left:12px;right:12px;z-index:100005;background:rgba(255,255,255,.97);border-radius:10px;padding:10px 14px;font-size:.65rem;color:#5c4010;font-family:'Noto Serif JP',serif;box-shadow:0 2px 12px rgba(0,0,0,.35);">
+    <div id="fsTapTitle" style="font-weight:800;font-size:.78rem;margin-bottom:4px;"></div>
     <div id="fsTapDetail" style="line-height:1.8;"></div>
   </div>
   <!-- 下部ガイド -->
-  <div style="position:absolute;bottom:calc(env(safe-area-inset-bottom,0px)+16px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">タップすると方位・距離・吉凶を表示 ・ 750m以上で吉方取り</div>
+  <div style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.95);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;">タップで方位・距離・吉凶を表示 ・ 750m以上で吉方取り</div>
 </div>
 
 <!-- 方位地図 JS -->
@@ -3787,10 +3792,10 @@ function drawFsMapContent(lat,lng){
   // 十字マーカー（最前面：オーバーレイの後に描画）
   const crossIcon2=L.divIcon({
     className:'',
-    html:'<div style="position:relative;width:28px;height:28px;"><div style="position:absolute;top:50%;left:0;width:100%;height:2.5px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.6);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:2.5px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.6);transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:10px;height:10px;background:#c4a043;border:2.5px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 5px rgba(0,0,0,.5);"></div></div>',
-    iconSize:[28,28],iconAnchor:[14,14]
+    html:'<div style="position:relative;width:44px;height:44px;"><div style="position:absolute;top:50%;left:0;width:100%;height:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8);transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:14px;height:14px;background:#ffd860;border:3px solid #d83c70;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(0,0,0,.7);"></div></div>',
+    iconSize:[44,44],iconAnchor:[22,22]
   });
-  const cm=L.marker([lat,lng],{icon:crossIcon2,interactive:false,zIndexOffset:2000}).addTo(kitokuFsMapInst);
+  const cm=L.marker([lat,lng],{icon:crossIcon2,interactive:false,zIndexOffset:5000}).addTo(kitokuFsMapInst);
   kitokuFsLayers.push(cm);
 }
 
