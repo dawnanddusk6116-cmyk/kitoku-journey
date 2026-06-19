@@ -832,7 +832,11 @@ function init(){
     applyLifeReadingBanner();
     maybePrefillLifeConsult();
     // state.info確定後に地図オーバーレイを再描画（吉凶連動）
-    if(mapState.initialized) drawCompassOverlay();
+    if(mapState.initialized){
+      setTimeout(() => drawCompassOverlay(), 50);
+    }
+    // 地図復元用フラグ
+    state._initDone = true;
   }catch(e){
     showPremiumError(e);
   }
@@ -3329,7 +3333,6 @@ function drawCompassOverlay(){
 
   // 吉凶判定（既存のgetKyouDirsを流用）
   const kyouSet = getKyouSetForMap();
-  console.log('[MAP DEBUG] drawCompassOverlay kyouSet:', [...kyouSet]);
 
   DIR_ANGLES.forEach(d => {
     const midAngle = (d.from + d.to) / 2;
@@ -3422,14 +3425,8 @@ function getKyouSetForMap(){
     if(typeof buildDirData === 'function' && state.info){
       const center = centerForDate();
       const { kyouItems } = buildDirData(center);
-      console.log('[MAP DEBUG] center:', center, 'kyouItems:', JSON.stringify(kyouItems));
       const strictItems = (kyouItems||[]).filter(x => !x.name.includes('定位対冲'));
-      console.log('[MAP DEBUG] strictItems:', JSON.stringify(strictItems));
-      const result = new Set(strictItems.map(x => x.dir));
-      console.log('[MAP DEBUG] kyouSet dirs:', [...result]);
-      return result;
-    } else {
-      console.warn('[MAP DEBUG] buildDirData unavailable or state.info null:', typeof buildDirData, state.info);
+      return new Set(strictItems.map(x => x.dir));
     }
   } catch(e){ console.warn('getKyouSetForMap error:', e); }
   return new Set();
@@ -3699,9 +3696,12 @@ document.addEventListener('keydown', e => {
 document.addEventListener('DOMContentLoaded', () => {
   initMapSection();
 
-  // init()でstate.infoが確定した後に位置復元・地図描画する
-  // （同一DOMContentLoadedイベント内での実行順序を保証するためsetTimeoutで遅延）
-  setTimeout(() => {
+  // init()のstate.info確定を待ってから地図を復元・描画する
+  function restoreMapWhenReady(){
+    if(!state._initDone){
+      setTimeout(restoreMapWhenReady, 50);
+      return;
+    }
     try {
       const home = localStorage.getItem('kitoku-map-home');
       if(home){
@@ -3710,7 +3710,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('locateBtn').textContent = '📍 現在地を登録済み';
       }
     } catch(e){}
-  }, 200);
+  }
+  restoreMapWhenReady();
 });
 </script>
 </body>
