@@ -3262,14 +3262,6 @@ function createKitokuMap(lat, lng){
       attribution:'© OpenStreetMap contributors', maxZoom:19
     }).addTo(kitokuMapInst);
 
-    // 現在地マーカー（十字）
-    const crossIcon = L.divIcon({
-      className: '',
-      html: '<div style="position:relative;width:24px;height:24px;"><div style="position:absolute;top:50%;left:0;width:100%;height:2px;background:#c4a043;transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:2px;background:#c4a043;transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:8px;height:8px;background:#c4a043;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 4px rgba(0,0,0,.4);"></div></div>',
-      iconSize: [24,24], iconAnchor: [12,12]
-    });
-    L.marker([lat,lng],{icon:crossIcon,interactive:false,zIndexOffset:1000}).addTo(kitokuMapInst);
-
     kitokuMapReady = true;
     drawKitokuMapLines(lat, lng);
     setTimeout(()=>kitokuMapInst.invalidateSize(), 200);
@@ -3302,6 +3294,15 @@ function drawKitokuMapLines(lat, lng){
   // 吉凶判定（buildDirDataを流用→方位盤と完全同一）
   const {kyouItems} = buildDirData(center);
   const kyouSet = new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+
+  // 現在地マーカー（十字）— 毎回描画して再描画でも消えないように
+  const crossIcon = L.divIcon({
+    className:'',
+    html:'<div style="position:relative;width:24px;height:24px;"><div style="position:absolute;top:50%;left:0;width:100%;height:2px;background:#c4a043;transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:2px;background:#c4a043;transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:8px;height:8px;background:#c4a043;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 4px rgba(0,0,0,.4);"></div></div>',
+    iconSize:[24,24],iconAnchor:[12,12]
+  });
+  const cMk=L.marker([lat,lng],{icon:crossIcon,interactive:false,zIndexOffset:1000}).addTo(kitokuMapInst);
+  kitokuMapLines.push(cMk);
 
   const _zoom = kitokuMapInst.getZoom();
   // モードに応じて最大線長を変える
@@ -3394,8 +3395,10 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
 
   const cPt=kitokuMapInst.latLngToContainerPoint([lat,lng]);
   const nPt=kitokuMapInst.latLngToContainerPoint([lat+0.75/111,lng]);
-  const R_OUT=Math.abs(cPt.y-nPt.y);
-  if(R_OUT<20) return;
+  let R_OUT=Math.abs(cPt.y-nPt.y);
+  // ズームアウトで750m円が小さすぎる場合は最小サイズを保証（旅行・海外モード対応）
+  if(R_OUT<60) R_OUT=60;
+  if(R_OUT>220) R_OUT=220; // 大きすぎる場合も抑制（日盤の拡大時）
 
   const R_IN=R_OUT*0.34,PAD=70,SVG=R_OUT*2+PAD*2,cx=SVG/2,cy=SVG/2;
   const ANG={N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
