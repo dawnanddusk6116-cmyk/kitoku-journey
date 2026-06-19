@@ -8,6 +8,8 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="kitoku-engine.js"></script>
 <script src="kitoku-teachings.js"></script>
 <script src="kitoku-self-manual.js"></script>
@@ -363,6 +365,22 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   color:#0f766e!important;
   font-weight:800!important;
 }
+/* ── 方位地図タブ ── */
+.map-mode-tab{
+  border:1px solid var(--rim);border-radius:10px;
+  background:rgba(255,255,255,.72);color:var(--mist);
+  font-family:'Noto Serif JP',serif;font-size:.58rem;font-weight:700;
+  padding:7px 4px;cursor:pointer;line-height:1.5;text-align:center;
+}
+.map-mode-tab span{display:block;font-size:.52rem;margin-top:2px;}
+.map-mode-tab.active{
+  background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);
+}
+/* Leafletデフォルトz-index修正 */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,
+.leaflet-tile-pane,.leaflet-overlay-pane,.leaflet-shadow-pane,.leaflet-marker-pane,
+.leaflet-tooltip-pane,.leaflet-popup-pane{z-index:auto;}
+.leaflet-control{z-index:2;}
 </style>
 </head>
 <body>
@@ -575,6 +593,65 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <a class="mode-link" href="move.html">🏡 引越し<br>で確認</a>
       </div>
       <div class="note">まずは日盤・月盤・年盤をここに集約。プレミア課金後は、ここから線路日・吉方日程・事業判断へ広げられます。</div>
+    </div>
+
+    <!-- ③ 方位地図 -->
+    <div class="panel" id="mapPanel">
+      <div class="panel-title">③ 方位地図 <span style="font-size:.54rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span></div>
+
+      <!-- モード切替タブ -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;" id="mapModeTabs">
+        <button class="map-mode-tab active" data-mode="daily" onclick="switchMapMode('daily')">🏠<br><span>日盤吉方</span></button>
+        <button class="map-mode-tab" data-mode="travel" onclick="switchMapMode('travel')">✈️<br><span>旅行先</span></button>
+        <button class="map-mode-tab" data-mode="pilgrimage" onclick="switchMapMode('pilgrimage')">⛩️<br><span>巡礼先</span></button>
+        <button class="map-mode-tab" data-mode="move" onclick="switchMapMode('move')">🏡<br><span>引越し</span></button>
+      </div>
+
+      <!-- モードガイド -->
+      <div id="mapModeGuide" style="font-size:.6rem;color:var(--mist);line-height:1.75;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.16);border-radius:9px;padding:8px 10px;margin-bottom:10px;"></div>
+
+      <!-- 中心地点コントロール -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <button onclick="locateUser()" id="locateBtn" style="flex:1;min-width:0;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(138,104,32,.08);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">📍 現在地を登録</button>
+        <button onclick="toggleSavedPlaces()" id="savedPlacesBtn" style="flex:1;min-width:0;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">⭐ よく行く場所 ▾</button>
+      </div>
+
+      <!-- よく行く場所リスト（折りたたみ） -->
+      <div id="savedPlacesList" style="display:none;margin-bottom:8px;background:rgba(255,255,255,.72);border:1px solid rgba(138,104,32,.18);border-radius:9px;overflow:hidden;">
+        <div id="savedPlacesItems" style="padding:6px 8px;max-height:160px;overflow-y:auto;"></div>
+        <button onclick="saveCurrentAsPlace()" style="width:100%;padding:8px;border:0;border-top:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.06);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">＋ 現在の中心地点を保存</button>
+      </div>
+
+      <!-- 現在の中心地点表示 -->
+      <div id="mapCenterInfo" style="font-size:.6rem;color:var(--mist);margin-bottom:6px;padding:5px 8px;background:rgba(138,104,32,.04);border-radius:6px;border:1px solid rgba(138,104,32,.1);">
+        中心地点：未設定
+      </div>
+
+      <!-- 地図本体 -->
+      <div id="kitokuMap" style="width:100%;height:320px;border-radius:10px;border:1px solid rgba(138,104,32,.2);overflow:hidden;position:relative;background:#e8e0d0;">
+        <div id="mapPlaceholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--mist);font-size:.68rem;text-align:center;padding:20px;">
+          <div style="font-size:2rem;opacity:.4;">🗺️</div>
+          <div>「現在地を登録」を押して<br>位置情報を許可してください</div>
+        </div>
+      </div>
+
+      <!-- ズームコントロール -->
+      <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+        <button onclick="mapZoom(1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">＋</button>
+        <button onclick="mapZoom(-1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">－</button>
+        <div style="flex:1;font-size:.58rem;color:var(--mist);line-height:1.5;text-align:right;">
+          凡例：<span style="color:#e84d80;font-weight:700;">■</span>吉方　<span style="color:#9aa0aa;font-weight:700;">■</span>凶方
+        </div>
+      </div>
+
+      <!-- タップ情報ポップアップ（地図の外に表示） -->
+      <div id="mapTapInfo" style="display:none;margin-top:8px;padding:10px 12px;border-radius:10px;border:1px solid rgba(138,104,32,.24);background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.72));">
+        <div id="mapTapTitle" style="font-size:.75rem;color:var(--goldlt);font-weight:800;margin-bottom:4px;"></div>
+        <div id="mapTapDetail" style="font-size:.62rem;color:var(--mist);line-height:1.8;"></div>
+        <button onclick="saveTapAsPlace()" id="saveTapBtn" style="margin-top:8px;width:100%;padding:7px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">⭐ この場所を保存</button>
+      </div>
+
+      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・気学的な意味を表示します。</div>
     </div>
 
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">便利ツール</div>
@@ -3113,6 +3190,463 @@ async function sendChat(){
   isThinking = false;
 }
 
+</script>
+
+<!-- ═══════════════════════════════
+     方位地図 JS
+═══════════════════════════════ -->
+<script>
+// ── 設定 ──────────────────────────────────────────────
+const MAP_MODES = {
+  daily:      { label:'🏠 日盤吉方',  zoom:15, maxZoom:18, minZoom:12, guide:'自宅を中心に、今日の日盤吉方を地図で確認します。750m圏内の吉方スポットを探すのに最適です。' },
+  travel:     { label:'✈️ 旅行先',    zoom:7,  maxZoom:12, minZoom:4,  guide:'旅行先を中心に、月盤・年盤の吉方を確認します。国内・海外の移動先選びに使います。' },
+  pilgrimage: { label:'⛩️ 巡礼先',   zoom:9,  maxZoom:14, minZoom:5,  guide:'出発地から見た聖地の方位を確認します。線路の日との照合に使います。' },
+  move:       { label:'🏡 引越し先', zoom:10, maxZoom:14, minZoom:6,  guide:'引越し候補地の方位を年盤・月盤で確認します。吉方エリアを大きく把握するのに使います。' }
+};
+
+// 方位の度数・名前（KITOKU標準：正方位30°・斜方位60°）
+const DIR_ANGLES = [
+  { dir:'N',  label:'北',   from:345, to:15  },
+  { dir:'NE', label:'北東', from:15,  to:75  },
+  { dir:'E',  label:'東',   from:75,  to:105 },
+  { dir:'SE', label:'南東', from:105, to:165 },
+  { dir:'S',  label:'南',   from:165, to:195 },
+  { dir:'SW', label:'南西', from:195, to:255 },
+  { dir:'W',  label:'西',   from:255, to:285 },
+  { dir:'NW', label:'北西', from:285, to:345 }
+];
+
+// ── 状態 ─────────────────────────────────────────────
+const mapState = {
+  mode: 'daily',
+  map: null,
+  centerLat: null,
+  centerLng: null,
+  overlayLayer: null,     // SVGオーバーレイ（八角形盤）
+  compassLayer: null,     // L.layerGroup（扇形・線）
+  centerMarker: null,
+  tapMarker: null,
+  lastTapLat: null,
+  lastTapLng: null,
+  savedPlaces: [],        // [{name, lat, lng}]
+  initialized: false
+};
+
+// ── 初期化 ────────────────────────────────────────────
+function initMapSection(){
+  // LocalStorageから保存済み地点を読み込み
+  try {
+    const saved = localStorage.getItem('kitoku-map-places');
+    if(saved) mapState.savedPlaces = JSON.parse(saved);
+  } catch(e){}
+
+  // モードガイドを初期表示
+  updateMapModeGuide();
+}
+
+function ensureMapInit(lat, lng){
+  if(mapState.initialized) return;
+
+  const el = document.getElementById('kitokuMap');
+  const placeholder = document.getElementById('mapPlaceholder');
+  if(placeholder) placeholder.style.display = 'none';
+
+  const cfg = MAP_MODES[mapState.mode];
+  mapState.map = L.map('kitokuMap', {
+    center: [lat, lng],
+    zoom: cfg.zoom,
+    zoomControl: false,
+    attributionControl: true
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(mapState.map);
+
+  // 十字マーカー（現在地）
+  const crossIcon = L.divIcon({
+    className: '',
+    html: '<div style="width:22px;height:22px;border:2.5px solid #8a6820;border-radius:50%;background:rgba(196,160,67,.25);display:flex;align-items:center;justify-content:center;"><div style="width:6px;height:6px;background:#8a6820;border-radius:50%;"></div></div>',
+    iconSize: [22,22],
+    iconAnchor: [11,11]
+  });
+  mapState.centerMarker = L.marker([lat, lng], { icon: crossIcon, zIndexOffset: 1000 }).addTo(mapState.map);
+
+  // 地図タップイベント
+  mapState.map.on('click', onMapTap);
+
+  // オーバーレイ描画
+  mapState.compassLayer = L.layerGroup().addTo(mapState.map);
+  mapState.map.on('zoomend moveend', drawCompassOverlay);
+
+  mapState.initialized = true;
+  drawCompassOverlay();
+}
+
+// ── 方位線・扇形オーバーレイ ─────────────────────────
+function drawCompassOverlay(){
+  if(!mapState.map || !mapState.compassLayer) return;
+  if(mapState.centerLat == null) return;
+
+  mapState.compassLayer.clearLayers();
+
+  const lat = mapState.centerLat;
+  const lng = mapState.centerLng;
+  const zoom = mapState.map.getZoom();
+
+  // ズーム連動の線の長さ計算（昨日の修正を踏襲）
+  const LINE_LENGTH = Math.min(
+    500000,
+    Math.max(500, 120000 / Math.pow(2, zoom - 10))
+  );
+
+  // 吉凶判定（既存のgetKyouDirsを流用）
+  const kyouSet = getKyouSetForMap();
+
+  DIR_ANGLES.forEach(d => {
+    const midAngle = (d.from + d.to) / 2;
+    // 北0°を地理的北に合わせる（leafletは北=0°、時計回り）
+    const isKyo = kyouSet.has(d.dir);
+    const color = isKyo ? 'rgba(120,125,135,.55)' : 'rgba(232,77,128,.72)';
+    const fillColor = isKyo ? 'rgba(120,125,135,.18)' : 'rgba(232,77,128,.13)';
+
+    // 扇形（ポリゴンで近似）
+    const fanPoints = buildFanPoints(lat, lng, d.from, d.to, LINE_LENGTH);
+    L.polygon(fanPoints, {
+      color: color,
+      weight: 1,
+      fillColor: fillColor,
+      fillOpacity: 1,
+      interactive: false
+    }).addTo(mapState.compassLayer);
+
+    // 中心線
+    const endPt = offsetLatLng(lat, lng, midAngle, LINE_LENGTH);
+    L.polyline([[lat, lng], [endPt.lat, endPt.lng]], {
+      color: color,
+      weight: isKyo ? 1.5 : 2,
+      opacity: 0.85,
+      dashArray: isKyo ? '4,4' : null,
+      interactive: false
+    }).addTo(mapState.compassLayer);
+
+    // 方位ラベル（扇形の中間あたり）
+    const labelDist = LINE_LENGTH * 0.55;
+    const labelPt = offsetLatLng(lat, lng, midAngle, labelDist);
+    const labelHtml = `<div style="font-size:10px;font-weight:800;color:${isKyo?'#9aa0aa':'#e84d80'};text-shadow:0 0 3px #fff,0 0 3px #fff;pointer-events:none;white-space:nowrap;">${d.label}</div>`;
+    L.marker([labelPt.lat, labelPt.lng], {
+      icon: L.divIcon({ className:'', html: labelHtml, iconAnchor:[12,8] }),
+      interactive: false
+    }).addTo(mapState.compassLayer);
+  });
+
+  // 中心の750m円（日盤モードのみ）
+  if(mapState.mode === 'daily'){
+    L.circle([lat, lng], {
+      radius: 750,
+      color: 'rgba(138,104,32,.5)',
+      weight: 1.5,
+      fill: false,
+      dashArray: '3,5',
+      interactive: false
+    }).addTo(mapState.compassLayer);
+  }
+}
+
+// 扇形のポリゴン頂点生成
+function buildFanPoints(lat, lng, fromDeg, toDeg, dist){
+  const pts = [[lat, lng]];
+  // 0°=北・時計回り → atan2用に変換済みで offsetLatLng に渡す
+  let f = fromDeg, t = toDeg;
+  if(t < f) t += 360;
+  const steps = Math.max(4, Math.round((t - f) / 10));
+  for(let i = 0; i <= steps; i++){
+    const deg = f + (t - f) * i / steps;
+    const pt = offsetLatLng(lat, lng, deg % 360, dist);
+    pts.push([pt.lat, pt.lng]);
+  }
+  pts.push([lat, lng]);
+  return pts;
+}
+
+// 方位角degree（北0°時計回り）・距離mから終点の緯度経度を計算
+function offsetLatLng(lat, lng, bearingDeg, distM){
+  const R = 6371000;
+  const bearingRad = bearingDeg * Math.PI / 180;
+  const latRad = lat * Math.PI / 180;
+  const lngRad = lng * Math.PI / 180;
+  const dRad = distM / R;
+  const lat2 = Math.asin(
+    Math.sin(latRad)*Math.cos(dRad) +
+    Math.cos(latRad)*Math.sin(dRad)*Math.cos(bearingRad)
+  );
+  const lng2 = lngRad + Math.atan2(
+    Math.sin(bearingRad)*Math.sin(dRad)*Math.cos(latRad),
+    Math.cos(dRad)-Math.sin(latRad)*Math.sin(lat2)
+  );
+  return { lat: lat2*180/Math.PI, lng: lng2*180/Math.PI };
+}
+
+// ── 吉凶セット取得 ────────────────────────────────────
+function getKyouSetForMap(){
+  // 既存のstate.info / getKyouDirsが使えれば流用、なければ空セット
+  try {
+    if(typeof getKyouDirs === 'function' && state.info){
+      const d = state.date;
+      const res = getKyouDirs(d.getFullYear(), d.getMonth()+1, d.getDate(), state.info.honmei, state.info.tsuki, state.banType||'day');
+      // 定位対冲を除外（昨日の修正パターン）
+      const realKyo = (res.kyouItems||[]).filter(k => !k.name.includes('定位対冲'));
+      return new Set(realKyo.map(k => k.dir));
+    }
+  } catch(e){}
+  return new Set();
+}
+
+// ── 位置情報取得 ──────────────────────────────────────
+function locateUser(){
+  const btn = document.getElementById('locateBtn');
+  btn.textContent = '⏳ 取得中...';
+  btn.disabled = true;
+
+  if(!navigator.geolocation){
+    alert('このブラウザでは位置情報が使用できません。');
+    btn.textContent = '📍 現在地を登録';
+    btn.disabled = false;
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      setMapCenter(lat, lng, '現在地');
+      btn.textContent = '📍 現在地を登録済み';
+      btn.disabled = false;
+      // LocalStorageに保存
+      localStorage.setItem('kitoku-map-home', JSON.stringify({lat, lng}));
+    },
+    err => {
+      alert('位置情報の取得に失敗しました。\nブラウザの設定で位置情報を許可してください。');
+      btn.textContent = '📍 現在地を登録';
+      btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+function setMapCenter(lat, lng, name){
+  mapState.centerLat = lat;
+  mapState.centerLng = lng;
+
+  if(!mapState.initialized){
+    ensureMapInit(lat, lng);
+  } else {
+    const cfg = MAP_MODES[mapState.mode];
+    mapState.map.setView([lat, lng], cfg.zoom);
+    mapState.centerMarker.setLatLng([lat, lng]);
+    drawCompassOverlay();
+  }
+
+  // 中心地点表示更新
+  document.getElementById('mapCenterInfo').textContent =
+    `中心地点：${name}（${lat.toFixed(4)}, ${lng.toFixed(4)}）`;
+
+  // タップ情報リセット
+  document.getElementById('mapTapInfo').style.display = 'none';
+}
+
+// ── モード切替 ────────────────────────────────────────
+function switchMapMode(mode){
+  mapState.mode = mode;
+
+  // タブUI更新
+  document.querySelectorAll('.map-mode-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+
+  updateMapModeGuide();
+
+  if(mapState.initialized && mapState.centerLat != null){
+    const cfg = MAP_MODES[mode];
+    mapState.map.setZoom(cfg.zoom);
+    drawCompassOverlay();
+  }
+}
+
+function updateMapModeGuide(){
+  const el = document.getElementById('mapModeGuide');
+  if(el) el.textContent = MAP_MODES[mapState.mode].guide;
+}
+
+// ── ズームボタン ──────────────────────────────────────
+function mapZoom(delta){
+  if(!mapState.map) return;
+  mapState.map.setZoom(mapState.map.getZoom() + delta);
+}
+
+// ── 地図タップ処理 ────────────────────────────────────
+function onMapTap(e){
+  const lat = e.latlng.lat;
+  const lng = e.latlng.lng;
+  mapState.lastTapLat = lat;
+  mapState.lastTapLng = lng;
+
+  if(mapState.centerLat == null) return;
+
+  // タップマーカー
+  if(mapState.tapMarker) mapState.map.removeLayer(mapState.tapMarker);
+  const tapIcon = L.divIcon({
+    className: '',
+    html: '<div style="font-size:22px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));">📍</div>',
+    iconSize: [22,28],
+    iconAnchor: [11,28]
+  });
+  mapState.tapMarker = L.marker([lat, lng], { icon: tapIcon }).addTo(mapState.map);
+
+  // 方位・距離計算
+  const info = calcDirectionInfo(mapState.centerLat, mapState.centerLng, lat, lng);
+
+  // 吉凶判定
+  const kyouSet = getKyouSetForMap();
+  const isKyo = kyouSet.has(info.dir);
+  const kyoLabel = isKyo ? '凶方' : '吉方';
+  const kyoColor = isKyo ? '#9aa0aa' : '#e84d80';
+
+  // 表示
+  document.getElementById('mapTapTitle').innerHTML =
+    `<span style="color:${kyoColor};">${info.dirLabel}（${info.branch}）</span>　${kyoLabel}`;
+  document.getElementById('mapTapDetail').innerHTML =
+    `距離：約 ${formatDist(info.dist)}<br>` +
+    `角度：${info.bearing.toFixed(1)}°<br>` +
+    `気学的意味：${isKyo ? '現在の盤面では凶方位です。移動・引越しは控えめに。' : '現在の盤面では吉方位です。積極的に活用できます。'}`;
+  document.getElementById('mapTapInfo').style.display = 'block';
+}
+
+// 方位計算（中心→タップ地点）
+function calcDirectionInfo(cLat, cLng, tLat, tLng){
+  // 距離（ハバーサイン）
+  const R = 6371000;
+  const dLat = (tLat - cLat) * Math.PI / 180;
+  const dLng = (tLng - cLng) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(cLat*Math.PI/180)*Math.cos(tLat*Math.PI/180)*Math.sin(dLng/2)**2;
+  const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  // 方位角（北0°・時計回り）
+  const y = Math.sin(dLng)*Math.cos(tLat*Math.PI/180);
+  const x = Math.cos(cLat*Math.PI/180)*Math.sin(tLat*Math.PI/180) -
+             Math.sin(cLat*Math.PI/180)*Math.cos(tLat*Math.PI/180)*Math.cos(dLng);
+  const bearingRad = Math.atan2(y, x);
+  const bearing = ((bearingRad * 180/Math.PI) + 360) % 360;
+
+  // KITOKU方位判定（30°/60°）
+  let dir = 'N', dirLabel = '北';
+  for(const d of DIR_ANGLES){
+    let f = d.from, t = d.to;
+    if(t < f){ // 北：345〜15°
+      if(bearing >= f || bearing < t){ dir = d.dir; dirLabel = d.label; break; }
+    } else {
+      if(bearing >= f && bearing < t){ dir = d.dir; dirLabel = d.label; break; }
+    }
+  }
+
+  // 十二支（30°刻み）
+  const BRANCHES_BY_ANGLE = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const branchIdx = Math.floor(((bearing + 15) % 360) / 30);
+  const branch = BRANCHES_BY_ANGLE[branchIdx];
+
+  return { dir, dirLabel, branch, bearing, dist };
+}
+
+function formatDist(m){
+  if(m < 1000) return Math.round(m) + 'm';
+  return (m/1000).toFixed(1) + 'km';
+}
+
+// ── よく行く場所 ──────────────────────────────────────
+function toggleSavedPlaces(){
+  const list = document.getElementById('savedPlacesList');
+  const btn = document.getElementById('savedPlacesBtn');
+  const isOpen = list.style.display !== 'none';
+  list.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '⭐ よく行く場所 ▾' : '⭐ よく行く場所 ▴';
+  if(!isOpen) renderSavedPlaces();
+}
+
+function renderSavedPlaces(){
+  const container = document.getElementById('savedPlacesItems');
+  const places = mapState.savedPlaces;
+  if(places.length === 0){
+    container.innerHTML = '<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ保存した場所がありません</div>';
+    return;
+  }
+  container.innerHTML = places.map((p, i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(138,104,32,.1);">
+      <button onclick="loadSavedPlace(${i})" style="flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;">
+        ${p.name}
+        <span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</span>
+      </button>
+      <button onclick="deleteSavedPlace(${i})" style="width:24px;height:24px;border:1px solid rgba(138,104,32,.2);border-radius:6px;background:rgba(255,255,255,.72);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>
+    </div>
+  `).join('');
+}
+
+function loadSavedPlace(idx){
+  const p = mapState.savedPlaces[idx];
+  if(!p) return;
+  setMapCenter(p.lat, p.lng, p.name);
+  // リストを閉じる
+  document.getElementById('savedPlacesList').style.display = 'none';
+  document.getElementById('savedPlacesBtn').textContent = '⭐ よく行く場所 ▾';
+}
+
+function deleteSavedPlace(idx){
+  mapState.savedPlaces.splice(idx, 1);
+  savePlacesToStorage();
+  renderSavedPlaces();
+}
+
+function saveCurrentAsPlace(){
+  if(mapState.centerLat == null){
+    alert('中心地点が設定されていません。');
+    return;
+  }
+  const name = prompt('場所の名前を入力してください（例：自宅・実家・会社）', '');
+  if(!name) return;
+  mapState.savedPlaces.push({ name, lat: mapState.centerLat, lng: mapState.centerLng });
+  savePlacesToStorage();
+  renderSavedPlaces();
+}
+
+function saveTapAsPlace(){
+  if(mapState.lastTapLat == null) return;
+  const name = prompt('場所の名前を入力してください', '');
+  if(!name) return;
+  mapState.savedPlaces.push({ name, lat: mapState.lastTapLat, lng: mapState.lastTapLng });
+  savePlacesToStorage();
+}
+
+function savePlacesToStorage(){
+  try {
+    localStorage.setItem('kitoku-map-places', JSON.stringify(mapState.savedPlaces));
+  } catch(e){}
+}
+
+// ── 起動時の初期化呼び出し ─────────────────────────────
+// premium.htmlのDOMContentLoadedに相乗り（既存のinit関数の後ろで呼ぶ）
+document.addEventListener('DOMContentLoaded', () => {
+  initMapSection();
+
+  // 前回の現在地が保存されていれば復元
+  try {
+    const home = localStorage.getItem('kitoku-map-home');
+    if(home){
+      const {lat, lng} = JSON.parse(home);
+      setMapCenter(lat, lng, '登録済み地点');
+      document.getElementById('locateBtn').textContent = '📍 現在地を登録済み';
+    }
+  } catch(e){}
+});
 </script>
 </body>
 </html>
