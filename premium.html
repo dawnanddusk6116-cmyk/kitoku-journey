@@ -376,11 +376,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .map-mode-tab.active{
   background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);
 }
-/* Leafletデフォルトz-index修正 */
-.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,
-.leaflet-tile-pane,.leaflet-overlay-pane,.leaflet-shadow-pane,.leaflet-marker-pane,
-.leaflet-tooltip-pane,.leaflet-popup-pane{z-index:auto;}
-.leaflet-control{z-index:2;}
 /* ── 地図全画面モード ── */
 #mapPanel.map-fullscreen{
   position:fixed!important;inset:0!important;z-index:9000!important;
@@ -388,9 +383,13 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   overflow-y:auto!important;background:var(--card)!important;
 }
 #mapPanel.map-fullscreen #kitokuMap{
-  height:calc(100vh - 320px)!important;
-  min-height:260px!important;
+  height:calc(100vh - 300px)!important;min-height:260px!important;
 }
+/* ── Leaflet z-index修正 ── */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,
+.leaflet-tile-pane,.leaflet-overlay-pane,.leaflet-shadow-pane,
+.leaflet-marker-pane,.leaflet-tooltip-pane,.leaflet-popup-pane{z-index:auto;}
+.leaflet-control{z-index:2;}
 </style>
 </head>
 <body>
@@ -607,37 +606,36 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 
     <!-- ③ 方位地図 -->
     <div class="panel" id="mapPanel">
-      <div class="panel-title">③ 方位地図 <span style="font-size:.54rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span>
-        <button onclick="toggleMapFullscreen()" id="mapFullscreenBtn" title="全画面表示" style="float:right;border:1px solid rgba(138,104,32,.28);border-radius:6px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:.7rem;padding:4px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;">⛶ 全画面</button>
+      <div class="panel-title">③ 方位地図
+        <span style="font-size:.52rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span>
+        <button onclick="toggleMapFullscreen()" id="mapFullscreenBtn" style="float:right;border:1px solid rgba(138,104,32,.28);border-radius:6px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:.65rem;padding:4px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">⛶ 全画面</button>
       </div>
 
       <!-- モード切替タブ -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;" id="mapModeTabs">
-        <button class="map-mode-tab active" data-mode="daily" onclick="switchMapMode('daily')">🏠<br><span>日盤吉方</span></button>
-        <button class="map-mode-tab" data-mode="travel" onclick="switchMapMode('travel')">✈️<br><span>旅行先</span></button>
-        <button class="map-mode-tab" data-mode="pilgrimage" onclick="switchMapMode('pilgrimage')">⛩️<br><span>巡礼先</span></button>
-        <button class="map-mode-tab" data-mode="move" onclick="switchMapMode('move')">🏡<br><span>引越し</span></button>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
+        <button class="map-mode-tab active" data-mode="daily"      onclick="switchMapMode('daily')">🏠<span>日盤吉方</span></button>
+        <button class="map-mode-tab"        data-mode="travel"     onclick="switchMapMode('travel')">✈️<span>旅行先</span></button>
+        <button class="map-mode-tab"        data-mode="pilgrimage" onclick="switchMapMode('pilgrimage')">⛩️<span>巡礼先</span></button>
+        <button class="map-mode-tab"        data-mode="move"       onclick="switchMapMode('move')">🏡<span>引越し</span></button>
       </div>
 
       <!-- モードガイド -->
       <div id="mapModeGuide" style="font-size:.6rem;color:var(--mist);line-height:1.75;background:rgba(255,255,255,.62);border:1px solid rgba(138,104,32,.16);border-radius:9px;padding:8px 10px;margin-bottom:10px;"></div>
 
       <!-- 中心地点コントロール -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-        <button onclick="locateUser()" id="locateBtn" style="flex:1;min-width:0;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(138,104,32,.08);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">📍 現在地を登録</button>
-        <button onclick="toggleSavedPlaces()" id="savedPlacesBtn" style="flex:1;min-width:0;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">⭐ よく行く場所 ▾</button>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button onclick="locateUser()" id="locateBtn" style="flex:1;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(138,104,32,.08);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">📍 現在地を登録</button>
+        <button onclick="toggleSavedPlaces()" id="savedPlacesBtn" style="flex:1;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">⭐ よく行く場所 ▾</button>
       </div>
 
-      <!-- よく行く場所リスト（折りたたみ） -->
+      <!-- よく行く場所リスト -->
       <div id="savedPlacesList" style="display:none;margin-bottom:8px;background:rgba(255,255,255,.72);border:1px solid rgba(138,104,32,.18);border-radius:9px;overflow:hidden;">
         <div id="savedPlacesItems" style="padding:6px 8px;max-height:160px;overflow-y:auto;"></div>
         <button onclick="saveCurrentAsPlace()" style="width:100%;padding:8px;border:0;border-top:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.06);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">＋ 現在の中心地点を保存</button>
       </div>
 
-      <!-- 現在の中心地点表示 -->
-      <div id="mapCenterInfo" style="font-size:.6rem;color:var(--mist);margin-bottom:6px;padding:5px 8px;background:rgba(138,104,32,.04);border-radius:6px;border:1px solid rgba(138,104,32,.1);">
-        中心地点：未設定
-      </div>
+      <!-- 中心地点表示 -->
+      <div id="mapCenterInfo" style="font-size:.6rem;color:var(--mist);margin-bottom:6px;padding:5px 8px;background:rgba(138,104,32,.04);border-radius:6px;border:1px solid rgba(138,104,32,.1);">中心地点：未設定</div>
 
       <!-- 地図本体 -->
       <div id="kitokuMap" style="width:100%;height:320px;border-radius:10px;border:1px solid rgba(138,104,32,.2);overflow:hidden;position:relative;background:#e8e0d0;">
@@ -647,24 +645,24 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </div>
       </div>
 
-      <!-- ズームコントロール -->
+      <!-- ズームボタン＋凡例 -->
       <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
-        <button onclick="mapZoom(1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">＋</button>
+        <button onclick="mapZoom(1)"  style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">＋</button>
         <button onclick="mapZoom(-1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">－</button>
-        <div style="flex:1;font-size:.58rem;color:var(--mist);line-height:1.5;text-align:right;">
+        <div style="flex:1;font-size:.58rem;color:var(--mist);line-height:1.6;text-align:right;">
           凡例：<span style="color:#e84d80;font-weight:700;">■</span>吉方　<span style="color:#9aa0aa;font-weight:700;">■</span>凶方<br>
           <span id="mapBanTypeLabel" style="color:var(--gold);font-weight:700;">日盤</span>連動中
         </div>
       </div>
 
-      <!-- タップ情報ポップアップ（地図の外に表示） -->
+      <!-- タップ情報 -->
       <div id="mapTapInfo" style="display:none;margin-top:8px;padding:10px 12px;border-radius:10px;border:1px solid rgba(138,104,32,.24);background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.72));">
         <div id="mapTapTitle" style="font-size:.75rem;color:var(--goldlt);font-weight:800;margin-bottom:4px;"></div>
-        <div id="mapTapDetail" style="font-size:.62rem;color:var(--mist);line-height:1.8;"></div>
-        <button onclick="saveTapAsPlace()" id="saveTapBtn" style="margin-top:8px;width:100%;padding:7px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">⭐ この場所を保存</button>
+        <div id="mapTapDetail" style="font-size:.62rem;color:var(--mist);line-height:1.9;"></div>
+        <button onclick="saveTapAsPlace()" style="margin-top:8px;width:100%;padding:7px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">⭐ この場所を保存</button>
       </div>
 
-      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・気学的な意味を表示します。</div>
+      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・星・吉凶を表示します。</div>
     </div>
 
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">便利ツール</div>
@@ -831,8 +829,7 @@ function init(){
     renderAiContextSummary();
     applyLifeReadingBanner();
     maybePrefillLifeConsult();
-    // 地図復元用フラグ
-    state._initDone = true;
+    state._initDone = true; // 地図復元タイミング制御用
   }catch(e){
     showPremiumError(e);
   }
@@ -859,7 +856,6 @@ function setBanType(type){
   renderBoard();
   refreshDestinationPrem();
   renderAiContextSummary();
-  // ③ 方位地図を再描画
   redrawMapIfReady();
 }
 function moveDate(delta){
@@ -870,7 +866,6 @@ function moveDate(delta){
   refreshDestinationPrem();
   renderSenro();
   renderAiContextSummary();
-  // ③ 方位地図を再描画
   redrawMapIfReady();
 }
 function setOrient(orient){
@@ -3211,272 +3206,243 @@ async function sendChat(){
 
 </script>
 
-<!-- ═══════════════════════════════
-     方位地図 JS（direction_v2方式）
-═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     ③ 方位地図 JS（direction_v2方式）
+═══════════════════════════════════════ -->
 <script>
-// ── 地図状態 ──────────────────────────────────────────
+// ── 定数 ─────────────────────────────────────────────
 const MAP_MODES = {
-  daily:      { zoom:12, guide:'自宅を中心に、今日の日盤吉方を地図で確認します。750m圏内の吉方スポットを探すのに最適です。' },
-  travel:     { zoom:7,  guide:'旅行先を中心に、月盤・年盤の吉方を確認します。国内・海外の移動先選びに使います。' },
+  daily:      { zoom:12, guide:'自宅を中心に、今日の日盤吉方を地図で確認します。750m〜数km圏の吉方スポット探しに最適です。' },
+  travel:     { zoom:7,  guide:'旅行先を中心に、月盤・年盤の吉方を確認します。国内・海外の目的地選びに使います。' },
   pilgrimage: { zoom:9,  guide:'出発地から見た聖地の方位を確認します。線路の日との照合に使います。' },
   move:       { zoom:10, guide:'引越し候補地の方位を年盤・月盤で確認します。吉方エリアを大きく把握するのに使います。' }
 };
+const MAP_DIR_ANGLES  = { N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315 };
+const MAP_ETO_BY_DIR  = { N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥'] };
+const MAP_JP_DIR      = { N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西' };
+const MAP_STAR_NAMES  = { 1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫' };
+const MAP_SHI         = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const MAP_KITOKU_SPANS= [
+  {dir:'N',from:345,to:15},{dir:'NE',from:15,to:75},{dir:'E',from:75,to:105},
+  {dir:'SE',from:105,to:165},{dir:'S',from:165,to:195},{dir:'SW',from:195,to:255},
+  {dir:'W',from:255,to:285},{dir:'NW',from:285,to:345}
+];
 
-let kitokuMapInstance = null;
-let kitokuMapLines = [];
-let kitokuMapCenter = null;
+// ── 状態 ─────────────────────────────────────────────
+let kitokuMapInst   = null;   // Leaflet map instance
+let kitokuMapLines  = [];     // 全レイヤーの配列（一括削除用）
+let kitokuMapCenter = null;   // { lat, lng }
 let kitokuMapCompassOverlay = null;
-let kitokuMapMode = 'daily';
-let kitokuMapReady = false;
-
-const MAP_DIR_ANGLES = { N:0, NE:45, E:90, SE:135, S:180, SW:225, W:270, NW:315 };
-const MAP_ETO_BY_DIR = {N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
-const MAP_JP_DIR = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
-const MAP_STAR_NAMES = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
-const MAP_SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+let kitokuMapMode   = 'daily';
+let kitokuMapReady  = false;
+let kitokuMapPlaces = [];     // よく行く場所
+let kitokuMapLastTap= null;   // 最後にタップした座標
 
 // ── 初期化 ────────────────────────────────────────────
 function initMapSection(){
   updateMapModeGuide();
-  try {
-    const saved = localStorage.getItem('kitoku-map-places');
-    if(saved){ kitokuMapState_places = JSON.parse(saved); }
-  } catch(e){}
+  try{ const s=localStorage.getItem('kitoku-map-places'); if(s) kitokuMapPlaces=JSON.parse(s); }catch(e){}
 }
-
-let kitokuMapState_places = [];
-let kitokuMapLastTap = null;
 
 // ── 地図生成 ──────────────────────────────────────────
 function createKitokuMap(lat, lng){
-  kitokuMapCenter = { lat, lng };
+  kitokuMapCenter = {lat, lng};
   const placeholder = document.getElementById('mapPlaceholder');
-  if(placeholder) placeholder.style.display = 'none';
+  if(placeholder) placeholder.style.display='none';
 
-  setTimeout(() => {
+  setTimeout(()=>{
     const cfg = MAP_MODES[kitokuMapMode];
-    kitokuMapInstance = L.map('kitokuMap', {
-      center: [lat, lng], zoom: cfg.zoom, zoomControl: false
-    });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors', maxZoom: 19
-    }).addTo(kitokuMapInstance);
+    kitokuMapInst = L.map('kitokuMap',{ center:[lat,lng], zoom:cfg.zoom, zoomControl:false });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      attribution:'© OpenStreetMap contributors', maxZoom:19
+    }).addTo(kitokuMapInst);
 
-    // 現在地マーカー
-    L.circleMarker([lat, lng], {
-      radius: 8, fillColor: '#c4a043', color: '#fff', weight: 2, opacity: 1, fillOpacity: 1
-    }).addTo(kitokuMapInstance);
+    // 現在地マーカー（金の丸）
+    L.circleMarker([lat,lng],{
+      radius:8, fillColor:'#c4a043', color:'#fff', weight:2, opacity:1, fillOpacity:1
+    }).addTo(kitokuMapInst);
 
     kitokuMapReady = true;
     drawKitokuMapLines(lat, lng);
-    setTimeout(() => kitokuMapInstance.invalidateSize(), 200);
+    setTimeout(()=>kitokuMapInst.invalidateSize(), 200);
 
-    kitokuMapInstance.on('zoomend', () => {
-      const c = kitokuMapCenter || { lat, lng };
+    kitokuMapInst.on('zoomend',()=>{
+      const c=kitokuMapCenter||{lat,lng};
       drawKitokuMapLines(c.lat, c.lng);
     });
-
-    kitokuMapInstance.on('click', onKitokuMapTap);
-
+    kitokuMapInst.on('click', onKitokuMapTap);
   }, 100);
 }
 
-// ── 方位線・オーバーレイ描画（direction_v2方式） ──────
+// ── 方位線＋SVGオーバーレイ描画 ──────────────────────
 function drawKitokuMapLines(lat, lng){
-  if(!kitokuMapInstance) return;
-
-  // 既存レイヤーを全削除
-  kitokuMapLines.forEach(l => kitokuMapInstance.removeLayer(l));
-  kitokuMapLines = [];
-
+  if(!kitokuMapInst) return;
+  kitokuMapLines.forEach(l=>kitokuMapInst.removeLayer(l));
+  kitokuMapLines=[];
   if(!state.info) return;
 
-  const { honmei, tsukimei } = state.info;
+  const {honmei,tsukimei} = state.info;
   const center = centerForDate();
   if(!center) return;
-
   const p2s = buildBoardFromCenter(center);
-  const d = state.date;
-  const y = d.getFullYear(), m = d.getMonth()+1, dd = d.getDate();
 
-  // 三合
-  const z = getZodiac(y);
+  // 三合セット
+  const y=state.date.getFullYear();
+  const z=getZodiac(y);
   const sangoSet = new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
 
-  // 吉凶判定（buildDirData流用）
-  const { kyouItems } = buildDirData(center);
-  const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
+  // 吉凶判定（buildDirDataを流用→方位盤と完全同一）
+  const {kyouItems} = buildDirData(center);
+  const kyouSet = new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
 
-  // ズーム連動の線長
-  const _zoom = kitokuMapInstance.getZoom();
-  const LINE_LENGTH = Math.min(150, Math.max(2, 40000 / Math.pow(2, _zoom)));
+  const _zoom = kitokuMapInst.getZoom();
+  const LINE_LENGTH = Math.min(150, Math.max(2, 40000/Math.pow(2,_zoom)));
 
-  Object.entries(MAP_DIR_ANGLES).forEach(([dir, angle]) => {
+  Object.entries(MAP_DIR_ANGLES).forEach(([dir,angle])=>{
     const starN = p2s[dir];
-    const ddRank = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
-    const knsLine = kyouItems.filter(k => k.dir === dir);
-    const realKns = knsLine.filter(k => !k.name.includes('定位対冲'));
-    const isKyo = realKns.length > 0 || kyouSet.has(dir) || ddRank.isKyo;
+    const dd = rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
+    const kns = kyouItems.filter(k=>k.dir===dir);
+    const realKns = kns.filter(k=>!k.name.includes('定位対冲'));
+    const isKyo = realKns.length>0 || kyouSet.has(dir) || dd.isKyo;
 
-    let color, weight, opacity, dashArray;
-    if(isKyo){
-      color='#9aa0aa'; weight=1.5; opacity=0.55; dashArray='4,4';
-    } else if(ddRank.rank>=5){
-      color='#e84d80'; weight=3; opacity=0.8; dashArray=null;
-    } else if(ddRank.rank>=3){
-      color='#f5a8c0'; weight=2; opacity=0.7; dashArray=null;
-    } else if(ddRank.rank>=1){
-      color='#fbbf24'; weight=1.5; opacity=0.6; dashArray=null;
-    } else {
-      color='#94a3b8'; weight=1; opacity=0.35; dashArray='2,4';
-    }
+    let color,weight,opacity,dashArray;
+    if(isKyo){      color='#9aa0aa'; weight=1.5; opacity=0.55; dashArray='4,4'; }
+    else if(dd.rank>=5){ color='#e84d80'; weight=3;   opacity=0.8;  dashArray=null; }
+    else if(dd.rank>=3){ color='#f5a8c0'; weight=2;   opacity=0.7;  dashArray=null; }
+    else if(dd.rank>=1){ color='#fbbf24'; weight=1.5; opacity=0.6;  dashArray=null; }
+    else {               color='#94a3b8'; weight=1;   opacity=0.35; dashArray='2,4'; }
 
-    const drawLine = (deg, w, op, dash) => {
-      const rad = deg * Math.PI / 180;
-      const dlat = Math.cos(rad) * (LINE_LENGTH / 111);
-      const dlng = Math.sin(rad) * (LINE_LENGTH / (111 * Math.cos(lat * Math.PI / 180)));
-      const opts = { color, weight: w, opacity: op };
-      if(dash) opts.dashArray = dash;
-      const line = L.polyline([[lat, lng], [lat+dlat, lng+dlng]], opts);
-      line.addTo(kitokuMapInstance);
-      kitokuMapLines.push(line);
+    const drawLine=(deg,w,op,dash)=>{
+      const rad=deg*Math.PI/180;
+      const dlat=Math.cos(rad)*(LINE_LENGTH/111);
+      const dlng=Math.sin(rad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)));
+      const opts={color,weight:w,opacity:op}; if(dash)opts.dashArray=dash;
+      const line=L.polyline([[lat,lng],[lat+dlat,lng+dlng]],opts);
+      line.addTo(kitokuMapInst); kitokuMapLines.push(line);
     };
 
     // 吉方扇形
-    if(!isKyo && ddRank.rank >= 2){
-      const isSeihou = ['N','E','S','W'].includes(dir);
-      const halfSpan = isSeihou ? 15 : 30;
-      const FAN_LEN = Math.min(200, Math.max(3, 55000 / Math.pow(2, _zoom)));
-      const pts = [[lat, lng]];
-      for(let a = angle-halfSpan; a <= angle+halfSpan; a += 5){
-        const rad = a * Math.PI / 180;
-        const dlat = Math.cos(rad) * (FAN_LEN / 111);
-        const dlng = Math.sin(rad) * (FAN_LEN / (111 * Math.cos(lat * Math.PI / 180)));
-        pts.push([lat+dlat, lng+dlng]);
+    if(!isKyo && dd.rank>=2){
+      const isSeihou=['N','E','S','W'].includes(dir);
+      const halfSpan=isSeihou?15:30;
+      const FAN_LEN=Math.min(200,Math.max(3,55000/Math.pow(2,_zoom)));
+      const pts=[[lat,lng]];
+      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+        const r=a*Math.PI/180;
+        const dlat=Math.cos(r)*(FAN_LEN/111);
+        const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
+        pts.push([lat+dlat,lng+dlng]);
       }
-      const fanColor = ddRank.rank>=4 ? '#e84d80' : ddRank.rank>=3 ? '#f06a98' : '#f5a8c0';
-      const fanOpacity = ddRank.rank>=4 ? 0.18 : ddRank.rank>=3 ? 0.14 : 0.1;
-      const fan = L.polygon(pts, { color:fanColor, weight:1, opacity:0.4, fillColor:fanColor, fillOpacity:fanOpacity });
-      fan.addTo(kitokuMapInstance);
-      kitokuMapLines.push(fan);
+      const fanColor=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
+      const fanOpacity=dd.rank>=4?0.18:dd.rank>=3?0.14:0.1;
+      const fan=L.polygon(pts,{color:fanColor,weight:1,opacity:0.4,fillColor:fanColor,fillOpacity:fanOpacity});
+      fan.addTo(kitokuMapInst); kitokuMapLines.push(fan);
     }
 
-    // メイン方位線
     drawLine(angle, weight, opacity, dashArray);
-
-    // 吉方補助線
-    if(!isKyo && ddRank.rank >= 2){
+    if(!isKyo && dd.rank>=2){
       drawLine(angle-15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
       drawLine(angle+15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
     }
 
     // 方位ラベル
-    const midRad = angle * Math.PI / 180;
-    const midLat = lat + Math.cos(midRad)*(LINE_LENGTH/111)*0.15;
-    const midLng = lng + Math.sin(midRad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))*0.15;
-    const lcolor = isKyo ? '#ef4444' : ddRank.rank>=3 ? '#16a34a' : '#78716c';
-    const label = L.divIcon({
-      html: `<div style="font-size:10px;font-weight:700;color:${lcolor};white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff;">${MAP_JP_DIR[dir]}<br>${MAP_STAR_NAMES[starN]||''}</div>`,
-      iconAnchor: [20,10], className:''
+    const midRad=angle*Math.PI/180;
+    const midLat=lat+Math.cos(midRad)*(LINE_LENGTH/111)*0.15;
+    const midLng=lng+Math.sin(midRad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))*0.15;
+    const lcolor=isKyo?'#ef4444':dd.rank>=3?'#16a34a':'#78716c';
+    const lbl=L.divIcon({
+      html:`<div style="font-size:10px;font-weight:700;color:${lcolor};white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff;">${MAP_JP_DIR[dir]}<br>${MAP_STAR_NAMES[starN]||''}</div>`,
+      iconAnchor:[20,10],className:''
     });
-    const marker = L.marker([midLat, midLng], { icon:label, interactive:false });
-    marker.addTo(kitokuMapInstance);
-    kitokuMapLines.push(marker);
+    const mk=L.marker([midLat,midLng],{icon:lbl,interactive:false});
+    mk.addTo(kitokuMapInst); kitokuMapLines.push(mk);
   });
 
   // 距離円（750m・3km・10km）
-  [[0.75,'rgba(196,160,67,.2)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.06)']].forEach(([r, fill]) => {
-    const circle = L.circle([lat, lng], {
-      radius: r*1000, color:'rgba(196,160,67,.3)', weight:1, fill:true, fillColor:fill, fillOpacity:0.3
-    }).addTo(kitokuMapInstance);
-    kitokuMapLines.push(circle);
+  [[0.75,'rgba(196,160,67,.2)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.06)']].forEach(([r,fill])=>{
+    const c=L.circle([lat,lng],{radius:r*1000,color:'rgba(196,160,67,.3)',weight:1,fill:true,fillColor:fill,fillOpacity:0.3});
+    c.addTo(kitokuMapInst); kitokuMapLines.push(c);
   });
 
-  // 方位盤SVGオーバーレイ
-  drawKitokuMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei);
+  // 八角形SVGオーバーレイ
+  drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoSet,honmei,tsukimei);
 
   // 凡例の盤種更新
-  const banLabelEl = document.getElementById('mapBanTypeLabel');
-  if(banLabelEl){
-    banLabelEl.textContent = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
-  }
+  const bl=document.getElementById('mapBanTypeLabel');
+  if(bl) bl.textContent={'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
 }
 
-// ── 方位盤SVGオーバーレイ（direction_v2そのまま移植） ──
-function drawKitokuMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei){
-  if(!kitokuMapInstance) return;
-  if(kitokuMapCompassOverlay){ kitokuMapInstance.removeLayer(kitokuMapCompassOverlay); kitokuMapCompassOverlay=null; }
+// ── 八角形SVGオーバーレイ（direction_v2完全移植） ────
+function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoSet,honmei,tsukimei){
+  if(!kitokuMapInst) return;
+  if(kitokuMapCompassOverlay){ kitokuMapInst.removeLayer(kitokuMapCompassOverlay); kitokuMapCompassOverlay=null; }
 
-  const centerPt = kitokuMapInstance.latLngToContainerPoint([lat, lng]);
-  const northPt  = kitokuMapInstance.latLngToContainerPoint([lat+0.75/111, lng]);
-  const radiusPx = Math.abs(centerPt.y - northPt.y);
-  if(radiusPx < 20) return;
+  const cPt=kitokuMapInst.latLngToContainerPoint([lat,lng]);
+  const nPt=kitokuMapInst.latLngToContainerPoint([lat+0.75/111,lng]);
+  const R_OUT=Math.abs(cPt.y-nPt.y);
+  if(R_OUT<20) return;
 
-  const R_OUT=radiusPx, R_IN=R_OUT*0.34, PAD=70;
-  const SVG=R_OUT*2+PAD*2, cx=SVG/2, cy=SVG/2;
-  const angles={N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
+  const R_IN=R_OUT*0.34,PAD=70,SVG=R_OUT*2+PAD*2,cx=SVG/2,cy=SVG/2;
+  const ANG={N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
+  function pXY(r,a){const rad=(a-90)*Math.PI/180;return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)];}
 
-  function pXY(r,a){ const rad=(a-90)*Math.PI/180; return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)]; }
-
-  // 破の支を特定
+  // 破の支
   const _y=state.date.getFullYear(),_m=state.date.getMonth()+1,_d=state.date.getDate();
-  const z=getZodiac(_y);
-  let breakBranch=MAP_SHI[(z.d+6)%12]||'', breakDir2=OPP[z.d]||'';
-  if(state.banType==='month'){ const mb=getMonthBranch(_y,_m,_d); breakBranch=MAP_SHI[(mb+6)%12]||''; breakDir2=OPP[BRANCH_DIR[mb]]||''; }
-  else if(state.banType==='day'){ const db=getDayBranch(_y,_m,_d); breakBranch=MAP_SHI[(db+6)%12]||''; breakDir2=OPP[BRANCH_DIR[db]]||''; }
+  const z2=getZodiac(_y);
+  let breakBranch=MAP_SHI[(z2.d+6)%12]||'',breakDir2=OPP[z2.d]||'';
+  if(state.banType==='month'){const mb=getMonthBranch(_y,_m,_d);breakBranch=MAP_SHI[(mb+6)%12]||'';breakDir2=OPP[BRANCH_DIR[mb]]||'';}
+  else if(state.banType==='day'){const db=getDayBranch(_y,_m,_d);breakBranch=MAP_SHI[(db+6)%12]||'';breakDir2=OPP[BRANCH_DIR[db]]||'';}
 
   let cells='';
-  Object.entries(angles).forEach(([dir,{c,span}])=>{
+  Object.entries(ANG).forEach(([dir,{c,span}])=>{
     const starN=p2s[dir];
     const dd=rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
     const kns=kyouItems.filter(k=>k.dir===dir);
     const realKyoItems=kns.filter(k=>!k.name.includes('定位対冲'));
     const isKyo=realKyoItems.length>0||kyouSet.has(dir)||dd.isKyo;
-    const start=c-span/2, end=c+span/2;
+    const start=c-span/2,end=c+span/2;
 
     let fill='rgba(40,50,60,.4)';
     if(isKyo) fill='rgba(120,125,135,.55)';
     else if(dd.rank>=2) fill='rgba(232,140,165,.5)';
     else if(dd.rank>=1) fill='rgba(232,160,180,.4)';
 
-    const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
+    const[ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
     cells+=`<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
 
-    const nr=(R_IN+R_OUT)/2;
-    const [nx,ny]=pXY(nr,c);
-    const fsNum=Math.max(13,R_OUT*0.1);
-    cells+=`<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${fsNum.toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
+    const[nx,ny]=pXY((R_IN+R_OUT)/2,c);
+    const fsN=Math.max(13,R_OUT*0.1);
+    cells+=`<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${fsN.toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
 
     const realKyo=kns.filter(k=>!k.name.includes('定位対冲'));
     let kyoLabel='';
     if(isKyo&&realKyo.length) kyoLabel=realKyo[0].name.split('/')[0][0];
     else if(!isKyo&&dd.rank>=2) kyoLabel='吉';
     if(kyoLabel&&R_OUT>40){
-      const [lx,ly]=pXY(R_OUT*0.82,c);
-      const lcolor=(kyoLabel==='吉')?'#d24a78':'#888e98';
+      const[lx,ly]=pXY(R_OUT*0.82,c);
+      const lc=(kyoLabel==='吉')?'#d24a78':'#888e98';
       const rr=Math.max(8,R_OUT*0.06);
-      cells+=`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lcolor}"/>`;
+      cells+=`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lc}"/>`;
       cells+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
     }
   });
 
   // 中宮
-  const centerPts=[];
-  Object.values(angles).forEach(({c,span})=>{ const [px,py]=pXY(R_IN,c-span/2); centerPts.push(`${px.toFixed(1)},${py.toFixed(1)}`); });
-  cells+=`<polygon points="${centerPts.join(' ')}" fill="rgba(28,38,48,.5)" stroke="rgba(255,255,255,.4)" stroke-width="1"/>`;
+  const cPts=[];
+  Object.values(ANG).forEach(({c,span})=>{const[px,py]=pXY(R_IN,c-span/2);cPts.push(`${px.toFixed(1)},${py.toFixed(1)}`);});
+  cells+=`<polygon points="${cPts.join(' ')}" fill="rgba(28,38,48,.5)" stroke="rgba(255,255,255,.4)" stroke-width="1"/>`;
 
   // 十二支
   if(R_OUT>36){
-    Object.entries(angles).forEach(([dir,{c,span}])=>{
+    Object.entries(ANG).forEach(([dir,{c,span}])=>{
       const etoList=MAP_ETO_BY_DIR[dir]||[];
       etoList.forEach((eto,idx)=>{
-        let off=0; if(etoList.length===2) off=(idx===0?-12:12);
-        const [ex,ey]=pXY(R_IN*0.68,c+off);
-        const isBreak=(eto===breakBranch&&dir===breakDir2);
-        const ecolor=isBreak?'#ff6060':'rgba(255,255,255,.7)';
-        const fs=isBreak?Math.max(10,R_OUT*0.06):Math.max(8,R_OUT*0.048);
-        cells+=`<text x="${ex.toFixed(1)}" y="${ey.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${ecolor}" font-size="${fs.toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="${isBreak?'800':'500'}">${eto}</text>`;
+        let off=0;if(etoList.length===2)off=(idx===0?-12:12);
+        const[ex,ey]=pXY(R_IN*0.68,c+off);
+        const isBrk=(eto===breakBranch&&dir===breakDir2);
+        const ec=isBrk?'#ff6060':'rgba(255,255,255,.7)';
+        const fs=isBrk?Math.max(10,R_OUT*0.06):Math.max(8,R_OUT*0.048);
+        cells+=`<text x="${ex.toFixed(1)}" y="${ey.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${ec}" font-size="${fs.toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="${isBrk?'800':'500'}">${eto}</text>`;
       });
     });
   }
@@ -3485,107 +3451,114 @@ function drawKitokuMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, 
   cells+=`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="#ffd860" font-size="${Math.max(15,R_OUT*0.12).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2px">${center}</text>`;
 
   const svgHtml=`<svg width="${SVG}" height="${SVG}" viewBox="0 0 ${SVG} ${SVG}" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
-  const icon=L.divIcon({ className:'map-compass-overlay', html:svgHtml, iconSize:[SVG,SVG], iconAnchor:[SVG/2,SVG/2] });
-  kitokuMapCompassOverlay=L.marker([lat,lng],{icon,interactive:false,keyboard:false}).addTo(kitokuMapInstance);
+  const icon=L.divIcon({className:'map-compass-overlay',html:svgHtml,iconSize:[SVG,SVG],iconAnchor:[SVG/2,SVG/2]});
+  kitokuMapCompassOverlay=L.marker([lat,lng],{icon,interactive:false,keyboard:false}).addTo(kitokuMapInst);
   kitokuMapLines.push(kitokuMapCompassOverlay);
 }
 
 // ── 中心地点セット ────────────────────────────────────
 function setMapCenter(lat, lng, name){
-  kitokuMapCenter = { lat, lng };
-  document.getElementById('mapCenterInfo').textContent = `中心地点：${name}（${lat.toFixed(4)}, ${lng.toFixed(4)}）`;
-  document.getElementById('mapTapInfo').style.display = 'none';
-
-  if(!kitokuMapReady){
-    createKitokuMap(lat, lng);
-  } else {
-    kitokuMapInstance.setView([lat, lng], MAP_MODES[kitokuMapMode].zoom);
-    drawKitokuMapLines(lat, lng);
+  kitokuMapCenter={lat,lng};
+  document.getElementById('mapCenterInfo').textContent=`中心地点：${name}（${lat.toFixed(4)}, ${lng.toFixed(4)}）`;
+  document.getElementById('mapTapInfo').style.display='none';
+  if(!kitokuMapReady){ createKitokuMap(lat,lng); }
+  else {
+    kitokuMapInst.setView([lat,lng],MAP_MODES[kitokuMapMode].zoom);
+    drawKitokuMapLines(lat,lng);
   }
 }
 
 // ── 現在地取得 ────────────────────────────────────────
 function locateUser(){
-  const btn = document.getElementById('locateBtn');
-  btn.textContent = '⏳ 取得中...'; btn.disabled = true;
+  const btn=document.getElementById('locateBtn');
+  btn.textContent='⏳ 取得中...'; btn.disabled=true;
   if(!navigator.geolocation){
     alert('このブラウザでは位置情報が使用できません。');
-    btn.textContent = '📍 現在地を登録'; btn.disabled = false; return;
+    btn.textContent='📍 現在地を登録'; btn.disabled=false; return;
   }
   navigator.geolocation.getCurrentPosition(
-    pos => {
-      const lat = pos.coords.latitude, lng = pos.coords.longitude;
-      setMapCenter(lat, lng, '現在地');
-      btn.textContent = '📍 現在地を登録済み'; btn.disabled = false;
-      localStorage.setItem('kitoku-map-home', JSON.stringify({lat, lng}));
+    pos=>{
+      const{latitude:lat,longitude:lng}=pos.coords;
+      setMapCenter(lat,lng,'現在地');
+      btn.textContent='📍 現在地を登録済み'; btn.disabled=false;
+      localStorage.setItem('kitoku-map-home',JSON.stringify({lat,lng}));
     },
-    () => { alert('位置情報の取得に失敗しました。'); btn.textContent = '📍 現在地を登録'; btn.disabled = false; },
-    { enableHighAccuracy:true, timeout:10000 }
+    ()=>{ alert('位置情報の取得に失敗しました。\nブラウザの設定で位置情報を許可してください。'); btn.textContent='📍 現在地を登録'; btn.disabled=false; },
+    {enableHighAccuracy:true,timeout:10000}
   );
 }
 
 // ── モード切替 ────────────────────────────────────────
 function switchMapMode(mode){
-  kitokuMapMode = mode;
-  document.querySelectorAll('.map-mode-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.mode===mode));
+  kitokuMapMode=mode;
+  document.querySelectorAll('.map-mode-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   updateMapModeGuide();
-  if(kitokuMapReady && kitokuMapCenter){
-    kitokuMapInstance.setZoom(MAP_MODES[mode].zoom);
-    drawKitokuMapLines(kitokuMapCenter.lat, kitokuMapCenter.lng);
+  if(kitokuMapReady&&kitokuMapCenter){
+    kitokuMapInst.setZoom(MAP_MODES[mode].zoom);
+    drawKitokuMapLines(kitokuMapCenter.lat,kitokuMapCenter.lng);
   }
 }
-
 function updateMapModeGuide(){
-  const el = document.getElementById('mapModeGuide');
-  if(el) el.textContent = MAP_MODES[kitokuMapMode].guide;
+  const el=document.getElementById('mapModeGuide');
+  if(el) el.textContent=MAP_MODES[kitokuMapMode].guide;
 }
 
 // ── ズームボタン ──────────────────────────────────────
 function mapZoom(delta){
-  if(!kitokuMapInstance) return;
-  kitokuMapInstance.setZoom(kitokuMapInstance.getZoom()+delta);
+  if(!kitokuMapInst) return;
+  kitokuMapInst.setZoom(kitokuMapInst.getZoom()+delta);
+}
+
+// ── 方位盤との連動（setBanType・moveDateから呼ばれる） ─
+function redrawMapIfReady(){
+  if(kitokuMapReady&&kitokuMapCenter)
+    drawKitokuMapLines(kitokuMapCenter.lat,kitokuMapCenter.lng);
 }
 
 // ── 地図タップ ────────────────────────────────────────
 function onKitokuMapTap(e){
   if(!kitokuMapCenter) return;
-  const lat=e.latlng.lat, lng=e.latlng.lng;
-  kitokuMapLastTap = {lat, lng};
+  const{lat,lng}=e.latlng;
+  kitokuMapLastTap={lat,lng};
 
+  // 距離計算（ハバーサイン）
   const R=6371000;
   const dLat=(lat-kitokuMapCenter.lat)*Math.PI/180;
   const dLng=(lng-kitokuMapCenter.lng)*Math.PI/180;
   const a=Math.sin(dLat/2)**2+Math.cos(kitokuMapCenter.lat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLng/2)**2;
   const dist=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+
+  // 方位角（北0°・時計回り）
   const y2=Math.sin(dLng)*Math.cos(lat*Math.PI/180);
   const x2=Math.cos(kitokuMapCenter.lat*Math.PI/180)*Math.sin(lat*Math.PI/180)-Math.sin(kitokuMapCenter.lat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.cos(dLng);
   const bearing=((Math.atan2(y2,x2)*180/Math.PI)+360)%360;
 
   // KITOKU方位判定（30°/60°）
-  const KITOKU_SPANS=[
-    {dir:'N',from:345,to:15},{dir:'NE',from:15,to:75},{dir:'E',from:75,to:105},
-    {dir:'SE',from:105,to:165},{dir:'S',from:165,to:195},{dir:'SW',from:195,to:255},
-    {dir:'W',from:255,to:285},{dir:'NW',from:285,to:345}
-  ];
-  let tapDir='N', tapDirLabel='北';
-  for(const s of KITOKU_SPANS){
-    let f=s.from,t=s.to;
-    if(t<f){ if(bearing>=f||bearing<t){tapDir=s.dir;tapDirLabel=MAP_JP_DIR[s.dir];break;} }
-    else { if(bearing>=f&&bearing<t){tapDir=s.dir;tapDirLabel=MAP_JP_DIR[s.dir];break;} }
+  let tapDir='N',tapDirLabel='北';
+  for(const s of MAP_KITOKU_SPANS){
+    const f=s.from,t=s.to;
+    if(t<f){if(bearing>=f||bearing<t){tapDir=s.dir;tapDirLabel=MAP_JP_DIR[s.dir];break;}}
+    else{if(bearing>=f&&bearing<t){tapDir=s.dir;tapDirLabel=MAP_JP_DIR[s.dir];break;}}
   }
 
-  const { kyouItems } = buildDirData(centerForDate());
-  const kyouSet2 = new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
-  const isKyo = kyouSet2.has(tapDir);
-  const kyoColor = isKyo ? '#9aa0aa' : '#e84d80';
-  const banLabel = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
+  // 吉凶・星情報
+  const center=centerForDate();
+  const p2s=buildBoardFromCenter(center);
+  const starN=p2s[tapDir];
+  const {kyouItems}=buildDirData(center);
+  const kyouSet2=new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+  const isKyo=kyouSet2.has(tapDir);
+  const kyoColor=isKyo?'#9aa0aa':'#e84d80';
+  const kyoLabel=isKyo?'凶方':'吉方';
+  const banLabel={'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
   const d=state.date;
+  const fmt=m=>m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';
 
-  const formatDist = m => m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';
-  document.getElementById('mapTapTitle').innerHTML = `<span style="color:${kyoColor};">${tapDirLabel}</span>　${isKyo?'凶方':'吉方'}`;
-  document.getElementById('mapTapDetail').innerHTML =
-    `距離：約 ${formatDist(dist)}<br>角度：${bearing.toFixed(1)}°<br>` +
-    `判定基準：${banLabel}・${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日<br>` +
+  document.getElementById('mapTapTitle').innerHTML=
+    `<span style="color:${kyoColor};">${tapDirLabel}　${MAP_STAR_NAMES[starN]||''}　${kyoLabel}</span>`;
+  document.getElementById('mapTapDetail').innerHTML=
+    `距離：約 ${fmt(dist)}　／　角度：${bearing.toFixed(1)}°<br>`+
+    `判定基準：${banLabel}・${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日<br>`+
     (isKyo?'現在の盤面では凶方位です。移動・引越しは控えめに。':'現在の盤面では吉方位です。積極的に活用できます。');
   document.getElementById('mapTapInfo').style.display='block';
 }
@@ -3600,11 +3573,11 @@ function toggleSavedPlaces(){
   if(!isOpen) renderSavedPlaces();
 }
 function renderSavedPlaces(){
-  const container=document.getElementById('savedPlacesItems');
-  if(kitokuMapState_places.length===0){
-    container.innerHTML='<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ保存した場所がありません</div>';return;
+  const c=document.getElementById('savedPlacesItems');
+  if(!kitokuMapPlaces.length){
+    c.innerHTML='<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ保存した場所がありません</div>';return;
   }
-  container.innerHTML=kitokuMapState_places.map((p,i)=>`
+  c.innerHTML=kitokuMapPlaces.map((p,i)=>`
     <div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(138,104,32,.1);">
       <button onclick="loadSavedPlace(${i})" style="flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;">
         ${p.name}<span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</span>
@@ -3613,37 +3586,32 @@ function renderSavedPlaces(){
     </div>`).join('');
 }
 function loadSavedPlace(idx){
-  const p=kitokuMapState_places[idx]; if(!p) return;
+  const p=kitokuMapPlaces[idx];if(!p)return;
   setMapCenter(p.lat,p.lng,p.name);
   document.getElementById('savedPlacesList').style.display='none';
   document.getElementById('savedPlacesBtn').textContent='⭐ よく行く場所 ▾';
 }
 function deleteSavedPlace(idx){
-  kitokuMapState_places.splice(idx,1); savePlacesToStorage(); renderSavedPlaces();
+  kitokuMapPlaces.splice(idx,1);savePlacesToStorage();renderSavedPlaces();
 }
 function saveCurrentAsPlace(){
   if(!kitokuMapCenter){alert('中心地点が設定されていません。');return;}
   const name=prompt('場所の名前を入力してください（例：自宅・実家・会社）','');
-  if(!name) return;
-  kitokuMapState_places.push({name,lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng});
+  if(!name)return;
+  kitokuMapPlaces.push({name,lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng});
   savePlacesToStorage();
+  alert(`「${name}」を保存しました。`);
 }
 function saveTapAsPlace(){
-  if(!kitokuMapLastTap) return;
+  if(!kitokuMapLastTap)return;
   const name=prompt('場所の名前を入力してください','');
-  if(!name) return;
-  kitokuMapState_places.push({name,lat:kitokuMapLastTap.lat,lng:kitokuMapLastTap.lng});
+  if(!name)return;
+  kitokuMapPlaces.push({name,lat:kitokuMapLastTap.lat,lng:kitokuMapLastTap.lng});
   savePlacesToStorage();
+  alert(`「${name}」を保存しました。`);
 }
 function savePlacesToStorage(){
-  try{ localStorage.setItem('kitoku-map-places',JSON.stringify(kitokuMapState_places)); }catch(e){}
-}
-
-// ── 方位盤との連動（setBanType・moveDateから呼ばれる） ──
-function redrawMapIfReady(){
-  if(kitokuMapReady && kitokuMapCenter){
-    drawKitokuMapLines(kitokuMapCenter.lat, kitokuMapCenter.lng);
-  }
+  try{localStorage.setItem('kitoku-map-places',JSON.stringify(kitokuMapPlaces));}catch(e){}
 }
 
 // ── 全画面 ────────────────────────────────────────────
@@ -3653,26 +3621,29 @@ function toggleMapFullscreen(){
   const isFs=panel.classList.toggle('map-fullscreen');
   btn.textContent=isFs?'✕ 閉じる':'⛶ 全画面';
   document.body.style.overflow=isFs?'hidden':'';
-  if(kitokuMapInstance){
-    setTimeout(()=>{ kitokuMapInstance.invalidateSize(); redrawMapIfReady(); },150);
+  if(kitokuMapInst){
+    setTimeout(()=>{
+      kitokuMapInst.invalidateSize();
+      if(kitokuMapCenter) drawKitokuMapLines(kitokuMapCenter.lat,kitokuMapCenter.lng);
+    },150);
   }
 }
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     const panel=document.getElementById('mapPanel');
-    if(panel&&panel.classList.contains('map-fullscreen')) toggleMapFullscreen();
+    if(panel&&panel.classList.contains('map-fullscreen'))toggleMapFullscreen();
   }
 });
 
-// ── 起動時の初期化 ────────────────────────────────────
-document.addEventListener('DOMContentLoaded', ()=>{
+// ── 起動（state._initDone を待って位置復元） ──────────
+document.addEventListener('DOMContentLoaded',()=>{
   initMapSection();
   function restoreMapWhenReady(){
-    if(!state._initDone){ setTimeout(restoreMapWhenReady,50); return; }
+    if(!state._initDone){setTimeout(restoreMapWhenReady,50);return;}
     try{
       const home=localStorage.getItem('kitoku-map-home');
       if(home){
-        const {lat,lng}=JSON.parse(home);
+        const{lat,lng}=JSON.parse(home);
         setMapCenter(lat,lng,'登録済み地点');
         document.getElementById('locateBtn').textContent='📍 現在地を登録済み';
       }
