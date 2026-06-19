@@ -3329,6 +3329,7 @@ function drawCompassOverlay(){
 
   // 吉凶判定（既存のgetKyouDirsを流用）
   const kyouSet = getKyouSetForMap();
+  console.log('[MAP DEBUG] drawCompassOverlay kyouSet:', [...kyouSet]);
 
   DIR_ANGLES.forEach(d => {
     const midAngle = (d.from + d.to) / 2;
@@ -3421,9 +3422,14 @@ function getKyouSetForMap(){
     if(typeof buildDirData === 'function' && state.info){
       const center = centerForDate();
       const { kyouItems } = buildDirData(center);
-      // 定位対冲を除外（方位盤のstrictItemsと同じロジック）
+      console.log('[MAP DEBUG] center:', center, 'kyouItems:', JSON.stringify(kyouItems));
       const strictItems = (kyouItems||[]).filter(x => !x.name.includes('定位対冲'));
-      return new Set(strictItems.map(x => x.dir));
+      console.log('[MAP DEBUG] strictItems:', JSON.stringify(strictItems));
+      const result = new Set(strictItems.map(x => x.dir));
+      console.log('[MAP DEBUG] kyouSet dirs:', [...result]);
+      return result;
+    } else {
+      console.warn('[MAP DEBUG] buildDirData unavailable or state.info null:', typeof buildDirData, state.info);
     }
   } catch(e){ console.warn('getKyouSetForMap error:', e); }
   return new Set();
