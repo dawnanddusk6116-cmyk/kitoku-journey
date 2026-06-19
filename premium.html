@@ -3341,6 +3341,17 @@ function drawKitokuMapLines(lat, lng){
   // 海外スケール（旅行・引越し）は大円（曲線）で描画
   const useGreatCircle = (kitokuMapMode==='travel' || kitokuMapMode==='move');
 
+  // ── 海外モード：8方位の境界線を大円で描く（塗りつぶし扇形なし） ──
+  if(useGreatCircle){
+    // 30°/60°方式の境界角（方位の切れ目）
+    const BOUNDARY_ANGLES = [15,75,105,165,195,255,285,345];
+    BOUNDARY_ANGLES.forEach(b=>{
+      const path=gcPath(lat,lng,b,LINE_LENGTH*1000,48);
+      const bl=L.polyline(path,{color:'rgba(90,95,105,.45)',weight:1,opacity:0.6,dashArray:'3,5'});
+      bl.addTo(kitokuMapInst); kitokuMapLines.push(bl);
+    });
+  }
+
   Object.entries(MAP_DIR_ANGLES).forEach(([dir,angle])=>{
     const starN = p2s[dir];
     const dd = rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
@@ -3358,10 +3369,8 @@ function drawKitokuMapLines(lat, lng){
     const drawLine=(deg,w,op,dash)=>{
       let latlngs;
       if(useGreatCircle){
-        // 大円（曲線）：距離はメートル換算
         latlngs = gcPath(lat, lng, deg, LINE_LENGTH*1000, 48);
       } else {
-        // 平面近似（近距離）：直線
         const rad=deg*Math.PI/180;
         const dlat=Math.cos(rad)*(LINE_LENGTH/111);
         const dlng=Math.sin(rad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)));
@@ -3372,31 +3381,17 @@ function drawKitokuMapLines(lat, lng){
       line.addTo(kitokuMapInst); kitokuMapLines.push(line);
     };
 
-    // 吉方扇形
-    if(!isKyo && dd.rank>=2){
+    // 吉方扇形（近距離モードのみ。海外モードは中心軸線で表現）
+    if(!isKyo && dd.rank>=2 && !useGreatCircle){
       const isSeihou=['N','E','S','W'].includes(dir);
       const halfSpan=isSeihou?15:30;
-      // 扇形は日付変更線に達しない距離に制限（最大3000km）。線は長く伸ばす。
-      const FAN_LEN = useGreatCircle ? Math.min(FAN_LENGTH_BASE, 3000) : FAN_LENGTH_BASE;
-      let pts;
-      if(useGreatCircle){
-        // 大円扇形：中心→左端へ大円、外周弧、右端→中心の順で境界を構成
-        pts=[];
-        const leftArc=gcPath(lat,lng,angle-halfSpan,FAN_LEN*1000,16);
-        pts=pts.concat(leftArc);
-        for(let a=angle-halfSpan; a<=angle+halfSpan; a+=2){
-          pts.push(gcDestination(lat,lng,a,FAN_LEN*1000));
-        }
-        const rightArc=gcPath(lat,lng,angle+halfSpan,FAN_LEN*1000,16).reverse();
-        pts=pts.concat(rightArc);
-      } else {
-        pts=[[lat,lng]];
-        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
-          const r=a*Math.PI/180;
-          const dlat=Math.cos(r)*(FAN_LEN/111);
-          const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
-          pts.push([lat+dlat,lng+dlng]);
-        }
+      const FAN_LEN=FAN_LENGTH_BASE;
+      const pts=[[lat,lng]];
+      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+        const r=a*Math.PI/180;
+        const dlat=Math.cos(r)*(FAN_LEN/111);
+        const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
+        pts.push([lat+dlat,lng+dlng]);
       }
       const fanColor=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fanOpacity=dd.rank>=4?0.24:dd.rank>=3?0.18:0.13;
@@ -3404,8 +3399,13 @@ function drawKitokuMapLines(lat, lng){
       fan.addTo(kitokuMapInst); kitokuMapLines.push(fan);
     }
 
+    // メイン方位線（海外モードでは吉方を太いピンクで強調）
+    if(useGreatCircle && !isKyo && dd.rank>=2){
+      weight = dd.rank>=4?4:3; opacity=0.85; color='#e84d80'; dashArray=null;
+    }
     drawLine(angle, weight, opacity, dashArray);
-    if(!isKyo && dd.rank>=2){
+    // 近距離モードのみ吉方の補助線（±15°）を描く
+    if(!isKyo && dd.rank>=2 && !useGreatCircle){
       drawLine(angle-15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
       drawLine(angle+15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
     }
@@ -3802,6 +3802,15 @@ function drawFsMapContent(lat,lng){
   const LL  = Math.min(_fsLineMax, Math.max(3, _fsLineCoef/Math.pow(2,_z)));
   const FL_BASE = Math.min(_fsFanMax,  Math.max(5, _fsFanCoef /Math.pow(2,_z)));
   const useGC = (kitokuMapMode==='travel' || kitokuMapMode==='move');
+  // 海外モード：8方位の境界線を大円で描く（塗りつぶし扇形なし）
+  if(useGC){
+    const BOUNDARY_ANGLES=[15,75,105,165,195,255,285,345];
+    BOUNDARY_ANGLES.forEach(b=>{
+      const path=gcPath(lat,lng,b,LL*1000,48);
+      const bl=L.polyline(path,{color:'rgba(90,95,105,.45)',weight:1,opacity:0.6,dashArray:'3,5'}).addTo(kitokuFsMapInst);
+      kitokuFsLayers.push(bl);
+    });
+  }
   Object.entries(MAP_DIR_ANGLES).forEach(([dir,angle])=>{
     const starN=p2s[dir];
     const dd=rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
@@ -3827,32 +3836,23 @@ function drawFsMapContent(lat,lng){
       const l=L.polyline(latlngs,opts).addTo(kitokuFsMapInst);
       kitokuFsLayers.push(l);
     };
-    if(!isKyo&&dd.rank>=2){
+    // 吉方扇形（近距離モードのみ）
+    if(!isKyo&&dd.rank>=2&&!useGC){
       const isSeihou=['N','E','S','W'].includes(dir),halfSpan=isSeihou?15:30;
-      const FL = useGC ? Math.min(FL_BASE, 3000) : FL_BASE;
-      let pts;
-      if(useGC){
-        pts=[];
-        const leftArc=gcPath(lat,lng,angle-halfSpan,FL*1000,16);
-        pts=pts.concat(leftArc);
-        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=2){
-          pts.push(gcDestination(lat,lng,a,FL*1000));
-        }
-        const rightArc=gcPath(lat,lng,angle+halfSpan,FL*1000,16).reverse();
-        pts=pts.concat(rightArc);
-      } else {
-        pts=[[lat,lng]];
-        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
-          const r=a*Math.PI/180;pts.push([lat+Math.cos(r)*(FL/111),lng+Math.sin(r)*(FL/(111*Math.cos(lat*Math.PI/180)))]);
-        }
+      const FL=FL_BASE;
+      const pts=[[lat,lng]];
+      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+        const r=a*Math.PI/180;pts.push([lat+Math.cos(r)*(FL/111),lng+Math.sin(r)*(FL/(111*Math.cos(lat*Math.PI/180)))]);
       }
       const fc=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fo=dd.rank>=4?0.28:dd.rank>=3?0.22:0.16;
       const fan=L.polygon(pts,{color:'#d83c70',weight:2,opacity:0.7,fillColor:fc,fillOpacity:fo}).addTo(kitokuFsMapInst);
       kitokuFsLayers.push(fan);
     }
+    // メイン方位線（海外モードは吉方を太いピンクで強調）
+    if(useGC&&!isKyo&&dd.rank>=2){weight=dd.rank>=4?4:3;opacity=0.85;color='#e84d80';dashArray=null;}
     dLine(angle,weight,opacity,dashArray);
-    if(!isKyo&&dd.rank>=2){dLine(angle-15,Math.max(weight*0.7,1.2),opacity*0.75,'5,4');dLine(angle+15,Math.max(weight*0.7,1.2),opacity*0.75,'5,4');}
+    if(!isKyo&&dd.rank>=2&&!useGC){dLine(angle-15,Math.max(weight*0.7,1.2),opacity*0.75,'5,4');dLine(angle+15,Math.max(weight*0.7,1.2),opacity*0.75,'5,4');}
   });
 
   // SVGオーバーレイ（共通関数を流用、fsMapInstに描画）
