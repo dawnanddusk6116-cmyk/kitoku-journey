@@ -3597,7 +3597,8 @@ function judgeDirForMap(dir){
   if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'本命・月命 吉' };
   if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方・三合' };
   if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方' };
-  if(dd.rank>=1) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'天道' };
+  // 天道（rank1）は吉方ではない。独立カテゴリ・白扱い（direction_v2と同じ）
+  if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#b86080', sub:'天道（補助的な後押し）' };
   // ランク0＝吉でも凶でもない普通の方位
   return { kind:'normal', label:'普通', color:'#78716c', sub:'吉凶なし' };
 }
@@ -3619,9 +3620,10 @@ function onKitokuMapTap(e){
   const calcNote=isLongDist?'　<span style="font-size:.55rem;color:var(--mist);">（球面計算）</span>':'';
 
   let meaning;
-  if(j.kind==='kyo')      meaning='現在の盤面では凶方位です。移動・引越しは控えめに。';
-  else if(j.kind==='kichi')meaning='現在の盤面では吉方位です。積極的に活用できます。';
-  else                    meaning='吉でも凶でもない方位です。';
+  if(j.kind==='kyo')        meaning='現在の盤面では凶方位です。移動・引越しは控えめに。';
+  else if(j.kind==='kichi') meaning='現在の盤面では吉方位です。積極的に活用できます。';
+  else if(j.kind==='tendo') meaning='天道です。吉方位ではありませんが、天が後押しする補助的な方位です。';
+  else                      meaning='吉でも凶でもない方位です。';
 
   document.getElementById('mapTapTitle').innerHTML=
     `<span style="color:${j.color};">${tapDirLabel}　${MAP_STAR_NAMES[starN]||''}　${j.label}</span>`;
@@ -3815,9 +3817,10 @@ function onFsMapTap(e){
   const calcNote=isLongDist?'（球面計算）':'';
 
   let meaning;
-  if(j.kind==='kyo')      meaning='凶方位です。移動・引越しは控えめに。';
-  else if(j.kind==='kichi')meaning='吉方位です。積極的に活用できます。';
-  else                    meaning='吉でも凶でもない方位です。';
+  if(j.kind==='kyo')        meaning='凶方位です。移動・引越しは控えめに。';
+  else if(j.kind==='kichi') meaning='吉方位です。積極的に活用できます。';
+  else if(j.kind==='tendo') meaning='天道です。吉方位ではありませんが、天が後押しする補助的な方位です。';
+  else                      meaning='吉でも凶でもない方位です。';
 
   document.getElementById('fsTapTitle').innerHTML=`<span style="color:${j.color};">${tapDirLabel}　${MAP_STAR_NAMES[starN]||''}　${j.label}</span>`;
   document.getElementById('fsTapDetail').innerHTML=
