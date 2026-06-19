@@ -831,6 +831,8 @@ function init(){
     renderAiContextSummary();
     applyLifeReadingBanner();
     maybePrefillLifeConsult();
+    // state.info確定後に地図オーバーレイを再描画（吉凶連動）
+    if(mapState.initialized) drawCompassOverlay();
   }catch(e){
     showPremiumError(e);
   }
@@ -3691,15 +3693,18 @@ document.addEventListener('keydown', e => {
 document.addEventListener('DOMContentLoaded', () => {
   initMapSection();
 
-  // 前回の現在地が保存されていれば復元
-  try {
-    const home = localStorage.getItem('kitoku-map-home');
-    if(home){
-      const {lat, lng} = JSON.parse(home);
-      setMapCenter(lat, lng, '登録済み地点');
-      document.getElementById('locateBtn').textContent = '📍 現在地を登録済み';
-    }
-  } catch(e){}
+  // init()でstate.infoが確定した後に位置復元・地図描画する
+  // （同一DOMContentLoadedイベント内での実行順序を保証するためsetTimeoutで遅延）
+  setTimeout(() => {
+    try {
+      const home = localStorage.getItem('kitoku-map-home');
+      if(home){
+        const {lat, lng} = JSON.parse(home);
+        setMapCenter(lat, lng, '登録済み地点');
+        document.getElementById('locateBtn').textContent = '📍 現在地を登録済み';
+      }
+    } catch(e){}
+  }, 200);
 });
 </script>
 </body>
