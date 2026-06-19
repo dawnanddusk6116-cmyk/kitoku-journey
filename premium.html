@@ -640,7 +640,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button onclick="mapZoom(1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">＋</button>
         <button onclick="mapZoom(-1)" style="width:36px;height:36px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-size:1.1rem;font-weight:700;cursor:pointer;">－</button>
         <div style="flex:1;font-size:.58rem;color:var(--mist);line-height:1.5;text-align:right;">
-          凡例：<span style="color:#e84d80;font-weight:700;">■</span>吉方　<span style="color:#9aa0aa;font-weight:700;">■</span>凶方
+          凡例：<span style="color:#e84d80;font-weight:700;">■</span>吉方　<span style="color:#9aa0aa;font-weight:700;">■</span>凶方<br>
+          <span id="mapBanTypeLabel" style="color:var(--gold);font-weight:700;">日盤</span>連動中
         </div>
       </div>
 
@@ -844,6 +845,8 @@ function setBanType(type){
   renderBoard();
   refreshDestinationPrem();
   renderAiContextSummary();
+  // ③ 方位地図を再描画
+  if(mapState.initialized) drawCompassOverlay();
 }
 function moveDate(delta){
   if(state.banType==='year')state.date.setFullYear(state.date.getFullYear()+delta);
@@ -853,6 +856,8 @@ function moveDate(delta){
   refreshDestinationPrem();
   renderSenro();
   renderAiContextSummary();
+  // ③ 方位地図を再描画
+  if(mapState.initialized) drawCompassOverlay();
 }
 function setOrient(orient){
   state.orient=orient==='north'?'north':'south';
@@ -3291,6 +3296,13 @@ function drawCompassOverlay(){
 
   mapState.compassLayer.clearLayers();
 
+  // 凡例の盤種ラベルを更新
+  const banLabelEl = document.getElementById('mapBanTypeLabel');
+  if(banLabelEl){
+    const banLabel = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
+    banLabelEl.textContent = banLabel;
+  }
+
   const lat = mapState.centerLat;
   const lng = mapState.centerLng;
   const zoom = mapState.map.getZoom();
@@ -3390,16 +3402,27 @@ function offsetLatLng(lat, lng, bearingDeg, distM){
 
 // ── 吉凶セット取得 ────────────────────────────────────
 function getKyouSetForMap(){
-  // 既存のstate.info / getKyouDirsが使えれば流用、なければ空セット
   try {
     if(typeof getKyouDirs === 'function' && state.info){
-      const d = state.date;
-      const res = getKyouDirs(d.getFullYear(), d.getMonth()+1, d.getDate(), state.info.honmei, state.info.tsuki, state.banType||'day');
-      // 定位対冲を除外（昨日の修正パターン）
-      const realKyo = (res.kyouItems||[]).filter(k => !k.name.includes('定位対冲'));
-      return new Set(realKyo.map(k => k.dir));
+      const center = centerForDate();
+      const breakDir = getBreakDirForDate();
+      const _teiiKyo = localStorage.getItem('kitoku-teii-kyo') === '1';
+      const _tmSatsu = localStorage.getItem('kitoku-tsukimei-satsu') || 'on';
+      // 既存コードと完全に同じ引数順序で呼ぶ
+      // getKyouDirs(center, honmei, breakDir, tsukimei, banType, options)
+      const kyou = getKyouDirs(
+        center,
+        state.info.honmei,
+        breakDir,
+        state.info.tsukimei,
+        state.banType,
+        { teiiAsKyo: _teiiKyo, tsukimeiSatsu: _tmSatsu }
+      );
+      // 定位対冲を除外（方位盤と同じ strictItems ロジック）
+      const strictItems = (kyou.items||[]).filter(x => !x.name.includes('定位対冲'));
+      return new Set(strictItems.map(x => x.dir));
     }
-  } catch(e){}
+  } catch(e){ console.warn('getKyouSetForMap error:', e); }
   return new Set();
 }
 
@@ -3513,12 +3536,18 @@ function onMapTap(e){
   const kyoLabel = isKyo ? '凶方' : '吉方';
   const kyoColor = isKyo ? '#9aa0aa' : '#e84d80';
 
+  // 現在の盤種・日付ラベル
+  const banLabel = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
+  const d = state.date;
+  const dateLabel = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+
   // 表示
   document.getElementById('mapTapTitle').innerHTML =
     `<span style="color:${kyoColor};">${info.dirLabel}（${info.branch}）</span>　${kyoLabel}`;
   document.getElementById('mapTapDetail').innerHTML =
     `距離：約 ${formatDist(info.dist)}<br>` +
     `角度：${info.bearing.toFixed(1)}°<br>` +
+    `判定基準：${banLabel}・${dateLabel}<br>` +
     `気学的意味：${isKyo ? '現在の盤面では凶方位です。移動・引越しは控えめに。' : '現在の盤面では吉方位です。積極的に活用できます。'}`;
   document.getElementById('mapTapInfo').style.display = 'block';
 }
