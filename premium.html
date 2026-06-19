@@ -831,10 +831,6 @@ function init(){
     renderAiContextSummary();
     applyLifeReadingBanner();
     maybePrefillLifeConsult();
-    // state.info確定後に地図オーバーレイを再描画（吉凶連動）
-    if(mapState.initialized){
-      setTimeout(() => drawCompassOverlay(), 50);
-    }
     // 地図復元用フラグ
     state._initDone = true;
   }catch(e){
@@ -864,7 +860,7 @@ function setBanType(type){
   refreshDestinationPrem();
   renderAiContextSummary();
   // ③ 方位地図を再描画
-  if(mapState.initialized) drawCompassOverlay();
+  redrawMapIfReady();
 }
 function moveDate(delta){
   if(state.banType==='year')state.date.setFullYear(state.date.getFullYear()+delta);
@@ -875,7 +871,7 @@ function moveDate(delta){
   renderSenro();
   renderAiContextSummary();
   // ③ 方位地図を再描画
-  if(mapState.initialized) drawCompassOverlay();
+  redrawMapIfReady();
 }
 function setOrient(orient){
   state.orient=orient==='north'?'north':'south';
@@ -3216,500 +3212,471 @@ async function sendChat(){
 </script>
 
 <!-- ═══════════════════════════════
-     方位地図 JS
+     方位地図 JS（direction_v2方式）
 ═══════════════════════════════ -->
 <script>
-// ── 設定 ──────────────────────────────────────────────
+// ── 地図状態 ──────────────────────────────────────────
 const MAP_MODES = {
-  daily:      { label:'🏠 日盤吉方',  zoom:15, maxZoom:18, minZoom:12, guide:'自宅を中心に、今日の日盤吉方を地図で確認します。750m圏内の吉方スポットを探すのに最適です。' },
-  travel:     { label:'✈️ 旅行先',    zoom:7,  maxZoom:12, minZoom:4,  guide:'旅行先を中心に、月盤・年盤の吉方を確認します。国内・海外の移動先選びに使います。' },
-  pilgrimage: { label:'⛩️ 巡礼先',   zoom:9,  maxZoom:14, minZoom:5,  guide:'出発地から見た聖地の方位を確認します。線路の日との照合に使います。' },
-  move:       { label:'🏡 引越し先', zoom:10, maxZoom:14, minZoom:6,  guide:'引越し候補地の方位を年盤・月盤で確認します。吉方エリアを大きく把握するのに使います。' }
+  daily:      { zoom:12, guide:'自宅を中心に、今日の日盤吉方を地図で確認します。750m圏内の吉方スポットを探すのに最適です。' },
+  travel:     { zoom:7,  guide:'旅行先を中心に、月盤・年盤の吉方を確認します。国内・海外の移動先選びに使います。' },
+  pilgrimage: { zoom:9,  guide:'出発地から見た聖地の方位を確認します。線路の日との照合に使います。' },
+  move:       { zoom:10, guide:'引越し候補地の方位を年盤・月盤で確認します。吉方エリアを大きく把握するのに使います。' }
 };
 
-// 方位の度数・名前（KITOKU標準：正方位30°・斜方位60°）
-const DIR_ANGLES = [
-  { dir:'N',  label:'北',   from:345, to:15  },
-  { dir:'NE', label:'北東', from:15,  to:75  },
-  { dir:'E',  label:'東',   from:75,  to:105 },
-  { dir:'SE', label:'南東', from:105, to:165 },
-  { dir:'S',  label:'南',   from:165, to:195 },
-  { dir:'SW', label:'南西', from:195, to:255 },
-  { dir:'W',  label:'西',   from:255, to:285 },
-  { dir:'NW', label:'北西', from:285, to:345 }
-];
+let kitokuMapInstance = null;
+let kitokuMapLines = [];
+let kitokuMapCenter = null;
+let kitokuMapCompassOverlay = null;
+let kitokuMapMode = 'daily';
+let kitokuMapReady = false;
 
-// ── 状態 ─────────────────────────────────────────────
-const mapState = {
-  mode: 'daily',
-  map: null,
-  centerLat: null,
-  centerLng: null,
-  overlayLayer: null,     // SVGオーバーレイ（八角形盤）
-  compassLayer: null,     // L.layerGroup（扇形・線）
-  centerMarker: null,
-  tapMarker: null,
-  lastTapLat: null,
-  lastTapLng: null,
-  savedPlaces: [],        // [{name, lat, lng}]
-  initialized: false
-};
+const MAP_DIR_ANGLES = { N:0, NE:45, E:90, SE:135, S:180, SW:225, W:270, NW:315 };
+const MAP_ETO_BY_DIR = {N:['子'],NE:['丑','寅'],E:['卯'],SE:['辰','巳'],S:['午'],SW:['未','申'],W:['酉'],NW:['戌','亥']};
+const MAP_JP_DIR = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+const MAP_STAR_NAMES = {1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
+const MAP_SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 
 // ── 初期化 ────────────────────────────────────────────
 function initMapSection(){
-  // LocalStorageから保存済み地点を読み込み
+  updateMapModeGuide();
   try {
     const saved = localStorage.getItem('kitoku-map-places');
-    if(saved) mapState.savedPlaces = JSON.parse(saved);
+    if(saved){ kitokuMapState_places = JSON.parse(saved); }
   } catch(e){}
-
-  // モードガイドを初期表示
-  updateMapModeGuide();
 }
 
-function ensureMapInit(lat, lng){
-  if(mapState.initialized) return;
+let kitokuMapState_places = [];
+let kitokuMapLastTap = null;
 
-  const el = document.getElementById('kitokuMap');
+// ── 地図生成 ──────────────────────────────────────────
+function createKitokuMap(lat, lng){
+  kitokuMapCenter = { lat, lng };
   const placeholder = document.getElementById('mapPlaceholder');
   if(placeholder) placeholder.style.display = 'none';
 
-  const cfg = MAP_MODES[mapState.mode];
-  mapState.map = L.map('kitokuMap', {
-    center: [lat, lng],
-    zoom: cfg.zoom,
-    zoomControl: false,
-    attributionControl: true
-  });
+  setTimeout(() => {
+    const cfg = MAP_MODES[kitokuMapMode];
+    kitokuMapInstance = L.map('kitokuMap', {
+      center: [lat, lng], zoom: cfg.zoom, zoomControl: false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors', maxZoom: 19
+    }).addTo(kitokuMapInstance);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(mapState.map);
+    // 現在地マーカー
+    L.circleMarker([lat, lng], {
+      radius: 8, fillColor: '#c4a043', color: '#fff', weight: 2, opacity: 1, fillOpacity: 1
+    }).addTo(kitokuMapInstance);
 
-  // 十字マーカー（現在地）
-  const crossIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:22px;height:22px;border:2.5px solid #8a6820;border-radius:50%;background:rgba(196,160,67,.25);display:flex;align-items:center;justify-content:center;"><div style="width:6px;height:6px;background:#8a6820;border-radius:50%;"></div></div>',
-    iconSize: [22,22],
-    iconAnchor: [11,11]
-  });
-  mapState.centerMarker = L.marker([lat, lng], { icon: crossIcon, zIndexOffset: 1000 }).addTo(mapState.map);
+    kitokuMapReady = true;
+    drawKitokuMapLines(lat, lng);
+    setTimeout(() => kitokuMapInstance.invalidateSize(), 200);
 
-  // 地図タップイベント
-  mapState.map.on('click', onMapTap);
+    kitokuMapInstance.on('zoomend', () => {
+      const c = kitokuMapCenter || { lat, lng };
+      drawKitokuMapLines(c.lat, c.lng);
+    });
 
-  // オーバーレイ描画
-  mapState.compassLayer = L.layerGroup().addTo(mapState.map);
-  mapState.map.on('zoomend moveend', drawCompassOverlay);
+    kitokuMapInstance.on('click', onKitokuMapTap);
 
-  mapState.initialized = true;
-  drawCompassOverlay();
+  }, 100);
 }
 
-// ── 方位線・扇形オーバーレイ ─────────────────────────
-function drawCompassOverlay(){
-  if(!mapState.map || !mapState.compassLayer) return;
-  if(mapState.centerLat == null) return;
+// ── 方位線・オーバーレイ描画（direction_v2方式） ──────
+function drawKitokuMapLines(lat, lng){
+  if(!kitokuMapInstance) return;
 
-  mapState.compassLayer.clearLayers();
+  // 既存レイヤーを全削除
+  kitokuMapLines.forEach(l => kitokuMapInstance.removeLayer(l));
+  kitokuMapLines = [];
 
-  // 凡例の盤種ラベルを更新
+  if(!state.info) return;
+
+  const { honmei, tsukimei } = state.info;
+  const center = centerForDate();
+  if(!center) return;
+
+  const p2s = buildBoardFromCenter(center);
+  const d = state.date;
+  const y = d.getFullYear(), m = d.getMonth()+1, dd = d.getDate();
+
+  // 三合
+  const z = getZodiac(y);
+  const sangoSet = new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
+
+  // 吉凶判定（buildDirData流用）
+  const { kyouItems } = buildDirData(center);
+  const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
+
+  // ズーム連動の線長
+  const _zoom = kitokuMapInstance.getZoom();
+  const LINE_LENGTH = Math.min(150, Math.max(2, 40000 / Math.pow(2, _zoom)));
+
+  Object.entries(MAP_DIR_ANGLES).forEach(([dir, angle]) => {
+    const starN = p2s[dir];
+    const ddRank = rankDir(dir, starN, honmei, tsukimei, sangoSet, null);
+    const knsLine = kyouItems.filter(k => k.dir === dir);
+    const realKns = knsLine.filter(k => !k.name.includes('定位対冲'));
+    const isKyo = realKns.length > 0 || kyouSet.has(dir) || ddRank.isKyo;
+
+    let color, weight, opacity, dashArray;
+    if(isKyo){
+      color='#9aa0aa'; weight=1.5; opacity=0.55; dashArray='4,4';
+    } else if(ddRank.rank>=5){
+      color='#e84d80'; weight=3; opacity=0.8; dashArray=null;
+    } else if(ddRank.rank>=3){
+      color='#f5a8c0'; weight=2; opacity=0.7; dashArray=null;
+    } else if(ddRank.rank>=1){
+      color='#fbbf24'; weight=1.5; opacity=0.6; dashArray=null;
+    } else {
+      color='#94a3b8'; weight=1; opacity=0.35; dashArray='2,4';
+    }
+
+    const drawLine = (deg, w, op, dash) => {
+      const rad = deg * Math.PI / 180;
+      const dlat = Math.cos(rad) * (LINE_LENGTH / 111);
+      const dlng = Math.sin(rad) * (LINE_LENGTH / (111 * Math.cos(lat * Math.PI / 180)));
+      const opts = { color, weight: w, opacity: op };
+      if(dash) opts.dashArray = dash;
+      const line = L.polyline([[lat, lng], [lat+dlat, lng+dlng]], opts);
+      line.addTo(kitokuMapInstance);
+      kitokuMapLines.push(line);
+    };
+
+    // 吉方扇形
+    if(!isKyo && ddRank.rank >= 2){
+      const isSeihou = ['N','E','S','W'].includes(dir);
+      const halfSpan = isSeihou ? 15 : 30;
+      const FAN_LEN = Math.min(200, Math.max(3, 55000 / Math.pow(2, _zoom)));
+      const pts = [[lat, lng]];
+      for(let a = angle-halfSpan; a <= angle+halfSpan; a += 5){
+        const rad = a * Math.PI / 180;
+        const dlat = Math.cos(rad) * (FAN_LEN / 111);
+        const dlng = Math.sin(rad) * (FAN_LEN / (111 * Math.cos(lat * Math.PI / 180)));
+        pts.push([lat+dlat, lng+dlng]);
+      }
+      const fanColor = ddRank.rank>=4 ? '#e84d80' : ddRank.rank>=3 ? '#f06a98' : '#f5a8c0';
+      const fanOpacity = ddRank.rank>=4 ? 0.18 : ddRank.rank>=3 ? 0.14 : 0.1;
+      const fan = L.polygon(pts, { color:fanColor, weight:1, opacity:0.4, fillColor:fanColor, fillOpacity:fanOpacity });
+      fan.addTo(kitokuMapInstance);
+      kitokuMapLines.push(fan);
+    }
+
+    // メイン方位線
+    drawLine(angle, weight, opacity, dashArray);
+
+    // 吉方補助線
+    if(!isKyo && ddRank.rank >= 2){
+      drawLine(angle-15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
+      drawLine(angle+15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
+    }
+
+    // 方位ラベル
+    const midRad = angle * Math.PI / 180;
+    const midLat = lat + Math.cos(midRad)*(LINE_LENGTH/111)*0.15;
+    const midLng = lng + Math.sin(midRad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))*0.15;
+    const lcolor = isKyo ? '#ef4444' : ddRank.rank>=3 ? '#16a34a' : '#78716c';
+    const label = L.divIcon({
+      html: `<div style="font-size:10px;font-weight:700;color:${lcolor};white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff;">${MAP_JP_DIR[dir]}<br>${MAP_STAR_NAMES[starN]||''}</div>`,
+      iconAnchor: [20,10], className:''
+    });
+    const marker = L.marker([midLat, midLng], { icon:label, interactive:false });
+    marker.addTo(kitokuMapInstance);
+    kitokuMapLines.push(marker);
+  });
+
+  // 距離円（750m・3km・10km）
+  [[0.75,'rgba(196,160,67,.2)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.06)']].forEach(([r, fill]) => {
+    const circle = L.circle([lat, lng], {
+      radius: r*1000, color:'rgba(196,160,67,.3)', weight:1, fill:true, fillColor:fill, fillOpacity:0.3
+    }).addTo(kitokuMapInstance);
+    kitokuMapLines.push(circle);
+  });
+
+  // 方位盤SVGオーバーレイ
+  drawKitokuMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei);
+
+  // 凡例の盤種更新
   const banLabelEl = document.getElementById('mapBanTypeLabel');
   if(banLabelEl){
-    const banLabel = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
-    banLabelEl.textContent = banLabel;
+    banLabelEl.textContent = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
   }
+}
 
-  const lat = mapState.centerLat;
-  const lng = mapState.centerLng;
-  const zoom = mapState.map.getZoom();
+// ── 方位盤SVGオーバーレイ（direction_v2そのまま移植） ──
+function drawKitokuMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei){
+  if(!kitokuMapInstance) return;
+  if(kitokuMapCompassOverlay){ kitokuMapInstance.removeLayer(kitokuMapCompassOverlay); kitokuMapCompassOverlay=null; }
 
-  // ズーム連動の線の長さ計算（昨日の修正を踏襲）
-  const LINE_LENGTH = Math.min(
-    500000,
-    Math.max(500, 120000 / Math.pow(2, zoom - 10))
-  );
+  const centerPt = kitokuMapInstance.latLngToContainerPoint([lat, lng]);
+  const northPt  = kitokuMapInstance.latLngToContainerPoint([lat+0.75/111, lng]);
+  const radiusPx = Math.abs(centerPt.y - northPt.y);
+  if(radiusPx < 20) return;
 
-  // 吉凶判定（既存のgetKyouDirsを流用）
-  const kyouSet = getKyouSetForMap();
+  const R_OUT=radiusPx, R_IN=R_OUT*0.34, PAD=70;
+  const SVG=R_OUT*2+PAD*2, cx=SVG/2, cy=SVG/2;
+  const angles={N:{c:0,span:30},NE:{c:45,span:60},E:{c:90,span:30},SE:{c:135,span:60},S:{c:180,span:30},SW:{c:225,span:60},W:{c:270,span:30},NW:{c:315,span:60}};
 
-  DIR_ANGLES.forEach(d => {
-    const midAngle = (d.from + d.to) / 2;
-    // 北0°を地理的北に合わせる（leafletは北=0°、時計回り）
-    const isKyo = kyouSet.has(d.dir);
-    const color = isKyo ? 'rgba(120,125,135,.55)' : 'rgba(232,77,128,.72)';
-    const fillColor = isKyo ? 'rgba(120,125,135,.18)' : 'rgba(232,77,128,.13)';
+  function pXY(r,a){ const rad=(a-90)*Math.PI/180; return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)]; }
 
-    // 扇形（ポリゴンで近似）
-    const fanPoints = buildFanPoints(lat, lng, d.from, d.to, LINE_LENGTH);
-    L.polygon(fanPoints, {
-      color: color,
-      weight: 1,
-      fillColor: fillColor,
-      fillOpacity: 1,
-      interactive: false
-    }).addTo(mapState.compassLayer);
+  // 破の支を特定
+  const _y=state.date.getFullYear(),_m=state.date.getMonth()+1,_d=state.date.getDate();
+  const z=getZodiac(_y);
+  let breakBranch=MAP_SHI[(z.d+6)%12]||'', breakDir2=OPP[z.d]||'';
+  if(state.banType==='month'){ const mb=getMonthBranch(_y,_m,_d); breakBranch=MAP_SHI[(mb+6)%12]||''; breakDir2=OPP[BRANCH_DIR[mb]]||''; }
+  else if(state.banType==='day'){ const db=getDayBranch(_y,_m,_d); breakBranch=MAP_SHI[(db+6)%12]||''; breakDir2=OPP[BRANCH_DIR[db]]||''; }
 
-    // 中心線
-    const endPt = offsetLatLng(lat, lng, midAngle, LINE_LENGTH);
-    L.polyline([[lat, lng], [endPt.lat, endPt.lng]], {
-      color: color,
-      weight: isKyo ? 1.5 : 2,
-      opacity: 0.85,
-      dashArray: isKyo ? '4,4' : null,
-      interactive: false
-    }).addTo(mapState.compassLayer);
+  let cells='';
+  Object.entries(angles).forEach(([dir,{c,span}])=>{
+    const starN=p2s[dir];
+    const dd=rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
+    const kns=kyouItems.filter(k=>k.dir===dir);
+    const realKyoItems=kns.filter(k=>!k.name.includes('定位対冲'));
+    const isKyo=realKyoItems.length>0||kyouSet.has(dir)||dd.isKyo;
+    const start=c-span/2, end=c+span/2;
 
-    // 方位ラベル（扇形の中間あたり）
-    const labelDist = LINE_LENGTH * 0.55;
-    const labelPt = offsetLatLng(lat, lng, midAngle, labelDist);
-    const labelHtml = `<div style="font-size:10px;font-weight:800;color:${isKyo?'#9aa0aa':'#e84d80'};text-shadow:0 0 3px #fff,0 0 3px #fff;pointer-events:none;white-space:nowrap;">${d.label}</div>`;
-    L.marker([labelPt.lat, labelPt.lng], {
-      icon: L.divIcon({ className:'', html: labelHtml, iconAnchor:[12,8] }),
-      interactive: false
-    }).addTo(mapState.compassLayer);
+    let fill='rgba(40,50,60,.4)';
+    if(isKyo) fill='rgba(120,125,135,.55)';
+    else if(dd.rank>=2) fill='rgba(232,140,165,.5)';
+    else if(dd.rank>=1) fill='rgba(232,160,180,.4)';
+
+    const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
+    cells+=`<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
+
+    const nr=(R_IN+R_OUT)/2;
+    const [nx,ny]=pXY(nr,c);
+    const fsNum=Math.max(13,R_OUT*0.1);
+    cells+=`<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${fsNum.toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
+
+    const realKyo=kns.filter(k=>!k.name.includes('定位対冲'));
+    let kyoLabel='';
+    if(isKyo&&realKyo.length) kyoLabel=realKyo[0].name.split('/')[0][0];
+    else if(!isKyo&&dd.rank>=2) kyoLabel='吉';
+    if(kyoLabel&&R_OUT>40){
+      const [lx,ly]=pXY(R_OUT*0.82,c);
+      const lcolor=(kyoLabel==='吉')?'#d24a78':'#888e98';
+      const rr=Math.max(8,R_OUT*0.06);
+      cells+=`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${rr.toFixed(1)}" fill="${lcolor}"/>`;
+      cells+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${(rr*1.1).toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="700">${kyoLabel}</text>`;
+    }
   });
 
-  // 中心の750m円（日盤モードのみ）
-  if(mapState.mode === 'daily'){
-    L.circle([lat, lng], {
-      radius: 750,
-      color: 'rgba(138,104,32,.5)',
-      weight: 1.5,
-      fill: false,
-      dashArray: '3,5',
-      interactive: false
-    }).addTo(mapState.compassLayer);
+  // 中宮
+  const centerPts=[];
+  Object.values(angles).forEach(({c,span})=>{ const [px,py]=pXY(R_IN,c-span/2); centerPts.push(`${px.toFixed(1)},${py.toFixed(1)}`); });
+  cells+=`<polygon points="${centerPts.join(' ')}" fill="rgba(28,38,48,.5)" stroke="rgba(255,255,255,.4)" stroke-width="1"/>`;
+
+  // 十二支
+  if(R_OUT>36){
+    Object.entries(angles).forEach(([dir,{c,span}])=>{
+      const etoList=MAP_ETO_BY_DIR[dir]||[];
+      etoList.forEach((eto,idx)=>{
+        let off=0; if(etoList.length===2) off=(idx===0?-12:12);
+        const [ex,ey]=pXY(R_IN*0.68,c+off);
+        const isBreak=(eto===breakBranch&&dir===breakDir2);
+        const ecolor=isBreak?'#ff6060':'rgba(255,255,255,.7)';
+        const fs=isBreak?Math.max(10,R_OUT*0.06):Math.max(8,R_OUT*0.048);
+        cells+=`<text x="${ex.toFixed(1)}" y="${ey.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="${ecolor}" font-size="${fs.toFixed(0)}" font-family="'Noto Serif JP',serif" font-weight="${isBreak?'800':'500'}">${eto}</text>`;
+      });
+    });
+  }
+
+  // 中宮星
+  cells+=`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="#ffd860" font-size="${Math.max(15,R_OUT*0.12).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2px">${center}</text>`;
+
+  const svgHtml=`<svg width="${SVG}" height="${SVG}" viewBox="0 0 ${SVG} ${SVG}" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
+  const icon=L.divIcon({ className:'map-compass-overlay', html:svgHtml, iconSize:[SVG,SVG], iconAnchor:[SVG/2,SVG/2] });
+  kitokuMapCompassOverlay=L.marker([lat,lng],{icon,interactive:false,keyboard:false}).addTo(kitokuMapInstance);
+  kitokuMapLines.push(kitokuMapCompassOverlay);
+}
+
+// ── 中心地点セット ────────────────────────────────────
+function setMapCenter(lat, lng, name){
+  kitokuMapCenter = { lat, lng };
+  document.getElementById('mapCenterInfo').textContent = `中心地点：${name}（${lat.toFixed(4)}, ${lng.toFixed(4)}）`;
+  document.getElementById('mapTapInfo').style.display = 'none';
+
+  if(!kitokuMapReady){
+    createKitokuMap(lat, lng);
+  } else {
+    kitokuMapInstance.setView([lat, lng], MAP_MODES[kitokuMapMode].zoom);
+    drawKitokuMapLines(lat, lng);
   }
 }
 
-// 扇形のポリゴン頂点生成
-function buildFanPoints(lat, lng, fromDeg, toDeg, dist){
-  const pts = [[lat, lng]];
-  // 0°=北・時計回り → atan2用に変換済みで offsetLatLng に渡す
-  let f = fromDeg, t = toDeg;
-  if(t < f) t += 360;
-  const steps = Math.max(4, Math.round((t - f) / 10));
-  for(let i = 0; i <= steps; i++){
-    const deg = f + (t - f) * i / steps;
-    const pt = offsetLatLng(lat, lng, deg % 360, dist);
-    pts.push([pt.lat, pt.lng]);
-  }
-  pts.push([lat, lng]);
-  return pts;
-}
-
-// 方位角degree（北0°時計回り）・距離mから終点の緯度経度を計算
-function offsetLatLng(lat, lng, bearingDeg, distM){
-  const R = 6371000;
-  const bearingRad = bearingDeg * Math.PI / 180;
-  const latRad = lat * Math.PI / 180;
-  const lngRad = lng * Math.PI / 180;
-  const dRad = distM / R;
-  const lat2 = Math.asin(
-    Math.sin(latRad)*Math.cos(dRad) +
-    Math.cos(latRad)*Math.sin(dRad)*Math.cos(bearingRad)
-  );
-  const lng2 = lngRad + Math.atan2(
-    Math.sin(bearingRad)*Math.sin(dRad)*Math.cos(latRad),
-    Math.cos(dRad)-Math.sin(latRad)*Math.sin(lat2)
-  );
-  return { lat: lat2*180/Math.PI, lng: lng2*180/Math.PI };
-}
-
-// ── 吉凶セット取得 ────────────────────────────────────
-// buildDirData()を再利用して方位盤と完全同一の結果を得る
-function getKyouSetForMap(){
-  try {
-    if(typeof buildDirData === 'function' && state.info){
-      const center = centerForDate();
-      const { kyouItems } = buildDirData(center);
-      const strictItems = (kyouItems||[]).filter(x => !x.name.includes('定位対冲'));
-      return new Set(strictItems.map(x => x.dir));
-    }
-  } catch(e){ console.warn('getKyouSetForMap error:', e); }
-  return new Set();
-}
-
-// ── 位置情報取得 ──────────────────────────────────────
+// ── 現在地取得 ────────────────────────────────────────
 function locateUser(){
   const btn = document.getElementById('locateBtn');
-  btn.textContent = '⏳ 取得中...';
-  btn.disabled = true;
-
+  btn.textContent = '⏳ 取得中...'; btn.disabled = true;
   if(!navigator.geolocation){
     alert('このブラウザでは位置情報が使用できません。');
-    btn.textContent = '📍 現在地を登録';
-    btn.disabled = false;
-    return;
+    btn.textContent = '📍 現在地を登録'; btn.disabled = false; return;
   }
-
   navigator.geolocation.getCurrentPosition(
     pos => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
+      const lat = pos.coords.latitude, lng = pos.coords.longitude;
       setMapCenter(lat, lng, '現在地');
-      btn.textContent = '📍 現在地を登録済み';
-      btn.disabled = false;
-      // LocalStorageに保存
+      btn.textContent = '📍 現在地を登録済み'; btn.disabled = false;
       localStorage.setItem('kitoku-map-home', JSON.stringify({lat, lng}));
     },
-    err => {
-      alert('位置情報の取得に失敗しました。\nブラウザの設定で位置情報を許可してください。');
-      btn.textContent = '📍 現在地を登録';
-      btn.disabled = false;
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
+    () => { alert('位置情報の取得に失敗しました。'); btn.textContent = '📍 現在地を登録'; btn.disabled = false; },
+    { enableHighAccuracy:true, timeout:10000 }
   );
-}
-
-function setMapCenter(lat, lng, name){
-  mapState.centerLat = lat;
-  mapState.centerLng = lng;
-
-  if(!mapState.initialized){
-    ensureMapInit(lat, lng);
-  } else {
-    const cfg = MAP_MODES[mapState.mode];
-    mapState.map.setView([lat, lng], cfg.zoom);
-    mapState.centerMarker.setLatLng([lat, lng]);
-    drawCompassOverlay();
-  }
-
-  // 中心地点表示更新
-  document.getElementById('mapCenterInfo').textContent =
-    `中心地点：${name}（${lat.toFixed(4)}, ${lng.toFixed(4)}）`;
-
-  // タップ情報リセット
-  document.getElementById('mapTapInfo').style.display = 'none';
 }
 
 // ── モード切替 ────────────────────────────────────────
 function switchMapMode(mode){
-  mapState.mode = mode;
-
-  // タブUI更新
-  document.querySelectorAll('.map-mode-tab').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.mode === mode);
-  });
-
+  kitokuMapMode = mode;
+  document.querySelectorAll('.map-mode-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.mode===mode));
   updateMapModeGuide();
-
-  if(mapState.initialized && mapState.centerLat != null){
-    const cfg = MAP_MODES[mode];
-    mapState.map.setZoom(cfg.zoom);
-    drawCompassOverlay();
+  if(kitokuMapReady && kitokuMapCenter){
+    kitokuMapInstance.setZoom(MAP_MODES[mode].zoom);
+    drawKitokuMapLines(kitokuMapCenter.lat, kitokuMapCenter.lng);
   }
 }
 
 function updateMapModeGuide(){
   const el = document.getElementById('mapModeGuide');
-  if(el) el.textContent = MAP_MODES[mapState.mode].guide;
+  if(el) el.textContent = MAP_MODES[kitokuMapMode].guide;
 }
 
 // ── ズームボタン ──────────────────────────────────────
 function mapZoom(delta){
-  if(!mapState.map) return;
-  mapState.map.setZoom(mapState.map.getZoom() + delta);
+  if(!kitokuMapInstance) return;
+  kitokuMapInstance.setZoom(kitokuMapInstance.getZoom()+delta);
 }
 
-// ── 地図タップ処理 ────────────────────────────────────
-function onMapTap(e){
-  const lat = e.latlng.lat;
-  const lng = e.latlng.lng;
-  mapState.lastTapLat = lat;
-  mapState.lastTapLng = lng;
+// ── 地図タップ ────────────────────────────────────────
+function onKitokuMapTap(e){
+  if(!kitokuMapCenter) return;
+  const lat=e.latlng.lat, lng=e.latlng.lng;
+  kitokuMapLastTap = {lat, lng};
 
-  if(mapState.centerLat == null) return;
-
-  // タップマーカー
-  if(mapState.tapMarker) mapState.map.removeLayer(mapState.tapMarker);
-  const tapIcon = L.divIcon({
-    className: '',
-    html: '<div style="font-size:22px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));">📍</div>',
-    iconSize: [22,28],
-    iconAnchor: [11,28]
-  });
-  mapState.tapMarker = L.marker([lat, lng], { icon: tapIcon }).addTo(mapState.map);
-
-  // 方位・距離計算
-  const info = calcDirectionInfo(mapState.centerLat, mapState.centerLng, lat, lng);
-
-  // 吉凶判定
-  const kyouSet = getKyouSetForMap();
-  const isKyo = kyouSet.has(info.dir);
-  const kyoLabel = isKyo ? '凶方' : '吉方';
-  const kyoColor = isKyo ? '#9aa0aa' : '#e84d80';
-
-  // 現在の盤種・日付ラベル
-  const banLabel = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
-  const d = state.date;
-  const dateLabel = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
-
-  // 表示
-  document.getElementById('mapTapTitle').innerHTML =
-    `<span style="color:${kyoColor};">${info.dirLabel}（${info.branch}）</span>　${kyoLabel}`;
-  document.getElementById('mapTapDetail').innerHTML =
-    `距離：約 ${formatDist(info.dist)}<br>` +
-    `角度：${info.bearing.toFixed(1)}°<br>` +
-    `判定基準：${banLabel}・${dateLabel}<br>` +
-    `気学的意味：${isKyo ? '現在の盤面では凶方位です。移動・引越しは控えめに。' : '現在の盤面では吉方位です。積極的に活用できます。'}`;
-  document.getElementById('mapTapInfo').style.display = 'block';
-}
-
-// 方位計算（中心→タップ地点）
-function calcDirectionInfo(cLat, cLng, tLat, tLng){
-  // 距離（ハバーサイン）
-  const R = 6371000;
-  const dLat = (tLat - cLat) * Math.PI / 180;
-  const dLng = (tLng - cLng) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(cLat*Math.PI/180)*Math.cos(tLat*Math.PI/180)*Math.sin(dLng/2)**2;
-  const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-  // 方位角（北0°・時計回り）
-  const y = Math.sin(dLng)*Math.cos(tLat*Math.PI/180);
-  const x = Math.cos(cLat*Math.PI/180)*Math.sin(tLat*Math.PI/180) -
-             Math.sin(cLat*Math.PI/180)*Math.cos(tLat*Math.PI/180)*Math.cos(dLng);
-  const bearingRad = Math.atan2(y, x);
-  const bearing = ((bearingRad * 180/Math.PI) + 360) % 360;
+  const R=6371000;
+  const dLat=(lat-kitokuMapCenter.lat)*Math.PI/180;
+  const dLng=(lng-kitokuMapCenter.lng)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(kitokuMapCenter.lat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  const dist=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  const y2=Math.sin(dLng)*Math.cos(lat*Math.PI/180);
+  const x2=Math.cos(kitokuMapCenter.lat*Math.PI/180)*Math.sin(lat*Math.PI/180)-Math.sin(kitokuMapCenter.lat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.cos(dLng);
+  const bearing=((Math.atan2(y2,x2)*180/Math.PI)+360)%360;
 
   // KITOKU方位判定（30°/60°）
-  let dir = 'N', dirLabel = '北';
-  for(const d of DIR_ANGLES){
-    let f = d.from, t = d.to;
-    if(t < f){ // 北：345〜15°
-      if(bearing >= f || bearing < t){ dir = d.dir; dirLabel = d.label; break; }
-    } else {
-      if(bearing >= f && bearing < t){ dir = d.dir; dirLabel = d.label; break; }
-    }
+  const KITOKU_SPANS=[
+    {dir:'N',from:345,to:15},{dir:'NE',from:15,to:75},{dir:'E',from:75,to:105},
+    {dir:'SE',from:105,to:165},{dir:'S',from:165,to:195},{dir:'SW',from:195,to:255},
+    {dir:'W',from:255,to:285},{dir:'NW',from:285,to:345}
+  ];
+  let tapDir='N', tapDirLabel='北';
+  for(const s of KITOKU_SPANS){
+    let f=s.from,t=s.to;
+    if(t<f){ if(bearing>=f||bearing<t){tapDir=s.dir;tapDirLabel=MAP_JP_DIR[s.dir];break;} }
+    else { if(bearing>=f&&bearing<t){tapDir=s.dir;tapDirLabel=MAP_JP_DIR[s.dir];break;} }
   }
 
-  // 十二支（30°刻み）
-  const BRANCHES_BY_ANGLE = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-  const branchIdx = Math.floor(((bearing + 15) % 360) / 30);
-  const branch = BRANCHES_BY_ANGLE[branchIdx];
+  const { kyouItems } = buildDirData(centerForDate());
+  const kyouSet2 = new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+  const isKyo = kyouSet2.has(tapDir);
+  const kyoColor = isKyo ? '#9aa0aa' : '#e84d80';
+  const banLabel = {'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
+  const d=state.date;
 
-  return { dir, dirLabel, branch, bearing, dist };
-}
-
-function formatDist(m){
-  if(m < 1000) return Math.round(m) + 'm';
-  return (m/1000).toFixed(1) + 'km';
+  const formatDist = m => m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';
+  document.getElementById('mapTapTitle').innerHTML = `<span style="color:${kyoColor};">${tapDirLabel}</span>　${isKyo?'凶方':'吉方'}`;
+  document.getElementById('mapTapDetail').innerHTML =
+    `距離：約 ${formatDist(dist)}<br>角度：${bearing.toFixed(1)}°<br>` +
+    `判定基準：${banLabel}・${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日<br>` +
+    (isKyo?'現在の盤面では凶方位です。移動・引越しは控えめに。':'現在の盤面では吉方位です。積極的に活用できます。');
+  document.getElementById('mapTapInfo').style.display='block';
 }
 
 // ── よく行く場所 ──────────────────────────────────────
 function toggleSavedPlaces(){
-  const list = document.getElementById('savedPlacesList');
-  const btn = document.getElementById('savedPlacesBtn');
-  const isOpen = list.style.display !== 'none';
-  list.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? '⭐ よく行く場所 ▾' : '⭐ よく行く場所 ▴';
+  const list=document.getElementById('savedPlacesList');
+  const btn=document.getElementById('savedPlacesBtn');
+  const isOpen=list.style.display!=='none';
+  list.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'⭐ よく行く場所 ▾':'⭐ よく行く場所 ▴';
   if(!isOpen) renderSavedPlaces();
 }
-
 function renderSavedPlaces(){
-  const container = document.getElementById('savedPlacesItems');
-  const places = mapState.savedPlaces;
-  if(places.length === 0){
-    container.innerHTML = '<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ保存した場所がありません</div>';
-    return;
+  const container=document.getElementById('savedPlacesItems');
+  if(kitokuMapState_places.length===0){
+    container.innerHTML='<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ保存した場所がありません</div>';return;
   }
-  container.innerHTML = places.map((p, i) => `
+  container.innerHTML=kitokuMapState_places.map((p,i)=>`
     <div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(138,104,32,.1);">
       <button onclick="loadSavedPlace(${i})" style="flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;">
-        ${p.name}
-        <span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</span>
+        ${p.name}<span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</span>
       </button>
       <button onclick="deleteSavedPlace(${i})" style="width:24px;height:24px;border:1px solid rgba(138,104,32,.2);border-radius:6px;background:rgba(255,255,255,.72);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-
 function loadSavedPlace(idx){
-  const p = mapState.savedPlaces[idx];
-  if(!p) return;
-  setMapCenter(p.lat, p.lng, p.name);
-  // リストを閉じる
-  document.getElementById('savedPlacesList').style.display = 'none';
-  document.getElementById('savedPlacesBtn').textContent = '⭐ よく行く場所 ▾';
+  const p=kitokuMapState_places[idx]; if(!p) return;
+  setMapCenter(p.lat,p.lng,p.name);
+  document.getElementById('savedPlacesList').style.display='none';
+  document.getElementById('savedPlacesBtn').textContent='⭐ よく行く場所 ▾';
 }
-
 function deleteSavedPlace(idx){
-  mapState.savedPlaces.splice(idx, 1);
-  savePlacesToStorage();
-  renderSavedPlaces();
+  kitokuMapState_places.splice(idx,1); savePlacesToStorage(); renderSavedPlaces();
 }
-
 function saveCurrentAsPlace(){
-  if(mapState.centerLat == null){
-    alert('中心地点が設定されていません。');
-    return;
-  }
-  const name = prompt('場所の名前を入力してください（例：自宅・実家・会社）', '');
+  if(!kitokuMapCenter){alert('中心地点が設定されていません。');return;}
+  const name=prompt('場所の名前を入力してください（例：自宅・実家・会社）','');
   if(!name) return;
-  mapState.savedPlaces.push({ name, lat: mapState.centerLat, lng: mapState.centerLng });
+  kitokuMapState_places.push({name,lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng});
   savePlacesToStorage();
-  renderSavedPlaces();
 }
-
 function saveTapAsPlace(){
-  if(mapState.lastTapLat == null) return;
-  const name = prompt('場所の名前を入力してください', '');
+  if(!kitokuMapLastTap) return;
+  const name=prompt('場所の名前を入力してください','');
   if(!name) return;
-  mapState.savedPlaces.push({ name, lat: mapState.lastTapLat, lng: mapState.lastTapLng });
+  kitokuMapState_places.push({name,lat:kitokuMapLastTap.lat,lng:kitokuMapLastTap.lng});
   savePlacesToStorage();
 }
-
 function savePlacesToStorage(){
-  try {
-    localStorage.setItem('kitoku-map-places', JSON.stringify(mapState.savedPlaces));
-  } catch(e){}
+  try{ localStorage.setItem('kitoku-map-places',JSON.stringify(kitokuMapState_places)); }catch(e){}
 }
 
-// ── 全画面トグル ─────────────────────────────────────
-function toggleMapFullscreen(){
-  const panel = document.getElementById('mapPanel');
-  const btn = document.getElementById('mapFullscreenBtn');
-  const isFs = panel.classList.toggle('map-fullscreen');
-  btn.textContent = isFs ? '✕ 閉じる' : '⛶ 全画面';
-  document.body.style.overflow = isFs ? 'hidden' : '';
-  // Leafletはコンテナサイズ変更後にinvalidateSizeが必要
-  if(mapState.map){
-    setTimeout(() => {
-      mapState.map.invalidateSize();
-      drawCompassOverlay();
-    }, 150);
+// ── 方位盤との連動（setBanType・moveDateから呼ばれる） ──
+function redrawMapIfReady(){
+  if(kitokuMapReady && kitokuMapCenter){
+    drawKitokuMapLines(kitokuMapCenter.lat, kitokuMapCenter.lng);
   }
 }
 
-// ── 全画面中にESCで閉じる ──────────────────────────────
-document.addEventListener('keydown', e => {
-  if(e.key === 'Escape'){
-    const panel = document.getElementById('mapPanel');
-    if(panel && panel.classList.contains('map-fullscreen')){
-      toggleMapFullscreen();
-    }
+// ── 全画面 ────────────────────────────────────────────
+function toggleMapFullscreen(){
+  const panel=document.getElementById('mapPanel');
+  const btn=document.getElementById('mapFullscreenBtn');
+  const isFs=panel.classList.toggle('map-fullscreen');
+  btn.textContent=isFs?'✕ 閉じる':'⛶ 全画面';
+  document.body.style.overflow=isFs?'hidden':'';
+  if(kitokuMapInstance){
+    setTimeout(()=>{ kitokuMapInstance.invalidateSize(); redrawMapIfReady(); },150);
+  }
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    const panel=document.getElementById('mapPanel');
+    if(panel&&panel.classList.contains('map-fullscreen')) toggleMapFullscreen();
   }
 });
-// premium.htmlのDOMContentLoadedに相乗り（既存のinit関数の後ろで呼ぶ）
-document.addEventListener('DOMContentLoaded', () => {
-  initMapSection();
 
-  // init()のstate.info確定を待ってから地図を復元・描画する
+// ── 起動時の初期化 ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', ()=>{
+  initMapSection();
   function restoreMapWhenReady(){
-    if(!state._initDone){
-      setTimeout(restoreMapWhenReady, 50);
-      return;
-    }
-    try {
-      const home = localStorage.getItem('kitoku-map-home');
+    if(!state._initDone){ setTimeout(restoreMapWhenReady,50); return; }
+    try{
+      const home=localStorage.getItem('kitoku-map-home');
       if(home){
-        const {lat, lng} = JSON.parse(home);
-        setMapCenter(lat, lng, '登録済み地点');
-        document.getElementById('locateBtn').textContent = '📍 現在地を登録済み';
+        const {lat,lng}=JSON.parse(home);
+        setMapCenter(lat,lng,'登録済み地点');
+        document.getElementById('locateBtn').textContent='📍 現在地を登録済み';
       }
-    } catch(e){}
+    }catch(e){}
   }
   restoreMapWhenReady();
 });
