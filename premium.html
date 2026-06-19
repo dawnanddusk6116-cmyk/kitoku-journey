@@ -3252,11 +3252,17 @@ function gcDestination(lat, lng, bearingDeg, distM){
   return [lat2*180/Math.PI, ((lng2*180/Math.PI)+540)%360-180];
 }
 // 始点から方位bearingへ距離distMまでの大円経路を多点で返す（曲線描画用）
+// 日付変更線(経度±180)を跨ぐ点で経路を打ち切り、地図横断を防ぐ
 function gcPath(lat, lng, bearingDeg, distM, steps){
   steps = steps || 48;
   const pts = [[lat, lng]];
+  let prevLng = lng;
   for(let i=1; i<=steps; i++){
-    pts.push(gcDestination(lat, lng, bearingDeg, distM*i/steps));
+    const p = gcDestination(lat, lng, bearingDeg, distM*i/steps);
+    // 経度が急にジャンプ（>180度差）したら日付変更線を跨いだので打ち切り
+    if(Math.abs(p[1]-prevLng) > 180) break;
+    pts.push(p);
+    prevLng = p[1];
   }
   return pts;
 }
@@ -3370,20 +3376,18 @@ function drawKitokuMapLines(lat, lng){
     if(!isKyo && dd.rank>=2){
       const isSeihou=['N','E','S','W'].includes(dir);
       const halfSpan=isSeihou?15:30;
-      const FAN_LEN=FAN_LENGTH_BASE;
+      // 扇形は日付変更線に達しない距離に制限（最大3000km）。線は長く伸ばす。
+      const FAN_LEN = useGreatCircle ? Math.min(FAN_LENGTH_BASE, 3000) : FAN_LENGTH_BASE;
       let pts;
       if(useGreatCircle){
         // 大円扇形：中心→左端へ大円、外周弧、右端→中心の順で境界を構成
         pts=[];
-        // 左端の大円経路（中心→外周）
-        const leftArc=gcPath(lat,lng,angle-halfSpan,FAN_LEN*1000,20);
+        const leftArc=gcPath(lat,lng,angle-halfSpan,FAN_LEN*1000,16);
         pts=pts.concat(leftArc);
-        // 外周弧（左端→右端を方位刻みで）
         for(let a=angle-halfSpan; a<=angle+halfSpan; a+=2){
           pts.push(gcDestination(lat,lng,a,FAN_LEN*1000));
         }
-        // 右端の大円経路（外周→中心）逆順
-        const rightArc=gcPath(lat,lng,angle+halfSpan,FAN_LEN*1000,20).reverse();
+        const rightArc=gcPath(lat,lng,angle+halfSpan,FAN_LEN*1000,16).reverse();
         pts=pts.concat(rightArc);
       } else {
         pts=[[lat,lng]];
@@ -3825,16 +3829,16 @@ function drawFsMapContent(lat,lng){
     };
     if(!isKyo&&dd.rank>=2){
       const isSeihou=['N','E','S','W'].includes(dir),halfSpan=isSeihou?15:30;
-      const FL=FL_BASE;
+      const FL = useGC ? Math.min(FL_BASE, 3000) : FL_BASE;
       let pts;
       if(useGC){
         pts=[];
-        const leftArc=gcPath(lat,lng,angle-halfSpan,FL*1000,20);
+        const leftArc=gcPath(lat,lng,angle-halfSpan,FL*1000,16);
         pts=pts.concat(leftArc);
         for(let a=angle-halfSpan;a<=angle+halfSpan;a+=2){
           pts.push(gcDestination(lat,lng,a,FL*1000));
         }
-        const rightArc=gcPath(lat,lng,angle+halfSpan,FL*1000,20).reverse();
+        const rightArc=gcPath(lat,lng,angle+halfSpan,FL*1000,16).reverse();
         pts=pts.concat(rightArc);
       } else {
         pts=[[lat,lng]];
