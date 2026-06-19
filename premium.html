@@ -3238,6 +3238,28 @@ const MAP_KITOKU_SPANS= [
   {dir:'W',from:255,to:285},{dir:'NW',from:285,to:345}
 ];
 
+// ── 大円（great circle）経路生成 ───────────────────────
+// 始点(lat,lng)から方位bearingへ距離distMの終点を球面で計算
+function gcDestination(lat, lng, bearingDeg, distM){
+  const R = 6371000;
+  const br = bearingDeg * Math.PI/180;
+  const lat1 = lat * Math.PI/180;
+  const lng1 = lng * Math.PI/180;
+  const dR = distM / R;
+  const lat2 = Math.asin(Math.sin(lat1)*Math.cos(dR) + Math.cos(lat1)*Math.sin(dR)*Math.cos(br));
+  const lng2 = lng1 + Math.atan2(Math.sin(br)*Math.sin(dR)*Math.cos(lat1), Math.cos(dR)-Math.sin(lat1)*Math.sin(lat2));
+  return [lat2*180/Math.PI, ((lng2*180/Math.PI)+540)%360-180];
+}
+// 始点から方位bearingへ距離distMまでの大円経路を多点で返す（曲線描画用）
+function gcPath(lat, lng, bearingDeg, distM, steps){
+  steps = steps || 48;
+  const pts = [[lat, lng]];
+  for(let i=1; i<=steps; i++){
+    pts.push(gcDestination(lat, lng, bearingDeg, distM*i/steps));
+  }
+  return pts;
+}
+
 // ── 状態 ─────────────────────────────────────────────
 let kitokuMapInst   = null;   // Leaflet map instance
 let kitokuMapLines  = [];     // 全レイヤーの配列（一括削除用）
@@ -3309,6 +3331,8 @@ function drawKitokuMapLines(lat, lng){
   const FAN_COEF  = {daily:55000, travel:10000000, pilgrimage:250000, move:400000}[kitokuMapMode] || 55000;
   const LINE_LENGTH = Math.min(LINE_MAX, Math.max(2, LINE_COEF/Math.pow(2,_zoom)));
   const FAN_LENGTH_BASE = Math.min(FAN_MAX, Math.max(3, FAN_COEF/Math.pow(2,_zoom)));
+  // 海外スケール（旅行・引越し）は大円（曲線）で描画
+  const useGreatCircle = (kitokuMapMode==='travel' || kitokuMapMode==='move');
 
   Object.entries(MAP_DIR_ANGLES).forEach(([dir,angle])=>{
     const starN = p2s[dir];
@@ -3325,11 +3349,19 @@ function drawKitokuMapLines(lat, lng){
     else {               color='#94a3b8'; weight=1;   opacity=0.35; dashArray='2,4'; }
 
     const drawLine=(deg,w,op,dash)=>{
-      const rad=deg*Math.PI/180;
-      const dlat=Math.cos(rad)*(LINE_LENGTH/111);
-      const dlng=Math.sin(rad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)));
+      let latlngs;
+      if(useGreatCircle){
+        // 大円（曲線）：距離はメートル換算
+        latlngs = gcPath(lat, lng, deg, LINE_LENGTH*1000, 48);
+      } else {
+        // 平面近似（近距離）：直線
+        const rad=deg*Math.PI/180;
+        const dlat=Math.cos(rad)*(LINE_LENGTH/111);
+        const dlng=Math.sin(rad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)));
+        latlngs = [[lat,lng],[lat+dlat,lng+dlng]];
+      }
       const opts={color,weight:w,opacity:op}; if(dash)opts.dashArray=dash;
-      const line=L.polyline([[lat,lng],[lat+dlat,lng+dlng]],opts);
+      const line=L.polyline(latlngs,opts);
       line.addTo(kitokuMapInst); kitokuMapLines.push(line);
     };
 
@@ -3338,12 +3370,24 @@ function drawKitokuMapLines(lat, lng){
       const isSeihou=['N','E','S','W'].includes(dir);
       const halfSpan=isSeihou?15:30;
       const FAN_LEN=FAN_LENGTH_BASE;
-      const pts=[[lat,lng]];
-      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
-        const r=a*Math.PI/180;
-        const dlat=Math.cos(r)*(FAN_LEN/111);
-        const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
-        pts.push([lat+dlat,lng+dlng]);
+      let pts;
+      if(useGreatCircle){
+        // 大円扇形：外周を大円の弧でつなぐ
+        pts=[[lat,lng]];
+        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=3){
+          // 各方位の大円終点を集める（外周を曲線で結ぶため中間点も追加）
+          const arc=gcPath(lat,lng,a,FAN_LEN*1000,16);
+          // 中心からの放射は最後の点（終点）だけ使い、外周弧を構成
+          pts.push(arc[arc.length-1]);
+        }
+      } else {
+        pts=[[lat,lng]];
+        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+          const r=a*Math.PI/180;
+          const dlat=Math.cos(r)*(FAN_LEN/111);
+          const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
+          pts.push([lat+dlat,lng+dlng]);
+        }
       }
       const fanColor=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fanOpacity=dd.rank>=4?0.24:dd.rank>=3?0.18:0.13;
@@ -3748,6 +3792,7 @@ function drawFsMapContent(lat,lng){
   const _fsFanCoef  = {daily:80000,travel:10000000,pilgrimage:250000,move:400000}[kitokuMapMode]||80000;
   const LL  = Math.min(_fsLineMax, Math.max(3, _fsLineCoef/Math.pow(2,_z)));
   const FL_BASE = Math.min(_fsFanMax,  Math.max(5, _fsFanCoef /Math.pow(2,_z)));
+  const useGC = (kitokuMapMode==='travel' || kitokuMapMode==='move');
   Object.entries(MAP_DIR_ANGLES).forEach(([dir,angle])=>{
     const starN=p2s[dir];
     const dd=rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
@@ -3761,18 +3806,32 @@ function drawFsMapContent(lat,lng){
     else if(dd.rank>=1){color='#fbbf24';weight=1.5;opacity=0.6;dashArray=null;}
     else{color='#94a3b8';weight=1;opacity=0.35;dashArray='2,4';}
     const dLine=(deg,w,op,dash)=>{
-      const rad=deg*Math.PI/180;
-      const dlat=Math.cos(rad)*(LL/111),dlng=Math.sin(rad)*(LL/(111*Math.cos(lat*Math.PI/180)));
+      let latlngs;
+      if(useGC){
+        latlngs=gcPath(lat,lng,deg,LL*1000,48);
+      } else {
+        const rad=deg*Math.PI/180;
+        const dlat=Math.cos(rad)*(LL/111),dlng=Math.sin(rad)*(LL/(111*Math.cos(lat*Math.PI/180)));
+        latlngs=[[lat,lng],[lat+dlat,lng+dlng]];
+      }
       const opts={color,weight:w,opacity:op};if(dash)opts.dashArray=dash;
-      const l=L.polyline([[lat,lng],[lat+dlat,lng+dlng]],opts).addTo(kitokuFsMapInst);
+      const l=L.polyline(latlngs,opts).addTo(kitokuFsMapInst);
       kitokuFsLayers.push(l);
     };
     if(!isKyo&&dd.rank>=2){
       const isSeihou=['N','E','S','W'].includes(dir),halfSpan=isSeihou?15:30;
       const FL=FL_BASE;
-      const pts=[[lat,lng]];
-      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
-        const r=a*Math.PI/180;pts.push([lat+Math.cos(r)*(FL/111),lng+Math.sin(r)*(FL/(111*Math.cos(lat*Math.PI/180)))]);
+      let pts;
+      if(useGC){
+        pts=[[lat,lng]];
+        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=3){
+          pts.push(gcDestination(lat,lng,a,FL*1000));
+        }
+      } else {
+        pts=[[lat,lng]];
+        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+          const r=a*Math.PI/180;pts.push([lat+Math.cos(r)*(FL/111),lng+Math.sin(r)*(FL/(111*Math.cos(lat*Math.PI/180)))]);
+        }
       }
       const fc=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fo=dd.rank>=4?0.28:dd.rank>=3?0.22:0.16;
