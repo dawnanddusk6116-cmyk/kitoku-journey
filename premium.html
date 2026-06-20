@@ -34,14 +34,6 @@ body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;mi
 .subtitle{font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:8px;}
 .panel{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:15px;}
 .panel-title{font-size:.72rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:10px;}
-.panel-details{padding:0;overflow:hidden;}
-.panel-details>summary{list-style:none;cursor:pointer;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--goldlt);}
-.panel-details>summary::-webkit-details-marker{display:none;}
-.panel-details>summary::after{content:'⌄';width:27px;height:27px;border:1px solid rgba(138,104,32,.24);border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(255,255,255,.75);transition:transform .18s;flex-shrink:0;}
-.panel-details[open]>summary::after{transform:rotate(180deg);}
-.panel-details-title{font-size:.72rem;font-weight:800;letter-spacing:.08em;}
-.panel-details-note{display:block;margin-top:4px;font-size:.54rem;color:var(--mist);font-weight:500;letter-spacing:0;line-height:1.55;}
-.panel-details-body{border-top:1px solid var(--rim);padding:15px;}
 .star-text{font-size:.78rem;color:var(--snow);line-height:2;font-weight:500;}
 .note{font-size:.62rem;color:var(--mist);line-height:1.8;margin-top:8px;}
 .copy-btn,.ghost-btn{width:100%;border-radius:9px;padding:11px 12px;font-family:'Noto Serif JP',serif;font-size:.75rem;cursor:pointer;letter-spacing:.04em;}
@@ -116,14 +108,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .topic-btn{border:1px solid var(--rim);border-radius:9px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:800;line-height:1.35;padding:8px 8px;cursor:pointer;text-align:left;min-height:54px;}
 .topic-btn span{display:block;font-size:.5rem;color:var(--mist);font-weight:500;margin-top:1px;line-height:1.35;}
 .topic-btn:active{transform:scale(.98);}
-.compact-consult{margin-top:10px;border:1px solid rgba(138,104,32,.22);border-radius:12px;background:rgba(255,255,255,.66);overflow:hidden;}
-.compact-consult summary{list-style:none;cursor:pointer;padding:12px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--goldlt);}
-.compact-consult summary::-webkit-details-marker{display:none;}
-.compact-consult summary::after{content:'⌄';width:26px;height:26px;border:1px solid rgba(138,104,32,.24);border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(255,255,255,.72);transition:transform .18s;flex-shrink:0;}
-.compact-consult[open] summary::after{transform:rotate(180deg);}
-.compact-consult-title{display:block;font-size:.74rem;font-weight:900;letter-spacing:.08em;}
-.compact-consult-note{display:block;margin-top:3px;font-size:.56rem;color:var(--mist);font-weight:500;line-height:1.55;}
-.compact-consult-body{border-top:1px solid rgba(138,104,32,.16);padding:12px 12px 13px;}
 .scent-link-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
 .scent-link-grid .scent-link{display:block;text-decoration:none;text-align:center;border:1px solid rgba(138,104,32,.22);background:rgba(255,255,255,.72);border-radius:9px;padding:9px 7px;color:var(--goldlt);font-size:.64rem;font-weight:800;line-height:1.45;}
 .scent-link-grid .scent-link span{display:block;font-size:.5rem;color:var(--mist);font-weight:500;margin-top:1px;}
@@ -467,15 +451,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
       </div>
 
-      <details class="compact-consult" id="consultOptions">
-        <summary>
-          <span>
-            <span class="compact-consult-title">相談内容を開く</span>
-            <span class="compact-consult-note">テーマ・話し方・入力欄をまとめています</span>
-          </span>
-        </summary>
-        <div class="compact-consult-body">
-
       <details class="mini-accordion">
         <summary>AI相談に入る情報</summary>
         <div class="mini-accordion-body" id="aiContextSummary">
@@ -561,18 +536,10 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </div>
       </div>
       <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
-        </div>
-      </details>
     </div>
 
-    <details class="panel panel-details" id="compassPanel">
-      <summary>
-        <span>
-          <span class="panel-details-title">② プレミア方位盤</span>
-          <span class="panel-details-note">旅行・聖地巡礼・引越しの方位と日程を見る</span>
-        </span>
-      </summary>
-      <div class="panel-details-body">
+    <div class="panel">
+      <div class="panel-title">② プレミア方位盤</div>
       <details class="premium-help">
         <summary>Premium Compass の使い方</summary>
         <div class="premium-help-body">
@@ -680,18 +647,13 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <a class="mode-link" href="move.html">🏡 引越し<br>で確認</a>
       </div>
       <div class="note">まずは日盤・月盤・年盤をここに集約。プレミア課金後は、ここから線路日・吉方日程・事業判断へ広げられます。</div>
-      </div>
-    </details>
+    </div>
 
     <!-- ③ 方位地図 -->
-    <details class="panel panel-details" id="mapPanel">
-      <summary>
-        <span>
-          <span class="panel-details-title">③ 方位地図</span>
-          <span class="panel-details-note">現在地・目的地を地図で確認する</span>
-        </span>
-      </summary>
-      <div class="panel-details-body">
+    <div class="panel" id="mapPanel">
+      <div class="panel-title">③ 方位地図
+        <span style="font-size:.52rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span>
+      </div>
 
       <!-- モード切替タブ -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
@@ -756,22 +718,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button onclick="saveTapAsPlace()" style="margin-top:8px;width:100%;padding:7px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">⭐ この場所を保存</button>
       </div>
 
-      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・星・吉凶を表示します。Google Map への差し替えを予定しています。</div>
-      </div>
-    </details>
-
-    <details class="panel panel-details" id="senroPanel">
-      <summary>
-        <span>
-          <span class="panel-details-title">④ 線路の日</span>
-          <span class="panel-details-note">契約・開始・出発など、動かす日の候補を見る</span>
-        </span>
-      </summary>
-      <div class="panel-details-body">
-        <div class="senro-list" id="senroDays"></div>
-        <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
-      </div>
-    </details>
+      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・星・吉凶を表示します。</div>
+    </div>
 
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">便利ツール</div>
 
@@ -833,6 +781,14 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
       <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
       <button class="copy-btn" id="copyTargetBtn" onclick="copyTargetInfo()">📋 相手の星情報をコピー</button>
+      </div>
+    </details>
+
+    <details class="self-accordion">
+      <summary>今月の線路の日 <button type="button" onclick="event.stopPropagation();openToolHelp('senro')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
+      <div class="self-accordion-body">
+      <div class="senro-list" id="senroDays"></div>
+      <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
       </div>
     </details>
 
@@ -2364,27 +2320,13 @@ function renderModeContent(mode){
 document.addEventListener('DOMContentLoaded',function(){
   const saved=localStorage.getItem('kitoku-premium-mode')||'travel';
   setTimeout(function(){ renderModeContent(saved); }, 100);
-  const mapPanel=document.getElementById('mapPanel');
-  if(mapPanel){
-    mapPanel.addEventListener('toggle',function(){
-      if(mapPanel.open&&typeof kitokuMapInst!=='undefined'&&kitokuMapInst){
-        setTimeout(function(){ try{ kitokuMapInst.invalidateSize(); }catch(e){} },160);
-      }
-    });
-  }
 });
 
 
 // ── TODAY'S INSPIRATION ──
 function scrollToAiChat(){
   const el=document.getElementById('aiChatPanel');
-  const details=document.getElementById('consultOptions');
-  if(details) details.open=true;
   if(el) el.scrollIntoView({behavior:'smooth'});
-  setTimeout(()=>{
-    const input=document.getElementById('chatInput');
-    if(input) input.focus({preventScroll:true});
-  },260);
 }
 
 const TOOL_HELP = {
