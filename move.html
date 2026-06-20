@@ -272,6 +272,46 @@ body{
   padding:10px;
 }
 .preset-grid.open{display:grid;}
+.destination-accordion{
+  margin:10px 0 0;
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:12px;
+  background:rgba(255,253,248,.72);
+  overflow:hidden;
+}
+.destination-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 13px;
+  color:var(--goldlt);
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.06em;
+}
+.destination-accordion summary::-webkit-details-marker{display:none;}
+.destination-accordion summary::after{
+  content:"▶";
+  color:var(--gold);
+  font-size:.68rem;
+}
+.destination-accordion[open] summary::after{content:"▼";}
+.destination-accordion-note{
+  display:block;
+  font-size:.56rem;
+  color:var(--mist);
+  font-weight:400;
+  letter-spacing:0;
+  margin-top:3px;
+  line-height:1.5;
+}
+.destination-accordion-body{
+  padding:0 12px 12px;
+}
+
 .preset-btn{
   background:var(--card);
   border:1px solid var(--rim);border-radius:9px;
@@ -1112,6 +1152,12 @@ html.font-large .font-btn{font-size:.8rem;}
     ── または下のリストから大まかな方位を確認する ──
   </div>
 
+  <details class="destination-accordion">
+    <summary>
+      <span>地域リストから選ぶ<span class="destination-accordion-note">北海道・関東・海外など、代表地点から大まかな方位を確認できます</span></span>
+    </summary>
+    <div class="destination-accordion-body">
+
   <!-- 国内 -->
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-hokkaido_tohoku')">
@@ -1171,6 +1217,9 @@ html.font-large .font-btn{font-size:.8rem;}
     </div>
     <div class="preset-grid" id="grid-overseas_far"></div>
   </div>
+
+    </div>
+  </details>
 
   <div style="
     margin-top:10px;
