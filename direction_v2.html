@@ -2239,7 +2239,7 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
     let fill = 'rgba(40,50,60,.4)';
     if (isKyo) fill = 'rgba(120,125,135,.55)';
     else if (dd.rank >= 2) fill = 'rgba(232,140,165,.5)';
-    else if (dd.rank >= 1) fill = 'rgba(232,160,180,.4)';
+    else if (dd.rank >= 1) fill = 'rgba(255,255,255,.9)';
 
     const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
     cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
@@ -3466,7 +3466,7 @@ function octa_getColors(dd,isDark){
   if(dd.rank>=4)return{fill:d?'rgba(240,150,175,.44)':'rgba(246,206,217,.5)',stroke:d?'rgba(240,150,175,.82)':'rgba(210,130,152,.55)',num:d?'#ffe0e8':'#9a3050',name:d?'rgba(255,210,222,.88)':'rgba(154,48,80,.68)'};
   if(dd.rank>=3)return{fill:d?'rgba(238,145,170,.38)':'rgba(248,216,224,.55)',stroke:d?'rgba(238,145,170,.72)':'rgba(214,150,168,.5)',num:d?'#ffe0e8':'#a04060',name:d?'rgba(255,205,218,.85)':'rgba(160,64,96,.62)'};
   if(dd.rank>=2)return{fill:d?'rgba(236,140,168,.32)':'rgba(250,228,234,.55)',stroke:d?'rgba(236,140,168,.6)':'rgba(220,170,185,.45)',num:d?'#ffdce6':'#b05070',name:d?'rgba(255,200,214,.8)':'rgba(176,80,112,.56)'};
-  if(dd.rank>=1)return{fill:d?'rgba(234,138,165,.24)':'rgba(252,236,240,.5)',stroke:d?'rgba(234,138,165,.5)':'rgba(224,184,196,.4)',num:d?'#ffd6e2':'#b86080',name:d?'rgba(255,196,210,.72)':'rgba(184,96,128,.5)'};
+  if(dd.rank>=1)return{fill:d?'rgba(248,248,250,.92)':'rgba(255,255,255,.85)',stroke:d?'rgba(210,205,195,.5)':'rgba(180,175,165,.38)',num:d?'rgba(50,45,38,.85)':'rgba(40,35,28,.8)',name:d?'rgba(90,82,68,.7)':'rgba(90,80,65,.55)'};
   // 普通＝白（夜も白っぽく）
   return{fill:d?'rgba(248,248,250,.92)':'rgba(255,255,255,.85)',stroke:d?'rgba(210,205,195,.5)':'rgba(180,175,165,.38)',num:d?'rgba(50,45,38,.85)':'rgba(40,35,28,.8)',name:d?'rgba(90,82,68,.7)':'rgba(90,80,65,.55)'};
 }
@@ -3550,6 +3550,7 @@ function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet,extra){
       let bColor,bBg;
       if(dd.isKyo){bColor=isDark?'rgba(210,215,225,.9)':'#5a5f69';bBg=isDark?'rgba(120,125,135,.3)':'rgba(155,160,170,.25)';}
       else if(dd.isCaution&&dd.rank<2){bColor=isDark?'#e0b050':'#9a6810';bBg=isDark?'rgba(190,135,35,.2)':'rgba(190,135,35,.14)';}
+      else if(subText==='天道'){bColor=isDark?'#e0b050':'#8a6820';bBg=isDark?'rgba(255,255,255,.18)':'rgba(255,255,255,.88)';}
       else{bColor=isDark?'#f0b8c8':'#a04060';bBg=isDark?'rgba(232,180,195,.25)':'rgba(245,205,215,.4)';}
       svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
       svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'8.6','font-family':"'Noto Serif JP',serif"}));

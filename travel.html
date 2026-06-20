@@ -3233,7 +3233,7 @@ function drawPickerCompassOverlay(mapInst, lat, lng) {
     let fill = 'rgba(40,50,60,.4)';
     if (isKyo) fill='rgba(120,125,135,.55)';
     else if (dd.rank>=2) fill='rgba(232,140,165,.5)';
-    else if (dd.rank>=1) fill='rgba(196,160,67,.38)';
+    else if (dd.rank>=1) fill='rgba(255,255,255,.9)';
     const [ix1,iy1]=pXY(R_IN,start),[ox1,oy1]=pXY(R_OUT,start),[ox2,oy2]=pXY(R_OUT,end),[ix2,iy2]=pXY(R_IN,end);
     cells += `<path d="M ${ix1.toFixed(1)} ${iy1.toFixed(1)} L ${ox1.toFixed(1)} ${oy1.toFixed(1)} L ${ox2.toFixed(1)} ${oy2.toFixed(1)} L ${ix2.toFixed(1)} ${iy2.toFixed(1)} Z" fill="${fill}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`;
     const nr=(R_IN+R_OUT)/2, [nx,ny]=pXY(nr,c);
