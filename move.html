@@ -274,10 +274,11 @@ body{
 .preset-grid.open{display:grid;}
 .destination-accordion{
   margin:10px 0 0;
-  border:1px solid rgba(138,104,32,.22);
+  border:1px solid rgba(138,104,32,.34);
   border-radius:12px;
-  background:rgba(255,253,248,.72);
+  background:linear-gradient(135deg,#fffdf8,#f8f2e8);
   overflow:hidden;
+  box-shadow:0 2px 10px rgba(60,40,10,.04);
 }
 .destination-accordion summary{
   list-style:none;
@@ -286,19 +287,28 @@ body{
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  padding:12px 13px;
+  padding:13px 14px;
   color:var(--goldlt);
-  font-size:.72rem;
-  font-weight:700;
+  font-size:.76rem;
+  font-weight:800;
   letter-spacing:.06em;
 }
 .destination-accordion summary::-webkit-details-marker{display:none;}
 .destination-accordion summary::after{
-  content:"▶";
-  color:var(--gold);
-  font-size:.68rem;
+  content:"開く ▶";
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(138,104,32,.12);
+  border:1px solid rgba(138,104,32,.26);
+  color:var(--goldlt);
+  font-size:.62rem;
+  font-weight:800;
 }
-.destination-accordion[open] summary::after{content:"▼";}
+.destination-accordion[open] summary::after{content:"閉じる ▼";}
 .destination-accordion-note{
   display:block;
   font-size:.56rem;
@@ -854,6 +864,30 @@ html.font-large .font-btn{font-size:.8rem;}
   cursor:pointer;font-family:'Noto Serif JP',serif;
   letter-spacing:.06em;
 }
+.guide-action-row{
+  margin:10px 16px 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.guide-action-row .nav-open-btn,
+.guide-action-row .guide-open-btn{
+  width:100%;
+  min-height:38px;
+  justify-content:center;
+  margin:0;
+  padding:8px 6px;
+  white-space:nowrap;
+  line-height:1.2;
+}
+@media(max-width:360px){
+  .guide-action-row{gap:6px;}
+  .guide-action-row .nav-open-btn,
+  .guide-action-row .guide-open-btn{
+    font-size:.62rem;
+    padding:8px 4px;
+  }
+}
 
 /* ── STEPヒント ── */
 .step-hint {
@@ -1235,10 +1269,10 @@ html.font-large .font-btn{font-size:.8rem;}
 </div>
 
   <!-- 方位盤ガイドボタン -->
-  <div style="margin:0 16px 0;display:flex;justify-content:flex-end;">
-      <button class="nav-open-btn" onclick="openNavModal()">📋 ナビの使い方</button>
-  <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
-  <button class="guide-open-btn" onclick="openKariModal()" style="background:rgba(60,120,60,.08);border-color:rgba(60,120,60,.3);color:#3a6e3a;">🌿 仮吉方とは？</button>
+  <div class="guide-action-row">
+    <button class="nav-open-btn" onclick="openNavModal()">📋 ナビの使い方</button>
+    <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
+    <button class="guide-open-btn" onclick="openKariModal()" style="background:rgba(60,120,60,.08);border-color:rgba(60,120,60,.3);color:#3a6e3a;">🌿 仮吉方とは？</button>
   </div>
 
   <!-- STEP2→3 ガイダンス -->
