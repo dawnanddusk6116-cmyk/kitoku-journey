@@ -3600,12 +3600,13 @@ const STAR_SHOUI = {
      keyword:'帝王・中心・支配・トップ'}
 };
 
-// 恵方の度数を八方位に変換
+// 恵方の度数を八方位に変換（最も近い方位を返す）
 function ehouDegToDir(deg){
   const dirs=[['N',0],['NE',45],['E',90],['SE',135],['S',180],['SW',225],['W',270],['NW',315]];
+  const angDiff=(a,b)=>{ let d=Math.abs(a-b)%360; return d>180?360-d:d; };
   let best='S', bestDiff=999;
   dirs.forEach(([d,a])=>{
-    let diff=180-Math.abs(((deg-a+540)%360)-180);
+    const diff=angDiff(deg,a);
     if(diff<bestDiff){bestDiff=diff;best=d;}
   });
   return best;
