@@ -34,6 +34,14 @@ body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;mi
 .subtitle{font-size:.72rem;color:var(--mist);line-height:1.8;margin-top:8px;}
 .panel{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:15px;}
 .panel-title{font-size:.72rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin-bottom:10px;}
+.panel-details{padding:0;overflow:hidden;}
+.panel-details>summary{list-style:none;cursor:pointer;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--goldlt);}
+.panel-details>summary::-webkit-details-marker{display:none;}
+.panel-details>summary::after{content:'⌄';width:27px;height:27px;border:1px solid rgba(138,104,32,.24);border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(255,255,255,.75);transition:transform .18s;}
+.panel-details[open]>summary::after{transform:rotate(180deg);}
+.panel-details-title{font-size:.72rem;font-weight:800;letter-spacing:.08em;}
+.panel-details-note{display:block;margin-top:4px;font-size:.54rem;color:var(--mist);font-weight:500;letter-spacing:0;line-height:1.55;}
+.panel-details-body{border-top:1px solid var(--rim);padding:15px;}
 .star-text{font-size:.78rem;color:var(--snow);line-height:2;font-weight:500;}
 .note{font-size:.62rem;color:var(--mist);line-height:1.8;margin-top:8px;}
 .copy-btn,.ghost-btn{width:100%;border-radius:9px;padding:11px 12px;font-family:'Noto Serif JP',serif;font-size:.75rem;cursor:pointer;letter-spacing:.04em;}
@@ -108,6 +116,15 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .topic-btn{border:1px solid var(--rim);border-radius:9px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:800;line-height:1.35;padding:8px 8px;cursor:pointer;text-align:left;min-height:54px;}
 .topic-btn span{display:block;font-size:.5rem;color:var(--mist);font-weight:500;margin-top:1px;line-height:1.35;}
 .topic-btn:active{transform:scale(.98);}
+.compact-consult{margin-top:10px;border:1px solid rgba(138,104,32,.22);border-radius:12px;background:rgba(255,255,255,.66);overflow:hidden;}
+.compact-consult summary{list-style:none;cursor:pointer;padding:12px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--goldlt);}
+.compact-consult summary::-webkit-details-marker{display:none;}
+.compact-consult summary::after{content:'⌄';width:26px;height:26px;border:1px solid rgba(138,104,32,.24);border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(255,255,255,.72);transition:transform .18s;}
+.compact-consult[open] summary::after{transform:rotate(180deg);}
+.compact-consult-title{display:block;font-size:.74rem;font-weight:900;letter-spacing:.08em;}
+.compact-consult-note{display:block;margin-top:3px;font-size:.56rem;color:var(--mist);font-weight:500;line-height:1.55;}
+.compact-consult-body{border-top:1px solid rgba(138,104,32,.16);padding:12px 12px 13px;}
+.compact-panel-note{font-size:.6rem;color:var(--mist);line-height:1.75;background:rgba(138,104,32,.045);border:1px solid rgba(138,104,32,.14);border-radius:10px;padding:9px 11px;}
 .scent-link-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
 .scent-link-grid .scent-link{display:block;text-decoration:none;text-align:center;border:1px solid rgba(138,104,32,.22);background:rgba(255,255,255,.72);border-radius:9px;padding:9px 7px;color:var(--goldlt);font-size:.64rem;font-weight:800;line-height:1.45;}
 .scent-link-grid .scent-link span{display:block;font-size:.5rem;color:var(--mist);font-weight:500;margin-top:1px;}
@@ -451,6 +468,15 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
       </div>
 
+      <details class="compact-consult" id="consultOptions">
+        <summary>
+          <span>
+            <span class="compact-consult-title">相談内容を開く</span>
+            <span class="compact-consult-note">テーマ・話し方・入力欄をまとめています</span>
+          </span>
+        </summary>
+        <div class="compact-consult-body">
+
       <details class="mini-accordion">
         <summary>AI相談に入る情報</summary>
         <div class="mini-accordion-body" id="aiContextSummary">
@@ -536,6 +562,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </div>
       </div>
       <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
+        </div>
+      </details>
     </div>
 
     <div class="panel">
@@ -650,10 +678,14 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </div>
 
     <!-- ③ 方位地図 -->
-    <div class="panel" id="mapPanel">
-      <div class="panel-title">③ 方位地図
-        <span style="font-size:.52rem;color:var(--mist);font-weight:500;">※ Google Map 差し替え予定</span>
-      </div>
+    <details class="panel panel-details" id="mapPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">③ 方位地図</span>
+          <span class="panel-details-note">現在地・目的地を地図で確認する時だけ開きます</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
 
       <!-- モード切替タブ -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
@@ -681,17 +713,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <!-- 中心地点表示 -->
       <div id="mapCenterInfo" style="font-size:.6rem;color:var(--mist);margin-bottom:6px;padding:5px 8px;background:rgba(138,104,32,.04);border-radius:6px;border:1px solid rgba(138,104,32,.1);">中心地点：未設定</div>
 
-      <!-- 恵方トグル -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:7px 10px;background:rgba(212,160,40,.06);border:1px solid rgba(212,160,40,.22);border-radius:8px;">
-        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;flex:1;">
-          <input type="checkbox" id="setEhouShow" onchange="toggleEhouLine()" style="width:38px;height:22px;cursor:pointer;accent-color:#d4a028;">
-          <div>
-            <div style="font-size:.66rem;color:#a87b1a;font-weight:800;">⛩️ 恵方ライン（節分の恵方）</div>
-            <div id="ehouInfoLabel" style="font-size:.54rem;color:var(--mist);">今年の恵方を金色のラインで表示</div>
-          </div>
-        </label>
-      </div>
-
       <!-- 地図本体 -->
       <div id="kitokuMap" style="width:100%;height:320px;border-radius:10px;border:1px solid rgba(138,104,32,.2);overflow:hidden;position:relative;background:#e8e0d0;">
         <div id="mapPlaceholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--mist);font-size:.68rem;text-align:center;padding:20px;">
@@ -718,8 +739,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button onclick="saveTapAsPlace()" style="margin-top:8px;width:100%;padding:7px;border:1px solid rgba(138,104,32,.24);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">⭐ この場所を保存</button>
       </div>
 
-      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・星・吉凶を表示します。</div>
-    </div>
+      <div class="note" style="margin-top:10px;">地図をタップすると、その地点の方位・距離・星・吉凶を表示します。Google Map への差し替えを予定しています。</div>
+      </div>
+    </details>
 
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">便利ツール</div>
 
@@ -2320,13 +2342,27 @@ function renderModeContent(mode){
 document.addEventListener('DOMContentLoaded',function(){
   const saved=localStorage.getItem('kitoku-premium-mode')||'travel';
   setTimeout(function(){ renderModeContent(saved); }, 100);
+  const mapPanel=document.getElementById('mapPanel');
+  if(mapPanel){
+    mapPanel.addEventListener('toggle',function(){
+      if(mapPanel.open&&typeof kitokuMapInst!=='undefined'&&kitokuMapInst){
+        setTimeout(function(){ try{ kitokuMapInst.invalidateSize(); }catch(e){} },160);
+      }
+    });
+  }
 });
 
 
 // ── TODAY'S INSPIRATION ──
 function scrollToAiChat(){
   const el=document.getElementById('aiChatPanel');
+  const details=document.getElementById('consultOptions');
+  if(details) details.open=true;
   if(el) el.scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    const input=document.getElementById('chatInput');
+    if(input) input.focus({preventScroll:true});
+  },260);
 }
 
 const TOOL_HELP = {
@@ -3313,9 +3349,6 @@ function loadKyoSettings(){
   if(teiiEl) teiiEl.checked = (teiiKyo==='1');
   // 相剋表示はデフォルトOFF
   if(skEl) skEl.checked = (soukokuShow==='1');
-  // 恵方ラインはデフォルトOFF
-  const ehouEl = document.getElementById('setEhouShow');
-  if(ehouEl) ehouEl.checked = (localStorage.getItem('kitoku-ehou-show')==='1');
 }
 
 function updateKyoSetting(){
@@ -3387,32 +3420,6 @@ const MAP_KITOKU_SPANS= [
   {dir:'W',from:255,to:285},{dir:'NW',from:285,to:345}
 ];
 
-// ── 恵方（節分の恵方）の算出 ──────────────────────────
-// 年の十干（下一桁）で決まる。立春前は前年扱い。
-// 恵方は厳密には十干の方角：甲己=甲(東微北75°)/乙庚=庚(西微南255°)/
-// 丙辛戊癸=丙(南微東165°)/丁壬=壬(北微西345°)
-// 通称「南南東やや右」等は丙方向（165°）を指す
-function getEhouForYear(year, month, day){
-  // 立春（2/4頃）前は前年の十干で判定
-  const adjYear = (month===1 || (month===2 && day<4)) ? year-1 : year;
-  const k = ((adjYear % 10) + 10) % 10; // 西暦下一桁
-  // 0=庚,1=辛,2=壬,3=癸,4=甲,5=乙,6=丙,7=丁,8=戊,9=己
-  // 恵方の方角（度・北0時計回り）と通称
-  const EHOU_TABLE = {
-    4:{deg:75, kan:'甲', label:'東微北（およそ東北東）'},  // 甲
-    9:{deg:75, kan:'甲', label:'東微北（およそ東北東）'},  // 己→甲方
-    5:{deg:255,kan:'庚', label:'西微南（およそ西南西）'},  // 乙→庚方
-    0:{deg:255,kan:'庚', label:'西微南（およそ西南西）'},  // 庚
-    6:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},  // 丙
-    1:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},  // 辛→丙方
-    8:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},  // 戊→丙方
-    3:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},  // 癸→丙方
-    7:{deg:345,kan:'壬', label:'北微西（およそ北北西）'},  // 丁→壬方
-    2:{deg:345,kan:'壬', label:'北微西（およそ北北西）'}   // 壬
-  };
-  return Object.assign({year:adjYear}, EHOU_TABLE[k]);
-}
-
 // ── 大円（great circle）経路生成 ───────────────────────
 // 始点(lat,lng)から方位bearingへ距離distMの終点を球面で計算
 function gcDestination(lat, lng, bearingDeg, distM){
@@ -3450,14 +3457,6 @@ let kitokuMapMode   = 'daily';
 let kitokuMapReady  = false;
 let kitokuMapPlaces = [];     // よく行く場所
 let kitokuMapLastTap= null;   // 最後にタップした座標
-let kitokuTapMarker = null;   // タップ地点のピンマーカー
-let kitokuTapLine   = null;   // タップ地点と中心を結ぶ線
-let kitokuFsTapMarker = null; // 全画面：タップピン
-let kitokuFsTapLine   = null; // 全画面：タップ線
-let kitokuEhouLine    = null; // 恵方ライン（通常地図）
-let kitokuEhouLabel   = null; // 恵方ラベル
-let kitokuFsEhouLine  = null; // 恵方ライン（全画面）
-let kitokuFsEhouLabel = null;
 
 // ── 初期化 ────────────────────────────────────────────
 function initMapSection(){
@@ -3488,13 +3487,11 @@ function createKitokuMap(lat, lng){
 
     kitokuMapReady = true;
     drawKitokuMapLines(lat, lng);
-    drawEhouLine();
     setTimeout(()=>kitokuMapInst.invalidateSize(), 200);
 
     kitokuMapInst.on('zoomend',()=>{
       const c=kitokuMapCenter||{lat,lng};
       drawKitokuMapLines(c.lat, c.lng);
-      drawEhouLine();
     });
     kitokuMapInst.on('click', onKitokuMapTap);
   }, 100);
@@ -3751,82 +3748,10 @@ function setMapCenter(lat, lng, name){
   kitokuMapCenter={lat,lng};
   document.getElementById('mapCenterInfo').textContent=`中心地点：${name}（${lat.toFixed(4)}, ${lng.toFixed(4)}）`;
   document.getElementById('mapTapInfo').style.display='none';
-  clearTapMarkers();
   if(!kitokuMapReady){ createKitokuMap(lat,lng); }
   else {
     kitokuMapInst.setView([lat,lng],MAP_MODES[kitokuMapMode].zoom);
     drawKitokuMapLines(lat,lng);
-    drawEhouLine();
-  }
-}
-
-// タップピン・線をクリア（通常地図）
-function clearTapMarkers(){
-  if(kitokuTapMarker&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuTapMarker);kitokuTapMarker=null;}
-  if(kitokuTapLine&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuTapLine);kitokuTapLine=null;}
-}
-
-// ── 恵方ライン ────────────────────────────────────────
-function isEhouShowOn(){
-  return localStorage.getItem('kitoku-ehou-show')==='1';
-}
-function toggleEhouLine(){
-  const el=document.getElementById('setEhouShow');
-  const on=el&&el.checked;
-  try{localStorage.setItem('kitoku-ehou-show', on?'1':'0');}catch(e){}
-  drawEhouLine();
-}
-// 恵方ラインを描画（通常地図・全画面の両方）
-function drawEhouLine(){
-  // 既存の恵方ラインを除去
-  if(kitokuEhouLine&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuEhouLine);kitokuEhouLine=null;}
-  if(kitokuEhouLabel&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuEhouLabel);kitokuEhouLabel=null;}
-  if(kitokuFsEhouLine&&kitokuFsMapInst){kitokuFsMapInst.removeLayer(kitokuFsEhouLine);kitokuFsEhouLine=null;}
-  if(kitokuFsEhouLabel&&kitokuFsMapInst){kitokuFsMapInst.removeLayer(kitokuFsEhouLabel);kitokuFsEhouLabel=null;}
-
-  if(!isEhouShowOn() || !kitokuMapCenter) {
-    updateEhouLabel();
-    return;
-  }
-  const d=state.date;
-  const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
-  const {lat,lng}=kitokuMapCenter;
-  // 恵方ラインの長さ（モード連動）
-  const dist = (kitokuMapMode==='travel'||kitokuMapMode==='move') ? 4000000 : 80000;
-
-  // 通常地図に描画
-  if(kitokuMapInst){
-    const path=gcPath(lat,lng,ehou.deg,dist,48);
-    kitokuEhouLine=L.polyline(path,{color:'#d4a028',weight:3.5,opacity:0.9}).addTo(kitokuMapInst);
-    const lp=gcDestination(lat,lng,ehou.deg, Math.min(dist*0.25, 50000));
-    kitokuEhouLabel=L.marker([lp[0],lp[1]],{
-      icon:L.divIcon({className:'',html:`<div style="background:#d4a028;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3);">⛩️ ${ehou.year}年の恵方</div>`,iconAnchor:[30,10]}),
-      interactive:false
-    }).addTo(kitokuMapInst);
-  }
-  // 全画面に描画
-  if(kitokuFsMapInst && document.getElementById('kitokuMapFullscreenModal').style.display==='block'){
-    const fsDist=(kitokuMapMode==='travel'||kitokuMapMode==='move')?6000000:120000;
-    const path2=gcPath(lat,lng,ehou.deg,fsDist,48);
-    kitokuFsEhouLine=L.polyline(path2,{color:'#d4a028',weight:4,opacity:0.9}).addTo(kitokuFsMapInst);
-    const lp2=gcDestination(lat,lng,ehou.deg,Math.min(fsDist*0.25,80000));
-    kitokuFsEhouLabel=L.marker([lp2[0],lp2[1]],{
-      icon:L.divIcon({className:'',html:`<div style="background:#d4a028;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:11px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.4);">⛩️ ${ehou.year}年の恵方</div>`,iconAnchor:[35,11]}),
-      interactive:false
-    }).addTo(kitokuFsMapInst);
-  }
-  updateEhouLabel();
-}
-// 恵方トグルの説明ラベルを更新
-function updateEhouLabel(){
-  const el=document.getElementById('ehouInfoLabel');
-  if(!el) return;
-  const d=state.date;
-  const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
-  if(isEhouShowOn()){
-    el.innerHTML=`<strong style="color:#a87b1a;">${ehou.year}年の恵方＝${ehou.kan}（${ehou.label}）</strong>`;
-  } else {
-    el.textContent='今年の恵方を金色のラインで表示';
   }
 }
 
@@ -3858,7 +3783,6 @@ function switchMapMode(mode){
   if(kitokuMapReady&&kitokuMapCenter){
     kitokuMapInst.setZoom(MAP_MODES[mode].zoom);
     drawKitokuMapLines(kitokuMapCenter.lat,kitokuMapCenter.lng);
-    drawEhouLine();
   }
 }
 function updateMapModeGuide(){
@@ -3876,11 +3800,6 @@ function mapZoom(delta){
 function redrawMapIfReady(){
   if(kitokuMapReady&&kitokuMapCenter)
     drawKitokuMapLines(kitokuMapCenter.lat,kitokuMapCenter.lng);
-  // 盤種・日付変更でタップ判定が変わるため、古いタップ表示はクリア
-  clearTapMarkers();
-  const ti=document.getElementById('mapTapInfo');
-  if(ti) ti.style.display='none';
-  drawEhouLine(); // 恵方ラインも再描画（年が変わると恵方も変わる）
 }
 
 // ── 地図タップ ────────────────────────────────────────
@@ -3942,9 +3861,8 @@ function judgeDirForMap(dir){
   if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'本命・月命 吉' };
   if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方・三合' };
   if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方' };
-  // 天道（rank1）は吉方ではない。独立カテゴリ・白扱い（盤面と同じ）
-  // ピンクにせず中立色＋「天道」サインのみ表示する
-  if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#8a6820', sub:'天道（吉方ではない補助的な後押し）' };
+  // 天道（rank1）は吉方ではない。独立カテゴリ・白扱い（direction_v2と同じ）
+  if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#b86080', sub:'天道（補助的な後押し）' };
   // ランク0＝吉でも凶でもない普通の方位
   return { kind:'normal', label:'普通', color:'#78716c', sub:'吉凶なし' };
 }
@@ -3960,21 +3878,6 @@ function onKitokuMapTap(e){
   const p2s=buildBoardFromCenter(center);
   const starN=p2s[tapDir];
   const j=judgeDirForMap(tapDir);
-
-  // タップ地点のピン＋中心への線を描画（吉凶色で・天道と普通は中立色）
-  const pinColor = j.kind==='kyo'?'#9aa0aa':j.kind==='kichi'?'#e84d80':'#8a6820';
-  if(kitokuTapMarker) kitokuMapInst.removeLayer(kitokuTapMarker);
-  if(kitokuTapLine) kitokuMapInst.removeLayer(kitokuTapLine);
-  kitokuTapLine=L.polyline([[kitokuMapCenter.lat,kitokuMapCenter.lng],[lat,lng]],{
-    color:pinColor,weight:1.5,opacity:0.8,dashArray:'4,4'
-  }).addTo(kitokuMapInst);
-  const pinIcon=L.divIcon({
-    className:'',
-    html:`<div style="position:relative;width:26px;height:34px;"><svg width="26" height="34" viewBox="0 0 26 34"><path d="M13 0C5.8 0 0 5.8 0 13c0 9 13 21 13 21s13-12 13-21C26 5.8 20.2 0 13 0z" fill="${pinColor}" stroke="#fff" stroke-width="2"/><circle cx="13" cy="13" r="5" fill="#fff"/></svg></div>`,
-    iconSize:[26,34],iconAnchor:[13,34]
-  });
-  kitokuTapMarker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:3000}).addTo(kitokuMapInst);
-
   const banLabel={'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
   const d=state.date;
   const fmt=m=>m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';
@@ -4078,8 +3981,7 @@ function openMapFullscreen(){
     }
     kitokuFsMapInst.invalidateSize();
     drawFsMapContent(c.lat,c.lng);
-    drawEhouLine();
-    kitokuFsMapInst.off('zoomend').on('zoomend',()=>{drawFsMapContent(c.lat,c.lng);drawEhouLine();});
+    kitokuFsMapInst.off('zoomend').on('zoomend',()=>drawFsMapContent(c.lat,c.lng));
   },100);
 }
 function closeMapFullscreen(){
@@ -4212,7 +4114,6 @@ function drawFsMapContent(lat,lng){
 function onFsMapTap(e){
   if(!kitokuMapCenter) return;
   const{lat,lng}=e.latlng;
-  kitokuMapLastTap={lat,lng};
 
   const{dist,bearing,dir:tapDir,dirLabel:tapDirLabel,isLongDist}=calcMapTapInfo(kitokuMapCenter.lat,kitokuMapCenter.lng,lat,lng);
 
@@ -4220,21 +4121,6 @@ function onFsMapTap(e){
   const p2s=buildBoardFromCenter(center);
   const starN=p2s[tapDir];
   const j=judgeDirForMap(tapDir);
-
-  // タップ地点のピン＋中心への線（天道・普通は中立色）
-  const pinColor = j.kind==='kyo'?'#9aa0aa':j.kind==='kichi'?'#e84d80':'#8a6820';
-  if(kitokuFsTapMarker) kitokuFsMapInst.removeLayer(kitokuFsTapMarker);
-  if(kitokuFsTapLine) kitokuFsMapInst.removeLayer(kitokuFsTapLine);
-  kitokuFsTapLine=L.polyline([[kitokuMapCenter.lat,kitokuMapCenter.lng],[lat,lng]],{
-    color:pinColor,weight:2,opacity:0.85,dashArray:'5,4'
-  }).addTo(kitokuFsMapInst);
-  const fsPinIcon=L.divIcon({
-    className:'',
-    html:`<div style="position:relative;width:30px;height:40px;"><svg width="30" height="40" viewBox="0 0 30 40"><path d="M15 0C6.7 0 0 6.7 0 15c0 10.4 15 25 15 25s15-14.6 15-25C30 6.7 23.3 0 15 0z" fill="${pinColor}" stroke="#fff" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="#fff"/></svg></div>`,
-    iconSize:[30,40],iconAnchor:[15,40]
-  });
-  kitokuFsTapMarker=L.marker([lat,lng],{icon:fsPinIcon,zIndexOffset:6000}).addTo(kitokuFsMapInst);
-
   const fmt=m=>m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';
   const banLabel={'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
   const d=state.date;
