@@ -95,6 +95,73 @@ body{
   font-size:.95rem;color:var(--goldlt);font-weight:600;
   margin-bottom:6px;letter-spacing:.06em;
 }
+.step-section{
+  border-color:rgba(138,104,32,.22);
+  box-shadow:0 2px 10px rgba(60,40,10,.035);
+}
+.step-section .sec-label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(138,104,32,.1);
+  border:1px solid rgba(138,104,32,.25);
+  border-radius:999px;
+  padding:5px 10px;
+  margin-bottom:10px;
+  font-size:.62rem;
+  letter-spacing:.12em;
+  color:var(--goldlt);
+  font-weight:800;
+}
+.step-section .sec-title{
+  font-size:1.02rem;
+  font-weight:800;
+}
+.bonus-accordion{
+  padding:0;
+  overflow:hidden;
+}
+.bonus-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:15px 16px;
+}
+.bonus-accordion summary::-webkit-details-marker{display:none;}
+.bonus-accordion summary::after{
+  content:"開く ▶";
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(138,104,32,.1);
+  border:1px solid rgba(138,104,32,.24);
+  color:var(--goldlt);
+  font-size:.62rem;
+  font-weight:800;
+  flex-shrink:0;
+}
+.bonus-accordion[open] summary::after{content:"閉じる ▼";}
+.bonus-summary-main{
+  min-width:0;
+}
+.bonus-summary-note{
+  display:block;
+  font-size:.62rem;
+  color:var(--mist);
+  line-height:1.6;
+  margin-top:5px;
+  font-weight:400;
+  letter-spacing:0;
+}
+.bonus-accordion-body{
+  padding:0 16px 16px;
+}
 
 /* ── 星情報バー ── */
 .star-bar{
@@ -1088,7 +1155,7 @@ html.font-large .font-btn{font-size:.8rem;}
 </details>
 
 <!-- STEP 1: 自宅登録 -->
-<div class="section">
+<div class="section step-section">
   <div class="sec-label">STEP 1 — 現在地（旧居）</div>
   <div class="sec-title">今住んでいる場所を登録する</div>
   <div id="homeRegArea">
@@ -1117,7 +1184,7 @@ html.font-large .font-btn{font-size:.8rem;}
   </div>
 
 <!-- STEP 2: 目的地設定 -->
-<div class="section">
+<div class="section step-section">
   <div class="sec-label">STEP 2 — 引越し先</div>
   <div class="sec-title">引越し先を選ぶ</div>
 
@@ -1465,9 +1532,15 @@ html.font-large .font-btn{font-size:.8rem;}
 </div>
 
 <!-- 家相調律セクション -->
-<div class="section" style="margin-top:12px;">
-  <div class="sec-label">BONUS — 今の家を整える</div>
-  <div class="sec-title">🏡 空間の調律</div>
+<details class="section bonus-accordion" style="margin-top:12px;">
+  <summary>
+    <span class="bonus-summary-main">
+      <span class="sec-label">BONUS — 今の家を整える</span>
+      <span class="sec-title">🏡 空間の調律</span>
+      <span class="bonus-summary-note">引越しできない時や、今の家を整えたい時に開いて使います。</span>
+    </span>
+  </summary>
+  <div class="bonus-accordion-body">
   <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:14px;">
     引越しできない時も、今の家をパワースポットに変えられます。<br>
     家相は「怖いもの」ではなく、<strong style="color:var(--snow);">「足りないエネルギーを補う地図」</strong>です。<br>
@@ -1568,7 +1641,8 @@ html.font-large .font-btn{font-size:.8rem;}
 
     </div>
   </div>
-</div>
+  </div>
+</details>
 
 <!-- 地図ピッカーモーダル -->
 <div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:#f7f4ef;flex-direction:column;">
