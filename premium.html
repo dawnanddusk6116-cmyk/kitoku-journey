@@ -760,6 +760,54 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
+    <!-- 最大吉方の開運アイテム -->
+    <details class="panel panel-details" id="kichiOkiPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">🌟 最大吉方の開運アイテム</span>
+          <span class="panel-details-note">あなたの最大吉方から導く、常に使えるラッキーカラー・フード・アイテム</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
+        <div style="font-size:.64rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">
+          本命星と月命星の間を取り持つ<strong>最大吉方</strong>は、あなたが一生使える開運の核です。この星の色・味・食べ物・アイテムを日常に取り入れると、運気が底上げされます。吉方位旅行・お水取りの際の「現地で何を食べ、何を身につけるか」の指針にもなります。
+        </div>
+        <div id="kichiOkiContent" style="font-size:.66rem;color:var(--snow);line-height:1.85;"></div>
+      </div>
+    </details>
+
+    <!-- 恵方参りナビ -->
+    <details class="panel panel-details" id="ehouMairiPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">⛩️ 恵方参りナビ</span>
+          <span class="panel-details-note">今年の恵方の社寺へ。チャンスに気づき、乗る知恵と勇気を得る</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
+        <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:12px;">
+          恵方参りをすると、その年のチャンスの「気」を受け取り、<strong>一瞬のチャンスに気づいて乗る知恵と勇気</strong>が得られます。天の気が切り替わる節目に自分の気を整える方法です。
+        </div>
+        <div id="ehouMairiContent" style="font-size:.66rem;color:var(--snow);line-height:1.85;"></div>
+      </div>
+    </details>
+
+    <!-- 恵方置き・恵方受けナビ -->
+    <details class="panel panel-details" id="ehouOkiPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">⛩️ 恵方置き・恵方受けナビ</span>
+          <span class="panel-details-note">家の中の恵方に「気」を満たす、その年の置物とお札の配置</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
+        <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:12px;">
+          恵方が海や山で社寺がない時は、<strong>家の中の恵方</strong>に「恵方置き」を据えると、家に恵方の「気」が満ちます。その対角線上に「恵方受け」を置くと、気が留まり充満します。「恵方置き」は<strong>その年の恵方に廻座する九星</strong>にまつわるもの、「恵方受け」はお札や破魔矢です。
+        </div>
+        <div id="ehouOkiContent" style="font-size:.66rem;color:var(--snow);line-height:1.85;"></div>
+      </div>
+    </details>
+
     <details class="panel panel-details" id="senroPanel">
       <summary>
         <span>
@@ -927,6 +975,9 @@ function init(){
     renderBoard();
     renderSenro();
     renderAiContextSummary();
+    renderKichiOkiNav();
+    renderEhouMairiNav();
+    renderEhouOkiNav();
     applyLifeReadingBanner();
     maybePrefillLifeConsult();
     state._initDone = true; // 地図復元タイミング制御用
@@ -967,6 +1018,8 @@ function moveDate(delta){
   renderSenro();
   renderAiContextSummary();
   redrawMapIfReady();
+  if(typeof renderEhouMairiNav==='function') renderEhouMairiNav();
+  if(typeof renderEhouOkiNav==='function') renderEhouOkiNav();
 }
 function setOrient(orient){
   state.orient=orient==='north'?'north':'south';
@@ -3471,7 +3524,354 @@ function getEhouForYear(year, month, day){
   return Object.assign({year:adjYear}, EHOU_TABLE[k]);
 }
 
-// ── 大円（great circle）経路生成 ───────────────────────
+// ══════════════════════════════════════════
+// 吉方置きナビ ─ 最大吉方の算出と象意DB
+// ══════════════════════════════════════════
+// 九星の五行グループ（相生の輪：水→木→火→土→金→水）
+const GOGYO_OF_STAR = {1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+const STARS_OF_GOGYO = {'水':[1],'木':[3,4],'火':[9],'土':[2,5,8],'金':[6,7]};
+// 相生：親（自分を生む）／子（自分が生む）
+const OYA_GOGYO = {'水':'金','木':'水','火':'木','土':'火','金':'土'}; // 親
+const KO_GOGYO  = {'水':'木','木':'火','火':'土','土':'金','金':'水'}; // 子
+
+// ある星の相生集合（親星＋兄弟星＋子星）を返す
+function sojoSet(star){
+  const g=GOGYO_OF_STAR[star];
+  const set=new Set();
+  (STARS_OF_GOGYO[g]||[]).forEach(s=>set.add(s));        // 兄弟（比和）
+  (STARS_OF_GOGYO[OYA_GOGYO[g]]||[]).forEach(s=>set.add(s)); // 親
+  (STARS_OF_GOGYO[KO_GOGYO[g]]||[]).forEach(s=>set.add(s));  // 子
+  return set;
+}
+
+// 最大吉方（間の星）を算出 ─ 知恵の蔵パターンA/B/C
+// 本命星と月命星の共通の相生星から、本人の2星を除いたもの
+function getSaidaiKichi(honmei, tsukimei){
+  if(!honmei) return [];
+  if(!tsukimei) tsukimei=honmei;
+  const setH=sojoSet(honmei);
+  const setT=sojoSet(tsukimei);
+  // 両者に共通する相生星
+  const common=[...setH].filter(s=>setT.has(s));
+  // 本命・月命そのものは除外
+  const result=common.filter(s=>s!==honmei && s!==tsukimei);
+  // 5（五黄）は方位を持たないので吉方置きの対象から外す
+  return result.filter(s=>s!==5).sort((a,b)=>a-b);
+}
+
+// 九星の象意DB（吉方置き・恵方受け用）
+// 知恵の蔵「九星象意一覧」「2.星の算出とパラメータルール」準拠
+const STAR_SHOUI = {
+  1:{name:'一白水星',gogyo:'水',colors:['白','黒','紺'],taste:'塩味',
+     foods:['魚・刺身','海藻','貝類','豆腐','お酒','塩辛・漬物'],
+     items:['水を張った器','パールのアクセサリー','黒や紺の布','水辺の写真'],
+     keyword:'浄化・始まり・人脈の潤い'},
+  2:{name:'二黒土星',gogyo:'土',colors:['黄','茶','ベージュ'],taste:'甘味',
+     foods:['発酵食品（納豆・味噌）','根菜','鍋もの'],
+     items:['四角い陶器','土の鉢植え（2つ以上）','黄色・茶系の布','古いもの'],
+     keyword:'基盤・育成・大衆の支持'},
+  3:{name:'三碧木星',gogyo:'木',colors:['青','緑','トルコブルー'],taste:'酸味',
+     foods:['柑橘類','サラダ','酢のもの'],
+     items:['観葉植物','青・緑の小物','音の出るもの（鈴・楽器）','新しいもの'],
+     keyword:'発展・新規・発信'},
+  4:{name:'四緑木星',gogyo:'木',colors:['緑','モスグリーン'],taste:'酸味',
+     foods:['麺類（長いもの）','サラダ','柑橘'],
+     items:['観葉植物','長いもの','緑の布','アロマ・香りもの','整った形の品'],
+     keyword:'縁・信用・整う'},
+  6:{name:'六白金星',gogyo:'金',colors:['金','銀','パールホワイト'],taste:'辛味',
+     foods:['包んだもの（餃子・春巻き）','高級な料理','辛いもの'],
+     items:['金・銀の小物','丸いもの','高級感のある品','時計','破魔矢・神具'],
+     keyword:'完成・財産・格の向上'},
+  7:{name:'七赤金星',gogyo:'金',colors:['オレンジ','ピンク'],taste:'辛味',
+     foods:['鶏肉','卵','スイーツ','コーヒー','楽しいお酒'],
+     items:['オレンジ・ピンクの生花','金属の小物','楽しい雰囲気の品','スイーツ'],
+     keyword:'悦び・愛嬌・金運'},
+  8:{name:'八白土星',gogyo:'土',colors:['白','黄','ベージュ','茶'],taste:'甘味',
+     foods:['タケノコ','イクラ（魚卵）','アワビ','甘いもの'],
+     items:['山型・とがった置物','積み重ねるもの','白や黄の布','背の高い品'],
+     keyword:'相続・蓄積・変化の節目'},
+  9:{name:'九紫火星',gogyo:'火',colors:['赤','紫'],taste:'苦味',
+     foods:['カニ・エビ（甲殻類）','トマト','ピーマン','苦味のもの'],
+     items:['赤・紫の生花','光るもの・鏡','2つで一対のもの（メガネ等）','美しい絵'],
+     keyword:'知性・美・名誉'},
+  5:{name:'五黄土星',gogyo:'土',colors:['黄','茶','オード色'],taste:'甘味',
+     foods:['発酵食品（味噌・納豆・チーズ）','根菜','甘いもの'],
+     items:['首相・大統領など頂点に立つ人物の置物や写真','黄色・茶色の置物や絵','発酵食品','黄色・茶色のゴミ箱（綺麗なもの）','帝王・中心を表すもの'],
+     keyword:'帝王・中心・支配・トップ'}
+};
+
+// 恵方の度数を八方位に変換
+function ehouDegToDir(deg){
+  const dirs=[['N',0],['NE',45],['E',90],['SE',135],['S',180],['SW',225],['W',270],['NW',315]];
+  let best='S', bestDiff=999;
+  dirs.forEach(([d,a])=>{
+    let diff=180-Math.abs(((deg-a+540)%360)-180);
+    if(diff<bestDiff){bestDiff=diff;best=d;}
+  });
+  return best;
+}
+
+// その年の恵方に廻座する九星を算出
+function getEhouHouiStar(year, month, day){
+  const ehou=getEhouForYear(year, month, day);
+  const ehouDir=ehouDegToDir(ehou.deg);
+  const yc=yearCenter(ehou.year);
+  const p2s=buildBoardFromCenter(yc);
+  const star=p2s[ehouDir];
+  return {ehou, ehouDir, star, oppDir:OPP[ehouDir]};
+}
+
+// 吉方置きナビの内容を生成
+function renderKichiOkiNav(){
+  const el=document.getElementById('kichiOkiContent');
+  if(!el) return;
+  if(!state.info || !state.info.honmei){
+    el.innerHTML='<div style="color:var(--mist);">生年月日を登録すると、あなたの最大吉方に合わせた提案が表示されます。</div>';
+    return;
+  }
+  const honmei=state.info.honmei;
+  const tsukimei=state.info.tsukimei;
+  const maxKichi=getSaidaiKichi(honmei, tsukimei);
+  const hStar=STAR_SHOUI[honmei], tStar=STAR_SHOUI[tsukimei];
+
+  // 最大吉方の象意をまとめる
+  let kichiHtml='';
+  if(maxKichi.length===0){
+    kichiHtml='<div style="color:var(--mist);">最大吉方が算出できませんでした。</div>';
+  } else {
+    maxKichi.forEach(s=>{
+      const sh=STAR_SHOUI[s];
+      kichiHtml+=`
+        <div style="margin:10px 0;padding:11px 13px;background:rgba(232,140,165,.06);border:1px solid rgba(232,140,165,.22);border-radius:10px;">
+          <div style="font-size:.74rem;color:#d24a78;font-weight:800;margin-bottom:6px;">${sh.name}（${sh.keyword}）</div>
+          <div style="line-height:1.9;">
+            <div>🎨 <strong>色</strong>：${sh.colors.join('・')}</div>
+            <div>👅 <strong>味</strong>：${sh.taste}</div>
+            <div>🍽️ <strong>食べ物</strong>：${sh.foods.join('、')}</div>
+            <div>📿 <strong>置くもの</strong>：${sh.items.join('、')}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  // 健康カラー（月命星）
+  const healthColors=tStar?tStar.colors.join('・'):'—';
+
+  el.innerHTML=`
+    <div style="margin-bottom:14px;padding:10px 12px;background:rgba(138,104,32,.05);border-radius:9px;border:1px solid rgba(138,104,32,.14);">
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:4px;">あなたの命式</div>
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;">本命星：${hStar?hStar.name:'—'}　／　月命星：${tStar?tStar.name:'—'}</div>
+    </div>
+
+    <div style="font-size:.7rem;color:var(--goldlt);font-weight:800;margin:6px 0 4px;">🌟 あなたの最大吉方</div>
+    <div style="font-size:.58rem;color:var(--mist);margin-bottom:6px;">本命星と月命星の間を取り持つ「共通の吉星」。あなたが一生使える開運の核です。</div>
+    ${kichiHtml}
+
+    <div style="margin-top:16px;padding:12px 14px;background:rgba(91,141,239,.05);border:1px solid rgba(91,141,239,.2);border-radius:10px;">
+      <div style="font-size:.7rem;color:#3f6fd6;font-weight:800;margin-bottom:6px;">💡 日常への取り入れ方</div>
+      <div style="line-height:1.95;color:var(--snow);">
+        <div style="margin-bottom:6px;"><strong>ラッキーカラー</strong>：最大吉方の色を服・小物・持ち物に。商談やデート、大事な日に身につけると後押しになります。</div>
+        <div style="margin-bottom:6px;"><strong>ラッキーフード</strong>：最大吉方の食べ物を取り入れる。吉方位旅行の現地で食べると効果が高まります。</div>
+        <div><strong>身につける色（健康運）</strong>：月命星 ${tStar?tStar.name:''} の色＝<strong style="color:#3f6fd6;">${healthColors}</strong>。健康運は最大吉方ではなく月命星の色を優先します。</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding:11px 13px;background:rgba(212,160,40,.06);border:1px solid rgba(212,160,40,.22);border-radius:10px;">
+      <div style="font-size:.66rem;color:#a87b1a;font-weight:800;margin-bottom:5px;">💊 琥珀色の処方箋</div>
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.85;">
+        最大吉方の色の生花やアイテムは、季節ごとに新しくすると気の鮮度が保たれます。携帯番号や車のナンバーの末尾を最大吉方の数字に合わせるのも、知恵の蔵が勧める開運法です。
+      </div>
+    </div>
+  `;
+}
+
+// ── 陽遁・陰遁の切り替わり日を算出 ────────────────────
+// 夏至前後の「九紫中宮の日」＝陽遁→陰遁の切替
+// 冬至前後の「一白中宮の日」＝陰遁→陽遁の切替
+// この日は天の気が反転する特異点。恵方参りに最適なボーナス日。
+function getIntonSwitchDays(year){
+  const result={natsu:null, fuyu:null};
+  if(typeof getDayCenter!=='function') return result;
+  // 夏至（約6/21）に最も近い九紫中宮(=9)の日
+  const geshi=new Date(year,5,21).getTime();
+  let bestN=null, bestNDiff=999;
+  for(let m=6;m<=7;m++){
+    const dstart=(m===6)?10:1, dmax=(m===6)?30:10;
+    for(let d=dstart;d<=dmax;d++){
+      if(getDayCenter(year,m,d)===9){
+        const diff=Math.abs(new Date(year,m-1,d).getTime()-geshi)/86400000;
+        if(diff<bestNDiff){bestNDiff=diff;bestN={m,d};}
+      }
+    }
+  }
+  result.natsu=bestN;
+  // 冬至（約12/22）に最も近い一白中宮(=1)の日
+  const toji=new Date(year,11,22).getTime();
+  let bestF=null, bestFDiff=999;
+  for(let d=10;d<=31;d++){
+    if(getDayCenter(year,12,d)===1){
+      const diff=Math.abs(new Date(year,11,d).getTime()-toji)/86400000;
+      if(diff<bestFDiff){bestFDiff=diff;bestF={m:12,d};}
+    }
+  }
+  for(let d=1;d<=10;d++){
+    if(getDayCenter(year+1,1,d)===1){
+      const diff=Math.abs(new Date(year+1,0,d).getTime()-toji)/86400000;
+      if(diff<bestFDiff){bestFDiff=diff;bestF={m:1,d,nextYear:true};}
+    }
+  }
+  result.fuyu=bestF;
+  return result;
+}
+
+// 恵方参りナビの内容を生成
+function renderEhouMairiNav(){
+  const el=document.getElementById('ehouMairiContent');
+  if(!el) return;
+  const d=state.date;
+  const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
+  const ehouDir=ehouDegToDir(ehou.deg);
+  const JP_DIR={N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+
+  // 陽遁・陰遁の切り替わり日（その年の分）
+  let intonHtml='';
+  let todayAlertHtml='';
+  try{
+    const sw=getIntonSwitchDays(d.getFullYear());
+    const fmt=x=>x?`${x.m}月${x.d}日${x.nextYear?'（翌年）':''}`:'—';
+    // 今日が切替日の前後1.5日以内か判定
+    const todayT=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();
+    const checkNear=(x,baseYear)=>{
+      if(!x) return false;
+      const xy=x.nextYear?baseYear+1:baseYear;
+      const xd=new Date(xy,x.m-1,x.d).getTime();
+      return Math.abs(todayT-xd)/86400000<=1.5;
+    };
+    if(checkNear(sw.natsu,d.getFullYear())||checkNear(sw.fuyu,d.getFullYear())){
+      const which=checkNear(sw.natsu,d.getFullYear())?'陽遁→陰遁（九紫中宮）':'陰遁→陽遁（一白中宮）';
+      todayAlertHtml=`<div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(135deg,rgba(232,77,128,.12),rgba(212,160,40,.12));border:2px solid rgba(232,77,128,.4);border-radius:11px;">
+        <div style="font-size:.74rem;color:#d24a78;font-weight:900;margin-bottom:4px;">⭐ 今日は「日盤の切り替わり」です！</div>
+        <div style="font-size:.62rem;color:var(--snow);line-height:1.85;">天のエネルギーが反転する特異点（${which}）。運気のズレが大きくなるこの2日間に<strong>恵方参り</strong>へ行くと、ズレが修正され、巨大なチャンスを掴めます。今年最高クラスのボーナス日です。</div>
+      </div>`;
+    }
+    if(sw.natsu||sw.fuyu){
+      intonHtml=`<div style="margin-top:8px;padding:8px 10px;background:rgba(232,77,128,.07);border:1px solid rgba(232,77,128,.25);border-radius:8px;">
+        <div style="font-size:.6rem;color:#d24a78;font-weight:800;margin-bottom:3px;">⭐ ${d.getFullYear()}年の特異点（陽遁・陰遁の切替）</div>
+        <div style="font-size:.58rem;color:var(--mist);line-height:1.8;">
+          ${sw.natsu?`夏至前後 <strong>${fmt(sw.natsu)}</strong>（陽遁→陰遁・九紫中宮）<br>`:''}
+          ${sw.fuyu?`冬至前後 <strong>${fmt(sw.fuyu)}</strong>（陰遁→陽遁・一白中宮）<br>`:''}
+          天のエネルギーが反転するこの日は、運気のズレを修正する<strong>恵方参りの最重要日</strong>です。
+        </div>
+      </div>`;
+    }
+  }catch(e){}
+
+  el.innerHTML=`
+    ${todayAlertHtml}
+    <div style="margin-bottom:14px;padding:11px 13px;background:rgba(212,160,40,.07);border-radius:10px;border:1px solid rgba(212,160,40,.25);">
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:4px;">${ehou.year}年の恵方</div>
+      <div style="font-size:.74rem;color:#a87b1a;font-weight:800;">${ehou.kan}（${ehou.label}）＝ ${JP_DIR[ehouDir]}の方角</div>
+      <div style="font-size:.6rem;color:var(--mist);margin-top:4px;">この方角にチャンスの気が集まっています。</div>
+    </div>
+
+    <div style="margin:10px 0;padding:12px 14px;background:rgba(232,140,165,.06);border:1px solid rgba(232,140,165,.22);border-radius:10px;">
+      <div style="font-size:.72rem;color:#d24a78;font-weight:800;margin-bottom:6px;">📍 神社・社寺の探し方</div>
+      <div style="line-height:1.95;">
+        <div>① 自宅から見て<strong>${JP_DIR[ehouDir]}（恵方）</strong>の方角</div>
+        <div>② 自宅から<strong>750m以上</strong>離れていること（近いと方位作用が出ません）</div>
+        <div>③ 神社・お寺・教会・モスク等。<strong>お稲荷さん・お墓では不可</strong></div>
+        <div style="font-size:.58rem;color:var(--mist);margin-top:4px;">※ 上の「③ 方位地図」で恵方ライン（⛩️トグル）をONにすると、自宅からの恵方が地図で確認できます。</div>
+      </div>
+    </div>
+
+    <div style="margin:10px 0;padding:12px 14px;background:rgba(91,141,239,.06);border:1px solid rgba(91,141,239,.2);border-radius:10px;">
+      <div style="font-size:.72rem;color:#3f6fd6;font-weight:800;margin-bottom:6px;">🙏 参拝の作法</div>
+      <div style="line-height:1.95;">
+        <div>1. まず通常のお参りをする</div>
+        <div>2. 両手を上げ、<strong>右手人差し指で天</strong>を、<strong>左手人差し指で地</strong>を指す（左右逆でも可）</div>
+        <div>3. 「<strong>私にチャンスをください</strong>」「<strong>私にチャンスを見抜く知恵と勇気をください</strong>」と心の中で唱える</div>
+        <div style="font-size:.58rem;color:var(--mist);margin-top:4px;">※ 天の気が指から入り、体を巡って地へ放出され、気が整います。ポーズはした方が効果を感じる人が多いです。午前中（〜14〜15時）がおすすめ、夜は避けます。</div>
+      </div>
+    </div>
+
+    <div style="margin:10px 0;padding:12px 14px;background:rgba(138,104,32,.06);border:1px solid rgba(138,104,32,.2);border-radius:10px;">
+      <div style="font-size:.72rem;color:#a87b1a;font-weight:800;margin-bottom:6px;">📅 おすすめの日（天の気の切り替わり）</div>
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.9;">
+        立春（2/4頃）・春分（3/20頃）・夏至（6/21頃）・秋分（9/23頃）・冬至（12/22頃）などの節目がおすすめです。特に<strong>立春は一年の始まりの節目</strong>。その日に行けなければ<strong>1週間以内</strong>に行けばOK。恵方参りはいつ行っても良く、何度行っても構いません。
+      </div>
+      ${intonHtml}
+    </div>
+
+    <div style="margin-top:10px;padding:10px 12px;background:rgba(232,160,40,.05);border:1px solid rgba(232,160,40,.18);border-radius:9px;">
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.85;">
+        ※ 旅行・出張中は<strong>前日に寝て起きた場所</strong>を起点に恵方を割り出します。年内に引越した場合は<strong>新居</strong>を起点にします。恵方が良くない方位（被判法上）でも恵方参りは可能ですが、気になる場合は現地で飲食しないようにします。
+      </div>
+    </div>
+  `;
+}
+
+// 恵方置き・恵方受けナビの内容を生成
+function renderEhouOkiNav(){
+  const el=document.getElementById('ehouOkiContent');
+  if(!el) return;
+  const d=state.date;
+  const info=getEhouHouiStar(d.getFullYear(), d.getMonth()+1, d.getDate());
+  const sh=STAR_SHOUI[info.star];
+  const JP_DIR={N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+
+  if(!sh){
+    el.innerHTML='<div style="color:var(--mist);">恵方の星を算出できませんでした。</div>';
+    return;
+  }
+
+  el.innerHTML=`
+    <div style="margin-bottom:14px;padding:11px 13px;background:rgba(212,160,40,.07);border-radius:10px;border:1px solid rgba(212,160,40,.25);">
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:4px;">${info.ehou.year}年の恵方</div>
+      <div style="font-size:.74rem;color:#a87b1a;font-weight:800;">${info.ehou.kan}（${info.ehou.label}）＝ ${JP_DIR[info.ehouDir]}の方角</div>
+      <div style="font-size:.64rem;color:var(--goldlt);margin-top:4px;">恵方に廻座する九星：<strong>${sh.name}</strong></div>
+    </div>
+
+    <div style="margin:10px 0;padding:12px 14px;background:rgba(232,140,165,.06);border:1px solid rgba(232,140,165,.22);border-radius:10px;">
+      <div style="font-size:.72rem;color:#d24a78;font-weight:800;margin-bottom:6px;">🔋 恵方置き（家の${JP_DIR[info.ehouDir]}にスイッチを置く）</div>
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:8px;line-height:1.85;">${sh.name}にまつわるものを置くと、家に恵方の「気」が満ちます。これは神頼みではなく、<strong>「ここに天の気が集まる」と自分で意識するトリガー</strong>。目が行くたび脳が「今年はここからチャンスが来る」と臨戦態勢になります。</div>
+      <div style="line-height:1.95;">
+        <div>🎨 <strong>色</strong>：${sh.colors.join('・')}（濃いめが良い）</div>
+        <div>📿 <strong>置物・アイテム</strong>：${sh.items.join('、')}</div>
+        <div>🖼️ <strong>絵・モチーフ</strong>：${sh.keyword}を表すもの</div>
+        <div>🍽️ <strong>象意の食べ物</strong>：${sh.foods.join('、')}</div>
+      </div>
+    </div>
+
+    <div style="margin:10px 0;padding:12px 14px;background:rgba(91,141,239,.06);border:1px solid rgba(91,141,239,.2);border-radius:10px;">
+      <div style="font-size:.72rem;color:#3f6fd6;font-weight:800;margin-bottom:6px;">📥 恵方受け（対角線の${JP_DIR[info.oppDir]}に置く）</div>
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.9;">
+        恵方置きの反対側（${JP_DIR[info.oppDir]}）に恵方受けを置くと、家全体に恵方の「気」が留まり、家族全体に作用します。<br>
+        <strong>置くもの</strong>：お札・破魔矢・お守り。${JP_DIR[info.ehouDir]}（恵方）に<strong>向けて</strong>貼る・置くのがポイント。好きな神社・社寺で受けたもの、いただいたものでOK。将軍が毎年受ける破魔矢は、まさにこの恵方受けに最適です。
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:11px 13px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.16);border-radius:10px;">
+      <div style="font-size:.62rem;color:#a87b1a;font-weight:800;margin-bottom:5px;">🌱 さらに効かせる「引き算」のコツ</div>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.85;">
+        恵方から入った気は直線的に突き抜けます。受け側（${JP_DIR[info.oppDir]}）がゴミ箱や物置でごちゃごちゃだと、せっかくの気がそこで滞ります。お札・破魔矢を置くだけでなく、その周囲を<strong>整理整頓して綺麗な空きスペース</strong>にしておくと、呼び込んだチャンスが綺麗に着陸します。物を足すより、引き算で運気の器を作るのがKITOKU流です。
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:10px 12px;background:rgba(232,160,40,.05);border:1px solid rgba(232,160,40,.18);border-radius:9px;">
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.85;">
+        ※ 間取り上どうしても${JP_DIR[info.ehouDir]}・${JP_DIR[info.oppDir]}に置けない場合は、おおまかに恵方置き＝南寄り、恵方受け＝北寄り、で構いません。
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding:11px 13px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.16);border-radius:10px;">
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.85;">
+        ※ 恵方は毎年変わり、廻座する星も変わります。${info.ehou.year}年は<strong>${sh.name}</strong>（${sh.colors.join('・')}）。立春で切り替わるので、節分のタイミングで新しくするのが理想です。
+      </div>
+    </div>
+  `;
+}
+
+
 // 始点(lat,lng)から方位bearingへ距離distMの終点を球面で計算
 function gcDestination(lat, lng, bearingDeg, distM){
   const R = 6371000;
