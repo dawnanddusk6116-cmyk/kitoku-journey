@@ -257,6 +257,47 @@ body{
   padding:10px;
 }
 .preset-grid.open{display:grid;}
+.destination-accordion{
+  margin-top:12px;
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:11px;
+  background:rgba(255,255,255,.62);
+  overflow:hidden;
+}
+.destination-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 14px;
+  color:var(--goldlt);
+  font-size:.76rem;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+.destination-accordion summary::-webkit-details-marker{display:none;}
+.destination-accordion summary::after{
+  content:"▶";
+  color:var(--gold);
+  font-size:.68rem;
+  flex-shrink:0;
+}
+.destination-accordion[open] summary::after{content:"▼";}
+.destination-accordion-note{
+  display:block;
+  margin-top:3px;
+  color:var(--mist);
+  font-size:.56rem;
+  font-weight:400;
+  line-height:1.6;
+  letter-spacing:0;
+}
+.destination-accordion-body{
+  border-top:1px solid rgba(138,104,32,.14);
+  padding:10px 10px 4px;
+}
 .preset-btn{
   background:var(--card);
   border:1px solid var(--rim);border-radius:9px;
@@ -1093,6 +1134,10 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="sec-label">STEP 2 — 目的地</div>
   <div class="sec-title">行きたい聖地を選ぶ</div>
 
+  <details class="destination-accordion">
+    <summary><span>目的地リストを開く<span class="destination-accordion-note">お遍路・熊野・西国などをカテゴリから選びます</span></span></summary>
+    <div class="destination-accordion-body">
+
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-henro-awa')">
       <span>四国お遍路 — 阿波（徳島）発心の道場 1〜23番<span class="preset-group-count">23ヶ所</span></span>
@@ -1191,6 +1236,9 @@ html.font-large .font-btn{font-size:.8rem;}
     </div>
     <div class="preset-grid" id="grid-tokai"></div>
   </div>
+
+    </div>
+  </details>
 
   <div style="
     margin-top:10px;
@@ -1386,6 +1434,7 @@ html.font-large .font-btn{font-size:.8rem;}
       </div>
     </div>
   </div>
+
   <div style="
     margin-top:10px;
     background:rgba(196,160,67,.08);
