@@ -654,7 +654,7 @@ function octa_getColors(dd){
   if(dd.rank>=4)return{fill:'rgba(246,206,217,.55)',stroke:'rgba(210,130,152,.6)',num:'#9a3050',name:'rgba(154,48,80,.68)'};
   if(dd.rank>=3)return{fill:'rgba(248,216,224,.6)',stroke:'rgba(214,150,168,.55)',num:'#a04060',name:'rgba(160,64,96,.62)'};
   if(dd.rank>=2)return{fill:'rgba(250,228,234,.6)',stroke:'rgba(220,170,185,.5)',num:'#b05070',name:'rgba(176,80,112,.56)'};
-  if(dd.rank>=1)return{fill:'rgba(252,236,240,.55)',stroke:'rgba(224,184,196,.45)',num:'#b86080',name:'rgba(184,96,128,.5)'};
+  if(dd.rank>=1)return{fill:'rgba(255,255,255,.9)',stroke:'rgba(180,175,165,.42)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)'};
   return{fill:'rgba(255,255,255,.9)',stroke:'rgba(180,175,165,.42)',num:'rgba(40,35,28,.8)',name:'rgba(90,80,65,.55)'};
 }
 
@@ -717,6 +717,7 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
       if(dd.rincho){bColor='#7a4000';bBg='rgba(120,70,0,.14)';}
       else if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
       else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else if(subText==='天道'){bColor='#8a6820';bBg='rgba(255,255,255,.88)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
       svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
       svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'7.5','font-family':"'Noto Serif JP',serif"}));
