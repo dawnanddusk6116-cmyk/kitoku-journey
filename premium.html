@@ -2451,7 +2451,7 @@ document.addEventListener('DOMContentLoaded',function(){
   if(mapPanel){
     mapPanel.addEventListener('toggle',function(){
       if(mapPanel.open&&typeof kitokuMapInst!=='undefined'&&kitokuMapInst){
-        setTimeout(function(){ try{ kitokuMapInst.invalidateSize(); }catch(e){} },160);
+        setTimeout(function(){ try{ KitokuMap.invalidateSize(kitokuMapInst); }catch(e){} },160);
       }
     });
   }
@@ -4021,6 +4021,11 @@ const KitokuMap = {
     return 12;
   },
 
+  // ズーム設定（相対変更等に使用）
+  setZoom(map, zoom){
+    if(this.provider==='leaflet'){ map.setZoom(zoom); }
+  },
+
   // 線を追加（points: [{lat,lng}...], style:{color,weight,opacity,dashArray}）→ handle
   addLine(map, points, style){
     if(this.provider==='leaflet'){
@@ -4097,6 +4102,20 @@ const KitokuMap = {
   onZoom(map, fn){
     if(this.provider==='leaflet'){
       map.on('zoomend', ()=>fn());
+    }
+  },
+
+  // ズーム終了イベントを一旦解除してから登録（重複防止・フルスクリーン用）
+  reonZoom(map, fn){
+    if(this.provider==='leaflet'){
+      map.off('zoomend').on('zoomend', ()=>fn());
+    }
+  },
+
+  // ズームコントロール（＋/−ボタン）を追加
+  addZoomControl(map, position){
+    if(this.provider==='leaflet'){
+      L.control.zoom({position:position||'topright'}).addTo(map);
     }
   },
 
@@ -4219,7 +4238,7 @@ function drawKitokuMapLines(lat, lng){
   const {kyouItems} = buildDirData(center);
   const kyouSet = new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
 
-  const _zoom = kitokuMapInst.getZoom();
+  const _zoom = KitokuMap.getZoom(kitokuMapInst);
   // モードに応じて最大線長を変える
   // daily:150km / pilgrimage:500km / travel・move:10000km（海外対応）
   const LINE_MAX = {daily:150, travel:10000, pilgrimage:500, move:800}[kitokuMapMode] || 150;
@@ -4476,8 +4495,8 @@ function drawEhouLine(){
   // 既存の恵方ラインを除去
   if(kitokuEhouLine){ KitokuMap.remove(kitokuMapInst, kitokuEhouLine); kitokuEhouLine=null; }
   if(kitokuEhouLabel){ KitokuMap.remove(kitokuMapInst, kitokuEhouLabel); kitokuEhouLabel=null; }
-  if(kitokuFsEhouLine&&kitokuFsMapInst){kitokuFsMapInst.removeLayer(kitokuFsEhouLine);kitokuFsEhouLine=null;}
-  if(kitokuFsEhouLabel&&kitokuFsMapInst){kitokuFsMapInst.removeLayer(kitokuFsEhouLabel);kitokuFsEhouLabel=null;}
+  if(kitokuFsEhouLine){ KitokuMap.remove(kitokuFsMapInst, kitokuFsEhouLine); kitokuFsEhouLine=null; }
+  if(kitokuFsEhouLabel){ KitokuMap.remove(kitokuFsMapInst, kitokuFsEhouLabel); kitokuFsEhouLabel=null; }
 
   if(!isEhouShowOn() || !kitokuMapCenter) {
     updateEhouLabel();
@@ -4503,12 +4522,12 @@ function drawEhouLine(){
   if(kitokuFsMapInst && document.getElementById('kitokuMapFullscreenModal').style.display==='block'){
     const fsDist=(kitokuMapMode==='travel'||kitokuMapMode==='move')?6000000:120000;
     const path2=gcPath(lat,lng,ehou.deg,fsDist,48);
-    kitokuFsEhouLine=L.polyline(path2,{color:'#d4a028',weight:4,opacity:0.9}).addTo(kitokuFsMapInst);
+    kitokuFsEhouLine=KitokuMap.addLine(kitokuFsMapInst, path2.map(p=>({lat:p[0],lng:p[1]})),
+      {color:'#d4a028',weight:4,opacity:0.9});
     const lp2=gcDestination(lat,lng,ehou.deg,Math.min(fsDist*0.25,80000));
-    kitokuFsEhouLabel=L.marker([lp2[0],lp2[1]],{
-      icon:L.divIcon({className:'',html:`<div style="background:#d4a028;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:11px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.4);">⛩️ ${ehou.year}年の恵方</div>`,iconAnchor:[35,11]}),
-      interactive:false
-    }).addTo(kitokuFsMapInst);
+    const fsEhouLabelHtml=`<div style="background:#d4a028;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:11px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.4);">⛩️ ${ehou.year}年の恵方</div>`;
+    kitokuFsEhouLabel=KitokuMap.addHtmlMarker(kitokuFsMapInst, {lat:lp2[0],lng:lp2[1]}, fsEhouLabelHtml,
+      {w:70,h:22,anchorX:35,anchorY:11,interactive:false});
   }
   updateEhouLabel();
 }
@@ -4564,7 +4583,7 @@ function updateMapModeGuide(){
 // ── ズームボタン ──────────────────────────────────────
 function mapZoom(delta){
   if(!kitokuMapInst) return;
-  kitokuMapInst.setZoom(kitokuMapInst.getZoom()+delta);
+  KitokuMap.setZoom(kitokuMapInst, KitokuMap.getZoom(kitokuMapInst)+delta);
 }
 
 // ── 方位盤との連動（setBanType・moveDateから呼ばれる） ─
@@ -4762,19 +4781,16 @@ function openMapFullscreen(){
   const c=kitokuMapCenter||{lat:33.8416,lng:132.7657};
   setTimeout(()=>{
     if(!kitokuFsMapInst){
-      kitokuFsMapInst=L.map('kitokuMapFullscreen',{center:[c.lat,c.lng],zoom:11,zoomControl:false});
-      L.control.zoom({position:'topright'}).addTo(kitokuFsMapInst);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-        attribution:'© OpenStreetMap contributors',maxZoom:19
-      }).addTo(kitokuFsMapInst);
-      kitokuFsMapInst.on('click', onFsMapTap);
+      kitokuFsMapInst=KitokuMap.create('kitokuMapFullscreen', {lat:c.lat,lng:c.lng}, 11);
+      KitokuMap.addZoomControl(kitokuFsMapInst, 'topright');
+      KitokuMap.onClick(kitokuFsMapInst, (latlng)=>onFsMapTap(latlng));
     } else {
-      kitokuFsMapInst.setView([c.lat,c.lng],11);
+      KitokuMap.setView(kitokuFsMapInst, {lat:c.lat,lng:c.lng}, 11);
     }
-    kitokuFsMapInst.invalidateSize();
+    KitokuMap.invalidateSize(kitokuFsMapInst);
     drawFsMapContent(c.lat,c.lng);
     drawEhouLine();
-    kitokuFsMapInst.off('zoomend').on('zoomend',()=>{drawFsMapContent(c.lat,c.lng);drawEhouLine();});
+    KitokuMap.reonZoom(kitokuFsMapInst, ()=>{drawFsMapContent(c.lat,c.lng);drawEhouLine();});
   },100);
 }
 function closeMapFullscreen(){
@@ -4787,7 +4803,7 @@ document.addEventListener('keydown',e=>{
 
 function drawFsMapContent(lat,lng){
   if(!kitokuFsMapInst) return;
-  kitokuFsLayers.forEach(l=>kitokuFsMapInst.removeLayer(l));
+  kitokuFsLayers.forEach(l=>KitokuMap.remove(kitokuFsMapInst, l));
   kitokuFsLayers=[];
   if(!state.info) return;
 
@@ -4803,12 +4819,13 @@ function drawFsMapContent(lat,lng){
 
   // 距離円
   [[0.75,'rgba(196,160,67,.25)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.05)']].forEach(([r,fill])=>{
-    const c2=L.circle([lat,lng],{radius:r*1000,color:'rgba(196,160,67,.3)',weight:1,fill:true,fillColor:fill,fillOpacity:0.3}).addTo(kitokuFsMapInst);
+    const c2=KitokuMap.addCircle(kitokuFsMapInst, {lat:lat,lng:lng}, r*1000,
+      {color:'rgba(196,160,67,.3)',weight:1,fillColor:fill,fillOpacity:0.3});
     kitokuFsLayers.push(c2);
   });
 
   // 方位線・扇形
-  const _z=kitokuFsMapInst.getZoom();
+  const _z=KitokuMap.getZoom(kitokuFsMapInst);
   const _fsLineMax  = {daily:300,  travel:10000, pilgrimage:500,  move:800 }[kitokuMapMode]||300;
   const _fsFanMax   = {daily:400,  travel:9000, pilgrimage:600,  move:1000}[kitokuMapMode]||400;
   const _fsLineCoef = {daily:60000,travel:8000000,pilgrimage:200000,move:300000}[kitokuMapMode]||60000;
@@ -4838,7 +4855,7 @@ function drawFsMapContent(lat,lng){
       const style=touchesKichi
         ? {color:'#e84d80',weight:2.5,opacity:0.8,dashArray:null}
         : {color:'rgba(90,95,105,.4)',weight:1,opacity:0.5,dashArray:'3,5'};
-      const bl=L.polyline(path,style).addTo(kitokuFsMapInst);
+      const bl=KitokuMap.addLine(kitokuFsMapInst, path.map(p=>({lat:p[0],lng:p[1]})), style);
       kitokuFsLayers.push(bl);
     });
   }
@@ -4864,7 +4881,7 @@ function drawFsMapContent(lat,lng){
         latlngs=[[lat,lng],[lat+dlat,lng+dlng]];
       }
       const opts={color,weight:w,opacity:op};if(dash)opts.dashArray=dash;
-      const l=L.polyline(latlngs,opts).addTo(kitokuFsMapInst);
+      const l=KitokuMap.addLine(kitokuFsMapInst, latlngs.map(p=>({lat:p[0],lng:p[1]})), opts);
       kitokuFsLayers.push(l);
     };
     // 吉方扇形（近距離モードのみ）
@@ -4877,7 +4894,8 @@ function drawFsMapContent(lat,lng){
       }
       const fc=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fo=dd.rank>=4?0.28:dd.rank>=3?0.22:0.16;
-      const fan=L.polygon(pts,{color:'#d83c70',weight:2,opacity:0.7,fillColor:fc,fillOpacity:fo}).addTo(kitokuFsMapInst);
+      const fan=KitokuMap.addPolygon(kitokuFsMapInst, pts.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#d83c70',weight:2,opacity:0.7,fillColor:fc,fillOpacity:fo});
       kitokuFsLayers.push(fan);
     }
     // メイン方位線（海外モードは境界線が主役なので中心軸は控えめに）
@@ -4895,18 +4913,17 @@ function drawFsMapContent(lat,lng){
   kitokuMapInst=savedInst;
 
   // 十字マーカー（最前面：オーバーレイの後に描画）
-  const crossIcon2=L.divIcon({
-    className:'',
-    html:'<div style="position:relative;width:44px;height:44px;"><div style="position:absolute;top:50%;left:0;width:100%;height:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8);transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:14px;height:14px;background:#ffd860;border:3px solid #d83c70;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(0,0,0,.7);"></div></div>',
-    iconSize:[44,44],iconAnchor:[22,22]
-  });
-  const cm=L.marker([lat,lng],{icon:crossIcon2,interactive:false,zIndexOffset:5000}).addTo(kitokuFsMapInst);
+  const crossHtml2='<div style="position:relative;width:44px;height:44px;"><div style="position:absolute;top:50%;left:0;width:100%;height:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8);transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:14px;height:14px;background:#ffd860;border:3px solid #d83c70;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(0,0,0,.7);"></div></div>';
+  const cm=KitokuMap.addHtmlMarker(kitokuFsMapInst, {lat:lat,lng:lng}, crossHtml2,
+    {w:44,h:44,anchorX:22,anchorY:22,interactive:false,zIndex:5000});
   kitokuFsLayers.push(cm);
 }
 
 function onFsMapTap(e){
   if(!kitokuMapCenter) return;
-  const{lat,lng}=e.latlng;
+  const lat = e.lat!=null ? e.lat : (e.latlng ? e.latlng.lat : null);
+  const lng = e.lng!=null ? e.lng : (e.latlng ? e.latlng.lng : null);
+  if(lat==null||lng==null) return;
   kitokuMapLastTap={lat,lng};
 
   const{dist,bearing,dir:tapDir,dirLabel:tapDirLabel,isLongDist}=calcMapTapInfo(kitokuMapCenter.lat,kitokuMapCenter.lng,lat,lng);
@@ -4918,17 +4935,14 @@ function onFsMapTap(e){
 
   // タップ地点のピン＋中心への線（天道・普通は中立色）
   const pinColor = j.kind==='kyo'?'#9aa0aa':j.kind==='kichi'?'#e84d80':'#8a6820';
-  if(kitokuFsTapMarker) kitokuFsMapInst.removeLayer(kitokuFsTapMarker);
-  if(kitokuFsTapLine) kitokuFsMapInst.removeLayer(kitokuFsTapLine);
-  kitokuFsTapLine=L.polyline([[kitokuMapCenter.lat,kitokuMapCenter.lng],[lat,lng]],{
-    color:pinColor,weight:2,opacity:0.85,dashArray:'5,4'
-  }).addTo(kitokuFsMapInst);
-  const fsPinIcon=L.divIcon({
-    className:'',
-    html:`<div style="position:relative;width:30px;height:40px;"><svg width="30" height="40" viewBox="0 0 30 40"><path d="M15 0C6.7 0 0 6.7 0 15c0 10.4 15 25 15 25s15-14.6 15-25C30 6.7 23.3 0 15 0z" fill="${pinColor}" stroke="#fff" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="#fff"/></svg></div>`,
-    iconSize:[30,40],iconAnchor:[15,40]
-  });
-  kitokuFsTapMarker=L.marker([lat,lng],{icon:fsPinIcon,zIndexOffset:6000}).addTo(kitokuFsMapInst);
+  if(kitokuFsTapMarker){ KitokuMap.remove(kitokuFsMapInst, kitokuFsTapMarker); kitokuFsTapMarker=null; }
+  if(kitokuFsTapLine){ KitokuMap.remove(kitokuFsMapInst, kitokuFsTapLine); kitokuFsTapLine=null; }
+  kitokuFsTapLine=KitokuMap.addLine(kitokuFsMapInst,
+    [{lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng},{lat:lat,lng:lng}],
+    {color:pinColor,weight:2,opacity:0.85,dashArray:'5,4'});
+  const fsPinHtml=`<div style="position:relative;width:30px;height:40px;"><svg width="30" height="40" viewBox="0 0 30 40"><path d="M15 0C6.7 0 0 6.7 0 15c0 10.4 15 25 15 25s15-14.6 15-25C30 6.7 23.3 0 15 0z" fill="${pinColor}" stroke="#fff" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="#fff"/></svg></div>`;
+  kitokuFsTapMarker=KitokuMap.addHtmlMarker(kitokuFsMapInst, {lat:lat,lng:lng}, fsPinHtml,
+    {w:30,h:40,anchorX:15,anchorY:40,zIndex:6000});
 
   const fmt=m=>m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';
   const banLabel={'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
