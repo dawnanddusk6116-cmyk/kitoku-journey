@@ -4161,15 +4161,23 @@ const KitokuMap = {
       return mk;
     }
     if(this._gReady()){
-      // HTMLをラップし、アンカー位置に合わせて transform で位置補正
+      // 確実なアンカー制御：外側ラッパーを0×0の「点」にし、
+      // 内容をその点からの相対位置(absolute)で配置する。
+      // これでAdvancedMarkerの基準がどこでも、アンカー(ax,ay)が必ず座標に来る。
       const w=opts.w||30, h=opts.h||30;
       const ax=opts.anchorX!=null?opts.anchorX:w/2, ay=opts.anchorY!=null?opts.anchorY:h/2;
       const wrap=document.createElement('div');
-      wrap.style.position='relative';
-      // アンカーをマーカー基準点に合わせる（中心からのズレを transform で補正）
-      wrap.style.transform=`translate(${(w/2 - ax)}px, ${(h/2 - ay)}px)`;
+      wrap.style.position='absolute';
+      wrap.style.width='0'; wrap.style.height='0';
+      const inner=document.createElement('div');
+      inner.style.position='absolute';
+      // アンカー(ax,ay)が原点(0,0)＝座標 に来るよう、内容を左上方向へずらす
+      inner.style.left=(-ax)+'px';
+      inner.style.top=(-ay)+'px';
+      inner.style.width=w+'px'; inner.style.height=h+'px';
+      inner.innerHTML=html;
+      wrap.appendChild(inner);
       if(opts.interactive===false) wrap.style.pointerEvents='none';
-      wrap.innerHTML=html;
       const mk=new google.maps.marker.AdvancedMarkerElement({
         map:map, position:{lat:latlng.lat,lng:latlng.lng},
         content:wrap, zIndex:opts.zIndex||0,
