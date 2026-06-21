@@ -773,6 +773,30 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           本命星と月命星の間を取り持つ<strong>最大吉方</strong>は、あなたが一生使える開運の核です。この星の色・味・食べ物・アイテムを日常に取り入れると、運気が底上げされます。吉方位旅行・お水取りの際の「現地で何を食べ、何を身につけるか」の指針にもなります。
         </div>
         <div id="kichiOkiContent" style="font-size:.66rem;color:var(--snow);line-height:1.85;"></div>
+
+        <!-- 商談・デート相手との最大吉方 -->
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(138,104,32,.18);">
+          <div style="font-size:.74rem;color:var(--goldlt);font-weight:800;margin-bottom:6px;">🤝 商談・デート相手を口説く</div>
+          <div style="font-size:.6rem;color:var(--mist);line-height:1.85;margin-bottom:10px;">
+            絶対にまとめたい相手がいるなら、自分と相手の<strong>共通の最大吉方</strong>を場に介入させます。相手の本命星を選ぶと、二人を繋ぐ星の色・食べ物・店が出ます。これを共有すれば、相剋の相手とも嘘のように意気投合します。
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-size:.64rem;color:var(--mist);">相手の本命星：</span>
+            <select id="partnerStarSelect" onchange="renderPartnerKichi()" style="flex:1;background:var(--card);border:1px solid var(--rim);border-radius:6px;color:var(--snow);padding:6px 8px;font-size:.7rem;">
+              <option value="">選んでください</option>
+              <option value="1">一白水星</option>
+              <option value="2">二黒土星</option>
+              <option value="3">三碧木星</option>
+              <option value="4">四緑木星</option>
+              <option value="5">五黄土星</option>
+              <option value="6">六白金星</option>
+              <option value="7">七赤金星</option>
+              <option value="8">八白土星</option>
+              <option value="9">九紫火星</option>
+            </select>
+          </div>
+          <div id="partnerKichiContent" style="font-size:.66rem;color:var(--snow);line-height:1.85;"></div>
+        </div>
       </div>
     </details>
 
@@ -3682,6 +3706,67 @@ function renderKichiOkiNav(){
       <div style="font-size:.62rem;color:var(--mist);line-height:1.85;">
         最大吉方の色の生花やアイテムは、季節ごとに新しくすると気の鮮度が保たれます。携帯番号や車のナンバーの末尾を最大吉方の数字に合わせるのも、知恵の蔵が勧める開運法です。
       </div>
+    </div>
+  `;
+}
+
+// 商談・デート相手との最大吉方を表示
+function renderPartnerKichi(){
+  const el=document.getElementById('partnerKichiContent');
+  if(!el) return;
+  const sel=document.getElementById('partnerStarSelect');
+  const partner=sel?parseInt(sel.value,10):0;
+  if(!partner || !state.info || !state.info.honmei){
+    el.innerHTML='';
+    return;
+  }
+  const myHonmei=state.info.honmei;
+  const pStar=STAR_SHOUI[partner];
+  // 自分の本命 × 相手の本命 の最大吉方（間の星）
+  const bridge=getSaidaiKichi(myHonmei, partner);
+  // 相生・相剋の関係を判定
+  const myG=GOGYO_OF_STAR[myHonmei], pG=GOGYO_OF_STAR[partner];
+  let relation='';
+  if(myG===pG) relation='比和（同じ五行・気が合う）';
+  else if(KO_GOGYO[myG]===pG || KO_GOGYO[pG]===myG) relation='相生（自然に通じ合う）';
+  else relation='相剋（異質だが、間を取れば最強）';
+
+  let bridgeHtml='';
+  if(bridge.length===0){
+    bridgeHtml=`<div style="color:var(--mist);font-size:.62rem;">この組み合わせの最大吉方は算出対象外（同一星など）です。相手の星の象意を直接取り入れてください。</div>`;
+  } else {
+    bridge.forEach(s=>{
+      const sh=STAR_SHOUI[s];
+      bridgeHtml+=`<div style="margin:8px 0;padding:10px 12px;background:rgba(232,140,165,.07);border:1px solid rgba(232,140,165,.25);border-radius:9px;">
+        <div style="font-size:.72rem;color:#d24a78;font-weight:800;margin-bottom:5px;">🌟 ${sh.name}（二人を繋ぐ星）</div>
+        <div style="line-height:1.9;">
+          <div>🎨 <strong>身につける色</strong>：${sh.colors.join('・')}</div>
+          <div>🍽️ <strong>一緒に食べる</strong>：${sh.foods.join('、')}</div>
+          <div>🏮 <strong>選ぶ店・空間</strong>：${sh.keyword}を感じさせる場所</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  el.innerHTML=`
+    <div style="margin-bottom:10px;padding:9px 11px;background:rgba(91,141,239,.05);border:1px solid rgba(91,141,239,.18);border-radius:8px;">
+      <div style="font-size:.62rem;color:var(--snow);">あなた（${STAR_SHOUI[myHonmei].name}）× 相手（${pStar.name}）<br>
+      <span style="color:#3f6fd6;font-weight:700;">関係：${relation}</span></div>
+    </div>
+
+    <div style="font-size:.64rem;color:var(--goldlt);font-weight:800;margin:6px 0 2px;">① 二人の最大吉方を場に挟む（最強の一手）</div>
+    <div style="font-size:.56rem;color:var(--mist);margin-bottom:4px;">これを共有すれば、相剋の相手とも意気投合します。</div>
+    ${bridgeHtml}
+
+    <div style="font-size:.64rem;color:var(--goldlt);font-weight:800;margin:12px 0 2px;">② 相手の星に寄せる（相手を心地よくする）</div>
+    <div style="margin:6px 0;padding:10px 12px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.18);border-radius:9px;">
+      <div style="font-size:.7rem;color:#a87b1a;font-weight:700;margin-bottom:4px;">${pStar.name}が喜ぶもの</div>
+      <div style="line-height:1.9;">
+        <div>🎨 色：${pStar.colors.join('・')}</div>
+        <div>🍽️ 食べ物：${pStar.foods.join('、')}</div>
+        <div>💬 響くキーワード：${pStar.keyword}</div>
+      </div>
+      <div style="font-size:.56rem;color:var(--mist);margin-top:5px;">相手の星の色の小物を身につけたり、相手の象意の話題に触れると、相手は無意識に心を開きます。</div>
     </div>
   `;
 }
