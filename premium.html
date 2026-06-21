@@ -3989,10 +3989,10 @@ function renderEhouOkiNav(){
 //   ② KITOKU_GMAP_CONFIG.apiKey の 'YOUR_GOOGLE_MAPS_API_KEY' を本物のキーに変更
 //   （マップIDは設定済み。Leafletに戻すときは①を 'leaflet' に戻すだけ）
 // ══════════════════════════════════════════════════════
-const KITOKU_MAP_PROVIDER = 'leaflet'; // ← 'google' に変えるとGoogle Maps稼働
+const KITOKU_MAP_PROVIDER = 'google'; // ← 'google' に変えるとGoogle Maps稼働
 const KITOKU_GMAP_CONFIG = {
   // Google Maps用設定。APIキーだけ将軍が手元で差し替える（YOUR_... を本物のキーに）
-  apiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+  apiKey: 'AIzaSyBtIQR65LBqDb5m0epD7o14N_yg-DDsCq0',
   mapId: '158e22aedaec303714816f1b',          // 通常地図用のマップID（ベクター）
   mapIdFullscreen: '158e22aedaec3037bccbcbc0' // フルスクリーン用のマップID（ベクター）
 };
@@ -4084,7 +4084,7 @@ const KitokuMap = {
     if(this._gReady()){
       const path = points.map(p=>({lat:p.lat,lng:p.lng}));
       const opt = {
-        path:path, map:map,
+        path:path, map:map, clickable:false,
         strokeColor:style.color||'#e84d80',
         strokeWeight:style.weight||2,
         strokeOpacity:style.dashArray?0:(style.opacity!=null?style.opacity:0.8)
@@ -4114,7 +4114,7 @@ const KitokuMap = {
     }
     if(this._gReady()){
       return new google.maps.Polygon({
-        paths:points.map(p=>({lat:p.lat,lng:p.lng})), map:map,
+        paths:points.map(p=>({lat:p.lat,lng:p.lng})), map:map, clickable:false,
         strokeColor:style.color||'#e84d80', strokeWeight:style.weight||1,
         strokeOpacity:style.opacity!=null?style.opacity:0.6,
         fillColor:style.fillColor||style.color||'#e84d80',
@@ -4135,7 +4135,7 @@ const KitokuMap = {
     }
     if(this._gReady()){
       return new google.maps.Circle({
-        center:{lat:center.lat,lng:center.lng}, radius:radiusM, map:map,
+        center:{lat:center.lat,lng:center.lng}, radius:radiusM, map:map, clickable:false,
         strokeColor:style.color||'rgba(196,160,67,.3)', strokeWeight:style.weight||1,
         strokeOpacity:0.8, fillColor:style.fillColor||style.color, fillOpacity:style.fillOpacity!=null?style.fillOpacity:0.3
       });
