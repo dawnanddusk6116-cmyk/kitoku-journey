@@ -493,7 +493,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <summary>うまく使うコツ</summary>
         <div class="mini-accordion-body">
           ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
-          ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星」を調べて貼ると相談しやすくなります。
+          ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星を確認する」で調べて貼ると相談しやすくなります。
         </div>
       </details>
 
@@ -564,6 +564,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </div>
       </details>
     </div>
+
+    <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">方位で動く</div>
 
     <details class="panel panel-details" id="compassPanel">
       <summary>
@@ -760,6 +762,21 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
+    <details class="panel panel-details" id="senroPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">④ 線路の日</span>
+          <span class="panel-details-note">契約・開始・出発など、動かす日の候補を見る</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
+        <div class="senro-list" id="senroDays"></div>
+        <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
+      </div>
+    </details>
+
+    <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">日常の処方箋</div>
+
     <!-- 最大吉方の開運アイテム -->
     <details class="panel panel-details" id="kichiOkiPanel">
       <summary>
@@ -800,6 +817,34 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
+    <details class="self-accordion">
+      <summary>相手の星を確認する <button type="button" onclick="event.stopPropagation();openToolHelp('target')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
+      <div class="self-accordion-body">
+      <div class="note">人間関係・仕事・面談など、相手の星を確認して関わり方のヒントを見る入口です。保存はしません。</div>
+      <div class="field-grid">
+        <div>
+          <label>相手の名前・メモ</label>
+          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
+        </div>
+        <div>
+          <label>性別</label>
+          <select id="targetGender" onchange="updateTargetInfo()">
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <label>相手の生年月日</label>
+        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+      </div>
+      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+      <button class="copy-btn" id="copyTargetBtn" onclick="copyTargetInfo()">📋 相手の星情報をコピー</button>
+      </div>
+    </details>
+
+    <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">恵方の活用</div>
+
     <!-- 恵方参りナビ -->
     <details class="panel panel-details" id="ehouMairiPanel">
       <summary>
@@ -829,19 +874,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           恵方が海や山で社寺がない時は、<strong>家の中の恵方</strong>に「恵方置き」を据えると、家に恵方の「気」が満ちます。その対角線上に「恵方受け」を置くと、気が留まり充満します。「恵方置き」は<strong>その年の恵方に廻座する九星</strong>にまつわるもの、「恵方受け」はお札や破魔矢です。
         </div>
         <div id="ehouOkiContent" style="font-size:.66rem;color:var(--snow);line-height:1.85;"></div>
-      </div>
-    </details>
-
-    <details class="panel panel-details" id="senroPanel">
-      <summary>
-        <span>
-          <span class="panel-details-title">④ 線路の日</span>
-          <span class="panel-details-note">契約・開始・出発など、動かす日の候補を見る</span>
-        </span>
-      </summary>
-      <div class="panel-details-body">
-        <div class="senro-list" id="senroDays"></div>
-        <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
       </div>
     </details>
 
@@ -879,32 +911,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </button>
 
         <div id="rsResults" style="margin-top:12px;"></div>
-      </div>
-    </details>
-
-    <details class="self-accordion">
-      <summary>相手の星も入れる <button type="button" onclick="event.stopPropagation();openToolHelp('target')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
-      <div class="self-accordion-body">
-      <div class="note">人間関係・仕事・面談など、相手情報を一時的に加えるための入口です。保存はしません。</div>
-      <div class="field-grid">
-        <div>
-          <label>相手の名前・メモ</label>
-          <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
-        </div>
-        <div>
-          <label>性別</label>
-          <select id="targetGender" onchange="updateTargetInfo()">
-            <option value="male">男性</option>
-            <option value="female">女性</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-top:8px;">
-        <label>相手の生年月日</label>
-        <input id="targetBirth" type="date" onchange="updateTargetInfo()">
-      </div>
-      <div class="preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
-      <button class="copy-btn" id="copyTargetBtn" onclick="copyTargetInfo()">📋 相手の星情報をコピー</button>
       </div>
     </details>
 
@@ -1663,7 +1669,7 @@ function insertConsultTemplate(type){
 困っていること：【ここに入力】
 どうなりたいか：【ここに入力】
 
-必要なら、下の「相手の星も入れる」で相手の星情報を調べて貼るので、見るポイントから教えてください。`,
+必要なら、下の「相手の星を確認する」で相手の星情報を調べて貼るので、見るポイントから教えてください。`,
     money:`お金・仕事の判断について相談したいです。
 
 相談したいこと：【ここに入力】
@@ -1995,7 +2001,7 @@ ${boardSummary}${senroSummary}
 ・最初に結論、その次に手順、最後に次の一手を書く
 ・相談に将来の日付・移動・契約日が関係する場合は、このページ下部の方位盤でその日を表示し、「方位盤メモ」をコピーして貼ると精度が上がる、と自然に案内する
 ・出発地が「現在地」とだけ書かれている場合、AIは地名や座標を知らない。具体的な場所判断には、方位盤メモまたは市区町村の追記を自然に依頼する
-・相談に第三者との人間関係・商談・面談が関係する場合は、このページ下部の「相手の星も入れる」で相手の星情報を調べ、コピーして貼ると相談しやすい、と自然に案内する
+・相談に第三者との人間関係・商談・面談が関係する場合は、このページ下部の「相手の星を確認する」で相手の星情報を調べ、コピーして貼ると相談しやすい、と自然に案内する
 ・相談内容に必要な情報が足りない時は、結論を急がず、最初に確認質問をする
 ・確認質問は一度に最大3つまで。スマホの音声入力で答えやすい短い質問にする
 ・旅・引越し・聖地巡礼では、目的地、出発地、候補日、目的、同伴者の有無、方位盤メモの有無を必要に応じて聞く
