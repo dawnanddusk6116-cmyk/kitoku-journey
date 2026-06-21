@@ -3980,6 +3980,141 @@ function renderEhouOkiNav(){
 }
 
 
+// ══════════════════════════════════════════════════════
+// KitokuMap 抽象化レイヤー
+// Leaflet と Google Maps を切り替え可能にする共通インターフェース
+// provider を 'leaflet' / 'google' で切替（現在は leaflet 稼働）
+// ══════════════════════════════════════════════════════
+const KITOKU_MAP_PROVIDER = 'leaflet'; // ← Google移行時に 'google' へ
+const KITOKU_GMAP_CONFIG = {
+  // Google Maps用設定（移行時に使用。キーは将軍が手元で差し替え）
+  apiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+  mapId: 'YOUR_MAP_ID',          // 通常地図用のマップID（ベクター）
+  mapIdFullscreen: 'YOUR_MAP_ID' // フルスクリーン用のマップID（ベクター）
+};
+
+const KitokuMap = {
+  provider: KITOKU_MAP_PROVIDER,
+
+  // 地図インスタンスを生成
+  // elementId: 地図を描くdivのid, center:{lat,lng}, zoom:数値
+  create(elementId, center, zoom){
+    if(this.provider==='leaflet'){
+      const m = L.map(elementId, { center:[center.lat,center.lng], zoom:zoom, zoomControl:false });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        attribution:'© OpenStreetMap contributors', maxZoom:19
+      }).addTo(m);
+      return m;
+    }
+    // google: new google.maps.Map(...) （移行時に実装）
+    return null;
+  },
+
+  // 中心とズームを設定
+  setView(map, center, zoom){
+    if(this.provider==='leaflet'){ map.setView([center.lat,center.lng], zoom); }
+  },
+
+  // ズーム取得
+  getZoom(map){
+    if(this.provider==='leaflet'){ return map.getZoom(); }
+    return 12;
+  },
+
+  // 線を追加（points: [{lat,lng}...], style:{color,weight,opacity,dashArray}）→ handle
+  addLine(map, points, style){
+    if(this.provider==='leaflet'){
+      const latlngs = points.map(p=>[p.lat,p.lng]);
+      return L.polyline(latlngs, {
+        color:style.color||'#e84d80', weight:style.weight||2,
+        opacity:style.opacity!=null?style.opacity:0.8,
+        dashArray:style.dashArray||null
+      }).addTo(map);
+    }
+    return null;
+  },
+
+  // 面（多角形）を追加 → handle
+  addPolygon(map, points, style){
+    if(this.provider==='leaflet'){
+      const latlngs = points.map(p=>[p.lat,p.lng]);
+      return L.polygon(latlngs, {
+        color:style.color||'#e84d80', weight:style.weight||1,
+        opacity:style.opacity!=null?style.opacity:0.6,
+        fillColor:style.fillColor||style.color||'#e84d80',
+        fillOpacity:style.fillOpacity!=null?style.fillOpacity:0.2
+      }).addTo(map);
+    }
+    return null;
+  },
+
+  // 円を追加（radiusM:半径メートル）→ handle
+  addCircle(map, center, radiusM, style){
+    if(this.provider==='leaflet'){
+      return L.circle([center.lat,center.lng], {
+        radius:radiusM, color:style.color||'rgba(196,160,67,.3)',
+        weight:style.weight||1, fill:true,
+        fillColor:style.fillColor||style.color, fillOpacity:style.fillOpacity!=null?style.fillOpacity:0.3
+      }).addTo(map);
+    }
+    return null;
+  },
+
+  // マーカー（HTMLアイコン）を追加 → handle
+  // latlng:{lat,lng}, html:文字列, opts:{w,h,anchorX,anchorY,zIndex,interactive}
+  addHtmlMarker(map, latlng, html, opts){
+    if(this.provider==='leaflet'){
+      const icon = L.divIcon({
+        className:'', html:html,
+        iconSize:[opts.w||30,opts.h||30],
+        iconAnchor:[opts.anchorX!=null?opts.anchorX:(opts.w||30)/2, opts.anchorY!=null?opts.anchorY:(opts.h||30)/2]
+      });
+      const mk = L.marker([latlng.lat,latlng.lng], {
+        icon:icon,
+        zIndexOffset:opts.zIndex||0,
+        interactive:opts.interactive!==false
+      });
+      mk.addTo(map);
+      return mk;
+    }
+    return null;
+  },
+
+  // レイヤー（線・面・マーカー）を地図から除去
+  remove(map, handle){
+    if(!handle) return;
+    if(this.provider==='leaflet'){ map.removeLayer(handle); }
+  },
+
+  // クリックイベント登録（fnには {lat,lng} を渡す）
+  onClick(map, fn){
+    if(this.provider==='leaflet'){
+      map.on('click', e=>fn({lat:e.latlng.lat, lng:e.latlng.lng}));
+    }
+  },
+
+  // ズーム終了イベント登録
+  onZoom(map, fn){
+    if(this.provider==='leaflet'){
+      map.on('zoomend', ()=>fn());
+    }
+  },
+
+  // 緯度経度→コンテナピクセル座標（オーバーレイSVG用）
+  latLngToPixel(map, latlng){
+    if(this.provider==='leaflet'){
+      const p = map.latLngToContainerPoint([latlng.lat,latlng.lng]);
+      return {x:p.x, y:p.y};
+    }
+    return {x:0,y:0};
+  },
+
+  // サイズ再計算（コンテナのサイズ変更時）
+  invalidateSize(map){
+    if(this.provider==='leaflet'){ map.invalidateSize(); }
+  }
+};
+
 // 始点(lat,lng)から方位bearingへ距離distMの終点を球面で計算
 function gcDestination(lat, lng, bearingDeg, distM){
   const R = 6371000;
@@ -4038,7 +4173,7 @@ function createKitokuMap(lat, lng){
   if(placeholder) placeholder.style.display='none';
 
   setTimeout(()=>{
-    if(typeof L==='undefined'){
+    if(KitokuMap.provider==='leaflet' && typeof L==='undefined'){
       if(placeholder){
         placeholder.style.display='flex';
         placeholder.innerHTML='<div style="font-size:1.6rem;opacity:.45;">🗺️</div><div>地図ライブラリを読み込めませんでした。<br>通信環境を確認して、もう一度お試しください。</div>';
@@ -4047,29 +4182,26 @@ function createKitokuMap(lat, lng){
       return;
     }
     const cfg = MAP_MODES[kitokuMapMode];
-    kitokuMapInst = L.map('kitokuMap',{ center:[lat,lng], zoom:cfg.zoom, zoomControl:false });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      attribution:'© OpenStreetMap contributors', maxZoom:19
-    }).addTo(kitokuMapInst);
+    kitokuMapInst = KitokuMap.create('kitokuMap', {lat:lat,lng:lng}, cfg.zoom);
 
     kitokuMapReady = true;
     drawKitokuMapLines(lat, lng);
     drawEhouLine();
-    setTimeout(()=>kitokuMapInst.invalidateSize(), 200);
+    setTimeout(()=>KitokuMap.invalidateSize(kitokuMapInst), 200);
 
-    kitokuMapInst.on('zoomend',()=>{
+    KitokuMap.onZoom(kitokuMapInst, ()=>{
       const c=kitokuMapCenter||{lat,lng};
       drawKitokuMapLines(c.lat, c.lng);
       drawEhouLine();
     });
-    kitokuMapInst.on('click', onKitokuMapTap);
+    KitokuMap.onClick(kitokuMapInst, (latlng)=>onKitokuMapTap(latlng));
   }, 100);
 }
 
 // ── 方位線＋SVGオーバーレイ描画 ──────────────────────
 function drawKitokuMapLines(lat, lng){
   if(!kitokuMapInst) return;
-  kitokuMapLines.forEach(l=>kitokuMapInst.removeLayer(l));
+  kitokuMapLines.forEach(l=>KitokuMap.remove(kitokuMapInst, l));
   kitokuMapLines=[];
   if(!state.info) return;
 
@@ -4124,8 +4256,8 @@ function drawKitokuMapLines(lat, lng){
       const style = touchesKichi
         ? {color:'#e84d80', weight:2, opacity:0.75, dashArray:null}      // 吉方の境界＝ピンク実線
         : {color:'rgba(90,95,105,.4)', weight:1, opacity:0.5, dashArray:'3,5'}; // それ以外＝グレー点線
-      const bl=L.polyline(path,style);
-      bl.addTo(kitokuMapInst); kitokuMapLines.push(bl);
+      const bl=KitokuMap.addLine(kitokuMapInst, path.map(p=>({lat:p[0],lng:p[1]})), style);
+      kitokuMapLines.push(bl);
     });
   }
 
@@ -4154,8 +4286,8 @@ function drawKitokuMapLines(lat, lng){
         latlngs = [[lat,lng],[lat+dlat,lng+dlng]];
       }
       const opts={color,weight:w,opacity:op}; if(dash)opts.dashArray=dash;
-      const line=L.polyline(latlngs,opts);
-      line.addTo(kitokuMapInst); kitokuMapLines.push(line);
+      const line=KitokuMap.addLine(kitokuMapInst, latlngs.map(p=>({lat:p[0],lng:p[1]})), opts);
+      kitokuMapLines.push(line);
     };
 
     // 吉方扇形（近距離モードのみ。海外モードは中心軸線で表現）
@@ -4172,8 +4304,9 @@ function drawKitokuMapLines(lat, lng){
       }
       const fanColor=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fanOpacity=dd.rank>=4?0.24:dd.rank>=3?0.18:0.13;
-      const fan=L.polygon(pts,{color:'#d83c70',weight:1.5,opacity:0.6,fillColor:fanColor,fillOpacity:fanOpacity});
-      fan.addTo(kitokuMapInst); kitokuMapLines.push(fan);
+      const fan=KitokuMap.addPolygon(kitokuMapInst, pts.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#d83c70',weight:1.5,opacity:0.6,fillColor:fanColor,fillOpacity:fanOpacity});
+      kitokuMapLines.push(fan);
     }
 
     // メイン方位線（海外モードは境界線が主役なので中心軸は控えめに）
@@ -4192,30 +4325,26 @@ function drawKitokuMapLines(lat, lng){
     const midLat=lat+Math.cos(midRad)*(LINE_LENGTH/111)*0.15;
     const midLng=lng+Math.sin(midRad)*(LINE_LENGTH/(111*Math.cos(lat*Math.PI/180)))*0.15;
     const lcolor=isKyo?'#ef4444':dd.rank>=3?'#16a34a':'#78716c';
-    const lbl=L.divIcon({
-      html:`<div style="font-size:10px;font-weight:700;color:${lcolor};white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff;">${MAP_JP_DIR[dir]}<br>${MAP_STAR_NAMES[starN]||''}</div>`,
-      iconAnchor:[20,10],className:''
-    });
-    const mk=L.marker([midLat,midLng],{icon:lbl,interactive:false});
-    mk.addTo(kitokuMapInst); kitokuMapLines.push(mk);
+    const lblHtml=`<div style="font-size:10px;font-weight:700;color:${lcolor};white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff;">${MAP_JP_DIR[dir]}<br>${MAP_STAR_NAMES[starN]||''}</div>`;
+    const mk=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:midLat,lng:midLng}, lblHtml,
+      {w:40,h:20,anchorX:20,anchorY:10,interactive:false});
+    kitokuMapLines.push(mk);
   });
 
   // 距離円（750m・3km・10km）
   [[0.75,'rgba(196,160,67,.2)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.06)']].forEach(([r,fill])=>{
-    const c=L.circle([lat,lng],{radius:r*1000,color:'rgba(196,160,67,.3)',weight:1,fill:true,fillColor:fill,fillOpacity:0.3});
-    c.addTo(kitokuMapInst); kitokuMapLines.push(c);
+    const c=KitokuMap.addCircle(kitokuMapInst, {lat:lat,lng:lng}, r*1000,
+      {color:'rgba(196,160,67,.3)',weight:1,fillColor:fill,fillOpacity:0.3});
+    kitokuMapLines.push(c);
   });
 
   // 八角形SVGオーバーレイ
   drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoSet,honmei,tsukimei);
 
   // 現在地マーカー（十字）— オーバーレイの後＝最前面に描画
-  const crossIcon = L.divIcon({
-    className:'',
-    html:'<div style="position:relative;width:28px;height:28px;"><div style="position:absolute;top:50%;left:0;width:100%;height:2.5px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.6);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:2.5px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.6);transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:10px;height:10px;background:#c4a043;border:2.5px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 5px rgba(0,0,0,.5);"></div></div>',
-    iconSize:[28,28],iconAnchor:[14,14]
-  });
-  const cMk=L.marker([lat,lng],{icon:crossIcon,interactive:false,zIndexOffset:2000}).addTo(kitokuMapInst);
+  const crossHtml='<div style="position:relative;width:28px;height:28px;"><div style="position:absolute;top:50%;left:0;width:100%;height:2.5px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.6);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;height:100%;width:2.5px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.6);transform:translateX(-50%);"></div><div style="position:absolute;top:50%;left:50%;width:10px;height:10px;background:#c4a043;border:2.5px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 5px rgba(0,0,0,.5);"></div></div>';
+  const cMk = KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lat,lng:lng}, crossHtml,
+    {w:28,h:28,anchorX:14,anchorY:14,interactive:false,zIndex:2000});
   kitokuMapLines.push(cMk);
 
   // 凡例の盤種更新
@@ -4226,10 +4355,10 @@ function drawKitokuMapLines(lat, lng){
 // ── 八角形SVGオーバーレイ（direction_v2完全移植） ────
 function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoSet,honmei,tsukimei){
   if(!kitokuMapInst) return;
-  if(kitokuMapCompassOverlay){ kitokuMapInst.removeLayer(kitokuMapCompassOverlay); kitokuMapCompassOverlay=null; }
+  if(kitokuMapCompassOverlay){ KitokuMap.remove(kitokuMapInst, kitokuMapCompassOverlay); kitokuMapCompassOverlay=null; }
 
-  const cPt=kitokuMapInst.latLngToContainerPoint([lat,lng]);
-  const nPt=kitokuMapInst.latLngToContainerPoint([lat+0.75/111,lng]);
+  const cPt=KitokuMap.latLngToPixel(kitokuMapInst, {lat:lat,lng:lng});
+  const nPt=KitokuMap.latLngToPixel(kitokuMapInst, {lat:lat+0.75/111,lng:lng});
   let R_OUT=Math.abs(cPt.y-nPt.y);
   // ズームアウトで750m円が小さすぎる場合は最小サイズを保証（旅行・海外モード対応）
   if(R_OUT<60) R_OUT=60;
@@ -4307,8 +4436,8 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
   cells+=`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="#ffd860" font-size="${Math.max(15,R_OUT*0.12).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2px">${center}</text>`;
 
   const svgHtml=`<svg width="${SVG}" height="${SVG}" viewBox="0 0 ${SVG} ${SVG}" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
-  const icon=L.divIcon({className:'map-compass-overlay',html:svgHtml,iconSize:[SVG,SVG],iconAnchor:[SVG/2,SVG/2]});
-  kitokuMapCompassOverlay=L.marker([lat,lng],{icon,interactive:false,keyboard:false}).addTo(kitokuMapInst);
+  kitokuMapCompassOverlay=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lat,lng:lng}, svgHtml,
+    {w:SVG,h:SVG,anchorX:SVG/2,anchorY:SVG/2,interactive:false});
   kitokuMapLines.push(kitokuMapCompassOverlay);
 }
 
@@ -4320,7 +4449,7 @@ function setMapCenter(lat, lng, name){
   clearTapMarkers();
   if(!kitokuMapReady){ createKitokuMap(lat,lng); }
   else {
-    kitokuMapInst.setView([lat,lng],MAP_MODES[kitokuMapMode].zoom);
+    KitokuMap.setView(kitokuMapInst, {lat:lat,lng:lng}, MAP_MODES[kitokuMapMode].zoom);
     drawKitokuMapLines(lat,lng);
     drawEhouLine();
   }
@@ -4328,8 +4457,8 @@ function setMapCenter(lat, lng, name){
 
 // タップピン・線をクリア（通常地図）
 function clearTapMarkers(){
-  if(kitokuTapMarker&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuTapMarker);kitokuTapMarker=null;}
-  if(kitokuTapLine&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuTapLine);kitokuTapLine=null;}
+  if(kitokuTapMarker){ KitokuMap.remove(kitokuMapInst, kitokuTapMarker); kitokuTapMarker=null; }
+  if(kitokuTapLine){ KitokuMap.remove(kitokuMapInst, kitokuTapLine); kitokuTapLine=null; }
 }
 
 // ── 恵方ライン ────────────────────────────────────────
@@ -4345,8 +4474,8 @@ function toggleEhouLine(){
 // 恵方ラインを描画（通常地図・全画面の両方）
 function drawEhouLine(){
   // 既存の恵方ラインを除去
-  if(kitokuEhouLine&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuEhouLine);kitokuEhouLine=null;}
-  if(kitokuEhouLabel&&kitokuMapInst){kitokuMapInst.removeLayer(kitokuEhouLabel);kitokuEhouLabel=null;}
+  if(kitokuEhouLine){ KitokuMap.remove(kitokuMapInst, kitokuEhouLine); kitokuEhouLine=null; }
+  if(kitokuEhouLabel){ KitokuMap.remove(kitokuMapInst, kitokuEhouLabel); kitokuEhouLabel=null; }
   if(kitokuFsEhouLine&&kitokuFsMapInst){kitokuFsMapInst.removeLayer(kitokuFsEhouLine);kitokuFsEhouLine=null;}
   if(kitokuFsEhouLabel&&kitokuFsMapInst){kitokuFsMapInst.removeLayer(kitokuFsEhouLabel);kitokuFsEhouLabel=null;}
 
@@ -4363,12 +4492,12 @@ function drawEhouLine(){
   // 通常地図に描画
   if(kitokuMapInst){
     const path=gcPath(lat,lng,ehou.deg,dist,48);
-    kitokuEhouLine=L.polyline(path,{color:'#d4a028',weight:3.5,opacity:0.9}).addTo(kitokuMapInst);
+    kitokuEhouLine=KitokuMap.addLine(kitokuMapInst, path.map(p=>({lat:p[0],lng:p[1]})),
+      {color:'#d4a028',weight:3.5,opacity:0.9});
     const lp=gcDestination(lat,lng,ehou.deg, Math.min(dist*0.25, 50000));
-    kitokuEhouLabel=L.marker([lp[0],lp[1]],{
-      icon:L.divIcon({className:'',html:`<div style="background:#d4a028;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3);">⛩️ ${ehou.year}年の恵方</div>`,iconAnchor:[30,10]}),
-      interactive:false
-    }).addTo(kitokuMapInst);
+    const ehouLabelHtml=`<div style="background:#d4a028;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3);">⛩️ ${ehou.year}年の恵方</div>`;
+    kitokuEhouLabel=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lp[0],lng:lp[1]}, ehouLabelHtml,
+      {w:60,h:20,anchorX:30,anchorY:10,interactive:false});
   }
   // 全画面に描画
   if(kitokuFsMapInst && document.getElementById('kitokuMapFullscreenModal').style.display==='block'){
@@ -4517,7 +4646,10 @@ function judgeDirForMap(dir){
 
 function onKitokuMapTap(e){
   if(!kitokuMapCenter) return;
-  const{lat,lng}=e.latlng;
+  // KitokuMap経由は{lat,lng}、旧Leaflet直呼びは{latlng:{lat,lng}}
+  const lat = e.lat!=null ? e.lat : (e.latlng ? e.latlng.lat : null);
+  const lng = e.lng!=null ? e.lng : (e.latlng ? e.latlng.lng : null);
+  if(lat==null||lng==null) return;
   kitokuMapLastTap={lat,lng};
 
   const{dist,bearing,dir:tapDir,dirLabel:tapDirLabel,isLongDist}=calcMapTapInfo(kitokuMapCenter.lat,kitokuMapCenter.lng,lat,lng);
@@ -4529,17 +4661,14 @@ function onKitokuMapTap(e){
 
   // タップ地点のピン＋中心への線を描画（吉凶色で・天道と普通は中立色）
   const pinColor = j.kind==='kyo'?'#9aa0aa':j.kind==='kichi'?'#e84d80':'#8a6820';
-  if(kitokuTapMarker) kitokuMapInst.removeLayer(kitokuTapMarker);
-  if(kitokuTapLine) kitokuMapInst.removeLayer(kitokuTapLine);
-  kitokuTapLine=L.polyline([[kitokuMapCenter.lat,kitokuMapCenter.lng],[lat,lng]],{
-    color:pinColor,weight:1.5,opacity:0.8,dashArray:'4,4'
-  }).addTo(kitokuMapInst);
-  const pinIcon=L.divIcon({
-    className:'',
-    html:`<div style="position:relative;width:26px;height:34px;"><svg width="26" height="34" viewBox="0 0 26 34"><path d="M13 0C5.8 0 0 5.8 0 13c0 9 13 21 13 21s13-12 13-21C26 5.8 20.2 0 13 0z" fill="${pinColor}" stroke="#fff" stroke-width="2"/><circle cx="13" cy="13" r="5" fill="#fff"/></svg></div>`,
-    iconSize:[26,34],iconAnchor:[13,34]
-  });
-  kitokuTapMarker=L.marker([lat,lng],{icon:pinIcon,zIndexOffset:3000}).addTo(kitokuMapInst);
+  if(kitokuTapMarker){ KitokuMap.remove(kitokuMapInst, kitokuTapMarker); kitokuTapMarker=null; }
+  if(kitokuTapLine){ KitokuMap.remove(kitokuMapInst, kitokuTapLine); kitokuTapLine=null; }
+  kitokuTapLine = KitokuMap.addLine(kitokuMapInst,
+    [{lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng},{lat:lat,lng:lng}],
+    {color:pinColor,weight:1.5,opacity:0.8,dashArray:'4,4'});
+  const pinHtml=`<div style="position:relative;width:26px;height:34px;"><svg width="26" height="34" viewBox="0 0 26 34"><path d="M13 0C5.8 0 0 5.8 0 13c0 9 13 21 13 21s13-12 13-21C26 5.8 20.2 0 13 0z" fill="${pinColor}" stroke="#fff" stroke-width="2"/><circle cx="13" cy="13" r="5" fill="#fff"/></svg></div>`;
+  kitokuTapMarker = KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lat,lng:lng}, pinHtml,
+    {w:26,h:34,anchorX:13,anchorY:34,zIndex:3000});
 
   const banLabel={'day':'日盤','month':'月盤','year':'年盤'}[state.banType||'day'];
   const d=state.date;
