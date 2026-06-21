@@ -4002,7 +4002,7 @@ function renderEhouOkiNav(){
 //   ② KITOKU_GMAP_CONFIG.apiKey の 'YOUR_GOOGLE_MAPS_API_KEY' を本物のキーに変更
 //   （マップIDは設定済み。Leafletに戻すときは①を 'leaflet' に戻すだけ）
 // ══════════════════════════════════════════════════════
-const KITOKU_MAP_PROVIDER = 'google'; // ← 'google' に変えるとGoogle Maps稼働
+const KITOKU_MAP_PROVIDER = 'Google'; // ← 'google' に変えるとGoogle Maps稼働
 const KITOKU_GMAP_CONFIG = {
   // Google Maps用設定。APIキーだけ将軍が手元で差し替える（YOUR_... を本物のキーに）
   apiKey: 'AIzaSyBtIQR65LBqDb5m0epD7o14N_yg-DDsCq0',
@@ -4244,8 +4244,10 @@ const KitokuMap = {
   addZoomControl(map, position){
     if(this.provider==='leaflet'){
       L.control.zoom({position:position||'topright'}).addTo(map);
+    } else if(this._gReady()){
+      // disableDefaultUI:trueで隠れているズームコントロールだけ再表示
+      map.setOptions({zoomControl:true, zoomControlOptions:{position:google.maps.ControlPosition.RIGHT_BOTTOM}});
     }
-    // google: create時のoptionでzoomControl表示するため、ここでは何もしない
   },
 
   // 緯度経度→コンテナピクセル座標（オーバーレイSVG用）
