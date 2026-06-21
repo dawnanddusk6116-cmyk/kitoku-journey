@@ -3429,6 +3429,19 @@ async function sendChat(){
   <button onclick="closeMapFullscreen()" style="position:fixed;top:14px;right:14px;z-index:100010;background:#fff;border:2px solid #d83c70;border-radius:50%;width:52px;height:52px;font-size:1.6rem;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.5);color:#d83c70;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
   <!-- 上部ラベル -->
   <div style="position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.95);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;">📍 北が上 ・ <span style="color:#e84d80;">■</span>吉方　<span style="color:#9aa0aa;">■</span>凶方</div>
+  <!-- 全画面日付変更バー -->
+  <div id="fsDateBar" style="position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.96);border-radius:10px;padding:6px 10px;box-shadow:0 2px 10px rgba(0,0,0,.35);display:flex;align-items:center;gap:6px;white-space:nowrap;">
+    <!-- 盤種切替 -->
+    <button onclick="fsSwitchBan('day')" id="fsBtn-day" style="font-size:.58rem;padding:3px 7px;border-radius:6px;border:1px solid #d4a028;background:#d4a028;color:#fff;font-family:'Noto Serif JP',serif;cursor:pointer;font-weight:700;">日</button>
+    <button onclick="fsSwitchBan('month')" id="fsBtn-month" style="font-size:.58rem;padding:3px 7px;border-radius:6px;border:1px solid var(--rim);background:rgba(255,255,255,.8);color:#5c4010;font-family:'Noto Serif JP',serif;cursor:pointer;">月</button>
+    <button onclick="fsSwitchBan('year')" id="fsBtn-year" style="font-size:.58rem;padding:3px 7px;border-radius:6px;border:1px solid var(--rim);background:rgba(255,255,255,.8);color:#5c4010;font-family:'Noto Serif JP',serif;cursor:pointer;">年</button>
+    <!-- 日付表示＋前後ボタン -->
+    <button onclick="fsMoveDate(-1)" style="font-size:.9rem;padding:2px 8px;border:none;background:none;color:#5c4010;cursor:pointer;font-weight:700;">◀</button>
+    <span id="fsDateLabel" style="font-size:.64rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;min-width:80px;text-align:center;"></span>
+    <button onclick="fsMoveDate(1)" style="font-size:.9rem;padding:2px 8px;border:none;background:none;color:#5c4010;cursor:pointer;font-weight:700;">▶</button>
+    <!-- 今日に戻る -->
+    <button onclick="fsMoveToday()" style="font-size:.56rem;padding:3px 7px;border-radius:6px;border:1px solid rgba(196,160,67,.4);background:rgba(196,160,67,.08);color:#a87b1a;font-family:'Noto Serif JP',serif;cursor:pointer;">今日</button>
+  </div>
   <!-- 下部タップ情報 -->
   <div id="fsTapInfo" style="display:none;position:fixed;bottom:70px;left:12px;right:12px;z-index:100005;background:rgba(255,255,255,.97);border-radius:10px;padding:10px 14px;font-size:.65rem;color:#5c4010;font-family:'Noto Serif JP',serif;box-shadow:0 2px 12px rgba(0,0,0,.35);">
     <div id="fsTapTitle" style="font-weight:800;font-size:.78rem;margin-bottom:4px;"></div>
@@ -4916,6 +4929,7 @@ let kitokuFsLayers   = [];
 function openMapFullscreen(){
   const modal=document.getElementById('kitokuMapFullscreenModal');
   modal.style.display='block';
+  updateFsDateBar();
   const c=kitokuMapCenter||{lat:33.8416,lng:132.7657};
   const buildFs=()=>{
     if(!kitokuFsMapInst){
@@ -4942,6 +4956,70 @@ function closeMapFullscreen(){
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeMapFullscreen();
 });
+
+// ── 全画面の日付バー ──────────────────────────────────
+function updateFsDateBar(){
+  const d=state.date;
+  const type=state.banType||'day';
+  const el=document.getElementById('fsDateLabel');
+  if(!el) return;
+  if(type==='year'){
+    el.textContent=d.getFullYear()+'年（年盤）';
+  } else if(type==='month'){
+    el.textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月（月盤）';
+  } else {
+    el.textContent=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+'（日盤）';
+  }
+  // 盤種ボタンのアクティブ状態を更新
+  ['day','month','year'].forEach(t=>{
+    const btn=document.getElementById('fsBtn-'+t);
+    if(!btn) return;
+    if(t===type){
+      btn.style.background='#d4a028'; btn.style.color='#fff';
+      btn.style.border='1px solid #d4a028'; btn.style.fontWeight='700';
+    } else {
+      btn.style.background='rgba(255,255,255,.8)'; btn.style.color='#5c4010';
+      btn.style.border='1px solid rgba(196,160,67,.3)'; btn.style.fontWeight='400';
+    }
+  });
+}
+function fsMoveDate(delta){
+  // 通常画面の moveDate と同じロジック
+  if(state.banType==='year') state.date.setFullYear(state.date.getFullYear()+delta);
+  else if(state.banType==='month') state.date.setMonth(state.date.getMonth()+delta);
+  else state.date.setDate(state.date.getDate()+delta);
+  updateFsDateBar();
+  // 全画面地図を再描画
+  if(kitokuFsMapInst && kitokuMapCenter){
+    drawFsMapContent(kitokuMapCenter.lat, kitokuMapCenter.lng);
+    drawEhouLine();
+  }
+  // 通常盤面も同期
+  renderBoard();
+  redrawMapIfReady();
+}
+function fsSwitchBan(type){
+  state.banType=type;
+  updateFsDateBar();
+  if(kitokuFsMapInst && kitokuMapCenter){
+    drawFsMapContent(kitokuMapCenter.lat, kitokuMapCenter.lng);
+    drawEhouLine();
+  }
+  renderBoard();
+  redrawMapIfReady();
+}
+function fsMoveToday(){
+  state.date=new Date();
+  state.banType='day';
+  updateFsDateBar();
+  if(kitokuFsMapInst && kitokuMapCenter){
+    drawFsMapContent(kitokuMapCenter.lat, kitokuMapCenter.lng);
+    drawEhouLine();
+  }
+  renderBoard();
+  redrawMapIfReady();
+}
+
 
 function drawFsMapContent(lat,lng){
   if(!kitokuFsMapInst) return;
