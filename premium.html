@@ -3443,7 +3443,7 @@ async function sendChat(){
   </div>
   <!-- 全画面小型方位盤（日付バーの下） -->
   <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:#fff;border-radius:12px;padding:8px 10px;box-shadow:0 3px 14px rgba(0,0,0,.4);cursor:pointer;text-align:center;border:1.5px solid rgba(196,160,67,.3);" onclick="closeMapFullscreen()" title="タップで方位盤へ">
-    <div id="fsMiniCompassSvg" style="width:130px;height:130px;"></div>
+    <div id="fsMiniCompassSvg" style="width:170px;height:170px;line-height:0;"></div>
     <div style="font-size:.48rem;color:#9aa0aa;margin-top:2px;">方位盤</div>
   </div>
   <!-- 下部タップ情報 -->
@@ -5047,12 +5047,12 @@ function updateFsMiniCompass(){
   const src=svgList.length>0?svgList[0]:null;
   if(src){
     const clone=src.cloneNode(true);
-    // サイズ・viewBoxを確実に設定
     const origVB=src.getAttribute('viewBox')||'0 0 360 360';
     clone.setAttribute('viewBox',origVB);
-    clone.setAttribute('width','160');
-    clone.setAttribute('height','160');
-    clone.style.cssText='width:160px;height:160px;display:block;filter:contrast(1.6) saturate(1.8) brightness(1.05);background:#fff;';
+    clone.setAttribute('width','170');
+    clone.setAttribute('height','170');
+    clone.removeAttribute('style');
+    clone.style.cssText='width:170px !important;height:170px !important;max-width:none !important;display:block;margin:0;filter:contrast(1.45) saturate(1.6);';
     el.innerHTML='';
     el.appendChild(clone);
     return;
