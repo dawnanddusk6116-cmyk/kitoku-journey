@@ -3442,7 +3442,7 @@ async function sendChat(){
     <button onclick="fsMoveToday()" style="font-size:.56rem;padding:3px 7px;border-radius:6px;border:1px solid rgba(196,160,67,.4);background:rgba(196,160,67,.08);color:#a87b1a;font-family:'Noto Serif JP',serif;cursor:pointer;">今日</button>
   </div>
   <!-- 全画面小型方位盤（日付バーの下） -->
-  <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.94);border-radius:12px;padding:6px 8px;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:pointer;text-align:center;" onclick="closeMapFullscreen()" title="タップで方位盤へ">
+  <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:#fff;border-radius:12px;padding:8px 10px;box-shadow:0 3px 14px rgba(0,0,0,.4);cursor:pointer;text-align:center;border:1.5px solid rgba(196,160,67,.3);" onclick="closeMapFullscreen()" title="タップで方位盤へ">
     <div id="fsMiniCompassSvg" style="width:130px;height:130px;"></div>
     <div style="font-size:.48rem;color:#9aa0aa;margin-top:2px;">方位盤</div>
   </div>
@@ -4013,7 +4013,7 @@ function renderEhouOkiNav(){
 //   ② KITOKU_GMAP_CONFIG.apiKey の 'YOUR_GOOGLE_MAPS_API_KEY' を本物のキーに変更
 //   （マップIDは設定済み。Leafletに戻すときは①を 'leaflet' に戻すだけ）
 // ══════════════════════════════════════════════════════
-const KITOKU_MAP_PROVIDER = 'google'; // ← 'google' に変えるとGoogle Maps稼働
+const KITOKU_MAP_PROVIDER = 'google' // ← 'google' に変えるとGoogle Maps稼働
 const KITOKU_GMAP_CONFIG = {
   // Google Maps用設定。APIキーだけ将軍が手元で差し替える（YOUR_... を本物のキーに）
   apiKey: 'AIzaSyBtIQR65LBqDb5m0epD7o14N_yg-DDsCq0',
@@ -5045,8 +5045,8 @@ function updateFsMiniCompass(){
   const src=wrap?wrap.querySelector('svg'):null;
   if(src){
     const clone=src.cloneNode(true);
-    clone.setAttribute('width','90');
-    clone.setAttribute('height','90');
+    clone.setAttribute('width','130');
+    clone.setAttribute('height','130');
     clone.style.width='130px';
     clone.style.height='130px';
     // viewBoxがあればそのまま使う（縮小表示される）
@@ -5055,6 +5055,9 @@ function updateFsMiniCompass(){
       const h=src.getAttribute('height')||200;
       clone.setAttribute('viewBox','0 0 '+w+' '+h);
     }
+    // コントラスト強化：透明度を使っている要素を不透明に近づける
+    clone.style.filter='contrast(1.2) saturate(1.3)';
+    clone.style.background='#fff';
     el.innerHTML='';
     el.appendChild(clone);
     return;
