@@ -4483,7 +4483,7 @@ function drawKitokuMapLines(lat, lng){
         // 海外モード：球面計算で扇形を描く
         const fanDistM = FAN_LENGTH_BASE * 1000; // km→m
         const pts=[{lat:lat,lng:lng}];
-        for(let a=deg-halfSpan; a<=deg+halfSpan; a+=5){
+        for(let a=angle-halfSpan; a<=angle+halfSpan; a+=5){
           const p=gcDestination(lat,lng,a,fanDistM);
           pts.push({lat:p[0],lng:p[1]});
         }
@@ -5192,7 +5192,7 @@ function drawFsMapContent(lat,lng){
       if(useGC){
         const fanDistM=FL_BASE*1000;
         const pts=[{lat:lat,lng:lng}];
-        for(let a=deg-halfSpan;a<=deg+halfSpan;a+=5){
+        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
           const p=gcDestination(lat,lng,a,fanDistM);
           pts.push({lat:p[0],lng:p[1]});
         }
