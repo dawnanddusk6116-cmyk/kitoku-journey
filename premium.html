@@ -3449,6 +3449,17 @@ async function sendChat(){
   </div>
   <!-- 下部ガイド -->
   <div style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.95);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;">タップで方位・距離・吉凶を表示 ・ 750m以上で吉方取り</div>
+  <!-- 右下：ズームボタン＋小型方位盤 -->
+  <div style="position:fixed;bottom:60px;right:12px;z-index:100005;display:flex;flex-direction:column;align-items:center;gap:6px;">
+    <!-- ズームボタン -->
+    <button onclick="KitokuMap.setZoom(kitokuFsMapInst, KitokuMap.getZoom(kitokuFsMapInst)+1)" style="width:36px;height:36px;background:rgba(255,255,255,.95);border:1px solid rgba(196,160,67,.3);border-radius:8px;font-size:1.3rem;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);color:#5c4010;display:flex;align-items:center;justify-content:center;">＋</button>
+    <button onclick="KitokuMap.setZoom(kitokuFsMapInst, KitokuMap.getZoom(kitokuFsMapInst)-1)" style="width:36px;height:36px;background:rgba(255,255,255,.95);border:1px solid rgba(196,160,67,.3);border-radius:8px;font-size:1.3rem;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);color:#5c4010;display:flex;align-items:center;justify-content:center;">－</button>
+  </div>
+  <!-- 左下：小型方位盤 -->
+  <div id="fsMiniCompass" style="position:fixed;bottom:60px;left:12px;z-index:100005;background:rgba(255,255,255,.92);border-radius:12px;padding:6px;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:pointer;" onclick="closeMapFullscreen()" title="閉じて方位盤を見る">
+    <div id="fsMiniCompassSvg" style="width:110px;height:110px;"></div>
+    <div style="font-size:.5rem;color:var(--mist,#9aa0aa);text-align:center;margin-top:2px;">タップで盤面へ</div>
+  </div>
 </div>
 
 <!-- 方位地図 JS -->
@@ -4246,7 +4257,7 @@ const KitokuMap = {
       L.control.zoom({position:position||'topright'}).addTo(map);
     } else if(this._gReady()){
       // disableDefaultUI:trueで隠れているズームコントロールだけ再表示
-      map.setOptions({zoomControl:true, zoomControlOptions:{position:google.maps.ControlPosition.RIGHT_BOTTOM}});
+      map.setOptions({zoomControl:false}); // HTML製ズームボタンを使用
     }
   },
 
@@ -4932,6 +4943,7 @@ function openMapFullscreen(){
   const modal=document.getElementById('kitokuMapFullscreenModal');
   modal.style.display='block';
   updateFsDateBar();
+  updateFsMiniCompass();
   const c=kitokuMapCenter||{lat:33.8416,lng:132.7657};
   const buildFs=()=>{
     if(!kitokuFsMapInst){
@@ -4991,6 +5003,7 @@ function fsMoveDate(delta){
   else if(state.banType==='month') state.date.setMonth(state.date.getMonth()+delta);
   else state.date.setDate(state.date.getDate()+delta);
   updateFsDateBar();
+  updateFsMiniCompass();
   // 全画面地図を再描画
   if(kitokuFsMapInst && kitokuMapCenter){
     drawFsMapContent(kitokuMapCenter.lat, kitokuMapCenter.lng);
@@ -5003,6 +5016,7 @@ function fsMoveDate(delta){
 function fsSwitchBan(type){
   state.banType=type;
   updateFsDateBar();
+  updateFsMiniCompass();
   if(kitokuFsMapInst && kitokuMapCenter){
     drawFsMapContent(kitokuMapCenter.lat, kitokuMapCenter.lng);
     drawEhouLine();
@@ -5020,6 +5034,53 @@ function fsMoveToday(){
   }
   renderBoard();
   redrawMapIfReady();
+}
+
+// 全画面の小型方位盤を更新
+function updateFsMiniCompass(){
+  const el=document.getElementById('fsMiniCompassSvg');
+  if(!el||!state.info) return;
+  // 既存の方位盤SVGを取得して縮小コピー
+  const src=document.getElementById('banSvg')||document.querySelector('.ban-svg');
+  if(src){
+    const svgStr=src.outerHTML;
+    el.innerHTML=svgStr;
+    const miniSvg=el.querySelector('svg');
+    if(miniSvg){
+      miniSvg.style.width='110px';
+      miniSvg.style.height='110px';
+      miniSvg.setAttribute('width','110');
+      miniSvg.setAttribute('height','110');
+    }
+    return;
+  }
+  // SVGが取得できない場合は簡易表示
+  const center=centerForDate();
+  if(!center) return;
+  const p2s=buildBoardFromCenter(center);
+  const dirs=['N','NE','E','SE','S','SW','W','NW'];
+  const JP={N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+  const ANGLES={N:270,NE:315,E:0,SE:45,S:90,SW:135,W:180,NW:225};
+  const STAR_N={1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
+  const {kyouItems}=buildDirData(center);
+  const kyouSet=new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+  const cx=55,cy=55,r=42;
+  let svg=`<svg width="110" height="110" viewBox="0 0 110 110">
+    <circle cx="${cx}" cy="${cy}" r="${r+8}" fill="rgba(30,25,15,.15)" stroke="rgba(196,160,67,.3)" stroke-width="1"/>`;
+  dirs.forEach(dir=>{
+    const ang=ANGLES[dir]*Math.PI/180;
+    const x=cx+r*Math.cos(ang), y=cy+r*Math.sin(ang);
+    const starN=p2s[dir];
+    const isKyo=kyouSet.has(dir);
+    const fill=isKyo?'#9aa0aa':'#e84d80';
+    svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="12" fill="${fill}" opacity="0.85"/>`;
+    svg+=`<text x="${x.toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">${JP[dir][0]}</text>`;
+    svg+=`<text x="${x.toFixed(1)}" y="${(y+6).toFixed(1)}" text-anchor="middle" font-size="7" fill="#fff">${STAR_N[starN]?.[0]||''}</text>`;
+  });
+  svg+=`<circle cx="${cx}" cy="${cy}" r="8" fill="rgba(212,160,40,.9)"/>
+    <text x="${cx}" y="${cy+3}" text-anchor="middle" font-size="7" fill="#fff" font-weight="700">${center}</text>
+  </svg>`;
+  el.innerHTML=svg;
 }
 
 
