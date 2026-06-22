@@ -192,6 +192,20 @@ body{
 .tool-name{font-size:.82rem;font-weight:700;color:var(--goldlt);}
 .tool-desc{font-size:.6rem;color:var(--mist);}
 .tool-arrow{font-size:.8rem;color:rgba(100,80,40,.3);flex-shrink:0;}
+.tool-item.locked{
+  background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.7));
+  border:1px solid rgba(138,104,32,.18);
+  cursor:not-allowed;
+}
+.tool-item.locked .tool-arrow{color:rgba(138,104,32,.35);}
+.tool-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-left:6px;padding:1px 6px;border-radius:7px;
+  font-size:.48rem;font-weight:800;letter-spacing:.04em;
+  color:var(--goldlt);background:rgba(138,104,32,.1);
+  border:1px solid rgba(138,104,32,.3);
+  vertical-align:middle;
+}
 
 /* ── 区切り ── */
 .divider{
@@ -312,10 +326,10 @@ body{
         <span class="tool-info"><span class="tool-name">無料レポート</span><span class="tool-desc">あなたの星を詳しく読み解く</span></span>
         <span class="tool-arrow">›</span>
       </a>
-      <a class="tool-item" href="premium.html">
+      <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('PREMIUM機能は課金開始後に使えるようになります。KIGAKU先生AI・線路の日・詳細相談をまとめて開く入口です。');">
         <span class="tool-icon">✨</span>
-        <span class="tool-info"><span class="tool-name">気学先生AI</span><span class="tool-desc">象意・深義・AI相談</span></span>
-        <span class="tool-arrow">›</span>
+        <span class="tool-info"><span class="tool-name">PREMIUM｜KIGAKU先生AI <span class="tool-badge">有料</span></span><span class="tool-desc">課金開始後に利用できます</span></span>
+        <span class="tool-arrow">準備中</span>
       </a>
 
       <div class="tools-section-label">📝 姓名・ビジネス・人間関係</div>
