@@ -3443,7 +3443,7 @@ async function sendChat(){
   </div>
   <!-- 全画面小型方位盤（日付バーの下） -->
   <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.94);border-radius:12px;padding:6px 8px;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:pointer;text-align:center;" onclick="closeMapFullscreen()" title="タップで方位盤へ">
-    <div id="fsMiniCompassSvg" style="width:90px;height:90px;"></div>
+    <div id="fsMiniCompassSvg" style="width:130px;height:130px;"></div>
     <div style="font-size:.48rem;color:#9aa0aa;margin-top:2px;">方位盤</div>
   </div>
   <!-- 下部タップ情報 -->
@@ -5047,8 +5047,8 @@ function updateFsMiniCompass(){
     const clone=src.cloneNode(true);
     clone.setAttribute('width','90');
     clone.setAttribute('height','90');
-    clone.style.width='90px';
-    clone.style.height='90px';
+    clone.style.width='130px';
+    clone.style.height='130px';
     // viewBoxがあればそのまま使う（縮小表示される）
     if(!clone.getAttribute('viewBox')){
       const w=src.getAttribute('width')||200;
