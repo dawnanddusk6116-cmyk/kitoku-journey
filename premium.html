@@ -4275,6 +4275,20 @@ const KitokuMap = {
     return {x:0,y:0};
   },
 
+  // コンテナピクセル座標→緯度経度（オーバーレイSVGの逆変換用）
+  pixelToLatLng(map, px){
+    if(this.provider==='leaflet'){
+      const ll=map.containerPointToLatLng([px.x,px.y]);
+      return {lat:ll.lat, lng:ll.lng};
+    }
+    if(this._gReady() && map.__kitokuOverlayProjection){
+      const proj=map.__kitokuOverlayProjection;
+      const ll=proj.fromContainerPixelToLatLng(new google.maps.Point(px.x,px.y));
+      if(ll) return {lat:ll.lat(), lng:ll.lng()};
+    }
+    return {lat:0,lng:0};
+  },
+
   // サイズ再計算（コンテナのサイズ変更時）
   invalidateSize(map){
     if(this.provider==='leaflet'){ map.invalidateSize(); }
@@ -4474,38 +4488,23 @@ function drawKitokuMapLines(lat, lng){
       kitokuMapLines.push(line);
     };
 
-    // 吉方扇形（近距離モード）または吉方帯（海外モード）
-    if(!isKyo && dd.rank>=2){
+    // 吉方扇形（近距離モードのみ。海外モードは境界線で表現）
+    if(!isKyo && dd.rank>=2 && !useGreatCircle){
       const isSeihou=['N','E','S','W'].includes(dir);
       const halfSpan=isSeihou?15:30;
       const fanColor=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fanOpacity=dd.rank>=4?0.24:dd.rank>=3?0.18:0.13;
-      if(useGreatCircle){
-        // 海外モード：中心から弧で扇形（北またぎ対応）
-        const lo=angle-halfSpan, hi=angle+halfSpan;
-        const pts=[{lat:lat,lng:lng}];
-        for(let a=lo; a<=hi; a+=5){
-          const p=gcDestination(lat,lng,((a%360)+360)%360, LINE_LENGTH*1000);
-          pts.push({lat:p[0],lng:p[1]});
-        }
-        pts.push({lat:lat,lng:lng});
-        const fan=KitokuMap.addPolygon(kitokuMapInst, pts,
-          {color:'#d83c70',weight:1,opacity:0.4,fillColor:fanColor,fillOpacity:fanOpacity});
-        kitokuMapLines.push(fan);
-      } else {
-        // 近距離モード：平面計算で扇形
-        const FAN_LEN=FAN_LENGTH_BASE;
-        const pts=[[lat,lng]];
-        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
-          const r=a*Math.PI/180;
-          const dlat=Math.cos(r)*(FAN_LEN/111);
-          const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
-          pts.push([lat+dlat,lng+dlng]);
-        }
-        const fan=KitokuMap.addPolygon(kitokuMapInst, pts.map(p=>({lat:p[0],lng:p[1]})),
-          {color:'#d83c70',weight:1.5,opacity:0.6,fillColor:fanColor,fillOpacity:fanOpacity});
-        kitokuMapLines.push(fan);
+      const FAN_LEN=FAN_LENGTH_BASE;
+      const pts=[[lat,lng]];
+      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+        const r=a*Math.PI/180;
+        const dlat=Math.cos(r)*(FAN_LEN/111);
+        const dlng=Math.sin(r)*(FAN_LEN/(111*Math.cos(lat*Math.PI/180)));
+        pts.push([lat+dlat,lng+dlng]);
       }
+      const fan=KitokuMap.addPolygon(kitokuMapInst, pts.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#d83c70',weight:1.5,opacity:0.6,fillColor:fanColor,fillOpacity:fanOpacity});
+      kitokuMapLines.push(fan);
     }
 
     // メイン方位線（海外モードは境界線が主役なので中心軸は控えめに）
@@ -5187,32 +5186,19 @@ function drawFsMapContent(lat,lng){
       const l=KitokuMap.addLine(kitokuFsMapInst, latlngs.map(p=>({lat:p[0],lng:p[1]})), opts);
       kitokuFsLayers.push(l);
     };
-    // 吉方扇形（近距離モード）または吉方帯（海外モード）
-    if(!isKyo&&dd.rank>=2){
+    // 吉方扇形（近距離モードのみ。海外モードは境界線で表現）
+    if(!isKyo&&dd.rank>=2&&!useGC){
       const isSeihou=['N','E','S','W'].includes(dir),halfSpan=isSeihou?15:30;
       const fc=dd.rank>=4?'#e84d80':dd.rank>=3?'#f06a98':'#f5a8c0';
       const fo=dd.rank>=4?0.24:dd.rank>=3?0.18:0.13;
-      if(useGC){
-        const lo=angle-halfSpan, hi=angle+halfSpan;
-        const pts=[{lat:lat,lng:lng}];
-        for(let a=lo;a<=hi;a+=5){
-          const p=gcDestination(lat,lng,((a%360)+360)%360,LL*1000);
-          pts.push({lat:p[0],lng:p[1]});
-        }
-        pts.push({lat:lat,lng:lng});
-        const fan=KitokuMap.addPolygon(kitokuFsMapInst,pts,
-          {color:'#d83c70',weight:1,opacity:0.4,fillColor:fc,fillOpacity:fo});
-        kitokuFsLayers.push(fan);
-      } else {
-        const FL=FL_BASE;
-        const pts=[[lat,lng]];
-        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
-          const r=a*Math.PI/180;pts.push([lat+Math.cos(r)*(FL/111),lng+Math.sin(r)*(FL/(111*Math.cos(lat*Math.PI/180)))]);
-        }
-        const fan=KitokuMap.addPolygon(kitokuFsMapInst,pts.map(p=>({lat:p[0],lng:p[1]})),
-          {color:'#d83c70',weight:2,opacity:0.7,fillColor:fc,fillOpacity:fo});
-        kitokuFsLayers.push(fan);
+      const FL=FL_BASE;
+      const pts=[[lat,lng]];
+      for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
+        const r=a*Math.PI/180;pts.push([lat+Math.cos(r)*(FL/111),lng+Math.sin(r)*(FL/(111*Math.cos(lat*Math.PI/180)))]);
       }
+      const fan=KitokuMap.addPolygon(kitokuFsMapInst,pts.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#d83c70',weight:2,opacity:0.7,fillColor:fc,fillOpacity:fo});
+      kitokuFsLayers.push(fan);
     }
     // メイン方位線（海外モードは境界線が主役なので中心軸は控えめに）
     if(useGC&&!isKyo&&dd.rank>=2){weight=1.5;opacity=0.5;color='#f5a8c0';dashArray='6,4';}
