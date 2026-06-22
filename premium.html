@@ -4434,27 +4434,22 @@ function drawKitokuMapLines(lat, lng){
       S:{left:165,right:195}, SW:{left:195,right:255},
       W:{left:255,right:285}, NW:{left:285,right:345}
     };
-    // 吉方の帯（境界線2本の間を塗りつぶす）
+    // 吉方の帯（中心から弧で扇形・北またぎ対応）
     Object.entries(DIR_BOUNDS).forEach(([dir,{left,right}])=>{
       if(!dirIsKichi[dir]) return;
       const rank=dirRank[dir]||2;
       const fanColor=rank>=4?'#e84d80':rank>=3?'#f06a98':'#f5a8c0';
       const fanOpacity=rank>=4?0.22:rank>=3?0.16:0.11;
-      // 左境界線のパス（中心→先端）
-      const leftPath=gcPath(lat,lng,left,LINE_LENGTH*1000,24);
-      // 右境界線のパス（先端→中心、逆順）
-      const rightPath=gcPath(lat,lng,right,LINE_LENGTH*1000,24);
-      // ポリゴン：中心→左境界先端→（弧）→右境界先端→中心
+      let lo=left, hi=right;
+      if(hi<lo) hi+=360;
       const pts=[{lat:lat,lng:lng}];
-      leftPath.forEach(p=>pts.push({lat:p[0],lng:p[1]}));
-      // 弧（先端付近を5度刻みで結ぶ）
-      for(let a=left+5; a<right; a+=5){
-        const p=gcPath(lat,lng,a,LINE_LENGTH*1000,1);
-        if(p.length>0) pts.push({lat:p[p.length-1][0],lng:p[p.length-1][1]});
+      for(let a=lo; a<=hi; a+=5){
+        const p=gcDestination(lat,lng,((a%360)+360)%360, LINE_LENGTH*1000);
+        pts.push({lat:p[0],lng:p[1]});
       }
-      [...rightPath].reverse().forEach(p=>pts.push({lat:p[0],lng:p[1]}));
+      pts.push({lat:lat,lng:lng});
       const fan=KitokuMap.addPolygon(kitokuMapInst, pts,
-        {color:'#d83c70',weight:1,opacity:0.5,fillColor:fanColor,fillOpacity:fanOpacity});
+        {color:'#d83c70',weight:1,opacity:0.4,fillColor:fanColor,fillOpacity:fanOpacity});
       kitokuMapLines.push(fan);
     });
     // 境界角の線を描く
@@ -5173,17 +5168,16 @@ function drawFsMapContent(lat,lng){
       const rank=dirRankMap[dir]||2;
       const fc=rank>=4?'#e84d80':rank>=3?'#f06a98':'#f5a8c0';
       const fo=rank>=4?0.22:rank>=3?0.16:0.11;
-      const leftPath=gcPath(lat,lng,left,LL*1000,24);
-      const rightPath=gcPath(lat,lng,right,LL*1000,24);
+      let lo=left, hi=right;
+      if(hi<lo) hi+=360;
       const pts=[{lat:lat,lng:lng}];
-      leftPath.forEach(p=>pts.push({lat:p[0],lng:p[1]}));
-      for(let a=left+5;a<right;a+=5){
-        const p=gcPath(lat,lng,a,LL*1000,1);
-        if(p.length>0) pts.push({lat:p[p.length-1][0],lng:p[p.length-1][1]});
+      for(let a=lo; a<=hi; a+=5){
+        const p=gcDestination(lat,lng,((a%360)+360)%360, LL*1000);
+        pts.push({lat:p[0],lng:p[1]});
       }
-      [...rightPath].reverse().forEach(p=>pts.push({lat:p[0],lng:p[1]}));
+      pts.push({lat:lat,lng:lng});
       const fan=KitokuMap.addPolygon(kitokuFsMapInst, pts,
-        {color:'#d83c70',weight:1,opacity:0.5,fillColor:fc,fillOpacity:fo});
+        {color:'#d83c70',weight:1,opacity:0.4,fillColor:fc,fillOpacity:fo});
       kitokuFsLayers.push(fan);
     });
     const BOUNDARIES=[
