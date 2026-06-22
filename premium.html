@@ -3431,21 +3431,20 @@ async function sendChat(){
   <button onclick="closeMapFullscreen()" style="position:fixed;top:14px;right:14px;z-index:100010;background:#fff;border:2px solid #d83c70;border-radius:50%;width:52px;height:52px;font-size:1.6rem;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.5);color:#d83c70;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
   <!-- 上部ラベル -->
   <div style="position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.95);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none;">📍 北が上 ・ <span style="color:#e84d80;">■</span>吉方　<span style="color:#9aa0aa;">■</span>凶方</div>
-  <!-- 全画面日付変更バー（小型方位盤を右端に内包） -->
+  <!-- 全画面日付変更バー -->
   <div id="fsDateBar" style="position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.96);border-radius:10px;padding:6px 10px;box-shadow:0 2px 10px rgba(0,0,0,.35);display:flex;align-items:center;gap:6px;white-space:nowrap;">
-    <!-- 盤種切替 -->
     <button onclick="fsSwitchBan('day')" id="fsBtn-day" style="font-size:.58rem;padding:3px 7px;border-radius:6px;border:1px solid #d4a028;background:#d4a028;color:#fff;font-family:'Noto Serif JP',serif;cursor:pointer;font-weight:700;">日</button>
     <button onclick="fsSwitchBan('month')" id="fsBtn-month" style="font-size:.58rem;padding:3px 7px;border-radius:6px;border:1px solid var(--rim);background:rgba(255,255,255,.8);color:#5c4010;font-family:'Noto Serif JP',serif;cursor:pointer;">月</button>
     <button onclick="fsSwitchBan('year')" id="fsBtn-year" style="font-size:.58rem;padding:3px 7px;border-radius:6px;border:1px solid var(--rim);background:rgba(255,255,255,.8);color:#5c4010;font-family:'Noto Serif JP',serif;cursor:pointer;">年</button>
-    <!-- 日付表示＋前後ボタン -->
     <button onclick="fsMoveDate(-1)" style="font-size:.9rem;padding:2px 8px;border:none;background:none;color:#5c4010;cursor:pointer;font-weight:700;">◀</button>
     <span id="fsDateLabel" style="font-size:.64rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;min-width:80px;text-align:center;"></span>
     <button onclick="fsMoveDate(1)" style="font-size:.9rem;padding:2px 8px;border:none;background:none;color:#5c4010;cursor:pointer;font-weight:700;">▶</button>
-    <!-- 今日に戻る -->
     <button onclick="fsMoveToday()" style="font-size:.56rem;padding:3px 7px;border-radius:6px;border:1px solid rgba(196,160,67,.4);background:rgba(196,160,67,.08);color:#a87b1a;font-family:'Noto Serif JP',serif;cursor:pointer;">今日</button>
-    <!-- 小型方位盤（セパレーター後） -->
-    <div style="width:1px;height:28px;background:rgba(196,160,67,.3);margin:0 2px;"></div>
-    <div id="fsMiniCompassSvg" style="width:46px;height:46px;cursor:pointer;flex-shrink:0;" title="方位盤" onclick="closeMapFullscreen()"></div>
+  </div>
+  <!-- 全画面小型方位盤（日付バーの下） -->
+  <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:rgba(255,255,255,.94);border-radius:12px;padding:6px 8px;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:pointer;text-align:center;" onclick="closeMapFullscreen()" title="タップで方位盤へ">
+    <div id="fsMiniCompassSvg" style="width:90px;height:90px;"></div>
+    <div style="font-size:.48rem;color:#9aa0aa;margin-top:2px;">方位盤</div>
   </div>
   <!-- 下部タップ情報 -->
   <div id="fsTapInfo" style="display:none;position:fixed;bottom:70px;left:12px;right:12px;z-index:100005;background:rgba(255,255,255,.97);border-radius:10px;padding:10px 14px;font-size:.65rem;color:#5c4010;font-family:'Noto Serif JP',serif;box-shadow:0 2px 12px rgba(0,0,0,.35);">
@@ -5046,10 +5045,10 @@ function updateFsMiniCompass(){
   const src=wrap?wrap.querySelector('svg'):null;
   if(src){
     const clone=src.cloneNode(true);
-    clone.setAttribute('width','46');
-    clone.setAttribute('height','46');
-    clone.style.width='46px';
-    clone.style.height='46px';
+    clone.setAttribute('width','90');
+    clone.setAttribute('height','90');
+    clone.style.width='90px';
+    clone.style.height='90px';
     // viewBoxがあればそのまま使う（縮小表示される）
     if(!clone.getAttribute('viewBox')){
       const w=src.getAttribute('width')||200;
