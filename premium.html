@@ -5040,24 +5040,19 @@ function fsMoveToday(){
 function updateFsMiniCompass(){
   const el=document.getElementById('fsMiniCompassSvg');
   if(!el) return;
-  // compassWrapの中のSVGを取得して縮小コピー（方位盤と完全同期）
+  // compassWrapのSVGをコピー（方位盤と完全同期）
   const wrap=document.getElementById('compassWrap');
-  const src=wrap?wrap.querySelector('svg'):null;
+  // 最初のSVGだけ取得（複数ある場合は最初のメインSVGのみ）
+  const svgList=wrap?wrap.querySelectorAll('svg'):[];
+  const src=svgList.length>0?svgList[0]:null;
   if(src){
     const clone=src.cloneNode(true);
+    // サイズ・viewBoxを確実に設定
+    const origVB=src.getAttribute('viewBox')||'0 0 360 360';
+    clone.setAttribute('viewBox',origVB);
     clone.setAttribute('width','160');
     clone.setAttribute('height','160');
-    clone.style.width='160px';
-    clone.style.height='160px';
-    // viewBoxがあればそのまま使う（縮小表示される）
-    if(!clone.getAttribute('viewBox')){
-      const w=src.getAttribute('width')||200;
-      const h=src.getAttribute('height')||200;
-      clone.setAttribute('viewBox','0 0 '+w+' '+h);
-    }
-    // コントラスト強化：透明度を使っている要素を不透明に近づける
-    clone.style.filter='contrast(1.6) saturate(1.8) brightness(1.05)';
-    clone.style.background='#fff';
+    clone.style.cssText='width:160px;height:160px;display:block;filter:contrast(1.6) saturate(1.8) brightness(1.05);background:#fff;';
     el.innerHTML='';
     el.appendChild(clone);
     return;
