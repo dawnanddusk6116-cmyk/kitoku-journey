@@ -3442,7 +3442,7 @@ async function sendChat(){
     <button onclick="fsMoveToday()" style="font-size:.56rem;padding:3px 7px;border-radius:6px;border:1px solid rgba(196,160,67,.4);background:rgba(196,160,67,.08);color:#a87b1a;font-family:'Noto Serif JP',serif;cursor:pointer;">今日</button>
   </div>
   <!-- 全画面小型方位盤（日付バーの下） -->
-  <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:#fff;border-radius:12px;padding:8px 10px;box-shadow:0 3px 14px rgba(0,0,0,.4);cursor:pointer;text-align:center;border:1.5px solid rgba(196,160,67,.3);" onclick="closeMapFullscreen()" title="タップで方位盤へ">
+  <div id="fsMiniCompassWrap" style="position:fixed;top:128px;left:50%;transform:translateX(-50%);z-index:100005;background:none;border-radius:12px;padding:4px 6px;cursor:pointer;text-align:center;" onclick="closeMapFullscreen()" title="タップで方位盤へ">
     <div id="fsMiniCompassSvg" style="width:170px;height:170px;line-height:0;"></div>
     <div style="font-size:.48rem;color:#9aa0aa;margin-top:2px;">方位盤</div>
   </div>
@@ -5052,7 +5052,7 @@ function updateFsMiniCompass(){
     clone.setAttribute('width','170');
     clone.setAttribute('height','170');
     clone.removeAttribute('style');
-    clone.style.cssText='width:170px !important;height:170px !important;max-width:none !important;display:block;margin:0;filter:contrast(1.45) saturate(1.6);';
+    clone.style.cssText='width:170px !important;height:170px !important;max-width:none !important;display:block;margin:0;filter:contrast(1.8) saturate(2.0) drop-shadow(0 0 2px rgba(0,0,0,0.15));';
     el.innerHTML='';
     el.appendChild(clone);
     return;
