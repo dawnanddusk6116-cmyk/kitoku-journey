@@ -4406,7 +4406,7 @@ function drawKitokuMapLines(lat, lng){
   // モードに応じて最大線長を変える
   // daily:150km / pilgrimage:500km / travel・move:10000km（海外対応）
   const LINE_MAX = {daily:150, travel:10000, pilgrimage:500, move:10000}[kitokuMapMode] || 150;
-  const FAN_MAX  = {daily:200, travel:9000, pilgrimage:600, move:1000}[kitokuMapMode] || 200;
+  const FAN_MAX  = {daily:200, travel:9000, pilgrimage:600, move:9000}[kitokuMapMode] || 200;
   const LINE_COEF = {daily:40000, travel:8000000, pilgrimage:200000, move:300000}[kitokuMapMode] || 40000;
   const FAN_COEF  = {daily:55000, travel:10000000, pilgrimage:250000, move:10000000}[kitokuMapMode] || 55000;
   const LINE_LENGTH = Math.min(LINE_MAX, Math.max(2, LINE_COEF/Math.pow(2,_zoom)));
@@ -4483,7 +4483,7 @@ function drawKitokuMapLines(lat, lng){
         // 海外モード：球面計算で扇形を描く
         const fanDistM = FAN_LENGTH_BASE * 1000; // km→m
         const pts=[{lat:lat,lng:lng}];
-        for(let a=deg-halfSpan; a<=deg+halfSpan; a+=5){
+        for(let a=angle-halfSpan; a<=angle+halfSpan; a+=5){
           const p=gcDestination(lat,lng,a,fanDistM);
           pts.push({lat:p[0],lng:p[1]});
         }
@@ -4511,10 +4511,11 @@ function drawKitokuMapLines(lat, lng){
       weight = 1.5; opacity=0.5; color='#f5a8c0'; dashArray='6,4';
     }
     drawLine(angle, weight, opacity, dashArray);
-    // 近距離モードのみ吉方の補助線（±15°）を描く
+    // 近距離モードの補助線（±15°）は扇形がないときだけ描く
     if(!isKyo && dd.rank>=2 && !useGreatCircle){
-      drawLine(angle-15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
-      drawLine(angle+15, Math.max(weight*0.7,1.2), opacity*0.75, '5,4');
+      // 扇形を描いているので補助線は不要（重複を防ぐ）
+    } else if(isKyo || dd.rank<2){
+      // 凶方・低ランクは補助線なし
     }
 
     // 方位ラベル
@@ -5127,7 +5128,7 @@ function drawFsMapContent(lat,lng){
   // 方位線・扇形
   const _z=KitokuMap.getZoom(kitokuFsMapInst);
   const _fsLineMax  = {daily:300,  travel:10000, pilgrimage:500,  move:10000}[kitokuMapMode]||300;
-  const _fsFanMax   = {daily:400,  travel:9000, pilgrimage:600,  move:1000}[kitokuMapMode]||400;
+  const _fsFanMax   = {daily:400,  travel:9000, pilgrimage:600,  move:9000}[kitokuMapMode]||400;
   const _fsLineCoef = {daily:60000,travel:8000000,pilgrimage:200000,move:300000}[kitokuMapMode]||60000;
   const _fsFanCoef  = {daily:80000,travel:10000000,pilgrimage:250000,move:10000000}[kitokuMapMode]||80000;
   const LL  = Math.min(_fsLineMax, Math.max(3, _fsLineCoef/Math.pow(2,_z)));
@@ -5192,7 +5193,7 @@ function drawFsMapContent(lat,lng){
       if(useGC){
         const fanDistM=FL_BASE*1000;
         const pts=[{lat:lat,lng:lng}];
-        for(let a=deg-halfSpan;a<=deg+halfSpan;a+=5){
+        for(let a=angle-halfSpan;a<=angle+halfSpan;a+=5){
           const p=gcDestination(lat,lng,a,fanDistM);
           pts.push({lat:p[0],lng:p[1]});
         }
@@ -5214,7 +5215,7 @@ function drawFsMapContent(lat,lng){
     // メイン方位線（海外モードは境界線が主役なので中心軸は控えめに）
     if(useGC&&!isKyo&&dd.rank>=2){weight=1.5;opacity=0.5;color='#f5a8c0';dashArray='6,4';}
     dLine(angle,weight,opacity,dashArray);
-    if(!isKyo&&dd.rank>=2&&!useGC){dLine(angle-15,Math.max(weight*0.7,1.2),opacity*0.75,'5,4');dLine(angle+15,Math.max(weight*0.7,1.2),opacity*0.75,'5,4');}
+    // 補助線（±15°）は扇形を描いた場合は不要（重複防止）
   });
 
   // SVGオーバーレイ（共通関数を流用、fsMapInstに描画）
