@@ -4013,7 +4013,7 @@ function renderEhouOkiNav(){
 //   ② KITOKU_GMAP_CONFIG.apiKey の 'YOUR_GOOGLE_MAPS_API_KEY' を本物のキーに変更
 //   （マップIDは設定済み。Leafletに戻すときは①を 'leaflet' に戻すだけ）
 // ══════════════════════════════════════════════════════
-const KITOKU_MAP_PROVIDER = 'google' // ← 'google' に変えるとGoogle Maps稼働
+const KITOKU_MAP_PROVIDER = 'google'; // ← 'google' に変えるとGoogle Maps稼働
 const KITOKU_GMAP_CONFIG = {
   // Google Maps用設定。APIキーだけ将軍が手元で差し替える（YOUR_... を本物のキーに）
   apiKey: 'AIzaSyBtIQR65LBqDb5m0epD7o14N_yg-DDsCq0',
@@ -5045,10 +5045,10 @@ function updateFsMiniCompass(){
   const src=wrap?wrap.querySelector('svg'):null;
   if(src){
     const clone=src.cloneNode(true);
-    clone.setAttribute('width','130');
-    clone.setAttribute('height','130');
-    clone.style.width='130px';
-    clone.style.height='130px';
+    clone.setAttribute('width','160');
+    clone.setAttribute('height','160');
+    clone.style.width='160px';
+    clone.style.height='160px';
     // viewBoxがあればそのまま使う（縮小表示される）
     if(!clone.getAttribute('viewBox')){
       const w=src.getAttribute('width')||200;
@@ -5056,7 +5056,7 @@ function updateFsMiniCompass(){
       clone.setAttribute('viewBox','0 0 '+w+' '+h);
     }
     // コントラスト強化：透明度を使っている要素を不透明に近づける
-    clone.style.filter='contrast(1.2) saturate(1.3)';
+    clone.style.filter='contrast(1.6) saturate(1.8) brightness(1.05)';
     clone.style.background='#fff';
     el.innerHTML='';
     el.appendChild(clone);
