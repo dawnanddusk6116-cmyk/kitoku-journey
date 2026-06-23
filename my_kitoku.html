@@ -111,6 +111,24 @@ body{
   color:#2a6b3d;
 }
 
+.feature-group-title{
+  margin:16px 2px 6px;
+  display:flex;align-items:center;gap:8px;
+  font-size:.58rem;letter-spacing:.16em;color:var(--gold);font-weight:800;
+}
+.feature-group-title:first-child{margin-top:0;}
+.feature-group-title::after{content:'';flex:1;height:1px;background:var(--rim);}
+.feature-card.locked{
+  border-color:rgba(138,104,32,.22);
+  background:linear-gradient(135deg,rgba(138,104,32,.045),var(--card));
+}
+.feature-card.locked .feature-name::after{
+  content:'準備中';
+  display:inline-flex;margin-left:8px;vertical-align:middle;
+  font-size:.48rem;line-height:1;padding:3px 7px;border-radius:999px;
+  background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);color:var(--goldlt);
+}
+
 .setup-done-btn{
   display:block;width:calc(100% - 32px);margin:0 16px 20px;
   background:linear-gradient(135deg,rgba(42,106,176,.18),rgba(42,106,176,.1));
@@ -192,6 +210,20 @@ body{
   background:rgba(42,106,176,.35);
 }
 .my-feature-item:active{transform:scale(.98);background:rgba(42,106,176,.04);}
+
+.my-feature-group{
+  margin:14px 2px 6px;
+  display:flex;align-items:center;gap:8px;
+  font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:800;
+}
+.my-feature-group:first-child{margin-top:0;}
+.my-feature-group::after{content:'';flex:1;height:1px;background:var(--rim);}
+.my-feature-item.locked::before{background:rgba(138,104,32,.38);}
+.my-feature-item.locked .mf-name{color:var(--goldlt);}
+.my-feature-item.locked .mf-arrow{
+  font-size:.58rem;color:var(--gold);letter-spacing:.08em;
+  min-width:42px;text-align:right;
+}
 .mf-icon{font-size:1.6rem;flex-shrink:0;width:38px;text-align:center;}
 .mf-info{flex:1;}
 .mf-name{font-size:.9rem;font-weight:700;color:var(--goldlt);margin-bottom:3px;}
@@ -264,25 +296,39 @@ footer{text-align:center;margin-top:28px;padding:0 16px;font-size:.6rem;letter-s
 
 <script>
 // ══ 機能マスター ══
+const FEATURE_GROUPS={
+  direction:'方位・移動',
+  self:'星・自分を知る',
+  life:'姓名・人間関係・仕事',
+  home:'家・空間',
+  premium:'プレミアム機能（準備中）',
+  ai:'AI・海外向け'
+};
+const FEATURE_GROUP_ORDER=['direction','self','life','home','premium','ai'];
 const FEATURES=[
-  {id:'direction',icon:'🧭',name:'日盤吉方',desc:'今日の吉凶方位を確認する。毎日の基本。',href:'direction_v2.html',badge:null},
-  {id:'travel',icon:'✈️',name:'旅行吉方位ナビ',desc:'旅行日程・目的地を選ぶ。',href:'travel.html',badge:null},
-  {id:'pilgrimage',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
-  {id:'life',icon:'📝',name:'姓名鑑定',desc:'名前・屋号・SNS名の画数と五行を確認。',href:'life.html',badge:null},
-  {id:'kyusei',icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
-  {id:'report',icon:'📋',name:'無料レポート',desc:'自分の星を詳しく読み解いたレポートを見る。',href:'report_generator_free.html',badge:null},
-  {id:'scent',icon:'✤',name:'色と香りで整える',desc:'服・名刺・小物の色、香りを五行で整える。',href:'scent.html',badge:null},
-  {id:'astro64',icon:'🔭',name:'私の設計図を重ねて読む',desc:'太陽・月・金星から、自分の本質や惹かれるものを読む。',href:'astro64.html',badge:null},
-  {id:'relations',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
-  {id:'business',icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名鑑定。仕事に使う。',href:'business.html',badge:null},
-  {id:'kaso',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
-  {id:'premium_map',icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しの方位を地図で確認。',href:'premium.html#mapPanel',badge:'有料',locked:true},
-  {id:'premium_triple',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。',href:'premium.html#tripleBoardPanel',badge:'有料',locked:true},
-  {id:'premium_senro',icon:'🚃',name:'線路の日',desc:'吉日・契約日・出発日を探す。',href:'premium.html#senroPanel',badge:'有料',locked:true},
-  {id:'premium_ai',icon:'✨',name:'KIGAKU先生AI',desc:'結果を相談文にして深掘りする。',href:'premium.html#aiChatPanel',badge:'有料',locked:true},
-  {id:'free_ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'index.html?direct=1',badge:'無料'},
-  {id:'english',icon:'EN',name:'JAPAN OS — English Preview',desc:'英語でKITOKUを体験する入口。',href:'en/index.html',badge:null},
-];
+  {id:'direction',group:'direction',icon:'🧭',name:'日盤吉方',desc:'今日の吉凶方位を確認する。毎日の基本。',href:'direction_v2.html',badge:null},
+  {id:'travel',group:'direction',icon:'✈️',name:'旅行吉方位ナビ',desc:'旅行日程・目的地を選ぶ。',href:'travel.html',badge:null},
+  {id:'pilgrimage',group:'direction',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
+
+  {id:'kyusei',group:'self',icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
+  {id:'report',group:'self',icon:'📋',name:'無料レポート',desc:'自分の星を詳しく読み解いたレポートを見る。',href:'report_generator_free.html',badge:null},
+  {id:'scent',group:'self',icon:'✤',name:'色と香りで整える',desc:'服・名刺・小物の色、香りを五行で整える。',href:'scent.html',badge:null},
+  {id:'astro64',group:'self',icon:'🔭',name:'私の設計図を重ねて読む',desc:'太陽・月・金星から、自分の本質や惹かれるものを読む。',href:'astro64.html',badge:null},
+
+  {id:'life',group:'life',icon:'📝',name:'姓名鑑定',desc:'名前・屋号・SNS名の画数と五行を確認。',href:'life.html',badge:null},
+  {id:'relations',group:'life',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
+  {id:'business',group:'life',icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名鑑定。仕事に使う。',href:'business.html',badge:null},
+
+  {id:'kaso',group:'home',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
+
+  {id:'premium_map',group:'premium',icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しの方位を地図で確認。',href:'premium.html#mapPanel',badge:'有料',locked:true},
+  {id:'premium_triple',group:'premium',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。',href:'premium.html#tripleBoardPanel',badge:'有料',locked:true},
+  {id:'premium_senro',group:'premium',icon:'🚃',name:'線路の日',desc:'吉日・契約日・出発日を探す。',href:'premium.html#senroPanel',badge:'有料',locked:true},
+  {id:'premium_ai',group:'premium',icon:'✨',name:'KIGAKU先生AI',desc:'結果を相談文にして深掘りする。',href:'premium.html#aiChatPanel',badge:'有料',locked:true},
+
+  {id:'free_ai',group:'ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'index.html?direct=1',badge:'無料'},
+  {id:'english',group:'ai',icon:'EN',name:'JAPAN OS — English Preview',desc:'英語でKITOKUを体験する入口。',href:'en/index.html',badge:null},
+]];
 
 // ══ 計算関数（最小セット）══
 const SEKKI_DB={2024:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:8,11:7,12:7},2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}};
@@ -375,9 +421,18 @@ function saveSelected(){
 
 function renderFeatureGrid(){
   const grid=document.getElementById('featureGrid');
+  grid.innerHTML='';
+  let currentGroup='';
   FEATURES.forEach(f=>{
+    if(f.group!==currentGroup){
+      currentGroup=f.group;
+      const group=document.createElement('div');
+      group.className='feature-group-title';
+      group.textContent=FEATURE_GROUPS[f.group]||'';
+      grid.appendChild(group);
+    }
     const card=document.createElement('div');
-    card.className='feature-card';
+    card.className='feature-card'+(f.locked?' locked':'');
     card.dataset.id=f.id;
     card.innerHTML=`
       <div class="feature-check"></div>
@@ -473,11 +528,17 @@ function renderMyPage(){
   const list=document.getElementById('myFeatureList');
   list.innerHTML='';
   const featureMap=Object.fromEntries(FEATURES.map(f=>[f.id,f]));
-  selectedFeatures.forEach(id=>{
-    const f=featureMap[id];
-    if(!f)return;
+  let currentGroup='';
+  FEATURES.filter(f=>selectedFeatures.includes(f.id)).forEach(f=>{
+    if(f.group!==currentGroup){
+      currentGroup=f.group;
+      const group=document.createElement('div');
+      group.className='my-feature-group';
+      group.textContent=FEATURE_GROUPS[f.group]||'';
+      list.appendChild(group);
+    }
     const item=document.createElement('a');
-    item.className='my-feature-item';
+    item.className='my-feature-item'+(f.locked?' locked':'');
     item.href=f.locked?'javascript:void(0)':f.href;
     if(f.locked){
       item.onclick=(e)=>{
@@ -491,7 +552,7 @@ function renderMyPage(){
         <div class="mf-name">${f.name}${f.badge?` <span style="font-size:.48rem;padding:1px 6px;border-radius:6px;background:${f.badge==='有料'?'rgba(138,104,32,.1)':'rgba(58,122,78,.1)'};border:1px solid ${f.badge==='有料'?'rgba(138,104,32,.3)':'rgba(58,122,78,.3)'};color:${f.badge==='有料'?'var(--goldlt)':'#2a6b3d'};font-weight:700;vertical-align:middle;">${f.badge}</span>`:''}</div>
         <div class="mf-desc">${f.desc}</div>
       </div>
-      <div class="mf-arrow">›</div>
+      <div class="mf-arrow">${f.locked?'準備中':'›'}</div>
     `;
     list.appendChild(item);
   });
