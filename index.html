@@ -697,17 +697,21 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 /* ── 4枚のカード（2×2グリッド） ── */
 .cards-grid{
   margin:0 16px;
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  display:flex;flex-direction:column;gap:8px;
 }
 .app-card{
   background:var(--card);
-  border-radius:var(--radius);padding:14px 12px;
+  border-radius:var(--radius);padding:14px 16px;
   cursor:pointer;transition:all .18s;
   text-decoration:none;color:inherit;
-  display:block;position:relative;
+  display:flex;align-items:center;gap:12px;position:relative;
   overflow:hidden;
   border:1px solid var(--rim);
 }
+.app-card .card-icon{margin:0;flex-shrink:0;width:32px;text-align:center;}
+.app-card .card-num,.app-card .card-title,.app-card .card-desc{position:relative;z-index:1;}
+.app-card .card-title,.app-card .card-desc{display:block;}
+.app-card .card-arrow{margin-left:auto;margin-top:0;align-self:center;}
 .app-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
   border-radius:var(--radius) var(--radius) 0 0;
@@ -1683,11 +1687,11 @@ body.theme-night .philosophy-list{
     </button>
 
     <div class="nav-bar" aria-label="画面内の目次">
-      <button class="nav-btn" type="button" onclick="scrollToSection('sec1')">① 九星・整える</button>
-      <button class="nav-btn" type="button" onclick="scrollToSection('sec2')">② AI・星読み</button>
-      <button class="nav-btn" type="button" onclick="scrollToSection('sec3')" style="display:none;">③ 人との縁</button>
-      <button class="nav-btn" type="button" onclick="scrollToSection('sec4')" style="display:none;">④ 仕事</button>
-      <button class="nav-btn" type="button" onclick="scrollToSection('sec5')" style="display:none;">⑤ 旅</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec1')">九星・整える</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec2')">深く見る</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec3')" style="display:none;">人との縁</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec4')" style="display:none;">仕事</button>
+      <button class="nav-btn" type="button" onclick="scrollToSection('sec5')" style="display:none;">旅</button>
     </div>
 
     <button class="home-setting-btn" type="button" onclick="openSettings()">⚙ 生年月日</button>
@@ -1710,37 +1714,47 @@ body.theme-night .philosophy-list{
     <div class="cards-grid">
       <a class="app-card tone-daily" href="report_generator_free.html">
         <div class="card-icon">📜</div>
-        <div class="card-num">① 入口レポート</div>
-        <div class="card-title">はじめてのKITOKU診断</div>
-        <div class="card-desc">名前と生年月日だけで、星・名前・今年の流れをまとめて確認する。</div>
+        <div class="card-info">
+          <div class="card-num">入口レポート</div>
+          <div class="card-title">はじめてのKITOKU診断</div>
+          <div class="card-desc">名前と生年月日だけで、星・名前・今年の流れをまとめて確認する。</div>
+        </div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="kyusei_v2.html">
         <div class="card-icon">⭐</div>
-        <div class="card-num">② 自分を知る</div>
-        <div class="card-title">自分の星を見る</div>
-        <div class="card-desc">本命星・月命・傾斜・同会・納音から、自分の役割と才能を読む入口。</div>
+        <div class="card-info">
+          <div class="card-num">自分を知る</div>
+          <div class="card-title">自分の星を見る</div>
+          <div class="card-desc">本命星・月命・傾斜・同会・納音から、自分の役割と才能を読む入口。</div>
+        </div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="direction_v2.html">
         <div class="card-icon">🧭</div>
-        <div class="card-num">③ 今日の羅針盤</div>
-        <div class="card-title">今日の方位盤</div>
-        <div class="card-desc">今日・今月の盤を見て、行く方向・避ける方向の判断材料にする。</div>
+        <div class="card-info">
+          <div class="card-num">今日の羅針盤</div>
+          <div class="card-title">今日の方位盤</div>
+          <div class="card-desc">今日・今月の盤を見て、行く方向・避ける方向の判断材料にする。</div>
+        </div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="today.html">
         <div class="card-icon">🌸</div>
-        <div class="card-num">④ 今日の整え方</div>
-        <div class="card-title">今日を整える</div>
-        <div class="card-desc">今日の星に合う色・香り・小さな行動で、一日を整えるヒント。</div>
+        <div class="card-info">
+          <div class="card-num">今日の整え方</div>
+          <div class="card-title">今日を整える</div>
+          <div class="card-desc">今日の星に合う色・香り・小さな行動で、一日を整えるヒント。</div>
+        </div>
         <div class="card-arrow">›</div>
       </a>
       <a class="app-card tone-daily" href="scent.html">
         <div class="card-icon">✿</div>
-        <div class="card-num">⑤ 五感で整える</div>
-        <div class="card-title">色と香りで整える</div>
-        <div class="card-desc">服・名刺・小物の色、手持ち香水、会う人・場面から選ぶ。</div>
+        <div class="card-info">
+          <div class="card-num">五感で整える</div>
+          <div class="card-title">色と香りで整える</div>
+          <div class="card-desc">服・名刺・小物の色、手持ち香水、会う人・場面から選ぶ。</div>
+        </div>
         <div class="card-arrow">›</div>
       </a>
     </div>
@@ -1749,7 +1763,7 @@ body.theme-night .philosophy-list{
   <!-- AI・星読み（ブルー） -->
   <div class="section-block tone-self" id="sec2">
     <div class="cards-label tone-self" style="margin-top:16px;">
-      <div class="cards-label-num">2</div>
+      <div class="cards-label-num">✦</div>
       <div class="cards-label-text">
         <div class="cards-label-title">さらに深く見る</div>
         <div class="cards-label-hint">必要な時だけ、AI相談や星読みで掘り下げます</div>
@@ -1758,7 +1772,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-self" href="javascript:void(0)" onclick="event.preventDefault();alert('KIGAKU先生AIはプレミアム機能です。課金開始後に使えるようになります。');">
       <div class="card-icon">✨</div>
       <div class="card-info">
-        <div class="card-num">⑤ プレミアム相談</div>
+        <div class="card-num">プレミアム相談</div>
         <div class="card-title">KIGAKU先生AI</div>
         <div class="card-desc">結果を相談文にして、悩み・問い・次の一手を深掘りします。現在は準備中です。</div>
       </div>
@@ -1767,7 +1781,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-self" href="astro64.html">
       <div class="card-icon">🔭</div>
       <div class="card-info">
-        <div class="card-num">⑥ 星を重ねて深掘り</div>
+        <div class="card-num">星を重ねて深掘り</div>
         <div class="card-title">私の設計図を重ねて読む</div>
         <div class="card-desc">太陽・月・金星から、表の自分・本音・惹かれるものをAI相談文にする。</div>
       </div>
@@ -1778,7 +1792,7 @@ body.theme-night .philosophy-list{
   <!-- 人との関係（テラコッタ） -->
   <div class="section-block tone-relation" id="sec3" style="display:none;">
     <div class="cards-label tone-relation">
-      <div class="cards-label-num">3</div>
+      <div class="cards-label-num">✦</div>
       <div class="cards-label-text">
         <div class="cards-label-title">人との関係を整える</div>
         <div class="cards-label-hint">相性を決めつけず、違いをどう活かすかを見る</div>
@@ -1787,7 +1801,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-relation" href="relations.html">
       <div class="card-icon">🔗</div>
       <div class="card-info">
-        <div class="card-num">⑦ KITOKU @ RELATIONS</div>
+        <div class="card-num">KITOKU @ RELATIONS</div>
         <div class="card-title">相性レポート</div>
         <div class="card-desc">大切な人との相性を読み解く。AI深掘りレポート・8人の賢者が語る。</div>
       </div>
@@ -1798,7 +1812,7 @@ body.theme-night .philosophy-list{
   <!-- 仕事（グリーン） -->
   <div class="section-block tone-work" id="sec4" style="display:none;">
     <div class="cards-label tone-work">
-      <div class="cards-label-num">4</div>
+      <div class="cards-label-num">✦</div>
       <div class="cards-label-text">
         <div class="cards-label-title">仕事に活かす</div>
         <div class="cards-label-hint">採用・面談・育成の視点を、参考資料として整える</div>
@@ -1807,7 +1821,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-work" href="business.html">
       <div class="card-icon">💼</div>
       <div class="card-info">
-        <div class="card-num">⑧ KITOKU @ BUSINESS</div>
+        <div class="card-num">KITOKU @ BUSINESS</div>
         <div class="card-title">採用・面談シート</div>
         <div class="card-desc">候補者の特性・相性・面談質問を生成。5000年の知恵を仕事に。</div>
       </div>
@@ -1818,7 +1832,7 @@ body.theme-night .philosophy-list{
   <!-- 旅を整える（パープル） -->
   <div class="section-block tone-travel" id="sec5" style="display:none;">
     <div class="cards-label tone-travel">
-      <div class="cards-label-num">5</div>
+      <div class="cards-label-num">✦</div>
       <div class="cards-label-text">
         <div class="cards-label-title">旅を整える</div>
         <div class="cards-label-hint">吉方位×線路の日で、最良の日程を選ぶ</div>
@@ -1827,7 +1841,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-travel" href="pilgrimage.html">
       <div class="card-icon">🗾</div>
       <div class="card-info">
-        <div class="card-num">⑨ 聖地巡礼 吉方位ナビ</div>
+        <div class="card-num">聖地巡礼 吉方位ナビ</div>
         <div class="card-title">巡礼日程ナビ</div>
         <div class="card-desc">お遍路・伊勢・出雲・熊野。吉方位×線路の日で日程を選ぶ。</div>
       </div>
@@ -1836,7 +1850,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-travel" href="travel.html" onclick="openTravel(event)">
       <div class="card-icon">✈️</div>
       <div class="card-info">
-        <div class="card-num">⑩ 旅行 吉方位ナビ</div>
+        <div class="card-num">旅行 吉方位ナビ</div>
         <div class="card-title">旅行日程ナビ</div>
         <div class="card-desc">目的地への方位と吉日を確認し、旅に出る日を選ぶ。</div>
       </div>
@@ -1845,7 +1859,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-travel" href="kaso.html">
       <div class="card-icon">🏠</div>
       <div class="card-info">
-        <div class="card-num">⑫ 家相診断</div>
+        <div class="card-num">家相診断</div>
         <div class="card-title">KITOKU @ HOME — 今の家を読み解く</div>
         <div class="card-desc">中心・張り欠け・玄関・温度差・地相・リカバリー処方箋。住んでいる家の見直しサインを診断する。</div>
       </div>
@@ -1854,7 +1868,7 @@ body.theme-night .philosophy-list{
     <a class="app-card-wide tone-travel" href="move.html">
       <div class="card-icon">🏡</div>
       <div class="card-info">
-        <div class="card-num">⑬ 引越し 吉方位ナビ</div>
+        <div class="card-num">引越し 吉方位ナビ</div>
         <div class="card-title">引越し・仮吉方ナビ</div>
         <div class="card-desc">年盤・月盤で引越し先を選ぶ。同一市内の精密計算・仮吉方対応。</div>
       </div>
