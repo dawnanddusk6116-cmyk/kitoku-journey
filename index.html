@@ -911,8 +911,8 @@ html.font-small{font-size:14px;}
 html.font-large{font-size:18px;}
 .selector-settings-wrap{
   margin:16px 16px 0;
-  display:grid;grid-template-columns:1fr auto 1fr;
-  align-items:center;gap:10px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  flex-wrap:wrap;
 }
 .selector-settings-btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
@@ -929,8 +929,6 @@ html.font-large{font-size:18px;}
   font-size:.62rem;line-height:1.5;cursor:pointer;
   text-decoration:underline;text-underline-offset:3px;
 }
-.selector-mini-link:first-child{text-align:right;}
-.selector-mini-link:last-child{text-align:left;}
 
 body.theme-night{
   --bg:#070b16;
@@ -1592,7 +1590,6 @@ body.theme-night .philosophy-list{
   </div>
 
   <div class="selector-settings-wrap">
-    <button type="button" class="selector-mini-link" onclick="location.href='guide_01.html'">KITOKUとは</button>
     <button class="selector-settings-btn" onclick="openSettings()">⚙ 設定・生年月日の変更</button>
     <button type="button" class="selector-mini-link" onclick="showPwaHint()">ホーム画面に追加</button>
   </div>
@@ -1951,24 +1948,6 @@ body.theme-night .philosophy-list{
     <div class="kitoku-about-arrow">›</div>
   </button>
 
-  <!-- PWAバナー -->
-  <div class="pwa-banner">
-    <div class="pwa-icon">📱</div>
-    <div class="pwa-text">
-      <strong>ホーム画面に追加できます</strong><br>
-      iPhoneはSafariの共有ボタンから「ホーム画面に追加」。毎日アプリのように開けます。
-    </div>
-  </div>
-
-  <!-- KITOKUとは？ -->
-  <div class="kitoku-about" onclick="location.href='guide_01.html'">
-    <div>
-      <div class="kitoku-about-text">✦ KITOKUとは？</div>
-      <div class="kitoku-about-sub">自分を知り、自分で動くための羅針盤</div>
-    </div>
-    <div class="kitoku-about-arrow">›</div>
-  </div>
-
   <!-- 免責 -->
   <div class="disclaimer-small">
     ※ 気学には流派により計算方法・吉凶の優先順位が異なります。他のアプリと比較しながら、根拠をご自身で判断する材料としてご使用ください。KITOKU OSは東洋の叡智とY理論に基づく独自解釈です。
@@ -2213,7 +2192,7 @@ function openTravel(event) {
 }
 
 function showPwaHint() {
-  alert('iPhoneはSafariの共有ボタンから「ホーム画面に追加」を選ぶと、毎日アプリのように開けます。');
+  alert('iPhoneはSafariの共有ボタンから「ホーム画面に追加」を選ぶと、毎日アプリのように開けます。\n\nAndroidはChromeのメニューから「ホーム画面に追加」を選んでください。');
 }
 
 // ============================================================

@@ -68,6 +68,23 @@ body{
   font-size:.68rem;color:var(--mist);line-height:2;
   letter-spacing:.06em;
 }
+.home-add-link{
+  margin:12px auto 0;
+  border:1px solid rgba(138,104,32,.24);
+  background:rgba(255,255,255,.58);
+  color:var(--goldlt);
+  border-radius:999px;
+  padding:7px 13px;
+  font-family:'Noto Serif JP',serif;
+  font-size:.62rem;
+  letter-spacing:.08em;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.home-add-link:active{transform:scale(.98);}
+
 
 /* ── 入口カード ── */
 .entry-section{
@@ -263,6 +280,7 @@ body{
     九星・方位・姓名・家相・納音<br>
     5000年の知恵を、今日の一手へ。
   </div>
+  <button type="button" class="home-add-link" onclick="showPwaHint()">📱 ホーム画面に追加</button>
 </div>
 
 <!-- 入口カード -->
@@ -439,6 +457,10 @@ function toggleAllTools(){
   panel.style.display=isOpen?'none':'block';
   label.textContent=isOpen?'✦ すべてのツールを見る':'✦ 閉じる';
   arrow.style.transform=isOpen?'rotate(0deg)':'rotate(90deg)';
+}
+
+function showPwaHint(){
+  alert('iPhoneはSafariの共有ボタンから「ホーム画面に追加」を選ぶと、毎日アプリのように開けます。\n\nAndroidはChromeのメニューから「ホーム画面に追加」を選んでください。');
 }
 </script>
 </body>
