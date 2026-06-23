@@ -730,6 +730,39 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
   border:1px solid rgba(183,131,24,.2);
 }
 .app-card.tone-daily .card-num{color:var(--c-daily);}
+.daily-accordion{
+  background:linear-gradient(160deg,var(--c-daily-bg),var(--card));
+  border:1px solid var(--c-daily-border);
+  border-radius:var(--radius);overflow:hidden;position:relative;
+}
+.daily-accordion::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--c-daily);border-radius:var(--radius) var(--radius) 0 0;
+}
+.daily-accordion summary{
+  list-style:none;display:flex;align-items:center;gap:12px;
+  padding:14px 16px;cursor:pointer;position:relative;
+}
+.daily-accordion summary::-webkit-details-marker{display:none;}
+.daily-accordion .card-icon{margin:0;flex-shrink:0;width:32px;text-align:center;}
+.daily-accordion .card-info{flex:1;}
+.daily-accordion .accordion-arrow{
+  font-size:.78rem;color:rgba(138,104,32,.55);transition:transform .18s;
+}
+.daily-accordion[open] .accordion-arrow{transform:rotate(90deg);}
+.daily-accordion-body{
+  padding:0 14px 14px 60px;display:grid;gap:8px;
+}
+.daily-sub-link{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
+  background:rgba(255,255,255,.72);border:1px solid rgba(183,131,24,.2);
+  border-radius:10px;padding:10px 12px;
+}
+.daily-sub-link .sub-icon{font-size:1rem;line-height:1;}
+.daily-sub-link .sub-info{flex:1;}
+.daily-sub-title{font-size:.72rem;color:var(--goldlt);font-weight:700;line-height:1.45;}
+.daily-sub-desc{font-size:.58rem;color:var(--mist);line-height:1.55;margin-top:2px;}
+.daily-sub-link .sub-arrow{font-size:.68rem;color:rgba(138,104,32,.45);}
 .card-title{
   font-size:.82rem;color:var(--goldlt);font-weight:600;
   letter-spacing:.03em;margin-bottom:4px;line-height:1.4;
@@ -1739,24 +1772,35 @@ body.theme-night .philosophy-list{
         </div>
         <div class="card-arrow">›</div>
       </a>
-      <a class="app-card tone-daily" href="today.html">
-        <div class="card-icon">🌸</div>
-        <div class="card-info">
-          <div class="card-num">今日の整え方</div>
-          <div class="card-title">今日を整える</div>
-          <div class="card-desc">今日の星に合う色・香り・小さな行動で、一日を整えるヒント。</div>
+      <details class="daily-accordion">
+        <summary>
+          <div class="card-icon">🌸</div>
+          <div class="card-info">
+            <div class="card-num">今日の整え方</div>
+            <div class="card-title">今日を整える</div>
+            <div class="card-desc">方位・色・香り・小さな行動を、今日の一手としてまとめて見る。</div>
+          </div>
+          <div class="accordion-arrow">›</div>
+        </summary>
+        <div class="daily-accordion-body">
+          <a class="daily-sub-link" href="today.html">
+            <div class="sub-icon">🌸</div>
+            <div class="sub-info">
+              <div class="daily-sub-title">今日の整え方を見る</div>
+              <div class="daily-sub-desc">今日の星に合う色・香り・小さな行動。</div>
+            </div>
+            <div class="sub-arrow">›</div>
+          </a>
+          <a class="daily-sub-link" href="scent.html">
+            <div class="sub-icon">✿</div>
+            <div class="sub-info">
+              <div class="daily-sub-title">色と香りで整える</div>
+              <div class="daily-sub-desc">服・名刺・小物の色、手持ち香水、会う人・場面から選ぶ。</div>
+            </div>
+            <div class="sub-arrow">›</div>
+          </a>
         </div>
-        <div class="card-arrow">›</div>
-      </a>
-      <a class="app-card tone-daily" href="scent.html">
-        <div class="card-icon">✿</div>
-        <div class="card-info">
-          <div class="card-num">五感で整える</div>
-          <div class="card-title">色と香りで整える</div>
-          <div class="card-desc">服・名刺・小物の色、手持ち香水、会う人・場面から選ぶ。</div>
-        </div>
-        <div class="card-arrow">›</div>
-      </a>
+      </details>
     </div>
   </div>
 
