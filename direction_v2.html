@@ -577,6 +577,26 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 .star-card-tap{font-size:.6rem;color:var(--gold);margin-top:5px;letter-spacing:.04em;opacity:.6;}
 
 
+/* ── 方位盤タップヒント ── */
+.ban-tap-hint{
+  margin:8px auto 10px;
+  padding:7px 12px;
+  max-width:360px;
+  border:1px solid rgba(196,160,67,.28);
+  border-radius:999px;
+  background:rgba(196,160,67,.07);
+  color:var(--mist);
+  font-size:.64rem;
+  line-height:1.6;
+  text-align:center;
+  letter-spacing:.04em;
+}
+[data-theme="light"] .ban-tap-hint{
+  background:rgba(120,90,20,.06);
+  border-color:rgba(120,90,20,.22);
+  color:rgba(65,45,15,.72);
+}
+
 /* ── 盤面ナビゲーション ── */
 .ban-nav{
   display:flex;align-items:center;justify-content:space-between;
@@ -1713,6 +1733,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <button class="ban-nav-btn" onclick="navBan(1)">▶</button>
     </div>
     <div id="compassWrap" style="overflow:hidden;width:100%;"></div>
+    <div class="ban-tap-hint">方位をタップすると、吉凶の理由と今日の処方箋が開きます。</div>
 
     <!-- シェア用画像保存ボタン -->
     <div style="margin:10px 0 4px;text-align:center;display:grid;gap:8px;">
@@ -1758,30 +1779,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <!-- 土用アラート -->
   <div id="doyoAlert" style="display:none;margin:8px 16px 0;padding:10px 14px;background:rgba(232,160,40,.08);border:1px solid rgba(232,160,40,.25);border-radius:8px;font-size:.68rem;color:rgba(200,130,20,.9);line-height:1.8;">
     🌿 <strong>土用期間中です。</strong>月建方向への旅行は注意。引越し（定住）は問題ありません。
-  </div>
-
-  <!-- 線路の日（プレミアム） -->
-  <div style="margin:14px 16px 0;">
-    <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ 今月の線路の日</div>
-    <div style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;position:relative;overflow:hidden;">
-      <!-- ぼかしオーバーレイ -->
-      <div id="senroBlur" style="position:absolute;inset:0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(247,244,239,.5);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-radius:14px;">
-        <div style="font-size:1.2rem;">🔒</div>
-        <div style="font-size:.7rem;color:var(--gold);font-weight:700;">プレミアムプランで確認できます</div>
-        <div style="font-size:.6rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日と吉方位を合わせることで<br>行動の精度が上がります</div>
-      </div>
-      <!-- 実際のコンテンツ（ぼかし下） -->
-      <div id="senroContent">
-        <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
-          今月、あなたの本命星が定位宮に戻る日です。<br>
-          吉方位と重ねると、行動の気が最大になります。
-        </div>
-        <div id="senroDays" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-        <div style="font-size:.58rem;color:var(--mist);margin-top:10px;opacity:.7;">
-          ※ KITOKUの正式鑑定基準に基づく計算です。流派により異なります。
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- 吉方スポットを探す -->
@@ -1842,6 +1839,30 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
         <a id="mapYahoo" href="#" target="_blank" style="flex:1;background:#fff0e0;border:1px solid #f0c090;border-radius:8px;padding:10px;text-align:center;font-size:.72rem;font-weight:700;color:#e05800;text-decoration:none;font-family:'Noto Serif JP',serif;">🔴 Yahoo!</a>
       </div>
       <div style="font-size:.62rem;color:var(--mist);line-height:1.8;">750m以上離れた場所への外出で吉方を取ることができます</div>
+    </div>
+  </div>
+
+  <!-- 線路の日（プレミアム） -->
+  <div style="margin:14px 16px 0;">
+    <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ 今月の線路の日</div>
+    <div style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;position:relative;overflow:hidden;">
+      <!-- ぼかしオーバーレイ -->
+      <div id="senroBlur" style="position:absolute;inset:0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(247,244,239,.5);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-radius:14px;">
+        <div style="font-size:1.2rem;">🔒</div>
+        <div style="font-size:.7rem;color:var(--gold);font-weight:700;">プレミアムプランで確認できます</div>
+        <div style="font-size:.6rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日と吉方位を合わせることで<br>行動の精度が上がります</div>
+      </div>
+      <!-- 実際のコンテンツ（ぼかし下） -->
+      <div id="senroContent">
+        <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
+          今月、あなたの本命星が定位宮に戻る日です。<br>
+          吉方位と重ねると、行動の気が最大になります。
+        </div>
+        <div id="senroDays" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div style="font-size:.58rem;color:var(--mist);margin-top:10px;opacity:.7;">
+          ※ KITOKUの正式鑑定基準に基づく計算です。流派により異なります。
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3291,7 +3312,7 @@ function showBanGuide(){
           <strong style="color:var(--goldlt);">3/5</strong>：本命吉方に三合などの後押し<br>
           <strong style="color:var(--goldlt);">2/5</strong>：本命吉方<br>
           <strong style="color:var(--goldlt);">1/5</strong>：天道などの補助的な吉<br><br>
-          盤面の外側ラベルやマスをタップすると、理由と処方箋を確認できます。
+          方位をタップすると、吉凶の理由と今日の処方箋が開きます。
         </div>
       </div>
       <div class="gogyou-box" style="margin-bottom:14px;">
