@@ -266,9 +266,7 @@ footer{text-align:center;margin-top:28px;padding:0 16px;font-size:.6rem;letter-s
 // ══ 機能マスター ══
 const FEATURES=[
   {id:'direction',icon:'🧭',name:'日盤吉方',desc:'今日の吉凶方位を確認する。毎日の基本。',href:'direction_v2.html',badge:null},
-  {id:'triple',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時確認。旅行・引越しの徹底確認。',href:'triple_board.html',badge:null},
-  {id:'mapline',icon:'🗺️',name:'方位線マップ',desc:'吉方位の方位線を地図で確認する。',href:'direction_v2.html',badge:null},
-  {id:'travel',icon:'✈️',name:'旅行・聖地巡礼',desc:'吉方旅行・聖地巡礼の日程を組む。',href:'travel.html',badge:null},
+  {id:'travel',icon:'✈️',name:'旅行吉方位ナビ',desc:'旅行日程・目的地を選ぶ。',href:'travel.html',badge:null},
   {id:'pilgrimage',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
   {id:'life',icon:'📝',name:'姓名鑑定',desc:'名前・屋号・SNS名の画数と五行を確認。',href:'life.html',badge:null},
   {id:'kyusei',icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
@@ -278,7 +276,10 @@ const FEATURES=[
   {id:'relations',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
   {id:'business',icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名鑑定。仕事に使う。',href:'business.html',badge:null},
   {id:'kaso',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
-  {id:'premium',icon:'✨',name:'PREMIUM｜KIGAKU先生AI',desc:'課金開始後に利用できます。KIGAKU先生AI・線路の日・詳細相談をまとめて使う入口です。',href:'premium.html',badge:'有料',locked:true},
+  {id:'premium_map',icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しの方位を地図で確認。',href:'premium.html#mapPanel',badge:'有料',locked:true},
+  {id:'premium_triple',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。',href:'premium.html#tripleBoardPanel',badge:'有料',locked:true},
+  {id:'premium_senro',icon:'🚃',name:'線路の日',desc:'吉日・契約日・出発日を探す。',href:'premium.html#senroPanel',badge:'有料',locked:true},
+  {id:'premium_ai',icon:'✨',name:'KIGAKU先生AI',desc:'結果を相談文にして深掘りする。',href:'premium.html#aiChatPanel',badge:'有料',locked:true},
   {id:'free_ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'index.html?direct=1',badge:'無料'},
   {id:'english',icon:'EN',name:'JAPAN OS — English Preview',desc:'英語でKITOKUを体験する入口。',href:'en/index.html',badge:null},
 ];
@@ -481,7 +482,7 @@ function renderMyPage(){
     if(f.locked){
       item.onclick=(e)=>{
         e.preventDefault();
-        alert('PREMIUM機能は課金開始後に使えるようになります。KIGAKU先生AI・線路の日・詳細相談をまとめて開く入口です。');
+        alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');
       };
     }
     item.innerHTML=`

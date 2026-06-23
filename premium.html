@@ -424,7 +424,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   <section class="hero">
     <div class="eyebrow">PREMIUM BASE</div>
     <div class="title">Premium Compass</div>
-    <div class="subtitle">方位盤・星情報・線路の日をまとめる、プレミア機能の土台ページです。</div>
+    <div class="subtitle">地図×方位盤・三盤比較・線路の日・KIGAKU先生AIをまとめる、プレミア機能の土台ページです。</div>
   </section>
 
   <div id="missingBirth" class="missing" style="display:none;">
@@ -459,118 +459,12 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
-    <div class="panel" id="aiChatPanel">
-      <div class="panel-title">① 気学先生に相談する</div>
-      <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
-        あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
-        コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
-        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
-      </div>
-
-      <details class="compact-consult" id="consultOptions">
-        <summary>
-          <span>
-            <span class="compact-consult-title">相談内容を開く</span>
-            <span class="compact-consult-note">テーマ・話し方・入力欄をまとめています</span>
-          </span>
-        </summary>
-        <div class="compact-consult-body">
-
-      <details class="mini-accordion">
-        <summary>AI相談に入る情報</summary>
-        <div class="mini-accordion-body" id="aiContextSummary">
-          読み込み中...
-        </div>
-      </details>
-      <div id="lifeReadingBanner" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:10px;">
-        <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 姓名鑑定の結果を読み込みました</div>
-        <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);line-height:1.7;"></div>
-        <button type="button" onclick="clearLifeReadingContext()" style="margin-top:8px;width:100%;border:1px solid rgba(138,104,32,.28);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 12px;color:var(--goldlt);font-size:.62rem;font-weight:800;">自分の相談に戻す</button>
-        <div style="margin-top:5px;font-size:.54rem;color:var(--mist);line-height:1.6;">読み込んだ姓名鑑定だけを解除して、あなた本人の九星情報モードに戻します。</div>
-      </div>
-
-      <details class="mini-accordion">
-        <summary>うまく使うコツ</summary>
-        <div class="mini-accordion-body">
-          ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
-          ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星を確認する」で調べて貼ると相談しやすくなります。
-        </div>
-      </details>
-
-      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ</div>
-      <div class="topic-grid">
-        <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimage')">聖地巡礼<span>出発日と線路の日</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimageRoute')">巡礼ルート相談<span>回る順番と移動手段</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('photo')">写真で相談<span>香水・服・持ち物</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('scent')">香りで整える<span>香水・花・色</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('blank')">白紙で話す<span>音声入力・フリートーク</span></button>
-      </div>
-
-      <details class="mini-accordion">
-        <summary>香りの参考リンク</summary>
-        <div class="mini-accordion-body">
-          香り・色・場面を相談したあと、試す場所を探すための入口です。商品名・価格・在庫は変わるため、購入前に公式ページで確認してください。
-          <div class="scent-link-grid">
-            <a class="scent-link main" href="https://px.a8.net/svt/ejp?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" target="_blank" rel="nofollow sponsored noopener">カラリアで探す<span>香りを試す</span></a>
-            <a class="scent-link" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<span>参考リンク</span></a>
-            <a class="scent-link wide" href="https://coen-fragrance.com/" target="_blank" rel="nofollow sponsored noopener">Coenで王道ブランドを少量から探す<span>参考リンク</span></a>
-            <a class="scent-link" href="https://www.aoyamaflowermarket.com/" target="_blank" rel="noopener">青山フラワー<span>花の香り</span></a>
-            <a class="scent-link" href="https://www.fromcocoro.com/kaori/" target="_blank" rel="noopener">From COCORO<span>和の香り</span></a>
-            <a class="scent-link" href="https://noseshop.jp/" target="_blank" rel="noopener">NOSE SHOP<span>個性派</span></a>
-          </div>
-          <div class="scent-note">リンクは参考入口です。最終的な購入判断は、公式ページで確認してください。</div>
-        </div>
-      </details>
-
-      <div style="margin-bottom:12px;">
-        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="pill active" id="tone-simple" onclick="setTone('simple')">🎯 シンプル</button>
-          <button class="pill" id="tone-amber" onclick="setTone('amber')">✨ 琥珀色</button>
-          <button class="pill" id="tone-night" onclick="setTone('night')">🌙 夜モード</button>
-        </div>
-      </div>
-
-      <div id="chatMessages" style="min-height:120px;max-height:400px;overflow-y:auto;background:rgba(100,80,40,.03);border:1px solid var(--rim);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:.65rem;color:var(--mist);text-align:center;line-height:1.8;">
-          今日の過ごし方、仕事、お金、人間関係、旅や移動の判断などを相談できます。
-        </div>
-      </div>
-
-      <!-- 画像添付 -->
-      <div id="imagePreviewArea" style="display:none;margin-bottom:8px;position:relative;">
-        <img id="imagePreview" style="max-height:120px;border-radius:8px;border:1px solid var(--rim);">
-        <button onclick="removeImage()" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.5);border:none;border-radius:50%;color:#fff;font-size:.6rem;cursor:pointer;">✕</button>
-        <div style="font-size:.55rem;color:var(--mist);line-height:1.6;margin-top:5px;">写真から見える色・質感・用途を五行に置き換えて、今日の気に合う使い方を相談できます。</div>
-      </div>
-      <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
-
-      <div class="chat-composer">
-        <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
-          oninput="autoResizeChatInput()"
-          rows="5"></textarea>
-        <div class="chat-actions">
-          <button class="chat-action-btn photo" onclick="document.getElementById('imageInput').click()" title="写真を添付" aria-label="写真を添付">📷</button>
-          <button class="chat-action-btn send" onclick="sendChat()" aria-label="送信">✦</button>
-        </div>
-      </div>
-      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
-        </div>
-      </details>
-    </div>
-
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">方位で動く</div>
 
     <details class="panel panel-details" id="compassPanel">
       <summary>
         <span>
-          <span class="panel-details-title">② プレミア方位盤</span>
+          <span class="panel-details-title">① プレミア方位盤</span>
           <span class="panel-details-note">旅行・聖地巡礼・引越しの方位と日程を見る</span>
         </span>
       </summary>
@@ -689,8 +583,8 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     <details class="panel panel-details" id="mapPanel">
       <summary>
         <span>
-          <span class="panel-details-title">③ 方位地図</span>
-          <span class="panel-details-note">現在地・目的地を地図で確認する</span>
+          <span class="panel-details-title">① 地図×方位盤</span>
+          <span class="panel-details-note">日盤・旅行・聖地巡礼・引越しの方位を地図で確認する</span>
         </span>
       </summary>
       <div class="panel-details-body">
@@ -762,10 +656,32 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
+    <details class="panel panel-details" id="tripleBoardPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">② 三盤比較</span>
+          <span class="panel-details-note">年盤・月盤・日盤を同時に見て、輪重・重なりを発見する</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
+        <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:12px;">
+          無料版の方位盤は、日盤・月盤・年盤を切り替えて確認します。三盤比較では3つを同時に並べ、年盤・月盤・日盤が重なる強い吉方や、注意すべき重なりを一目で確認できます。
+        </div>
+        <div style="padding:10px 12px;border:1px solid rgba(138,104,32,.18);border-radius:10px;background:rgba(138,104,32,.05);font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:10px;">
+          <strong style="color:var(--goldlt);">使いどころ</strong><br>
+          旅行・聖地巡礼・引越し・大事な移動の前に、盤を切り替えずに全体を見たい時に使います。輪重や重なりを発見しやすい、プレミアム向けの確認画面です。
+        </div>
+        <a class="daily-direction-link" href="triple_board.html">
+          <span>📊 三盤比較を開く</span>
+          <small>年盤・月盤・日盤を並べて確認する</small>
+        </a>
+      </div>
+    </details>
+
     <details class="panel panel-details" id="senroPanel">
       <summary>
         <span>
-          <span class="panel-details-title">④ 線路の日</span>
+          <span class="panel-details-title">③ 線路の日</span>
           <span class="panel-details-note">契約・開始・出発など、動かす日の候補を見る</span>
         </span>
       </summary>
@@ -774,6 +690,113 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <div class="unlock">ここはプレミアプランの中核候補です。Stripe導入後は、決済済みユーザーだけ詳細表示にできます。</div>
       </div>
     </details>
+
+    <div class="panel" id="aiChatPanel">
+      <div class="panel-title">④ KIGAKU先生AIで深掘り</div>
+      <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
+        あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
+        コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
+        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
+      </div>
+
+      <details class="compact-consult" id="consultOptions">
+        <summary>
+          <span>
+            <span class="compact-consult-title">相談内容を開く</span>
+            <span class="compact-consult-note">テーマ・話し方・入力欄をまとめています</span>
+          </span>
+        </summary>
+        <div class="compact-consult-body">
+
+      <details class="mini-accordion">
+        <summary>AI相談に入る情報</summary>
+        <div class="mini-accordion-body" id="aiContextSummary">
+          読み込み中...
+        </div>
+      </details>
+      <div id="lifeReadingBanner" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:10px;">
+        <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 姓名鑑定の結果を読み込みました</div>
+        <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);line-height:1.7;"></div>
+        <button type="button" onclick="clearLifeReadingContext()" style="margin-top:8px;width:100%;border:1px solid rgba(138,104,32,.28);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 12px;color:var(--goldlt);font-size:.62rem;font-weight:800;">自分の相談に戻す</button>
+        <div style="margin-top:5px;font-size:.54rem;color:var(--mist);line-height:1.6;">読み込んだ姓名鑑定だけを解除して、あなた本人の九星情報モードに戻します。</div>
+      </div>
+
+      <details class="mini-accordion">
+        <summary>うまく使うコツ</summary>
+        <div class="mini-accordion-body">
+          ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
+          ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星を確認する」で調べて貼ると相談しやすくなります。
+        </div>
+      </details>
+
+      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ</div>
+      <div class="topic-grid">
+        <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimage')">聖地巡礼<span>出発日と線路の日</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimageRoute')">巡礼ルート相談<span>回る順番と移動手段</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('photo')">写真で相談<span>香水・服・持ち物</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('scent')">香りで整える<span>香水・花・色</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('blank')">白紙で話す<span>音声入力・フリートーク</span></button>
+      </div>
+
+      <details class="mini-accordion">
+        <summary>香りの参考リンク</summary>
+        <div class="mini-accordion-body">
+          香り・色・場面を相談したあと、試す場所を探すための入口です。商品名・価格・在庫は変わるため、購入前に公式ページで確認してください。
+          <div class="scent-link-grid">
+            <a class="scent-link main" href="https://px.a8.net/svt/ejp?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" target="_blank" rel="nofollow sponsored noopener">カラリアで探す<span>香りを試す</span></a>
+            <a class="scent-link" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<span>参考リンク</span></a>
+            <a class="scent-link wide" href="https://coen-fragrance.com/" target="_blank" rel="nofollow sponsored noopener">Coenで王道ブランドを少量から探す<span>参考リンク</span></a>
+            <a class="scent-link" href="https://www.aoyamaflowermarket.com/" target="_blank" rel="noopener">青山フラワー<span>花の香り</span></a>
+            <a class="scent-link" href="https://www.fromcocoro.com/kaori/" target="_blank" rel="noopener">From COCORO<span>和の香り</span></a>
+            <a class="scent-link" href="https://noseshop.jp/" target="_blank" rel="noopener">NOSE SHOP<span>個性派</span></a>
+          </div>
+          <div class="scent-note">リンクは参考入口です。最終的な購入判断は、公式ページで確認してください。</div>
+        </div>
+      </details>
+
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="pill active" id="tone-simple" onclick="setTone('simple')">🎯 シンプル</button>
+          <button class="pill" id="tone-amber" onclick="setTone('amber')">✨ 琥珀色</button>
+          <button class="pill" id="tone-night" onclick="setTone('night')">🌙 夜モード</button>
+        </div>
+      </div>
+
+      <div id="chatMessages" style="min-height:120px;max-height:400px;overflow-y:auto;background:rgba(100,80,40,.03);border:1px solid var(--rim);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:.65rem;color:var(--mist);text-align:center;line-height:1.8;">
+          今日の過ごし方、仕事、お金、人間関係、旅や移動の判断などを相談できます。
+        </div>
+      </div>
+
+      <!-- 画像添付 -->
+      <div id="imagePreviewArea" style="display:none;margin-bottom:8px;position:relative;">
+        <img id="imagePreview" style="max-height:120px;border-radius:8px;border:1px solid var(--rim);">
+        <button onclick="removeImage()" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.5);border:none;border-radius:50%;color:#fff;font-size:.6rem;cursor:pointer;">✕</button>
+        <div style="font-size:.55rem;color:var(--mist);line-height:1.6;margin-top:5px;">写真から見える色・質感・用途を五行に置き換えて、今日の気に合う使い方を相談できます。</div>
+      </div>
+      <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
+
+      <div class="chat-composer">
+        <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
+          oninput="autoResizeChatInput()"
+          rows="5"></textarea>
+        <div class="chat-actions">
+          <button class="chat-action-btn photo" onclick="document.getElementById('imageInput').click()" title="写真を添付" aria-label="写真を添付">📷</button>
+          <button class="chat-action-btn send" onclick="sendChat()" aria-label="送信">✦</button>
+        </div>
+      </div>
+      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
+        </div>
+      </details>
+    </div>
+
 
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">日常の処方箋</div>
 
