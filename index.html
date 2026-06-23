@@ -718,6 +718,9 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 }
 .app-card.tone-daily{border-color:var(--c-daily-border);background:linear-gradient(160deg,var(--c-daily-bg),var(--card));}
 .app-card.tone-daily::before{background:var(--c-daily);}
+.app-card.tone-entry{border-color:rgba(58,122,78,.28);background:linear-gradient(160deg,rgba(58,122,78,.08),var(--card));}
+.app-card.tone-entry::before{background:#3a7a4e;}
+.app-card.tone-entry .card-num{color:#3a7a4e;background:rgba(58,122,78,.08);border-color:rgba(58,122,78,.2);}
 .app-card:active{transform:scale(.97);}
 
 .card-icon{font-size:1.3rem;margin-bottom:6px;line-height:1;}
@@ -1742,27 +1745,9 @@ body.theme-night .philosophy-list{
     </div>
   </div>
 
-  <!-- まずはここ（ゴールド） -->
+  <!-- まずはここ（羅針盤） -->
   <div class="section-block tone-daily" id="sec1">
     <div class="cards-grid">
-      <a class="app-card tone-daily" href="report_generator_free.html">
-        <div class="card-icon">📜</div>
-        <div class="card-info">
-          <div class="card-num">入口レポート</div>
-          <div class="card-title">はじめてのKITOKU診断</div>
-          <div class="card-desc">名前と生年月日だけで、星・名前・今年の流れをまとめて確認する。</div>
-        </div>
-        <div class="card-arrow">›</div>
-      </a>
-      <a class="app-card tone-daily" href="kyusei_v2.html">
-        <div class="card-icon">⭐</div>
-        <div class="card-info">
-          <div class="card-num">自分を知る</div>
-          <div class="card-title">自分の星を見る</div>
-          <div class="card-desc">本命星・月命・傾斜・同会・納音から、自分の役割と才能を読む入口。</div>
-        </div>
-        <div class="card-arrow">›</div>
-      </a>
       <a class="app-card tone-daily" href="direction_v2.html">
         <div class="card-icon">🧭</div>
         <div class="card-info">
@@ -1801,6 +1786,24 @@ body.theme-night .philosophy-list{
           </a>
         </div>
       </details>
+      <a class="app-card tone-daily" href="kyusei_v2.html">
+        <div class="card-icon">⭐</div>
+        <div class="card-info">
+          <div class="card-num">自分を知る</div>
+          <div class="card-title">自分の星を見る</div>
+          <div class="card-desc">本命星・月命・傾斜・同会・納音から、自分の役割と才能を読む入口。</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+      <a class="app-card tone-entry" href="report_generator_free.html">
+        <div class="card-icon">📜</div>
+        <div class="card-info">
+          <div class="card-num">まず体験する</div>
+          <div class="card-title">はじめてのKITOKU診断</div>
+          <div class="card-desc">名前と生年月日だけで、星・名前・今年の流れを一枚で確認する。</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
     </div>
   </div>
 
