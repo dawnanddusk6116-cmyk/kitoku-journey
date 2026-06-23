@@ -374,11 +374,11 @@ const KO_GOGYO={'水':'木','木':'火','火':'土','土':'金','金':'水'};
 function sojoSet_t(star){const g=GOGYO_OF_STAR[star];const s=new Set();(STARS_OF_GOGYO[g]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[OYA_GOGYO[g]]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[KO_GOGYO[g]]||[]).forEach(x=>s.add(x));return s;}
 function getSaidaiKichi_t(h,t){if(!h)return[];if(!t)t=h;const sh=sojoSet_t(h),st=sojoSet_t(t);const c=[...sh].filter(s=>st.has(s));return c.filter(s=>s!==h&&s!==t).filter(s=>s!==5).sort((a,b)=>a-b);}
 
-// 今日の処方星（本命星×日盤中宮の最大吉方。なければ日盤中宮星を使用）
+// 今日の処方星（本命星×日盤中宮をつなぐ補助星。最大吉方があれば採用）
 function getTodayPrescStar(honmei, dayStar){
   const bridge=getSaidaiKichi_t(honmei, dayStar);
-  if(bridge.length>0) return bridge[0]; // 最初の間の星
-  return dayStar; // 間の星がなければ日盤中宮
+  if(bridge.length>0) return bridge[0]; // 今日の処方星
+  return dayStar; // 補助星がなければ日盤中宮
 }
 
 // ============================================================
@@ -532,9 +532,9 @@ function drawColor(prescStar){
     const dayS=STAR_DATA[gStar.dayStar]||{};
     const honS=STAR_DATA[gStar.honmei]||{};
     if(gStar.dayStar===prescStar){
-      reasonEl.textContent=`今日は${dayS.j}の日。あなた（${honS.j}）と今日の気を繋ぐ色として、${s.colorName}を使います。`;
+      reasonEl.textContent=`今日は${dayS.j}の日。あなた（${honS.j}）と今日の気をつなぐ補助星として、${s.colorName}を使います。`;
     } else {
-      reasonEl.textContent=`あなた（${honS.j}）× 今日（${dayS.j}）の最大吉方は${s.j}。その色「${s.colorName}」が今日のあなたの処方色です。`;
+      reasonEl.textContent=`あなた（${honS.j}）× 今日（${dayS.j}）をつなぐ今日の処方星は${s.j}。その色「${s.colorName}」で、今日の不足をやさしく補います。`;
     }
   }
   // スウォッチ（グラデーション）
