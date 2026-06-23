@@ -239,7 +239,7 @@ footer{text-align:center;margin-top:28px;padding:0 16px;font-size:.6rem;letter-s
 <div class="app-header">
   <div class="header-logo">KITOKU</div>
   <div class="header-edit" id="headerEdit" style="display:none;" onclick="showSetup()">⚙ 編集</div>
-  <a href="top.html" id="headerBack" class="header-edit" style="background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.25);color:var(--goldlt);">← もどる</a>
+  <a href="javascript:void(0)" onclick="smartBack()" id="headerBack" class="header-edit" style="background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.25);color:var(--goldlt);">← もどる</a>
 </div>
 
 <!-- ══ セットアップ画面 ══ -->
@@ -392,6 +392,17 @@ function getKichiDirs(y,m,d,honmei,tsukimei){
   });
   result.sort((a,b)=>b.rank-a.rank);
   return result.slice(0,4);
+}
+
+// ══ 戻る導線 ══
+function smartBack(){
+  const ref=document.referrer||'';
+  const sameOrigin=ref&&new URL(ref,location.href).origin===location.origin;
+  if(sameOrigin&&history.length>1){
+    history.back();
+    return;
+  }
+  location.href='top.html';
 }
 
 // ══ 状態管理 ══
