@@ -166,15 +166,33 @@ body{
 /* ── すべてのツール ── */
 .all-tools-wrap{margin-top:4px;}
 .all-tools-btn{
-  width:100%;background:rgba(100,80,40,.06);
-  border:1.5px solid rgba(100,80,40,.18);
+  width:100%;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(246,241,231,.9));
+  border:1.5px solid rgba(145,101,28,.22);
+  border-left:5px solid var(--gold);
   border-radius:var(--radius);
-  padding:15px 18px;
-  display:flex;align-items:center;justify-content:space-between;
-  font-family:'Noto Serif JP',serif;font-size:.82rem;
-  color:var(--goldlt);font-weight:700;letter-spacing:.1em;
+  padding:15px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-family:'Noto Serif JP',serif;color:var(--goldlt);
   cursor:pointer;transition:all .2s;
+  box-shadow:0 12px 28px rgba(80,55,20,.05);
 }
+.all-tools-main{display:flex;flex-direction:column;gap:7px;text-align:left;min-width:0;}
+.all-tools-title{font-size:.86rem;font-weight:800;letter-spacing:.08em;}
+.all-tools-sub{font-size:.58rem;line-height:1.7;color:var(--ink);letter-spacing:.03em;font-weight:500;}
+.all-tools-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;}
+.all-tools-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:3px 8px;border-radius:999px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(145,101,28,.16);
+  color:#7a5618;font-size:.52rem;font-weight:700;letter-spacing:.04em;
+}
+.all-tools-chip.impact{
+  background:rgba(63,136,90,.08);
+  border-color:rgba(63,136,90,.26);
+  color:#2f754c;
+}
+.all-tools-arrow{font-size:1rem;color:var(--gold);transition:transform .3s;flex-shrink:0;}
 .all-tools-btn:active{transform:scale(.98);}
 .tools-section-label{
   font-size:.6rem;letter-spacing:.18em;color:var(--gold);
@@ -290,8 +308,18 @@ body{
   <!-- すべてのツール -->
   <div class="all-tools-wrap">
     <button class="all-tools-btn" onclick="toggleAllTools()">
-      <span id="allToolsLabel">✦ すべてのツールを見る</span>
-      <span id="allToolsArrow" style="transition:transform .3s;">›</span>
+      <span class="all-tools-main">
+        <span id="allToolsLabel" class="all-tools-title">✦ すべてのツールを見る</span>
+        <span class="all-tools-sub">姓名鑑定・方位盤・家相・相性・ビジネスまで、目的別に選べます。</span>
+        <span class="all-tools-chips" aria-hidden="true">
+          <span class="all-tools-chip impact">姓名鑑定</span>
+          <span class="all-tools-chip">方位盤</span>
+          <span class="all-tools-chip">家相</span>
+          <span class="all-tools-chip">相性</span>
+          <span class="all-tools-chip">仕事</span>
+        </span>
+      </span>
+      <span id="allToolsArrow" class="all-tools-arrow">›</span>
     </button>
     <div id="allToolsPanel" style="display:none;">
 
