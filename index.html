@@ -2126,6 +2126,9 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     showScreenFirst();
   }
+  if (params.get('gallery') === '1') {
+    setTimeout(openImgGallery, 0);
+  }
 });
 
 function showScreenFirst() {

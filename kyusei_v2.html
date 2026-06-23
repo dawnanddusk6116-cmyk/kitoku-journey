@@ -67,19 +67,23 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-next-card.ai{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(112,156,210,.13));border-color:rgba(112,156,210,.38);}
 .report-next-card.astro{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(126,98,180,.14));border-color:rgba(126,98,180,.4);}
 .report-next-card.scent{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(220,116,150,.14));border-color:rgba(220,116,150,.38);}
+.report-next-card.world{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(138,104,32,.12));border-color:rgba(138,104,32,.32);}
 .report-next-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.14);color:var(--goldlt);font-size:.95rem;flex-shrink:0;}
 .report-next-card.ai .report-next-icon{background:rgba(112,156,210,.16);color:#3d6491;}
 .report-next-card.astro .report-next-icon{background:rgba(126,98,180,.16);color:#6b4b9a;}
 .report-next-card.scent .report-next-icon{background:rgba(220,116,150,.16);color:#a94d72;}
+.report-next-card.world .report-next-icon{background:rgba(138,104,32,.13);color:var(--goldlt);}
 .report-next-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
 .report-next-card.ai .report-next-title{color:#3d6491;}
 .report-next-card.astro .report-next-title{color:#6b4b9a;}
 .report-next-card.scent .report-next-title{color:#a94d72;}
+.report-next-card.world .report-next-title{color:var(--goldlt);}
 .report-next-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
 .report-next-badge{font-size:.58rem;color:#fff;background:var(--goldlt);border-radius:999px;padding:4px 8px;letter-spacing:.06em;margin-left:auto;white-space:nowrap;font-weight:800;}
 .report-next-card.ai .report-next-badge{background:#3d6491;}
 .report-next-card.astro .report-next-badge{background:#6b4b9a;}
 .report-next-card.scent .report-next-badge{background:#a94d72;}
+.report-next-card.world .report-next-badge{background:var(--goldlt);}
 .report-next-note{font-size:.58rem;color:var(--mist);line-height:1.65;text-align:center;margin-top:2px;}
 
 /* 納音 */
@@ -165,12 +169,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .report-next-card.ai{background:linear-gradient(135deg,rgba(112,156,210,.12),rgba(18,21,42,.95));border-color:rgba(112,156,210,.32);}
 [data-theme="dark"] .report-next-card.astro{background:linear-gradient(135deg,rgba(126,98,180,.14),rgba(18,21,42,.95));border-color:rgba(126,98,180,.34);}
 [data-theme="dark"] .report-next-card.scent{background:linear-gradient(135deg,rgba(220,116,150,.14),rgba(18,21,42,.95));border-color:rgba(220,116,150,.34);}
+[data-theme="dark"] .report-next-card.world{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(18,21,42,.95));border-color:rgba(196,160,67,.32);}
 [data-theme="dark"] .report-next-card.ai .report-next-title,
 [data-theme="dark"] .report-next-card.ai .report-next-icon{color:#9fc3f4;}
 [data-theme="dark"] .report-next-card.astro .report-next-title,
 [data-theme="dark"] .report-next-card.astro .report-next-icon{color:#c4a7f5;}
 [data-theme="dark"] .report-next-card.scent .report-next-title,
 [data-theme="dark"] .report-next-card.scent .report-next-icon{color:#f2a1c0;}
+[data-theme="dark"] .report-next-card.world .report-next-title,
+[data-theme="dark"] .report-next-card.world .report-next-icon{color:#f0d878;}
 [data-theme="dark"] .report-next-text{color:rgba(232,238,255,.72);}
 
 /* ── app-header ── */
@@ -323,24 +330,32 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
           <a class="report-next-card ai" href="ai.html">
             <div class="report-next-icon">AI</div>
             <div>
-              <div class="report-next-title">この結果をAIに相談する</div>
-              <div class="report-next-text">九星の結果を材料に、悩み・問い・次の一手を整理できます。</div>
+              <div class="report-next-title">無料AIに相談する</div>
+              <div class="report-next-text">星情報をコピーして、ChatGPT・Claudeなどに貼り付けて相談できます。</div>
             </div>
             <div class="report-next-badge">開く</div>
           </a>
           <a class="report-next-card astro" href="astro64.html">
-            <div class="report-next-icon">Astro</div>
+            <div class="report-next-icon">🔭</div>
             <div>
-              <div class="report-next-title">星を重ねて別角度から見る</div>
+              <div class="report-next-title">私の設計図を重ねて読む</div>
               <div class="report-next-text">太陽・月・金星から、表の自分・本音・惹かれるものをAI相談文にします。</div>
             </div>
             <div class="report-next-badge">開く</div>
           </a>
           <a class="report-next-card scent" href="scent.html">
-            <div class="report-next-icon">香</div>
+            <div class="report-next-icon">✤</div>
             <div>
-              <div class="report-next-title">色と香りで今日を整える</div>
-              <div class="report-next-text">服・名刺・小物の色、香り、会う相手・シーンから小さな一手を作れます。</div>
+              <div class="report-next-title">香りAIで整える</div>
+              <div class="report-next-text">シーン・相手・手持ち香水から、自分に合う香りを探します。</div>
+            </div>
+            <div class="report-next-badge">開く</div>
+          </a>
+          <a class="report-next-card world" href="index.html?direct=1&amp;gallery=1">
+            <div class="report-next-icon">🖼</div>
+            <div>
+              <div class="report-next-title">KITOKUの世界</div>
+              <div class="report-next-text">九星・納音・5000年の知恵を、絵で見る。</div>
             </div>
             <div class="report-next-badge">開く</div>
           </a>
