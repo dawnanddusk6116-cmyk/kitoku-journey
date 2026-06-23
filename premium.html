@@ -583,7 +583,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     <details class="panel panel-details" id="mapPanel">
       <summary>
         <span>
-          <span class="panel-details-title">① 地図×方位盤</span>
+          <span class="panel-details-title">② 地図×方位盤</span>
           <span class="panel-details-note">日盤・旅行・聖地巡礼・引越しの方位を地図で確認する</span>
         </span>
       </summary>
@@ -616,12 +616,19 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <div id="mapCenterInfo" style="font-size:.6rem;color:var(--mist);margin-bottom:6px;padding:5px 8px;background:rgba(138,104,32,.04);border-radius:6px;border:1px solid rgba(138,104,32,.1);">中心地点：未設定</div>
 
       <!-- 恵方トグル -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:7px 10px;background:rgba(212,160,40,.06);border:1px solid rgba(212,160,40,.22);border-radius:8px;">
-        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;flex:1;">
+      <div style="padding:7px 10px;background:rgba(212,160,40,.06);border:1px solid rgba(212,160,40,.22);border-radius:8px;margin-bottom:8px;">
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin-bottom:6px;">
           <input type="checkbox" id="setEhouShow" onchange="toggleEhouLine()" style="width:38px;height:22px;cursor:pointer;accent-color:#d4a028;">
           <div>
-            <div style="font-size:.66rem;color:#a87b1a;font-weight:800;">⛩️ 恵方ライン（節分の恵方）</div>
+            <div style="font-size:.66rem;color:#a87b1a;font-weight:800;">⛩️ 恵方ライン（今年）</div>
             <div id="ehouInfoLabel" style="font-size:.54rem;color:var(--mist);">今年の恵方を金色のラインで表示</div>
+          </div>
+        </label>
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;padding-top:5px;border-top:1px solid rgba(212,160,40,.18);">
+          <input type="checkbox" id="setEhouNextShow" onchange="toggleEhouLine()" style="width:38px;height:22px;cursor:pointer;accent-color:#a87b1a;">
+          <div>
+            <div style="font-size:.66rem;color:#a87b1a;font-weight:800;">⛩️ 恵方ライン（来年）</div>
+            <div id="ehouNextInfoLabel" style="font-size:.54rem;color:var(--mist);">来年の恵方を薄い金色で表示</div>
           </div>
         </label>
       </div>
@@ -659,7 +666,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     <details class="panel panel-details" id="tripleBoardPanel">
       <summary>
         <span>
-          <span class="panel-details-title">② 三盤比較</span>
+          <span class="panel-details-title">③ 三盤比較</span>
           <span class="panel-details-note">年盤・月盤・日盤を同時に見て、輪重・重なりを発見する</span>
         </span>
       </summary>
@@ -681,7 +688,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     <details class="panel panel-details" id="senroPanel">
       <summary>
         <span>
-          <span class="panel-details-title">③ 線路の日</span>
+          <span class="panel-details-title">④ 線路の日</span>
           <span class="panel-details-note">契約・開始・出発など、動かす日の候補を見る</span>
         </span>
       </summary>
@@ -692,7 +699,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </details>
 
     <div class="panel" id="aiChatPanel">
-      <div class="panel-title">④ KIGAKU先生AIで深掘り</div>
+      <div class="panel-title">⑤ KIGAKU先生AIで深掘り</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
         あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
         コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
@@ -3504,6 +3511,8 @@ function loadKyoSettings(){
   // 恵方ラインはデフォルトOFF
   const ehouEl = document.getElementById('setEhouShow');
   if(ehouEl) ehouEl.checked = (localStorage.getItem('kitoku-ehou-show')==='1');
+  const ehouNextEl=document.getElementById('setEhouNextShow');
+  if(ehouNextEl) ehouNextEl.checked = (localStorage.getItem('kitoku-ehou-next-show')==='1');
 }
 
 function updateKyoSetting(){
@@ -4363,6 +4372,10 @@ let kitokuEhouLine    = null; // 恵方ライン（通常地図）
 let kitokuEhouLabel   = null; // 恵方ラベル
 let kitokuFsEhouLine  = null; // 恵方ライン（全画面）
 let kitokuFsEhouLabel = null;
+let kitokuEhouNextLine    = null; // 来年の恵方ライン（通常地図）
+let kitokuEhouNextLabel   = null;
+let kitokuFsEhouNextLine  = null; // 来年の恵方ライン（全画面）
+let kitokuFsEhouNextLabel = null;
 
 // ── 初期化 ────────────────────────────────────────────
 function initMapSection(){
@@ -4690,59 +4703,130 @@ function toggleEhouLine(){
   const el=document.getElementById('setEhouShow');
   const on=el&&el.checked;
   try{localStorage.setItem('kitoku-ehou-show', on?'1':'0');}catch(e){}
+  const el2=document.getElementById('setEhouNextShow');
+  const on2=el2&&el2.checked;
+  try{localStorage.setItem('kitoku-ehou-next-show', on2?'1':'0');}catch(e){}
   drawEhouLine();
+}
+function isEhouNextShowOn(){
+  const el=document.getElementById('setEhouNextShow');
+  return el ? el.checked : localStorage.getItem('kitoku-ehou-next-show')==='1';
 }
 // 恵方ラインを描画（通常地図・全画面の両方）
 function drawEhouLine(){
-  // 既存の恵方ラインを除去
+  // 既存の今年の恵方ラインを除去
   if(kitokuEhouLine){ KitokuMap.remove(kitokuMapInst, kitokuEhouLine); kitokuEhouLine=null; }
   if(kitokuEhouLabel){ KitokuMap.remove(kitokuMapInst, kitokuEhouLabel); kitokuEhouLabel=null; }
   if(kitokuFsEhouLine){ KitokuMap.remove(kitokuFsMapInst, kitokuFsEhouLine); kitokuFsEhouLine=null; }
   if(kitokuFsEhouLabel){ KitokuMap.remove(kitokuFsMapInst, kitokuFsEhouLabel); kitokuFsEhouLabel=null; }
+  // 既存の来年の恵方ラインを除去
+  if(kitokuEhouNextLine){ KitokuMap.remove(kitokuMapInst, kitokuEhouNextLine); kitokuEhouNextLine=null; }
+  if(kitokuEhouNextLabel){ KitokuMap.remove(kitokuMapInst, kitokuEhouNextLabel); kitokuEhouNextLabel=null; }
+  if(kitokuFsEhouNextLine){ KitokuMap.remove(kitokuFsMapInst, kitokuFsEhouNextLine); kitokuFsEhouNextLine=null; }
+  if(kitokuFsEhouNextLabel){ KitokuMap.remove(kitokuFsMapInst, kitokuFsEhouNextLabel); kitokuFsEhouNextLabel=null; }
 
-  if(!isEhouShowOn() || !kitokuMapCenter) {
-    updateEhouLabel();
-    return;
-  }
+  if(!kitokuMapCenter) { updateEhouLabel(); return; }
   const d=state.date;
-  const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
   const {lat,lng}=kitokuMapCenter;
-  // 恵方ラインの長さ（モード連動）
   const dist = (kitokuMapMode==='travel'||kitokuMapMode==='move') ? 20000000 : 80000;
 
-  // 通常地図に描画
-  if(kitokuMapInst){
-    const path=gcPath(lat,lng,ehou.deg,dist,48);
-    kitokuEhouLine=KitokuMap.addLine(kitokuMapInst, path.map(p=>({lat:p[0],lng:p[1]})),
-      {color:'#d4a028',weight:3.5,opacity:0.9});
-    const lp=gcDestination(lat,lng,ehou.deg, Math.min(dist*0.25, 50000));
-    const ehouLabelHtml=`<div style="background:#d4a028;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3);">⛩️ ${ehou.year}年の恵方</div>`;
-    kitokuEhouLabel=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lp[0],lng:lp[1]}, ehouLabelHtml,
-      {w:60,h:20,anchorX:30,anchorY:10,interactive:false});
+  // ── 今年の恵方ライン ──
+  if(isEhouShowOn()){
+    const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
+    if(kitokuMapInst){
+      const path=gcPath(lat,lng,ehou.deg,dist,48);
+      kitokuEhouLine=KitokuMap.addLine(kitokuMapInst, path.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#d4a028',weight:3.5,opacity:0.9});
+      const lp=gcDestination(lat,lng,ehou.deg, Math.min(dist*0.25, 50000));
+      const ehouLabelHtml=`<div style="background:#d4a028;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3);">⛩️ ${ehou.year}年の恵方</div>`;
+      kitokuEhouLabel=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lp[0],lng:lp[1]}, ehouLabelHtml,
+        {w:60,h:20,anchorX:30,anchorY:10,interactive:false});
+    }
+    if(kitokuFsMapInst && document.getElementById('kitokuMapFullscreenModal').style.display==='block'){
+      const fsDist=(kitokuMapMode==='travel'||kitokuMapMode==='move')?20000000:120000;
+      const path2=gcPath(lat,lng,ehou.deg,fsDist,48);
+      kitokuFsEhouLine=KitokuMap.addLine(kitokuFsMapInst, path2.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#d4a028',weight:4,opacity:0.9});
+      const lp2=gcDestination(lat,lng,ehou.deg,Math.min(fsDist*0.25,80000));
+      const fsEhouLabelHtml=`<div style="background:#d4a028;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:11px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.4);">⛩️ ${ehou.year}年の恵方</div>`;
+      kitokuFsEhouLabel=KitokuMap.addHtmlMarker(kitokuFsMapInst, {lat:lp2[0],lng:lp2[1]}, fsEhouLabelHtml,
+        {w:70,h:22,anchorX:35,anchorY:11,interactive:false});
+    }
   }
-  // 全画面に描画
-  if(kitokuFsMapInst && document.getElementById('kitokuMapFullscreenModal').style.display==='block'){
-    const fsDist=(kitokuMapMode==='travel'||kitokuMapMode==='move')?20000000:120000;
-    const path2=gcPath(lat,lng,ehou.deg,fsDist,48);
-    kitokuFsEhouLine=KitokuMap.addLine(kitokuFsMapInst, path2.map(p=>({lat:p[0],lng:p[1]})),
-      {color:'#d4a028',weight:4,opacity:0.9});
-    const lp2=gcDestination(lat,lng,ehou.deg,Math.min(fsDist*0.25,80000));
-    const fsEhouLabelHtml=`<div style="background:#d4a028;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:11px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.4);">⛩️ ${ehou.year}年の恵方</div>`;
-    kitokuFsEhouLabel=KitokuMap.addHtmlMarker(kitokuFsMapInst, {lat:lp2[0],lng:lp2[1]}, fsEhouLabelHtml,
-      {w:70,h:22,anchorX:35,anchorY:11,interactive:false});
+
+  // ── 来年の恵方ライン ──
+  if(isEhouNextShowOn()){
+    // 来年の恵方：今年の立春後なら +1年、立春前なら今年が来年扱いなので +1年
+    const cy=d.getFullYear();
+    const cm=d.getMonth()+1;
+    const cd=d.getDate();
+    // adjYearは立春基準の今年→それに+1して来年の恵方を取得
+    const adjYear=(cm===1||(cm===2&&cd<4))?cy-1:cy;
+    const nextEhouYear=adjYear+1;
+    const nextK=((nextEhouYear%10)+10)%10;
+    const EHOU_TABLE={
+      4:{deg:75,kan:'甲',label:'東微北（およそ東北東）'},
+      9:{deg:75,kan:'甲',label:'東微北（およそ東北東）'},
+      5:{deg:255,kan:'庚',label:'西微南（およそ西南西）'},
+      0:{deg:255,kan:'庚',label:'西微南（およそ西南西）'},
+      6:{deg:165,kan:'丙',label:'南微東（およそ南南東）'},
+      1:{deg:165,kan:'丙',label:'南微東（およそ南南東）'},
+      8:{deg:165,kan:'丙',label:'南微東（およそ南南東）'},
+      3:{deg:165,kan:'丙',label:'南微東（およそ南南東）'},
+      7:{deg:345,kan:'壬',label:'北微西（およそ北北西）'},
+      2:{deg:345,kan:'壬',label:'北微西（およそ北北西）'}
+    };
+    const nextEhou=Object.assign({year:nextEhouYear}, EHOU_TABLE[nextK]);
+    const nextDist=(kitokuMapMode==='travel'||kitokuMapMode==='move')?20000000:80000;
+    if(kitokuMapInst){
+      const path=gcPath(lat,lng,nextEhou.deg,nextDist,48);
+      kitokuEhouNextLine=KitokuMap.addLine(kitokuMapInst, path.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#b8900a',weight:2.5,opacity:0.6,dashArray:'8,6'});
+      const lp=gcDestination(lat,lng,nextEhou.deg, Math.min(nextDist*0.25, 50000));
+      const nextLabelHtml=`<div style="background:#b8900a;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3);opacity:.85;">⛩️ ${nextEhou.year}年の恵方</div>`;
+      kitokuEhouNextLabel=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lp[0],lng:lp[1]}, nextLabelHtml,
+        {w:60,h:20,anchorX:30,anchorY:10,interactive:false});
+    }
+    if(kitokuFsMapInst && document.getElementById('kitokuMapFullscreenModal').style.display==='block'){
+      const fsDist=(kitokuMapMode==='travel'||kitokuMapMode==='move')?20000000:120000;
+      const path2=gcPath(lat,lng,nextEhou.deg,fsDist,48);
+      kitokuFsEhouNextLine=KitokuMap.addLine(kitokuFsMapInst, path2.map(p=>({lat:p[0],lng:p[1]})),
+        {color:'#b8900a',weight:3,opacity:0.6,dashArray:'10,7'});
+      const lp2=gcDestination(lat,lng,nextEhou.deg,Math.min(fsDist*0.25,80000));
+      const fsNextLabelHtml=`<div style="background:#b8900a;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:11px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.4);opacity:.85;">⛩️ ${nextEhou.year}年の恵方</div>`;
+      kitokuFsEhouNextLabel=KitokuMap.addHtmlMarker(kitokuFsMapInst, {lat:lp2[0],lng:lp2[1]}, fsNextLabelHtml,
+        {w:70,h:22,anchorX:35,anchorY:11,interactive:false});
+    }
   }
+
   updateEhouLabel();
 }
 // 恵方トグルの説明ラベルを更新
 function updateEhouLabel(){
   const el=document.getElementById('ehouInfoLabel');
-  if(!el) return;
-  const d=state.date;
-  const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
-  if(isEhouShowOn()){
-    el.innerHTML=`<strong style="color:#a87b1a;">${ehou.year}年の恵方＝${ehou.kan}（${ehou.label}）</strong>`;
-  } else {
-    el.textContent='今年の恵方を金色のラインで表示';
+  if(el){
+    const d=state.date;
+    const ehou=getEhouForYear(d.getFullYear(), d.getMonth()+1, d.getDate());
+    if(isEhouShowOn()){
+      el.innerHTML=`<strong style="color:#a87b1a;">${ehou.year}年の恵方＝${ehou.kan}（${ehou.label}）</strong>`;
+    } else {
+      el.textContent='今年の恵方を金色のラインで表示';
+    }
+  }
+  const el2=document.getElementById('ehouNextInfoLabel');
+  if(el2){
+    const d=state.date;
+    const cy=d.getFullYear(); const cm=d.getMonth()+1; const cd=d.getDate();
+    const adjYear=(cm===1||(cm===2&&cd<4))?cy-1:cy;
+    const nextYear=adjYear+1;
+    const nextK=((nextYear%10)+10)%10;
+    const EHOU_TABLE={4:{kan:'甲',label:'東微北'},9:{kan:'甲',label:'東微北'},5:{kan:'庚',label:'西微南'},0:{kan:'庚',label:'西微南'},6:{kan:'丙',label:'南微東'},1:{kan:'丙',label:'南微東'},8:{kan:'丙',label:'南微東'},3:{kan:'丙',label:'南微東'},7:{kan:'壬',label:'北微西'},2:{kan:'壬',label:'北微西'}};
+    const ne=EHOU_TABLE[nextK];
+    if(isEhouNextShowOn()){
+      el2.innerHTML=`<strong style="color:#a87b1a;">${nextYear}年の恵方＝${ne.kan}（${ne.label}）</strong>`;
+    } else {
+      el2.textContent='来年の恵方を薄い金色（破線）で表示';
+    }
   }
 }
 
