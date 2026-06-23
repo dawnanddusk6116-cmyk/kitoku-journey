@@ -163,6 +163,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="section">
     <div class="sec-label">✦ 今日の色</div>
     <div class="card">
+      <div id="colorPrescReason" style="font-size:.62rem;color:var(--gold,#c4a043);background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:7px;padding:7px 10px;margin-bottom:10px;line-height:1.7;">—</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">シーンを選ぶと、色の使い方が変わります</div>
       <div class="color-scene-tabs">
         <button class="color-scene-tab active" data-scene="朝の準備" onclick="selectColorScene(this)">🌅 朝の準備</button>
@@ -365,10 +366,25 @@ const NICHIBAN_ANCHORS={
 function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS[y];if(!a)return null;const useY=t<=a.yoto.endDate;const anc=useY?a.yoto:a.into;const diff=Math.round((t-anc.ref)/86400000);const stem=((anc.stem+diff)%10+10)%10;const branch=((anc.branch+diff)%12+12)%12;const star=useY?(((anc.star-1+diff)%9)+9)%9+1:(((anc.star-1-diff)%9)+9)%9+1;return{stem,branch,star};}
 function getDayKanshi(y,m,d){const dd=_getDayData(y,m,d);if(!dd){const di=dIdx(y,m,d);return{kan:GAN[di%10],shi:ZHI[di%12]};}return{kan:KAN[dd.stem],shi:SHI[dd.branch]};}
 
+// ── 最大吉方（間の星）算出 ──────────────────────────────
+const GOGYO_OF_STAR={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+const STARS_OF_GOGYO={'水':[1],'木':[3,4],'火':[9],'土':[2,5,8],'金':[6,7]};
+const OYA_GOGYO={'水':'金','木':'水','火':'木','土':'火','金':'土'};
+const KO_GOGYO={'水':'木','木':'火','火':'土','土':'金','金':'水'};
+function sojoSet_t(star){const g=GOGYO_OF_STAR[star];const s=new Set();(STARS_OF_GOGYO[g]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[OYA_GOGYO[g]]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[KO_GOGYO[g]]||[]).forEach(x=>s.add(x));return s;}
+function getSaidaiKichi_t(h,t){if(!h)return[];if(!t)t=h;const sh=sojoSet_t(h),st=sojoSet_t(t);const c=[...sh].filter(s=>st.has(s));return c.filter(s=>s!==h&&s!==t).filter(s=>s!==5).sort((a,b)=>a-b);}
+
+// 今日の処方星（本命星×日盤中宮の最大吉方。なければ日盤中宮星を使用）
+function getTodayPrescStar(honmei, dayStar){
+  const bridge=getSaidaiKichi_t(honmei, dayStar);
+  if(bridge.length>0) return bridge[0]; // 最初の間の星
+  return dayStar; // 間の星がなければ日盤中宮
+}
+
 // ============================================================
 // アプリ状態
 // ============================================================
-let gStar={honmei:6,tsukimei:1,honmeiNachin:'天河水',tsukimeiNachin:'天河水',dayNachin:'大駅土'};
+let gStar={honmei:6,tsukimei:1,honmeiNachin:'天河水',tsukimeiNachin:'天河水',dayNachin:'大駅土',dayStar:7,prescStar:7};
 let curColorScene='朝の準備';
 let curScene='朝の準備';
 
@@ -406,12 +422,19 @@ function init(){
 
   gStar={honmei:h,tsukimei:tFK,honmeiNachin:yNac,tsukimeiNachin:mNac,dayNachin:dNac};
 
+  // 日盤中宮星と今日の処方星を計算
+  const dayData=_getDayData(ty,tm,td);
+  const dayStar=dayData?dayData.star:h;
+  const prescStar=getTodayPrescStar(h,dayStar);
+  gStar.dayStar=dayStar;
+  gStar.prescStar=prescStar;
+
   document.getElementById('mainContent').style.display='block';
 
-  // 各セクション描画
+  // 各セクション描画（処方星ベース）
   drawKotoba(dks.kan,dks.shi,h,ty,tm,td);
-  drawColor(h);
-  drawKeyword(h,tFK);
+  drawColor(prescStar);
+  drawKeyword(prescStar,tFK);
   // 初期シーン（朝の準備）の香りを自動表示
   try{fetchScent();}catch(e){console.warn('scent render skipped once',e);}
   setTimeout(ensureScentRendered,80);
@@ -429,7 +452,11 @@ function ensureScentRendered(){
 
 // ① 今日の一言
 function drawKotoba(kan,shi,honmei,ty,tm,td){
-  const s=STAR_DATA[honmei]||{};
+  const dayData=_getDayData(ty,tm,td);
+  const dayStar=dayData?dayData.star:honmei;
+  const prescStar=gStar.prescStar||honmei;
+  const sDay=STAR_DATA[dayStar]||{};
+  const sPresc=STAR_DATA[prescStar]||{};
   const elemMsgs={
     水:'流れるように、しなやかに。今日は柔軟さが最大の武器です。',
     木:'新しい芽が出る日。一歩踏み出すことを恐れないで。',
@@ -437,8 +464,9 @@ function drawKotoba(kan,shi,honmei,ty,tm,td){
     土:'大地のように静かに、しかし確実に積み上げる日です。',
     金:'天命の輝きを発揮する日。高い視点で物事を見渡して。'
   };
+  const dayMsg=elemMsgs[sDay.elem]||'今日も一歩一歩、着実に。';
   document.getElementById('todayKotoba').textContent=
-    `今日は${kan}${shi}の日。${s.elem||''}の気が満ちています。\n${elemMsgs[s.elem]||'今日も一歩一歩、着実に。'}`;
+    `今日は${kan}${shi}の日。${sDay.j}の気が流れています。\nあなたには${sPresc.j}の力が共鳴する日。${dayMsg}`;
 }
 
 // ② 今日の色
@@ -446,7 +474,7 @@ function selectColorScene(btn){
   document.querySelectorAll('.color-scene-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   curColorScene=btn.dataset.scene;
-  drawColor(gStar.honmei);
+  drawColor(gStar.prescStar);
 }
 
 function buildColorSceneGuide(s){
@@ -494,10 +522,21 @@ function buildColorSceneGuide(s){
   return guides[curColorScene]||guides['朝の準備'];
 }
 
-function drawColor(honmei){
-  const s=STAR_DATA[honmei]||{};
+function drawColor(prescStar){
+  const s=STAR_DATA[prescStar]||{};
   const cols=s.colors||['#888'];
   const guide=buildColorSceneGuide(s);
+  // 処方理由の説明
+  const reasonEl=document.getElementById('colorPrescReason');
+  if(reasonEl){
+    const dayS=STAR_DATA[gStar.dayStar]||{};
+    const honS=STAR_DATA[gStar.honmei]||{};
+    if(gStar.dayStar===prescStar){
+      reasonEl.textContent=`今日は${dayS.j}の日。あなた（${honS.j}）と今日の気を繋ぐ色として、${s.colorName}を使います。`;
+    } else {
+      reasonEl.textContent=`あなた（${honS.j}）× 今日（${dayS.j}）の最大吉方は${s.j}。その色「${s.colorName}」が今日のあなたの処方色です。`;
+    }
+  }
   // スウォッチ（グラデーション）
   const grad=`linear-gradient(135deg, ${cols.join(', ')})`;
   const sw=document.getElementById('colorSwatch');
@@ -538,7 +577,7 @@ async function fetchScent(){
 
   if(USE_API){
     // ── 将来のAPI切替用（USE_API=trueにするだけで動く）──
-    const s=STAR_DATA[gStar.honmei]||{};
+    const s=STAR_DATA[gStar.prescStar||gStar.honmei]||{};
     result.innerHTML='<div class="scent-loading">✨ あなた専用の香りを選んでいます…</div>';
     try{
       const res=await fetch('/api/scent',{
@@ -563,7 +602,7 @@ async function fetchScent(){
   // ── 事前データから表示（現在の実装）──
   result.innerHTML='<div class="scent-loading">✨ 香りを選んでいます…</div>';
   setTimeout(()=>{
-    const starData=SCENT_DATA[gStar.honmei];
+    const starData=SCENT_DATA[gStar.prescStar||gStar.honmei];
     if(!starData){result.innerHTML='<div class="scent-loading">データを取得できませんでした</div>';return;}
     const d=starData[curScene];
     if(!d){result.innerHTML='<div class="scent-loading">データを取得できませんでした</div>';return;}
@@ -624,7 +663,7 @@ function renderScent(d){
     </div>`;
 
   window._scentData={
-    starName:STAR_DATA[gStar.honmei]?.j||'',
+    starName:STAR_DATA[gStar.prescStar||gStar.honmei]?.j||'',
     nachinName:gStar.honmeiNachin,
     sceneName:curScene,
     scentName:d.name||'',
@@ -655,7 +694,7 @@ function setTheme(t){
   document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);
   try{localStorage.setItem('kitoku-theme',t);}catch(e){}
   ['dark','light'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===t);});
-  if(document.getElementById('colorSwatch'))drawColor(gStar.honmei);
+  if(document.getElementById('colorSwatch'))drawColor(gStar.prescStar||gStar.honmei);
 }
 function setFontSize(s){
   const m={s:'15px',m:'17px',l:'19px'};
