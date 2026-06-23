@@ -579,22 +579,27 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 /* ── 方位盤タップヒント ── */
 .ban-tap-hint{
-  margin:8px auto 10px;
-  padding:7px 12px;
-  max-width:360px;
-  border:1px solid rgba(196,160,67,.28);
+  margin:10px auto 12px;
+  padding:9px 14px;
+  max-width:390px;
+  border:1.5px solid rgba(196,160,67,.45);
   border-radius:999px;
-  background:rgba(196,160,67,.07);
-  color:var(--mist);
-  font-size:.64rem;
+  background:linear-gradient(135deg,rgba(196,160,67,.16),rgba(196,160,67,.07));
+  color:var(--goldlt);
+  font-size:.7rem;
+  font-weight:700;
   line-height:1.6;
   text-align:center;
   letter-spacing:.04em;
+  box-shadow:0 8px 18px rgba(40,25,5,.08);
+}
+.ban-tap-hint::before{
+  content:'👆 ';
 }
 [data-theme="light"] .ban-tap-hint{
-  background:rgba(120,90,20,.06);
-  border-color:rgba(120,90,20,.22);
-  color:rgba(65,45,15,.72);
+  background:linear-gradient(135deg,rgba(140,105,30,.13),rgba(255,250,238,.78));
+  border-color:rgba(140,105,30,.36);
+  color:rgba(70,45,10,.86);
 }
 
 /* ── 盤面ナビゲーション ── */
@@ -1760,20 +1765,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <!-- 流派注意 -->
   <div class="ryuha-note">
     ⚠️ 気学には流派により計算方法・吉凶の優先順位が異なります。他のアプリと比較しながら、根拠をご自身で判断する材料にしてください。KITOKUは東洋の叡智とY理論に基づく独自解釈です。
-  </div>
-
-  <!-- 吉方リスト（クリックでポップアップ） -->
-  <div class="kichi-section-title">行くべき方向</div>
-  <div class="kichi-list" id="kichiList" style="margin:0 16px;overflow:hidden;"></div>
-
-  <!-- 凶方（折りたたみ） -->
-  <div class="kyo-list">
-    <div class="kyo-header" onclick="toggleKyo()">
-      <span>🚦</span>
-      <span style="letter-spacing:.1em;">注意が必要な方向</span>
-      <span id="kyoArrow" style="margin-left:auto;font-size:.8rem;">▾</span>
-    </div>
-    <div class="kyo-body" id="kyoBody"></div>
   </div>
 
   <!-- 土用アラート -->
@@ -3688,6 +3679,7 @@ function renderBan(type){
 
 function renderKichiList(dirData,p2s){
   const list=document.getElementById('kichiList');
+  if(!list)return;
   // 吉方を rank降順でソート
   const kichis=ALL8
     .filter(d=>dirData[d].rank>=2&&!dirData[d].isKyo)
@@ -3747,6 +3739,16 @@ function renderKichiList(dirData,p2s){
 
 function renderKyoList(kyouItems,type){
   const body=document.getElementById('kyoBody');
+  if(!body){
+    if(type==='day'){
+      var doyo=document.getElementById('doyoAlert');
+      if(doyo){
+        var show=gState.seasonAlert!==false&&gState.ty&&gState.tm&&gState.td&&isDoyoPeriod(gState.ty,gState.tm,gState.td);
+        doyo.style.display=show?'block':'none';
+      }
+    }
+    return;
+  }
   // 帰着日設定がOFFの場合、日盤の凶に「年盤・月盤が吉なら無視OK」の注釈を追加
   const showKichakuNote=(!gState.kichakuWarn)&&(type==='day');
   if(kyouItems.length===0){
@@ -3779,6 +3781,7 @@ function renderKyoList(kyouItems,type){
 function toggleKyo(){
   const body=document.getElementById('kyoBody');
   const arrow=document.getElementById('kyoArrow');
+  if(!body||!arrow)return;
   body.classList.toggle('open');
   arrow.textContent=body.classList.contains('open')?'▴':'▾';
 }
