@@ -306,8 +306,9 @@ const FEATURE_GROUPS={
 };
 const FEATURE_GROUP_ORDER=['direction','self','life','home','premium','ai'];
 const FEATURES=[
-  {id:'direction',group:'direction',icon:'🧭',name:'日盤吉方',desc:'今日の吉凶方位を確認する。毎日の基本。',href:'direction_v2.html',badge:null},
+  {id:'direction',group:'direction',icon:'🧭',name:'方位盤',desc:'日盤・月盤・年盤・吉凶判定。',href:'direction_v2.html',badge:null},
   {id:'travel',group:'direction',icon:'✈️',name:'旅行吉方位ナビ',desc:'旅行日程・目的地を選ぶ。',href:'travel.html',badge:null},
+  {id:'move',group:'direction',icon:'🏡',name:'引越しナビ',desc:'年盤・月盤で引越し先を選ぶ。',href:'move.html',badge:null},
   {id:'pilgrimage',group:'direction',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
 
   {id:'kyusei',group:'self',icon:'⭐',name:'九星・本命星',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
@@ -315,13 +316,13 @@ const FEATURES=[
   {id:'scent',group:'self',icon:'✤',name:'香りAIで整える',desc:'シーン・相手・手持ち香水から、自分に合う香りを探す。',href:'scent.html',badge:null},
   {id:'astro64',group:'self',icon:'🔭',name:'私の設計図を重ねて読む',desc:'太陽・月・金星から、自分の本質や惹かれるものを読む。',href:'astro64.html',badge:null},
 
-  {id:'life',group:'life',icon:'📝',name:'姓名鑑定',desc:'名前・屋号・SNS名の画数と五行を確認。',href:'life.html',badge:null},
+  {id:'life',group:'life',icon:'📝',name:'姓名鑑定',desc:'画数・五行・陰陽・響きを見る。',href:'life.html',badge:null},
   {id:'relations',group:'life',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
   {id:'business',group:'life',icon:'💼',name:'ビジネス鑑定',desc:'採用・商談・社名鑑定。仕事に使う。',href:'business.html',badge:null},
 
   {id:'kaso',group:'home',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
 
-  {id:'premium_map',group:'premium',icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しの方位を地図で確認。',href:'premium.html#mapPanel',badge:'有料',locked:true},
+  {id:'premium_map',group:'premium',icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しを地図で確認。',href:'premium.html#mapPanel',badge:'有料',locked:true},
   {id:'premium_triple',group:'premium',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。',href:'premium.html#tripleBoardPanel',badge:'有料',locked:true},
   {id:'premium_senro',group:'premium',icon:'🚃',name:'線路の日',desc:'吉日・契約日・出発日を探す。',href:'premium.html#senroPanel',badge:'有料',locked:true},
   {id:'premium_ai',group:'premium',icon:'✨',name:'KIGAKU先生AI',desc:'結果を相談文にして深掘りする。',href:'premium.html#aiChatPanel',badge:'有料',locked:true},
