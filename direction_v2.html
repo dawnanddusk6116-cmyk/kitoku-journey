@@ -1760,12 +1760,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     🌿 <strong>土用期間中です。</strong>月建方向への旅行は注意。引越し（定住）は問題ありません。
   </div>
 
-  <!-- 今日の処方箋 -->
-  <div style="margin:16px 16px 0;">
-    <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ 今日の処方箋</div>
-    <div id="rxCard" style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;"></div>
-  </div>
-
   <!-- 線路の日（プレミアム） -->
   <div style="margin:14px 16px 0;">
     <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ 今月の線路の日</div>
@@ -1787,16 +1781,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
           ※ KITOKUの正式鑑定基準に基づく計算です。流派により異なります。
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- AIに相談する -->
-  <div style="margin:14px 16px 0;">
-    <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ AIに相談する</div>
-    <div style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;">
-      <div style="font-size:.72rem;color:var(--mist);margin-bottom:10px;">🤖 AI × KITOKU — スマホのAIに話しかけてみましょう</div>
-      <div id="aiPromptBox" style="background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.9;margin-bottom:10px;"></div>
-      <button onclick="copyAIPrompt()" style="width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:8px;padding:10px;font-size:.75rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;">📋 コピーして使う</button>
     </div>
   </div>
 
@@ -3995,7 +3979,8 @@ function generateAIPrompt(dirData,p2s,type){
   }else{
     prompt=`今日は${H.j}の私に特別な吉方がありません。心身を整えるために、今日おすすめの飲み物・食べ物・過ごし方を${H.elem}の五行エネルギーに合わせて提案してください。`;
   }
-  document.getElementById('aiPromptBox').textContent=prompt;
+  const aiPromptBox = document.getElementById('aiPromptBox');
+  if(aiPromptBox) aiPromptBox.textContent=prompt;
   gState.currentPrompt=prompt;
 }
 
