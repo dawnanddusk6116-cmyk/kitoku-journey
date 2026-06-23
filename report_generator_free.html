@@ -214,7 +214,7 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 <!-- ヘッダー -->
 <div class="hdr no-print">
   <div class="hdr-logo">✦ KITOKU</div>
-  <button class="back-btn" onclick="window.location.href='top.html'">← TOP</button>
+  <button class="back-btn" onclick="smartBack()">← もどる</button>
 </div>
 
 <!-- ===== 入力画面 s0 ===== -->
@@ -1755,5 +1755,21 @@ function buildReportHTML(d){
   return html;
 }
 </script>
+
+<script>
+function smartBack(){
+  const ref = document.referrer || '';
+  let sameOrigin = false;
+  try {
+    sameOrigin = !!ref && new URL(ref, location.href).origin === location.origin;
+  } catch(e) {}
+  if (sameOrigin && history.length > 1) {
+    history.back();
+    return;
+  }
+  location.href = 'top.html';
+}
+</script>
+
 </body>
 </html>

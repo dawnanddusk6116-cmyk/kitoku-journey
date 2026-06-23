@@ -327,7 +327,7 @@ const FEATURES=[
   {id:'premium_senro',group:'premium',icon:'🚃',name:'線路の日',desc:'吉日・契約日・出発日を探す。',href:'premium.html#senroPanel',badge:'有料',locked:true},
   {id:'premium_ai',group:'premium',icon:'✨',name:'KIGAKU先生AI',desc:'結果を相談文にして深掘りする。',href:'premium.html#aiChatPanel',badge:'有料',locked:true},
 
-  {id:'free_ai',group:'ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'index.html?direct=1',badge:'無料'},
+  {id:'free_ai',group:'ai',icon:'💬',name:'無料AIに相談する',desc:'星情報をコピーしてChatGPT・ClaudeなどのAIに貼り付けて相談できます。',href:'ai.html',badge:'無料'},
   {id:'english',group:'ai',icon:'EN',name:'JAPAN OS — English Preview',desc:'英語でKITOKUを体験する入口。',href:'en/index.html',badge:null},
 ];
 
@@ -532,7 +532,7 @@ function renderMyPage(){
   }else{
     const chip=document.createElement('div');
     chip.className='today-star-chip';
-    chip.innerHTML='<a href="index.html?direct=1" style="color:var(--goldlt);text-decoration:none;">生年月日を設定する →</a>';
+    chip.innerHTML='<a href="index.html?direct=1&home=1" style="color:var(--goldlt);text-decoration:none;">生年月日を設定する →</a>';
     starsEl.appendChild(chip);
   }
 
