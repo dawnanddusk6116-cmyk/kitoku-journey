@@ -1419,16 +1419,9 @@ body.theme-night .philosophy-list{
         <div class="selector-en">KITOKU @ JOURNEY</div>
         <div class="selector-title">今日の羅針盤を開く</div>
         <div class="selector-desc">方位・九星・香り・AI相談で、今日の動き方を整えます。</div>
-        <div style="font-size:.68rem;color:var(--gold);margin-top:6px;font-weight:600;line-height:2;">
-          ⊙ 今日の方位盤を見る →<br>
-          ⊙ 九星・納音で自分を知る →<br>
-          ⊙ 色と香り × AI で今日を整える →
+        <div style="font-size:.68rem;color:var(--gold);margin-top:6px;font-weight:600;line-height:1.9;">
+          まず今日の盤面を開き、必要な時だけ詳しい機能へ進みます。
         </div>
-      </div>
-      <div class="selector-side" aria-hidden="true">
-        <div class="selector-chip">今日</div>
-        <div class="selector-chip">自分</div>
-        <div class="selector-chip">AI相談</div>
       </div>
       <div class="selector-arrow">›</div>
     </div>
@@ -1755,14 +1748,21 @@ body.theme-night .philosophy-list{
 
   <!-- AI・星読み（ブルー） -->
   <div class="section-block tone-self" id="sec2">
-    <a class="app-card-wide tone-self" href="ai.html">
-      <div class="card-icon">🤖</div>
-      <div class="card-info">
-        <div class="card-num">⑤ 迷った時の相談</div>
-        <div class="card-title">気学先生に聞く</div>
-        <div class="card-desc">結果をAIに渡して、悩み・問い・次の一手を整理する。</div>
+    <div class="cards-label tone-self" style="margin-top:16px;">
+      <div class="cards-label-num">2</div>
+      <div class="cards-label-text">
+        <div class="cards-label-title">さらに深く見る</div>
+        <div class="cards-label-hint">必要な時だけ、AI相談や星読みで掘り下げます</div>
       </div>
-      <div class="app-card-wide-arrow">›</div>
+    </div>
+    <a class="app-card-wide tone-self" href="javascript:void(0)" onclick="event.preventDefault();alert('KIGAKU先生AIはプレミアム機能です。課金開始後に使えるようになります。');">
+      <div class="card-icon">✨</div>
+      <div class="card-info">
+        <div class="card-num">⑤ プレミアム相談</div>
+        <div class="card-title">KIGAKU先生AI</div>
+        <div class="card-desc">結果を相談文にして、悩み・問い・次の一手を深掘りします。現在は準備中です。</div>
+      </div>
+      <div class="app-card-wide-arrow" style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;">準備中</div>
     </a>
     <a class="app-card-wide tone-self" href="astro64.html">
       <div class="card-icon">🔭</div>

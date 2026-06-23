@@ -132,6 +132,10 @@ body{
 .entry-card.e-academy .entry-title{color:#4a2a78;}
 
 .entry-desc{font-size:.65rem;color:var(--mist);line-height:1.75;}
+.entry-points{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+.entry-points span{display:inline-flex;align-items:center;justify-content:center;min-height:22px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid rgba(100,80,40,.14);font-size:.55rem;font-weight:800;letter-spacing:.06em;color:var(--goldlt);}
+.entry-card.e-my .entry-points span{color:#1a3c70;border-color:rgba(42,106,176,.18);background:rgba(42,106,176,.06);}
+.entry-card.e-academy .entry-points span{color:#4a2a78;border-color:rgba(123,94,167,.2);background:rgba(123,94,167,.06);}
 .entry-arrow{font-size:.9rem;color:rgba(100,80,40,.3);flex-shrink:0;}
 
 /* 今日の日付バッジ */
@@ -248,12 +252,13 @@ body{
   <div class="entry-label">入口を選ぶ</div>
 
   <!-- ① 今日の羅針盤 -->
-  <a class="entry-card e-today" href="index.html?direct=1">
+  <a class="entry-card e-today" href="index.html?direct=1&home=1">
     <div class="entry-icon">🧭</div>
     <div class="entry-info">
       <div class="today-badge" id="todayBadge">今日を整える</div>
       <div class="entry-title">今日の羅針盤</div>
-      <div class="entry-desc">今日の方位・色・香り・姓名・AI相談。<br>毎日ここから始める人向け。</div>
+      <div class="entry-desc">今日の方位・色・香り・姓名を見て、今日の動き方を整えます。</div>
+      <div class="entry-points"><span>今日</span><span>方位</span><span>整える</span></div>
     </div>
     <div class="entry-arrow">›</div>
   </a>
@@ -264,7 +269,8 @@ body{
     <div class="entry-info">
       <div class="my-badge">自分専用<span class="new-badge">NEW</span></div>
       <div class="entry-title">自分専用KITOKUを作る</div>
-      <div class="entry-desc">よく使う機能だけを選んで、あなただけの入口を作る。日盤吉方・旅行・聖地巡礼など自由に組み合わせ。</div>
+      <div class="entry-desc">よく使う機能だけを選んで、あなただけの入口を作ります。</div>
+      <div class="entry-points"><span>選ぶ</span><span>保存</span><span>毎日使う</span></div>
     </div>
     <div class="entry-arrow">›</div>
   </a>
@@ -275,7 +281,8 @@ body{
     <div class="entry-info">
       <div class="entry-en">KITOKU ACADEMY</div>
       <div class="entry-title">気学を学ぶ</div>
-      <div class="entry-desc">九星・方位・姓名・家相・納音を基礎から。知識を深めて、判断力を育てる。</div>
+      <div class="entry-desc">九星・方位・姓名・家相・納音を基礎から学ぶ入口です。</div>
+      <div class="entry-points"><span>00</span><span>01</span><span>準備中</span></div>
     </div>
     <div style="font-size:.6rem;padding:3px 10px;border-radius:8px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.3);color:#4a2a78;font-weight:700;flex-shrink:0;">準備中</div>
   </div>
