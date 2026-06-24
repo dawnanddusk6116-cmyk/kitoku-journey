@@ -53,6 +53,33 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .target-box label{display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:5px;}
 .target-box input,.target-box select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.62);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:9px;}
 .target-preview{font-size:.68rem;color:var(--snow);line-height:1.8;background:rgba(255,255,255,.44);border:1px dashed rgba(138,104,32,.3);border-radius:9px;padding:9px;margin-top:8px;}
+
+/* おすすめ4つ + カテゴリアコーディオン */
+.ai-recommend-panel{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(239,248,242,.82));border:1px solid rgba(72,142,94,.26);border-radius:var(--r);padding:14px;box-shadow:0 10px 26px rgba(72,142,94,.06);}
+.ai-recommend-kicker{display:flex;align-items:center;gap:8px;font-size:.66rem;color:#2f7d4c;font-weight:800;letter-spacing:.08em;margin-bottom:5px;}
+.ai-recommend-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
+.ai-recommend-note{font-size:.64rem;color:var(--mist);line-height:1.8;margin-bottom:12px;}
+.ai-recommend-grid{display:grid;gap:8px;}
+.ai-recommend-card{width:100%;appearance:none;text-decoration:none;text-align:left;background:rgba(255,255,255,.78);border:1px solid rgba(72,142,94,.24);border-radius:11px;padding:12px 12px;display:flex;gap:10px;align-items:center;color:inherit;font-family:'Noto Serif JP',serif;cursor:pointer;box-shadow:0 6px 18px rgba(100,80,40,.035);}
+.ai-recommend-card:active{transform:scale(.99);}
+.ai-recommend-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(72,142,94,.1);font-size:1.02rem;flex-shrink:0;}
+.ai-recommend-body{flex:1;min-width:0;}
+.ai-recommend-card-title{font-size:.78rem;color:var(--snow);font-weight:900;margin-bottom:2px;line-height:1.45;}
+.ai-recommend-card-desc{font-size:.6rem;color:var(--mist);line-height:1.65;}
+.ai-recommend-chip{display:inline-flex;align-items:center;border:1px solid rgba(196,160,67,.35);background:rgba(196,160,67,.1);color:var(--goldlt);border-radius:999px;padding:1px 6px;font-size:.52rem;font-weight:800;margin-left:5px;vertical-align:middle;}
+.cat.ai-collapsible{padding-top:10px;}
+.cat.ai-collapsible .cat-label{cursor:pointer;margin-bottom:8px;align-items:center;padding-right:64px;}
+.cat.ai-collapsible .cat-label::after{content:'開く';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.62rem;color:var(--cat-accent);background:rgba(255,255,255,.64);border:1px solid var(--cat-border);border-radius:999px;padding:4px 9px;line-height:1.2;}
+.cat.ai-collapsible.open .cat-label::after{content:'閉じる';}
+.cat.ai-collapsible:not(.open) .prompt-card{display:none;}
+.cat.ai-collapsible.open .prompt-card{display:block;}
+.cat.ai-collapsible.open a.prompt-card{display:block;}
+.prompt-focus{box-shadow:0 0 0 3px rgba(72,142,94,.22),0 12px 26px rgba(72,142,94,.12)!important;border-color:rgba(72,142,94,.55)!important;}
+
+[data-theme="dark"] .ai-recommend-panel{background:linear-gradient(135deg,rgba(63,120,168,.16),rgba(18,21,42,.96));border-color:rgba(131,183,230,.35);}
+[data-theme="dark"] .ai-recommend-card{background:rgba(255,255,255,.055);border-color:rgba(131,183,230,.26);}
+[data-theme="dark"] .cat.ai-collapsible .cat-label::after{background:rgba(18,21,42,.82);}
+
 /* プロンプトカテゴリ */
 .cat{padding:16px 16px 0;}
 .cat-label{font-size:.6rem;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;background:var(--cat-bg,linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.42)));border:1px solid var(--cat-border,rgba(196,160,67,.28));border-radius:12px;padding:11px 12px;position:relative;overflow:hidden;box-shadow:0 8px 22px var(--cat-shadow,rgba(100,80,40,.035));}
@@ -275,8 +302,49 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </div>
 
+
+<section class="ai-recommend-panel" aria-label="まず試してほしいAI相談">
+  <div class="ai-recommend-kicker">まず試してほしい4つ</div>
+  <div class="ai-recommend-title">迷ったら、ここから始めてください</div>
+  <div class="ai-recommend-note">下のカテゴリは見出しだけに整理しています。気になる時だけ開いて、ほかの相談テーマを選べます。</div>
+  <div class="ai-recommend-grid">
+    <button class="ai-recommend-card" type="button" onclick="jumpAiPrompt('左脳マインドマップ')">
+      <span class="ai-recommend-icon">🧠</span>
+      <span class="ai-recommend-body">
+        <span class="ai-recommend-card-title">左脳マインドマップ <span class="ai-recommend-chip">迷ったらここ</span></span>
+        <span class="ai-recommend-card-desc">問い・現状・理想・次の一手まで整理する。</span>
+      </span>
+      <span class="prompt-arrow">›</span>
+    </button>
+    <button class="ai-recommend-card" type="button" onclick="jumpAiPrompt('納音から読み解く魂の本質')">
+      <span class="ai-recommend-icon">🎵</span>
+      <span class="ai-recommend-body">
+        <span class="ai-recommend-card-title">納音から読み解く魂の本質</span>
+        <span class="ai-recommend-card-desc">年・月・日の魂の音色から、本質と才能を読む。</span>
+      </span>
+      <span class="prompt-arrow">›</span>
+    </button>
+    <a class="ai-recommend-card" href="astro64.html">
+      <span class="ai-recommend-icon">🔭</span>
+      <span class="ai-recommend-body">
+        <span class="ai-recommend-card-title">西洋占星術×気学で深く見る</span>
+        <span class="ai-recommend-card-desc">太陽・月・金星と気学で、本音や惹かれるものを見る。</span>
+      </span>
+      <span class="prompt-arrow">›</span>
+    </a>
+    <button class="ai-recommend-card" type="button" onclick="jumpAiPrompt('今後5年ロードマップ')">
+      <span class="ai-recommend-icon">🗺️</span>
+      <span class="ai-recommend-body">
+        <span class="ai-recommend-card-title">今後5年ロードマップ</span>
+        <span class="ai-recommend-card-desc">5年の流れを渡して、動くタイミングを整理する。</span>
+      </span>
+      <span class="prompt-arrow">›</span>
+    </button>
+  </div>
+</section>
+
 <!-- カテゴリ：今日・今この瞬間 -->
-<div class="cat" data-tone="daily">
+<div class="cat ai-collapsible" data-tone="daily">
   <div class="cat-label">
     <div class="cat-number">1</div>
     <div class="cat-label-main">
@@ -352,7 +420,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：自分を知る -->
-<div class="cat" data-tone="self">
+<div class="cat ai-collapsible" data-tone="self">
   <div class="cat-label">
     <div class="cat-number">2</div>
     <div class="cat-label-main">
@@ -420,7 +488,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：人間関係・仕事 -->
-<div class="cat" data-tone="relation">
+<div class="cat ai-collapsible" data-tone="relation">
   <div class="cat-label">
     <div class="cat-number">3</div>
     <div class="cat-label-main">
@@ -467,7 +535,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <!-- カテゴリ：健康・お金・未来 -->
-<div class="cat" data-tone="future">
+<div class="cat ai-collapsible" data-tone="future">
   <div class="cat-label">
     <div class="cat-number">4</div>
     <div class="cat-label-main">
@@ -943,5 +1011,42 @@ function closeSettings(){const p=document.getElementById('settingPanel');if(p)p.
 })();
 
 </script>
+
+<script>
+function initAiPromptAccordions(){
+  document.querySelectorAll('.cat.ai-collapsible .cat-label').forEach(label=>{
+    if(label.dataset.aiAccordionReady === '1') return;
+    label.dataset.aiAccordionReady = '1';
+    label.setAttribute('role','button');
+    label.setAttribute('tabindex','0');
+    const toggle = () => {
+      const cat = label.closest('.cat.ai-collapsible');
+      if(cat) cat.classList.toggle('open');
+    };
+    label.addEventListener('click', toggle);
+    label.addEventListener('keydown', ev => {
+      if(ev.key === 'Enter' || ev.key === ' '){
+        ev.preventDefault();
+        toggle();
+      }
+    });
+  });
+}
+function jumpAiPrompt(title){
+  const titles = Array.from(document.querySelectorAll('.prompt-title'));
+  const targetTitle = titles.find(el => (el.textContent || '').includes(title));
+  if(!targetTitle) return;
+  const card = targetTitle.closest('.prompt-card');
+  const cat = targetTitle.closest('.cat.ai-collapsible');
+  if(cat) cat.classList.add('open');
+  if(card){
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.add('prompt-focus');
+    setTimeout(()=>card.classList.remove('prompt-focus'), 1400);
+  }
+}
+document.addEventListener('DOMContentLoaded', initAiPromptAccordions);
+</script>
+
 </body>
 </html>
