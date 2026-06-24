@@ -57,6 +57,10 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 /* ベース必須バッジ */
 .base-badge{display:inline-block;font-size:.55rem;padding:1px 7px;border-radius:8px;font-weight:700;background:rgba(58,122,78,.12);color:var(--green);border:1px solid rgba(58,122,78,.25);}
 
+/* 無料回数表示 */
+.free-limit-note{margin-top:12px;background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(255,255,255,.72));border:1px solid rgba(58,122,78,.22);border-radius:10px;padding:10px 12px;font-size:.68rem;color:var(--green);line-height:1.8;}
+.free-limit-note [data-free-report-remaining]{font-weight:700;font-size:.82rem;}
+
 /* 生成ボタン */
 .gen-btn{width:100%;background:linear-gradient(135deg,rgba(100,80,40,.2),rgba(100,80,40,.08));border:1.5px solid rgba(100,80,40,.45);border-radius:12px;color:var(--golddk);font-size:.95rem;padding:18px;cursor:pointer;letter-spacing:.2em;font-weight:700;font-family:'Noto Serif JP',serif;margin-top:8px;}
 .gen-btn:disabled{opacity:.5;cursor:not-allowed;}
@@ -273,8 +277,11 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
       <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
         <span style="color:#3a7a4e;">✓</span> 女性：魅力・愛され方・美の処方箋 / 男性：強み・勝負どころ
       </div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--fog);">
-        <span>🔒</span> <span style="text-decoration:line-through;opacity:.6;">未来5年・吉方位・香り・健康・線路の日・引越し（有料プレビューあり）</span>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
+        <span style="color:#3a7a4e;">✓</span> 未来5年・吉方位・香り・健康・線路の日・引越しも表示
+      </div>
+      <div class="free-limit-note">
+        ✦ 無料で1日3回まで診断できます。本日の残り <span data-free-report-remaining>3</span> 回。
       </div>
     </div>
   </div>
@@ -1157,6 +1164,44 @@ function showConfirm(){
   showPage('sConfirm');
 }
 
+// ===== 無料診断の回数制限 =====
+const FREE_REPORT_LIMIT=3;
+const FREE_REPORT_USAGE_KEY='kitoku_free_report_usage_v1';
+function todayUsageKey(){
+  const now=new Date();
+  const y=now.getFullYear();
+  const m=String(now.getMonth()+1).padStart(2,'0');
+  const d=String(now.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+function getFreeReportUsage(){
+  try{
+    const raw=localStorage.getItem(FREE_REPORT_USAGE_KEY);
+    const data=raw?JSON.parse(raw):null;
+    const today=todayUsageKey();
+    if(!data||data.date!==today) return {date:today,count:0};
+    return {date:today,count:Number(data.count)||0};
+  }catch(e){
+    return {date:todayUsageKey(),count:0};
+  }
+}
+function remainingFreeReports(){
+  return Math.max(0,FREE_REPORT_LIMIT-getFreeReportUsage().count);
+}
+function updateFreeReportLimitText(){
+  document.querySelectorAll('[data-free-report-remaining]').forEach(el=>{
+    el.textContent=remainingFreeReports();
+  });
+}
+function markFreeReportUsed(){
+  try{
+    const usage=getFreeReportUsage();
+    localStorage.setItem(FREE_REPORT_USAGE_KEY,JSON.stringify({date:usage.date,count:usage.count+1}));
+  }catch(e){}
+  updateFreeReportLimitText();
+}
+document.addEventListener('DOMContentLoaded',updateFreeReportLimitText);
+
 // ===== レポート生成 =====
 async function generateReport(){
   const sei=document.getElementById('inSei').value.trim();
@@ -1166,6 +1211,11 @@ async function generateReport(){
   const d=parseInt(document.getElementById('inD').value)||0;
   if(!sei||!mei){alert('姓名を入力してください');return;}
   if(!y||!m||!d){alert('生年月日を入力してください');return;}
+  if(remainingFreeReports()<=0){
+    alert('本日の無料診断は3回までです。また明日お試しください。');
+    updateFreeReportLimitText();
+    return;
+  }
 
   showPage('sLoading');
 
@@ -1211,15 +1261,16 @@ async function generateReport(){
   const html=buildReportHTML({
     sei,mei,y,m,d,h,t,k,dok,nac,seiK,meiK,ten,chi,jin,gai,so,nameScore,
     yearData,thisYearPos,thisYearCenter,houiMonths,
-    opts:new Set(['future','houi','scent','health','timing','move']), // FREE版は全オプションをぼかしで表示
+    opts:new Set(['future','houi','scent','health','timing','move']), // FREE版は全オプションを通常表示
     gender:selectedGender,
-    isFreeMode:true
+    isFreeMode:false
   });
 
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   const out=document.getElementById('reportOutput');
   out.style.display='block';
   out.innerHTML=html;
+  markFreeReportUsed();
   document.getElementById('saveBar').classList.add('on');
   window.scrollTo(0,0);
 }
@@ -1278,18 +1329,9 @@ function buildReportHTML(d){
   const fd=FEMALE_DATA[h]||FEMALE_DATA[2];
   const md=MALE_DATA[h]||MALE_DATA[2];
 
-  // ぼかしラッパー関数
+  // 無料版でもすべての項目を表示
   function paidSection(title, desc, content){
-    if(!isFree) return content;
-    return `<div class="paid-section">
-      <div class="paid-blur">${content}</div>
-      <div class="paid-overlay">
-        <div class="paid-badge">🔒 有料オプション</div>
-        <div class="paid-title">${title}</div>
-        <div class="paid-desc">${desc}</div>
-        <button class="paid-btn">✦ 準備中 — まもなく公開</button>
-      </div>
-    </div>`;
+    return content;
   }
   function nextLink(icon,title,desc,href){
     return `<a class="next-link" href="${href}">
@@ -1392,7 +1434,7 @@ function buildReportHTML(d){
     <div class="rs-label">FREE REPORT</div>
     <div class="rs-title">このレポートについて</div>
     <div class="note-box">
-      これは、忙しい方にもKITOKUを短時間で体験していただくための無料パーソナルレポートです。名前と生年月日から、まず知っておきたい自分の星・名前・今年の流れをコンパクトにまとめています。${isFemale?'女性版として、魅力・愛され方・美の処方箋を中心に読み解きます。':'男性版として、強み・勝負どころ・動くタイミングを中心に読み解きます。'}より深い未来年表・吉方位・香り・健康・線路の日などは、次に見るためのプレビューとして表示しています。
+      これは、忙しい方にもKITOKUを短時間で体験していただくための無料パーソナルレポートです。名前と生年月日から、まず知っておきたい自分の星・名前・今年の流れをコンパクトにまとめています。${isFemale?'女性版として、魅力・愛され方・美の処方箋を中心に読み解きます。':'男性版として、強み・勝負どころ・動くタイミングを中心に読み解きます。'}未来年表・吉方位・香り・健康・線路の日なども、この無料レポート内で確認できます。まずは自分を知る入口として、1日3回までお試しください。
     </div>
     <div class="next-links">
       ${nextLink('⭐','もっと詳しく：自分の星を見る','本命星・月命・傾斜・同会・納音を詳しく確認します。','kyusei_v2.html')}
