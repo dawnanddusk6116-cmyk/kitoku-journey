@@ -103,6 +103,10 @@ body[data-theme="dark"] .rs-t{color:#d88;}
 .next-link-title{font-size:.72rem;font-weight:700;color:var(--golddk);}
 .next-link-desc{font-size:.6rem;color:var(--mist);line-height:1.6;margin-top:2px;}
 .next-link-arrow{margin-left:auto;color:var(--fog);}
+.next-link.locked{background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(250,245,236,.86));border-color:rgba(138,104,32,.26);cursor:not-allowed;opacity:.86;}
+.next-link.locked .next-link-title{color:var(--golddk);}
+.next-link.locked .next-link-arrow{font-size:.66rem;color:var(--goldlt);font-weight:700;white-space:nowrap;}
+.premium-chip{display:inline-block;margin-left:6px;padding:1px 7px;border:1px solid rgba(138,104,32,.28);border-radius:999px;font-size:.52rem;color:var(--gold);vertical-align:middle;}
 .footer{text-align:center;font-size:.55rem;color:var(--fog);letter-spacing:.1em;line-height:1.9;margin-top:30px;}
 .hidden{display:none;}
 .pdf-btn{width:100%;margin-top:8px;padding:12px;background:var(--card);border:1px solid rgba(138,104,32,.3);border-radius:10px;color:var(--golddk);font-family:'Noto Serif JP',serif;font-size:.78rem;font-weight:700;cursor:pointer;}
@@ -183,10 +187,10 @@ body[data-theme="dark"] .rs-t{color:#d88;}
       <span><span class="next-link-title">今日・今月の吉方位を見る</span><span class="next-link-desc">この5年を、毎日の吉方取りに落とし込む</span></span>
       <span class="next-link-arrow">›</span>
     </a>
-    <a class="next-link" href="premium.html?from=roadmap">
+    <a class="next-link locked" href="javascript:void(0)" aria-disabled="true" onclick="alert('KIGAKU先生AIはプレミアム機能として準備中です。'); return false;">
       <span class="next-link-icon">✦</span>
-      <span><span class="next-link-title">気学先生に相談する</span><span class="next-link-desc">あなたの5年を、具体的な行動に落として相談できます</span></span>
-      <span class="next-link-arrow">›</span>
+      <span><span class="next-link-title">PREMIUM | KIGAKU先生AI<span class="premium-chip">有料</span></span><span class="next-link-desc">課金開始後に利用できます。5年ロードマップを相談文にして深掘りします。</span></span>
+      <span class="next-link-arrow">準備中</span>
     </a>
     <button class="pdf-btn" onclick="printRoadmap()">🖨 この地図を印刷・PDF保存する</button>
   </div>
