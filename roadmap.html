@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>5年ロードマップ — KITOKU @ JOURNEY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);
+  --gold:#8a6820;--goldlt:#c4a050;--golddk:#5c3e10;
+  --snow:#1c1208;--mist:#4a3820;--fog:#8a7060;
+  --r:14px;
+  --good:#3a7a4e;--steady:#7a6a3a;--warn:#a06a30;--prep:#6a5a8a;--best:#a04848;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:15px;line-height:1.8;min-height:100dvh;}
+body[data-theme="dark"]{
+  --bg:#15110c;--card:#1f1a13;--rim:rgba(196,160,80,.18);
+  --gold:#c4a050;--goldlt:#d8b870;--golddk:#e0c890;
+  --snow:#f0e8da;--mist:#bcaa88;--fog:#8a7860;
+}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(10px);}
+body[data-theme="dark"] .hdr{background:rgba(21,17,12,.95);}
+.hdr-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.25em;color:var(--gold);}
+.back-btn{background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);color:var(--golddk);font-size:.72rem;padding:8px 13px;border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;text-decoration:none;}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 60px;}
+.pg-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.15em;color:var(--golddk);text-align:center;margin-bottom:4px;}
+.pg-sub{font-size:.62rem;letter-spacing:.15em;color:var(--mist);text-align:center;margin-bottom:8px;}
+.pg-lead{font-size:.66rem;color:var(--mist);text-align:center;line-height:1.9;margin-bottom:22px;padding:0 8px;}
+
+/* 入力カード */
+.fc{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.fl{font-size:.68rem;letter-spacing:.12em;color:var(--gold);font-weight:700;display:block;margin-bottom:9px;}
+.frow{display:flex;gap:8px;}
+.fi{width:100%;background:#faf8f4;border:1px solid rgba(100,80,40,.2);border-radius:8px;padding:11px 13px;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.9rem;outline:none;text-align:center;}
+body[data-theme="dark"] .fi{background:#15110c;}
+.fi:focus{border-color:var(--gold);}
+.gender-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.gender-btn{background:var(--card);border:1.5px solid var(--rim);border-radius:8px;padding:11px;text-align:center;cursor:pointer;font-size:.8rem;color:var(--mist);}
+.gender-btn.on{background:rgba(138,104,32,.1);border-color:var(--gold);color:var(--golddk);font-weight:700;}
+.go-btn{width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,var(--gold),var(--goldlt));border:none;border-radius:10px;color:#fff;font-family:'Noto Serif JP',serif;font-size:.95rem;font-weight:700;letter-spacing:.08em;cursor:pointer;}
+.go-btn:active{opacity:.85;}
+
+/* 星情報バー */
+.star-bar{background:rgba(138,104,32,.06);border:1px solid rgba(138,104,32,.18);border-radius:10px;padding:11px 14px;margin-bottom:18px;font-size:.66rem;color:var(--mist);text-align:center;line-height:1.8;}
+.star-bar strong{color:var(--goldlt);font-weight:700;}
+
+/* タイムライン */
+.tl-title{font-size:.7rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:7px;}
+.tl-title::before{content:'';flex:0 0 18px;height:1px;background:var(--gold);}
+.year-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:0;margin-bottom:12px;overflow:hidden;position:relative;}
+.year-card.cur{border-color:var(--goldlt);box-shadow:0 2px 14px rgba(138,104,32,.12);}
+.yc-head{display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;}
+.yc-year{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--golddk);line-height:1;min-width:54px;}
+.yc-cur-tag{font-size:.5rem;background:var(--goldlt);color:#fff;padding:2px 7px;border-radius:999px;letter-spacing:.05em;margin-left:4px;}
+.yc-mid{flex:1;}
+.yc-badge{display:inline-block;font-size:.56rem;font-weight:700;padding:2px 9px;border-radius:999px;color:#fff;margin-bottom:4px;}
+.yc-theme{font-size:.72rem;font-weight:700;color:var(--snow);line-height:1.5;}
+.yc-palace{font-size:.56rem;color:var(--fog);margin-top:2px;}
+.yc-arrow{color:var(--fog);font-size:1.1rem;transition:transform .2s;}
+.year-card.open .yc-arrow{transform:rotate(90deg);}
+.yc-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.year-card.open .yc-body{max-height:700px;}
+.yc-inner{padding:0 16px 16px;}
+.yc-sec{margin-top:11px;}
+.yc-sec-lb{font-size:.58rem;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:4px;}
+.yc-sec-tx{font-size:.66rem;color:var(--mist);line-height:1.9;}
+.yc-action{background:rgba(138,104,32,.06);border-left:3px solid var(--goldlt);border-radius:0 7px 7px 0;padding:9px 12px;font-size:.64rem;color:var(--mist);line-height:1.85;margin-top:10px;}
+.yc-dir{display:inline-flex;align-items:center;gap:5px;background:rgba(58,122,78,.08);border:1px solid rgba(58,122,78,.25);border-radius:999px;padding:3px 11px;font-size:.6rem;color:var(--good);font-weight:700;margin-top:8px;}
+.yc-ryuunen{background:linear-gradient(135deg,rgba(160,72,72,.08),rgba(192,112,32,.05));border:1px solid rgba(160,72,72,.22);border-radius:8px;padding:9px 12px;font-size:.62rem;color:#a04848;line-height:1.85;margin-top:10px;font-weight:700;}
+body[data-theme="dark"] .yc-ryuunen{color:#d88;}
+.yc-memo{margin-top:11px;}
+.yc-memo-lb{font-size:.58rem;font-weight:700;color:var(--gold);letter-spacing:.04em;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.yc-memo-ta{width:100%;min-height:46px;background:#fbf9f5;border:1px solid rgba(138,104,32,.2);border-radius:8px;padding:8px 10px;font-family:'Noto Serif JP',serif;font-size:.64rem;color:var(--snow);line-height:1.75;resize:vertical;outline:none;}
+body[data-theme="dark"] .yc-memo-ta{background:#15110c;color:var(--snow);}
+.yc-memo-ta:focus{border-color:var(--gold);}
+.yc-memo-ta::placeholder{color:var(--fog);font-size:.6rem;}
+.yc-memo-hint{font-size:.54rem;color:var(--fog);margin-top:4px;line-height:1.7;}
+.yc-memo-print{display:none;}
+
+/* 流年カード（呼び込み） */
+.ryuunen-cta{background:var(--card);border:1px dashed rgba(138,104,32,.4);border-radius:var(--r);padding:16px;margin:18px 0;text-align:center;}
+.ryuunen-cta-t{font-size:.7rem;font-weight:700;color:var(--goldlt);margin-bottom:6px;}
+.ryuunen-cta-d{font-size:.62rem;color:var(--mist);line-height:1.85;margin-bottom:11px;}
+.ryuunen-cta-btn{display:inline-block;padding:9px 20px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.3);border-radius:999px;color:var(--goldlt);font-size:.66rem;font-weight:700;text-decoration:none;}
+
+/* 流年サマリー（鑑定済み） */
+.ryuunen-summary{background:linear-gradient(135deg,rgba(160,72,72,.06),rgba(192,112,32,.04));border:1px solid rgba(160,72,72,.2);border-radius:var(--r);padding:15px 16px;margin:18px 0;}
+.rs-t{font-size:.66rem;font-weight:700;color:#a04848;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+body[data-theme="dark"] .rs-t{color:#d88;}
+.rs-years{font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:5px;}
+.rs-d{font-size:.6rem;color:var(--mist);line-height:1.85;}
+
+/* 注意書き・導線 */
+.disclaimer{font-size:.58rem;color:var(--fog);text-align:center;line-height:1.85;margin:22px 0 14px;padding:0 10px;}
+.next-link{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;text-decoration:none;}
+.next-link-icon{font-size:1.4rem;}
+.next-link-title{font-size:.72rem;font-weight:700;color:var(--golddk);}
+.next-link-desc{font-size:.6rem;color:var(--mist);line-height:1.6;margin-top:2px;}
+.next-link-arrow{margin-left:auto;color:var(--fog);}
+.footer{text-align:center;font-size:.55rem;color:var(--fog);letter-spacing:.1em;line-height:1.9;margin-top:30px;}
+.hidden{display:none;}
+.pdf-btn{width:100%;margin-top:8px;padding:12px;background:var(--card);border:1px solid rgba(138,104,32,.3);border-radius:10px;color:var(--golddk);font-family:'Noto Serif JP',serif;font-size:.78rem;font-weight:700;cursor:pointer;}
+
+/* ============ 印刷・PDF用 ============ */
+@media print{
+  @page{size:A4;margin:12mm 10mm;}
+  body{background:#fff !important;font-size:10px;}
+  .hdr,.back-btn,#inputCard,.pdf-btn,.next-link,.ryuunen-cta-btn{display:none !important;}
+  .wrap{max-width:100%;padding:0;}
+  .pg-title{font-size:20px;margin-top:0;}
+  .pg-sub{font-size:9px;}
+  .pg-lead{display:none;}
+  .star-bar{font-size:10px;margin-bottom:10px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  /* 全カードを開いた状態で印刷 */
+  .year-card .yc-body{max-height:none !important;}
+  .year-card .yc-arrow{display:none;}
+  .year-card{page-break-inside:avoid;break-inside:avoid;box-shadow:none !important;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .yc-badge,.yc-dir,.yc-action,.yc-ryuunen,.ryuunen-summary,.yc-memo-ta{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  /* メモ：textareaを隠し、印刷用divを表示 */
+  .yc-memo-ta{display:none !important;}
+  .yc-memo-hint{display:none;}
+  .yc-memo-print{display:block;font-size:9px;color:#2a2018;line-height:1.7;padding:6px 9px;background:#faf7f1;border:1px solid #e0d6c4;border-radius:6px;white-space:pre-wrap;}
+  .yc-memo-print:empty{display:none;}
+  .yc-memo:has(.yc-memo-print:empty) .yc-memo-lb{display:none;}
+  .tl-title{font-size:11px;}
+  .disclaimer{font-size:8px;margin:10px 0;}
+  .footer{margin-top:12px;font-size:8px;}
+  /* メモ欄を印刷時は枠付きテキストとして見せる */
+  .yc-memo-lb{font-size:8px;}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <span class="hdr-logo">KITOKU</span>
+  <a href="index.html" class="back-btn">← もどる</a>
+</div>
+
+<div class="wrap">
+  <div class="pg-title">5-Year Roadmap</div>
+  <div class="pg-sub">これからの5年・あなたの運気の地図</div>
+  <div class="pg-lead">
+    九星は毎年、あなたの本命星を盤上の異なる宮へと運びます。<br>
+    その巡りを5年分ひらいて、いつ動き、いつ整えるかの地図にします。
+  </div>
+
+  <!-- 入力 -->
+  <div id="inputCard" class="fc">
+    <label class="fl">生年月日</label>
+    <div class="frow">
+      <input class="fi" id="by" type="number" inputmode="numeric" placeholder="年" min="1920" max="2030">
+      <input class="fi" id="bm" type="number" inputmode="numeric" placeholder="月" min="1" max="12">
+      <input class="fi" id="bd" type="number" inputmode="numeric" placeholder="日" min="1" max="31">
+    </div>
+    <div class="gender-row">
+      <div class="gender-btn on" id="gMale" onclick="setGender('male')">男性</div>
+      <div class="gender-btn" id="gFemale" onclick="setGender('female')">女性</div>
+    </div>
+    <button class="go-btn" onclick="generate()">5年の地図をひらく</button>
+  </div>
+
+  <!-- 結果 -->
+  <div id="result" class="hidden">
+    <div class="star-bar" id="starBar"></div>
+    <div class="tl-title">5年のタイムライン</div>
+    <div id="timeline"></div>
+    <div id="ryuunenArea"></div>
+    <div class="disclaimer">
+      この地図は九星気学の巡りに基づく「大局の傾向」です。<br>
+      吉凶を断定するものではなく、あなた自身が動くタイミングを決めるための羅針盤として、どうぞ。
+    </div>
+    <a class="next-link" href="direction_v2.html">
+      <span class="next-link-icon">🧭</span>
+      <span><span class="next-link-title">今日・今月の吉方位を見る</span><span class="next-link-desc">この5年を、毎日の吉方取りに落とし込む</span></span>
+      <span class="next-link-arrow">›</span>
+    </a>
+    <a class="next-link" href="premium.html?from=roadmap">
+      <span class="next-link-icon">✦</span>
+      <span><span class="next-link-title">気学先生に相談する</span><span class="next-link-desc">あなたの5年を、具体的な行動に落として相談できます</span></span>
+      <span class="next-link-arrow">›</span>
+    </a>
+    <button class="pdf-btn" onclick="printRoadmap()">🖨 この地図を印刷・PDF保存する</button>
+  </div>
+
+  <div class="footer">KITOKU @ JOURNEY<br>自分を知る。理解する。決める。</div>
+</div>
+
+<script>
+// ============================================================
+// データ
+// ============================================================
+const STARS={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const POS_PALACE={1:'坎（北）',2:'坤（南西）',3:'震（東）',4:'巽（南東）',5:'中央',6:'乾（北西）',7:'兌（西）',8:'艮（北東）',9:'離（南）'};
+const POS_DIR={1:'北',2:'南西',3:'東',4:'南東',5:'中央',6:'北西',7:'西',8:'北東',9:'南'};
+
+// 宮テーマ（report版の検証済みYEAR_THEME・気学調整済み）
+const YEAR_THEME={
+  1:{cls:'warn',badge:'充電期',theme:'魂の脱皮・内側を整える年',body:'本命星が北（坎）に座る「坎入」の年です。体調を崩しやすく、気持ちが揺れることもありますが、これは古い殻を脱ぎ捨てる準備です。無理に押し切らず「内側を育てる年」として使うことが最善です。',action:'健康を最優先にする。手放す決断をする。吉方取りで内側のエネルギーを補充する。大きな決断は来年以降に。'},
+  2:{cls:'steady',badge:'安定期',theme:'育成と信頼を積み上げる年',body:'安定したエネルギーが流れる年です。コツコツと積み上げることで大きな信頼が育まれます。急いで成果を求めず、誠実な行動の継続が最大の投資になります。',action:'感謝を伝える。今あるご縁を深める。大きな決断より小さな誠実さを積み重ねる。'},
+  3:{cls:'good',badge:'始動期',theme:'新しいことを始める最高のタイミング',body:'行動力とアイデアが高まる年です。始めたかったことを今年スタートすると、大きな流れに乗れます。新しい出会いと縁が活発になります。',action:'新しい場所に出かける。会いたかった人に連絡する。ずっと迷っていたことを始める。'},
+  4:{cls:'good',badge:'縁の年',theme:'縁とネットワークが最大化する年',body:'人と人をつなぐことで、思いがけないチャンスが生まれます。旅行・外出・新しい出会いに積極的になってください。',action:'紹介・橋渡し役を引き受ける。旅行に出かける。新しいコミュニティに参加する。'},
+  5:{cls:'prep',badge:'中央・節目の年',theme:'人生の中心に還り、内を固める節目の年',body:'本命星が中央（五黄の座）に入る、9年に一度の節目の年です。全方位のエネルギーが自分に集まる特別な一年ですが、気学では「八方塞がり」とも呼ばれ、外へ大きく動くより内を固めるのに適した時期とされます。新しい引越しや転職などの大きな移動は急がず、これまでの歩みを棚卸しし、次のステージへの計画を静かに練る年として使うのが最善です。',action:'これまでの積み上げを棚卸しする。健康と足元を整える。大きな移動は来年以降に回し、計画づくりに専念する。'},
+  6:{cls:'best',badge:'完成期',theme:'積み上げてきたものが社会的な形になる年',body:'これまでの努力が信頼・形・権威として現れ始めます。新しい縁が広がりやすく、人脈が仕事や人生に直結する展開が起きやすい年です。',action:'積み上げてきたものを言葉にして人に伝える。SNS・対話・発表の機会を作る。新しい人に会いに行く。'},
+  7:{cls:'steady',badge:'収穫期',theme:'収穫と喜びを受け取る年',body:'これまでに動いたことの結果が実り始めます。焦って新しいことを始めるより、今あるものを丁寧に育て、受け取ることに集中してください。',action:'感謝を伝える。楽しむことに罪悪感を持たない。今あるご縁を深める。'},
+  8:{cls:'prep',badge:'変化・転換期',theme:'古いものを整理し、次へ切り替える変わり目の年',body:'本命星が艮（北東）に座る、変化と改革の年です。九星が一巡する変わり目にあたり、人間関係・仕事・住まいなどで「区切り」や「切り替え」が起きやすい時期です。変化に伴う摩擦や別れが表に出ることもありますが、それは古いものを整理して次へ進むための脱皮です。無理に現状にしがみつくより、整理整頓・断捨離・継承（受け継ぐ／譲る）を意識すると、変化を味方にできます。',action:'不要なものを手放し、身辺を整理する。受け継ぐもの・譲るものを見極める。変化を恐れず、次の土台づくりに使う。健康診断で足元を確認する。'},
+  9:{cls:'good',badge:'発展期',theme:'知恵と光が輝く発展の年',body:'本命星が南（離）に座る発展の年です。人間関係が豊かになりやすく、口コミや縁が自然に広がります。発信力と知性が高まり、新しいつながりが動き出します。ただし離は「別離」の象もあり、整理が起きることもあります。',action:'悩みを聞いてもらえる人に会いに行く。発信・表現の機会を作る。南の吉方への旅が運気を整えます。'},
+};
+const CLS_COLOR={good:'#3a7a4e',steady:'#7a6a3a',warn:'#a06a30',prep:'#6a5a8a',best:'#a04848'};
+
+// その年の推奨方位（本命星が座る宮の方位＝その年に運気が向かう方角）
+const DIR_HINT={
+  1:'北（水辺・静けさ・休息の方角）',2:'南西（家庭・育成・着実さの方角）',3:'東（始動・発展・活気の方角）',
+  4:'南東（縁・信用・人脈の方角）',5:'中央（動より内省。大きな移動は控えめに）',6:'北西（完成・権威・目上との縁の方角）',
+  7:'西（喜び・収穫・金運の方角）',8:'北東（変化・整理・継承の方角）',9:'南（発展・名誉・発信の方角）'};
+
+// ============================================================
+// 暦・星計算（既存ファイルの検証済みロジック）
+// ============================================================
+const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7}};
+const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};return A[m];}
+function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
+function ds9(n){while(n>9){let s=0;while(n>0){s+=n%10;n=Math.floor(n/10);}n=s;}return n;}
+function m9(x){const r=((x%9)+9)%9;return r===0?9:r;}
+function red(v){if(v>=10)return v-9;if(v<=0)return v+9;return v;}
+function pal(n,C){return((n-C+4)%9+9)%9+1;}
+function sat(P,C){return((C+P-6)%9+9)%9+1;}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
+function calcKeisha(h,t){return pal(h,t);}
+function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
+
+let gGender='male';
+let gHonmei=null;
+let gBirth=null;
+
+function setGender(g){
+  gGender=g;
+  document.getElementById('gMale').classList.toggle('on',g==='male');
+  document.getElementById('gFemale').classList.toggle('on',g==='female');
+}
+
+// ============================================================
+// 生成
+// ============================================================
+function generate(){
+  const by=parseInt(document.getElementById('by').value);
+  const bm=parseInt(document.getElementById('bm').value);
+  const bd=parseInt(document.getElementById('bd').value)||1;
+  if(!by||!bm||by<1920||by>2030||bm<1||bm>12){
+    alert('生年月日を正しく入力してください。');
+    return;
+  }
+  const {kY,kM}=getKD(by,bm,bd);
+  const h=calcHonmei(kY);
+  let t=calcTsukimei(h,kM);
+  const TAICHUU={1:9,9:1,2:8,3:4,4:3,6:2,7:1,8:7};
+  TAICHUU[5]=gGender==='female'?6:7;
+  let tFK=t; if(h===t){tFK=TAICHUU[t]||t;}
+  const k=calcKeisha(h,tFK);
+
+  gHonmei=h;
+  gBirth={by,bm,bd};
+
+  // localStorageに保存（他ページと共有）
+  try{
+    localStorage.setItem('kitoku-birth',`${by}-${bm}-${bd}`);
+    localStorage.setItem('kitoku-gender',gGender);
+  }catch(e){}
+
+  // 星情報バー
+  document.getElementById('starBar').innerHTML=
+    `あなたの星：<strong>${STARS[h]}</strong>（本命星）・<strong>${STARS[t]}</strong>（月命星）・<strong>${STARS[k]}</strong>（傾斜）`;
+
+  // タイムライン生成
+  buildTimeline(h);
+  // 流年
+  buildRyuunen(by);
+
+  document.getElementById('inputCard').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function buildTimeline(h){
+  const thisYear=new Date().getFullYear();
+  let html='';
+  for(let i=0;i<5;i++){
+    const yr=thisYear+i;
+    const c=yearCenter(yr);
+    const pos=((h-c+4)%9+9)%9+1||9;
+    const th=YEAR_THEME[pos]||YEAR_THEME[9];
+    const color=CLS_COLOR[th.cls]||'#7a6a3a';
+    const isCur=i===0;
+    const dirHint=DIR_HINT[pos]||'';
+    html+=`
+    <div class="year-card${isCur?' cur open':''}" onclick="this.classList.toggle('open')">
+      <div class="yc-head">
+        <div class="yc-year">${yr}${isCur?'<span class="yc-cur-tag">今年</span>':''}</div>
+        <div class="yc-mid">
+          <span class="yc-badge" style="background:${color};">${th.badge}</span>
+          <div class="yc-theme">${th.theme}</div>
+          <div class="yc-palace">本命星が ${POS_PALACE[pos]} に回座</div>
+        </div>
+        <div class="yc-arrow">›</div>
+      </div>
+      <div class="yc-body"><div class="yc-inner">
+        <div class="yc-sec">
+          <div class="yc-sec-lb">この年の流れ</div>
+          <div class="yc-sec-tx">${th.body}</div>
+        </div>
+        <div class="yc-action">✦ ${th.action}</div>
+        <div class="yc-dir">🧭 運気が向かう方角：${dirHint}</div>
+        <div class="yc-ryuunen-slot" data-year="${yr}"></div>
+        <div class="yc-memo">
+          <div class="yc-memo-lb">✍ ${yr}年の自分（今していること・しようとしていること）</div>
+          <textarea class="yc-memo-ta" data-year="${yr}" placeholder="例：お遍路を回っている／転職を考えている／資格の勉強中…&#10;書き込むと、今の自分がこの年の流れに乗れているか照らし合わせられます。" oninput="saveMemo(${yr},this.value)" onclick="event.stopPropagation()"></textarea>
+          <div class="yc-memo-print" data-year="${yr}"></div>
+          <div class="yc-memo-hint">この欄は印刷・PDFにも反映されます。あなたの現状と、九星の巡りを重ねてみてください。</div>
+        </div>
+      </div></div>
+    </div>`;
+  }
+  document.getElementById('timeline').innerHTML=html;
+  restoreMemos();
+}
+
+// 印刷：全カードを開いてから印刷ダイアログを出す
+function printRoadmap(){
+  document.querySelectorAll('.year-card').forEach(c=>c.classList.add('open'));
+  // textareaの内容を印刷用divに反映（textareaは印刷で値が出ないため）
+  document.querySelectorAll('.yc-memo-ta').forEach(ta=>{
+    const yr=ta.getAttribute('data-year');
+    const pd=document.querySelector('.yc-memo-print[data-year="'+yr+'"]');
+    if(pd)pd.textContent=ta.value.trim();
+  });
+  setTimeout(()=>window.print(),120);
+}
+
+// 現状メモの保存・復元（年をキーに・星に依存しない）
+function saveMemo(year,val){
+  try{localStorage.setItem('kitoku-roadmap-memo-'+year, val);}catch(e){}
+}
+function restoreMemos(){
+  document.querySelectorAll('.yc-memo-ta').forEach(ta=>{
+    const yr=ta.getAttribute('data-year');
+    try{
+      const v=localStorage.getItem('kitoku-roadmap-memo-'+yr);
+      if(v)ta.value=v;
+    }catch(e){}
+  });
+}
+
+// ============================================================
+// 流年（姓名鑑定済みなら表示・未鑑定なら呼び込み）
+// ============================================================
+function buildRyuunen(by){
+  const area=document.getElementById('ryuunenArea');
+  let so=null;
+  // life.htmlの鑑定結果から総格を取得
+  try{
+    const raw=localStorage.getItem('kitoku-life-reading');
+    if(raw){
+      const data=JSON.parse(raw);
+      if(data && data.gk && typeof data.gk.so==='number') so=data.gk.so;
+    }
+  }catch(e){}
+
+  if(!so){
+    // 未鑑定 → 呼び込み
+    area.innerHTML=`
+    <div class="ryuunen-cta">
+      <div class="ryuunen-cta-t">⌛ あなたの「変化の年（流年）」も重ねられます</div>
+      <div class="ryuunen-cta-d">
+        お名前の総画数から、人生が大きく動く「変化の年」を割り出せます。<br>
+        姓名鑑定をすると、この5年の中にあなただけの転換点が浮かび上がります。
+      </div>
+      <a class="ryuunen-cta-btn" href="life.html">姓名鑑定をする →</a>
+    </div>`;
+    return;
+  }
+
+  // 流年計算（life.html確定版と同じ式）
+  let en=so; while(en>9){en=[...String(en)].reduce((a,b)=>a+parseInt(b),0);}
+  const ages=[]; let a=en; while(a<=90){ages.push(a);a+=9;}
+
+  // 数え年で、今後5年に該当する流年があるか（中心年と周辺年を区別）
+  const thisYear=new Date().getFullYear();
+  const hits=[];
+  for(let i=0;i<5;i++){
+    const yr=thisYear+i;
+    const kazoe=yr-by+1; // 数え年
+    const exact=ages.includes(kazoe);            // 流年ど真ん中
+    const nearAge=ages.find(ag=>Math.abs(ag-kazoe)===1); // 前後1年
+    if(exact||nearAge){
+      const centerAge=exact?kazoe:nearAge;
+      hits.push({year:yr,age:centerAge,kazoe,exact:!!exact});
+      const slot=document.querySelector(`.yc-ryuunen-slot[data-year="${yr}"]`);
+      if(slot){
+        if(exact){
+          slot.innerHTML=`<div class="yc-ryuunen">⌛ 流年ど真ん中（数え${kazoe}歳）— 人生が大きく動きやすい変化の年です。脱皮の年として、環境を整え吉方を取ると、変化を飛躍の推進力に変えられます。</div>`;
+        }else{
+          slot.innerHTML=`<div class="yc-ryuunen" style="opacity:.82;">⌛ 流年の周辺ゾーン（${nearAge}歳の前後）— 変化の余波が出やすい時期です。大きな決断の前に足元を整えておくと安心です。</div>`;
+        }
+      }
+    }
+  }
+
+  // サマリー
+  if(hits.length>0){
+    const yrs=hits.map(x=>`${x.year}年（数え${x.age}歳${x.exact?'・ど真ん中':'前後'}）`).join('・');
+    area.innerHTML=`
+    <div class="ryuunen-summary">
+      <div class="rs-t">⌛ あなたの流年（変化の年）</div>
+      <div class="rs-years">${yrs}</div>
+      <div class="rs-d">この5年の中の転換点です。お名前の総画数（${so}画→基本数${en}）から導いた「変化が起きやすい年」で、前後1〜2年が動きのゾーンになります。恐れるためではなく、前もって傘を用意するための時刻表として使ってください。近づいたら、環境を整え・吉方を取り・言葉や習慣を見直すことで、大きな変化を飛躍の推進力に変えられます。</div>
+    </div>`;
+  }else{
+    area.innerHTML=`
+    <div class="ryuunen-summary">
+      <div class="rs-t">⌛ あなたの流年（変化の年）</div>
+      <div class="rs-d">お名前の総画数（${so}画→基本数${en}）から見ると、この5年は流年（大きな変化の年）にはあたりません。穏やかに足場を固められる時期です。次の流年に向けて、今のうちに器を整えておくのが吉です。</div>
+    </div>`;
+  }
+}
+
+// ============================================================
+// 初期化（保存済みデータがあれば自動入力）
+// ============================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  // テーマ
+  try{
+    const th=localStorage.getItem('kitoku-theme');
+    if(th)document.body.setAttribute('data-theme',th);
+  }catch(e){}
+  // 生年月日
+  try{
+    const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+    const g=localStorage.getItem('kitoku-gender');
+    if(g)setGender(g);
+    if(b){
+      const arr=b.split('-').map(Number);
+      if(arr[0])document.getElementById('by').value=arr[0];
+      if(arr[1])document.getElementById('bm').value=arr[1];
+      if(arr[2])document.getElementById('bd').value=arr[2];
+    }
+  }catch(e){}
+});
+</script>
+</body>
+</html>
