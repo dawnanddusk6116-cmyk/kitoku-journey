@@ -4354,6 +4354,23 @@ function gcPath(lat, lng, bearingDeg, distM, steps){
   }
   return pts;
 }
+// 日付変更線をまたいでも打ち切らない版（経度を連続値=unwrapで返す）。
+// 塗りつぶし扇形ポリゴン専用。Leaflet/GoogleともにLng>180/<-180を正しい位置に描画する。
+function gcPathUnwrapped(lat, lng, bearingDeg, distM, steps){
+  steps = steps || 48;
+  const pts = [[lat, lng]];
+  let prev = lng;
+  for(let i=1; i<=steps; i++){
+    const p = gcDestination(lat, lng, bearingDeg, distM*i/steps);
+    let adj = p[1];
+    // 前点との差が±180を超えたら360の倍数で補正し連続値にする
+    while(adj - prev >  180) adj -= 360;
+    while(adj - prev < -180) adj += 360;
+    pts.push([p[0], adj]);
+    prev = adj;
+  }
+  return pts;
+}
 
 // ── 状態 ─────────────────────────────────────────────
 let kitokuMapInst   = null;   // Leaflet map instance
@@ -4464,20 +4481,57 @@ function drawKitokuMapLines(lat, lng){
   // 海外スケール（旅行・引越し）は大円（曲線）で描画
   const useGreatCircle = (kitokuMapMode==='travel' || kitokuMapMode==='move');
 
-  // ── 海外モード：8方位の境界線を大円で描く（塗りつぶし扇形なし） ──
+  // ── 海外モード：8方位の吉方帯（大円扇形）＋境界線を描く ──
   if(useGreatCircle){
-    // 各方位が吉方か先に判定
+    // 各方位の吉凶・ランクを先に判定
     const dirIsKichi = {};
-    const dirRank = {};
+    const dirRankMap = {};
     Object.entries(MAP_DIR_ANGLES).forEach(([dir])=>{
       const starN0=p2s[dir];
       const dd0=rankDir(dir,starN0,honmei,tsukimei,sangoSet,null);
       const kns0=kyouItems.filter(k=>k.dir===dir).filter(k=>!k.name.includes('定位対冲'));
       const isKyo0=kns0.length>0||kyouSet.has(dir)||dd0.isKyo;
       dirIsKichi[dir] = (!isKyo0 && dd0.rank>=2);
-      dirRank[dir] = dd0.rank;
+      dirRankMap[dir] = dd0.rank;
     });
-    // 境界角の線を描く
+
+    // 各方位の角度範囲（気学式：正方位30度・斜方位60度）
+    const DIR_SPAN = {
+      N:[345,15], NE:[15,75], E:[75,105], SE:[105,165],
+      S:[165,195], SW:[195,255], W:[255,285], NW:[285,345]
+    };
+    // 塗りつぶし扇形は実用範囲(最大5000km)で頭打ち。日付変更線をまたぐ超長距離で扇形が崩れるのを防ぐ。境界線は全長のまま。
+    const FAN_DIST = Math.min(LINE_LENGTH*1000, 5000*1000);
+
+    // 吉方の帯（扇形）を大円で塗りつぶす
+    Object.entries(DIR_SPAN).forEach(([dir,[a0,a1]])=>{
+      if(!dirIsKichi[dir]) return;
+      const rank=dirRankMap[dir];
+      const fanColor = rank>=4?'#e84d80':rank>=3?'#f06a98':'#f5a8c0';
+      const fanOpacity = rank>=4?0.20:rank>=3?0.15:0.11;
+      // 角度範囲をstepごとに分割（N/W等の0跨ぎを正規化）
+      let start=a0, end=a1;
+      if(end<start) end+=360; // 例 N:345→375
+      const ANG_STEP=5, RADIAL_STEPS=24;
+      // 始端エッジ（中心→外）を大円で（日付変更線対応のunwrap版）
+      const edgeStart=gcPathUnwrapped(lat,lng,((start%360)+360)%360,FAN_DIST,RADIAL_STEPS);
+      // 外周の弧（各角度の最遠点）
+      const arcPts=[];
+      for(let a=start; a<=end+0.001; a+=ANG_STEP){
+        const ang=((a%360)+360)%360;
+        const gp=gcPathUnwrapped(lat,lng,ang,FAN_DIST,RADIAL_STEPS);
+        arcPts.push(gp[gp.length-1]);
+      }
+      // 終端エッジ（外→中心）を大円で（逆順）
+      const edgeEnd=gcPathUnwrapped(lat,lng,((end%360)+360)%360,FAN_DIST,RADIAL_STEPS).slice().reverse();
+      // ポリゴン：始端エッジ（中心→外）→ 外周弧 → 終端エッジ（外→中心）
+      const poly=[...edgeStart, ...arcPts, ...edgeEnd];
+      const fan=KitokuMap.addPolygon(kitokuMapInst, poly.map(p=>({lat:p[0],lng:p[1]})),
+        {color:fanColor,weight:1,opacity:0.5,fillColor:fanColor,fillOpacity:fanOpacity});
+      kitokuMapLines.push(fan);
+    });
+
+    // 境界角の線を描く（帯のエッジとして上に重ねる）
     const BOUNDARIES = [
       {ang:15,  dirs:['N','NE']}, {ang:75,  dirs:['NE','E']},
       {ang:105, dirs:['E','SE']}, {ang:165, dirs:['SE','S']},
@@ -5241,7 +5295,7 @@ function drawFsMapContent(lat,lng){
   const LL  = Math.min(_fsLineMax, Math.max(3, _fsLineCoef/Math.pow(2,_z)));
   const FL_BASE = Math.min(_fsFanMax,  Math.max(5, _fsFanCoef /Math.pow(2,_z)));
   const useGC = (kitokuMapMode==='travel' || kitokuMapMode==='move');
-  // 海外モード：8方位の境界線を大円で描く（吉方の境界はピンク）
+  // 海外モード：8方位の吉方帯（大円扇形）＋境界線を描く
   if(useGC){
     const dirIsKichi={}, dirRankMap={};
     Object.entries(MAP_DIR_ANGLES).forEach(([dir])=>{
@@ -5252,6 +5306,32 @@ function drawFsMapContent(lat,lng){
       dirIsKichi[dir]=(!isKyo0&&dd0.rank>=2);
       dirRankMap[dir]=dd0.rank;
     });
+    // 各方位の角度範囲（気学式：正方位30度・斜方位60度）
+    const DIR_SPAN={N:[345,15],NE:[15,75],E:[75,105],SE:[105,165],S:[165,195],SW:[195,255],W:[255,285],NW:[285,345]};
+    // 塗りつぶし扇形は実用範囲(最大5000km)で頭打ち。境界線は全長のまま。
+    const FAN_DIST=Math.min(LL*1000, 5000*1000);
+    // 吉方帯を大円扇形で塗る
+    Object.entries(DIR_SPAN).forEach(([dir,[a0,a1]])=>{
+      if(!dirIsKichi[dir]) return;
+      const rank=dirRankMap[dir];
+      const fc=rank>=4?'#e84d80':rank>=3?'#f06a98':'#f5a8c0';
+      const fo=rank>=4?0.20:rank>=3?0.15:0.11;
+      let start=a0,end=a1; if(end<start) end+=360;
+      const STEP=5, RSTEPS=24;
+      const edgeStart=gcPathUnwrapped(lat,lng,((start%360)+360)%360,FAN_DIST,RSTEPS);
+      const arcPts=[];
+      for(let a=start;a<=end+0.001;a+=STEP){
+        const ang=((a%360)+360)%360;
+        const gp=gcPathUnwrapped(lat,lng,ang,FAN_DIST,RSTEPS);
+        arcPts.push(gp[gp.length-1]);
+      }
+      const edgeEnd=gcPathUnwrapped(lat,lng,((end%360)+360)%360,FAN_DIST,RSTEPS).slice().reverse();
+      const poly=[...edgeStart, ...arcPts, ...edgeEnd];
+      const fan=KitokuMap.addPolygon(kitokuFsMapInst, poly.map(p=>({lat:p[0],lng:p[1]})),
+        {color:fc,weight:1,opacity:0.5,fillColor:fc,fillOpacity:fo});
+      kitokuFsLayers.push(fan);
+    });
+    // 境界線（帯のエッジ）
     const BOUNDARIES=[
       {ang:15,dirs:['N','NE']},{ang:75,dirs:['NE','E']},
       {ang:105,dirs:['E','SE']},{ang:165,dirs:['SE','S']},
