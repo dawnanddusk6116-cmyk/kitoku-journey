@@ -237,6 +237,18 @@ body{
   cursor:not-allowed;
 }
 .tool-item.locked .tool-arrow{color:rgba(138,104,32,.35);}
+.tool-item.free-ai-tool{
+  border-left:4px solid #5d9b76;
+  background:linear-gradient(90deg,rgba(233,247,239,.96),rgba(255,255,255,.98));
+  box-shadow:0 10px 22px rgba(61,120,82,.08);
+}
+.tool-item.free-ai-tool .tool-icon{
+  background:rgba(93,155,118,.12);
+  border-radius:12px;
+  padding:4px 0;
+}
+.tool-item.free-ai-tool .tool-name{color:#2f704b;}
+.tool-item.free-ai-tool .tool-desc{color:#4c6b58;}
 .tool-badge{
   display:inline-flex;align-items:center;justify-content:center;
   margin-left:6px;padding:1px 6px;border-radius:7px;
@@ -376,12 +388,12 @@ body{
       </a>
       <a class="tool-item" href="scent.html">
         <span class="tool-icon">✤</span>
-        <span class="tool-info"><span class="tool-name">香りAIで整える</span><span class="tool-desc">シーン・相手・手持ち香水から香りを選ぶ</span></span>
+        <span class="tool-info"><span class="tool-name">香水を活用する</span><span class="tool-desc">シーン・相手・手持ち香水から香水を使い分ける</span></span>
         <span class="tool-arrow">›</span>
       </a>
       <a class="tool-item" href="astro64.html">
         <span class="tool-icon">🔭</span>
-        <span class="tool-info"><span class="tool-name">星を重ねて深掘り</span><span class="tool-desc">太陽・月・金星から本質を読む</span></span>
+        <span class="tool-info"><span class="tool-name">西洋占星術×気学で深く見る</span><span class="tool-desc">太陽・月・金星と気学で本質を見る</span></span>
         <span class="tool-arrow">›</span>
       </a>
 
@@ -443,7 +455,7 @@ body{
       </a>
 
       <div class="tools-section-label">AI・海外向け</div>
-      <a class="tool-item" href="ai.html">
+      <a class="tool-item free-ai-tool" href="ai.html">
         <span class="tool-icon">💬</span>
         <span class="tool-info"><span class="tool-name">AIで悩みを整理する <span class="tool-badge free">無料</span></span><span class="tool-desc">星情報をコピーして悩みと次の一手を整理</span></span>
         <span class="tool-arrow">›</span>
