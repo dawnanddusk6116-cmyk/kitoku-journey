@@ -12,7 +12,9 @@ html{background:var(--bg);min-height:100dvh}
 body{max-width:520px;margin:0 auto;background:var(--bg);color:var(--ink);font-family:'Noto Serif',serif;line-height:1.75;min-height:100dvh;padding-bottom:42px}
 .topbar{position:sticky;top:0;z-index:10;background:rgba(247,244,239,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--rim);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{font-family:'Cormorant Garamond',serif;letter-spacing:.18em;color:var(--gold);font-size:1.1rem;white-space:nowrap}
-.jp-link{border:1px solid rgba(138,104,32,.35);border-radius:999px;color:var(--gold);text-decoration:none;font-size:.68rem;padding:7px 11px;background:rgba(255,255,255,.58);white-space:nowrap}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.jp-link{border:1px solid rgba(138,104,32,.35);border-radius:999px;color:var(--gold);text-decoration:none;font-size:.68rem;padding:7px 11px;background:rgba(255,255,255,.58);white-space:nowrap;font-family:'Noto Serif',serif;line-height:1.2}
+button.jp-link{cursor:pointer}
 .hero{padding:28px 22px 18px}
 .eyebrow{font-size:.66rem;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:9px}
 h1{font-family:'Cormorant Garamond',serif;font-size:2.18rem;line-height:1.08;color:#4b300c;font-weight:600;letter-spacing:.02em}
@@ -90,7 +92,10 @@ footer{text-align:center;font-size:.62rem;color:rgba(93,80,61,.72);line-height:1
 <body>
 <div class="topbar">
   <div class="brand">✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY</div>
-  <a class="jp-link" href="javascript:void(0)" onclick="smartBackToJapanese()">Japanese</a>
+  <div class="nav-actions">
+    <button class="jp-link" type="button" onclick="goBackOne()">← Back</button>
+    <a class="jp-link" href="../top.html">Start</a>
+  </div>
 </div>
 
 <main>
@@ -251,8 +256,7 @@ Please write in clear, gentle English.</div>
 
 <script>
 
-function smartBackToJapanese(){
-  const fallback = '../index.html?direct=1&home=1';
+function goBackOne(){
   let sameOriginReferrer = false;
   try {
     sameOriginReferrer = !!document.referrer && new URL(document.referrer).origin === location.origin;
@@ -261,7 +265,7 @@ function smartBackToJapanese(){
     history.back();
     return;
   }
-  location.href = fallback;
+  location.href = '../top.html';
 }
 
 function todayIso(){
