@@ -34,7 +34,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .kotoba-kanshi{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(100,80,40,.3);float:right;margin-top:-4px;}
 
 /* ② 今日の色 */
-.color-swatch{width:100%;height:56px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;letter-spacing:.1em;}
+.color-swatch{width:100%;height:56px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:800;letter-spacing:.08em;text-align:center;padding:0 12px;}
 .color-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .color-item{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:10px 12px;}
 .color-item-label{font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:4px;}
@@ -541,12 +541,22 @@ function drawColor(prescStar){
   const grad=`linear-gradient(135deg, ${cols.join(', ')})`;
   const sw=document.getElementById('colorSwatch');
   const isDark=document.documentElement.dataset.theme==='dark';
+  const hexToRgb=(hex)=>{
+    const clean=String(hex||'').replace('#','').trim();
+    if(clean.length!==6) return [136,136,136];
+    return [parseInt(clean.slice(0,2),16),parseInt(clean.slice(2,4),16),parseInt(clean.slice(4,6),16)];
+  };
+  const avg=cols.reduce((sum,c)=>{
+    const [r,g,b]=hexToRgb(c);
+    return sum+(0.299*r+0.587*g+0.114*b);
+  },0)/Math.max(cols.length,1);
+  const useLightText=isDark||avg<135;
   sw.style.background=grad;
-  sw.style.color=isDark?'rgba(255,255,255,.92)':'#5c4010';
-  sw.style.textShadow=isDark?'0 1px 8px rgba(0,0,0,.45)':'0 1px 0 rgba(255,255,255,.35)';
-  sw.style.boxShadow=isDark
-    ? 'inset 0 0 0 999px rgba(10,12,24,.28)'
-    : 'inset 0 0 0 999px rgba(255,255,255,.16)';
+  sw.style.color=useLightText?'#fffaf0':'#4f3710';
+  sw.style.textShadow=useLightText?'0 1px 6px rgba(0,0,0,.38)':'0 1px 0 rgba(255,255,255,.5)';
+  sw.style.boxShadow=useLightText
+    ? 'inset 0 0 0 999px rgba(10,22,34,.18)'
+    : 'inset 0 0 0 999px rgba(255,255,255,.2)';
   sw.textContent=guide.swatch||s.colorName||'—';
   document.getElementById('colorFashionLabel').textContent=guide.fashionLabel||'✦ 洋服・ファッション';
   document.getElementById('colorFashion').textContent=guide.fashion||s.fashion||'—';
