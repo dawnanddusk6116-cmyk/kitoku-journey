@@ -149,6 +149,34 @@ textarea{min-height:86px;resize:vertical;}
 [data-theme="dark"] .link-btn.ref,
 [data-theme="dark"] .link-btn.coen{background:rgba(196,160,67,.08);color:var(--goldlt);}
 [data-theme="dark"] .link-btn.resource{background:rgba(255,255,255,.04);color:rgba(232,238,255,.82);}
+
+.print-only{display:none;}
+@media print{
+  .print-only{display:block !important;}
+  #printPromptArea{margin-top:6mm;}
+  .print-prompt-title{font-size:.9rem;font-weight:700;color:#5c4010;margin-bottom:4mm;}
+  .print-prompt-body{white-space:pre-wrap;font-size:.74rem;line-height:1.95;color:#1c1208;border:1px solid #e0d6c4;border-radius:10px;padding:5mm 6mm;}
+  @page{size:A4;margin:14mm 12mm;}
+  body{max-width:100%;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  /* 操作系を全部隠す */
+  .hdr,.toolbar,.back,.btn,.howto-card,.life-element-banner,.note,
+  .section .sec-label,.mode-grid,.field,.links-fold{display:none !important;}
+  /* 全sectionを隠し、印刷用divに一本化 */
+  .section{display:none !important;}
+  /* hero（星情報）は残してコンパクトに */
+  .hero{padding:0 !important;margin:0 0 6mm 0 !important;}
+  .hero-box{padding:0 !important;}
+  .triad{display:none !important;}
+  .star-text{font-size:.82rem;border:1px solid #e0d6c4;border-radius:8px;padding:8px 11px;}
+  /* 相談文ブロックは表示（detailsを強制展開）*/
+  #promptSection details[class*="prompt-fold"] > *{display:block !important;}
+  .prompt-fold summary{display:none !important;}
+  details.scent-fold{border:none !important;}
+  .links-fold{display:none !important;}
+  .prompt-card{border:1px solid #e0d6c4 !important;border-radius:10px;page-break-inside:avoid;background:#fff !important;}
+  .prompt-box{max-height:none !important;overflow:visible !important;border:1px solid #e0d6c4;color:#1c1208 !important;}
+  .prompt-title{color:#5c4010 !important;}
+}
 </style>
 </head>
 <body>
@@ -187,6 +215,7 @@ textarea{min-height:86px;resize:vertical;}
 <div class="star-card">
   <div class="star-label">あなたの星情報</div>
   <div class="star-text" id="starText">TOPで生年月日を登録すると自動で表示されます。</div>
+<div id="printPromptArea" class="print-only"><div class="print-prompt-title" id="printPromptTitle"></div><div class="print-prompt-body" id="printPromptBody"></div></div>
 </div>
 
 <div class="howto-card">
@@ -306,7 +335,7 @@ textarea{min-height:86px;resize:vertical;}
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="promptSection">
   <details class="scent-fold prompt-fold">
     <summary>
       <span class="sec-num">3</span>
@@ -318,6 +347,7 @@ textarea{min-height:86px;resize:vertical;}
     <div class="prompt-box" id="promptBox">—</div>
     <button class="btn primary" onclick="copyPrompt()">📋 コピーして貼り付ける</button>
     <button class="btn secondary" onclick="sharePrompt()">📤 AIアプリに送る</button>
+    <button class="btn secondary" onclick="printScent()">🖨 印刷・PDF保存</button>
     </div>
   </details>
 
@@ -601,6 +631,16 @@ function setPromptBox(text){
 function copyPrompt(){
   const text=document.getElementById('promptBox').textContent;
   navigator.clipboard.writeText(text).then(()=>alert('コピーしました'));
+}
+function printScent(){
+  // 相談文を印刷用divにコピー（detailsは印刷で中身が出ないため）
+  const box=document.getElementById('promptBox');
+  const title=document.getElementById('promptTitle');
+  const pb=document.getElementById('printPromptBody');
+  const pt=document.getElementById('printPromptTitle');
+  if(pb&&box)pb.textContent=box.textContent;
+  if(pt&&title)pt.textContent=title.textContent;
+  setTimeout(()=>window.print(),150);
 }
 async function sharePrompt(){
   const text=document.getElementById('promptBox').textContent;
