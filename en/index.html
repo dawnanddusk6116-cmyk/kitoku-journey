@@ -90,7 +90,7 @@ footer{text-align:center;font-size:.62rem;color:rgba(93,80,61,.72);line-height:1
 <body>
 <div class="topbar">
   <div class="brand">✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY</div>
-  <a class="jp-link" href="../">Japanese</a>
+  <a class="jp-link" href="javascript:void(0)" onclick="smartBackToJapanese()">Japanese</a>
 </div>
 
 <main>
@@ -250,6 +250,20 @@ Please write in clear, gentle English.</div>
 </footer>
 
 <script>
+
+function smartBackToJapanese(){
+  const fallback = '../index.html?direct=1&home=1';
+  let sameOriginReferrer = false;
+  try {
+    sameOriginReferrer = !!document.referrer && new URL(document.referrer).origin === location.origin;
+  } catch (e) {}
+  if (sameOriginReferrer && history.length > 1) {
+    history.back();
+    return;
+  }
+  location.href = fallback;
+}
+
 function todayIso(){
   const d=new Date();
   const y=d.getFullYear();
