@@ -44,6 +44,15 @@ h1{font-size:1.4rem;color:var(--goldlt);font-weight:500;margin-top:8px;letter-sp
 .ai-link-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
 .ai-link{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;border:1px solid rgba(138,104,32,.25);border-radius:10px;background:rgba(138,104,32,.07);color:var(--goldlt);font-size:.66rem;font-weight:800;padding:9px 7px;line-height:1.5;}
 .section{margin:14px 18px 0;background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:15px;}
+  .fold-section{padding:0;overflow:hidden;}
+  .fold-section summary{list-style:none;display:flex;align-items:center;gap:10px;cursor:pointer;padding:14px 15px;color:var(--goldlt);font-weight:800;}
+  .fold-section summary::-webkit-details-marker{display:none;}
+  .fold-section summary::after{content:'開く';margin-left:auto;border:1px solid rgba(138,104,32,.24);background:rgba(138,104,32,.06);border-radius:999px;padding:4px 9px;font-size:.58rem;color:var(--goldlt);letter-spacing:.08em;white-space:nowrap;}
+  .fold-section[open] summary::after{content:'閉じる';}
+  .fold-icon{width:28px;height:28px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.16);font-size:.82rem;flex-shrink:0;}
+  .fold-title{display:block;font-size:.78rem;letter-spacing:.08em;}
+  .fold-sub{display:block;font-size:.58rem;color:var(--mist);line-height:1.55;font-weight:500;letter-spacing:0;margin-top:2px;}
+  .fold-body{padding:0 15px 15px;}
 .label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:700;margin-bottom:8px;}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 .grid.three{grid-template-columns:1fr 1fr 1fr;}
@@ -178,23 +187,25 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   </div>
 </div>
 
-<section class="section">
-  <div class="label">AIに貼る相談文</div>
-  <div class="prompt-guide">
-    <div class="prompt-guide-title">ここをコピーすれば、そのままAIに相談できます</div>
-    生年月日・KITOKU OS DATA・星読み結果が、この相談文に自動で入ります。AIには「強み・迷いやすい点・恋愛や仕事での使い方」を聞ける形に整えます。
+<details class="section fold-section" id="promptDetails">
+  <summary><span class="fold-icon">AI</span><span><span class="fold-title">AIに貼る相談文</span><span class="fold-sub">計算後にコピーして、相談を深掘りできます</span></span></summary>
+  <div class="fold-body">
+    <div class="prompt-guide">
+      <div class="prompt-guide-title">ここをコピーすれば、そのままAIに相談できます</div>
+      生年月日・KITOKU OS DATA・星読み結果が、この相談文に自動で入ります。AIには「強み・迷いやすい点・恋愛や仕事での使い方」を聞ける形に整えます。
+    </div>
+    <textarea id="prompt" readonly>計算後、AIに貼る相談文がここに表示されます。</textarea>
+    <button class="copy" onclick="copyPrompt()">① AIに貼る相談文をコピー</button>
+    <div class="deep-note">コピーしたら、ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。</div>
+    <div class="deep-dive">
+      <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
+      <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
+      <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
+      <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
+    </div>
+    <div class="deep-note">続けて知りたいテーマがあれば、②の深掘り文を同じAIの会話に貼ります。最初の結果を土台に、恋愛・仕事・行動計画まで広げられます。</div>
   </div>
-  <textarea id="prompt" readonly>計算後、AIに貼る相談文がここに表示されます。</textarea>
-  <button class="copy" onclick="copyPrompt()">① AIに貼る相談文をコピー</button>
-  <div class="deep-note">コピーしたら、ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。</div>
-  <div class="deep-dive">
-    <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
-    <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
-    <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
-    <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
-  </div>
-  <div class="deep-note">続けて知りたいテーマがあれば、②の深掘り文を同じAIの会話に貼ります。最初の結果を土台に、恋愛・仕事・行動計画まで広げられます。</div>
-</section>
+</details>
 
 <section class="section">
   <div class="label">BIRTH DATA</div>
@@ -215,25 +226,29 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   <button onclick="runAstro64(true)">星を重ねて相談文を作る</button>
 </section>
 
-<section class="section">
-  <div class="label">KITOKU OS DATA</div>
-  <div class="field">
-    <label>あなたのKITOKU星情報</label>
-    <textarea id="kitokuData" class="input-area" oninput="runAstro64(false)" placeholder="生年月日を入力して計算すると、ここにKITOKU星情報が自動で入ります。"></textarea>
-    <div class="hint" id="kitokuAutoNote">生年月日から、本命星・月命星・傾斜・同会・納音を自動で入れます。必要なら後から書き足せます。</div>
+<details class="section fold-section" id="kitokuDataDetails">
+  <summary><span class="fold-icon">九</span><span><span class="fold-title">KITOKU星情報</span><span class="fold-sub">本命星・月命星・傾斜・同会・納音を確認できます</span></span></summary>
+  <div class="fold-body">
+    <div class="field">
+      <label>あなたのKITOKU星情報</label>
+      <textarea id="kitokuData" class="input-area" oninput="runAstro64(false)" placeholder="生年月日を入力して計算すると、ここにKITOKU星情報が自動で入ります。"></textarea>
+      <div class="hint" id="kitokuAutoNote">生年月日から、本命星・月命星・傾斜・同会・納音を自動で入れます。必要なら後から書き足せます。</div>
+    </div>
   </div>
-</section>
+</details>
 
-<section class="section">
-  <div class="label">RESULT</div>
-  <div class="plain-guide">
-    <strong>ここは計算結果です。</strong><br>
-    太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。上の「AIに貼る相談文」に、この結果が自動で反映されます。
+<details class="section fold-section" id="resultDetails">
+  <summary><span class="fold-icon">星</span><span><span class="fold-title">計算結果を見る</span><span class="fold-sub">太陽・月・金星などの64象意を確認できます</span></span></summary>
+  <div class="fold-body">
+    <div class="plain-guide">
+      <strong>ここは計算結果です。</strong><br>
+      太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。上の「AIに貼る相談文」に、この結果が自動で反映されます。
+    </div>
+    <div id="results" class="results">
+      <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
+    </div>
   </div>
-  <div id="results" class="results">
-    <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
-  </div>
-</section>
+</details>
 
 <footer><a href="kyusei_v2.html" style="color:var(--goldlt);text-decoration:none;">← 九星を知るへ戻る</a><br>KITOKU STAR READING — 自分を知り、自分を愛し、自分で動く</footer>
 
@@ -321,6 +336,7 @@ function buildKitokuOsText(input){
 
 function runAstro64(updateKitoku=true){
   const input=getInput();
+  ['promptDetails','resultDetails'].forEach(id=>{const el=document.getElementById(id); if(el) el.open=true;});
   if(!input.year || !input.month || !input.day){
     document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「星を重ねて相談文を作る」を押すと、ここに天体ごとの64象意が表示されます。</div>';
     document.getElementById('prompt').value='生年月日を入力して計算すると、AIに貼る相談文がここに表示されます。';
