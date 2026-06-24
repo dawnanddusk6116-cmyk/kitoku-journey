@@ -807,6 +807,18 @@ input[type="date"]:focus{border-color:rgba(138,104,32,.5);}
 .app-card-wide.tone-travel::before{background:var(--c-travel);}
 .app-card-wide.tone-travel .card-num{color:var(--c-travel);}
 .app-card-wide.tone-travel .card-title{color:#4a2a78;}
+.app-card-wide.tone-ai-free{
+  border-color:rgba(58,122,78,.32);
+  background:linear-gradient(135deg,rgba(58,122,78,.12),rgba(255,255,255,.96));
+  box-shadow:0 8px 22px rgba(58,122,78,.08);
+}
+.app-card-wide.tone-ai-free::before{background:#3a7a4e;}
+.app-card-wide.tone-ai-free .card-num{
+  color:#2f7045;
+  background:rgba(58,122,78,.1);
+  border-color:rgba(58,122,78,.22);
+}
+.app-card-wide.tone-ai-free .card-title{color:#245b38;}
 .app-card-wide:active{transform:scale(.98);}
 .app-card-wide .card-icon{margin:0;flex-shrink:0;font-size:1.3rem;}
 .app-card-wide .card-info{flex:1;}
@@ -1813,21 +1825,12 @@ body.theme-night .philosophy-list{
         <div class="cards-label-hint">必要な時だけ、AI相談や星読みで掘り下げます</div>
       </div>
     </div>
-    <a class="app-card-wide tone-self" href="javascript:void(0)" onclick="event.preventDefault();alert('KIGAKU先生AIはプレミアム機能です。課金開始後に使えるようになります。');">
-      <div class="card-icon">✨</div>
-      <div class="card-info">
-        <div class="card-num">プレミアム相談</div>
-        <div class="card-title">KIGAKU先生AI</div>
-        <div class="card-desc">結果を相談文にして、悩み・問い・次の一手を深掘りします。現在は準備中です。</div>
-      </div>
-      <div class="app-card-wide-arrow" style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;">準備中</div>
-    </a>
-    <a class="app-card-wide tone-self" href="ai.html">
+    <a class="app-card-wide tone-ai-free" href="ai.html">
       <div class="card-icon">💬</div>
       <div class="card-info">
         <div class="card-num">無料で相談</div>
         <div class="card-title">AIで悩みを整理する</div>
-        <div class="card-desc">星情報をコピーして、ChatGPT・Claudeなどに貼り付けて相談できます。</div>
+        <div class="card-desc">星情報をコピーして、ChatGPT・Claudeなどに貼り付けて、悩みと次の一手を整理できます。</div>
       </div>
       <div class="app-card-wide-arrow">›</div>
     </a>
@@ -1839,6 +1842,15 @@ body.theme-night .philosophy-list{
         <div class="card-desc">太陽・月・金星から、表の自分・本音・惹かれるものをAI相談文にする。</div>
       </div>
       <div class="app-card-wide-arrow">›</div>
+    </a>
+    <a class="app-card-wide tone-self" href="javascript:void(0)" onclick="event.preventDefault();alert('KIGAKU先生AIはプレミアム機能です。課金開始後に使えるようになります。');">
+      <div class="card-icon">✨</div>
+      <div class="card-info">
+        <div class="card-num">プレミアム相談</div>
+        <div class="card-title">KIGAKU先生AI</div>
+        <div class="card-desc">結果を相談文にして、悩み・問い・次の一手を深掘りします。現在は準備中です。</div>
+      </div>
+      <div class="app-card-wide-arrow" style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;">準備中</div>
     </a>
   </div>
 
