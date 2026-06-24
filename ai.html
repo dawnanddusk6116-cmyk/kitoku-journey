@@ -71,9 +71,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .cat.ai-collapsible .cat-label{cursor:pointer;margin-bottom:8px;align-items:center;padding-right:64px;}
 .cat.ai-collapsible .cat-label::after{content:'開く';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.62rem;color:var(--cat-accent);background:rgba(255,255,255,.64);border:1px solid var(--cat-border);border-radius:999px;padding:4px 9px;line-height:1.2;}
 .cat.ai-collapsible.open .cat-label::after{content:'閉じる';}
-.cat.ai-collapsible:not(.open) .prompt-card{display:none;}
-.cat.ai-collapsible.open .prompt-card{display:block;}
-.cat.ai-collapsible.open a.prompt-card{display:block;}
+.cat.ai-collapsible:not(.open) .prompt-card{display:none!important;}
+.cat.ai-collapsible.open .prompt-card{display:block!important;}
+.cat.ai-collapsible.open a.prompt-card{display:block!important;}
 .prompt-focus{box-shadow:0 0 0 3px rgba(72,142,94,.22),0 12px 26px rgba(72,142,94,.12)!important;border-color:rgba(72,142,94,.55)!important;}
 
 [data-theme="dark"] .ai-recommend-panel{background:linear-gradient(135deg,rgba(63,120,168,.16),rgba(18,21,42,.96));border-color:rgba(131,183,230,.35);}
@@ -474,7 +474,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
-  <a class="prompt-card featured" href="astro64.html" style="display:block;text-decoration:none;color:inherit;">
+  <a class="prompt-card featured" href="astro64.html" style="text-decoration:none;color:inherit;">
     <div class="prompt-head">
       <div class="prompt-icon">🔭</div>
       <div class="prompt-info">
