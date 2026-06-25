@@ -137,6 +137,17 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
 @media(max-width:390px){.app-header{padding:9px 11px;gap:7px}.brand-logo{font-size:.92rem;letter-spacing:.1em}.header-actions{gap:5px}.header-reset{font-size:.66rem;padding:7px 8px;min-height:31px}.toolbar{justify-content:flex-start}.tb-btn{padding:5px 10px}}
+
+.print-only{display:none;}
+@media print{
+  @page{size:A4;margin:14mm 12mm;}
+  body{max-width:100%;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .app-header,.toolbar,.notice,.flow-box,.concept-grid,.concept-item,.header-reset,
+  section.section,details.fold-section,button,.deep-dive,.ai-link,.plain-guide{display:none !important;}
+  .print-only{display:block !important;}
+  .print-astro-title{font-size:1rem;font-weight:700;color:#5c4010;margin-bottom:5mm;text-align:center;}
+  .print-astro-body{white-space:pre-wrap;font-size:.74rem;line-height:1.95;color:#1c1208;border:1px solid #e0d6c4;border-radius:10px;padding:6mm;}
+}
 </style>
 </head>
 <body>
@@ -196,6 +207,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     </div>
     <textarea id="prompt" readonly>計算後、AIに貼る相談文がここに表示されます。</textarea>
     <button class="copy" onclick="copyPrompt()">① AIに貼る相談文をコピー</button>
+    <button class="copy" onclick="printAstro()" style="margin-top:7px;">🖨 印刷・PDF保存</button>
     <div class="deep-note">コピーしたら、ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。</div>
     <div class="deep-dive">
       <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
@@ -237,6 +249,10 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   </div>
 </details>
 
+<div id="printAstroArea" class="print-only">
+  <div class="print-astro-title">西洋占星術 × 気学 — 星読み相談文</div>
+  <div class="print-astro-body" id="printAstroBody"></div>
+</div>
 <details class="section fold-section" id="resultDetails">
   <summary><span class="fold-icon">星</span><span><span class="fold-title">計算結果を見る</span><span class="fold-sub">太陽・月・金星などの64象意を確認できます</span></span></summary>
   <div class="fold-body">
@@ -396,6 +412,12 @@ function loadSavedBirthData(){
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
   navigator.clipboard.writeText(text).then(()=>alert('① 相談文をコピーしました\nChatGPT・Claude・Gemini、または気学先生に貼り付けてください。'));
+}
+function printAstro(){
+  const t=document.getElementById('prompt').value;
+  const pb=document.getElementById('printAstroBody');
+  if(pb)pb.textContent=t;
+  setTimeout(()=>window.print(),150);
 }
 
 const DEEP_DIVE_PROMPTS={
