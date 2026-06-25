@@ -1909,7 +1909,7 @@ function openFullscreenMap() {
   const c = dirMapCenter || { lat: 33.8416, lng: 132.7657 };
   setTimeout(() => {
     if (!fsMapInstance) {
-      fsMapInstance = L.map('fullscreenMap', { center: [c.lat, c.lng], zoom: 11, zoomControl: false });
+      fsMapInstance = L.map('fullscreenMap', { center: [c.lat, c.lng], zoom: 12, zoomControl: false });
       L.control.zoom({ position: 'bottomright' }).addTo(fsMapInstance);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap', maxZoom: 19
@@ -2227,8 +2227,9 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
   // 750mが画面上で何pxかを計算
   const centerPt = dirMapInstance.latLngToContainerPoint([lat, lng]);
   const northPt = dirMapInstance.latLngToContainerPoint([lat + 0.75/111, lng]);
-  const radiusPx = Math.abs(centerPt.y - northPt.y);
-  if (radiusPx < 20) return; // 小さすぎる場合は描画しない
+  let radiusPx = Math.abs(centerPt.y - northPt.y);
+  // 全画面モードでは常に表示。最小60pxを保証（広域ズームでも八角形が見える）
+  if (radiusPx < 60) radiusPx = 60;
 
   const R_OUT = radiusPx;
   const R_IN = R_OUT * 0.34;
