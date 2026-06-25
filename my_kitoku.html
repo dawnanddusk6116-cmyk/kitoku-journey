@@ -297,32 +297,30 @@ footer{text-align:center;margin-top:28px;padding:0 16px;font-size:.6rem;letter-s
 <script>
 // ══ 機能マスター ══
 const FEATURE_GROUPS={
-  direction:'方位・移動',
-  self:'星・自分を知る',
-  life:'姓名・人間関係・仕事',
-  home:'家・空間',
-  premium:'プレミアム機能（準備中）',
+  self:'🌟 自分を知る・整える',
+  biz:'💼 ビジネス・人間関係',
+  direction:'🧭 旅行・移動・聖地巡礼',
+  premium:'✨ プレミアム機能',
   ai:'AI・海外向け'
 };
-const FEATURE_GROUP_ORDER=['direction','self','life','home','premium','ai'];
+const FEATURE_GROUP_ORDER=['self','biz','direction','premium','ai'];
 const FEATURES=[
-  {id:'direction',group:'direction',icon:'🧭',name:'方位盤',desc:'日盤・月盤・年盤・吉凶判定。',href:'direction_v2.html',badge:null},
-  {id:'travel',group:'direction',icon:'✈️',name:'旅行吉方位ナビ',desc:'旅行日程・目的地を選ぶ。',href:'travel.html',badge:null},
-  {id:'move',group:'direction',icon:'🏡',name:'引越しナビ',desc:'年盤・月盤で引越し先を選ぶ。',href:'move.html',badge:null},
-  {id:'pilgrimage',group:'direction',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
-
   {id:'kyusei',group:'self',icon:'⭐',name:'自分の星を見る',desc:'本命星・月命星・傾斜・同会・納音を確認。',href:'kyusei_v2.html',badge:null},
   {id:'report',group:'self',icon:'📋',name:'はじめてのKITOKU診断',desc:'名前と生年月日で入口レポートを見る。',href:'report_generator_free.html',badge:null},
+  {id:'roadmap5',group:'self',icon:'🗺️',name:'今後5年ロードマップ',desc:'本命星の巡りで読む、これからの5年の地図。',href:'roadmap.html',badge:null},
+  {id:'mindmap',group:'self',icon:'🧠',name:'気学マインドマップ',desc:'左脳の論理で整理し、気学で自分を知る。',href:'mindmap.html',badge:null},
   {id:'scent',group:'self',icon:'✤',name:'香水を活用する',desc:'シーン・相手・手持ち香水から、香水を使い分ける。',href:'scent.html',badge:null},
   {id:'astro64',group:'self',icon:'🔭',name:'西洋占星術×気学で深く見る',desc:'太陽・月・金星と気学で本質を見る。',href:'astro64.html',badge:null},
-  {id:'mindmap',group:'self',icon:'🧠',name:'気学マインドマップ',desc:'問い・現状・理想・次の一手を整理する。',href:'mindmap.html',badge:null},
-  {id:'roadmap5',group:'self',icon:'🗺️',name:'今後5年ロードマップ',desc:'5年分の年盤から未来の流れを見る。',href:'roadmap.html',badge:null},
+  {id:'life',group:'self',icon:'📝',name:'姓名鑑定',desc:'画数・五行・陰陽・響きを見る。',href:'life.html',badge:null},
+  {id:'kaso',group:'self',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
 
-  {id:'life',group:'life',icon:'📝',name:'姓名鑑定',desc:'画数・五行・陰陽・響きを見る。',href:'life.html',badge:null},
-  {id:'relations',group:'life',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
-  {id:'business',group:'life',icon:'💼',name:'仕事・ビジネス鑑定',desc:'採用・商談・社名鑑定を仕事に使う。',href:'business.html',badge:null},
+  {id:'business',group:'biz',icon:'💼',name:'ビジネス・経営に活かす',desc:'採用・商談・お金の特性・経営テーマ・朝礼。',href:'business.html',badge:null},
+  {id:'relations',group:'biz',icon:'🤝',name:'相性・人間関係',desc:'恋愛・家族・仕事相手との縁を読む。',href:'relations.html',badge:null},
 
-  {id:'kaso',group:'home',icon:'🏠',name:'家相診断',desc:'中心・玄関・水回り・欠け張りを診断。',href:'kaso.html',badge:null},
+  {id:'direction',group:'direction',icon:'🧭',name:'方位盤',desc:'日盤・月盤・年盤・吉凶判定。',href:'direction_v2.html',badge:null},
+  {id:'travel',group:'direction',icon:'✈️',name:'旅行吉方位ナビ',desc:'旅行日程・目的地を選ぶ。',href:'travel.html',badge:null},
+  {id:'pilgrimage',group:'direction',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
+  {id:'move',group:'direction',icon:'🏡',name:'引越しナビ',desc:'年盤・月盤で引越し先を選ぶ。',href:'move.html',badge:null},
 
   {id:'premium_map',group:'premium',icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しを地図で確認。',href:'premium.html#mapPanel',badge:'有料',locked:true},
   {id:'premium_triple',group:'premium',icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。',href:'premium.html#tripleBoardPanel',badge:'有料',locked:true},
