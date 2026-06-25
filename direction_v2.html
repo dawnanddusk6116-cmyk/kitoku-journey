@@ -1859,7 +1859,36 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 
 </div><!-- /screenResult -->
 
-
+<!-- ── 次のステップ導線 ── -->
+<div id="nextStepBar" style="display:none;padding:14px 16px 10px;background:var(--bg,#1a1a2e);">
+  <div style="font-size:.58rem;letter-spacing:.15em;color:var(--gold,#c4a050);margin-bottom:10px;font-weight:700;">── 次のステップへ</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <a href="today.html" style="display:flex;align-items:center;gap:12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);border-radius:12px;padding:12px 14px;text-decoration:none;">
+      <span style="font-size:1.3rem;">🌸</span>
+      <span>
+        <span style="display:block;font-size:.72rem;font-weight:700;color:var(--goldlt,#c4a050);">今日を整える</span>
+        <span style="display:block;font-size:.58rem;color:var(--mist,#bcaa88);margin-top:2px;">方位・色・香り・小さな行動を、今日の一手にまとめる</span>
+      </span>
+      <span style="margin-left:auto;color:var(--goldlt,#c4a050);font-size:1rem;">›</span>
+    </a>
+    <a href="kyusei_v2.html" style="display:flex;align-items:center;gap:12px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.15);border-radius:12px;padding:12px 14px;text-decoration:none;">
+      <span style="font-size:1.3rem;">⭐</span>
+      <span>
+        <span style="display:block;font-size:.72rem;font-weight:700;color:var(--goldlt,#c4a050);">自分の星を見る</span>
+        <span style="display:block;font-size:.58rem;color:var(--mist,#bcaa88);margin-top:2px;">本命星・月命星・傾斜・同会・納音を確認する</span>
+      </span>
+      <span style="margin-left:auto;color:var(--goldlt,#c4a050);font-size:1rem;">›</span>
+    </a>
+    <a href="travel.html" style="display:flex;align-items:center;gap:12px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.15);border-radius:12px;padding:12px 14px;text-decoration:none;">
+      <span style="font-size:1.3rem;">✈️</span>
+      <span>
+        <span style="display:block;font-size:.72rem;font-weight:700;color:var(--goldlt,#c4a050);">旅行・吉方を選ぶ</span>
+        <span style="display:block;font-size:.58rem;color:var(--mist,#bcaa88);margin-top:2px;">日程・目的地を吉方位で決める</span>
+      </span>
+      <span style="margin-left:auto;color:var(--goldlt,#c4a050);font-size:1rem;">›</span>
+    </a>
+  </div>
+</div>
 
 </div><!-- /app-wrap -->
 
@@ -2842,6 +2871,9 @@ function launch(){
     document.getElementById('screenResult').classList.add('active');
     // renderRxAiMapはrenderBan内で呼ばれる
     document.getElementById('headerReset').style.display='block';
+    // 次のステップ導線を表示
+    var nsb=document.getElementById('nextStepBar');
+    if(nsb)nsb.style.display='block';
     window.scrollTo(0,0);
   },600);
 }
@@ -5430,6 +5462,8 @@ function copyAIPrompt(){
     if(typeof switchMainTab==='function') switchMainTab('compass');
     var hr=document.getElementById('headerReset');
     if(hr)hr.style.display='block';
+    var nsb=document.getElementById('nextStepBar');
+    if(nsb)nsb.style.display='block';
 
     computeAndRender(by,bm,bd,ty,tm,td,tStr);
 
