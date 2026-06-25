@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>気学マインドマップ — KITOKU @ JOURNEY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--fog:#8a7060;--r:14px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:var(--bg);min-height:100dvh;}
+body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;min-height:100dvh;max-width:480px;margin:0 auto;font-size:15px;line-height:1.8;}
+body[data-theme="dark"]{--bg:#15110c;--card:#1f1a13;--rim:rgba(196,160,80,.18);--gold:#c4a050;--goldlt:#d8b870;--snow:#f0e8da;--mist:#bcaa88;--fog:#8a7860;}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:var(--bg);z-index:20;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.2em;color:var(--gold);}
+.back-btn{background:rgba(100,80,40,.1);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);font-size:.72rem;padding:7px 11px;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:3px;}
+.back-group{display:flex;gap:7px;}
+.wrap{padding:18px 16px 50px;}
+.pg-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.1em;color:var(--goldlt);text-align:center;margin-bottom:4px;}
+.pg-sub{font-size:.62rem;letter-spacing:.12em;color:var(--mist);text-align:center;margin-bottom:14px;}
+.mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--card);border:1px solid var(--rim);border-radius:11px;padding:4px;margin-bottom:16px;}
+.mode-btn{padding:10px;text-align:center;font-size:.72rem;font-weight:700;color:var(--mist);border-radius:8px;cursor:pointer;transition:all .2s;}
+.mode-btn.on{background:linear-gradient(135deg,var(--gold),#b8923a);color:#fff;}
+.mode-btn-sub{display:block;font-size:.52rem;font-weight:400;margin-top:2px;opacity:.85;}
+.star-prof{background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(184,146,58,.04));border:1px solid rgba(138,104,32,.22);border-radius:var(--r);padding:14px 15px;margin-bottom:16px;}
+.sp-head{font-size:.6rem;letter-spacing:.06em;color:var(--gold);font-weight:700;margin-bottom:8px;}
+.sp-star{font-size:.82rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;}
+.sp-row{margin-bottom:9px;}
+.sp-label{font-size:.58rem;font-weight:700;color:var(--gold);margin-bottom:2px;}
+.sp-text{font-size:.66rem;color:var(--mist);line-height:1.8;}
+.sp-flow{background:rgba(58,122,78,.06);border:1px solid rgba(58,122,78,.2);border-radius:9px;padding:9px 11px;margin-top:8px;}
+.sp-flow-label{font-size:.58rem;font-weight:700;color:#3a7a4e;margin-bottom:2px;}
+.sp-q{background:#fbf9f5;border-left:3px solid var(--gold);border-radius:0 7px 7px 0;padding:8px 11px;margin-top:8px;font-size:.66rem;color:var(--goldlt);font-weight:700;line-height:1.75;}
+body[data-theme="dark"] .sp-q{background:#15110c;}
+.sp-birth{display:flex;gap:7px;margin-top:8px;}
+.sp-birth input{flex:1;background:#fbf9f5;border:1px solid rgba(100,80,40,.2);border-radius:7px;padding:8px;text-align:center;font-family:'Noto Serif JP',serif;font-size:.72rem;color:var(--snow);outline:none;}
+body[data-theme="dark"] .sp-birth input{background:#15110c;}
+.sp-birth button{background:var(--gold);color:#fff;border:none;border-radius:7px;padding:8px 14px;font-size:.66rem;font-weight:700;cursor:pointer;font-family:'Noto Serif JP',serif;}
+.disclaimer-box{font-size:.56rem;color:var(--fog);line-height:1.8;margin-top:8px;padding:8px 11px;background:rgba(100,80,40,.04);border-radius:8px;}
+.lead{background:var(--card);border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:14px 16px;font-size:.68rem;color:var(--mist);line-height:1.95;margin-bottom:18px;}
+.lead strong{color:var(--goldlt);}
+
+/* 記入フォーム */
+.field{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px 15px;margin-bottom:11px;border-left:3px solid var(--bar);}
+.field-head{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;}
+.field-num{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--bar);line-height:1;}
+.field-label{font-size:.74rem;font-weight:700;color:var(--snow);}
+.field-hint{font-size:.58rem;color:var(--fog);line-height:1.7;margin-bottom:8px;}
+.field-ta{width:100%;min-height:54px;background:#fbf9f5;border:1px solid rgba(100,80,40,.18);border-radius:9px;padding:9px 11px;font-family:'Noto Serif JP',serif;font-size:.7rem;color:var(--snow);line-height:1.8;resize:vertical;outline:none;}
+body[data-theme="dark"] .field-ta{background:#15110c;}
+.field-ta:focus{border-color:var(--gold);}
+.field-ta::placeholder{color:var(--fog);font-size:.64rem;}
+
+/* ボタン群 */
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0 8px;}
+.btn{padding:13px;border-radius:10px;font-family:'Noto Serif JP',serif;font-size:.78rem;font-weight:700;cursor:pointer;border:none;text-align:center;}
+.btn-main{background:linear-gradient(135deg,var(--gold),#b8923a);color:#fff;grid-column:1 / -1;letter-spacing:.05em;}
+.btn-sub{background:var(--card);border:1px solid rgba(100,80,40,.3);color:var(--goldlt);}
+.btn:active{opacity:.85;}
+
+/* マインドマップ図 */
+.map-area{margin-top:18px;}
+.map-title{font-size:.7rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.map-title::before{content:'';flex:0 0 18px;height:1px;background:var(--gold);}
+.mindmap{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:18px 16px;}
+.mm-center{text-align:center;margin-bottom:6px;}
+.mm-center-label{font-size:.54rem;letter-spacing:.1em;color:var(--gold);margin-bottom:5px;}
+.mm-center-box{display:inline-block;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(184,146,58,.06));border:1.5px solid var(--gold);border-radius:11px;padding:9px 18px;font-size:.78rem;font-weight:700;color:var(--goldlt);max-width:90%;line-height:1.5;}
+.mm-trunk{width:2px;height:16px;background:var(--rim);margin:0 auto;}
+.mm-branches{display:flex;flex-direction:column;gap:8px;}
+.mm-branch{display:flex;align-items:flex-start;gap:0;}
+.mm-branch-connector{flex:0 0 22px;display:flex;align-items:center;padding-top:13px;}
+.mm-branch-line{width:100%;height:2px;background:var(--bar);}
+.mm-branch-body{flex:1;background:#fbf9f5;border:1px solid var(--rim);border-left:3px solid var(--bar);border-radius:9px;padding:9px 12px;}
+body[data-theme="dark"] .mm-branch-body{background:#15110c;}
+.mm-branch-label{font-size:.58rem;font-weight:700;color:var(--bar);margin-bottom:3px;}
+.mm-branch-text{font-size:.68rem;color:var(--mist);line-height:1.8;white-space:pre-wrap;}
+.mm-branch-empty{font-size:.62rem;color:var(--fog);font-style:italic;}
+.mm-action{margin-top:14px;background:linear-gradient(135deg,rgba(58,122,78,.08),rgba(138,104,32,.05));border:1px solid rgba(58,122,78,.25);border-radius:10px;padding:11px 13px;}
+.mm-action-label{font-size:.58rem;font-weight:700;color:#3a7a4e;margin-bottom:4px;}
+.mm-action-text{font-size:.7rem;color:var(--mist);line-height:1.85;white-space:pre-wrap;font-weight:700;}
+
+.closing{font-size:.6rem;color:var(--fog);text-align:center;line-height:1.9;margin:20px 0 8px;padding:0 8px;}
+.copy-hint{font-size:.56rem;color:var(--fog);text-align:center;margin-top:4px;}
+.footer{text-align:center;font-size:.55rem;color:var(--fog);letter-spacing:.1em;line-height:1.9;margin-top:26px;}
+.hidden{display:none;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--snow);color:var(--bg);font-size:.66rem;padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;}
+.toast.show{opacity:.95;}
+
+@media print{
+  @page{size:A4;margin:14mm 12mm;}
+  body{max-width:100%;background:#fff;}
+  .hdr,.back-btn,.back-group,.lead,.btn-row,.field-ta,.field-hint,.copy-hint,.closing{display:none !important;}
+  .field{display:none;}
+  .map-area{margin-top:0;}
+  .mindmap{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .mm-center-box,.mm-branch-body,.mm-action,.mm-branch-line{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <span class="logo">KITOKU</span>
+  <div class="back-group">
+    <a href="javascript:history.back()" class="back-btn">← 前へ</a>
+    <a href="index.html" class="back-btn">⌂ 入口</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="pg-title">気学マインドマップ</div>
+  <div class="pg-sub">左脳の論理で整理し、気学で自分を知る</div>
+
+  <div class="mode-toggle">
+    <div class="mode-btn on" id="modeHeart" onclick="setMode('heart')">こころ・人生<span class="mode-btn-sub">悩み全般を整理する</span></div>
+    <div class="mode-btn" id="modeWork" onclick="setMode('work')">仕事・決断<span class="mode-btn-sub">決断の癖を気学で知る</span></div>
+  </div>
+
+  <!-- 仕事モード：星プロファイル -->
+  <div id="starProf" class="star-prof hidden"></div>
+
+  <div class="lead">
+    悩みは、頭の中でぐるぐるしている間は形が見えません。<strong>書き出して、分けて、並べる</strong>と、本当に向き合うべきことが立ち上がってきます。
+    下の7つの問いに、あなたの言葉で書いてみてください。書くほどに、絡まった糸がほどけていきます。<strong>答えを誰かに決めてもらうのではなく、自分で気づき、自分で決めるための地図</strong>です。
+  </div>
+
+  <!-- 記入フォーム -->
+  <div id="form">
+    <div class="field" style="--bar:#8a6820;">
+      <div class="field-head"><span class="field-num">1</span><span class="field-label">問い</span></div>
+      <div class="field-hint">いま、あなたが本当に向き合うべき問いは何ですか？「〜すべきか」より「私は本当はどうしたいのか」へ。</div>
+      <textarea class="field-ta" data-key="q1" placeholder="例：今の仕事を続けるべきか、ではなく——私は本当はどう生きたいのか？" oninput="saveField('q1',this.value)"></textarea>
+    </div>
+    <div class="field" style="--bar:#7a6a3a;">
+      <div class="field-head"><span class="field-num">2</span><span class="field-label">現状</span></div>
+      <div class="field-hint">今、実際に起きていることを、事実として書き出します。行動・状況を淡々と。</div>
+      <textarea class="field-ta" data-key="q2" placeholder="例：3年同じ仕事をしている。最近やりがいを感じない。でも安定はしている。" oninput="saveField('q2',this.value)"></textarea>
+    </div>
+    <div class="field" style="--bar:#a06a30;">
+      <div class="field-head"><span class="field-num">3</span><span class="field-label">感情</span></div>
+      <div class="field-hint">そのとき、心は何を感じていますか？左脳で整理する前に、まず正直な気持ちを。</div>
+      <textarea class="field-ta" data-key="q3" placeholder="例：焦り、退屈、でも変化への怖さもある。" oninput="saveField('q3',this.value)"></textarea>
+    </div>
+    <div class="field" style="--bar:#3a7a4e;">
+      <div class="field-head"><span class="field-num">4</span><span class="field-label">理想</span></div>
+      <div class="field-hint">どうなりたいですか？結果や数字だけでなく「どんな感情を得たいか」まで掘り下げます。</div>
+      <textarea class="field-ta" data-key="q4" placeholder="例：朝、今日が楽しみだと思える。自分の力が誰かの役に立っている実感。" oninput="saveField('q4',this.value)"></textarea>
+    </div>
+    <div class="field" style="--bar:#a04848;">
+      <div class="field-head"><span class="field-num">5</span><span class="field-label">ボトルネック</span></div>
+      <div class="field-hint">あなたを止めているものは何ですか？思い込み・恐れ・ズレを、自分を責めずに見つけます。</div>
+      <textarea class="field-ta" data-key="q5" placeholder="例：「もう遅い」「失敗したら戻れない」という思い込み。" oninput="saveField('q5',this.value)"></textarea>
+    </div>
+    <div class="field" style="--bar:#6a5a8a;">
+      <div class="field-head"><span class="field-num">6</span><span class="field-label">使える資源</span></div>
+      <div class="field-hint">すでに持っているものは？強み・経験・味方・時間。欠けているものより、今ある力に目を向けます。</div>
+      <textarea class="field-ta" data-key="q6" placeholder="例：これまでの経験、相談できる人、少しの貯え、学ぶ意欲。" oninput="saveField('q6',this.value)"></textarea>
+    </div>
+    <div class="field" style="--bar:#8a6820;">
+      <div class="field-head"><span class="field-num">7</span><span class="field-label">次の一手</span></div>
+      <div class="field-hint">24時間以内にできる、いちばん小さな一歩は？大きな決断でなく、足が動く一歩を。</div>
+      <textarea class="field-ta" data-key="q7" placeholder="例：気になっていた分野の本を1冊買う。詳しい人に15分話を聞く。" oninput="saveField('q7',this.value)"></textarea>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-main" onclick="buildMap()">✦ マインドマップに組み上げる</button>
+    <button class="btn btn-sub" onclick="copyForAI()">📋 AIに渡す形でコピー</button>
+    <button class="btn btn-sub" onclick="printMap()">🖨 印刷・PDF保存</button>
+  </div>
+  <div class="copy-hint">「AIに渡す形でコピー」を押すと、手持ちのAIに貼り付けて深めてもらえます。</div>
+
+  <!-- マインドマップ図 -->
+  <div id="mapArea" class="map-area hidden">
+    <div class="map-title">あなたのマインドマップ</div>
+    <div class="mindmap" id="mindmap"></div>
+    <div class="closing">
+      この地図は、あなたが自分の手で描いたものです。<br>
+      正解は外にではなく、すでにあなたの中にあります。次の一手から、はじめてみてください。
+    </div>
+  </div>
+
+  <div class="footer">KITOKU @ JOURNEY<br>自分を知る。理解する。決める。</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 九星 決断プロファイル（Ver.1+Ver.2.0統合・内省型）=====
+const STAR_NAMES={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const DECISION_PROF={
+  1:{type:'流れを読む・始める力',habit:'流れを読む柔軟さを持つが、水のように人の意見や場の空気に流されやすい。自分が納得するまで動かない一方、いざ動くと環境に染まりやすい。表面は意外と鈍感で、淡々と物事を始められる強みも。',trap:'噂や雰囲気に流され、損な状況をずるずる断ち切れない。一人で抱えると底なしに沈む。',q:'この判断は自分の納得から来ているか。それとも周りに流されていないか？'},
+  2:{type:'着実に積む・大器晩成',habit:'決断は遅く、考えすぎてフリーズしがち。論理型で慎重、相手の顔色にも敏感。だが地道に積み上げる力は天下一品で、後半戦で逆転する大器晩成型。',trap:'迷いすぎて機を逃す。「この程度でいい」と低い目標で満足してしまう。',q:'迷いは私の仕様。では遠くの大きな目標は何か。着実な一歩はどれか？'},
+  3:{type:'即始動・推進力',habit:'思いつきを即実行する推進力が最強。空気を読まず突っ走る。新しいものに飛びつく力に長け、過去を振り返らない（のが仕様）。',trap:'飛びつきと飽き。やり切る前に次へ移る。目上や周囲とぶつかりやすい。',q:'この勢いは推進力か、ただの飛びつきか。最後までやり切る設計はあるか？'},
+  4:{type:'縁と信用・調整役',habit:'人当たり良く情報網が広いが、実行は遅め。空気を読みすぎて疲れる。内面は計算高い。風のように迷いやすい。',trap:'周りに合わせすぎて自分の軸を見失う。不機嫌になると判断が崩れる。',q:'私は誰かに合わせて決めていないか。自分の信用を賭けられる対象か？'},
+  5:{type:'中心・腹を括る力',habit:'右脳と左脳の両方を使う特殊型。自分が中心でマイペース、他人の意見を聞きにくい。腹を括った時の突破力は最強。',trap:'我が強く独断専行。引くべき時に引けない。中心ゆえに孤立しがち。',q:'これは確信か、ただの意地か。確実に着地させる地に足のついた計画はあるか？'},
+  6:{type:'論理・大局を見る',habit:'即実行の論理型。新しいことを次々立ち上げる。完璧主義でプライドが高く、大局・全体を見る力に長ける。',trap:'自分の論理を過信し、他人が同じ速度で動かないとイライラ。プライドで引き際を誤る。',q:'私の論理は完璧か、それとも傲慢か。見えない部分（足元の備え）を整えているか？'},
+  7:{type:'機を見る・切る力',habit:'即実行で、「やめる・止める＝損切り」の切断力が最大の武器。機を見るのが上手く、喜びに敏感。だが土台が弱く愚痴っぽい面も。',trap:'楽観と他責。うまくいかない時「悪いのは向こう」と他責にし、ワンマンで突っ走り墜落。',q:'私の切る力は活きているか。うまくいかない時、他責になっていないか？'},
+  8:{type:'熟考・転換の力',habit:'自分が納得したタイミングでしか動かない。「止める・方向転換する」のが得意。七転び八起きの強靭さで、じっくり考え抜く。',trap:'動くべき時に動かず機を逃す。本音を出さず判断が固まる。',q:'これは熟考か、ただの停滞か。遥か先の大きな目標を見失っていないか？'},
+  9:{type:'直感・先見の明',habit:'即実行の直感型。頭の回転が速く先見の明がある。だが評価に過敏で傷つきやすく、熱しやすく冷めやすい。「離＝切る」力も持つ。',trap:'自己流の過信と、評価への過敏さの落差。熱狂と幻滅の往復。見栄での散財。',q:'これは直感か、ただの熱狂か。信頼できる人の視点に照らせているか？'},
+};
+// いまの気の流れ（回座宮→決断の構え）
+const FLOW_BY_POS={
+  1:{name:'坎（北）・充電の時',text:'守り・充電の時期。大きな勝負より、退いて力を蓄えるのに向く流れ。'},
+  2:{name:'坤（南西）・育成の時',text:'着実に積む時期。コツコツ育てる地道な一手が活きる流れ。'},
+  3:{name:'震（東）・始動の時',text:'動き・始動の時期。新しい挑戦やスタートを切るのに向く流れ。'},
+  4:{name:'巽（南東）・縁の時',text:'縁が広がる時期。人とのつながり・信用を育てる一手が活きる流れ。'},
+  5:{name:'中央・節目の時',text:'八方塞がりとも言われる節目。新規の大勝負は控え、内を固めるのに向く流れ。'},
+  6:{name:'乾（北西）・完成の時',text:'形になる時期。これまでの積み上げが結実しやすい流れ。'},
+  7:{name:'兌（西）・収穫の時',text:'収穫の時期。受け取り・利益確定・仕上げに向く流れ。'},
+  8:{name:'艮（北東）・転換の時',text:'変化・転換の時期。整理・損切り・方向転換に向く流れ。'},
+  9:{name:'離（南）・発展の時',text:'発展・発信の時期。表に出る・広げる一手が活きる流れ。ただし別離の象も。'},
+};
+const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7}};
+function getSekkiDay(y,m){if(SEKKI_DB[y])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};return A[m];}
+function getKYear(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){return mo<=2?y-1:y;}return mo===1?y-1:y;}
+function ds9(n){while(n>9){let s=0;while(n>0){s+=n%10;n=Math.floor(n/10);}n=s;}return n;}
+function m9(x){const r=((x%9)+9)%9;return r===0?9:r;}
+function calcHonmei(kY){return m9(11-ds9(kY));}
+function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
+
+let gMode='heart';
+let gHonmei=null;
+
+const FIELDS=[
+  {key:'q1',label:'問い',bar:'#8a6820'},
+  {key:'q2',label:'現状',bar:'#7a6a3a'},
+  {key:'q3',label:'感情',bar:'#a06a30'},
+  {key:'q4',label:'理想',bar:'#3a7a4e'},
+  {key:'q5',label:'ボトルネック',bar:'#a04848'},
+  {key:'q6',label:'使える資源',bar:'#6a5a8a'},
+  {key:'q7',label:'次の一手',bar:'#8a6820'},
+];
+
+// モードごとの問いかけ（heartは既存・workは仕事決断用）
+const MODE_HINTS={
+  heart:{
+    q1:['問い','いま、あなたが本当に向き合うべき問いは何ですか？「〜すべきか」より「私は本当はどうしたいのか」へ。','例：今の仕事を続けるべきか、ではなく——私は本当はどう生きたいのか？'],
+    q2:['現状','今、実際に起きていることを、事実として書き出します。行動・状況を淡々と。','例：3年同じ仕事をしている。最近やりがいを感じない。でも安定はしている。'],
+    q3:['感情','そのとき、心は何を感じていますか？左脳で整理する前に、まず正直な気持ちを。','例：焦り、退屈、でも変化への怖さもある。'],
+    q4:['理想','どうなりたいですか？結果や数字だけでなく「どんな感情を得たいか」まで掘り下げます。','例：朝、今日が楽しみだと思える。自分の力が誰かの役に立っている実感。'],
+    q5:['ボトルネック','あなたを止めているものは何ですか？思い込み・恐れ・ズレを、自分を責めずに見つけます。','例：「もう遅い」「失敗したら戻れない」という思い込み。'],
+    q6:['使える資源','すでに持っているものは？強み・経験・味方・時間。欠けているものより、今ある力に目を向けます。','例：これまでの経験、相談できる人、少しの貯え、学ぶ意欲。'],
+    q7:['次の一手','24時間以内にできる、いちばん小さな一歩は？大きな決断でなく、足が動く一歩を。','例：気になっていた分野の本を1冊買う。詳しい人に15分話を聞く。'],
+  },
+  work:{
+    q1:['向き合う決断','いま下そうとしている決断・課題は何ですか？仕事・お金・キャリアで、本当に問うべきことへ。','例：この事業を続けるか撤退するか、ではなく——私は何を成し遂げたいのか？'],
+    q2:['現状（事実）','いま実際に起きている状況を、数字や事実で淡々と。願望や解釈を混ぜずに。','例：売上は横ばい。チームは疲れている。資金は半年分ある。'],
+    q3:['本音・感情','その決断を前に、心は何を感じていますか？焦り・欲・恐れ・高揚。正直に。','例：このままではまずいという焦り。でも失敗への恐れもある。'],
+    q4:['目指す状態','どうなれば成功ですか？数字だけでなく「どんな状態・気持ちを得たいか」まで。','例：チームが自走し、自分は新しい挑戦に時間を使えている。'],
+    q5:['止めているもの','決断を鈍らせているのは何ですか？思い込み・恐れ・しがらみを、責めずに見つけます。','例：「ここまで投資したのだから引けない」というサンクコスト。'],
+    q6:['使える資源','すでに持っている武器は？人材・経験・資金・時間・人脈。今ある力に目を向けます。','例：信頼できる右腕、これまでの顧客基盤、半年分の運転資金。'],
+    q7:['次の一手','明日できる、いちばん小さな一歩は？大きな決断の前の、検証や対話の一手を。','例：撤退ラインを数字で決める。右腕に率直に相談する。'],
+  }
+};
+
+function setMode(mode){
+  gMode=mode;
+  document.getElementById('modeHeart').classList.toggle('on',mode==='heart');
+  document.getElementById('modeWork').classList.toggle('on',mode==='work');
+  // 問いかけを差し替え（記入内容は保持）
+  const hints=MODE_HINTS[mode];
+  FIELDS.forEach((f,i)=>{
+    const h=hints[f.key];
+    if(!h)return;
+    const fieldEls=document.querySelectorAll('.field');
+    const el=fieldEls[i];
+    if(el){
+      const lb=el.querySelector('.field-label');
+      const hint=el.querySelector('.field-hint');
+      const ta=el.querySelector('.field-ta');
+      if(lb)lb.textContent=h[0];
+      if(hint)hint.textContent=h[1];
+      if(ta)ta.setAttribute('placeholder',h[2]);
+    }
+  });
+  // 仕事モードなら星プロファイルを表示
+  const sp=document.getElementById('starProf');
+  if(mode==='work'){
+    sp.classList.remove('hidden');
+    renderStarProfile();
+  }else{
+    sp.classList.add('hidden');
+  }
+  try{localStorage.setItem('kitoku-mindmap-mode',mode);}catch(e){}
+}
+
+function renderStarProfile(){
+  const sp=document.getElementById('starProf');
+  if(!gHonmei){
+    // 生年月日入力を促す
+    sp.innerHTML=`<div class="sp-head">⚙ あなたの決断の癖を、九星から映します</div>
+      <div class="sp-text">生年月日を入れると、あなたの本命星から「決断・お金・仕事の癖」と「いまの気の流れ」を表示します。</div>
+      <div class="sp-birth">
+        <input id="spY" type="number" inputmode="numeric" placeholder="年" min="1920" max="2030">
+        <input id="spM" type="number" inputmode="numeric" placeholder="月" min="1" max="12">
+        <input id="spD" type="number" inputmode="numeric" placeholder="日" min="1" max="31">
+        <button onclick="calcStarFromBirth()">表示</button>
+      </div>`;
+    // 保存済みがあれば自動計算
+    try{
+      const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+      if(b){const a=b.split('-').map(Number); if(a[0]&&a[1]){applyHonmei(a[0],a[1],a[2]||1);return;}}
+    }catch(e){}
+    return;
+  }
+  const p=DECISION_PROF[gHonmei];
+  const thisYear=new Date().getFullYear();
+  const c=yearCenter(thisYear);
+  const pos=((gHonmei-c+4)%9+9)%9+1||9;
+  const flow=FLOW_BY_POS[pos];
+  sp.innerHTML=`
+    <div class="sp-head">⚙ あなたの決断の癖（本命星から）</div>
+    <div class="sp-star">${STAR_NAMES[gHonmei]} — ${p.type}</div>
+    <div class="sp-row"><div class="sp-label">お金・決断の癖</div><div class="sp-text">${p.habit}</div></div>
+    <div class="sp-row"><div class="sp-label">陥りやすい罠</div><div class="sp-text">${p.trap}</div></div>
+    <div class="sp-flow">
+      <div class="sp-flow-label">いまの気の流れ（${thisYear}年）— ${flow.name}</div>
+      <div class="sp-text">${flow.text}</div>
+    </div>
+    <div class="sp-q">自分への問い：${p.q}</div>
+    <div class="disclaimer-box">※ これは「あなたの心の癖を映す鏡」であり、投資や売買の助言ではありません。実際の判断はご自身で、必要に応じて専門家にも相談しながら行ってください。</div>`;
+}
+
+function calcStarFromBirth(){
+  const y=parseInt(document.getElementById('spY').value);
+  const m=parseInt(document.getElementById('spM').value);
+  const d=parseInt(document.getElementById('spD').value)||1;
+  if(!y||!m||y<1920||y>2030||m<1||m>12){showToast('生年月日を正しく入力してください');return;}
+  applyHonmei(y,m,d);
+  try{localStorage.setItem('kitoku-birth',`${y}-${m}-${d}`);}catch(e){}
+}
+function applyHonmei(y,m,d){
+  const kY=getKYear(y,m,d);
+  gHonmei=calcHonmei(kY);
+  renderStarProfile();
+}
+
+function saveField(key,val){
+  try{localStorage.setItem('kitoku-mindmap-'+key,val);}catch(e){}
+}
+function getField(key){
+  const el=document.querySelector('.field-ta[data-key="'+key+'"]');
+  return el?el.value.trim():'';
+}
+
+function buildMap(){
+  const q1=getField('q1');
+  if(!q1){
+    showToast('まず「問い」を書いてみてください');
+    document.querySelector('.field-ta[data-key="q1"]').focus();
+    return;
+  }
+  const mm=document.getElementById('mindmap');
+  // 中心
+  let html=`<div class="mm-center">
+    <div class="mm-center-label">中心テーマ — あなたが本当に向き合う問い</div>
+    <div class="mm-center-box">${esc(q1)}</div>
+  </div>
+  <div class="mm-trunk"></div>
+  <div class="mm-branches">`;
+  // 枝（問い以外）
+  FIELDS.filter(f=>f.key!=='q1'&&f.key!=='q7').forEach(f=>{
+    const v=getField(f.key);
+    html+=`<div class="mm-branch">
+      <div class="mm-branch-connector"><div class="mm-branch-line" style="background:${f.bar};"></div></div>
+      <div class="mm-branch-body" style="border-left-color:${f.bar};">
+        <div class="mm-branch-label" style="color:${f.bar};">${f.label}</div>
+        <div class="mm-branch-text">${v?esc(v):emptyTag('（まだ書かれていません）')}</div>
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+  // 次の一手（特別扱い）
+  const q7=getField('q7');
+  html+=`<div class="mm-action">
+    <div class="mm-action-label">▶ 次の一手（24時間以内にできること）</div>
+    <div class="mm-action-text">${q7?esc(q7):emptyTag('まだ決まっていません。小さな一歩を一つ、書いてみてください。')}</div>
+  </div>`;
+  mm.innerHTML=html;
+  document.getElementById('mapArea').classList.remove('hidden');
+  document.getElementById('mapArea').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function emptyTag(msg){
+  return '<span class="mm-branch-empty">'+msg+'</span>';
+}
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyForAI(){
+  const L={};
+  FIELDS.forEach(f=>L[f.key]=getField(f.key));
+  if(!L.q1){showToast('まず内容を書いてみてください');return;}
+  const txt=`あなたはKITOKUのAI軍師です。私の悩みを、答えを押し付けるのではなく、私自身が気づき決められるよう、琥珀色の言葉で正直に導いてください。不安を煽らず、でも甘やかしすぎず。最後は「自分で選ぶための判断材料」としてまとめてください。
+
+以下は私が気学マインドマップで整理した内容です。
+
+【問い】
+${L.q1||'（未記入）'}
+
+【現状】
+${L.q2||'（未記入）'}
+
+【感情】
+${L.q3||'（未記入）'}
+
+【理想】
+${L.q4||'（未記入）'}
+
+【ボトルネック（止めている思い込み・恐れ）】
+${L.q5||'（未記入）'}
+
+【使える資源（強み・味方・すでに持っているもの）】
+${L.q6||'（未記入）'}
+
+【次の一手】
+${L.q7||'（未記入）'}
+
+この整理をふまえて、次を返してください。
+1. 私が本当に向き合うべき問いの再設定
+2. 現状と理想のあいだにある、本当のギャップ
+3. ボトルネックの奥にある思い込みを、責めずに言語化
+4. すでにある資源を、どう次の一手に活かせるか
+5. 24時間以内・7日以内・今はやらないこと、の3つに分けた提案
+最後に、全体を文字のマインドマップ形式でまとめてください。`;
+
+  navigator.clipboard.writeText(txt).then(()=>{
+    showToast('コピーしました。AIに貼り付けてください');
+  }).catch(()=>{
+    // フォールバック
+    const ta=document.createElement('textarea');
+    ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');showToast('コピーしました');}catch(e){showToast('コピーに失敗しました');}
+    document.body.removeChild(ta);
+  });
+}
+
+function printMap(){
+  buildMap();
+  setTimeout(()=>window.print(),150);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// 復元
+window.addEventListener('DOMContentLoaded',()=>{
+  try{
+    const th=localStorage.getItem('kitoku-theme');
+    if(th)document.body.setAttribute('data-theme',th);
+  }catch(e){}
+  FIELDS.forEach(f=>{
+    try{
+      const v=localStorage.getItem('kitoku-mindmap-'+f.key);
+      if(v){
+        const el=document.querySelector('.field-ta[data-key="'+f.key+'"]');
+        if(el)el.value=v;
+      }
+    }catch(e){}
+  });
+  // モード復元
+  try{
+    const savedMode=localStorage.getItem('kitoku-mindmap-mode');
+    if(savedMode==='work')setMode('work');
+  }catch(e){}
+});
+</script>
+</body>
+</html>
