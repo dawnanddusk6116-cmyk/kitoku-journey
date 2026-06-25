@@ -262,7 +262,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">黄色い欄を書き換える</div></div>
         <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">コピーしてAIへ貼る</div></div>
       </div>
-      <div class="lead-step-note">迷ったら、下の「1 今日のことを相談する」か「左脳マインドマップ」から始めてください。別ページへのリンクは、もっと深く見たい時の入口です。</div>
+      <div class="lead-step-note">迷ったら、下の「1 今日のことを相談する」か「気学マインドマップ」から始めてください。別ページへのリンクは、もっと深く見たい時の入口です。</div>
     </div>
 
   </div>
@@ -308,14 +308,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="ai-recommend-title">迷ったら、ここから始めてください</div>
   <div class="ai-recommend-note">下のカテゴリは見出しだけに整理しています。気になる時だけ開いて、ほかの相談テーマを選べます。</div>
   <div class="ai-recommend-grid">
-    <button class="ai-recommend-card" type="button" onclick="jumpAiPrompt('左脳マインドマップ')">
+    <a class="ai-recommend-card" href="mindmap.html">
       <span class="ai-recommend-icon">🧠</span>
       <span class="ai-recommend-body">
-        <span class="ai-recommend-card-title">左脳マインドマップ <span class="ai-recommend-chip">迷ったらここ</span></span>
+        <span class="ai-recommend-card-title">気学マインドマップ <span class="ai-recommend-chip">迷ったらここ</span></span>
         <span class="ai-recommend-card-desc">問い・現状・理想・次の一手まで整理する。</span>
       </span>
       <span class="prompt-arrow">›</span>
-    </button>
+    </a>
     <button class="ai-recommend-card" type="button" onclick="jumpAiPrompt('納音から読み解く魂の本質')">
       <span class="ai-recommend-icon">🎵</span>
       <span class="ai-recommend-body">
@@ -377,35 +377,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       </div>
       <div class="prompt-text" id="qt2">—</div>
       <button class="prompt-copy-btn" onclick="copyPrompt('qt2',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <div id="mindmap" class="prompt-card featured" onclick="togglePrompt(this,'q11')">
-    <div class="prompt-head">
-      <div class="prompt-icon">🧩</div>
-      <div class="prompt-info">
-        <div class="prompt-title">左脳マインドマップ <span class="prompt-badge">迷ったらここ</span></div>
-        <div class="prompt-desc">ここに悩みを書き足すだけで、問い → 現状 → 理想 → 次の一手まで整理する</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q11">
-      <div class="value-guide">
-        <div class="value-guide-title">左脳マインドマップでできること</div>
-        <div class="value-guide-text">頭の中で混ざっている悩みを、AIに整理してもらうための高度な相談文です。答えを決めつけるのではなく、自分で選ぶための判断材料を作ります。</div>
-        <div class="value-guide-list">
-          <div class="value-guide-item"><span class="value-guide-num">1</span><span>あなたの悩みを、まず「本当の問い」に戻します。</span></div>
-          <div class="value-guide-item"><span class="value-guide-num">2</span><span>現状・理想・止めている思い込みを分けて整理します。</span></div>
-          <div class="value-guide-item"><span class="value-guide-num">3</span><span>最後に、24時間以内にできる小さな一手まで落とし込みます。</span></div>
-        </div>
-      </div>
-      <div class="write-guide">
-        <div class="write-guide-title">ここが一番大切です</div>
-        <div class="write-guide-text">コピーしたあと、AIアプリ側で「相談したいこと」の部分だけをあなたの言葉に書き換えてください。短くても大丈夫です。</div>
-        <div class="write-guide-example">例：仕事を続けるか迷っている / 人間関係で疲れている / 次の一歩が決められない</div>
-      </div>
-      <div class="prompt-text" id="qt11">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt11',event)">📋 コピーして貼り付ける</button>
     </div>
   </div>
 
@@ -706,53 +677,6 @@ ${target}
 ・今動くべきか、待つべきか
 
 率直に教えてください。`);
-
-  renderPromptText('qt11',
-`${base}
-${target}
-
-あなたはKITOKUのAI軍師です。
-私の悩みを、答えを押し付けるのではなく、以下の左脳マップで整理してください。
-
-＝＝＝＝ここを書き換えてください＝＝＝＝
-【相談したいこと】
-（ここに今の悩み・迷いをあなたの言葉で書いてください）
-例：仕事を続けるか迷っている / 人間関係で疲れている / 次の一歩が決められない
-＝＝＝＝ここまで＝＝＝＝
-
-【整理してほしい順番】
-1. 問い
-私が本当に向き合うべき問いを、背景を踏まえて再設定してください。
-
-2. 現状
-今起きていること、私の行動・思考・感情を分けて整理してください。
-
-3. 理想
-数字や結果だけでなく、私はどんな感情を得たいのかまで掘り下げてください。
-
-4. ボトルネック
-行動を止めている思い込み・恐れ・ズレを、責めずに見つけてください。
-
-5. ネクストアクション
-24時間以内にできる小さな一手、7日以内に整えること、今はやらないことを提案してください。
-
-【最後にマインドマップ化】
-上の整理を、文字のマインドマップ形式でもまとめてください。
-
-中心テーマ：
-・私が本当に向き合う問い
-
-枝：
-・現状
-・感情
-・思い込み
-・本当の望み
-・使える資源
-・次の一手
-
-【大切な姿勢】
-不安を煽らず、でも甘やかしすぎず、琥珀色の言葉で正直に導いてください。
-最後は「自分で選ぶための判断材料」としてまとめてください。`);
 
   document.getElementById('qt3').textContent=
 `${base}
