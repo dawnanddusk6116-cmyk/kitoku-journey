@@ -189,8 +189,8 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   <div class="flow-title">使い方は3ステップです</div>
   <div class="flow-steps">
     <div class="flow-step"><div class="flow-num">1</div><div>生年月日を入れて、太陽・月・金星などの結果を出します。</div></div>
-    <div class="flow-step"><div class="flow-num">2</div><div>上にできた相談文をコピーします。結果とKITOKU星情報がまとめて入ります。</div></div>
-    <div class="flow-step"><div class="flow-num">3</div><div>ChatGPT・Claude・Gemini、または気学先生に貼り付けて、自分の悩みに合わせて深掘りします。</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>「① AIに貼る相談文をコピー」を押して、ChatGPT・Claude・Geminiまたは気学先生に貼り付けます。<br><span style="color:var(--goldlt);font-weight:700;">これだけで会話が始まります。</span>返ってきた内容を読みながら、気になる部分を自由に掘り下げられます。</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>さらにテーマを絞って深掘りしたい場合は「② 深掘りボタン」を使います。①の返答が来た後に、同じ会話へ続けて貼るだけです。</div></div>
   </div>
   <div class="ai-link-row">
     <a class="ai-link" href="ai.html">AI相談の入口へ</a>
@@ -206,16 +206,22 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
       生年月日・KITOKU OS DATA・星読み結果が、この相談文に自動で入ります。AIには「強み・迷いやすい点・恋愛や仕事での使い方」を聞ける形に整えます。
     </div>
     <textarea id="prompt" readonly>計算後、AIに貼る相談文がここに表示されます。</textarea>
-    <button class="copy" onclick="copyPrompt()">① AIに貼る相談文をコピー</button>
-    <button class="copy" onclick="printAstro()" style="margin-top:7px;">🖨 印刷・PDF保存</button>
-    <div class="deep-note">コピーしたら、ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。</div>
-    <div class="deep-dive">
-      <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
-      <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
-      <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
-      <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
+    <div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
+      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">STEP 1 ── まずこれを貼るだけで会話が始まります</div>
+      <button class="copy" onclick="copyPrompt()" style="margin-bottom:0;">① AIに貼る相談文をコピー</button>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。<br>①だけで星読みの会話が成り立ちます。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
     </div>
-    <div class="deep-note">続けて知りたいテーマがあれば、②の深掘り文を同じAIの会話に貼ります。最初の結果を土台に、恋愛・仕事・行動計画まで広げられます。</div>
+    <button class="copy" onclick="printAstro()" style="margin-top:0;margin-bottom:10px;">🖨 印刷・PDF保存</button>
+    <div style="background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:11px 13px;">
+      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">STEP 2 ── ①の返答が来たら、テーマを絞って深掘り（任意）</div>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">①の返答を受け取ったら、同じAIの会話に続けて貼ります。最初の読みを土台に、恋愛・仕事・行動プランまで広げられます。</div>
+      <div class="deep-dive">
+        <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
+        <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
+        <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
+        <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
+      </div>
+    </div>
   </div>
 </details>
 
