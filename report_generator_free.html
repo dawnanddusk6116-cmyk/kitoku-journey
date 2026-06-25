@@ -211,6 +211,61 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 .paid-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;letter-spacing:.1em;color:var(--golddk);}
 .paid-desc{font-size:.63rem;color:var(--mist);line-height:1.7;max-width:260px;}
 .paid-btn{background:linear-gradient(135deg,rgba(100,80,40,.12),rgba(100,80,40,.05));border:1.5px solid rgba(100,80,40,.3);border-radius:10px;color:var(--fog);font-size:.73rem;padding:11px 22px;cursor:default;letter-spacing:.14em;font-weight:700;font-family:'Noto Serif JP',serif;}
+
+/* KITOKU text size control */
+.kitoku-text-size-control {
+  max-width: 720px;
+  margin: 10px auto 18px;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  box-sizing: border-box;
+  color: #6a4a1c;
+  font-size: 13px;
+}
+.kitoku-text-size-control__label {
+  letter-spacing: .08em;
+  font-size: 12px;
+  color: #8a6a32;
+}
+.kitoku-text-size-control__btn {
+  min-width: 36px;
+  height: 32px;
+  border: 1px solid #d9c7a5;
+  border-radius: 999px;
+  background: #fffaf0;
+  color: #5a3b13;
+  font: inherit;
+  cursor: pointer;
+}
+.kitoku-text-size-control__btn.is-active {
+  background: #8a6a24;
+  color: #fff;
+  border-color: #8a6a24;
+  box-shadow: 0 2px 8px rgba(138,106,36,.18);
+}
+html.kitoku-font-small, body.kitoku-font-small { font-size: 14px; }
+html.kitoku-font-medium, body.kitoku-font-medium { font-size: 16px; }
+html.kitoku-font-large, body.kitoku-font-large { font-size: 18px; }
+html.kitoku-font-large input,
+html.kitoku-font-large textarea,
+html.kitoku-font-large select,
+html.kitoku-font-large button {
+  font-size: 1em;
+}
+@media (max-width: 640px) {
+  .kitoku-text-size-control {
+    justify-content: center;
+    margin: 8px auto 14px;
+    padding: 0 16px;
+  }
+}
+@media print {
+  .kitoku-text-size-control { display: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -219,6 +274,14 @@ body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 <div class="hdr no-print">
   <div class="hdr-logo">✦ KITOKU</div>
   <button class="back-btn" onclick="smartBack()">← もどる</button>
+</div>
+
+<!-- KITOKU text size control -->
+<div class="kitoku-text-size-control no-print" aria-label="文字サイズ">
+  <span class="kitoku-text-size-control__label">文字</span>
+  <button type="button" class="kitoku-text-size-control__btn" data-kitoku-font-size="small" aria-pressed="false">小</button>
+  <button type="button" class="kitoku-text-size-control__btn" data-kitoku-font-size="medium" aria-pressed="false">中</button>
+  <button type="button" class="kitoku-text-size-control__btn" data-kitoku-font-size="large" aria-pressed="false">大</button>
 </div>
 
 <!-- ===== 入力画面 s0 ===== -->
@@ -1811,6 +1874,41 @@ function smartBack(){
   }
   location.href = 'top.html';
 }
+</script>
+
+
+<!-- KITOKU text size script -->
+<script>
+(function(){
+  const key = 'kitokuTextSize';
+  const sizes = ['small', 'medium', 'large'];
+  const classes = sizes.map(size => 'kitoku-font-' + size);
+
+  function applyTextSize(size) {
+    if (!sizes.includes(size)) size = 'medium';
+    document.documentElement.classList.remove(...classes);
+    document.body.classList.remove(...classes);
+    document.documentElement.classList.add('kitoku-font-' + size);
+    document.body.classList.add('kitoku-font-' + size);
+    document.querySelectorAll('[data-kitoku-font-size]').forEach(btn => {
+      const active = btn.dataset.kitokuFontSize === size;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    try { localStorage.setItem(key, size); } catch (e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    let saved = 'medium';
+    try { saved = localStorage.getItem(key) || 'medium'; } catch (e) {}
+    applyTextSize(saved);
+    document.querySelectorAll('[data-kitoku-font-size]').forEach(btn => {
+      btn.addEventListener('click', function(){
+        applyTextSize(btn.dataset.kitokuFontSize);
+      });
+    });
+  });
+})();
 </script>
 
 </body>
