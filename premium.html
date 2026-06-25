@@ -4093,13 +4093,34 @@ const KitokuMap = {
         disableDefaultUI:true, gestureHandling:'greedy',
         clickableIcons:false
       });
-      // 座標変換用のOverlayViewを仕込む（latLngToPixel が projection を使う）
+      // 座標変換 + 八角形SVG描画用のOverlayViewを仕込む
       const projOverlay = new google.maps.OverlayView();
-      projOverlay.onAdd=function(){};
-      projOverlay.draw=function(){
-        gmap.__kitokuOverlayProjection = this.getProjection();
+      projOverlay._div = null;
+      projOverlay.onAdd = function(){
+        const div = document.createElement('div');
+        div.style.cssText = 'position:absolute;left:0;top:0;width:0;height:0;overflow:visible;pointer-events:none;';
+        this._div = div;
+        this.getPanes().overlayLayer.appendChild(div);
+        gmap.__kitokuCompassDiv = div;
       };
-      projOverlay.onRemove=function(){};
+      projOverlay.draw = function(){
+        gmap.__kitokuOverlayProjection = this.getProjection();
+        // パン時に八角形の位置を更新
+        if(gmap.__kitokuCompassDiv && window.kitokuMapCompassOverlay && window.kitokuMapCompassOverlay._svgWrap){
+          const proj = this.getProjection();
+          const ov = window.kitokuMapCompassOverlay;
+          const pt = proj.fromLatLngToDivPixel(new google.maps.LatLng(ov._lat, ov._lng));
+          if(pt && ov._svgWrap){
+            ov._svgWrap.style.left = (pt.x - ov._SVG/2)+'px';
+            ov._svgWrap.style.top  = (pt.y - ov._SVG/2)+'px';
+          }
+        }
+      };
+      projOverlay.onRemove = function(){
+        if(this._div && this._div.parentNode) this._div.parentNode.removeChild(this._div);
+        this._div = null;
+        gmap.__kitokuCompassDiv = null;
+      };
       projOverlay.setMap(gmap);
       return gmap;
     }
@@ -4249,6 +4270,11 @@ const KitokuMap = {
     if(!handle) return;
     if(this.provider==='leaflet'){ map.removeLayer(handle); }
     else if(this._gReady()){
+      // OverlayView方式の八角形（_svgWrapを持つ）
+      if(handle._svgWrap){
+        if(handle._svgWrap.parentNode) handle._svgWrap.parentNode.removeChild(handle._svgWrap);
+        return;
+      }
       // Polyline/Polygon/Circle は setMap(null)、AdvancedMarkerは map=null
       if(handle.setMap) handle.setMap(null);
       else if('map' in handle) handle.map=null;
@@ -4724,8 +4750,33 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
   cells+=`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="#ffd860" font-size="${Math.max(15,R_OUT*0.12).toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2px">${center}</text>`;
 
   const svgHtml=`<svg width="${SVG}" height="${SVG}" viewBox="0 0 ${SVG} ${SVG}" xmlns="http://www.w3.org/2000/svg">${cells}</svg>`;
-  kitokuMapCompassOverlay=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lat,lng:lng}, svgHtml,
-    {w:SVG,h:SVG,anchorX:SVG/2,anchorY:SVG/2,interactive:false});
+  // Google Mapsの場合はOverlayViewのdivに直接配置（モバイルSafariのアンカーズレを回避）
+  if(KitokuMap.provider==='google' && kitokuMapInst.__kitokuCompassDiv && kitokuMapInst.__kitokuOverlayProjection){
+    const proj = kitokuMapInst.__kitokuOverlayProjection;
+    const pt = proj.fromLatLngToDivPixel(new google.maps.LatLng(lat, lng));
+    if(pt){
+      // compassDivをクリア
+      const compassDiv = kitokuMapInst.__kitokuCompassDiv;
+      compassDiv.innerHTML = '';
+      const svgWrap = document.createElement('div');
+      svgWrap.style.cssText = `position:absolute;left:${pt.x - SVG/2}px;top:${pt.y - SVG/2}px;width:${SVG}px;height:${SVG}px;pointer-events:none;`;
+      svgWrap.innerHTML = svgHtml;
+      compassDiv.appendChild(svgWrap);
+      // ズーム・パン時に再描画するため、ダミーのhandleを返す
+      kitokuMapCompassOverlay = {_svgWrap: svgWrap, _compassDiv: compassDiv, _lat:lat, _lng:lng, _svgHtml:svgHtml, _SVG:SVG};
+      // map_idle時に位置を更新
+      if(kitokuMapInst.__compassIdleListener) google.maps.event.removeListener(kitokuMapInst.__compassIdleListener);
+      kitokuMapInst.__compassIdleListener = google.maps.event.addListenerOnce(kitokuMapInst, 'idle', ()=>{
+        const proj2 = kitokuMapInst.__kitokuOverlayProjection;
+        if(!proj2) return;
+        const pt2 = proj2.fromLatLngToDivPixel(new google.maps.LatLng(lat, lng));
+        if(pt2 && svgWrap) svgWrap.style.left = (pt2.x - SVG/2)+'px', svgWrap.style.top = (pt2.y - SVG/2)+'px';
+      });
+    }
+  } else {
+    kitokuMapCompassOverlay=KitokuMap.addHtmlMarker(kitokuMapInst, {lat:lat,lng:lng}, svgHtml,
+      {w:SVG,h:SVG,anchorX:SVG/2,anchorY:SVG/2,interactive:false});
+  }
   kitokuMapLines.push(kitokuMapCompassOverlay);
 }
 
