@@ -45,6 +45,9 @@ body[data-theme="dark"] .fi{background:#15110c;}
 .gender-btn.on{background:rgba(138,104,32,.1);border-color:var(--gold);color:var(--golddk);font-weight:700;}
 .go-btn{width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,var(--gold),var(--goldlt));border:none;border-radius:10px;color:#fff;font-family:'Noto Serif JP',serif;font-size:.95rem;font-weight:700;letter-spacing:.08em;cursor:pointer;}
 .go-btn:active{opacity:.85;}
+.go-btn:disabled{opacity:.55;cursor:not-allowed;background:#cfc6b6;}
+.limit-note{margin-top:9px;text-align:center;font-size:.68rem;line-height:1.7;color:var(--mist);}
+.limit-note.is-limit{color:#b45b5b;font-weight:700;}
 
 /* 星情報バー */
 .star-bar{background:rgba(138,104,32,.06);border:1px solid rgba(138,104,32,.18);border-radius:10px;padding:11px 14px;margin-bottom:18px;font-size:.66rem;color:var(--mist);text-align:center;line-height:1.8;}
@@ -233,6 +236,7 @@ html.kitoku-font-large button {
       <div class="gender-btn" id="gFemale" onclick="setGender('female')">女性</div>
     </div>
     <button class="go-btn" onclick="generate()">5年の地図をひらく</button>
+    <div class="limit-note" id="roadmapUsageNote">無料版は1日3回まで使えます。</div>
   </div>
 
   <!-- 結果 -->
@@ -317,6 +321,50 @@ function setGender(g){
 }
 
 // ============================================================
+// 1日3回までの無料利用制限
+// ============================================================
+const ROADMAP_FREE_LIMIT = 3;
+
+function getRoadmapUsageKey(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `kitoku-roadmap-free-count-${y}-${m}-${day}`;
+}
+
+function getRoadmapUsage(){
+  try{
+    return parseInt(localStorage.getItem(getRoadmapUsageKey()) || '0', 10) || 0;
+  }catch(e){
+    return 0;
+  }
+}
+
+function updateRoadmapUsageNote(){
+  const note = document.getElementById('roadmapUsageNote');
+  const btn = document.querySelector('.go-btn');
+  if(!note) return;
+  const used = getRoadmapUsage();
+  const remain = Math.max(0, ROADMAP_FREE_LIMIT - used);
+  note.classList.toggle('is-limit', remain <= 0);
+  note.textContent = remain > 0
+    ? `無料版は1日3回まで。今日はあと${remain}回ひらけます。`
+    : '本日の無料回数（3回）を使い切りました。明日またお試しください。';
+  if(btn){
+    btn.disabled = remain <= 0;
+    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '5年の地図をひらく';
+  }
+}
+
+function countRoadmapUsage(){
+  try{
+    localStorage.setItem(getRoadmapUsageKey(), String(getRoadmapUsage() + 1));
+  }catch(e){}
+  updateRoadmapUsageNote();
+}
+
+// ============================================================
 // 生成
 // ============================================================
 function generate(){
@@ -327,6 +375,12 @@ function generate(){
     alert('生年月日を正しく入力してください。');
     return;
   }
+  if(getRoadmapUsage() >= ROADMAP_FREE_LIMIT){
+    updateRoadmapUsageNote();
+    alert('本日の無料回数（3回）を使い切りました。明日またお試しください。');
+    return;
+  }
+  countRoadmapUsage();
   const {kY,kM}=getKD(by,bm,bd);
   const h=calcHonmei(kY);
   let t=calcTsukimei(h,kM);
@@ -521,6 +575,7 @@ window.addEventListener('DOMContentLoaded',()=>{
       if(arr[2])document.getElementById('bd').value=arr[2];
     }
   }catch(e){}
+  updateRoadmapUsageNote();
 });
 </script>
 <script>
