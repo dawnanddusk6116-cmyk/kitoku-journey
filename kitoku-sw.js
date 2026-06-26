@@ -1,8 +1,10 @@
-const KITOKU_CACHE = 'kitoku-pwa-v2-academy';
+const KITOKU_CACHE = 'kitoku-pwa-v3-academy-pdf-viewer';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
   './academy.html',
+  './academy_pdf_00.html',
+  './academy_pdf_01.html',
   './kitoku-manifest.json',
   './kitoku-icon-180.png',
   './kitoku-icon-192.png',
