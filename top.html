@@ -516,7 +516,23 @@ body{
             .cat-btn-arrow{width:28px; height:28px; font-size:19px;}
         }
 
-    </style>
+    /* プレミアムまとめカード（top.html用）*/
+.premium-plan-wrap{background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(184,146,58,.05));border:1.5px solid rgba(138,104,32,.3);border-radius:14px;padding:14px 15px;margin-bottom:6px;}
+.premium-plan-wrap-header{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.premium-plan-wrap-icon{font-size:1.4rem;}
+.premium-plan-wrap-info{flex:1;}
+.premium-plan-wrap-name{font-size:.82rem;font-weight:700;color:var(--goldlt);margin-bottom:2px;}
+.premium-plan-wrap-price{font-size:.65rem;color:var(--gold);font-weight:700;margin-bottom:3px;}
+.premium-plan-wrap-desc{font-size:.6rem;color:var(--mist);line-height:1.7;}
+.premium-plan-wrap-arrow{color:var(--gold);font-size:.9rem;transition:transform .25s;}
+.premium-plan-wrap.open .premium-plan-wrap-arrow{transform:rotate(90deg);}
+.premium-plan-wrap-features{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,104,32,.15);}
+.premium-plan-wrap.open .premium-plan-wrap-features{display:block;}
+.prem-feat-item{display:flex;align-items:center;gap:9px;padding:7px 4px;border-bottom:1px solid rgba(138,104,32,.08);font-size:.65rem;color:var(--mist);}
+.prem-feat-item:last-child{border-bottom:none;}
+.prem-feat-icon{font-size:1.1rem;flex-shrink:0;}
+.prem-feat-name{font-weight:700;color:var(--snow);font-size:.68rem;}
+</style>
 </head>
 <body>
 
@@ -823,26 +839,23 @@ body{
       </a>
 
       <div class="tools-section-label">✨ プレミアム機能</div>
-      <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
-        <span class="tool-icon">🗺️</span>
-        <span class="tool-info"><span class="tool-name">地図×方位盤 <span class="tool-badge">有料</span></span><span class="tool-desc">日盤・旅行・聖地巡礼・引越しを地図で確認</span></span>
-        <span class="tool-arrow">準備中</span>
-      </a>
-      <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
-        <span class="tool-icon">📊</span>
-        <span class="tool-info"><span class="tool-name">三盤比較 <span class="tool-badge">有料</span></span><span class="tool-desc">年盤・月盤・日盤を同時に見て輪重を発見</span></span>
-        <span class="tool-arrow">準備中</span>
-      </a>
-      <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
-        <span class="tool-icon">🚃</span>
-        <span class="tool-info"><span class="tool-name">線路の日 <span class="tool-badge">有料</span></span><span class="tool-desc">吉日・契約日・出発日を探す</span></span>
-        <span class="tool-arrow">準備中</span>
-      </a>
-      <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
-        <span class="tool-icon">✨</span>
-        <span class="tool-info"><span class="tool-name">KIGAKU先生AI <span class="tool-badge">有料</span></span><span class="tool-desc">結果を相談文にして深掘り</span></span>
-        <span class="tool-arrow">準備中</span>
-      </a>
+      <div class="premium-plan-wrap" id="topPremCard">
+        <div class="premium-plan-wrap-header" onclick="toggleTopPrem()">
+          <div class="premium-plan-wrap-icon">✨</div>
+          <div class="premium-plan-wrap-info">
+            <div class="premium-plan-wrap-name">プレミアムプラン</div>
+            <div class="premium-plan-wrap-price">¥500 / 月（準備中）</div>
+            <div class="premium-plan-wrap-desc">地図×方位盤・三盤比較・線路の日・KIGAKU先生AIがすべて使えます</div>
+          </div>
+          <div class="premium-plan-wrap-arrow">›</div>
+        </div>
+        <div class="premium-plan-wrap-features">
+          <div class="prem-feat-item"><span class="prem-feat-icon">🗺️</span><span><span class="prem-feat-name">地図×方位盤</span><br>日盤・旅行・聖地巡礼・引越しを地図で確認。</span></div>
+          <div class="prem-feat-item"><span class="prem-feat-icon">📊</span><span><span class="prem-feat-name">三盤比較</span><br>年盤・月盤・日盤を同時に見て、輪重・重なりを発見。</span></div>
+          <div class="prem-feat-item"><span class="prem-feat-icon">🚃</span><span><span class="prem-feat-name">線路の日</span><br>吉日×吉方の組み合わせで、最適な出発日を探す。</span></div>
+          <div class="prem-feat-item"><span class="prem-feat-icon">✨</span><span><span class="prem-feat-name">KIGAKU先生AI</span><br>結果を相談文にして深掘りする。</span></div>
+        </div>
+      </div>
 
       <div class="tools-section-label">🌐 海外向け</div>
       <a class="tool-item" href="en/index.html">
@@ -925,6 +938,11 @@ function toggleCat(id){
   const isOpen=body.classList.contains('open');
   body.classList.toggle('open',!isOpen);
   btn.classList.toggle('open',!isOpen);
+}
+
+function toggleTopPrem(){
+  const card=document.getElementById('topPremCard');
+  if(card)card.classList.toggle('open');
 }
 
 function toggleAllTools(){
