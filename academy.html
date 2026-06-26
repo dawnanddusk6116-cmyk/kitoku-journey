@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KITOKU Academy</title>
+<style>
+:root{
+  --bg:#f4f0ea;
+  --paper:#fffdf8;
+  --ink:#4b2f12;
+  --muted:#8b7b68;
+  --line:#dfd3c3;
+  --gold:#a87918;
+  --purple:#7b5ea7;
+  --blue:#2a6ab0;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  line-height:1.8;
+}
+a{color:inherit;text-decoration:none}
+.page{max-width:720px;margin:0 auto;padding:0 18px 56px}
+.topbar{
+  position:sticky;top:0;z-index:5;
+  background:rgba(244,240,234,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:720px;margin:0 auto;padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.brand{letter-spacing:.28em;font-size:1.2rem;color:#7a5017}
+.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn{
+  border:1px solid #d6bf93;border-radius:10px;
+  padding:7px 13px;background:#fffaf0;color:#5b3a13;
+  font-size:.9rem;font-weight:700;
+}
+.hero{text-align:center;padding:44px 0 28px}
+.eyebrow{letter-spacing:.32em;color:var(--purple);font-size:.72rem;font-weight:700}
+h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
+.lead{color:#6c5b47;font-size:.95rem;margin:0 auto;max-width:31em}
+.lesson{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:22px;
+  margin:16px 0;
+  box-shadow:0 10px 26px rgba(70,44,14,.04);
+}
+.lesson-head{display:flex;gap:16px;align-items:flex-start}
+.num{
+  width:48px;height:48px;border-radius:50%;
+  display:grid;place-items:center;
+  background:#fff8e8;border:1px solid #d8ba74;
+  color:var(--gold);font-weight:800;flex:0 0 auto;
+}
+h2{font-size:1.25rem;margin:0 0 4px;letter-spacing:.06em}
+.desc{font-size:.92rem;color:#6c5b47;margin:0}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.action{
+  border:1px solid #d8c7ae;border-radius:12px;
+  padding:12px 10px;text-align:center;background:#fbf8f1;
+  font-weight:800;font-size:.92rem;
+}
+.action.video{border-color:#bba5d8;background:#fbf8ff;color:#4a2a78}
+.note{
+  margin-top:20px;padding:14px 16px;border-radius:14px;
+  background:#f8f1df;border:1px solid #dec894;
+  font-size:.86rem;color:#6c512b;
+}
+.footer{text-align:center;margin-top:38px;color:#9c8b78;font-size:.75rem;letter-spacing:.18em}
+@media(max-width:560px){
+  .page{padding:0 14px 48px}
+  h1{font-size:1.6rem}
+  .lesson{padding:18px}
+  .lesson-head{gap:12px}
+  .actions{grid-template-columns:1fr}
+  .brand{font-size:1rem}
+  .btn{padding:6px 10px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="top.html">KITOKU</a>
+    <nav class="nav">
+      <button class="btn" type="button" onclick="history.length > 1 ? history.back() : location.href='top.html'">← 前へ</button>
+      <a class="btn" href="top.html">入口へ</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <div class="eyebrow">KITOKU ACADEMY</div>
+    <h1>気学を学ぶ</h1>
+    <p class="lead">アプリの使い方と、KITOKUの考え方をPDFと動画で確認できます。まずは00と01から、全体像と入口をつかんでください。</p>
+  </section>
+
+  <section class="lesson">
+    <div class="lesson-head">
+      <div class="num">00</div>
+      <div>
+        <h2>東洋思想の地図</h2>
+        <p class="desc">気学・納音・姓名鑑定・家相の全体像を、ひとつの地図として見る入口です。</p>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="action" href="ACADEMY/kitoku_academy_00.pdf" target="_blank" rel="noopener">📄 PDFを開く</a>
+      <a class="action video" href="ACADEMY/00%E6%9D%B1%E6%B4%8B%E3%81%AE%E3%82%AA%E3%83%98%E3%82%9A%E3%83%AC%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%AF%E3%82%99%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0.mp4" target="_blank" rel="noopener">▶ 動画を見る</a>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="lesson-head">
+      <div class="num">01</div>
+      <div>
+        <h2>KITOKUの使い方</h2>
+        <p class="desc">スクリーンショットを見ながら、KITOKUで何ができるか、どこから始めるかを確認します。</p>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="action" href="ACADEMY/kitoku_academy_01.pdf" target="_blank" rel="noopener">📄 PDFを開く</a>
+      <a class="action video" href="ACADEMY/01KITOKU%EF%BC%9A%E5%A4%9A%E6%AC%A1%E5%85%83%E7%9A%84%E3%81%AA%E8%87%AA%E5%B7%B1%E3%81%B8%E3%81%AE%E8%A8%AD%E8%A8%88%E5%9B%B3.mp4" target="_blank" rel="noopener">▶ 動画を見る</a>
+    </div>
+  </section>
+
+  <div class="note">動画は容量が大きいため、スマートフォンではWi-Fi環境での視聴がおすすめです。動画内の表示や文言は、今後整えていきます。</div>
+
+  <div class="footer">KITOKU @ JOURNEY<br>自分で決めるための東洋OS</div>
+</main>
+</body>
+</html>
