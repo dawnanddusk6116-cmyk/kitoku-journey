@@ -1,10 +1,14 @@
-const KITOKU_CACHE = 'kitoku-pwa-v1';
+const KITOKU_CACHE = 'kitoku-pwa-v2-academy';
 const KITOKU_CORE = [
   './index.html',
+  './top.html',
+  './academy.html',
   './kitoku-manifest.json',
   './kitoku-icon-180.png',
   './kitoku-icon-192.png',
-  './kitoku-icon-512.png'
+  './kitoku-icon-512.png',
+  './ACADEMY/kitoku_academy_00.pdf',
+  './ACADEMY/kitoku_academy_01.pdf'
 ];
 
 self.addEventListener('install', event => {
