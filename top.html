@@ -223,6 +223,26 @@ body{
   display:flex;align-items:center;gap:6px;
 }
 .tools-sub-label::after{content:'';flex:1;height:1px;background:rgba(100,80,40,.1);}
+/* ── アコーディオン ── */
+.cat-accordion{margin-bottom:4px;}
+.cat-btn{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);border:1px solid var(--rim);border-radius:12px;
+  padding:13px 15px;cursor:pointer;text-align:left;
+}
+.cat-btn.open{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent;}
+.cat-btn-left{display:flex;align-items:center;gap:10px;}
+.cat-btn-num{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);font-weight:600;line-height:1;}
+.cat-btn-label{font-size:.8rem;font-weight:700;color:var(--snow);letter-spacing:.04em;}
+.cat-btn-arrow{font-size:.9rem;color:var(--gold);transition:transform .25s;}
+.cat-btn.open .cat-btn-arrow{transform:rotate(90deg);}
+.cat-body{
+  display:none;
+  background:var(--card);border:1px solid var(--rim);border-top:none;
+  border-bottom-left-radius:12px;border-bottom-right-radius:12px;
+  padding:0 0 6px;
+}
+.cat-body.open{display:block;}
 .tool-item{
   display:flex;align-items:center;gap:12px;
   padding:11px 8px;border-radius:10px;
@@ -341,101 +361,134 @@ body{
     <div style="font-size:.6rem;padding:3px 10px;border-radius:8px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.3);color:#4a2a78;font-weight:700;flex-shrink:0;">準備中</div>
   </div>
 
-  <!-- ── 三分類メインナビ ── -->
+  <!-- ── 三分類メインナビ（アコーディオン）── -->
   <div class="three-cats-wrap">
 
-    <div class="tools-section-label" style="padding-top:6px;">① 自分を知る</div>
-    <div class="tools-sub-label first">── まず使う</div>
-    <a class="tool-item" href="direction_v2.html">
-      <span class="tool-icon">🧭</span>
-      <span class="tool-info"><span class="tool-name">今日の方位盤</span><span class="tool-desc">日盤・月盤・年盤・今日の吉凶を確認</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="today.html">
-      <span class="tool-icon">🌸</span>
-      <span class="tool-info"><span class="tool-name">今日を整える</span><span class="tool-desc">方位・色・香り・小さな行動を今日の一手に</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="kyusei_v2.html">
-      <span class="tool-icon">⭐</span>
-      <span class="tool-info"><span class="tool-name">自分の星を見る</span><span class="tool-desc">本命星・月命星・傾斜・同会・納音</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="report_generator_free.html">
-      <span class="tool-icon">📋</span>
-      <span class="tool-info"><span class="tool-name">はじめてのKITOKU診断</span><span class="tool-desc">名前と生年月日で入口レポートを見る</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <div class="tools-sub-label">── さらに深く見る</div>
-    <a class="tool-item" href="roadmap.html">
-      <span class="tool-icon">🗺️</span>
-      <span class="tool-info"><span class="tool-name">今後5年ロードマップ</span><span class="tool-desc">本命星の巡りで読む、これからの5年の地図</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="life.html">
-      <span class="tool-icon">📝</span>
-      <span class="tool-info"><span class="tool-name">姓名鑑定</span><span class="tool-desc">画数・五行・陰陽・響き・命の設計図を見る</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="scent.html">
-      <span class="tool-icon">✤</span>
-      <span class="tool-info"><span class="tool-name">香水を活用する</span><span class="tool-desc">シーン・相手・手持ち香水から香水を使い分ける</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="astro64.html">
-      <span class="tool-icon">🔭</span>
-      <span class="tool-info"><span class="tool-name">西洋占星術×気学で深く見る</span><span class="tool-desc">太陽・月・金星と気学で本質を見る</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="mindmap.html">
-      <span class="tool-icon">🧠</span>
-      <span class="tool-info"><span class="tool-name">気学マインドマップ</span><span class="tool-desc">左脳の論理で整理し、気学で自分を知る</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="kaso.html">
-      <span class="tool-icon">🏠</span>
-      <span class="tool-info"><span class="tool-name">家相診断</span><span class="tool-desc">中心・玄関・水回り・欠け張り</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item free-ai-tool" href="ai.html">
-      <span class="tool-icon">💬</span>
-      <span class="tool-info"><span class="tool-name">AIで悩みを整理する <span class="tool-badge free">無料</span></span><span class="tool-desc">星情報をコピーして悩みと次の一手を整理</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
-      <span class="tool-icon">✨</span>
-      <span class="tool-info"><span class="tool-name">KIGAKU先生AI <span class="tool-badge">有料</span></span><span class="tool-desc">結果を相談文にして深掘り</span></span>
-      <span class="tool-arrow">準備中</span>
-    </a>
+    <!-- ① 自分を知る -->
+    <div class="cat-accordion">
+      <button class="cat-btn" onclick="toggleCat('cat1')">
+        <span class="cat-btn-left">
+          <span class="cat-btn-num">①</span>
+          <span class="cat-btn-label">自分を知る</span>
+        </span>
+        <span class="cat-btn-arrow">›</span>
+      </button>
+      <div class="cat-body" id="cat1">
+        <div class="tools-sub-label first">── まず使う</div>
+        <a class="tool-item" href="direction_v2.html">
+          <span class="tool-icon">🧭</span>
+          <span class="tool-info"><span class="tool-name">今日の方位盤</span><span class="tool-desc">日盤・月盤・年盤・今日の吉凶を確認</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="today.html">
+          <span class="tool-icon">🌸</span>
+          <span class="tool-info"><span class="tool-name">今日を整える</span><span class="tool-desc">方位・色・香り・小さな行動を今日の一手に</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="kyusei_v2.html">
+          <span class="tool-icon">⭐</span>
+          <span class="tool-info"><span class="tool-name">自分の星を見る</span><span class="tool-desc">本命星・月命星・傾斜・同会・納音</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="report_generator_free.html">
+          <span class="tool-icon">📋</span>
+          <span class="tool-info"><span class="tool-name">はじめてのKITOKU診断</span><span class="tool-desc">名前と生年月日で入口レポートを見る</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <div class="tools-sub-label">── さらに深く見る</div>
+        <a class="tool-item" href="roadmap.html">
+          <span class="tool-icon">🗺️</span>
+          <span class="tool-info"><span class="tool-name">今後5年ロードマップ</span><span class="tool-desc">本命星の巡りで読む、これからの5年の地図</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="life.html">
+          <span class="tool-icon">📝</span>
+          <span class="tool-info"><span class="tool-name">姓名鑑定</span><span class="tool-desc">画数・五行・陰陽・響き・命の設計図を見る</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="scent.html">
+          <span class="tool-icon">✤</span>
+          <span class="tool-info"><span class="tool-name">香水を活用する</span><span class="tool-desc">シーン・相手・手持ち香水から香水を使い分ける</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="astro64.html">
+          <span class="tool-icon">🔭</span>
+          <span class="tool-info"><span class="tool-name">西洋占星術×気学で深く見る</span><span class="tool-desc">太陽・月・金星と気学で本質を見る</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="mindmap.html">
+          <span class="tool-icon">🧠</span>
+          <span class="tool-info"><span class="tool-name">気学マインドマップ</span><span class="tool-desc">左脳の論理で整理し、気学で自分を知る</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="kaso.html">
+          <span class="tool-icon">🏠</span>
+          <span class="tool-info"><span class="tool-name">家相診断</span><span class="tool-desc">中心・玄関・水回り・欠け張り</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item free-ai-tool" href="ai.html">
+          <span class="tool-icon">💬</span>
+          <span class="tool-info"><span class="tool-name">AIで悩みを整理する <span class="tool-badge free">無料</span></span><span class="tool-desc">星情報をコピーして悩みと次の一手を整理</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
+          <span class="tool-icon">✨</span>
+          <span class="tool-info"><span class="tool-name">KIGAKU先生AI <span class="tool-badge">有料</span></span><span class="tool-desc">結果を相談文にして深掘り</span></span>
+          <span class="tool-arrow">準備中</span>
+        </a>
+      </div>
+    </div>
 
-    <div class="tools-section-label">② ビジネス・人間関係を整える</div>
-    <a class="tool-item" href="business.html">
-      <span class="tool-icon">💼</span>
-      <span class="tool-info"><span class="tool-name">ビジネス・経営に活かす</span><span class="tool-desc">採用・商談・お金の特性・経営テーマ・朝礼</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="relations.html">
-      <span class="tool-icon">🤝</span>
-      <span class="tool-info"><span class="tool-name">相性・人間関係</span><span class="tool-desc">恋愛・家族・仕事相手との縁を読む</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
+    <!-- ② ビジネス・人間関係 -->
+    <div class="cat-accordion">
+      <button class="cat-btn" onclick="toggleCat('cat2')">
+        <span class="cat-btn-left">
+          <span class="cat-btn-num">②</span>
+          <span class="cat-btn-label">ビジネス・人間関係を整える</span>
+        </span>
+        <span class="cat-btn-arrow">›</span>
+      </button>
+      <div class="cat-body" id="cat2">
+        <a class="tool-item" href="business.html">
+          <span class="tool-icon">💼</span>
+          <span class="tool-info"><span class="tool-name">ビジネス・経営に活かす</span><span class="tool-desc">採用・商談・お金の特性・経営テーマ・朝礼</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="relations.html">
+          <span class="tool-icon">🤝</span>
+          <span class="tool-info"><span class="tool-name">相性・人間関係</span><span class="tool-desc">恋愛・家族・仕事相手との縁を読む</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+      </div>
+    </div>
 
-    <div class="tools-section-label">③ 旅（気の力で）ひらく</div>
-    <a class="tool-item" href="travel.html">
-      <span class="tool-icon">✈️</span>
-      <span class="tool-info"><span class="tool-name">旅行吉方位ナビ</span><span class="tool-desc">旅行日程・目的地を選ぶ</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="pilgrimage.html">
-      <span class="tool-icon">⛩️</span>
-      <span class="tool-info"><span class="tool-name">聖地巡礼ナビ</span><span class="tool-desc">吉方位×線路の日で日程を選ぶ</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
-    <a class="tool-item" href="move.html">
-      <span class="tool-icon">🏡</span>
-      <span class="tool-info"><span class="tool-name">引越しナビ</span><span class="tool-desc">年盤・月盤で引越し先を選ぶ</span></span>
-      <span class="tool-arrow">›</span>
-    </a>
+    <!-- ③ 旅 -->
+    <div class="cat-accordion">
+      <button class="cat-btn" onclick="toggleCat('cat3')">
+        <span class="cat-btn-left">
+          <span class="cat-btn-num">③</span>
+          <span class="cat-btn-label">旅（気の力で）ひらく</span>
+        </span>
+        <span class="cat-btn-arrow">›</span>
+      </button>
+      <div class="cat-body" id="cat3">
+        <a class="tool-item" href="travel.html">
+          <span class="tool-icon">✈️</span>
+          <span class="tool-info"><span class="tool-name">旅行吉方位ナビ</span><span class="tool-desc">旅行日程・目的地を選ぶ</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="pilgrimage.html">
+          <span class="tool-icon">⛩️</span>
+          <span class="tool-info"><span class="tool-name">聖地巡礼ナビ</span><span class="tool-desc">吉方位×線路の日で日程を選ぶ</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+        <a class="tool-item" href="move.html">
+          <span class="tool-icon">🏡</span>
+          <span class="tool-info"><span class="tool-name">引越しナビ</span><span class="tool-desc">年盤・月盤で引越し先を選ぶ</span></span>
+          <span class="tool-arrow">›</span>
+        </a>
+      </div>
+    </div>
 
   </div>
 
@@ -608,6 +661,14 @@ body{
 })();
 
 // すべてのツール開閉
+function toggleCat(id){
+  const body=document.getElementById(id);
+  const btn=body.previousElementSibling;
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  btn.classList.toggle('open',!isOpen);
+}
+
 function toggleAllTools(){
   const panel=document.getElementById('allToolsPanel');
   const label=document.getElementById('allToolsLabel');
