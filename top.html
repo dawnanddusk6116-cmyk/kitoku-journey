@@ -354,7 +354,153 @@ body{
   line-height:2.2;
 }
 .footer a{color:var(--mist);text-decoration:none;}
-</style>
+
+
+        /* 2026-06-26: top entry labels, closer to the main cards */
+        .three-cats-wrap{
+            display:grid;
+            gap:12px;
+            margin:18px 0 22px;
+        }
+        .cat-btn{
+            position:relative;
+            width:100%;
+            min-height:92px;
+            display:grid;
+            grid-template-columns:1fr auto;
+            align-items:center;
+            gap:14px;
+            padding:18px 18px 18px 20px;
+            border:1px solid rgba(171,126,43,.28);
+            border-left:7px solid #a9791f;
+            border-radius:16px;
+            background:
+                radial-gradient(circle at 18% 0%, rgba(255,255,255,.92), transparent 34%),
+                linear-gradient(135deg, rgba(255,252,245,.98), rgba(255,255,255,.94) 54%, rgba(248,240,225,.76));
+            box-shadow:0 14px 32px rgba(75,47,16,.055), inset 0 1px 0 rgba(255,255,255,.9);
+            color:#4a2f12;
+            cursor:pointer;
+            overflow:hidden;
+            transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+        .cat-btn::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(120deg, rgba(255,255,255,.55), transparent 42%);
+            pointer-events:none;
+        }
+        .cat-btn:hover{
+            transform:translateY(-1px);
+            box-shadow:0 18px 42px rgba(75,47,16,.08), inset 0 1px 0 rgba(255,255,255,.95);
+        }
+        .cat-btn-left{
+            position:relative;
+            z-index:1;
+            display:grid;
+            grid-template-columns:38px 1fr;
+            align-items:center;
+            gap:14px;
+            min-width:0;
+        }
+        .cat-btn-num{
+            width:34px;
+            height:34px;
+            display:grid;
+            place-items:center;
+            border-radius:999px;
+            border:1px solid rgba(169,121,31,.5);
+            background:rgba(255,250,240,.96);
+            color:#9b6b17;
+            font-family:Georgia, "Times New Roman", serif;
+            font-size:17px;
+            font-weight:700;
+            box-shadow:0 0 0 5px rgba(169,121,31,.08);
+        }
+        .cat-btn-copy{
+            display:flex;
+            flex-direction:column;
+            gap:4px;
+            min-width:0;
+        }
+        .cat-btn-kicker{
+            display:block;
+            color:#9b6b17;
+            font-size:10px;
+            line-height:1;
+            font-weight:700;
+            letter-spacing:.15em;
+            text-transform:uppercase;
+        }
+        .cat-btn-label{
+            display:block;
+            color:#3f280f;
+            font-size:19px;
+            line-height:1.35;
+            font-weight:800;
+            letter-spacing:.03em;
+        }
+        .cat-btn-sub{
+            display:block;
+            color:#7f6b53;
+            font-size:13px;
+            line-height:1.55;
+            letter-spacing:.02em;
+        }
+        .cat-btn-arrow{
+            position:relative;
+            z-index:1;
+            width:30px;
+            height:30px;
+            display:grid;
+            place-items:center;
+            border-radius:999px;
+            border:1px solid rgba(169,121,31,.25);
+            background:rgba(255,255,255,.76);
+            color:#9b6b17;
+            font-size:21px;
+            line-height:1;
+        }
+        .cat-section:nth-child(2) .cat-btn{
+            border-left-color:#2d6f96;
+            border-color:rgba(75,135,172,.3);
+            background:
+                radial-gradient(circle at 18% 0%, rgba(255,255,255,.94), transparent 34%),
+                linear-gradient(135deg, rgba(246,251,255,.98), rgba(255,255,255,.94) 52%, rgba(232,243,251,.78));
+        }
+        .cat-section:nth-child(2) .cat-btn-num,
+        .cat-section:nth-child(2) .cat-btn-arrow{
+            border-color:rgba(45,111,150,.28);
+            color:#2d6f96;
+            box-shadow:0 0 0 5px rgba(45,111,150,.08);
+        }
+        .cat-section:nth-child(2) .cat-btn-kicker{color:#2d6f96;}
+        .cat-section:nth-child(3) .cat-btn{
+            border-left-color:#2f7c56;
+            border-color:rgba(74,145,103,.3);
+            background:
+                radial-gradient(circle at 18% 0%, rgba(255,255,255,.94), transparent 34%),
+                linear-gradient(135deg, rgba(247,253,249,.98), rgba(255,255,255,.94) 52%, rgba(232,244,236,.78));
+        }
+        .cat-section:nth-child(3) .cat-btn-num,
+        .cat-section:nth-child(3) .cat-btn-arrow{
+            border-color:rgba(47,124,86,.28);
+            color:#2f7c56;
+            box-shadow:0 0 0 5px rgba(47,124,86,.08);
+        }
+        .cat-section:nth-child(3) .cat-btn-kicker{color:#2f7c56;}
+        @media (max-width:560px){
+            .three-cats-wrap{gap:10px; margin-top:16px;}
+            .cat-btn{min-height:86px; padding:16px 14px 16px 16px; border-radius:14px;}
+            .cat-btn-left{grid-template-columns:34px 1fr; gap:12px;}
+            .cat-btn-num{width:30px; height:30px; font-size:15px;}
+            .cat-btn-kicker{font-size:9px; letter-spacing:.13em;}
+            .cat-btn-label{font-size:17px;}
+            .cat-btn-sub{font-size:12px; line-height:1.5;}
+            .cat-btn-arrow{width:28px; height:28px; font-size:19px;}
+        }
+
+    </style>
 </head>
 <body>
 
@@ -386,7 +532,8 @@ body{
       <button class="cat-btn" onclick="toggleCat('cat1')">
         <span class="cat-btn-left">
           <span class="cat-btn-num">①</span>
-          <span class="cat-btn-copy"><span class="cat-btn-label">自分を知る</span><span class="cat-btn-sub">星・名前・今年の流れから、自分の軸を確認する</span></span>
+          <span class="cat-btn-copy"><span class="cat-btn-kicker">SELF READING</span>
+              <span class="cat-btn-label">自分を知る</span><span class="cat-btn-sub">星・名前・今年の流れから、自分の軸を確認する</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
@@ -461,7 +608,8 @@ body{
       <button class="cat-btn" onclick="toggleCat('cat2')">
         <span class="cat-btn-left">
           <span class="cat-btn-num">②</span>
-          <span class="cat-btn-copy"><span class="cat-btn-label">ビジネス・人間関係を整える</span><span class="cat-btn-sub">仕事・相性・社名から、関係と判断を整える</span></span>
+          <span class="cat-btn-copy"><span class="cat-btn-kicker">RELATION / BUSINESS</span>
+              <span class="cat-btn-label">ビジネス・人間関係を整える</span><span class="cat-btn-sub">仕事・相性・社名から、関係と判断を整える</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
@@ -484,7 +632,8 @@ body{
       <button class="cat-btn" onclick="toggleCat('cat3')">
         <span class="cat-btn-left">
           <span class="cat-btn-num">③</span>
-          <span class="cat-btn-copy"><span class="cat-btn-label">行動して運を開く</span><span class="cat-btn-sub">方位・旅行・聖地巡礼・引越しで動く</span></span>
+          <span class="cat-btn-copy"><span class="cat-btn-kicker">ACTION COMPASS</span>
+              <span class="cat-btn-label">行動して運を開く</span><span class="cat-btn-sub">方位・旅行・聖地巡礼・引越しで、動く日を決める</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
