@@ -224,25 +224,79 @@ body{
 }
 .tools-sub-label::after{content:'';flex:1;height:1px;background:rgba(100,80,40,.1);}
 /* ── アコーディオン ── */
-.cat-accordion{margin-bottom:4px;}
-.cat-btn{
-  width:100%;display:flex;align-items:center;justify-content:space-between;
-  background:var(--card);border:1px solid var(--rim);border-radius:12px;
-  padding:13px 15px;cursor:pointer;text-align:left;
-}
-.cat-btn.open{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent;}
-.cat-btn-left{display:flex;align-items:center;gap:10px;}
-.cat-btn-num{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);font-weight:600;line-height:1;}
-.cat-btn-label{font-size:.8rem;font-weight:700;color:var(--snow);letter-spacing:.04em;}
-.cat-btn-arrow{font-size:.9rem;color:var(--gold);transition:transform .25s;}
-.cat-btn.open .cat-btn-arrow{transform:rotate(90deg);}
-.cat-body{
-  display:none;
-  background:var(--card);border:1px solid var(--rim);border-top:none;
-  border-bottom-left-radius:12px;border-bottom-right-radius:12px;
-  padding:0 0 6px;
-}
-.cat-body.open{display:block;}
+        .three-cats-wrap{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            margin:0 0 14px;
+        }
+        .cat-accordion{margin-bottom:0;}
+        .cat-btn{
+            width:100%;
+            min-height:74px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:14px;
+            background:linear-gradient(135deg, #fffaf0, #fffefd);
+            border:1px solid var(--rim);
+            border-left:5px solid var(--gold);
+            border-radius:16px;
+            padding:14px 16px;
+            box-shadow:0 8px 22px rgba(88, 65, 32, .055);
+            color:var(--ink);
+            text-align:left;
+            cursor:pointer;
+        }
+        .cat-btn-left{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            min-width:0;
+        }
+        .cat-btn-num{
+            width:30px;
+            height:30px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            flex:0 0 auto;
+            border:1px solid rgba(162, 112, 28, .36);
+            border-radius:999px;
+            background:#fffdf6;
+            color:var(--gold);
+            font-weight:800;
+            font-size:.95rem;
+        }
+        .cat-btn-copy{display:block; min-width:0;}
+        .cat-btn-label{
+            display:block;
+            font-size:1rem;
+            font-weight:800;
+            letter-spacing:.03em;
+            color:var(--ink);
+            line-height:1.35;
+        }
+        .cat-btn-sub{
+            display:block;
+            margin-top:4px;
+            font-size:.7rem;
+            line-height:1.45;
+            color:var(--muted);
+            letter-spacing:.02em;
+        }
+        .cat-btn-arrow{
+            color:var(--gold);
+            font-weight:900;
+            flex:0 0 auto;
+        }
+        .cat-body{
+            display:none;
+            padding:10px 2px 6px 12px;
+            border-left:2px solid rgba(162, 112, 28, .18);
+            margin:8px 0 6px 16px;
+        }
+        .cat-body.open{display:block;}
 .tool-item{
   display:flex;align-items:center;gap:12px;
   padding:11px 8px;border-radius:10px;
@@ -325,51 +379,14 @@ body{
 <div class="entry-section">
   <div class="entry-label">入口を選ぶ</div>
 
-  <!-- ① 自分を知る -->
-  <a class="entry-card e-today" href="index.html?direct=1&home=1">
-    <div class="entry-icon">🧭</div>
-    <div class="entry-info">
-      <div class="today-badge" id="todayBadge">今日の入口</div>
-      <div class="entry-title">自分を知る</div>
-      <div class="entry-desc">星・方位・香りから、自分の状態と今日の流れを見ます。</div>
-      <div class="entry-points"><span>自分</span><span>今日</span><span>整える</span></div>
-    </div>
-    <div class="entry-arrow">›</div>
-  </a>
-
-  <!-- ② 自分専用KITOKUを作る -->
-  <a class="entry-card e-my" href="my_kitoku.html">
-    <div class="entry-icon">⚙️</div>
-    <div class="entry-info">
-      <div class="my-badge">自分専用<span class="new-badge">NEW</span></div>
-      <div class="entry-title">自分専用KITOKUを作る</div>
-      <div class="entry-desc">よく使う機能だけを選んで、あなただけの入口を作ります。</div>
-      <div class="entry-points"><span>選ぶ</span><span>保存</span><span>毎日使う</span></div>
-    </div>
-    <div class="entry-arrow">›</div>
-  </a>
-
-  <!-- ③ KITOKU Academy -->
-  <div class="entry-card e-academy" style="opacity:.6;cursor:default;">
-    <div class="entry-icon">📖</div>
-    <div class="entry-info">
-      <div class="entry-en">KITOKU ACADEMY</div>
-      <div class="entry-title">気学を学ぶ</div>
-      <div class="entry-desc">九星・方位・姓名・家相・納音を基礎から学ぶ入口です。</div>
-      <div class="entry-points"><span>00</span><span>01</span><span>準備中</span></div>
-    </div>
-    <div style="font-size:.6rem;padding:3px 10px;border-radius:8px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.3);color:#4a2a78;font-weight:700;flex-shrink:0;">準備中</div>
-  </div>
-
-  <!-- ── 三分類メインナビ（アコーディオン）── -->
-  <div class="three-cats-wrap">
+<div class="three-cats-wrap">
 
     <!-- ① 自分を知る -->
     <div class="cat-accordion">
       <button class="cat-btn" onclick="toggleCat('cat1')">
         <span class="cat-btn-left">
           <span class="cat-btn-num">①</span>
-          <span class="cat-btn-label">自分を知る</span>
+          <span class="cat-btn-copy"><span class="cat-btn-label">自分を知る</span><span class="cat-btn-sub">星・名前・今年の流れから、自分の軸を確認する</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
@@ -444,7 +461,7 @@ body{
       <button class="cat-btn" onclick="toggleCat('cat2')">
         <span class="cat-btn-left">
           <span class="cat-btn-num">②</span>
-          <span class="cat-btn-label">ビジネス・人間関係を整える</span>
+          <span class="cat-btn-copy"><span class="cat-btn-label">ビジネス・人間関係を整える</span><span class="cat-btn-sub">仕事・相性・社名から、関係と判断を整える</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
@@ -467,7 +484,7 @@ body{
       <button class="cat-btn" onclick="toggleCat('cat3')">
         <span class="cat-btn-left">
           <span class="cat-btn-num">③</span>
-          <span class="cat-btn-label">旅（気の力で）ひらく</span>
+          <span class="cat-btn-copy"><span class="cat-btn-label">行動して運を開く</span><span class="cat-btn-sub">方位・旅行・聖地巡礼・引越しで動く</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
@@ -491,6 +508,36 @@ body{
     </div>
 
   </div>
+
+
+  
+
+  <!-- ② 自分専用KITOKUを作る -->
+  <a class="entry-card e-my" href="my_kitoku.html">
+    <div class="entry-icon">⚙️</div>
+    <div class="entry-info">
+      <div class="my-badge">自分専用<span class="new-badge">NEW</span></div>
+      <div class="entry-title">自分専用KITOKUを作る</div>
+      <div class="entry-desc">よく使う機能だけを選んで、あなただけの入口を作ります。</div>
+      <div class="entry-points"><span>選ぶ</span><span>保存</span><span>毎日使う</span></div>
+    </div>
+    <div class="entry-arrow">›</div>
+  </a>
+
+  <!-- ③ KITOKU Academy -->
+  <div class="entry-card e-academy" style="opacity:.6;cursor:default;">
+    <div class="entry-icon">📖</div>
+    <div class="entry-info">
+      <div class="entry-en">KITOKU ACADEMY</div>
+      <div class="entry-title">気学を学ぶ</div>
+      <div class="entry-desc">九星・方位・姓名・家相・納音を基礎から学ぶ入口です。</div>
+      <div class="entry-points"><span>00</span><span>01</span><span>準備中</span></div>
+    </div>
+    <div style="font-size:.6rem;padding:3px 10px;border-radius:8px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.3);color:#4a2a78;font-weight:700;flex-shrink:0;">準備中</div>
+  </div>
+
+  <!-- ── 三分類メインナビ（アコーディオン）── -->
+  
 
   <!-- すべてのツール（確認・管理用） -->
   <div class="all-tools-wrap">
@@ -586,7 +633,7 @@ body{
         <span class="tool-arrow">›</span>
       </a>
 
-      <div class="tools-section-label">③ 旅（気の力で）ひらく</div>
+      <div class="tools-section-label">③ 行動して運を開く</div>
       <a class="tool-item" href="travel.html">
         <span class="tool-icon">✈️</span>
         <span class="tool-info"><span class="tool-name">旅行吉方位ナビ</span><span class="tool-desc">旅行日程・目的地を選ぶ</span></span>
