@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -718,8 +721,8 @@ body{
     <div class="entry-info">
       <div class="entry-en">KITOKU ACADEMY</div>
       <div class="entry-title">気学を学ぶ</div>
-      <div class="entry-desc">00・01のPDFと動画から、KITOKUの考え方と使い方を学ぶ入口です。</div>
-      <div class="entry-points"><span>00</span><span>01</span><span>PDF・動画</span></div>
+      <div class="entry-desc">00・01のPDFから、KITOKUの考え方と使い方を学ぶ入口です。動画は準備中です。</div>
+      <div class="entry-points"><span>00</span><span>01</span><span>PDF</span><span>動画準備中</span></div>
     </div>
     <div class="entry-arrow">›</div>
   </a>
@@ -957,6 +960,10 @@ function toggleAllTools(){
 
 function showPwaHint(){
   alert('iPhoneはSafariの共有ボタンから「ホーム画面に追加」を選ぶと、毎日アプリのように開けます。\n\nAndroidはChromeのメニューから「ホーム画面に追加」を選んでください。');
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }
 </script>
 </body>

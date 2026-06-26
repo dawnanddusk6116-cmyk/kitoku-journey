@@ -2,7 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f0ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <title>KITOKU Academy</title>
 <style>
 :root{
@@ -70,6 +77,7 @@ h2{font-size:1.25rem;margin:0 0 4px;letter-spacing:.06em}
   font-weight:800;font-size:.92rem;
 }
 .action.video{border-color:#bba5d8;background:#fbf8ff;color:#4a2a78}
+.action.pending{border-color:#d8c7ae;background:#f3efe7;color:#8b7b68;cursor:not-allowed;opacity:.82}
 .note{
   margin-top:20px;padding:14px 16px;border-radius:14px;
   background:#f8f1df;border:1px solid #dec894;
@@ -102,7 +110,7 @@ h2{font-size:1.25rem;margin:0 0 4px;letter-spacing:.06em}
   <section class="hero">
     <div class="eyebrow">KITOKU ACADEMY</div>
     <h1>気学を学ぶ</h1>
-    <p class="lead">アプリの使い方と、KITOKUの考え方をPDFと動画で確認できます。まずは00と01から、全体像と入口をつかんでください。</p>
+    <p class="lead">アプリの使い方と、KITOKUの考え方をPDFで確認できます。動画はYouTube公開に向けて準備中です。</p>
   </section>
 
   <section class="lesson">
@@ -114,8 +122,8 @@ h2{font-size:1.25rem;margin:0 0 4px;letter-spacing:.06em}
       </div>
     </div>
     <div class="actions">
-      <a class="action" href="ACADEMY/kitoku_academy_00.pdf" target="_blank" rel="noopener">📄 PDFを開く</a>
-      <a class="action video" href="ACADEMY/00%E6%9D%B1%E6%B4%8B%E3%81%AE%E3%82%AA%E3%83%98%E3%82%9A%E3%83%AC%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%AF%E3%82%99%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0.mp4" target="_blank" rel="noopener">▶ 動画を見る</a>
+      <a class="action" href="ACADEMY/kitoku_academy_00.pdf">📄 PDFを開く</a>
+      <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
     </div>
   </section>
 
@@ -128,14 +136,19 @@ h2{font-size:1.25rem;margin:0 0 4px;letter-spacing:.06em}
       </div>
     </div>
     <div class="actions">
-      <a class="action" href="ACADEMY/kitoku_academy_01.pdf" target="_blank" rel="noopener">📄 PDFを開く</a>
-      <a class="action video" href="ACADEMY/01KITOKU%EF%BC%9A%E5%A4%9A%E6%AC%A1%E5%85%83%E7%9A%84%E3%81%AA%E8%87%AA%E5%B7%B1%E3%81%B8%E3%81%AE%E8%A8%AD%E8%A8%88%E5%9B%B3.mp4" target="_blank" rel="noopener">▶ 動画を見る</a>
+      <a class="action" href="ACADEMY/kitoku_academy_01.pdf">📄 PDFを開く</a>
+      <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
     </div>
   </section>
 
-  <div class="note">動画は容量が大きいため、スマートフォンではWi-Fi環境での視聴がおすすめです。動画内の表示や文言は、今後整えていきます。</div>
+  <div class="note">動画はYouTubeで公開予定です。準備ができ次第、このページから視聴できるようにします。</div>
 
   <div class="footer">KITOKU @ JOURNEY<br>自分で決めるための東洋OS</div>
 </main>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
+}
+</script>
 </body>
 </html>
