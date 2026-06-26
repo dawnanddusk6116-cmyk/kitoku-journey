@@ -217,6 +217,12 @@ body{
   display:flex;align-items:center;gap:8px;
 }
 .tools-section-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.tools-sub-label{
+  font-size:.56rem;font-weight:700;letter-spacing:.08em;
+  color:var(--mist);padding:8px 4px 3px;
+  display:flex;align-items:center;gap:6px;
+}
+.tools-sub-label::after{content:'';flex:1;height:1px;background:rgba(100,80,40,.1);}
 .tool-item{
   display:flex;align-items:center;gap:12px;
   padding:11px 8px;border-radius:10px;
@@ -353,7 +359,18 @@ body{
     </button>
     <div id="allToolsPanel" style="display:none;">
 
-      <div class="tools-section-label">🌟 自分を知る・整える</div>
+      <div class="tools-section-label">① 自分を知る</div>
+      <div class="tools-sub-label first">── まず使う</div>
+      <a class="tool-item" href="direction_v2.html">
+        <span class="tool-icon">🧭</span>
+        <span class="tool-info"><span class="tool-name">今日の方位盤</span><span class="tool-desc">日盤・月盤・年盤・今日の吉凶を確認</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item" href="today.html">
+        <span class="tool-icon">🌸</span>
+        <span class="tool-info"><span class="tool-name">今日を整える</span><span class="tool-desc">方位・色・香り・小さな行動を今日の一手に</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
       <a class="tool-item" href="kyusei_v2.html">
         <span class="tool-icon">⭐</span>
         <span class="tool-info"><span class="tool-name">自分の星を見る</span><span class="tool-desc">本命星・月命星・傾斜・同会・納音</span></span>
@@ -364,14 +381,15 @@ body{
         <span class="tool-info"><span class="tool-name">はじめてのKITOKU診断</span><span class="tool-desc">名前と生年月日で入口レポートを見る</span></span>
         <span class="tool-arrow">›</span>
       </a>
+      <div class="tools-sub-label">── さらに深く見る</div>
       <a class="tool-item" href="roadmap.html">
         <span class="tool-icon">🗺️</span>
         <span class="tool-info"><span class="tool-name">今後5年ロードマップ</span><span class="tool-desc">本命星の巡りで読む、これからの5年の地図</span></span>
         <span class="tool-arrow">›</span>
       </a>
-      <a class="tool-item" href="mindmap.html">
-        <span class="tool-icon">🧠</span>
-        <span class="tool-info"><span class="tool-name">気学マインドマップ</span><span class="tool-desc">左脳の論理で整理し、気学で自分を知る</span></span>
+      <a class="tool-item" href="life.html">
+        <span class="tool-icon">📝</span>
+        <span class="tool-info"><span class="tool-name">姓名鑑定</span><span class="tool-desc">画数・五行・陰陽・響き・命の設計図を見る</span></span>
         <span class="tool-arrow">›</span>
       </a>
       <a class="tool-item" href="scent.html">
@@ -384,9 +402,9 @@ body{
         <span class="tool-info"><span class="tool-name">西洋占星術×気学で深く見る</span><span class="tool-desc">太陽・月・金星と気学で本質を見る</span></span>
         <span class="tool-arrow">›</span>
       </a>
-      <a class="tool-item" href="life.html">
-        <span class="tool-icon">📝</span>
-        <span class="tool-info"><span class="tool-name">姓名鑑定</span><span class="tool-desc">画数・五行・陰陽・響き・命の設計図を見る</span></span>
+      <a class="tool-item" href="mindmap.html">
+        <span class="tool-icon">🧠</span>
+        <span class="tool-info"><span class="tool-name">気学マインドマップ</span><span class="tool-desc">左脳の論理で整理し、気学で自分を知る</span></span>
         <span class="tool-arrow">›</span>
       </a>
       <a class="tool-item" href="kaso.html">
@@ -394,8 +412,18 @@ body{
         <span class="tool-info"><span class="tool-name">家相診断</span><span class="tool-desc">中心・玄関・水回り・欠け張り</span></span>
         <span class="tool-arrow">›</span>
       </a>
+      <a class="tool-item free-ai-tool" href="ai.html">
+        <span class="tool-icon">💬</span>
+        <span class="tool-info"><span class="tool-name">AIで悩みを整理する <span class="tool-badge free">無料</span></span><span class="tool-desc">星情報をコピーして悩みと次の一手を整理</span></span>
+        <span class="tool-arrow">›</span>
+      </a>
+      <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
+        <span class="tool-icon">✨</span>
+        <span class="tool-info"><span class="tool-name">KIGAKU先生AI <span class="tool-badge">有料</span></span><span class="tool-desc">結果を相談文にして深掘り</span></span>
+        <span class="tool-arrow">準備中</span>
+      </a>
 
-      <div class="tools-section-label">💼 ビジネス・人間関係</div>
+      <div class="tools-section-label">② ビジネス・人間関係を整える</div>
       <a class="tool-item" href="business.html">
         <span class="tool-icon">💼</span>
         <span class="tool-info"><span class="tool-name">ビジネス・経営に活かす</span><span class="tool-desc">採用・商談・お金の特性・経営テーマ・朝礼</span></span>
@@ -407,12 +435,7 @@ body{
         <span class="tool-arrow">›</span>
       </a>
 
-      <div class="tools-section-label">🧭 旅行・移動・聖地巡礼</div>
-      <a class="tool-item" href="direction_v2.html">
-        <span class="tool-icon">🧭</span>
-        <span class="tool-info"><span class="tool-name">方位盤</span><span class="tool-desc">日盤・月盤・年盤・吉凶判定</span></span>
-        <span class="tool-arrow">›</span>
-      </a>
+      <div class="tools-section-label">③ 旅（気の力で）ひらく</div>
       <a class="tool-item" href="travel.html">
         <span class="tool-icon">✈️</span>
         <span class="tool-info"><span class="tool-name">旅行吉方位ナビ</span><span class="tool-desc">旅行日程・目的地を選ぶ</span></span>
@@ -451,12 +474,7 @@ body{
         <span class="tool-arrow">準備中</span>
       </a>
 
-      <div class="tools-section-label">AI・海外向け</div>
-      <a class="tool-item free-ai-tool" href="ai.html">
-        <span class="tool-icon">💬</span>
-        <span class="tool-info"><span class="tool-name">AIで悩みを整理する <span class="tool-badge free">無料</span></span><span class="tool-desc">星情報をコピーして悩みと次の一手を整理</span></span>
-        <span class="tool-arrow">›</span>
-      </a>
+      <div class="tools-section-label">🌐 海外向け</div>
       <a class="tool-item" href="en/index.html">
         <span class="tool-icon">EN</span>
         <span class="tool-info"><span class="tool-name">JAPAN OS — English Preview</span><span class="tool-desc">英語でKITOKUを体験する入口</span></span>
