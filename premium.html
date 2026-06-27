@@ -404,6 +404,46 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 #kitokuMapFullscreenModal .leaflet-bottom{z-index:10!important;}
 #kitokuMapFullscreenModal .leaflet-control{z-index:20!important;}
 #kitokuMapFullscreenModal .leaflet-top.leaflet-right{top:74px;right:14px;}
+/* ── 方位詳細ポップアップ (premium) ── */
+#dirPopupOverlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+#dirPopupOverlay.open{display:flex;}
+#dirPopupSheet{
+  background:#fefcf8;border-radius:20px 20px 0 0;
+  border-top:2px solid rgba(138,104,32,.3);
+  width:100%;max-width:480px;max-height:88dvh;overflow-y:auto;
+  padding:0 0 env(safe-area-inset-bottom,20px);
+  animation:dpSlideUp .28s ease;margin:0 auto;
+}
+@keyframes dpSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#dirPopupSheet .dp-handle{width:40px;height:4px;background:rgba(138,104,32,.2);border-radius:2px;margin:12px auto 0;}
+#dirPopupSheet .dp-head{padding:16px 20px 12px;border-bottom:1px solid rgba(138,104,32,.12);}
+#dirPopupSheet .dp-dir{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:#8B6914;letter-spacing:.1em;}
+#dirPopupSheet .dp-star{font-size:1rem;color:#7a6645;margin-top:6px;}
+#dirPopupSheet .dp-rank{font-size:.95rem;margin-top:8px;font-weight:700;}
+#dirPopupSheet .dp-body{padding:18px 20px;}
+#dirPopupSheet .dp-food-title{font-size:.72rem;letter-spacing:.12em;color:#8B6914;margin-bottom:12px;font-weight:800;}
+#dirPopupSheet .dp-food-cards{display:flex;flex-direction:column;gap:8px;}
+#dirPopupSheet .dp-food-card{display:flex;align-items:flex-start;gap:12px;background:rgba(138,104,32,.04);border:1px solid rgba(138,104,32,.12);border-radius:8px;padding:12px;}
+#dirPopupSheet .dp-food-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+#dirPopupSheet .dp-food-name{font-size:.92rem;color:#3a2a10;margin-bottom:5px;font-weight:700;}
+#dirPopupSheet .dp-food-reason{font-size:.78rem;color:#7a6645;line-height:1.8;}
+#dirPopupSheet .dp-gogyou{margin-top:14px;padding:12px 14px;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.15);border-radius:8px;}
+#dirPopupSheet .dp-gogyou-title{font-size:.82rem;letter-spacing:.12em;color:#8B6914;margin-bottom:8px;font-weight:800;}
+#dirPopupSheet .dp-gogyou-text{font-size:.9rem;color:#3a2a10;line-height:2.1;}
+#dirPopupSheet .dp-rank-meter{margin:10px 0 12px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(23,139,120,.09),rgba(255,255,255,.6));border:1px solid rgba(23,139,120,.25);}
+#dirPopupSheet .dp-rank-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#0f766e;font-size:.74rem;font-weight:900;letter-spacing:.04em;}
+#dirPopupSheet .dp-rank-label{font-size:.86rem;letter-spacing:.08em;}
+#dirPopupSheet .dp-rank-status{font-size:.62rem;color:#0f766e;background:rgba(23,139,120,.08);border:1px solid rgba(23,139,120,.22);border-radius:999px;padding:2px 8px;white-space:nowrap;}
+#dirPopupSheet .dp-rank-dots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;}
+#dirPopupSheet .dp-rank-dot{height:8px;border-radius:999px;background:rgba(23,139,120,.13);border:1px solid rgba(23,139,120,.18);}
+#dirPopupSheet .dp-rank-dot.on{background:#0f766e;border-color:#0f766e;}
+#dirPopupSheet .dp-rank-note{font-size:.58rem;color:#7a6645;line-height:1.7;margin-top:7px;}
+#dirPopupSheet .dp-kyo-text{font-size:.88rem;color:#3a2a10;line-height:2;}
+#dirPopupSheet .dp-close{width:100%;padding:14px;border:0;border-top:1px solid rgba(138,104,32,.12);background:none;color:#8B6914;font-size:.75rem;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.1em;}
 </style>
 </head>
 <body>
@@ -1278,7 +1318,8 @@ function drawOctagonPremium(wrap,center,dirData,extra){
     const outStart=octa_polarToXY(CX,CY,R_OUT,start);
     const outEnd=octa_polarToXY(CX,CY,R_OUT,end);
     const inEnd=octa_polarToXY(CX,CY,R_IN,end);
-    const path=octa_svgEl('path',{d:`M ${inStart.x} ${inStart.y} L ${outStart.x} ${outStart.y} L ${outEnd.x} ${outEnd.y} L ${inEnd.x} ${inEnd.y} Z`,fill:col.fill,stroke:col.stroke,'stroke-width':'1.1'});
+    const path=octa_svgEl('path',{d:`M ${inStart.x} ${inStart.y} L ${outStart.x} ${outStart.y} L ${outEnd.x} ${outEnd.y} L ${inEnd.x} ${inEnd.y} Z`,fill:col.fill,stroke:col.stroke,'stroke-width':'1.1',cursor:'pointer'});
+    path.addEventListener('click',()=>openDirPopupPremium(dir,center,dirData,extra));
     svg.appendChild(path);
 
     const nr=(R_IN+R_OUT)/2+4;
@@ -5529,6 +5570,161 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   restoreMapWhenReady();
 });
+</script>
+<!-- ── 方位詳細ポップアップ (premium) ── -->
+<div id="dirPopupOverlay" onclick="if(event.target===this)closeDirPopup()">
+  <div id="dirPopupSheet">
+    <div class="dp-handle"></div>
+    <div id="dirPopupContent"></div>
+    <button class="dp-close" onclick="closeDirPopup()">✕ 閉じる</button>
+  </div>
+</div>
+
+<script>
+// ── 方位詳細ポップアップ（プレミアム方位盤用） ──────────────────
+
+function closeDirPopup(){
+  document.getElementById('dirPopupOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function dpBuildRankMeter(rank){
+  const safe=Math.max(0,Math.min(5,Number(rank)||0));
+  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','最高ランク'];
+  const dots=Array.from({length:5},(_,i)=>`<span class="dp-rank-dot ${i<safe?'on':''}"></span>`).join('');
+  return `<div class="dp-rank-meter">
+    <div class="dp-rank-head">
+      <span class="dp-rank-label">吉方ランク ${safe}/5</span>
+      <span class="dp-rank-status">${labels[safe]}</span>
+    </div>
+    <div class="dp-rank-dots">${dots}</div>
+    <div class="dp-rank-note">数字が大きいほど、吉方条件が重なっています。方位を選ぶためのKITOKU内の目安です。</div>
+  </div>`;
+}
+
+function dpBuildAmberAction(starN){
+  const map={
+    1:{title:'温泉宿・水辺の宿を探す',sub:'一白の水で休息とリセットを整える'},
+    2:{title:'土地の味・発酵食を探す',sub:'二黒の土で体をゆっくり整える'},
+    3:{title:'朝出発の旅・新しい体験を探す',sub:'三碧の勢いで行動のスイッチを入れる'},
+    4:{title:'遠方のリゾート・風を感じる旅を探す',sub:'四緑の縁と信用を広げる'},
+    5:{title:'中心を整える滞在先を探す',sub:'五黄の日は無理なく場を整える'},
+    6:{title:'格式あるホテル・神社仏閣を探す',sub:'六白の格と責任感を磨く'},
+    7:{title:'食事・スイーツ・楽しみの場を探す',sub:'七赤の悦びで人間関係をやわらげる'},
+    8:{title:'山・高層階・静かな宿を探す',sub:'八白の変化と蓄積を整える'},
+    9:{title:'美術館・学び・眺めの良い場所を探す',sub:'九紫の知性と美意識を灯す'}
+  };
+  const d=map[starN]||{title:'今日の吉方に合う場所を探す',sub:'星の象意に合わせて行き先を選ぶ'};
+  return `<div style="margin-top:12px;padding:11px 12px;background:linear-gradient(135deg,rgba(154,120,48,.1),rgba(255,255,255,.6));border:1px solid rgba(154,120,48,.25);border-radius:9px;">
+    <div style="font-size:.62rem;letter-spacing:.12em;color:#8B6914;font-weight:800;margin-bottom:5px;">💊 琥珀色の処方箋</div>
+    <div style="font-size:.72rem;color:#3a2a10;line-height:1.75;margin-bottom:8px;">${d.sub}</div>
+    <button type="button" disabled style="width:100%;border:1px solid rgba(154,120,48,.3);background:rgba(255,255,255,.6);color:#8B6914;border-radius:8px;padding:9px 10px;font-family:inherit;font-size:.68rem;font-weight:800;opacity:.78;">${d.title}（準備中）</button>
+  </div>`;
+}
+
+function openDirPopupPremium(dir,center,dirData,extra){
+  if(typeof haptic==='function') haptic('light');
+  const dd=dirData[dir];
+  if(!dd) return;
+  const s=STARS[dd.starN];
+  if(!s) return;
+
+  const rank=dd.rank||0;
+  const isKyo=dd.isKyo||false;
+  const isCaution=dd.isCaution||false;
+
+  // 吉方ランクラベル
+  const sangoSet=getSangoSetForPremiumDate();
+  const isSango=sangoSet.has(dir);
+  const rankLabel=rank>=5?'本命・月命・三合　最高の吉方':rank>=4?'本命・月命　ともに吉方':rank>=3?'吉方（三合の後押しあり）':rank>=2?'吉方（人に与える日）':'吉方情報なし';
+  const rankColor=isKyo?'#b03028':isCaution?'#c08a2c':rank>=4?'#1d7a6a':'#1d7a6a';
+
+  // 飲食処方箋
+  const foods=s.conbini||[];
+  const foodIcons=['☕','🍱','🧃'];
+  const foodsHTML=foods.map((f,i)=>`
+    <div class="dp-food-card">
+      <div class="dp-food-icon">${foodIcons[i]||'🍀'}</div>
+      <div>
+        <div class="dp-food-name">${f}</div>
+        <div class="dp-food-reason">${s.elem}のエネルギーを取り込む食べ物・飲み物です</div>
+      </div>
+    </div>`).join('');
+
+  // 三合ブースター
+  const SANGO_PURPOSE={'木局':'発展・成長・教育・営業活動に最適。新しいことを始めるのにも吉。','火局':'知的・芸術・文化活動に最適。学問・発明・争いの調停にも吉。','金局':'経済活動が盛ん。人生の悦びを得て、感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。社会的人間関係が完成する。'};
+  let sangoHTML='';
+  if(isSango){
+    const y=state.date.getFullYear(),m=state.date.getMonth()+1,d2=state.date.getDate();
+    let bn=getZodiac(y).k;
+    if(state.banType==='month') bn=BRANCH_NAME_P[getMonthBranch(y,m,d2)];
+    if(state.banType==='day') bn=BRANCH_NAME_P[getDayBranch(y,m,d2)];
+    const sg=SANGO_MAP[bn]||{group:''};
+    const purpose=SANGO_PURPOSE[sg.group]||'';
+    if(purpose) sangoHTML=`<div style="margin-top:10px;padding:10px 12px;background:linear-gradient(135deg,rgba(154,120,48,.1),rgba(255,255,255,.5));border:1px solid rgba(154,120,48,.22);border-radius:8px;font-size:.72rem;color:#3a2a10;line-height:1.8;">
+      <div style="font-weight:700;color:#8B6914;margin-bottom:4px;">🔥 三合吉方（${sg.group}）の後押し</div>
+      <div>${purpose}</div></div>`;
+  }
+
+  // 定位対冲注意
+  let cautionHTML='';
+  if(isCaution) cautionHTML=`<div style="margin-top:10px;padding:10px 12px;background:rgba(192,138,44,.08);border:1px solid rgba(192,138,44,.25);border-radius:8px;font-size:.72rem;line-height:1.8;">
+    <div style="font-weight:700;color:#c08a2c;margin-bottom:4px;">🔸 定位対冲の注意</div>
+    <div style="color:#5a4a2a;">五大凶方のように一律で避ける扱いではありません。吉を取りながらも、慢心・過去の不調の再発・突発的な予定変更には気を配ってください。</div>
+  </div>`;
+
+  // 凶方メッセージ
+  const ANKENJATSU_MSG={1:'足元が滑りやすい・物事がてこずりやすい・男女間のトラブルに注意・うまい話には慎重に',2:'大切なものを失くしやすい・訪問先に空振りが出やすい・気難しい人と会いやすい・食べ物に注意',3:'言葉の行き違いが起きやすい・足元に注意・まとまりかけた話が戻りやすい・感情的になりやすい',4:'物事のすれ違いで気持ちを害しやすい・書類や連絡にミスが出やすい・移動中の怪我に注意',6:'移動中の事故に注意・予想外の出費・目上との意見の食い違いに注意',7:'言葉によるトラブルが起きやすい・刃物や鋭いものに注意・財布や持ち物の紛失に注意',8:'手足の怪我に注意・腰や関節を痛めやすい・身内との関係でもやもやしやすい',9:'感情的な衝突が起きやすい・思い込みや見込み違いに注意・火気や熱いものに注意'};
+  const ankenMsg=(isKyo&&ANKENJATSU_MSG[dd.starN])?`<div style="margin-top:12px;padding:10px 12px;background:rgba(176,64,48,.06);border:1px solid rgba(176,64,48,.15);border-radius:8px;font-size:.73rem;color:#5a4a2a;line-height:1.85;"><strong style="display:block;margin-bottom:4px;color:#8a3020;font-size:.7rem;letter-spacing:.1em;">⚠ この方位で起きやすいこと</strong>${ANKENJATSU_MSG[dd.starN]}</div>`:'';
+
+  // 本文組み立て
+  let bodyHTML='';
+  if(!isKyo && rank>=2){
+    bodyHTML=`
+      ${dpBuildRankMeter(rank)}
+      <div class="dp-food-title">✦ 今日の吉方取り処方箋</div>
+      <div class="dp-food-cards">${foodsHTML}</div>
+      <div class="dp-gogyou">
+        <div class="dp-gogyou-title">五行の知恵 — ${s.elem}のエネルギー</div>
+        <div class="dp-gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}</div>
+      </div>
+      ${cautionHTML}
+      ${sangoHTML}
+      ${dpBuildAmberAction(dd.starN)}`;
+  } else if(isKyo){
+    bodyHTML=`<div class="dp-kyo-text">
+      この方向は今日の星の配置上、注意が必要な方向です。<br>
+      どうしても出かける必要がある場合は、心構えを持って行動してください。
+      ${ankenMsg}
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.72rem;color:#8B6914;line-height:1.8;">
+        ✦ 心構え：①相手を責めない ②感謝の言葉を伝える ③一時停止・赤信号に気をつける
+      </div>
+    </div>`;
+  } else if(isCaution){
+    bodyHTML=`<div class="dp-kyo-text">
+      この方向には定位対冲の注意フラグがあります。<br>
+      五大凶方のように一律で避ける扱いではありませんが、慢心・過去の不調の再発・突発的な予定変更には気を配ってください。
+      ${cautionHTML}
+    </div>`;
+  } else {
+    bodyHTML=`<div class="dp-kyo-text">
+      今日の吉方ではありませんが、中性の方向です。<br>
+      特別な吉効果はありませんが、問題もありません。
+    </div>`;
+  }
+
+  const html=`
+    <div class="dp-head">
+      <div class="dp-dir">${JP[dir]||dir} ${isSango&&!isKyo?'✦':''}</div>
+      <div class="dp-star">${s.j}（${s.elem}）の方向</div>
+      <div class="dp-rank" style="color:${rankColor};">${isKyo?'⚠️ 注意が必要な方向':isCaution&&rank<2?'🔸 定位対冲の注意あり':isCaution?'✦ 吉方ですが定位対冲の注意あり':rankLabel}</div>
+    </div>
+    <div class="dp-body">${bodyHTML}</div>`;
+
+  document.getElementById('dirPopupContent').innerHTML=html;
+  document.getElementById('dirPopupOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
 </script>
 </body>
 </html>
