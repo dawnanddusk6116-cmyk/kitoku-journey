@@ -405,7 +405,44 @@ footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;colo
 
 <script>
 // ══ 定数 ══
-const STARS={1:{j:'一白水星',k:'一白',elem:'水'},2:{j:'二黒土星',k:'二黒',elem:'土'},3:{j:'三碧木星',k:'三碧',elem:'木'},4:{j:'四緑木星',k:'四緑',elem:'木'},5:{j:'五黄土星',k:'五黄',elem:'土'},6:{j:'六白金星',k:'六白',elem:'金'},7:{j:'七赤金星',k:'七赤',elem:'金'},8:{j:'八白土星',k:'八白',elem:'土'},9:{j:'九紫火星',k:'九紫',elem:'火'}};
+const STARS={
+  1:{j:'一白水星',k:'一白',elem:'水',color:'黒・紺・白',food:'塩味・豆腐・海藻・貝類',
+     basho:'温泉・水辺・川沿い・病院・夜の静かな場所',shintai:'腎臓・耳・血液',byoki:'腎臓病・耳の病・冷え・不妊',
+     conbini:['温かい昆布だし・お吸い物','豆腐・海藻サラダ','塩おにぎり（昆布・梅）'],
+     kaimono:'奥にしまい込んであるもの。あまり上等ではないもの。',raihousha:'病気・恋愛の相談・苦境の訴え・部下の話。'},
+  2:{j:'二黒土星',k:'二黒',elem:'土',color:'黄色・茶色・アイボリー',food:'甘味・根菜・芋類・発酵食品',
+     basho:'田畑・古い家・大衆的な食堂・商店街・不動産屋',shintai:'胃・腹部・子宮',byoki:'胃腸病・腹痛・婦人病・過労',
+     conbini:['さつまいもスイーツ・芋けんぴ','根菜の煮物・おでん','甘酒・乳酸菌飲料'],
+     kaimono:'大衆的な安物。古いが量が多いもの。',raihousha:'土地家屋・古い知人・家庭内・営業の話。'},
+  3:{j:'三碧木星',k:'三碧',elem:'木',color:'青・緑・碧',food:'酸味・柑橘類・新鮮な野菜',
+     basho:'電気店・楽器店・スポーツ施設・東の方向・新しい施設',shintai:'肝臓・喉・声帯・足',byoki:'肝臓病・声の病・神経系・足の怪我',
+     conbini:['緑野菜サラダ・グリーンスムージー','柑橘系ジュース','酢の物・さっぱり系'],
+     kaimono:'見かけは良いが中身は伴わないもの。派手な宣伝品。',raihousha:'新しくスタートした話。抗議・受け売りの意見。'},
+  4:{j:'四緑木星',k:'四緑',elem:'木',color:'緑・青緑・白',food:'酸味・ハーブ・風にさらしたもの',
+     basho:'空港・旅行代理店・神社・遠方・道路沿い・緑豊かな場所',shintai:'腸・気管・神経・頭髪',byoki:'腸の病・呼吸器系・神経痛・脱毛',
+     conbini:['ハーブティー・緑茶','青じそ入りサラダ・生野菜','ヨーグルト・乳酸菌系'],
+     kaimono:'使いやすくて便利なもの。比較的整った物。',raihousha:'遠方・旅行・縁談・話をまとめようとする努力。'},
+  5:{j:'五黄土星',k:'五黄',elem:'土',color:'黄色・金色・茶色',food:'甘味・根菜・土のもの全般',
+     basho:'中心地・政府機関・古い建物・廃墟・神社仏閣',shintai:'脾臓・大腸・消化器全般',byoki:'ガン・重篤な病・高熱・腫れ物',
+     conbini:['かぼちゃ・さつまいも系','おでん（全種）・根菜煮物','黒豆・ごま系和菓子'],
+     kaimono:'古いもの。見えないところにキズがあるもの。',raihousha:'言葉に嘘がある。紛争問題・古い病気・甘い話。'},
+  6:{j:'六白金星',k:'六白',elem:'金',color:'白・金・銀',food:'辛味・白い食べ物・根菜',
+     basho:'高級ホテル・神社仏閣・官公庁・銀行・北西の高台',shintai:'頭部・肺・大腸・骨',byoki:'頭部の病・肺の病・骨折・高血圧',
+     conbini:['大根おろし・辛み系サラダ','白米おにぎり・白パン','辛口缶コーヒー・白湯'],
+     kaimono:'高級品で一流品。値が張るが珍しいもの。',raihousha:'信仰・新しい希望・投資・争い事・ケンカの話。'},
+  7:{j:'七赤金星',k:'七赤',elem:'金',color:'ピンク・オレンジ・金',food:'辛味・甘いもの・鶏肉・お菓子',
+     basho:'飲食店・カフェ・居酒屋・カラオケ・結婚式場・西の繁華街',shintai:'口・歯・肺・胸部',byoki:'口腔疾患・歯痛・肺の病・胸部疾患',
+     conbini:['サラダチキン・白いチキン系','烏龍茶・ジャスミン茶','白あんまん・スイーツ'],
+     kaimono:'販売員に愛嬌がある。セールストークが上手で買ってしまうもの。',raihousha:'祝い事・ロマンス・マネーの貸し借り・恋愛の話。'},
+  8:{j:'八白土星',k:'八白',elem:'土',color:'白・黄色・ベージュ',food:'甘味・山のもの・根菜・漬物',
+     basho:'山・神社仏閣・ホテル・高台・北東エリア・温泉旅館',shintai:'腰・背中・関節・手足・脊髄',byoki:'腰痛・関節炎・リウマチ・骨折',
+     conbini:['山菜おこわ・栗ご飯系','たくあん・浅漬け・糠漬け','ほうじ茶・麦茶'],
+     kaimono:'詰め合わせ。キズや凹みがありそうなもの。',raihousha:'家庭内・新築・土地購入・親類問題の話。'},
+  9:{j:'九紫火星',k:'九紫',elem:'火',color:'赤・紫・オレンジ',food:'苦味・南国フルーツ・赤い食べ物',
+     basho:'学校・裁判所・美容院・図書館・デパート・南の繁華街',shintai:'心臓・目・頭脳・精神',byoki:'心臓病・眼病・頭痛・精神疾患・高熱',
+     conbini:['ビターチョコ・コーヒー','トマト・赤パプリカ系サラダ','マンゴー・パッションフルーツ'],
+     kaimono:'見た目が美しいもの。センスが良いもの。',raihousha:'物見遊山・観劇・政治・事件・投資の話。'},
+};
 const HP={1:'N',2:'SW',3:'E',4:'SE',5:'C',6:'NW',7:'W',8:'NE',9:'S'};
 const OPP={N:'S',S:'N',E:'W',W:'E',NE:'SW',SW:'NE',SE:'NW',NW:'SE',C:'C'};
 const ALL8=['N','NE','E','SE','S','SW','W','NW'];
@@ -569,6 +606,9 @@ function compute(){
   gState.yearNav={y:ty};gState.monthNav={y:ty,m:tm,d:td};gState.dayNav={y:ty,m:tm,d:td};
   document.getElementById('sb-honmei').textContent=STARS[honmei].j;
   document.getElementById('sb-tsukimei').textContent=STARS[tsukimei].j;
+  const doukiTB=getDoukiTB(honmei);
+  const sbDouki=document.getElementById('sb-douki');
+  if(sbDouki&&doukiTB)sbDouki.textContent=doukiTB.label+' — 線路の日：'+doukiTB.senro;
   document.getElementById('sb-kanshi').textContent=`${KAN[getDayStem(ty,tm,td)]}${SHI[getDayBranch(ty,tm,td)]}の日`;
   document.getElementById('starBar').style.display='flex';
   document.getElementById('orientRow').style.display='flex';
@@ -842,6 +882,27 @@ function buildBreakBranchNote(items){
   </span></div>`;
 }
 
+
+const ANKENJATSU_MSG={
+  1:'足元が滑りやすい・物事がてこずりやすい・男女間のトラブルに注意・うまい話には慎重に',
+  2:'大切なものを失くしやすい・訪問先に空振りが出やすい・気難しい人と会いやすい・食べ物に注意',
+  3:'言葉の行き違いが起きやすい・足元に注意・まとまりかけた話が戻りやすい・感情的になりやすい',
+  4:'物事のすれ違いで気持ちを害しやすい・書類や連絡にミスが出やすい・移動中の怪我に注意',
+  6:'移動中の事故に注意・予想外の出費・目上との意見の食い違いに注意',
+  7:'言葉によるトラブルが起きやすい・刃物や鋭いものに注意・財布や持ち物の紛失に注意',
+  8:'手足の怪我に注意・腰や関節を痛めやすい・身内との関係でもやもやしやすい',
+  9:'感情的な衝突が起きやすい・思い込みや見込み違いに注意・火気や熱いものに注意',
+};
+const SANGO_PURPOSE_TB={'木局':'発展・成長・教育・営業活動に最適。新しいことを始めるのにも吉。','火局':'知的・芸術・文化活動に最適。学問・発明・争いの調停にも吉。','金局':'経済活動が盛ん。人生の悦びを得て、感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。社会的人間関係が完成する。'};
+const KYOUHOU_TB={
+  '五黄殺':['明るい笑顔で生活する','自分の主張を固持しない','怒らない・イライラしない'],
+  '暗剣殺':['相手を傷つけやすいから注意','恩人にはお礼の言葉を','一時停止と赤信号に気をつけて'],
+  '破壊殺':['自分の目標をしっかりと','予定通りに進まずとも不満を言わず対応','事故やケガに注意'],
+  '本命殺':['無理はしない','自分の役割を自覚する','わがままを通さない'],
+  '本命的殺':['予想と違っていても驚かないこと','目的をいつまでも固定しないように'],
+};
+const DOUKI_TB={ten:{nums:[3,6,9],label:'天数系列',senro:'丑・辰・未・戌の日'},chi:{nums:[2,5,8],label:'地数系列',senro:'寅・巳・申・亥の日'},jin:{nums:[1,4,7],label:'人数系列',senro:'子・卯・午・酉の日'}};
+function getDoukiTB(h){if([3,6,9].includes(h))return DOUKI_TB.ten;if([2,5,8].includes(h))return DOUKI_TB.chi;return DOUKI_TB.jin;}
 function openPopup(dir,type,dirData,kyouItems){
   const dd=dirData[dir],star=STARS[dd.starN]||{};
   const typeLabel={year:'年盤',month:'月盤',day:'日盤'}[type];
@@ -853,6 +914,13 @@ function openPopup(dir,type,dirData,kyouItems){
     const names=dirKyoItems.map(formatKyoLabel).join('・');
     html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#b82840;">⚠ 凶方<br><span style="font-size:.75rem;">${names}</span></span></div>`;
     html+=buildBreakBranchNote(dirKyoItems);
+    // 起きやすいこと
+    const ankenMsg=ANKENJATSU_MSG[dd.starN];
+    if(ankenMsg)html+=`<div class="popup-row"><span class="popup-lbl">注意点</span><span class="popup-val" style="font-size:.72rem;color:var(--mist);">${ankenMsg}</span></div>`;
+    // 五大凶方の心構え
+    const kyouLabel=dirKyoItems.find(k=>KYOUHOU_TB[k.name])?.name||dirKyoItems[0]?.name||'';
+    const kokoroItems=KYOUHOU_TB[kyouLabel];
+    if(kokoroItems&&kokoroItems.length)html+=`<div class="popup-row"><span class="popup-lbl">心構え</span><span class="popup-val" style="font-size:.72rem;color:#8a5008;">${kokoroItems.map((t,i)=>'①②③④⑤'[i]+t).join('<br>')}</span></div>`;
   }else if(dd.isCaution){
     const names=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲')).map(k=>k.name).join('・')||'定位対冲';
     html+=`<div class="popup-row"><span class="popup-lbl">注意</span><span class="popup-val" style="color:#8a5f12;">🔸 ${names}<br><span style="font-size:.75rem;">五大凶方ではありません。慢心・過去の不調の再発・突発的な予定変更に注意してください。</span></span></div>`;
@@ -863,6 +931,16 @@ function openPopup(dir,type,dirData,kyouItems){
   }else if(dd.rank>=2){
     html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:#0f766e;">✦ 吉方ランク ${dd.rank}/5</span></div>${buildRankMeter(dd.rank)}`;
     if(dd.badges.length)html+=`<div class="popup-row"><span class="popup-lbl">理由</span><span class="popup-val">${dd.badges.join('・')}</span></div>`;
+    // 処方箋（食・色・場所）
+    if(star.food)html+=`<div class="popup-row"><span class="popup-lbl">処方箋</span><span class="popup-val">🍽 ${star.food}<br>🎨 ${star.color||''}${star.basho?'<br>📍 '+star.basho:''}</span></div>`;
+    if(star.shintai)html+=`<div class="popup-row"><span class="popup-lbl">身体</span><span class="popup-val" style="font-size:.72rem;">🫀 ${star.shintai}<br><span style="color:var(--mist);">注意：${star.byoki}</span></span></div>`;
+    // 三合ブースター
+    if(dd.isSango){
+      const bn=BRANCH_NAME?.[getDayBranch(gState.y,gState.m,gState.d)]||'';
+      const sg=SANGO_MAP?.[bn]||{group:''};
+      const sp=SANGO_PURPOSE_TB[sg.group]||'';
+      if(sp)html+=`<div class="popup-row"><span class="popup-lbl">三合</span><span class="popup-val" style="font-size:.72rem;color:#7a5008;">🔥 ${sg.group}の後押し<br>${sp}</span></div>`;
+    }
   }else{
     html+=`<div class="popup-row"><span class="popup-lbl">吉凶</span><span class="popup-val" style="color:var(--mist);">普通</span></div>`;
   }
