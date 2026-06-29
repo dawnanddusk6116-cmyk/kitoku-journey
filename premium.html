@@ -1047,7 +1047,11 @@ function buildInfo(birth,gender){
   return {birth,gender,by,bm,bd,kY:kd.kY,kM:kd.kM,honmei,tsukimei,keisha,dokai,yN,mN};
 }
 function starLine(info,prefix='私は'){
-  return `${prefix}${STARS[info.honmei]?.j||''}・月命${STARS[info.tsukimei]?.j||''}・傾斜${STARS[info.keisha]?.j||''}・同会${STARS[info.dokai]?.j||''}・納音 ${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）です。`;
+  const doukiInfo=typeof getDouki==='function'?getDouki(info.honmei):null;
+  const keishaTheme=typeof KEISHA_THEME!=='undefined'?KEISHA_THEME[info.keisha]:'';
+  const doukiStr=doukiInfo?` 道軌：${doukiInfo.label}（線路の日：${doukiInfo.senro}）`:'';
+  const keishaStr=keishaTheme?` 傾斜の潜在能力：${keishaTheme}`:'';
+  return `${prefix}${STARS[info.honmei]?.j||''}・月命${STARS[info.tsukimei]?.j||''}・傾斜${STARS[info.keisha]?.j||''}・同会${STARS[info.dokai]?.j||''}・納音 ${info.yN?info.yN.n:''}（年）${info.mN?info.mN.n:''}（月）です。${doukiStr}${keishaStr}`;
 }
 function init(){
   try{
@@ -5686,8 +5690,10 @@ function openDirPopupPremium(dir,center,dirData,extra){
       <div class="dp-food-cards">${foodsHTML}</div>
       <div class="dp-gogyou">
         <div class="dp-gogyou-title">五行の知恵 — ${s.elem}のエネルギー</div>
-        <div class="dp-gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}</div>
+        <div class="dp-gogyou-text">🎨 色：${s.color}<br>🍽 食：${s.food}${s.basho?'<br>📍 場所：'+s.basho:''}</div>
       </div>
+      ${s.shintai?`<div style="margin-top:8px;padding:9px 12px;background:rgba(100,150,200,.08);border:1px solid rgba(100,150,200,.2);border-radius:8px;font-size:.68rem;color:#5a4a2a;line-height:1.8;"><span style="font-weight:700;color:#8B6914;">🫀 身体との関係</span><br>関連部位：${s.shintai}<br>注意したい症状：${s.byoki}</div>`:''}
+      ${s.kaimono?`<div style="margin-top:8px;padding:9px 12px;background:rgba(154,120,48,.06);border:1px solid rgba(154,120,48,.15);border-radius:8px;font-size:.68rem;color:#5a4a2a;line-height:1.8;"><span style="font-weight:700;color:#8B6914;">🛍 この方向で買うもの</span><br>${s.kaimono}</div>`:''}
       ${cautionHTML}
       ${sangoHTML}
       ${dpBuildAmberAction(dd.starN)}`;
@@ -5699,6 +5705,16 @@ function openDirPopupPremium(dir,center,dirData,extra){
       <div style="margin-top:10px;padding:8px 12px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.72rem;color:#8B6914;line-height:1.8;">
         ✦ 心構え：①相手を責めない ②感謝の言葉を伝える ③一時停止・赤信号に気をつける
       </div>
+      ${(()=>{
+        const kyouLabel=dd.kyouLabel||'';
+        if(!kyouLabel||typeof KYOUHOU_KOKOROGAMAE==='undefined') return '';
+        const items=KYOUHOU_KOKOROGAMAE[kyouLabel];
+        if(!items||!items.length) return '';
+        return '<div style="margin-top:8px;padding:9px 12px;background:rgba(176,48,36,.06);border:1px solid rgba(176,48,36,.15);border-radius:8px;font-size:.68rem;color:#5a4a2a;line-height:1.9;">'
+          +'<span style="font-weight:700;color:#8a3020;display:block;margin-bottom:4px;">⚠ '+kyouLabel+'の心構え</span>'
+          +items.map((t,i)=>'①②③④⑤'[i]+''+t).join('<br>')
+          +'</div>';
+      })()}
     </div>`;
   } else if(isCaution){
     bodyHTML=`<div class="dp-kyo-text">
