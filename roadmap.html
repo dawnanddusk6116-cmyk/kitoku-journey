@@ -92,6 +92,7 @@ body[data-theme="dark"] .yc-memo-ta{background:#15110c;color:var(--snow);}
 .ryuunen-cta-d{font-size:.62rem;color:var(--mist);line-height:1.85;margin-bottom:11px;}
 .ryuunen-cta-btn{display:inline-block;padding:9px 20px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.3);border-radius:999px;color:var(--goldlt);font-size:.66rem;font-weight:700;text-decoration:none;}
 
+.yc-ryuunen-double{background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(176,64,48,.08))!important;border-color:rgba(138,104,32,.4)!important;font-weight:700;}
 /* 流年サマリー（鑑定済み） */
 .ryuunen-summary{background:linear-gradient(135deg,rgba(160,72,72,.06),rgba(192,112,32,.04));border:1px solid rgba(160,72,72,.2);border-radius:var(--r);padding:15px 16px;margin:18px 0;}
 .rs-t{font-size:.66rem;font-weight:700;color:#a04848;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
@@ -308,6 +309,40 @@ function sat(P,C){return((C+P-6)%9+9)%9+1;}
 function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
 function calcKeisha(h,t){return pal(h,t);}
+
+// ── 道軌の法則（蔵より）──
+const DOUKI={
+  ten:{nums:[3,6,9],label:'天数系列',omote:'前進・頑張り・明るさ・勇気・元気',ura:'助言・指導・明るさ・勇気・元気',senro:'丑・辰・未・戌の日'},
+  chi:{nums:[2,5,8],label:'地数系列',omote:'努力・不屈・陰ひなたなし・地道',ura:'温かみ・優しさ・寛容・親分肌',senro:'寅・巳・申・亥の日'},
+  jin:{nums:[1,4,7],label:'人数系列',omote:'融和・円満・調和',ura:'同調・理解・共感・受け入れる',senro:'子・卯・午・酉の日'},
+};
+function getDouki(h){
+  if([3,6,9].includes(h)) return DOUKI.ten;
+  if([2,5,8].includes(h)) return DOUKI.chi;
+  return DOUKI.jin;
+}
+
+// ── 傾斜テーマ（蔵より）──
+const KEISHA_THEME={
+  1:'柔軟に人に合わせる・裏方に徹する・深く考える力',
+  2:'地道にコツコツ育てる・母のような包容力で支える力',
+  3:'新しいことを元気よく始める・声を出して引っ張る力',
+  4:'人と人を結びつける・縁を整える力',
+  5:'誰もやりたがらない困難を強い決意で引き受ける力',
+  6:'高い理想を持ちリーダーシップを発揮する力',
+  7:'周りに喜びと楽しさを与える・言葉や食事で笑顔にする力',
+  8:'組織や家族の継承者となる・大きな変化や改革を起こす力',
+  9:'専門性を極め真実を照らす・美しい知恵で周りを導く力',
+};
+
+// ── 五大凶方の心構え（蔵より）──
+const KYOUHOU_KOKOROGAMAE={
+  '五黄殺':['明るい笑顔で生活する','始めに相手の要望を聞き、自分の主張を固持しない','怒らない、イライラしない'],
+  '暗剣殺':['相手を傷つけやすいから注意','恩人にはお礼の言葉を','一時停止と赤信号に気をつけて'],
+  '破壊殺':['自分の目標をしっかりと','予定通りに進まずとも、不満を言わずに対応する','あきらめない','事故やケガに注意'],
+  '本命殺':['無理はしない','自分の役割を自覚する','わがままを通さない、人に強制しない'],
+  '本命的殺':['予想と違っていても驚かないこと','目的をいつまでも固定しないように'],
+};
 function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
 
 let gGender='male';
@@ -399,8 +434,12 @@ function generate(){
   }catch(e){}
 
   // 星情報バー
+  const douki=getDouki(h);
   document.getElementById('starBar').innerHTML=
-    `あなたの星：<strong>${STARS[h]}</strong>（本命星）・<strong>${STARS[t]}</strong>（月命星）・<strong>${STARS[k]}</strong>（傾斜）`;
+    `あなたの星：<strong>${STARS[h]}</strong>（本命星）・<strong>${STARS[t]}</strong>（月命星）・<strong>${STARS[k]}</strong>（傾斜）`
+    +`<div style="font-size:.62rem;color:var(--mist);margin-top:6px;line-height:1.8;">`
+    +`✦ <strong>${douki.label}</strong>（${[3,6,9].includes(h)?'三碧・六白・九紫':[2,5,8].includes(h)?'二黒・五黄・八白':'一白・四緑・七赤'}）— 線路の日：<strong>${douki.senro}</strong>　表の力：${douki.omote}　<a href="https://apps.apple.com/jp/app/%E3%83%9D%E3%82%B1%E3%83%83%E3%83%88%E4%B8%87%E5%B9%B4%E6%9A%A6/id1245138589" target="_blank" rel="noopener" style="color:var(--goldlt);text-decoration:underline;font-size:.58rem;">📱ポッケと万年暦</a></div>`
+    +`<div style="font-size:.62rem;color:var(--mist);margin-top:3px;">✦ 傾斜（潜在能力）：<strong>${STARS[k]}</strong>の力 — ${KEISHA_THEME[k]||''}</div>`;
 
   // タイムライン生成
   buildTimeline(h);
@@ -414,6 +453,7 @@ function generate(){
 
 function buildTimeline(h){
   const thisYear=new Date().getFullYear();
+  const douki=getDouki(h);
   let html='';
   for(let i=0;i<5;i++){
     const yr=thisYear+i;
@@ -441,6 +481,7 @@ function buildTimeline(h){
         </div>
         <div class="yc-action">✦ ${th.action}</div>
         <div class="yc-dir">🧭 運気が向かう方角：${dirHint}</div>
+        <div class="yc-dir" style="margin-top:4px;">📅 <strong>${douki.label}</strong>の線路の日は「<strong>${douki.senro}</strong>」— この日に始めたことは長く続き、まっすぐ発展します。<br><span style="font-size:.6rem;color:var(--mist);">💡「ポッケと万年暦」アプリで今日の十二支を確認できます。<a href="https://apps.apple.com/jp/app/%E3%83%9D%E3%82%B1%E3%83%83%E3%83%88%E4%B8%87%E5%B9%B4%E6%9A%A6/id1245138589" target="_blank" rel="noopener" style="color:var(--goldlt);text-decoration:underline;">App Store</a> / <a href="https://play.google.com/store/apps/details?id=org.ametuchi.suimei.pocketreki&hl=ja" target="_blank" rel="noopener" style="color:var(--goldlt);text-decoration:underline;">Google Play</a></span></div>
         <div class="yc-ryuunen-slot" data-year="${yr}"></div>
         <div class="yc-memo">
           <div class="yc-memo-lb">✍ ${yr}年の自分（今していること・しようとしていること）</div>
@@ -510,9 +551,18 @@ function buildRyuunen(by){
     return;
   }
 
-  // 流年計算（life.html確定版と同じ式）
+  // 姓名流年計算（総画数から基本数）
   let en=so; while(en>9){en=[...String(en)].reduce((a,b)=>a+parseInt(b),0);}
   const ages=[]; let a=en; while(a<=90){ages.push(a);a+=9;}
+  // 九星坎入年（本命星hが宮1=北に回座する年齢）
+  const kannyuAges=[];
+  const _kc=((gHonmei+3)%9)+1;
+  for(let yr=1920;yr<=2100;yr++){
+    const c=((2024-yr)%9+9)%9+1;
+    if(c===_kc) kannyuAges.push(yr-by+1);
+  }
+  const kannyuSet=new Set(kannyuAges);
+  const ryunenSet=new Set(ages);
 
   // 数え年で、今後5年に該当する流年があるか（中心年と周辺年を区別）
   const thisYear=new Date().getFullYear();
@@ -528,7 +578,11 @@ function buildRyuunen(by){
       const slot=document.querySelector(`.yc-ryuunen-slot[data-year="${yr}"]`);
       if(slot){
         if(exact){
-          slot.innerHTML=`<div class="yc-ryuunen">⌛ 流年ど真ん中（数え${kazoe}歳）— 人生が大きく動きやすい変化の年です。脱皮の年として、環境を整え吉方を取ると、変化を飛躍の推進力に変えられます。</div>`;
+          const _isKn=kannyuSet.has(kazoe);
+          const _wLabel=_isKn?'🔴 W変化（流年＋坎入）':'⌛ 流年ど真ん中';
+          const _wMsg=_isKn?`<strong>流年（${kazoe}歳）と九星坎入が重なる、人生最大の転換点です。</strong>脱皮の摩擦は大きいほど、その後の飛躍も大きくなります。今から吉方位を取って器を強くしておきましょう。`:
+            `流年ど真ん中（数え${kazoe}歳）— 人生が大きく動きやすい変化の年です。脱皮の年として、環境を整え吉方を取ると、変化を飛躍の推進力に変えられます。`;
+          slot.innerHTML=`<div class="yc-ryuunen${_isKn?' yc-ryuunen-double':''}">${_wLabel}（数え${kazoe}歳）— ${_wMsg}</div>`;
         }else{
           slot.innerHTML=`<div class="yc-ryuunen" style="opacity:.82;">⌛ 流年の周辺ゾーン（${nearAge}歳の前後）— 変化の余波が出やすい時期です。大きな決断の前に足元を整えておくと安心です。</div>`;
         }
