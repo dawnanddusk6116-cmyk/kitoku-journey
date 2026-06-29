@@ -1378,7 +1378,11 @@ function runMorningTheme(){
   var ty=today.getFullYear(),tm=today.getMonth()+1,td=today.getDate();
   // 系列判定（本命星）
   var group=([2,5,8].indexOf(honmei)>=0)?'chisuu':([3,6,9].indexOf(honmei)>=0)?'tensuu':'jinsuu';
-  // 今日の干支から系列も判定（日盤中宮を簡易計算）
+  // 日盤中宮の系列も算出して二重チェック
+  var dayCenter=(typeof getDayCenter==='function')?getDayCenter(ty,tm,td):5;
+  var dayGroup=([2,5,8].indexOf(dayCenter)>=0)?'chisuu':([3,6,9].indexOf(dayCenter)>=0)?'tensuu':'jinsuu';
+  // 経営者の系列と日盤の系列が一致する場合はテーマが強化される
+  var isReinforced=(group===dayGroup);
   var themes={
     chisuu:{theme:'確実・着実・ミスをゼロに',detail:'今日はお釣りの間違い・オーダーミス・連絡漏れを徹底的になくす日です。「地道に、確実に、ひとつひとつ」を合言葉にしてください。',color:'#8a5a10'},
     tensuu:{theme:'明るく・元気よく・活気を出す',detail:'今日は笑顔と声のトーンが最強の武器です。スタッフ全員が明るく動くだけで売上が変わります。「今日はテンションを上げていこう」と伝えてください。',color:'#b04030'},
@@ -1390,7 +1394,7 @@ function runMorningTheme(){
   el.innerHTML='<div style="background:var(--card);border:1px solid rgba(138,104,32,.2);border-radius:12px;padding:14px 16px;">'
     +'<div style="font-size:.62rem;color:var(--gold);letter-spacing:.12em;margin-bottom:8px;">KITOKU 朝礼テーマ（'+ty+'年'+tm+'月'+td+'日）</div>'
     +'<div style="font-size:.7rem;color:var(--mist);margin-bottom:8px;">経営者：'+ownerS.k+'（'+(['地数系列','天数系列','人数系列'][['chisuu','tensuu','jinsuu'].indexOf(group)])+'）</div>'
-    +'<div style="font-size:.9rem;font-weight:700;color:'+t.color+';margin-bottom:10px;">「'+t.theme+'」</div>'
+    +'<div style="font-size:.9rem;font-weight:700;color:'+t.color+';margin-bottom:10px;">「'+t.theme+'」'+(isReinforced?' <span style="font-size:.6rem;background:'+t.color+';color:#fff;border-radius:4px;padding:2px 6px;margin-left:4px;">本日強化</span>':'')+'</div>'
     +'<div style="font-size:.68rem;color:var(--mist);line-height:1.85;">'+t.detail+'</div>'
     +'</div>';
 }
@@ -1688,15 +1692,15 @@ var CHAR_DESC={
 
 /* 裏性格データ（ビジネス版）*/
 var URA_BIZ={
-  1:'情報を集めすぎて決断を先送りにしやすい傾向があります。人の苦労に敏感すぎて疲弊しやすい。ただし信頼関係が生まれると驚くほどの粘り強さを発揮します。',
+  1:'情報を集めすぎて決断を先送りにしやすい。人の苦労に敏感すぎて疲弊しやすい。孤独な時間が続くと運勢が低下する。ただし信頼関係が生まれると驚くほどの粘り強さを発揮します。',
   2:'決断が異常に遅い。安全を重視しすぎて機会コストを逃しやすい。ただし一度動き出すと着実な歩みで周囲をごぼう抜きにします。',
-  3:'飽きっぽく熱しやすく冷めやすい。過去を振り返らず同じ失敗を繰り返す傾向も。ただし「完成しない自由」が最大の推進力になります。',
+  3:'飽きっぽく熱しやすく冷めやすい。過去を振り返らず同じ失敗を繰り返す傾向も。嘘と遅刻が増えた時は運勢崩壊のサイン。ただし「完成しない自由」と翻訳者・調整役としての役割が最大の推進力になります。',
   4:'人に合わせすぎて決断を先延ばしにしやすい傾向があります。内心ではよく計算しており、不機嫌になると周囲の空気を一変させる力があります。',
-  5:'言葉が少なく理由を伝えない時があります。上から目線に見られやすい。ただし全責任を背負う姿勢を見せた瞬間、周囲から強い信頼を得ます。',
+  5:'言葉が少なく理由を伝えない時があります。上から目線に見られやすい。機嫌が良い時は体調が悪い時というバグがある。ただし全責任を背負う姿勢を見せた瞬間、周囲から強い信頼を得ます。',
   6:'「なぜこんなこともできないの？」という圧が無意識に出る。完璧主義が周囲を疲弊させることも。ただし尊敬できる師匠に出会うと圧倒的実力を発揮します。',
   7:'失敗すると「やってます、悪いのは向こうです」と他責にする傾向。土台が弱く愚痴が多い。ただし人を楽しませることに特化した才能があります。',
   8:'本音をすぐには言わず、内側で考えを温めてから動きます。無自覚な上から目線で意見対立が起きやすい。ただし明確な目標があると七転び八起きで諦めません。',
-  9:'自分の理解力への自信が強く、自己流を貫いて孤立することも。ただし心から尊敬できる師匠に出会うと天才的な才能が開花します。'
+  9:'「自分以外は全員アホ」と無意識に思い込む傲慢さが出ることがある。お金が入ると男女問題を引き起こしやすい。ただし心からひれ伏す師匠に出会うと天才的な才能が開花します。'
 };
 
 /* ビジネス操縦法データ */
@@ -1893,7 +1897,7 @@ function analyze(){
   // AIレポート用データ保存
   rData={
     cat:curCat,sage:curC,scene:curT,nm:nm,
-    myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,
+    myH:myS.k,myE:myS.e,myT:myTS.k,myK:myKS.k,myHN:myN,
     cH:cS.k,cE:cS.e,cT:cTS.k,cK:cKS.k,
     compat:compat.l,compatType:compat.t,
     cUra:URA_BIZ[cN]||'',cSouju:SOUJU_BIZ[cN]||'',
@@ -1968,7 +1972,7 @@ function genReport(){
   var sageName=SAGE_LABEL[d.sage||'kitoku'];
   var catLabel=CAT_LABELS[d.cat||'hire'];
 
-  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n裏の性格（つまずきと強み）：'+d.cUra+'\n動かし方（最適な関わり方）：'+d.cSouju+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\n【KITOKUの絶対哲学】\n・相剋は「死角ゼロの最強チーム」として全肯定する\n・「合わないがゆえに全部できるようになる」\n・弱点は必ず「活かし方」とセットで伝える\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。動かし方（'+d.cSouju+'）を踏まえ、具体的な関わり方を示す。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
+  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n傾斜（潜在能力）：'+d.myK+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n傾斜（潜在能力）：'+d.cK+'\n裏の性格（つまずきと強み）：'+d.cUra+'\n動かし方（最適な関わり方）：'+d.cSouju+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\n【KITOKUの絶対哲学】\n・相剋は「死角ゼロの最強チーム」として全肯定する\n・「合わないがゆえに全部できるようになる」\n・弱点は必ず「活かし方」とセットで伝える\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。動かし方（'+d.cSouju+'）を踏まえ、具体的な関わり方を示す。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
 
   fetch('/api/claude',{
     method:'POST',
