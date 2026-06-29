@@ -2016,7 +2016,13 @@ function loadStarInfo() {
   const mn = calcMonthNayin(by, bm, bd);
 
   document.getElementById('starInfoText').textContent =
-    `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。`;
+    (() => {
+    const doukiInfo = typeof getDouki === 'function' ? getDouki(h) : null;
+    const keishaTheme = typeof KEISHA_THEME !== 'undefined' ? KEISHA_THEME[k] : '';
+    const doukiStr = doukiInfo ? ` 道軌：${doukiInfo.label}（線路の日：${doukiInfo.senro}）` : '';
+    const keishaStr = keishaTheme ? ` 傾斜の潜在能力：${keishaTheme}` : '';
+    return `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。${doukiStr}${keishaStr}`;
+  })();
 }
 
 // ============================================================
@@ -2660,7 +2666,11 @@ function rankDesc(rank, badges) {
     badges.forEach(b => {
       if (b.includes('本命')) parts.push('本命星の吉方');
       if (b.includes('月命')) parts.push('月命星の吉方');
-      if (b.includes('三合')) parts.push('三合の吉方（後押しの力）');
+      if (b.includes('三合')) {
+        const _SANGO_P={'木局':'発展・成長・営業','火局':'知的・芸術・文化','金局':'経済・恋愛・悦び','水局':'健康回復・人間関係'};
+        const _sg=Object.keys(_SANGO_P).find(k=>b.includes(k));
+        parts.push('三合の吉方（後押し）' + (_sg?'：'+_SANGO_P[_sg]:''));
+      }
       if (b.includes('天道')) parts.push('天道の方位');
     });
   }
@@ -3009,6 +3019,9 @@ function showDayDetail(y, m, d) {
                    : '— 吉凶なし';
     const fb = document.getElementById('dayDetailFeedback');
     if (fb) {
+      const dayStarData = (typeof STARS !== 'undefined') ? STARS[dayStarN] : null;
+      const bashoHint = dayStarData?.basho ? `<div style="margin-top:6px;font-size:.62rem;color:var(--mist);">📍 今日この方向に行くなら：${dayStarData.basho}</div>` : '';
+      const shintaiHint = dayStarData?.shintai ? `<div style="font-size:.6rem;color:var(--mist);">🫀 身体：${dayStarData.shintai}　注意：${dayStarData.byoki||''}</div>` : '';
       fb.innerHTML = `
         <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
           ${y}/${m}/${d}（${dow}）の日盤
@@ -3016,7 +3029,9 @@ function showDayDetail(y, m, d) {
         <div style="font-size:1rem;font-weight:800;color:${rankColor};margin-bottom:3px;">
           ${rankStr}
         </div>
-        <div style="font-size:.6rem;color:var(--mist);">
+        ${finalRank >= 2 && dayStarData ? `<div style="font-size:.65rem;color:var(--mist);line-height:1.8;margin-top:4px;">🎨 ${dayStarData.color||''}　🍽 ${dayStarData.food||''}</div>` : ''}
+        ${bashoHint}${shintaiHint}
+        <div style="font-size:.6rem;color:var(--mist);margin-top:4px;">
           ↑ 上のSTEP3「日盤タブ」で方位盤を確認できます
         </div>`;
       fb.style.display = 'block';
@@ -3117,6 +3132,8 @@ const KYO_PRESCRIPTION = {
   '本命殺': { emoji:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、意識して休息と睡眠の時間をたっぷりと取り、自分を優しく労りましょう。' },
   '月命殺': { emoji:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず、心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
   '定位対冲': { emoji:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、一緒にいる家族や同行者、足元の人間関係をいつも以上に大切にしてください。' },
+  '破壊殺':   { emoji:'🔸', title:'破壊殺への心がけ', text:'予定が崩れやすく、事故やケガに注意が必要な時です。自分の目標をしっかり持ち、予定通りに進まなくても不満を言わず柔軟に対応しましょう。あきらめずに動き続けることが吉。' },
+  '本命的殺': { emoji:'🔸', title:'本命的殺への心がけ', text:'予想と違う展開になりやすい時です。「こうあるべき」という目的を固定しすぎず、その場の流れに合わせて進んでください。驚かず受け止めることが最大の防御です。' },
 };
 
 function generateKyoPrescription(badges, rank) {

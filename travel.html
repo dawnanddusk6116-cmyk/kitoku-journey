@@ -1874,7 +1874,13 @@ function loadStarInfo() {
   const mn = calcMonthNayin(by, bm, bd);
 
   document.getElementById('starInfoText').textContent =
-    `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。`;
+    (() => {
+    const doukiInfo = typeof getDouki === 'function' ? getDouki(h) : null;
+    const keishaTheme = typeof KEISHA_THEME !== 'undefined' ? KEISHA_THEME[k] : '';
+    const doukiStr = doukiInfo ? ` 道軌：${doukiInfo.label}（線路の日：${doukiInfo.senro}）` : '';
+    const keishaStr = keishaTheme ? ` 傾斜の潜在能力：${keishaTheme}` : '';
+    return `私は${STARS[h].j}・月命${STARS[t].j}・傾斜${STARS[k].j}・同会${STARS[dstar].j}・納音 ${yn.n}（年）${mn.n}（月）です。${doukiStr}${keishaStr}`;
+  })();
 }
 
 function getStoredBirth() {
@@ -2941,6 +2947,9 @@ function showDayDetail(y, m, d) {
                    : '— 吉凶なし';
     const fb = document.getElementById('dayDetailFeedback');
     if (fb) {
+      const dayStarData = (typeof STARS !== 'undefined') ? STARS[dayStarN] : null;
+      const bashoHint = dayStarData?.basho ? `<div style="margin-top:6px;font-size:.62rem;color:var(--mist);">📍 今日この方向に行くなら：${dayStarData.basho}</div>` : '';
+      const shintaiHint = dayStarData?.shintai ? `<div style="font-size:.6rem;color:var(--mist);">🫀 身体：${dayStarData.shintai}　注意：${dayStarData.byoki||''}</div>` : '';
       fb.innerHTML = `
         <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
           ${y}/${m}/${d}（${dow}）の日盤
@@ -2948,7 +2957,9 @@ function showDayDetail(y, m, d) {
         <div style="font-size:1rem;font-weight:800;color:${rankColor};margin-bottom:3px;">
           ${rankStr}
         </div>
-        <div style="font-size:.6rem;color:var(--mist);">
+        ${finalRank >= 2 && dayStarData ? `<div style="font-size:.65rem;color:var(--mist);line-height:1.8;margin-top:4px;">🎨 ${dayStarData.color||''}　🍽 ${dayStarData.food||''}</div>` : ''}
+        ${bashoHint}${shintaiHint}
+        <div style="font-size:.6rem;color:var(--mist);margin-top:4px;">
           ↑ 上のSTEP3「日盤タブ」で方位盤を確認できます
         </div>`;
       fb.style.display = 'block';
@@ -3324,6 +3335,8 @@ const TRAVEL_KYO_PRESCRIPTION = {
   '本命殺': { icon:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、休息をたっぷり取って自分を労りましょう。常備薬を持参するとさらに安心です。' },
   '月命殺': { icon:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
   '定位対冲': { icon:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、同行者や足元の人間関係をいつも以上に大切にしてください。' },
+  '破壊殺':   { icon:'🔸', title:'破壊殺への心がけ', text:'予定が崩れやすく、事故やケガに注意が必要な時です。自分の目標をしっかり持ち、予定通りに進まなくても不満を言わず柔軟に対応しましょう。あきらめずに動き続けることが吉。' },
+  '本命的殺': { icon:'🔸', title:'本命的殺への心がけ', text:'予想と違う展開になりやすい時です。「こうあるべき」という目的を固定しすぎず、その場の流れに合わせて進んでください。驚かず受け止めることが最大の防御です。' },
 };
 
 function generateTravelKyoAlert(yearBadges, monthBadges, isPilgrimage) {
@@ -3378,6 +3391,10 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
 
   const isMax  = yr >= 5 || mr >= 5 ||
     [...yb,...mb].some(b => b.includes('三合') || b.includes('最高'));
+  const SANGO_PURPOSE_P={'木局':'発展・成長・教育・営業活動に最適。','火局':'知的・芸術・文化活動に最適。','金局':'経済活動が盛ん。人生の悦びを得て感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。'};
+  const sangoMatch=[...yb,...mb].find(b=>Object.keys(SANGO_PURPOSE_P).some(k=>b.includes(k)));
+  const sangoGroup=sangoMatch?Object.keys(SANGO_PURPOSE_P).find(k=>sangoMatch.includes(k)):'';
+  const sangoPurpose=sangoGroup?SANGO_PURPOSE_P[sangoGroup]:'';
   const isBoth = yr >= 4 && mr >= 2;
   const badges = [...new Set([...yb,...mb])].filter(b=>!b.includes('⚠')).join('・');
   const senroMsg = isPilgrimage
@@ -3392,6 +3409,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
       ${badges ? badges + '<br>' : ''}
       <strong style="color:var(--goldlt);">✦ ぜひこの方角・この時期に動いてください。</strong><br>
       遠くへ行くほど・長く滞在するほど吉のエネルギーが大きくなります。
+      ${sangoPurpose?'<br>🎯 三合の目的：<strong style="color:var(--goldlt);">'+sangoPurpose+'</strong>':''}
     </div>
     ${senroMsg}
   </div>`;
