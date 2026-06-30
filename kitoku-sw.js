@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-00-text';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-lines';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
