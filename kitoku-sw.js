@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v4-academy-image-pages';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-00-text';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -17,13 +17,22 @@ const KITOKU_CORE = [
   './academy_pages/00/page-4.png',
   './academy_pages/00/page-5.png',
   './academy_pages/00/page-6.png',
+  './academy_pages/00/page-7.png',
+  './academy_pages/00/page-8.png',
+  './academy_pages/00/page-9.png',
+  './academy_pages/00/page-10.png',
+  './academy_pages/00/page-11.png',
+  './academy_pages/00/page-12.png',
+  './academy_pages/00/page-13.png',
   './academy_pages/01/page-1.png',
   './academy_pages/01/page-2.png',
   './academy_pages/01/page-3.png',
   './academy_pages/01/page-4.png',
   './academy_pages/01/page-5.png',
   './academy_pages/01/page-6.png',
-  './academy_pages/01/page-7.png'
+  './academy_pages/01/page-7.png',
+  './academy_pages/01/page-8.png',
+  './academy_pages/01/page-9.png'
 ];
 
 self.addEventListener('install', event => {
