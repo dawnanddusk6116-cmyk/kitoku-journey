@@ -384,6 +384,48 @@ const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const STARS={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
 const ELEMS={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+
+// ── 五行別 香料・素材・色（蔵より）──
+const GOGYO_SCENT={
+  木:{stars:[3,4],label:'木（三碧・四緑）',
+     scent:'ユーカリ・ティーツリー・グリーン系・ヒノキ・茶葉・グレープフルーツ・ベルガモット',
+     material:'麻・綿（薄め）・レーヨン・天然素材の軽いもの',
+     color:'青・緑・碧・淡いグリーン',
+     note:'発展・成長・縁・新しい始まりのエネルギー。清涼感と発散性のある香りが木の気を強める。'},
+  火:{stars:[9],label:'火（九紫）',
+     scent:'ローズ・ジャスミン・ネロリ・ブラックペッパー・シナモン・フランキンセンス（乳香）',
+     material:'シルク・光沢のある化学繊維・ナイロン・艶のある素材',
+     color:'赤・紫・オレンジ',
+     note:'知性・美・直感・情熱のエネルギー。華やかさと深みを持つ香りが火の気を強める。'},
+  土:{stars:[2,5,8],label:'土（二黒・五黄・八白）',
+     scent:'サンダルウッド（白檀）・パチュリ・バニラ・ベンゾイン（安息香）・フランキンセンス',
+     material:'ウール・厚手の綿・平織りデニム・重みのある素材',
+     color:'黄色・茶色・ベージュ・アイボリー',
+     note:'安定・滋養・母性・基盤のエネルギー。重厚で温かみのある香りが土の気を強める。'},
+  金:{stars:[6,7],label:'金（六白・七赤）',
+     scent:'ベルガモット・オレンジ・グレープフルーツ・キンモクセイ・フランキンセンス（乳香）',
+     material:'カシミヤ・高級合繊・絹・品質の高い素材',
+     color:'白・金・銀（六白）/ オレンジ・ピンク（七赤）',
+     note:'収穫・鋭さ・悦び・豊かさのエネルギー。明るく軽やかな柑橘系が金の気を強める。'},
+  水:{stars:[1],label:'水（一白）',
+     scent:'ラベンダー・ゼラニウム・クラリセージ・カモミール・海塩・ウォータリー系',
+     material:'レーヨン・シフォン・極薄の綿（ガーゼ）・透ける素材',
+     color:'黒・紺・白・グレー',
+     note:'浸透・浄化・知恵・深い休息のエネルギー。静寂と清涼感のある香りが水の気を強める。'},
+};
+
+// ── 系列別 勝負の香り（蔵より）──
+const SERIES_SCENT={
+  ten:{label:'天数系列（三碧・六白・九紫）',senro:'丑・辰・未・戌の日',
+       morning:'ユーカリの揮発性（瞬発力）',evening:'ローズの残香（継続力）',
+       note:'朝のユーカリで脳のスイッチを入れ、夜のローズで決断を整える。'},
+  chi:{label:'地数系列（二黒・五黄・八白）',senro:'寅・巳・申・亥の日',
+       morning:'サンダルウッドの低音の香り',evening:'バニラの安心感',
+       note:'焦燥を鎮め、長期戦の精神基盤を作る。重厚な香りが地数系列の真骨頂。'},
+  jin:{label:'人数系列（一白・四緑・七赤）',senro:'子・卯・午・酉の日',
+       morning:'ベルガモットの陽光を凝縮した柑橘',evening:'ラベンダーの夜の静寂',
+       note:'朝のベルガモットが交渉を制し、夜のラベンダーが明日の戦略を生む。'},
+};
 const AVATAR={1:'Crystal Water / 澄み切った水',2:'Mother Earth / 母なる大地',3:'Sunrise Sound / 朝日の響き',4:'Harmonic Breeze / 調和の風',5:'Center Core / 再生の核',6:'Royal Sky / 気高き天',7:'Joyful Harvest / 喜びの収穫',8:'Evolution Mountain / 変革の山',9:'Brilliant Fire / 輝く炎'};
 const COLORS={1:'黒・紺・白',2:'黄・茶・赤・紫',3:'青・紺・水色',4:'緑・淡い青・白',5:'黄・茶・ゴールド',6:'白・金・銀・パール',7:'白・金・ピンク',8:'黄・茶・ベージュ',9:'赤・紫・緑'};
 const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7}};
@@ -436,7 +478,12 @@ function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
 function calcKeisha(h,t){return pal(h,t);}
 function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
-function starLine(info){return `私は${info.honmei}・月命${info.tsukimei}・傾斜${info.keisha}・同会${info.dokai}・納音 ${info.yNac}（年）${info.mNac}（月）${info.dNac}（日）です。`;}
+function starLine(info){
+  const seriesName=([3,6,9].indexOf(info.h)>=0)?'天数系列（丑・辰・未・戌の日）':([2,5,8].indexOf(info.h)>=0)?'地数系列（寅・巳・申・亥の日）':'人数系列（子・卯・午・酉の日）';
+  const elem=([3,4].indexOf(info.h)>=0)?'木':info.h===9?'火':([2,5,8].indexOf(info.h)>=0)?'土':([6,7].indexOf(info.h)>=0)?'金':'水';
+  const gogyoScent=GOGYO_SCENT[elem];
+  return `私は${info.honmei}・月命${info.tsukimei}・傾斜${info.keisha}・同会${info.dokai}・納音 ${info.yNac}（年）${info.mNac}（月）${info.dNac}（日）です。道軌：${seriesName}。五行：${elem}（推奨香料：${gogyoScent?gogyoScent.scent:''}）。`;
+}
 function calcInfoFromBirth(y,m,d,gender='male'){
   const {kY,kM}=getKD(y,m,d);
   const h=calcHonmei(kY);
@@ -500,6 +547,9 @@ function buildPrompt(){
   const base=info?starLine(info):'私はまだ星情報を登録していません。一般的な九星気学の観点で、やさしく提案してください。';
   const star=info?`${info.honmei}（${AVATAR[info.h]}）`:'私の九星';
   const color=info?COLORS[info.h]:'星に合う色';
+  const elemKey=info?([3,4].indexOf(info.h)>=0?'木':info.h===9?'火':[2,5,8].indexOf(info.h)>=0?'土':[6,7].indexOf(info.h)>=0?'金':'水'):'';
+  const gogyoInfo=elemKey?GOGYO_SCENT[elemKey]:null;
+  const seriesInfo=info?([3,6,9].indexOf(info.h)>=0?SERIES_SCENT.ten:[2,5,8].indexOf(info.h)>=0?SERIES_SCENT.chi:SERIES_SCENT.jin):null;
   const teacherName=consultFocus==='color'?'色AI先生':'香りAI先生';
   const modeTitle={
     self:consultFocus==='color'?'自分の色を選ぶ':'自分の香りを選ぶ',
@@ -520,6 +570,10 @@ ${modeTitle}
 
 【私の星のスタイル】
 ${star}
+
+【五行のエンジン】
+${gogyoInfo?('五行：'+elemKey+' / 推奨香料：'+gogyoInfo.scent+' / 素材：'+gogyoInfo.material+' / '+gogyoInfo.note):''}
+${seriesInfo?('系列：'+seriesInfo.label+' / 朝の香：'+seriesInfo.morning+' / 夜の香：'+seriesInfo.evening+' / '+seriesInfo.note):''}
 
 【目的】
 シーン：${scene}
