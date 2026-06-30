@@ -1,7 +1,8 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-start02';
+const KITOKU_CACHE = 'kitoku-pwa-v6-first-start-kyusei-v2b';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
+  './kyusei_v2.html',
   './academy.html',
   './academy_pdf_00.html',
   './academy_pdf_01.html',

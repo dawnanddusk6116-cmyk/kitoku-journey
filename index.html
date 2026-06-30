@@ -2367,6 +2367,13 @@ function startKITOKU() {
   localStorage.setItem('kitoku-self-birth', val);
   localStorage.setItem('kitoku-gender', gGender);
   localStorage.setItem('kitoku-self-gender', gGender);
+
+  const firstKyuseiKey = 'kitoku-start-first-kyusei-v2-done';
+  if (localStorage.getItem(firstKyuseiKey) !== '1') {
+    localStorage.setItem(firstKyuseiKey, '1');
+    window.location.href = 'kyusei_v2.html';
+    return;
+  }
   window.location.href = 'top.html';
 }
 
