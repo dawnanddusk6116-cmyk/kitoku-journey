@@ -289,6 +289,35 @@ function getInput(){
   };
 }
 
+
+// ── 道軌・傾斜・裏性格（蔵より）──
+const ASTRO_SERIES={
+  ten:{stars:[3,6,9],label:'天数系列',senro:'丑・辰・未・戌の日',note:'明るさ・勇気・前進のエンジン。目上との衝突は初期仕様。'},
+  chi:{stars:[2,5,8],label:'地数系列',senro:'寅・巳・申・亥の日',note:'努力・不屈・陰ひなたなし。追従型。憧れのモデルを提示してついていかせる。'},
+  jin:{stars:[1,4,7],label:'人数系列',senro:'子・卯・午・酉の日',note:'融和・円満・調和。争うと最も損をする。自立発展型。'},
+};
+const ASTRO_KEISHA_THEME={
+  1:'柔軟に人に合わせる・裏方に徹する・深く考える力',
+  2:'地道にコツコツ育てる・母のような包容力で支える力',
+  3:'新しいことを元気よく始める・声を出して引っ張る力',
+  4:'人と人を結びつける・縁を整える力',
+  5:'誰もやりたがらない困難を強い決意で引き受ける力',
+  6:'高い理想を持ちリーダーシップを発揮する力',
+  7:'周りに喜びと楽しさを与える・言葉や食事で笑顔にする力',
+  8:'組織や家族の継承者となる・大きな変化や改革を起こす力',
+  9:'専門性を極め真実を照らす・美しい知恵で周りを導く力',
+};
+const ASTRO_BUG={
+  1:'悩みやすく底なし沼にはまりやすい。1人で悩んでいる時間が運勢を破壊する。',
+  2:'行動と決断が異常に遅い。内面に恨みと妬みを溜め込みやすい。大器晩成型。',
+  3:'落ち着きがなく飽きっぽい。嘘と遅刻が増えた時は運勢崩壊のサイン。',
+  4:'八方美人に振る舞うが内面は計算高い。不機嫌になると人生崩壊のエラーサイン。',
+  5:'常に不機嫌そうで理由を説明しない。機嫌が良い時は体調が悪い時。',
+  6:'他人が自分のように完璧にできないとイライラ。プライドが極めて高い。',
+  7:'土台が弱く愚痴が多い。失敗すると「悪いのは向こう」と他責にしやすい。',
+  8:'本音を絶対に言わない。無自覚な上から目線で家庭内では暴君になりやすい。',
+  9:'自分が一番頭がいいと無意識に思い込む。お金が入ると男女問題を引き起こしやすい。',
+};
 const ASTRO_STARS={
   1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',
   6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'
@@ -353,7 +382,17 @@ function buildKitokuOsText(input){
   const yearN=astroNayinYear(kY);
   const monthN=astroNayinMonth(input.year,input.month,input.day);
   const dayN=astroNayinDay(input.year,input.month,input.day,input.hour);
-  return `私は${ASTRO_STARS[honmei]}・月命${ASTRO_STARS[tsukimei]}・傾斜${ASTRO_STARS[keisha]}・同会${ASTRO_STARS[dokai]}・納音 ${yearN.n}（年） ${monthN.n}（月） ${dayN.n}（日）です。`;
+  const seriesKey=[3,6,9].includes(honmei)?'ten':[2,5,8].includes(honmei)?'chi':'jin';
+  const seriesInfo=ASTRO_SERIES[seriesKey];
+  const keishaTheme=ASTRO_KEISHA_THEME[keisha]||'';
+  const bugText=ASTRO_BUG[honmei]||'';
+  return `私は${ASTRO_STARS[honmei]}・月命${ASTRO_STARS[tsukimei]}・傾斜${ASTRO_STARS[keisha]}・同会${ASTRO_STARS[dokai]}・納音 ${yearN.n}（年） ${monthN.n}（月） ${dayN.n}（日）です。`
+    +`
+道軌：${seriesInfo.label}（線路の日：${seriesInfo.senro}）`
+    +`
+傾斜の潜在能力：${keishaTheme}`
+    +`
+機体のバグ：${bugText}`;
 }
 
 function runAstro64(updateKitoku=true){
