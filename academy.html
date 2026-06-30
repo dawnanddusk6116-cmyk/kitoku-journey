@@ -20,11 +20,8 @@
   --line:#dfd3c3;
   --gold:#a87918;
   --purple:#7b5ea7;
-  --green:#57765a;
-  --blue:#2a6ab0;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
 body{
   margin:0;
   background:var(--bg);
@@ -51,64 +48,92 @@ a{color:inherit;text-decoration:none}
   padding:7px 13px;background:#fffaf0;color:#5b3a13;
   font-size:.9rem;font-weight:700;
 }
-.hero{text-align:center;padding:44px 0 22px}
+.hero{text-align:center;padding:44px 0 28px}
 .eyebrow{letter-spacing:.32em;color:var(--purple);font-size:.72rem;font-weight:700}
 h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 .lead{color:#6c5b47;font-size:.95rem;margin:0 auto;max-width:34em}
-.line-nav{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-  margin:8px 0 24px;
+.academy-lines{display:grid;gap:12px;margin-top:4px}
+.line{
+  background:rgba(255,253,248,.72);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 26px rgba(70,44,14,.035);
 }
-.line-nav a{
-  border:1px solid #d8c7ae;border-radius:12px;
-  background:#fffaf0;padding:10px 8px;text-align:center;
-  font-weight:800;font-size:.8rem;line-height:1.45;
+.line summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
 }
-.line-nav span{display:block;color:#8b7b68;font-size:.68rem;font-weight:700;letter-spacing:.06em}
-.line-block{scroll-margin-top:76px;margin-top:22px}
-.line-title{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
-  margin:0 0 10px;padding:0 2px;
+.line summary::-webkit-details-marker{display:none}
+.summary-main{min-width:0}
+.line-code{
+  display:block;
+  color:var(--purple);
+  font-size:.72rem;
+  letter-spacing:.26em;
+  font-weight:800;
+  line-height:1.3;
 }
-.line-title h2{font-size:1.05rem;margin:0;letter-spacing:.14em}
-.line-title .label{font-size:.72rem;letter-spacing:.22em;color:var(--purple);font-weight:800}
-.line-title .caption{font-size:.78rem;color:#7a6855;margin:0;text-align:right}
+.line-name{
+  display:block;
+  color:var(--ink);
+  font-size:1.12rem;
+  letter-spacing:.08em;
+  font-weight:800;
+  line-height:1.45;
+}
+.summary-sub{
+  color:#7a6855;
+  font-size:.78rem;
+  line-height:1.55;
+  text-align:right;
+}
+.chevron{
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid #d8ba74;
+  background:#fff8e8;
+  color:var(--gold);
+  display:grid;place-items:center;
+  flex:0 0 auto;
+  transition:transform .18s ease;
+}
+.line[open] .chevron{transform:rotate(180deg)}
+.line-body{border-top:1px solid #eadfce;padding:4px 16px 16px}
 .lesson{
   background:var(--paper);
   border:1px solid var(--line);
-  border-radius:18px;
-  padding:22px;
-  margin:14px 0;
-  box-shadow:0 10px 26px rgba(70,44,14,.04);
+  border-radius:14px;
+  padding:18px;
+  margin:12px 0;
 }
-.lesson.featured{
-  border-color:#d6bf93;
-  background:linear-gradient(180deg,#fffdf8,#fbf5e9);
-}
-.lesson-head{display:flex;gap:16px;align-items:flex-start}
+.lesson-head{display:flex;gap:14px;align-items:flex-start}
 .num{
-  min-width:48px;height:48px;border-radius:50%;
+  min-width:46px;height:46px;border-radius:50%;
   display:grid;place-items:center;
   background:#fff8e8;border:1px solid #d8ba74;
   color:var(--gold);font-weight:800;flex:0 0 auto;
   padding:0 8px;
 }
 .num.word{border-radius:999px;width:auto;letter-spacing:.08em}
-.lesson-title{font-size:1.25rem;margin:0 0 4px;letter-spacing:.06em;line-height:1.45}
-.desc{font-size:.92rem;color:#6c5b47;margin:0}
+.lesson-title{font-size:1.16rem;margin:0 0 4px;letter-spacing:.06em;line-height:1.45}
+.desc{font-size:.9rem;color:#6c5b47;margin:0}
 .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
 .tag{
   border:1px solid rgba(168,121,24,.25);border-radius:999px;
   background:#fff9ec;color:#7a5017;padding:2px 9px;
   font-size:.68rem;font-weight:800;letter-spacing:.06em;
 }
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .action{
   border:1px solid #d8c7ae;border-radius:12px;
   padding:12px 10px;text-align:center;background:#fbf8f1;
-  font-weight:800;font-size:.92rem;
+  font-weight:800;font-size:.9rem;
 }
-.action.video{border-color:#bba5d8;background:#fbf8ff;color:#4a2a78}
 .action.pending{border-color:#d8c7ae;background:#f3efe7;color:#8b7b68;cursor:not-allowed;opacity:.82}
 .note{
   margin-top:20px;padding:14px 16px;border-radius:14px;
@@ -119,14 +144,15 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 @media(max-width:560px){
   .page{padding:0 14px 48px}
   h1{font-size:1.6rem}
-  .line-nav{grid-template-columns:1fr;gap:7px}
-  .line-title{display:block}
-  .line-title .caption{text-align:left;margin-top:2px}
-  .lesson{padding:18px}
-  .lesson-head{gap:12px}
-  .actions{grid-template-columns:1fr}
   .brand{font-size:1rem}
   .btn{padding:6px 10px}
+  .line summary{align-items:flex-start;padding:14px}
+  .summary-sub{text-align:left;font-size:.74rem}
+  .line-name{font-size:1.04rem}
+  .line-body{padding:2px 12px 12px}
+  .lesson{padding:16px}
+  .lesson-head{gap:12px}
+  .actions{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -145,187 +171,171 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
   <section class="hero">
     <div class="eyebrow">KITOKU ACADEMY</div>
     <h1>気学を学ぶ</h1>
-    <p class="lead">初めての入口、基礎の体系学習、目的別のガイドをPDFと動画で確認できます。動画はYouTube公開に向けて準備中です。</p>
+    <p class="lead">初めての入口、基礎の体系学習、目的別のガイドをPDFと動画で確認できます。</p>
   </section>
 
-  <nav class="line-nav" aria-label="Academyの分類">
-    <a href="#start">START<span>はじめての方へ</span></a>
-    <a href="#basic">BASIC<span>基礎を学ぶ</span></a>
-    <a href="#guide">GUIDE<span>目的別に見る</span></a>
-  </nav>
-
-  <section class="line-block" id="start">
-    <div class="line-title">
-      <div>
-        <div class="label">START</div>
-        <h2>はじめての方へ</h2>
-      </div>
-      <p class="caption">まずKITOKUの使い方をつかむ入口です。</p>
-    </div>
-
-    <article class="lesson featured">
-      <div class="lesson-head">
-        <div class="num word">START</div>
-        <div>
-          <h3 class="lesson-title">KITOKUの使い方</h3>
-          <p class="desc">スクリーンショットを見ながら、KITOKUで何ができるか、どこから始めるかを確認します。</p>
-          <div class="tag-row">
-            <span class="tag">最初に見る</span>
-            <span class="tag">アプリの入口</span>
+  <section class="academy-lines" aria-label="Academyの分類">
+    <details class="line">
+      <summary>
+        <span class="summary-main">
+          <span class="line-code">START</span>
+          <span class="line-name">はじめての方へ</span>
+        </span>
+        <span class="summary-sub">最初に見る入口</span>
+        <span class="chevron" aria-hidden="true">▼</span>
+      </summary>
+      <div class="line-body">
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num word">START</div>
+            <div>
+              <h2 class="lesson-title">まず見る3ステップ</h2>
+              <p class="desc">自分の九星、今日の流れ、方位の見方へ進むための短い案内です。</p>
+              <div class="tag-row">
+                <span class="tag">準備中</span>
+                <span class="tag">PDF化予定</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="actions">
-        <a class="action" href="academy_pdf_01.html">📄 PDFを開く</a>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
-
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num word">NEXT</div>
-        <div>
-          <h3 class="lesson-title">まず見る3ステップ</h3>
-          <p class="desc">自分の九星、今日の流れ、方位の見方へ進むための短い案内です。</p>
-          <div class="tag-row">
-            <span class="tag">準備中</span>
-            <span class="tag">PDF化予定</span>
+          <div class="actions">
+            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
           </div>
-        </div>
+        </article>
       </div>
-      <div class="actions">
-        <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
-  </section>
+    </details>
 
-  <section class="line-block" id="basic">
-    <div class="line-title">
-      <div>
-        <div class="label">BASIC</div>
-        <h2>基礎を学ぶ</h2>
-      </div>
-      <p class="caption">00から順に、気学の土台を整えます。</p>
-    </div>
-
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num">00</div>
-        <div>
-          <h3 class="lesson-title">東洋思想の地図</h3>
-          <p class="desc">気学・納音・姓名鑑定・家相の全体像を、ひとつの地図として見る入口です。</p>
-          <div class="tag-row">
-            <span class="tag">思想の土台</span>
-            <span class="tag">東洋OS</span>
+    <details class="line">
+      <summary>
+        <span class="summary-main">
+          <span class="line-code">BASIC</span>
+          <span class="line-name">基礎を学ぶ</span>
+        </span>
+        <span class="summary-sub">00から順に学ぶ</span>
+        <span class="chevron" aria-hidden="true">▼</span>
+      </summary>
+      <div class="line-body">
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num">00</div>
+            <div>
+              <h2 class="lesson-title">東洋思想の地図</h2>
+              <p class="desc">気学・納音・姓名鑑定・家相の全体像を、ひとつの地図として見る入口です。</p>
+              <div class="tag-row">
+                <span class="tag">思想の土台</span>
+                <span class="tag">東洋OS</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="actions">
-        <a class="action" href="academy_pdf_00.html">📄 PDFを開く</a>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
-
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num">01</div>
-        <div>
-          <h3 class="lesson-title">自分の九星を知る</h3>
-          <p class="desc">本命星・月命星を入口に、自分の気質や使い方を読み解きます。</p>
-          <div class="tag-row">
-            <span class="tag">準備中</span>
-            <span class="tag">PDF化予定</span>
+          <div class="actions">
+            <a class="action" href="academy_pdf_00.html">📄 PDFを開く</a>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
           </div>
-        </div>
-      </div>
-      <div class="actions">
-        <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
+        </article>
 
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num">02</div>
-        <div>
-          <h3 class="lesson-title">方位の見方</h3>
-          <p class="desc">吉方位、凶方位、日盤・月盤・年盤の使い分けを整理します。</p>
-          <div class="tag-row">
-            <span class="tag">準備中</span>
-            <span class="tag">PDF化予定</span>
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num">01</div>
+            <div>
+              <h2 class="lesson-title">自分の九星を知る</h2>
+              <p class="desc">本命星・月命星を入口に、自分の気質や使い方を読み解きます。</p>
+              <div class="tag-row">
+                <span class="tag">基礎</span>
+                <span class="tag">自分を知る</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="actions">
-        <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
-  </section>
-
-  <section class="line-block" id="guide">
-    <div class="line-title">
-      <div>
-        <div class="label">GUIDE</div>
-        <h2>目的別に見る</h2>
-      </div>
-      <p class="caption">必要なテーマから、使い方へすぐ入る導線です。</p>
-    </div>
-
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num word">方位</div>
-        <div>
-          <h3 class="lesson-title">旅行・引越しの見方</h3>
-          <p class="desc">移動、旅行、引越しで方位をどう確認するかを目的別にまとめます。</p>
-          <div class="tag-row">
-            <span class="tag">準備中</span>
-            <span class="tag">目的別</span>
+          <div class="actions">
+            <a class="action" href="academy_pdf_01.html">📄 PDFを開く</a>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
           </div>
-        </div>
-      </div>
-      <div class="actions">
-        <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
+        </article>
 
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num word">名前</div>
-        <div>
-          <h3 class="lesson-title">姓名鑑定の見方</h3>
-          <p class="desc">名前を点数ではなく、意志や気質を育てる器として読むためのガイドです。</p>
-          <div class="tag-row">
-            <span class="tag">準備中</span>
-            <span class="tag">目的別</span>
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num">02</div>
+            <div>
+              <h2 class="lesson-title">方位の見方</h2>
+              <p class="desc">吉方位、凶方位、日盤・月盤・年盤の使い分けを整理します。</p>
+              <div class="tag-row">
+                <span class="tag">準備中</span>
+                <span class="tag">PDF化予定</span>
+              </div>
+            </div>
           </div>
-        </div>
+          <div class="actions">
+            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
+          </div>
+        </article>
       </div>
-      <div class="actions">
-        <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
+    </details>
 
-    <article class="lesson">
-      <div class="lesson-head">
-        <div class="num word">香り</div>
-        <div>
-          <h3 class="lesson-title">香りの使い方</h3>
-          <p class="desc">日々の気分や九星に合わせて、香りを整える入口をまとめます。</p>
-          <div class="tag-row">
-            <span class="tag">準備中</span>
-            <span class="tag">目的別</span>
+    <details class="line">
+      <summary>
+        <span class="summary-main">
+          <span class="line-code">GUIDE</span>
+          <span class="line-name">目的別に見る</span>
+        </span>
+        <span class="summary-sub">テーマから入る</span>
+        <span class="chevron" aria-hidden="true">▼</span>
+      </summary>
+      <div class="line-body">
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num word">方位</div>
+            <div>
+              <h2 class="lesson-title">旅行・引越しの見方</h2>
+              <p class="desc">移動、旅行、引越しで方位をどう確認するかを目的別にまとめます。</p>
+              <div class="tag-row">
+                <span class="tag">準備中</span>
+                <span class="tag">目的別</span>
+              </div>
+            </div>
           </div>
-        </div>
+          <div class="actions">
+            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num word">名前</div>
+            <div>
+              <h2 class="lesson-title">姓名鑑定の見方</h2>
+              <p class="desc">名前を点数ではなく、意志や気質を育てる器として読むためのガイドです。</p>
+              <div class="tag-row">
+                <span class="tag">準備中</span>
+                <span class="tag">目的別</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
+          </div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num word">香り</div>
+            <div>
+              <h2 class="lesson-title">香りの使い方</h2>
+              <p class="desc">日々の気分や九星に合わせて、香りを整える入口をまとめます。</p>
+              <div class="tag-row">
+                <span class="tag">準備中</span>
+                <span class="tag">目的別</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
+            <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
+          </div>
+        </article>
       </div>
-      <div class="actions">
-        <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-        <span class="action pending" aria-disabled="true">▶ 動画準備中</span>
-      </div>
-    </article>
+    </details>
   </section>
 
   <div class="note">動画はYouTubeで公開予定です。準備ができ次第、各カードの「動画を見る」導線に差し替えます。</div>
@@ -333,6 +343,14 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
   <div class="footer">KITOKU @ JOURNEY<br>自分で決めるための東洋OS</div>
 </main>
 <script>
+document.querySelectorAll('.line').forEach(line=>{
+  line.addEventListener('toggle',()=>{
+    if(!line.open) return;
+    document.querySelectorAll('.line[open]').forEach(other=>{
+      if(other!==line) other.open=false;
+    });
+  });
+});
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }

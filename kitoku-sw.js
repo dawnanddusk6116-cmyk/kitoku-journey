@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-lines';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-accordion-01';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
