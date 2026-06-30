@@ -64,25 +64,25 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-next-label{font-size:.62rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-top:10px;}
 .report-next-card{display:flex;align-items:center;gap:10px;text-decoration:none;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(196,160,67,.08));border:1.4px solid rgba(196,160,67,.34);border-radius:12px;padding:12px 11px;color:inherit;box-shadow:0 6px 18px rgba(100,80,40,.06);}
 .report-next-card:active{transform:scale(.99);}
-.report-next-card.ai{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(112,156,210,.13));border-color:rgba(112,156,210,.38);}
-.report-next-card.astro{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(126,98,180,.14));border-color:rgba(126,98,180,.4);}
-.report-next-card.scent{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(220,116,150,.14));border-color:rgba(220,116,150,.38);}
+.report-next-card.report{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(112,156,210,.13));border-color:rgba(112,156,210,.38);}
+.report-next-card.roadmap{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(92,150,112,.13));border-color:rgba(92,150,112,.34);}
+
 .report-next-card.world{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(138,104,32,.12));border-color:rgba(138,104,32,.32);}
 .report-next-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.14);color:var(--goldlt);font-size:.95rem;flex-shrink:0;}
-.report-next-card.ai .report-next-icon{background:rgba(112,156,210,.16);color:#3d6491;}
-.report-next-card.astro .report-next-icon{background:rgba(126,98,180,.16);color:#6b4b9a;}
-.report-next-card.scent .report-next-icon{background:rgba(220,116,150,.16);color:#a94d72;}
+.report-next-card.report .report-next-icon{background:rgba(112,156,210,.16);color:#3d6491;}
+.report-next-card.roadmap .report-next-icon{background:rgba(92,150,112,.16);color:#47795a;}
+
 .report-next-card.world .report-next-icon{background:rgba(138,104,32,.13);color:var(--goldlt);}
 .report-next-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
-.report-next-card.ai .report-next-title{color:#3d6491;}
-.report-next-card.astro .report-next-title{color:#6b4b9a;}
-.report-next-card.scent .report-next-title{color:#a94d72;}
+.report-next-card.report .report-next-title{color:#3d6491;}
+.report-next-card.roadmap .report-next-title{color:#47795a;}
+
 .report-next-card.world .report-next-title{color:var(--goldlt);}
 .report-next-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
 .report-next-badge{font-size:.58rem;color:#fff;background:var(--goldlt);border-radius:999px;padding:4px 8px;letter-spacing:.06em;margin-left:auto;white-space:nowrap;font-weight:800;}
-.report-next-card.ai .report-next-badge{background:#3d6491;}
-.report-next-card.astro .report-next-badge{background:#6b4b9a;}
-.report-next-card.scent .report-next-badge{background:#a94d72;}
+.report-next-card.report .report-next-badge{background:#3d6491;}
+.report-next-card.roadmap .report-next-badge{background:#47795a;}
+
 .report-next-card.world .report-next-badge{background:var(--goldlt);}
 .report-next-note{font-size:.58rem;color:var(--mist);line-height:1.65;text-align:center;margin-top:2px;}
 
@@ -166,16 +166,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .report-accordion summary::after{background:rgba(196,160,67,.14);border-color:rgba(196,160,67,.28);}
 [data-theme="dark"] .report-text{color:rgba(232,238,255,.76);}
 [data-theme="dark"] .report-next-card{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.24);box-shadow:none;}
-[data-theme="dark"] .report-next-card.ai{background:linear-gradient(135deg,rgba(112,156,210,.12),rgba(18,21,42,.95));border-color:rgba(112,156,210,.32);}
-[data-theme="dark"] .report-next-card.astro{background:linear-gradient(135deg,rgba(126,98,180,.14),rgba(18,21,42,.95));border-color:rgba(126,98,180,.34);}
-[data-theme="dark"] .report-next-card.scent{background:linear-gradient(135deg,rgba(220,116,150,.14),rgba(18,21,42,.95));border-color:rgba(220,116,150,.34);}
+[data-theme="dark"] .report-next-card.report{background:linear-gradient(135deg,rgba(112,156,210,.12),rgba(18,21,42,.95));border-color:rgba(112,156,210,.32);}
+[data-theme="dark"] .report-next-card.roadmap{background:linear-gradient(135deg,rgba(92,150,112,.14),rgba(18,21,42,.95));border-color:rgba(92,150,112,.32);}
+
 [data-theme="dark"] .report-next-card.world{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(18,21,42,.95));border-color:rgba(196,160,67,.32);}
-[data-theme="dark"] .report-next-card.ai .report-next-title,
-[data-theme="dark"] .report-next-card.ai .report-next-icon{color:#9fc3f4;}
-[data-theme="dark"] .report-next-card.astro .report-next-title,
-[data-theme="dark"] .report-next-card.astro .report-next-icon{color:#c4a7f5;}
-[data-theme="dark"] .report-next-card.scent .report-next-title,
-[data-theme="dark"] .report-next-card.scent .report-next-icon{color:#f2a1c0;}
+[data-theme="dark"] .report-next-card.report .report-next-title,
+[data-theme="dark"] .report-next-card.report .report-next-icon{color:#9fc3f4;}
+[data-theme="dark"] .report-next-card.roadmap .report-next-title,
+[data-theme="dark"] .report-next-card.roadmap .report-next-icon{color:#9ed4ad;}
+
 [data-theme="dark"] .report-next-card.world .report-next-title,
 [data-theme="dark"] .report-next-card.world .report-next-icon{color:#f0d878;}
 [data-theme="dark"] .report-next-text{color:rgba(232,238,255,.72);}
@@ -327,27 +326,19 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         </details>
         <div class="report-next">
           <div class="report-next-label">✦ 次にできること</div>
-          <a class="report-next-card ai" href="ai.html">
-            <div class="report-next-icon">AI</div>
+          <a class="report-next-card report" href="report_generator_free.html">
+            <div class="report-next-icon">📋</div>
             <div>
-              <div class="report-next-title">AIで悩みを整理する</div>
-              <div class="report-next-text">星情報をコピーして、悩み・問い・次の一手を整理できます。</div>
+              <div class="report-next-title">はじめてのKITOKU診断</div>
+              <div class="report-next-text">名前と生年月日で、入口レポートを確認します。</div>
             </div>
             <div class="report-next-badge">開く</div>
           </a>
-          <a class="report-next-card astro" href="astro64.html">
-            <div class="report-next-icon">🔭</div>
+          <a class="report-next-card roadmap" href="roadmap.html">
+            <div class="report-next-icon">🗺️</div>
             <div>
-              <div class="report-next-title">西洋占星術×気学で深く見る</div>
-              <div class="report-next-text">太陽・月・金星と気学を重ねて、自分の本質を別角度から見ます。</div>
-            </div>
-            <div class="report-next-badge">開く</div>
-          </a>
-          <a class="report-next-card scent" href="scent.html">
-            <div class="report-next-icon">✤</div>
-            <div>
-              <div class="report-next-title">香水を活用する</div>
-              <div class="report-next-text">場面・会う人・手持ち香水から、香りの使い方を選びます。</div>
+              <div class="report-next-title">今後5年ロードマップ</div>
+              <div class="report-next-text">本命星の巡りで、これからの5年の流れを見ます。</div>
             </div>
             <div class="report-next-badge">開く</div>
           </a>
