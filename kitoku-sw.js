@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-first-start-kyusei-v2b';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-youtube-links';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
