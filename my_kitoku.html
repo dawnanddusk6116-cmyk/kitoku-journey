@@ -344,6 +344,17 @@ const FEATURE_GROUPS={
   ai:'AI・海外向け'
 };
 const FEATURE_GROUP_ORDER=['self','biz','direction','ai'];
+const PREMIUM_PLAN_ID='premium_plan';
+const PREMIUM_PLAN_FEATURE={
+  id:PREMIUM_PLAN_ID,
+  group:'premium',
+  icon:'✨',
+  name:'プレミアムプラン',
+  desc:'地図×方位盤・三盤比較・線路の日・KIGAKU先生AIをまとめて使う入口です。現在は準備中です。',
+  href:'premium.html',
+  locked:true,
+  badge:'準備中'
+};
 const PREMIUM_FEATURES=[
   {icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しを地図で確認。吉方ラインをGoogleマップ上で確認できます。'},
   {icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。'},
@@ -463,6 +474,7 @@ function saveSelected(){
 (function init(){
   renderFeatureGrid();
   selectedFeatures=loadSelected();
+  premiumPlanSelected=selectedFeatures.includes(PREMIUM_PLAN_ID);
   // 選択状態を復元
   selectedFeatures.forEach(id=>{
     const card=document.querySelector(`.feature-card[data-id="${id}"]`);
@@ -545,6 +557,11 @@ function togglePremiumPlan(){
   card.classList.toggle('selected',premiumPlanSelected);
   const check=document.getElementById('premiumCheck');
   if(check)check.textContent=premiumPlanSelected?'✓':'';
+  if(premiumPlanSelected){
+    if(!selectedFeatures.includes(PREMIUM_PLAN_ID))selectedFeatures.push(PREMIUM_PLAN_ID);
+  }else{
+    selectedFeatures=selectedFeatures.filter(x=>x!==PREMIUM_PLAN_ID);
+  }
 }
 
 function toggleFeature(card,id){
@@ -628,7 +645,9 @@ function renderMyPage(){
   list.innerHTML='';
   const featureMap=Object.fromEntries(FEATURES.map(f=>[f.id,f]));
   let currentGroup='';
-  FEATURES.filter(f=>selectedFeatures.includes(f.id)).forEach(f=>{
+  const selectedList=FEATURES.filter(f=>selectedFeatures.includes(f.id));
+  if(selectedFeatures.includes(PREMIUM_PLAN_ID))selectedList.push(PREMIUM_PLAN_FEATURE);
+  selectedList.forEach(f=>{
     if(f.group!==currentGroup){
       currentGroup=f.group;
       const group=document.createElement('div');
@@ -642,7 +661,7 @@ function renderMyPage(){
     if(f.locked){
       item.onclick=(e)=>{
         e.preventDefault();
-        alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');
+        alert('プレミアムプランは準備中です。現在は自分専用KITOKUの入口として表示できます。');
       };
     }
     item.innerHTML=`

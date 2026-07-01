@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-video-note-wording';
+const KITOKU_CACHE = 'kitoku-pwa-v6-my-kitoku-premium-selection';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
