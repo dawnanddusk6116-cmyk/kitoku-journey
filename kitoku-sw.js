@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-family-video';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-travel-pdf';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -11,6 +11,7 @@ const KITOKU_CORE = [
   './academy_pdf_start_03.html',
   './academy_pdf_app_setup.html',
   './academy_pdf_guide_family.html',
+  './academy_pdf_guide_travel.html',
   './kitoku-manifest.json',
   './kitoku-icon-180.png',
   './kitoku-icon-192.png',
@@ -22,6 +23,7 @@ const KITOKU_CORE = [
   './kitoku_academy_start_03.pdf',
   './kitoku_academy_app_setup.pdf',
   './kitoku_academy_guide_family.pdf',
+  './kitoku_academy_guide_travel.pdf',
   './academy_pages/start01/page-1.png',
   './academy_pages/start01/page-2.png',
   './academy_pages/start01/page-3.png',
@@ -54,6 +56,14 @@ const KITOKU_CORE = [
   './academy_pages/guide_family/page-5.png',
   './academy_pages/guide_family/page-6.png',
   './academy_pages/guide_family/page-7.png',
+  './academy_pages/guide_travel/page-1.png',
+  './academy_pages/guide_travel/page-2.png',
+  './academy_pages/guide_travel/page-3.png',
+  './academy_pages/guide_travel/page-4.png',
+  './academy_pages/guide_travel/page-5.png',
+  './academy_pages/guide_travel/page-6.png',
+  './academy_pages/guide_travel/page-7.png',
+  './academy_pages/guide_travel/page-8.png',
   './academy_pages/00/page-1.png',
   './academy_pages/00/page-2.png',
   './academy_pages/00/page-3.png',
