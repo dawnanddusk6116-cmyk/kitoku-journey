@@ -2799,7 +2799,7 @@ function loadStarInfo() {
   const bar     = document.getElementById('starBar');
 
   if (typeof getKD === 'function') {
-    const birth = localStorage.getItem('kitoku-self-birth') || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+    const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
     const parts = birth.split('-').map(Number);
     if (parts.length === 3 && parts.every(Boolean)) {
       const [by, bm, bd] = parts;
@@ -4037,7 +4037,7 @@ function applyLifeStarDataset(disp, info){
 }
 
 function getSavedSelfBirth(){
-  return normalizeLifeDateValue(localStorage.getItem('kitoku-self-birth') || localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '');
+  return normalizeLifeDateValue(localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '');
 }
 
 function normalizeLifeStarForDesign(info){
