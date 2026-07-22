@@ -12,8 +12,22 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <script>
-// top.html系以外からの直接アクセスはtop.htmlへリダイレクト
+// ── ログイン(マジックリンク)の戻り先処理 ──
+// Supabaseの認証トークンは #access_token / ?code などで戻ってくる。
+// トークン付きで来た場合は、それを保持したまま premium.html へ引き渡す。
+// （末尾の redirect_to は将来の拡張用。まずは premium.html に集約する）
 (function(){
+  try{
+    var h = location.hash || '';
+    var s = location.search || '';
+    var hasAuth = /access_token=|[?&]code=|error=|error_code=/.test(h + s);
+    if(hasAuth){
+      // トークンをそのまま引き継いで premium.html へ
+      location.replace('premium.html' + s + h);
+      return;
+    }
+  }catch(e){}
+  // ── 通常のアクセス制御：直接アクセスは top.html へ ──
   try{
     const ref=document.referrer;
     const isFromTop=ref&&(

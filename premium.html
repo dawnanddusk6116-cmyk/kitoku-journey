@@ -5914,7 +5914,27 @@ async function kitokuInitAuth(){
     if(p) p.style.display = 'none';
     return;
   }
-  kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY);
+  kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY, {
+    auth: {
+      detectSessionInUrl: true,   // URL中のトークンを自動でセッション化
+      persistSession: true,        // ログイン状態をブラウザに保持
+      autoRefreshToken: true,
+      flowType: 'pkce'             // ?code= 形式にも対応
+    }
+  });
+
+  // ?token=...&type=magiclink 形式（verify型リンク）で戻ってきた場合の明示処理
+  try{
+    var _sp = new URLSearchParams((location.search||'').replace(/^\?/,''));
+    var _vtoken = _sp.get('token');
+    var _vtype = _sp.get('type');
+    if(_vtoken && _vtype && !location.hash.includes('access_token')){
+      var vr = await kitokuSB.auth.verifyOtp({ token_hash: _vtoken, type: _vtype });
+      if(vr && vr.data && vr.data.session){
+        kitokuSession = vr.data.session;
+      }
+    }
+  }catch(e){ /* verify失敗時は後続のgetSessionに委ねる */ }
 
   var urlAuth = kitokuReadUrlAuth();
 
