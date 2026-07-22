@@ -5882,6 +5882,32 @@ async function kitokuFetchClaude(payload, feature){
   });
 }
 
+/* URLに載ってくるログイン結果（成功トークン／失敗理由）を読み取る */
+function kitokuReadUrlAuth(){
+  var out = { hasToken:false, error:'', desc:'' };
+  try{
+    var h = (location.hash || '').replace(/^#/, '');
+    var q = (location.search || '').replace(/^\?/, '');
+    var merged = h + '&' + q;
+    var p = new URLSearchParams(merged);
+    if(p.get('access_token') || p.get('code')) out.hasToken = true;
+    out.error = p.get('error') || p.get('error_code') || '';
+    out.desc  = p.get('error_description') || '';
+  }catch(e){}
+  return out;
+}
+
+function kitokuAuthErrorText(err, desc){
+  var d = (desc || '').replace(/\+/g, ' ');
+  if(/expired/i.test(err + d)){
+    return 'このログインリンクは有効期限が切れています。お手数ですが、最新のメールのリンクをお使いいただくか、もう一度リンクを送信してください。';
+  }
+  if(/access_denied|invalid/i.test(err + d)){
+    return 'このログインリンクは使用済み、または無効です。もう一度リンクを送信してください。';
+  }
+  return 'ログインできませんでした：' + (d || err);
+}
+
 async function kitokuInitAuth(){
   if(!window.supabase || !window.supabase.createClient){
     var p = document.getElementById('authPanel');
@@ -5889,12 +5915,37 @@ async function kitokuInitAuth(){
     return;
   }
   kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY);
+
+  var urlAuth = kitokuReadUrlAuth();
+
   try{
     var s = await kitokuSB.auth.getSession();
     kitokuSession = (s && s.data) ? s.data.session : null;
   }catch(e){ kitokuSession = null; }
+
+  /* トークン付きで戻ってきた直後は、処理完了まで少し待つ */
+  if(!kitokuSession && urlAuth.hasToken){
+    for(var i=0; i<10; i++){
+      await new Promise(function(r){ setTimeout(r, 300); });
+      try{
+        var s2 = await kitokuSB.auth.getSession();
+        kitokuSession = (s2 && s2.data) ? s2.data.session : null;
+      }catch(e){}
+      if(kitokuSession) break;
+    }
+  }
+
   await kitokuLoadPlan();
   kitokuRenderAuth();
+
+  if(kitokuSession){
+    if(urlAuth.hasToken){
+      kitokuAuthMsg('ログインしました。', true);
+      try{ history.replaceState(null, '', location.pathname); }catch(e){}
+    }
+  } else if(urlAuth.error){
+    kitokuAuthMsg(kitokuAuthErrorText(urlAuth.error, urlAuth.desc), false);
+  }
 
   kitokuSB.auth.onAuthStateChange(async function(_event, session){
     kitokuSession = session;
