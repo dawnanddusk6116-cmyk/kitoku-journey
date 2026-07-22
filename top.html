@@ -562,10 +562,10 @@ body{
 
 <div id="birthBar" class="birth-bar" style="display:none;">
   <div>
-    <div class="birth-bar-name">登録中の生年月日</div>
+    <div class="birth-bar-name" id="birthBarLabel">登録中の生年月日</div>
     <div class="birth-bar-info" id="birthBarText">—</div>
   </div>
-  <button class="birth-bar-btn" onclick="changeBirth()">✎ 変更</button>
+  <button class="birth-bar-btn" id="birthBarBtn" onclick="changeBirth()">✎ 変更</button>
 </div>
 <div class="three-cats-wrap">
 
@@ -884,21 +884,35 @@ body{
 
 <script>
 // 生年月日バーの表示
-(function(){
+function renderBirthBar(){
   try{
+    const bar=document.getElementById('birthBar');
+    const label=document.getElementById('birthBarLabel');
+    const text=document.getElementById('birthBarText');
+    const btn=document.getElementById('birthBarBtn');
+    if(!bar||!label||!text||!btn)return;
     const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
     const g=localStorage.getItem('kitoku-gender')||'male';
+    let ok=false;
     if(b){
       const parts=b.split('-').map(Number);
       if(parts[0]&&parts[1]){
         const gLabel=g==='female'?'女性':'男性';
-        document.getElementById('birthBarText').textContent=
-          parts[0]+'年'+parts[1]+'月'+(parts[2]||1)+'日・'+gLabel;
-        document.getElementById('birthBar').style.display='flex';
+        label.textContent='登録中の生年月日';
+        text.textContent=parts[0]+'年'+parts[1]+'月'+(parts[2]||1)+'日・'+gLabel;
+        btn.textContent='✎ 変更';
+        ok=true;
       }
     }
+    if(!ok){
+      label.textContent='生年月日が未登録です';
+      text.textContent='登録すると、あなたの星で表示されます';
+      btn.textContent='✎ 登録する';
+    }
+    bar.style.display='flex';
   }catch(e){}
-})();
+}
+renderBirthBar();
 
 function changeBirth(){
   try{
@@ -917,8 +931,7 @@ function changeBirth(){
     localStorage.setItem('kitoku-gender',gInput);
     try{localStorage.removeItem('kitoku-self-birth');}catch(e){} // 旧キーの残骸を除去（このキーが残っていると生年月日変更が反映されないバグの原因になる）
     // 表示を更新
-    const gLabel=gInput==='female'?'女性':'男性';
-    document.getElementById('birthBarText').textContent=y+'年'+m+'月'+(d||1)+'日・'+gLabel;
+    renderBirthBar();
     alert('生年月日を更新しました。');
   }catch(e){}
 }
