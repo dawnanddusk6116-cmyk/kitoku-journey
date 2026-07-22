@@ -13,6 +13,7 @@
 <script src="kitoku-engine.js"></script>
 <script src="kitoku-teachings.js"></script>
 <script src="kitoku-self-manual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#5e503d;--r:14px;}
@@ -444,6 +445,23 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 #dirPopupSheet .dp-rank-note{font-size:.58rem;color:#7a6645;line-height:1.7;margin-top:7px;}
 #dirPopupSheet .dp-kyo-text{font-size:.88rem;color:#3a2a10;line-height:2;}
 #dirPopupSheet .dp-close{width:100%;padding:14px;border:0;border-top:1px solid rgba(138,104,32,.12);background:none;color:#8B6914;font-size:.75rem;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.1em;}
+/* ── プレミアム認証パネル ── */
+#authPanel{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;}
+#authPanel .auth-kicker{font-size:.6rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:8px;}
+#authPanel .auth-state{font-size:.78rem;color:var(--snow);line-height:1.9;}
+#authPanel .auth-mail{font-size:.72rem;color:var(--mist);word-break:break-all;}
+#authPanel .auth-plan{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:999px;font-size:.62rem;font-weight:800;letter-spacing:.06em;}
+#authPanel .auth-plan.on{background:rgba(196,160,67,.16);color:var(--goldlt);border:1px solid rgba(196,160,67,.45);}
+#authPanel .auth-plan.off{background:rgba(120,110,95,.1);color:var(--mist);border:1px solid rgba(120,110,95,.2);}
+#authPanel .auth-row{display:flex;gap:8px;margin-top:10px;}
+#authPanel input[type=email]{flex:1;min-width:0;padding:10px 12px;border:1px solid rgba(100,80,40,.22);border-radius:9px;background:#fff;color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.8rem;}
+#authPanel .auth-btn{padding:10px 14px;border:1px solid rgba(196,160,67,.45);border-radius:9px;background:rgba(196,160,67,.12);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.72rem;font-weight:700;letter-spacing:.05em;cursor:pointer;white-space:nowrap;}
+#authPanel .auth-btn:disabled{opacity:.5;cursor:default;}
+#authPanel .auth-btn.ghost{background:none;border-color:rgba(120,110,95,.28);color:var(--mist);}
+#authPanel .auth-note{font-size:.64rem;color:var(--mist);line-height:1.85;margin-top:9px;}
+#authPanel .auth-msg{font-size:.68rem;line-height:1.8;margin-top:9px;padding:9px 11px;border-radius:9px;display:none;}
+#authPanel .auth-msg.ok{display:block;background:rgba(196,160,67,.1);color:var(--goldlt);border:1px solid rgba(196,160,67,.3);}
+#authPanel .auth-msg.ng{display:block;background:rgba(176,64,64,.08);color:#8d3535;border:1px solid rgba(176,64,64,.22);}
 </style>
 </head>
 <body>
@@ -465,6 +483,23 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     <div class="eyebrow">PREMIUM BASE</div>
     <div class="title">Premium Compass</div>
     <div class="subtitle">地図×方位盤・三盤比較・線路の日・KIGAKU先生AIをまとめる、プレミア機能の土台ページです。</div>
+  </section>
+
+  <section id="authPanel" style="display:none;">
+    <div class="auth-kicker">PREMIUM ACCOUNT</div>
+    <div id="authState" class="auth-state">読み込み中…</div>
+    <div id="authFormRow" class="auth-row" style="display:none;">
+      <input type="email" id="authEmail" placeholder="メールアドレス" autocomplete="email" inputmode="email">
+      <button type="button" class="auth-btn" id="authSendBtn" onclick="kitokuSendMagicLink()">ログインリンクを送る</button>
+    </div>
+    <div id="authOutRow" class="auth-row" style="display:none;">
+      <button type="button" class="auth-btn ghost" onclick="kitokuSignOut()">ログアウト</button>
+    </div>
+    <div id="authMsg" class="auth-msg"></div>
+    <div class="auth-note">
+      パスワードは使いません。メールに届くリンクを開くとログインできます。<br>
+      ログインしなくても、方位盤・三盤比較・線路の日はこれまで通りご利用いただけます。
+    </div>
   </section>
 
   <div id="missingBirth" class="missing" style="display:none;">
@@ -2300,12 +2335,11 @@ async function sendChatBase() {
     }
     const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+m.content).join('\n\n');
     const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n上記を踏まえて、最後の相談者の発言に答えてください。';
-    const res = await fetch('/api/claude', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:prompt})
-    });
+    const res = await kitokuFetchClaude({prompt:prompt}, 'kigaku_chat');
     const raw = await res.text();
+    if(res.status===402){
+      throw new Error(KITOKU_PREMIUM_MSG);
+    }
     if(!res.ok){
       throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
     }
@@ -2648,12 +2682,11 @@ Vol.53「啐啄同時」
     if(location.protocol==='file:'){
       throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
     }
-    const res=await fetch('/api/claude',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:prompt})
-    });
+    const res=await kitokuFetchClaude({prompt:prompt}, 'kigaku_quote');
     const raw=await res.text();
+    if(res.status===402){
+      throw new Error(KITOKU_PREMIUM_MSG);
+    }
     if(!res.ok){
       throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
     }
@@ -3469,15 +3502,14 @@ async function sendChat(){
     }
     const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+String(m.content||'')).join('\n\n');
     const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n最後の相談者は写真も添付しています。写真から見える色・質感・用途・場面を五行に置き換え、相談内容に答えてください。';
-    const res = await fetch('/api/claude',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        prompt:prompt,
-        image:{media_type:imageType,data:imageData}
-      })
-    });
+    const res = await kitokuFetchClaude({
+      prompt:prompt,
+      image:{media_type:imageType,data:imageData}
+    }, 'kigaku_chat');
     const raw = await res.text();
+    if(res.status===402){
+      throw new Error(KITOKU_PREMIUM_MSG);
+    }
     if(!res.ok){
       throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
     }
@@ -5740,6 +5772,141 @@ function openDirPopupPremium(dir,center,dirData,extra){
   document.getElementById('dirPopupContent').innerHTML=html;
   document.getElementById('dirPopupOverlay').classList.add('open');
   document.body.style.overflow='hidden';
+}
+</script>
+
+<script>
+/* ══════════════════════════════════════════
+   KITOKU PREMIUM AUTH（Supabase マジックリンク）
+   ・パスワード不要。メールのリンクでログイン
+   ・プレミアム判定の最終決定はサーバー（/api/claude）が行う
+   ══════════════════════════════════════════ */
+var KITOKU_SUPABASE_URL = 'https://uwxitxsoflafnvqalion.supabase.co';
+var KITOKU_SUPABASE_KEY = 'sb_publishable_SMNNYs9QLvrDSBnTpRkH9w_w0Wa2K8d';
+var KITOKU_PREMIUM_MSG  = 'この機能はプレミアム会員向けです。ページ上部からログインのうえ、プレミアムにご登録ください。（方位盤・三盤比較・線路の日は無料でお使いいただけます）';
+
+var kitokuSB = null;
+var kitokuSession = null;
+var kitokuPlan = { base:false, business:false };
+
+function kitokuAuthMsg(text, ok){
+  var el = document.getElementById('authMsg');
+  if(!el) return;
+  if(!text){ el.className='auth-msg'; el.textContent=''; return; }
+  el.className = 'auth-msg ' + (ok ? 'ok' : 'ng');
+  el.textContent = text;
+}
+
+function kitokuRenderAuth(){
+  var panel = document.getElementById('authPanel');
+  var state = document.getElementById('authState');
+  var formRow = document.getElementById('authFormRow');
+  var outRow = document.getElementById('authOutRow');
+  if(!panel || !state) return;
+  panel.style.display = 'block';
+
+  if(kitokuSession && kitokuSession.user){
+    var mail = kitokuSession.user.email || '';
+    var isPremium = kitokuPlan.base || kitokuPlan.business;
+    var badge = isPremium
+      ? '<span class="auth-plan on">プレミアム会員</span>'
+      : '<span class="auth-plan off">無料プラン</span>';
+    state.innerHTML = 'ログイン中<br><span class="auth-mail">' + mail + '</span><br>' + badge;
+    if(formRow) formRow.style.display = 'none';
+    if(outRow) outRow.style.display = 'flex';
+  } else {
+    state.textContent = 'KIGAKU先生AIをご利用いただくには、ログインが必要です。';
+    if(formRow) formRow.style.display = 'flex';
+    if(outRow) outRow.style.display = 'none';
+  }
+}
+
+async function kitokuLoadPlan(){
+  kitokuPlan = { base:false, business:false };
+  if(!kitokuSB || !kitokuSession || !kitokuSession.user) return;
+  try{
+    var r = await kitokuSB.from('subscribers')
+      .select('base_status,business_status')
+      .eq('user_id', kitokuSession.user.id)
+      .maybeSingle();
+    if(r && r.data){
+      kitokuPlan.base = (r.data.base_status === 'active');
+      kitokuPlan.business = (r.data.business_status === 'active');
+    }
+  }catch(e){ /* 取得失敗時は無料プラン扱い。判定はサーバー側で行う */ }
+}
+
+async function kitokuSendMagicLink(){
+  var input = document.getElementById('authEmail');
+  var btn = document.getElementById('authSendBtn');
+  if(!kitokuSB){ kitokuAuthMsg('認証機能を読み込めませんでした。通信環境をご確認のうえ、再読み込みしてください。', false); return; }
+  var email = (input && input.value || '').trim();
+  if(!email || email.indexOf('@') < 0){ kitokuAuthMsg('メールアドレスをご入力ください。', false); return; }
+  if(btn){ btn.disabled = true; btn.textContent = '送信中…'; }
+  kitokuAuthMsg('', true);
+  try{
+    var r = await kitokuSB.auth.signInWithOtp({
+      email: email,
+      options: { emailRedirectTo: location.origin + '/premium.html' }
+    });
+    if(r && r.error){ throw new Error(r.error.message || 'メール送信に失敗しました'); }
+    kitokuAuthMsg('ログイン用のリンクを ' + email + ' に送信しました。メールを開いてリンクをタップしてください。', true);
+  }catch(e){
+    kitokuAuthMsg('送信できませんでした：' + (e.message || e), false);
+  }
+  if(btn){ btn.disabled = false; btn.textContent = 'ログインリンクを送る'; }
+}
+
+async function kitokuSignOut(){
+  if(!kitokuSB) return;
+  try{ await kitokuSB.auth.signOut(); }catch(e){}
+  kitokuSession = null;
+  kitokuPlan = { base:false, business:false };
+  kitokuAuthMsg('ログアウトしました。', true);
+  kitokuRenderAuth();
+}
+
+/* AI呼び出し共通ヘルパー：機能名とログイントークンを必ず添える */
+async function kitokuFetchClaude(payload, feature){
+  var headers = { 'Content-Type':'application/json' };
+  if(kitokuSession && kitokuSession.access_token){
+    headers['Authorization'] = 'Bearer ' + kitokuSession.access_token;
+  }
+  var body = {};
+  for(var k in payload){ if(Object.prototype.hasOwnProperty.call(payload,k)) body[k] = payload[k]; }
+  body.feature = feature;
+  return await fetch('/api/claude', {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(body)
+  });
+}
+
+async function kitokuInitAuth(){
+  if(!window.supabase || !window.supabase.createClient){
+    var p = document.getElementById('authPanel');
+    if(p) p.style.display = 'none';
+    return;
+  }
+  kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY);
+  try{
+    var s = await kitokuSB.auth.getSession();
+    kitokuSession = (s && s.data) ? s.data.session : null;
+  }catch(e){ kitokuSession = null; }
+  await kitokuLoadPlan();
+  kitokuRenderAuth();
+
+  kitokuSB.auth.onAuthStateChange(async function(_event, session){
+    kitokuSession = session;
+    await kitokuLoadPlan();
+    kitokuRenderAuth();
+  });
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', kitokuInitAuth);
+} else {
+  kitokuInitAuth();
 }
 </script>
 </body>
