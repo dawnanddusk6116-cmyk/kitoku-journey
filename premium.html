@@ -462,6 +462,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 #authPanel .auth-msg{font-size:.68rem;line-height:1.8;margin-top:9px;padding:9px 11px;border-radius:9px;display:none;}
 #authPanel .auth-msg.ok{display:block;background:rgba(196,160,67,.1);color:var(--goldlt);border:1px solid rgba(196,160,67,.3);}
 #authPanel .auth-msg.ng{display:block;background:rgba(176,64,64,.08);color:#8d3535;border:1px solid rgba(176,64,64,.22);}
+#authPanel .auth-spam{display:none;font-size:.66rem;line-height:1.85;margin-top:9px;padding:11px 13px;border-radius:9px;background:rgba(196,160,67,.07);border-left:3px solid var(--goldlt);text-align:left;}
+#authPanel .auth-spam b{color:var(--goldlt);}
+#authPanel .auth-spam .sub{display:block;margin-top:6px;font-size:.62rem;opacity:.78;}
 </style>
 </head>
 <body>
@@ -496,6 +499,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <button type="button" class="auth-btn ghost" onclick="kitokuSignOut()">ログアウト</button>
     </div>
     <div id="authMsg" class="auth-msg"></div>
+    <div id="authSpamNote" class="auth-spam">
+      差出人は <b>KITOKU @ JOURNEY</b> です。<br>
+      メールが見当たらない場合は、<b>迷惑メールフォルダ</b>をご確認ください。
+      <span class="sub">見つけたら「迷惑メールではない」を押していただくと、次回から受信トレイに届きます。<br>※続けて送信する場合は60秒ほど間隔が必要です。</span>
+    </div>
     <div class="auth-note">
       パスワードは使いません。メールに届くリンクを開くとログインできます。<br>
       ログインしなくても、方位盤・三盤比較・線路の日はこれまで通りご利用いただけます。
@@ -5797,6 +5805,11 @@ function kitokuAuthMsg(text, ok){
   el.textContent = text;
 }
 
+function kitokuSpamNote(show){
+  var el = document.getElementById('authSpamNote');
+  if(el) el.style.display = show ? 'block' : 'none';
+}
+
 function kitokuRenderAuth(){
   var panel = document.getElementById('authPanel');
   var state = document.getElementById('authState');
@@ -5892,6 +5905,7 @@ async function kitokuSendMagicLink(){
   if(!email || email.indexOf('@') < 0){ kitokuAuthMsg('メールアドレスをご入力ください。', false); return; }
   if(btn){ btn.disabled = true; btn.textContent = '送信中…'; }
   kitokuAuthMsg('', true);
+  kitokuSpamNote(false);
   try{
     var r = await kitokuSB.auth.signInWithOtp({
       email: email,
@@ -5899,6 +5913,7 @@ async function kitokuSendMagicLink(){
     });
     if(r && r.error){ throw new Error(r.error.message || 'メール送信に失敗しました'); }
     kitokuAuthMsg('ログイン用のリンクを ' + email + ' に送信しました。メールを開いてリンクをタップしてください。', true);
+    kitokuSpamNote(true);
   }catch(e){
     kitokuAuthMsg('送信できませんでした：' + (e.message || e), false);
   }
