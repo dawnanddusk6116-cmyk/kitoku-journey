@@ -5826,15 +5826,58 @@ async function kitokuLoadPlan(){
   if(!kitokuSB || !kitokuSession || !kitokuSession.user) return;
   try{
     var r = await kitokuSB.from('subscribers')
-      .select('base_status,business_status')
+      .select('base_status,business_status,birth_date,gender')
       .eq('user_id', kitokuSession.user.id)
       .maybeSingle();
     if(r && r.data){
       kitokuPlan.base = (r.data.base_status === 'active');
       kitokuPlan.business = (r.data.business_status === 'active');
+      await kitokuSyncBirth(r.data);
     }
   }catch(e){ /* 取得失敗時は無料プラン扱い。判定はサーバー側で行う */ }
 }
+
+/* ── 生年月日のクラウド同期（プレミアム会員のみ）──
+   Supabaseに保存があればそれを正としてlocalStorageへ反映。
+   無ければ（初回）localStorageの値をSupabaseへ保存する。 */
+async function kitokuSyncBirth(row){
+  try{
+    if(!kitokuSession || !kitokuSession.user) return;
+    var localBirth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+    var localGender = localStorage.getItem('kitoku-gender') || '';
+    var cloudBirth = (row && row.birth_date) ? row.birth_date : '';
+    var cloudGender = (row && row.gender) ? row.gender : '';
+
+    if(cloudBirth){
+      // クラウドを正とする。localStorageと違えば上書きし、画面を更新
+      var changed = (cloudBirth !== localBirth) || (cloudGender && cloudGender !== localGender);
+      localStorage.setItem('kitoku-birth', cloudBirth);
+      if(cloudGender) localStorage.setItem('kitoku-gender', cloudGender);
+      try{ localStorage.removeItem('kitoku-self-birth'); }catch(e){}
+      if(changed){
+        // 星情報を再読み込みする関数があれば呼ぶ（このページ内の表示更新）
+        if(typeof loadStarInfo === 'function'){ try{ loadStarInfo(); }catch(e){} }
+      }
+    } else if(localBirth){
+      // クラウドが空＝初回。localStorageの値を保存する
+      await kitokuSB.from('subscribers')
+        .update({ birth_date: localBirth, gender: localGender || 'male', updated_at: new Date().toISOString() })
+        .eq('user_id', kitokuSession.user.id);
+    }
+  }catch(e){ /* 同期失敗は致命的でない。localStorageで動作継続 */ }
+}
+
+/* 生年月日を変更した時に、プレミアム会員ならクラウドにも保存する。
+   （top.html等から window.kitokuSaveBirthToCloud(birth, gender) で呼べる） */
+window.kitokuSaveBirthToCloud = async function(birth, gender){
+  try{
+    if(!kitokuSB || !kitokuSession || !kitokuSession.user) return false;
+    await kitokuSB.from('subscribers')
+      .update({ birth_date: birth, gender: gender || 'male', updated_at: new Date().toISOString() })
+      .eq('user_id', kitokuSession.user.id);
+    return true;
+  }catch(e){ return false; }
+};
 
 async function kitokuSendMagicLink(){
   var input = document.getElementById('authEmail');
