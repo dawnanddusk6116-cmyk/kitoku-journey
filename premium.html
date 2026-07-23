@@ -1094,8 +1094,8 @@ function init(){
     if(typeof getKD!=='function'||typeof calcHonmei!=='function'||typeof buildBoardFromCenter!=='function'){
       throw new Error('kitoku-engine.js が読み込めていません');
     }
-    state.birth=normalizeBirth(localStorage.getItem('kitoku-self-birth')||localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'');
-    state.gender=localStorage.getItem('kitoku-self-gender')||localStorage.getItem('kitoku-gender')||'male';
+    state.birth=normalizeBirth(localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'');
+    state.gender=localStorage.getItem('kitoku-gender')||'male';
     state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
     state.mode=localStorage.getItem('kitoku-premium-mode')||'travel';
     state.consultType=localStorage.getItem('kitoku-premium-consult-type')||'free';
@@ -5854,9 +5854,14 @@ async function kitokuSyncBirth(row){
       localStorage.setItem('kitoku-birth', cloudBirth);
       if(cloudGender) localStorage.setItem('kitoku-gender', cloudGender);
       try{ localStorage.removeItem('kitoku-self-birth'); }catch(e){}
-      if(changed){
-        // 星情報を再読み込みする関数があれば呼ぶ（このページ内の表示更新）
-        if(typeof loadStarInfo === 'function'){ try{ loadStarInfo(); }catch(e){} }
+      // 値が変わった時、または「未登録」表示のまま止まっている時は画面を作り直す
+      var mb = document.getElementById('missingBirth');
+      var stuck = mb && mb.style.display !== 'none';
+      if(changed || stuck){
+        try{
+          if(mb) mb.style.display = 'none';
+          if(typeof init === 'function') init();
+        }catch(e){}
       }
     } else if(localBirth){
       // クラウドが空＝初回。localStorageの値を保存する
