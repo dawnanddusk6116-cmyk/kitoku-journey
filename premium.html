@@ -458,6 +458,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 #authPanel .auth-btn{padding:10px 14px;border:1px solid rgba(196,160,67,.45);border-radius:9px;background:rgba(196,160,67,.12);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.72rem;font-weight:700;letter-spacing:.05em;cursor:pointer;white-space:nowrap;}
 #authPanel .auth-btn:disabled{opacity:.5;cursor:default;}
 #authPanel .auth-btn.ghost{background:none;border-color:rgba(120,110,95,.28);color:var(--mist);}
+#authPanel .auth-btn.pay{background:linear-gradient(135deg,rgba(196,160,67,.9),rgba(176,140,55,.9));border-color:rgba(196,160,67,.7);color:#1a1508;}
+#authPanel .auth-btn.pay:hover{filter:brightness(1.08);}
+#authPanel .pay-note{font-size:.62rem;line-height:1.8;margin-top:7px;color:var(--mist);opacity:.85;}
 #authPanel .auth-note{font-size:.64rem;color:var(--mist);line-height:1.85;margin-top:9px;}
 #authPanel .auth-msg{font-size:.68rem;line-height:1.8;margin-top:9px;padding:9px 11px;border-radius:9px;display:none;}
 #authPanel .auth-msg.ok{display:block;background:rgba(196,160,67,.1);color:var(--goldlt);border:1px solid rgba(196,160,67,.3);}
@@ -497,6 +500,10 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </div>
     <div id="authOutRow" class="auth-row" style="display:none;">
       <button type="button" class="auth-btn ghost" onclick="kitokuSignOut()">ログアウト</button>
+    </div>
+    <div id="authPayRow" style="display:none;">
+      <button type="button" class="auth-btn pay" id="authPayBtn" onclick="kitokuStartCheckout()">プレミアムに登録する（月額500円）</button>
+      <div class="pay-note">KIGAKU先生AIをはじめ、プレミアム機能がすべてご利用いただけます。<br>いつでも解約でき、解約後もその期間の終わりまでご利用いただけます。</div>
     </div>
     <div id="authMsg" class="auth-msg"></div>
     <div id="authSpamNote" class="auth-spam">
@@ -5815,6 +5822,7 @@ function kitokuRenderAuth(){
   var state = document.getElementById('authState');
   var formRow = document.getElementById('authFormRow');
   var outRow = document.getElementById('authOutRow');
+  var payRow = document.getElementById('authPayRow');
   if(!panel || !state) return;
   panel.style.display = 'block';
 
@@ -5827,10 +5835,12 @@ function kitokuRenderAuth(){
     state.innerHTML = 'ログイン中<br><span class="auth-mail">' + mail + '</span><br>' + badge;
     if(formRow) formRow.style.display = 'none';
     if(outRow) outRow.style.display = 'flex';
+    if(payRow) payRow.style.display = isPremium ? 'none' : 'block';
   } else {
     state.textContent = 'KIGAKU先生AIをご利用いただくには、ログインが必要です。';
     if(formRow) formRow.style.display = 'flex';
     if(outRow) outRow.style.display = 'none';
+    if(payRow) payRow.style.display = 'none';
   }
 }
 
@@ -5918,6 +5928,36 @@ async function kitokuSendMagicLink(){
     kitokuAuthMsg('送信できませんでした：' + (e.message || e), false);
   }
   if(btn){ btn.disabled = false; btn.textContent = 'ログインリンクを送る'; }
+}
+
+/* Stripe Checkout を開く。サーバー側でトークンを検証してから決済URLを発行する */
+async function kitokuStartCheckout(){
+  var btn = document.getElementById('authPayBtn');
+  if(!kitokuSession || !kitokuSession.access_token){
+    kitokuAuthMsg('先にログインしてください。', false);
+    return;
+  }
+  if(btn){ btn.disabled = true; btn.textContent = '決済ページを準備中…'; }
+  kitokuAuthMsg('', true);
+  try{
+    var res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + kitokuSession.access_token
+      },
+      body: JSON.stringify({})
+    });
+    var data = await res.json();
+    if(!res.ok || !data || !data.url){
+      throw new Error((data && data.error) || '決済ページを開けませんでした。');
+    }
+    location.href = data.url;
+    return;
+  }catch(e){
+    kitokuAuthMsg(e.message || '決済ページを開けませんでした。', false);
+  }
+  if(btn){ btn.disabled = false; btn.textContent = 'プレミアムに登録する（月額500円）'; }
 }
 
 async function kitokuSignOut(){
@@ -6029,6 +6069,23 @@ async function kitokuInitAuth(){
   } else if(urlAuth.error){
     kitokuAuthMsg(kitokuAuthErrorText(urlAuth.error, urlAuth.desc), false);
   }
+
+  /* Stripe決済からの戻り */
+  try{
+    var cparam = new URLSearchParams(location.search).get('checkout');
+    if(cparam === 'success'){
+      kitokuAuthMsg('ご登録ありがとうございます。反映まで少しかかる場合があります。', true);
+      /* Webhookの反映を待って、数秒後にもう一度プランを確認する */
+      setTimeout(async function(){
+        await kitokuLoadPlan();
+        kitokuRenderAuth();
+      }, 4000);
+      try{ history.replaceState(null, '', location.pathname); }catch(e){}
+    } else if(cparam === 'cancel'){
+      kitokuAuthMsg('お手続きを中止しました。ご希望のときにいつでもご登録いただけます。', true);
+      try{ history.replaceState(null, '', location.pathname); }catch(e){}
+    }
+  }catch(e){}
 
   kitokuSB.auth.onAuthStateChange(async function(_event, session){
     kitokuSession = session;
