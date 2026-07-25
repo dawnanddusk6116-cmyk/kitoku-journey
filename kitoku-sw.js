@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-travel-pdf';
+const KITOKU_CACHE = 'kitoku-pwa-v6-life-pdf';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
