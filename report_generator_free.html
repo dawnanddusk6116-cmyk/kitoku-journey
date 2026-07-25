@@ -341,7 +341,7 @@ html.kitoku-font-large button {
         <span style="color:#3a7a4e;">✓</span> 女性：魅力・愛され方・美の処方箋 / 男性：強み・勝負どころ
       </div>
       <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mist);">
-        <span style="color:#3a7a4e;">✓</span> 未来5年・吉方位・香り・健康・線路の日・引越しも表示
+        <span style="color:#3a7a4e;">✓</span> 未来9年・吉方位・香り・健康・線路の日・引越しも表示
       </div>
       <div class="free-limit-note">
         ✦ 無料で1日3回まで診断できます。本日の残り <span data-free-report-remaining>3</span> 回。
@@ -1311,7 +1311,7 @@ async function generateReport(){
 
   // 年盤（本命星が座る宮番号でテーマを決定）
   const yearData=[];
-  for(let yr=thisYear;yr<=thisYear+4;yr++){
+  for(let yr=thisYear;yr<=thisYear+8;yr++){
     const c=yearCenter(yr);
     // 本命星が年盤のどの宮に座るか（pal関数相当）
     const pos=((h-c+4)%9+9)%9+1||9;
@@ -1342,29 +1342,64 @@ async function generateReport(){
 }
 
 function calcNameScore(sei,mei,seiK,meiK,jin,ten,chi,gai,so){
-  let score=0,details=[];
-  // 読み下し（30点）
-  score+=30;details.push({n:'読み下し',s:30,max:30});
-  // 五行（20点）
+  let score=100;
+  const details=[];
+  const notes=[];
+
+  // 無料レポートはフリガナを取らないため、LIFEの完全鑑定ではなく簡易目安にする。
+  // ただし、LIFEと強く矛盾しやすい代表項目だけはここでも反映する。
+  let yomiDeduct=0;
+  const natureChars=new Set('月日星空海山川河湖泉波雨雪風雷雲花草木森林桜梅松竹鳥鶴亀龍虎石玉');
+  [...mei].forEach(ch=>{
+    if(natureChars.has(ch)){
+      yomiDeduct+=15;
+      notes.push('名に自然文字「'+ch+'」があります');
+    }
+  });
+  const yomiScore=Math.max(0,30-Math.min(yomiDeduct,30));
+  score-=30-yomiScore;
+  details.push({n:'読み下し',s:yomiScore,max:30});
+
   const ggs=[gogyoOf(ten),gogyoOf(jin),gogyoOf(chi),gogyoOf(gai),gogyoOf(so)];
   const ggCounts={};ggs.forEach(g=>{ggCounts[g]=(ggCounts[g]||0)+1;});
   const maxCount=Math.max(...Object.values(ggCounts));
   const gogyoScore=maxCount>=4?8:maxCount===3?14:20;
-  score+=gogyoScore;details.push({n:'五行',s:gogyoScore,max:20});
-  // 陰陽（20点）
-  const allStr=[...sei,...mei];const allSt=allStr.map(c=>getStroke(c)||0).filter(s=>s>0);
-  const yang=allSt.filter(s=>s%2!==0).length,yin=allSt.length-yang;
+  if(gogyoScore<20)notes.push('五格の五行に偏りがあります');
+  score-=20-gogyoScore;
+  details.push({n:'五行',s:gogyoScore,max:20});
+
+  const seiSt=[...sei].map(c=>getStroke(c)||0).filter(s=>s>0);
+  const meiSt=[...mei].map(c=>getStroke(c)||0).filter(s=>s>0);
+  const allSt=seiSt.concat(meiSt);
+  const yang=allSt.filter(s=>s%2!==0).length;
+  const yin=allSt.length-yang;
   const diff=Math.abs(yang-yin);
-  const iyScore=diff<=1?20:diff<=2?15:diff<=3?10:5;
-  score+=iyScore;details.push({n:'陰陽',s:iyScore,max:20});
-  // 天地（20点）
+  let iyScore=diff<=1?20:diff<=2?15:diff<=3?10:5;
+  const seiAllY=seiSt.length&&seiSt.every(s=>s%2!==0);
+  const seiAllI=seiSt.length&&seiSt.every(s=>s%2===0);
+  const meiAllY=meiSt.length&&meiSt.every(s=>s%2!==0);
+  const meiAllI=meiSt.length&&meiSt.every(s=>s%2===0);
+  if((seiAllY&&meiAllI)||(seiAllI&&meiAllY)){
+    iyScore=0;
+    notes.push('姓と名の境目で陰陽が分かれています');
+  }
+  score-=20-iyScore;
+  details.push({n:'陰陽',s:iyScore,max:20});
+
   const tcScore=(gogyoOf(ten)===gogyoOf(so))||(gogyoOf(chi)===gogyoOf(so))?20:15;
-  score+=tcScore;details.push({n:'天地の配合',s:tcScore,max:20});
-  // 画数（10点）
-  const badNums=[4,9,13,14,19,20,22,23,26,28,32,34,36,37,40,44,45,46];
-  const kakuScore=badNums.includes(jin)?5:10;
-  score+=kakuScore;details.push({n:'画数',s:kakuScore,max:10});
-  return{score:Math.min(100,score),details};
+  score-=20-tcScore;
+  details.push({n:'天地の配合',s:tcScore,max:20});
+
+  const cautionNums=[4,9,10,13,14,19,20,22,23,26,28,32,34,36,37,40,43,44,45,46,53];
+  const kakuScore=(cautionNums.includes(jin)||cautionNums.includes(chi)||cautionNums.includes(so))?0:10;
+  if(kakuScore<10){
+    const targets=[['人格',jin],['地格',chi],['総格',so]].filter(([,n])=>cautionNums.includes(n)).map(([l,n])=>l+n+'画');
+    notes.push(targets.join('・')+'に注意数があります');
+  }
+  score-=10-kakuScore;
+  details.push({n:'画数',s:kakuScore,max:10});
+
+  return{score:Math.max(0,Math.min(100,score)),details,notes};
 }
 
 function calcHouiMonths(h,t,by,bm,bd,thisYear){
@@ -1662,9 +1697,10 @@ function buildReportHTML(d){
           <div class="sr-inner"><div class="sr-n">${nameScore.score}</div><div class="sr-u">/ 100</div></div>
         </div>
         <div>
-          <div style="font-size:.62rem;color:var(--fog);margin-bottom:5px;">名前の構造バランス</div>
-          <div style="font-size:.76rem;font-weight:700;color:var(--golddk);margin-bottom:4px;">${nameScore.score>=85?'とても整った名前です':nameScore.score>=70?'バランスの取れた名前です':'個性的な構造の名前です'}</div>
-          <div style="font-size:.66rem;color:var(--mist);line-height:1.8;">${nameScore.score>=85?`星（${STARS_K[h]}）と名前のエネルギーが深く共鳴しています。`:`独自のエネルギーを持つ名前です。`}</div>
+          <div style="font-size:.62rem;color:var(--fog);margin-bottom:5px;">名前の簡易チェック</div>
+          <div style="font-size:.76rem;font-weight:700;color:var(--golddk);margin-bottom:4px;">${nameScore.score>=85?'簡易チェックでは大きな崩れは少なめです':nameScore.score>=70?'整いと注意点が混在する名前です':'LIFEで詳しく確認したい名前です'}</div>
+          <div style="font-size:.66rem;color:var(--mist);line-height:1.8;">※ このレポートの名前チェックは、KITOKUを知るための入口です。姓名の詳しい構造や注意点は、専用の「姓名鑑定」でご確認ください。</div>
+          ${nameScore.notes&&nameScore.notes.length?`<div style="font-size:.6rem;color:#b04030;line-height:1.75;margin-top:6px;">簡易メモ：${nameScore.notes.slice(0,3).join('／')}</div>`:''}
         </div>
       </div>
     </div>
@@ -1684,8 +1720,8 @@ function buildReportHTML(d){
     </div>
 
     ${nameScore.score<90?`<div style="background:rgba(192,72,40,.04);border:1px solid rgba(192,72,40,.18);border-radius:8px;padding:11px 13px;margin-top:8px;">
-      <div style="font-size:.58rem;color:#b04030;font-weight:700;letter-spacing:.1em;margin-bottom:5px;">⚠ 知っておくこと — 人生に波が出やすいパターン</div>
-      <div style="font-size:.68rem;color:var(--mist);line-height:1.85;">この名前は良い時期と難しい時期がはっきりしやすい構造を持っています。良い波が来た時に仕込み、難しい波の時に内を整える意識があるだけで、同じ波でも全く違う結果になります。</div>
+      <div style="font-size:.58rem;color:#b04030;font-weight:700;letter-spacing:.1em;margin-bottom:5px;">⚠ 知っておくこと — LIFEで詳細確認がおすすめです</div>
+      <div style="font-size:.68rem;color:var(--mist);line-height:1.85;">この点数は無料レポート用の簡易目安です。フリガナを使う音の五行や、姓と名の接点、陰陽の細かな配列はLIFEでより詳しく判定します。無料レポートで良く見える名前でも、LIFEで注意点が出る場合があります。</div>
     </div>`:''}
     <div class="next-links">
       ${nextLink('🌱','もっと詳しく：姓名鑑定で見る','名前の五行・画数・九星との関係をLIFEで詳しく確認します。','life.html')}
@@ -1775,11 +1811,11 @@ function buildReportHTML(d){
     </div>
   </div>`;
 
-  // オプション: 未来5年
+  // オプション: 未来9年
   if(opts.has('future')){
     const futureContent=`<div class="rpt-sec">
       <div class="rs-label">05</div>
-      <div class="rs-title">これからの5年間</div>
+      <div class="rs-title">これからの9年間</div>
       <div class="year-cards">
         ${yearData.map((yd,i)=>{
           const th=yd.theme;
@@ -1797,7 +1833,7 @@ function buildReportHTML(d){
         }).join('')}
       </div>
     </div>`;
-    html+=paidSection('未来5年ロードマップ','2026〜2030年の年ごとのテーマ・やること・注意点',futureContent);
+    html+=paidSection('未来9年サイクル','今年から9年分のテーマ・やること・注意点',futureContent);
   }
 
   // オプション: 吉方位・旅

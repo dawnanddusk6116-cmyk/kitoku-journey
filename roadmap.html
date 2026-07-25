@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>5年ロードマップ — KITOKU @ JOURNEY</title>
+<title>九年サイクル — KITOKU @ JOURNEY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -217,11 +217,11 @@ html.kitoku-font-large button {
 </div>
 
 <div class="wrap">
-  <div class="pg-title">5-Year Roadmap</div>
-  <div class="pg-sub">これからの5年・あなたの運気の地図</div>
+  <div class="pg-title">9-Year Cycle</div>
+  <div class="pg-sub">これからの9年・あなたの運気の巡り</div>
   <div class="pg-lead">
     九星は毎年、あなたの本命星を盤上の異なる宮へと運びます。<br>
-    その巡りを5年分ひらいて、いつ動き、いつ整えるかの地図にします。
+    その巡りを9年分ひらいて、いつ動き、いつ整えるかの地図にします。
   </div>
 
   <!-- 入力 -->
@@ -236,14 +236,14 @@ html.kitoku-font-large button {
       <div class="gender-btn on" id="gMale" onclick="setGender('male')">男性</div>
       <div class="gender-btn" id="gFemale" onclick="setGender('female')">女性</div>
     </div>
-    <button class="go-btn" onclick="generate()">5年の地図をひらく</button>
+    <button class="go-btn" onclick="generate()">九年サイクルをひらく</button>
     <div class="limit-note" id="roadmapUsageNote">無料版は1日3回まで使えます。</div>
   </div>
 
   <!-- 結果 -->
   <div id="result" class="hidden">
     <div class="star-bar" id="starBar"></div>
-    <div class="tl-title">5年のタイムライン</div>
+    <div class="tl-title">9年のサイクル</div>
     <div id="timeline"></div>
     <div id="ryuunenArea"></div>
     <div class="disclaimer">
@@ -252,15 +252,15 @@ html.kitoku-font-large button {
     </div>
     <a class="next-link" href="direction_v2.html">
       <span class="next-link-icon">🧭</span>
-      <span><span class="next-link-title">今日・今月の吉方位を見る</span><span class="next-link-desc">この5年を、毎日の吉方取りに落とし込む</span></span>
+      <span><span class="next-link-title">今日・今月の吉方位を見る</span><span class="next-link-desc">この9年の流れを、毎日の吉方取りに落とし込む</span></span>
       <span class="next-link-arrow">›</span>
     </a>
     <a class="next-link locked" href="javascript:void(0)" aria-disabled="true" onclick="alert('KIGAKU先生AIはプレミアム機能として準備中です。'); return false;">
       <span class="next-link-icon">✦</span>
-      <span><span class="next-link-title">PREMIUM | KIGAKU先生AI<span class="premium-chip">有料</span></span><span class="next-link-desc">課金開始後に利用できます。5年ロードマップを相談文にして深掘りします。</span></span>
+      <span><span class="next-link-title">PREMIUM | KIGAKU先生AI<span class="premium-chip">有料</span></span><span class="next-link-desc">課金開始後に利用できます。九年サイクルを相談文にして深掘りします。</span></span>
       <span class="next-link-arrow">準備中</span>
     </a>
-    <button class="pdf-btn" onclick="printRoadmap()">🖨 この地図を印刷・PDF保存する</button>
+    <button class="pdf-btn" onclick="printRoadmap()">🖨 このサイクルを印刷・PDF保存する</button>
   </div>
 
   <div class="footer">KITOKU @ JOURNEY<br>自分を知る。理解する。決める。</div>
@@ -388,7 +388,7 @@ function updateRoadmapUsageNote(){
     : '本日の無料回数（3回）を使い切りました。明日またお試しください。';
   if(btn){
     btn.disabled = remain <= 0;
-    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '5年の地図をひらく';
+    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '九年サイクルをひらく';
   }
 }
 
@@ -455,7 +455,7 @@ function buildTimeline(h){
   const thisYear=new Date().getFullYear();
   const douki=getDouki(h);
   let html='';
-  for(let i=0;i<5;i++){
+  for(let i=0;i<9;i++){
     const yr=thisYear+i;
     const c=yearCenter(yr);
     const pos=((h-c+4)%9+9)%9+1||9;
@@ -544,7 +544,7 @@ function buildRyuunen(by){
       <div class="ryuunen-cta-t">⌛ あなたの「変化の年（流年）」も重ねられます</div>
       <div class="ryuunen-cta-d">
         お名前の総画数から、人生が大きく動く「変化の年」を割り出せます。<br>
-        姓名鑑定をすると、この5年の中にあなただけの転換点が浮かび上がります。
+        姓名鑑定をすると、この9年の中にあなただけの転換点が浮かび上がります。
       </div>
       <a class="ryuunen-cta-btn" href="life.html">姓名鑑定をする →</a>
     </div>`;
@@ -564,10 +564,10 @@ function buildRyuunen(by){
   const kannyuSet=new Set(kannyuAges);
   const ryunenSet=new Set(ages);
 
-  // 数え年で、今後5年に該当する流年があるか（中心年と周辺年を区別）
+  // 数え年で、今後9年に該当する流年があるか（中心年と周辺年を区別）
   const thisYear=new Date().getFullYear();
   const hits=[];
-  for(let i=0;i<5;i++){
+  for(let i=0;i<9;i++){
     const yr=thisYear+i;
     const kazoe=yr-by+1; // 数え年
     const exact=ages.includes(kazoe);            // 流年ど真ん中
@@ -597,13 +597,13 @@ function buildRyuunen(by){
     <div class="ryuunen-summary">
       <div class="rs-t">⌛ あなたの流年（変化の年）</div>
       <div class="rs-years">${yrs}</div>
-      <div class="rs-d">この5年の中の転換点です。お名前の総画数（${so}画→基本数${en}）から導いた「変化が起きやすい年」で、前後1〜2年が動きのゾーンになります。恐れるためではなく、前もって傘を用意するための時刻表として使ってください。近づいたら、環境を整え・吉方を取り・言葉や習慣を見直すことで、大きな変化を飛躍の推進力に変えられます。</div>
+      <div class="rs-d">この9年の中の転換点です。お名前の総画数（${so}画→基本数${en}）から導いた「変化が起きやすい年」で、前後1〜2年が動きのゾーンになります。恐れるためではなく、前もって傘を用意するための時刻表として使ってください。近づいたら、環境を整え・吉方を取り・言葉や習慣を見直すことで、大きな変化を飛躍の推進力に変えられます。</div>
     </div>`;
   }else{
     area.innerHTML=`
     <div class="ryuunen-summary">
       <div class="rs-t">⌛ あなたの流年（変化の年）</div>
-      <div class="rs-d">お名前の総画数（${so}画→基本数${en}）から見ると、この5年は流年（大きな変化の年）にはあたりません。穏やかに足場を固められる時期です。次の流年に向けて、今のうちに器を整えておくのが吉です。</div>
+      <div class="rs-d">お名前の総画数（${so}画→基本数${en}）から見ると、この9年は流年（大きな変化の年）にはあたりません。穏やかに足場を固められる時期です。次の流年に向けて、今のうちに器を整えておくのが吉です。</div>
     </div>`;
   }
 }
