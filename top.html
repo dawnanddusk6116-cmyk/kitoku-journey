@@ -100,73 +100,115 @@ body{
 }
 .entry-label::after{content:'';flex:1;height:1px;background:var(--rim);}
 .beginner-note{
-  margin:0 0 16px;
-  border:1.6px solid rgba(55,116,130,.32);
-  border-left:5px solid #377482;
-  border-radius:14px;
-  background:linear-gradient(135deg,rgba(241,250,249,.96),rgba(255,252,244,.9));
+  margin:0 0 18px;
+  border:2px solid rgba(47,105,117,.34);
+  border-left:9px solid #2f6975;
+  border-radius:16px;
+  background:
+    linear-gradient(135deg,rgba(232,247,245,.98),rgba(255,249,236,.96));
   color:var(--goldlt);
-  box-shadow:0 14px 30px rgba(55,116,130,.08), inset 0 1px 0 rgba(255,255,255,.8);
+  box-shadow:0 16px 34px rgba(47,105,117,.16), inset 0 1px 0 rgba(255,255,255,.9);
   overflow:hidden;
+  position:relative;
+}
+.beginner-note::before{
+  content:'';
+  position:absolute;
+  inset:0 auto 0 0;
+  width:9px;
+  background:#2f6975;
 }
 .beginner-note summary{
   list-style:none;
   display:grid;
   grid-template-columns:auto 1fr auto;
   align-items:center;
-  gap:11px;
-  padding:14px 14px 13px;
+  gap:12px;
+  padding:17px 16px 16px;
   cursor:pointer;
+  position:relative;
+  z-index:1;
 }
 .beginner-note summary::-webkit-details-marker{display:none;}
+.beginner-note summary > div{min-width:0;}
+@media (max-width:420px){
+  .beginner-note{border-left-width:7px;}
+  .beginner-note::before{width:7px;}
+  .beginner-note summary{
+    gap:10px;
+    padding:16px 13px 15px;
+  }
+  .beginner-note-num{
+    min-width:52px;
+    min-height:28px;
+    padding:5px 10px;
+    font-size:.54rem;
+  }
+  .beginner-note-title{
+    font-size:.9rem;
+    line-height:1.45;
+  }
+  .beginner-note-arrow{
+    width:36px;
+    height:36px;
+  }
+  .beginner-note-body{
+    padding:0 13px 15px 72px;
+  }
+}
 .beginner-note-num{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:50px;
-  min-height:24px;
-  border:1px solid rgba(55,116,130,.34);
+  min-width:58px;
+  min-height:30px;
+  border:1px solid rgba(255,255,255,.5);
   border-radius:999px;
-  padding:3px 10px;
-  color:#2f6975;
-  background:rgba(255,255,255,.72);
-  font-size:.56rem;
+  padding:5px 12px;
+  color:#fff;
+  background:#2f6975;
+  font-size:.58rem;
   line-height:1;
   font-weight:900;
-  letter-spacing:.12em;
+  letter-spacing:.14em;
+  box-shadow:0 8px 18px rgba(47,105,117,.2);
   white-space:nowrap;
 }
 .beginner-note-title{
   display:block;
-  font-size:.78rem;
+  font-size:.92rem;
   font-weight:900;
   letter-spacing:.04em;
-  margin-bottom:3px;
-  color:#4f3514;
+  margin-bottom:4px;
+  color:#2c2115;
+  line-height:1.55;
 }
 .beginner-note-sub{
   display:block;
-  font-size:.6rem;
-  color:#4f6f70;
-  line-height:1.55;
+  font-size:.66rem;
+  color:#2f6975;
+  font-weight:800;
+  line-height:1.6;
 }
 .beginner-note-arrow{
-  width:32px;
-  height:32px;
-  border:1px solid rgba(55,116,130,.34);
+  width:40px;
+  height:40px;
+  border:1px solid rgba(47,105,117,.24);
   border-radius:999px;
   display:grid;
   place-items:center;
   background:#fff;
   color:#2f6975;
-  font-size:.78rem;
+  font-size:1rem;
   font-weight:900;
   transition:transform .2s ease;
-  box-shadow:0 0 0 5px rgba(55,116,130,.08);
+  box-shadow:0 0 0 7px rgba(47,105,117,.1), 0 8px 18px rgba(47,105,117,.12);
 }
 .beginner-note[open] .beginner-note-arrow{transform:rotate(180deg);}
 .beginner-note-body{
-  padding:0 14px 14px 75px;
+  padding:0 16px 16px 86px;
+  position:relative;
+  z-index:1;
 }
 .beginner-note-text{
   font-size:.64rem;
@@ -697,8 +739,8 @@ body{
   <summary>
     <span class="beginner-note-num">START</span>
     <span>
-      <span class="beginner-note-title">初めての方は、まず「自分を知る」ことから</span>
-      <span class="beginner-note-sub">ここを開いて、見る順番を確認する</span>
+      <span class="beginner-note-title">初めての入口</span>
+      <span class="beginner-note-sub">まずここを開いて、見る順番を確認</span>
     </span>
     <span class="beginner-note-arrow">▼</span>
   </summary>

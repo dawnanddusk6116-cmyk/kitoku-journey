@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-beginner-accordion-strong';
+const KITOKU_CACHE = 'kitoku-pwa-v6-beginner-intro-banner';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
