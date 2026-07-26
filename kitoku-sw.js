@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-ryuunen-birth-match';
+const KITOKU_CACHE = 'kitoku-pwa-v6-centered-report-headers';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -13,6 +13,7 @@ const KITOKU_CORE = [
   './academy_pdf_guide_family.html',
   './academy_pdf_guide_travel.html',
   './kitoku-manifest.json',
+  './kitoku-badge.js',
   './kitoku-icon-180.png',
   './kitoku-icon-192.png',
   './kitoku-icon-512.png',

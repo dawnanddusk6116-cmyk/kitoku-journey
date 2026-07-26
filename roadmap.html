@@ -21,7 +21,7 @@ body[data-theme="dark"]{
   --gold:#c4a050;--goldlt:#d8b870;--golddk:#e0c890;
   --snow:#f0e8da;--mist:#bcaa88;--fog:#8a7860;
 }
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(10px);}
+.hdr{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:560px;margin:0 auto;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(10px);}
 body[data-theme="dark"] .hdr{background:rgba(21,17,12,.95);}
 .hdr-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.25em;color:var(--gold);}
 .back-btn{background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);color:var(--golddk);font-size:.72rem;padding:8px 13px;border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;text-decoration:none;}
@@ -200,6 +200,7 @@ html.kitoku-font-large button {
 </style>
 </head>
 <body>
+<div id="kitoku-badge-mount"></div>
 <div class="hdr">
   <span class="hdr-logo">KITOKU</span>
   <div class="nav-actions">
@@ -715,5 +716,6 @@ function roadmapGoBack(){
 })();
 </script>
 
+<script src="kitoku-badge.js"></script>
 </body>
 </html>

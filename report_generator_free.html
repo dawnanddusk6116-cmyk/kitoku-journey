@@ -17,7 +17,7 @@ html,body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',ser
 body{max-width:480px;margin:0 auto;padding-bottom:60px;}
 
 /* ヘッダー */
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(10px);}
+.hdr{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:480px;margin:0 auto;padding:14px 18px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.95);z-index:100;backdrop-filter:blur(10px);}
 .hdr-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.25em;color:var(--gold);}
 .back-btn{background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);color:var(--golddk);font-size:.72rem;padding:8px 13px;border-radius:6px;cursor:pointer;font-family:'Noto Serif JP',serif;}
 
@@ -269,6 +269,7 @@ html.kitoku-font-large button {
 </style>
 </head>
 <body>
+<div id="kitoku-badge-mount"></div>
 
 <!-- ヘッダー -->
 <div class="hdr no-print">
@@ -1991,5 +1992,6 @@ function smartBack(){
 })();
 </script>
 
+<script src="kitoku-badge.js"></script>
 </body>
 </html>
