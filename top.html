@@ -99,6 +99,60 @@ body{
   display:flex;align-items:center;gap:8px;
 }
 .entry-label::after{content:'';flex:1;height:1px;background:var(--rim);}
+.beginner-note{
+  position:relative;
+  margin:0 0 14px;
+  padding:13px 14px 12px 52px;
+  border:1.4px dashed rgba(138,104,32,.36);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,248,232,.72));
+  color:var(--goldlt);
+  box-shadow:0 10px 22px rgba(100,80,40,.055);
+}
+.beginner-note::before{
+  content:"1";
+  position:absolute;
+  left:14px;
+  top:14px;
+  width:27px;
+  height:27px;
+  border:2px solid rgba(28,18,8,.76);
+  border-radius:48% 54% 50% 46%;
+  display:grid;
+  place-items:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.35rem;
+  line-height:1;
+  transform:rotate(-7deg);
+  color:#1c1208;
+  background:rgba(255,255,255,.45);
+}
+.beginner-note-title{
+  font-size:.76rem;
+  font-weight:800;
+  letter-spacing:.06em;
+  margin-bottom:4px;
+}
+.beginner-note-text{
+  font-size:.64rem;
+  color:var(--mist);
+  line-height:1.75;
+}
+.beginner-note-flow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+  font-size:.56rem;
+  color:var(--goldlt);
+}
+.beginner-note-flow span{
+  border:1px solid rgba(138,104,32,.18);
+  background:rgba(255,255,255,.62);
+  border-radius:999px;
+  padding:3px 8px;
+  font-weight:800;
+}
 
 .entry-card{
   background:var(--card);border-radius:var(--radius);
@@ -569,6 +623,11 @@ body{
   </div>
   <button class="birth-bar-btn" id="birthBarBtn" onclick="changeBirth()">✎ 変更</button>
 </div>
+<div class="beginner-note">
+  <div class="beginner-note-title">初めての方はここから</div>
+  <div class="beginner-note-text">まず「自分の星を見る」で本命星・月命星・傾斜・同会・納音を確認してから、3点セットへ進むと迷いません。</div>
+  <div class="beginner-note-flow"><span>自分の星を見る</span><span>はじめてのKITOKU診断</span><span>九年サイクル</span><span>姓名鑑定</span></div>
+</div>
 <div class="three-cats-wrap">
 
     <!-- ① 自分を知る -->
@@ -577,12 +636,12 @@ body{
         <span class="cat-btn-left">
           <span class="cat-btn-num">①</span>
           <span class="cat-btn-copy"><span class="cat-btn-kicker">SELF READING</span>
-              <span class="cat-btn-label">自分を知る</span><span class="cat-btn-sub">星・名前・今年の流れから、自分の軸を確認する</span></span>
+              <span class="cat-btn-label">自分を知る</span><span class="cat-btn-sub">初めての方はここから。星・診断・九年サイクル・姓名で自分の軸を確認する</span></span>
         </span>
         <span class="cat-btn-arrow">›</span>
       </button>
       <div class="cat-body" id="cat1">
-        <div class="tools-sub-label first">── まず使う</div>
+        <div class="tools-sub-label first">── 初めての方はここから</div>
         <a class="tool-item" href="direction_v2.html">
           <span class="tool-icon">🧭</span>
           <span class="tool-info"><span class="tool-name">今日の方位盤</span><span class="tool-desc">日盤・月盤・年盤・今日の吉凶を確認</span></span>

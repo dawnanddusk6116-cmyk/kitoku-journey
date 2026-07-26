@@ -62,27 +62,29 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-tag{font-size:.6rem;color:var(--goldlt);background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.25);border-radius:999px;padding:3px 8px;font-weight:700;}
 .report-next{display:grid;grid-template-columns:1fr;gap:9px;margin-top:12px;}
 .report-next-label{font-size:.62rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-top:10px;}
+.report-next-intro{font-size:.64rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.58);border:1px dashed rgba(138,104,32,.26);border-radius:10px;padding:9px 11px;}
 .report-next-card{display:flex;align-items:center;gap:10px;text-decoration:none;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(196,160,67,.08));border:1.4px solid rgba(196,160,67,.34);border-radius:12px;padding:12px 11px;color:inherit;box-shadow:0 6px 18px rgba(100,80,40,.06);}
 .report-next-card:active{transform:scale(.99);}
 .report-next-card.report{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(112,156,210,.13));border-color:rgba(112,156,210,.38);}
 .report-next-card.roadmap{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(92,150,112,.13));border-color:rgba(92,150,112,.34);}
-
+.report-next-card.name{background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(196,140,92,.14));border-color:rgba(196,140,92,.38);}
+.report-next-world-label{font-size:.58rem;color:var(--mist);letter-spacing:.1em;margin:8px 0 -2px;padding-top:8px;border-top:1px solid rgba(100,80,40,.1);}
 .report-next-card.world{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(138,104,32,.12));border-color:rgba(138,104,32,.32);}
 .report-next-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.14);color:var(--goldlt);font-size:.95rem;flex-shrink:0;}
 .report-next-card.report .report-next-icon{background:rgba(112,156,210,.16);color:#3d6491;}
 .report-next-card.roadmap .report-next-icon{background:rgba(92,150,112,.16);color:#47795a;}
-
+.report-next-card.name .report-next-icon{background:rgba(196,140,92,.16);color:#8a5529;}
 .report-next-card.world .report-next-icon{background:rgba(138,104,32,.13);color:var(--goldlt);}
 .report-next-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
 .report-next-card.report .report-next-title{color:#3d6491;}
 .report-next-card.roadmap .report-next-title{color:#47795a;}
-
+.report-next-card.name .report-next-title{color:#8a5529;}
 .report-next-card.world .report-next-title{color:var(--goldlt);}
 .report-next-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
 .report-next-badge{font-size:.58rem;color:#fff;background:var(--goldlt);border-radius:999px;padding:4px 8px;letter-spacing:.06em;margin-left:auto;white-space:nowrap;font-weight:800;}
 .report-next-card.report .report-next-badge{background:#3d6491;}
 .report-next-card.roadmap .report-next-badge{background:#47795a;}
-
+.report-next-card.name .report-next-badge{background:#8a5529;}
 .report-next-card.world .report-next-badge{background:var(--goldlt);}
 .report-next-note{font-size:.58rem;color:var(--mist);line-height:1.65;text-align:center;margin-top:2px;}
 
@@ -168,13 +170,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .report-next-card{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.24);box-shadow:none;}
 [data-theme="dark"] .report-next-card.report{background:linear-gradient(135deg,rgba(112,156,210,.12),rgba(18,21,42,.95));border-color:rgba(112,156,210,.32);}
 [data-theme="dark"] .report-next-card.roadmap{background:linear-gradient(135deg,rgba(92,150,112,.14),rgba(18,21,42,.95));border-color:rgba(92,150,112,.32);}
-
+[data-theme="dark"] .report-next-card.name{background:linear-gradient(135deg,rgba(196,140,92,.14),rgba(18,21,42,.95));border-color:rgba(196,140,92,.32);}
+[data-theme="dark"] .report-next-intro{background:rgba(255,255,255,.04);border-color:rgba(212,175,55,.2);}
+[data-theme="dark"] .report-next-world-label{border-color:rgba(212,175,55,.16);}
 [data-theme="dark"] .report-next-card.world{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(18,21,42,.95));border-color:rgba(196,160,67,.32);}
 [data-theme="dark"] .report-next-card.report .report-next-title,
 [data-theme="dark"] .report-next-card.report .report-next-icon{color:#9fc3f4;}
 [data-theme="dark"] .report-next-card.roadmap .report-next-title,
 [data-theme="dark"] .report-next-card.roadmap .report-next-icon{color:#9ed4ad;}
-
+[data-theme="dark"] .report-next-card.name .report-next-title,
+[data-theme="dark"] .report-next-card.name .report-next-icon{color:#e5b08c;}
 [data-theme="dark"] .report-next-card.world .report-next-title,
 [data-theme="dark"] .report-next-card.world .report-next-icon{color:#f0d878;}
 [data-theme="dark"] .report-next-text{color:rgba(232,238,255,.72);}
@@ -325,7 +330,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
           </div>
         </details>
         <div class="report-next">
-          <div class="report-next-label">✦ 次にできること</div>
+          <div class="report-next-label">✦ 初めての方は、まずこの3つ</div>
+          <div class="report-next-intro">自分の星を確認したら、入口レポート・九年サイクル・姓名鑑定の順に見ると、自分の軸がつかみやすくなります。</div>
           <a class="report-next-card report" href="report_generator_free.html">
             <div class="report-next-icon">📋</div>
             <div>
@@ -342,6 +348,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
             </div>
             <div class="report-next-badge">開く</div>
           </a>
+          <a class="report-next-card name" href="life.html">
+            <div class="report-next-icon">📝</div>
+            <div>
+              <div class="report-next-title">姓名鑑定</div>
+              <div class="report-next-text">画数・五行・陰陽・響きから、名前の構造を詳しく見ます。</div>
+            </div>
+            <div class="report-next-badge">開く</div>
+          </a>
+          <div class="report-next-world-label">── 世界観を見たい方へ</div>
           <a class="report-next-card world" href="index.html?direct=1&amp;gallery=1">
             <div class="report-next-icon">🖼</div>
             <div>
