@@ -135,11 +135,18 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .life-title{font-size:1rem;color:var(--goldlt);font-weight:800;line-height:1.5;margin-bottom:10px;}
 .life-img{width:100%;display:block;border-radius:12px;border:1px solid rgba(196,160,67,.22);background:#fff;margin-bottom:12px;}
 .life-lead{font-size:.68rem;color:var(--mist);line-height:1.9;margin-bottom:12px;}
-.life-layers{display:grid;gap:7px;margin-bottom:12px;}
-.life-layer{background:var(--card);border:1px solid var(--rim);border-radius:10px;padding:9px 10px;}
-.life-layer-title{font-size:.66rem;color:var(--goldlt);font-weight:800;margin-bottom:2px;}
-.life-layer-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
-.life-note{font-size:.62rem;line-height:1.75;color:var(--goldlt);background:rgba(196,160,67,.1);border:1px dashed rgba(196,160,67,.34);border-radius:10px;padding:10px;}
+.life-leadbox{font-size:.66rem;color:var(--mist);line-height:1.9;background:linear-gradient(135deg,rgba(255,255,255,.66),rgba(196,160,67,.08));border:1px solid rgba(196,160,67,.22);border-radius:12px;padding:11px 12px;margin-bottom:12px;}
+.life-route{display:grid;grid-template-columns:1fr;gap:6px;margin:0 0 12px;}
+.life-route-row{display:grid;grid-template-columns:72px 1fr;align-items:center;gap:10px;background:var(--card);border:1px solid var(--rim);border-radius:10px;overflow:hidden;}
+.life-route-label{height:100%;min-height:58px;display:flex;flex-direction:column;justify-content:center;padding:9px 10px;background:rgba(196,160,67,.16);color:var(--goldlt);}
+.life-route-num{font-size:.55rem;font-weight:800;letter-spacing:.08em;margin-bottom:2px;}
+.life-route-role{font-size:.72rem;font-weight:800;line-height:1.35;}
+.life-route-body{padding:10px 10px 10px 0;}
+.life-route-title{font-size:.72rem;color:var(--snow);font-weight:800;line-height:1.45;margin-bottom:3px;}
+.life-route-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
+.life-note-title{font-size:.66rem;color:#1f5d90;font-weight:800;margin-bottom:6px;}
+.life-note{font-size:.64rem;line-height:1.9;color:var(--goldlt);background:linear-gradient(135deg,rgba(210,232,255,.72),rgba(196,160,67,.08));border:1px solid rgba(70,132,190,.2);border-radius:12px;padding:12px;}
+.life-note strong{color:var(--goldlt);font-weight:800;}
 [data-theme="dark"] .life-structure-btn{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.035));border-color:rgba(196,160,67,.3);}
 [data-theme="dark"] .life-sheet{background:#12152a;border-color:rgba(212,175,55,.24);}
 [data-theme="dark"] .life-close,[data-theme="dark"] .life-layer{background:rgba(255,255,255,.045);border-color:rgba(212,175,55,.18);}
@@ -393,16 +400,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <button class="life-close" type="button" onclick="closeLifeStructureModal()">✕</button>
     <div class="life-kicker">KITOKU MAP</div>
     <div class="life-title">あなたを縛らず、理解するための「5層の人生構造」</div>
+    <div class="life-leadbox">これは性格診断ではありません。外から見える顔、内側の反応、社会で立つ舞台、奥に眠る才能、魂の音色を重ねて見るための地図です。</div>
     <img class="life-img" src="https://drive.google.com/thumbnail?id=1sGz1X0-5TT6YJ2y_fpNXQrdEGPnkblX0&sz=w900" alt="5層の人生構造">
-    <div class="life-lead">九星と納音は、性格を決めつけるものではありません。どの層が何を見ているのかを知ると、あなたの星情報がぐっと読みやすくなります。</div>
-    <div class="life-layers">
-      <div class="life-layer"><div class="life-layer-title">第1層：本命星</div><div class="life-layer-text">人生を動かす中心のエンジン。社会で出やすい核の力です。</div></div>
-      <div class="life-layer"><div class="life-layer-title">第2層：月命星</div><div class="life-layer-text">身体や幼少期の感覚。安心感や内側の反応を見ます。</div></div>
-      <div class="life-layer"><div class="life-layer-title">第3層：同会</div><div class="life-layer-text">人生の舞台。社会から求められやすい役割や縁の広がりです。</div></div>
-      <div class="life-layer"><div class="life-layer-title">第4層：傾斜</div><div class="life-layer-text">水面下の才能。自分では当たり前すぎて気づきにくい力です。</div></div>
-      <div class="life-layer"><div class="life-layer-title">第5層：納音</div><div class="life-layer-text">魂の音色。同じ九星でも、その人らしい響きや質感が変わります。</div></div>
+    <div class="life-route">
+      <div class="life-route-row"><div class="life-route-label"><div class="life-route-num">第1層</div><div class="life-route-role">本命星<br>表の顔</div></div><div class="life-route-body"><div class="life-route-title">人生を動かす中心のエンジン</div><div class="life-route-text">社会で出やすい核の力。周りから見えるあなたの基本の姿です。</div></div></div>
+      <div class="life-route-row"><div class="life-route-label"><div class="life-route-num">第2層</div><div class="life-route-role">月命星<br>内なる心</div></div><div class="life-route-body"><div class="life-route-title">安心感や内側の反応</div><div class="life-route-text">身体感覚や幼少期の癖。疲れた時に出やすい心の動きを見ます。</div></div></div>
+      <div class="life-route-row"><div class="life-route-label"><div class="life-route-num">第3層</div><div class="life-route-role">同会<br>人生の舞台</div></div><div class="life-route-body"><div class="life-route-title">社会から求められやすい役割</div><div class="life-route-text">今世で立つ場所。人との縁や、自然と担いやすい役割を見ます。</div></div></div>
+      <div class="life-route-row"><div class="life-route-label"><div class="life-route-num">第4層</div><div class="life-route-role">傾斜<br>潜在能力</div></div><div class="life-route-body"><div class="life-route-title">水面下に眠る本音の力</div><div class="life-route-text">自分では当たり前すぎて気づきにくい才能。迷った時に戻る力です。</div></div></div>
+      <div class="life-route-row"><div class="life-route-label"><div class="life-route-num">第5層</div><div class="life-route-role">納音<br>魂の音色</div></div><div class="life-route-body"><div class="life-route-title">その人だけの響きや質感</div><div class="life-route-text">同じ九星でも人生で奏でる響きは変わります。名前と生まれが響き合う音です。</div></div></div>
     </div>
-    <div class="life-note">これは「こう生きなさい」という命令ではなく、自分を知り、自分を愛し、自分で動くための地図です。</div>
+    <div class="life-note"><div class="life-note-title">五つを一つの風景にすると</div>表向きの顔、内側の心、社会で立つ舞台、水面下の才能、魂の音色が重なって、その人らしい風景になります。これは「こう生きなさい」という命令ではなく、<strong>自分を知り、自分で動くための地図</strong>です。</div>
   </div>
 </div>
 

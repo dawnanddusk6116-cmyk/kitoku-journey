@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-beginner-note-copy';
+const KITOKU_CACHE = 'kitoku-pwa-v6-life-structure-map';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
