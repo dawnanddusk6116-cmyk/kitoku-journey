@@ -613,7 +613,6 @@ function startReading(){
   var nm=(document.getElementById('pName').value||'').trim();
   if(!mYv||!mMv||!pYv||!pMv||!nm){alert('自分と相手の生年月日・名前を入力してください');return;}
   localStorage.setItem('kitoku-birth',mYv+'-'+mMv+'-'+mDv);
-  localStorage.setItem('kitoku_birth',mYv+'-'+mMv+'-'+mDv);
   var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');
   var isNew=!sv.find(function(p){return p.name===nm;});
   if(isNew&&sv.length>=5){alert('無料プランは5人まで登録可能です。');return;}
