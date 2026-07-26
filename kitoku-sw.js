@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-starter-label-fix';
+const KITOKU_CACHE = 'kitoku-pwa-v6-beginner-accordion';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
