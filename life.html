@@ -3715,6 +3715,7 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
   if(!area) return;
 
   // 鑑定データをlocalStorageに保存
+  const readingBirth = getSavedSelfBirth();
   const readingData = {
     name: sei+mei,
     sei, mei,
@@ -3730,6 +3731,7 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
     items: (scoreResult.items||[]).map(i=>({cat:i.cat,title:i.title,text:i.text})),
     jinGG,
     mode: getLifeMode(),
+    birth: readingBirth,
     ts: Date.now()
   };
   localStorage.setItem('kitoku-life-reading', JSON.stringify(readingData));

@@ -392,6 +392,24 @@ function updateRoadmapUsageNote(){
   }
 }
 
+function normalizeRoadmapBirthValue(v){
+  const raw=String(v||'').trim().replace(/\//g,'-');
+  const m=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(!m) return raw;
+  return m[1]+'-'+String(Number(m[2])).padStart(2,'0')+'-'+String(Number(m[3])).padStart(2,'0');
+}
+
+function getCurrentBirthString(){
+  try{
+    const saved=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'';
+    const normalized=normalizeRoadmapBirthValue(saved);
+    if(normalized && saved!==normalized) localStorage.setItem('kitoku-birth', normalized);
+    return normalized;
+  }catch(e){
+    return '';
+  }
+}
+
 function countRoadmapUsage(){
   try{
     localStorage.setItem(getRoadmapUsageKey(), String(getRoadmapUsage() + 1));
@@ -429,7 +447,7 @@ function generate(){
 
   // localStorageに保存（他ページと共有）
   try{
-    localStorage.setItem('kitoku-birth',`${by}-${bm}-${bd}`);
+    localStorage.setItem('kitoku-birth',normalizeRoadmapBirthValue(by+'-'+bm+'-'+bd));
     localStorage.setItem('kitoku-gender',gGender);
   }catch(e){}
 
@@ -530,12 +548,14 @@ function restoreMemos(){
 function buildRyuunen(by){
   const area=document.getElementById('ryuunenArea');
   let so=null;
-  // life.htmlの鑑定結果から総格を取得
+  let readingBirth=null;
+  // life.htmlの鑑定結果から総格と鑑定時の生年月日を取得
   try{
     const raw=localStorage.getItem('kitoku-life-reading');
     if(raw){
       const data=JSON.parse(raw);
       if(data && data.gk && typeof data.gk.so==='number') so=data.gk.so;
+      if(data && typeof data.birth==='string') readingBirth=normalizeRoadmapBirthValue(data.birth);
     }
   }catch(e){}
 
@@ -550,6 +570,20 @@ function buildRyuunen(by){
       </div>
       <a class="ryuunen-cta-btn" href="life.html">姓名鑑定をする →</a>
     </div>`;
+    return;
+  }
+
+  const nowBirth=getCurrentBirthString();
+  if(!readingBirth || readingBirth!==nowBirth){
+    area.innerHTML=
+      '<div class="ryuunen-cta">'+
+        '<div class="ryuunen-cta-t">⌛ この方の「変化の年（流年）」を見るには</div>'+
+        '<div class="ryuunen-cta-d">'+
+          '今表示している生年月日での姓名鑑定がまだのようです。<br>'+
+          'この生年月日で姓名鑑定をすると、九年サイクルの中の転換点が正しく浮かび上がります。'+
+        '</div>'+
+        '<a class="ryuunen-cta-btn" href="life.html">この生年月日で姓名鑑定をする →</a>'+
+      '</div>';
     return;
   }
 
@@ -622,7 +656,9 @@ window.addEventListener('DOMContentLoaded',()=>{
   }catch(e){}
   // 生年月日
   try{
-    const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+    const bRaw=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
+    const b=normalizeRoadmapBirthValue(bRaw);
+    if(b && bRaw!==b) localStorage.setItem('kitoku-birth', b);
     const g=localStorage.getItem('kitoku-gender');
     if(g)setGender(g);
     if(b){
