@@ -412,19 +412,18 @@ body{
 .starter-set{
   position:relative;
   margin:0 0 12px;
-  padding:14px 10px 10px;
+  padding:10px;
   border:1px dashed rgba(138,104,32,.34);
   border-radius:14px;
   background:linear-gradient(135deg,rgba(255,252,244,.88),rgba(255,255,255,.62));
 }
-.starter-set::before{
-  content:"初回セット";
-  position:absolute;
-  left:12px;
-  top:-10px;
-  background:var(--bg);
+.starter-set-label{
+  display:inline-flex;
+  align-items:center;
+  margin:0 0 8px 2px;
   color:var(--goldlt);
-  border:1px solid rgba(138,104,32,.28);
+  border:1px solid rgba(138,104,32,.24);
+  background:rgba(255,255,255,.72);
   border-radius:999px;
   padding:2px 10px;
   font-size:.54rem;
@@ -669,6 +668,7 @@ body{
       <div class="cat-body" id="cat1">
         <div class="tools-sub-label first">── まずここだけ順番に見る</div>
         <div class="starter-set">
+          <div class="starter-set-label">初回セット</div>
           <a class="tool-item" href="kyusei_v2.html">
             <span class="tool-icon">⭐</span>
             <span class="tool-info"><span class="tool-name">自分の星を見る</span><span class="tool-desc">本命星・月命星・傾斜・同会・納音</span></span>
