@@ -706,6 +706,7 @@ body{
 </style>
 </head>
 <body>
+<div id="kitoku-badge-mount"></div>
 
 <!-- ヘッダー -->
 <div class="app-header">
@@ -1176,5 +1177,6 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }
 </script>
+<script src="kitoku-badge.js?v=20260727b"></script>
 </body>
 </html>

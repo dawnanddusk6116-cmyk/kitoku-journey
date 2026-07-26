@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-centered-report-headers';
+const KITOKU_CACHE = 'kitoku-pwa-v6-badge-loader-v20260727b';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
