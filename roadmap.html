@@ -218,10 +218,10 @@ html.kitoku-font-large button {
 
 <div class="wrap">
   <div class="pg-title">9-Year Cycle</div>
-  <div class="pg-sub">これからの9年・あなたの運気の巡り</div>
+  <div class="pg-sub">昨年を振り返り、これからの9年を読む</div>
   <div class="pg-lead">
     九星は毎年、あなたの本命星を盤上の異なる宮へと運びます。<br>
-    その巡りを9年分ひらいて、いつ動き、いつ整えるかの地図にします。
+    昨年の実感を入口に、今年から9年先までの巡りをひらきます。<br>一周して元に戻る流れを見ながら、いつ動き、いつ整えるかの地図にします。
   </div>
 
   <!-- 入力 -->
@@ -453,20 +453,22 @@ function generate(){
 
 function buildTimeline(h){
   const thisYear=new Date().getFullYear();
+  const startYear=thisYear-1;
   const douki=getDouki(h);
   let html='';
-  for(let i=0;i<9;i++){
-    const yr=thisYear+i;
+  for(let i=0;i<10;i++){
+    const yr=startYear+i;
     const c=yearCenter(yr);
     const pos=((h-c+4)%9+9)%9+1||9;
     const th=YEAR_THEME[pos]||YEAR_THEME[9];
     const color=CLS_COLOR[th.cls]||'#7a6a3a';
-    const isCur=i===0;
+    const isPrev=yr===thisYear-1;
+    const isCur=yr===thisYear;
     const dirHint=DIR_HINT[pos]||'';
     html+=`
-    <div class="year-card${isCur?' cur open':''}" onclick="this.classList.toggle('open')">
+    <div class="year-card${isCur?' cur open':isPrev?' open':''}" onclick="this.classList.toggle('open')">
       <div class="yc-head">
-        <div class="yc-year">${yr}${isCur?'<span class="yc-cur-tag">今年</span>':''}</div>
+        <div class="yc-year">${yr}${isPrev?'<span class="yc-cur-tag">昨年</span>':''}${isCur?'<span class="yc-cur-tag">今年</span>':''}</div>
         <div class="yc-mid">
           <span class="yc-badge" style="background:${color};">${th.badge}</span>
           <div class="yc-theme">${th.theme}</div>
@@ -564,11 +566,12 @@ function buildRyuunen(by){
   const kannyuSet=new Set(kannyuAges);
   const ryunenSet=new Set(ages);
 
-  // 数え年で、今後9年に該当する流年があるか（中心年と周辺年を区別）
+  // 数え年で、昨年から9年先までに該当する流年があるか（中心年と周辺年を区別）
   const thisYear=new Date().getFullYear();
+  const startYear=thisYear-1;
   const hits=[];
-  for(let i=0;i<9;i++){
-    const yr=thisYear+i;
+  for(let i=0;i<10;i++){
+    const yr=startYear+i;
     const kazoe=yr-by+1; // 数え年
     const exact=ages.includes(kazoe);            // 流年ど真ん中
     const nearAge=ages.find(ag=>Math.abs(ag-kazoe)===1); // 前後1年
@@ -597,13 +600,13 @@ function buildRyuunen(by){
     <div class="ryuunen-summary">
       <div class="rs-t">⌛ あなたの流年（変化の年）</div>
       <div class="rs-years">${yrs}</div>
-      <div class="rs-d">この9年の中の転換点です。お名前の総画数（${so}画→基本数${en}）から導いた「変化が起きやすい年」で、前後1〜2年が動きのゾーンになります。恐れるためではなく、前もって傘を用意するための時刻表として使ってください。近づいたら、環境を整え・吉方を取り・言葉や習慣を見直すことで、大きな変化を飛躍の推進力に変えられます。</div>
+      <div class="rs-d">このサイクル期間の転換点です。お名前の総画数（${so}画→基本数${en}）から導いた「変化が起きやすい年」で、前後1〜2年が動きのゾーンになります。恐れるためではなく、前もって傘を用意するための時刻表として使ってください。近づいたら、環境を整え・吉方を取り・言葉や習慣を見直すことで、大きな変化を飛躍の推進力に変えられます。</div>
     </div>`;
   }else{
     area.innerHTML=`
     <div class="ryuunen-summary">
       <div class="rs-t">⌛ あなたの流年（変化の年）</div>
-      <div class="rs-d">お名前の総画数（${so}画→基本数${en}）から見ると、この9年は流年（大きな変化の年）にはあたりません。穏やかに足場を固められる時期です。次の流年に向けて、今のうちに器を整えておくのが吉です。</div>
+      <div class="rs-d">お名前の総画数（${so}画→基本数${en}）から見ると、このサイクル期間は流年（大きな変化の年）にはあたりません。穏やかに足場を固められる時期です。次の流年に向けて、今のうちに器を整えておくのが吉です。</div>
     </div>`;
   }
 }

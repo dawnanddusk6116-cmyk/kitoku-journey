@@ -1311,14 +1311,16 @@ async function generateReport(){
 
   // 年盤（本命星が座る宮番号でテーマを決定）
   const yearData=[];
-  for(let yr=thisYear;yr<=thisYear+8;yr++){
+  const cycleStartYear=thisYear-1;
+  for(let yr=cycleStartYear;yr<=thisYear+8;yr++){
     const c=yearCenter(yr);
     // 本命星が年盤のどの宮に座るか（pal関数相当）
     const pos=((h-c+4)%9+9)%9+1||9;
     yearData.push({year:yr,center:c,pos:pos,theme:YEAR_THEME[pos]||YEAR_THEME[9]});
   }
-  const thisYearPos=yearData[0].pos;
-  const thisYearCenter=yearData[0].center;
+  const currentYearData=yearData.find(yd=>yd.year===thisYear)||yearData[0];
+  const thisYearPos=currentYearData.pos;
+  const thisYearCenter=currentYearData.center;
 
   // 月盤吉方（今年の残り月）
   const houiMonths=calcHouiMonths(h,t,y,m,d,thisYear);
@@ -1444,7 +1446,8 @@ function buildReportHTML(d){
       <div class="next-link-arrow">›</div>
     </a>`;
   }
-  const thisYearTheme=yearData[0].theme;
+  const currentYearData=yearData.find(yd=>yd.year===nowYear)||yearData[0];
+  const thisYearTheme=currentYearData.theme;
   const nameFull=`${sei} ${mei}`;
   const nowYear=new Date().getFullYear();
 
@@ -1815,7 +1818,7 @@ function buildReportHTML(d){
   if(opts.has('future')){
     const futureContent=`<div class="rpt-sec">
       <div class="rs-label">05</div>
-      <div class="rs-title">これからの9年間</div>
+      <div class="rs-title">昨年から9年先まで</div>
       <div class="year-cards">
         ${yearData.map((yd,i)=>{
           const th=yd.theme;
@@ -1833,7 +1836,7 @@ function buildReportHTML(d){
         }).join('')}
       </div>
     </div>`;
-    html+=paidSection('未来9年サイクル','今年から9年分のテーマ・やること・注意点',futureContent);
+    html+=paidSection('九年サイクル','昨年の振り返りと、今年から9年先までのテーマ・やること・注意点',futureContent);
   }
 
   // オプション: 吉方位・旅

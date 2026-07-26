@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-nine-year-cycle';
+const KITOKU_CACHE = 'kitoku-pwa-v6-nine-year-cycle-prev-year';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
