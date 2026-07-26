@@ -167,6 +167,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 </style>
 </head>
 <body>
+<div id="kitoku-badge-mount"></div>
 <header class="topbar">
   <div class="topbar-inner">
     <a class="brand" href="top.html">KITOKU</a>
@@ -445,5 +446,6 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('kitoku-sw.js').catch(()=>{});});
 }
 </script>
+<script src="kitoku-badge.js"></script>
 </body>
 </html>
