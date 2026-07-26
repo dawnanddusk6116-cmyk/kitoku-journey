@@ -134,6 +134,7 @@ body[data-fontsize="l"]{font-size:19px;}
 </style>
 </head>
 <body>
+<div id="kitoku-badge-mount"></div>
 
 <!-- ヘッダー -->
 <div class="app-header">
@@ -1195,5 +1196,6 @@ function runRoomCheck(){
   ['s','m','l'].forEach(function(x){var b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===fs);});
 })();
 </script>
+<script src="kitoku-badge.js"></script>
 </body>
 </html>
