@@ -36,12 +36,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .mystar-cell-sub{font-size:.6rem;color:var(--mist);}
 .mystar-guide{font-size:.68rem;color:var(--mist);line-height:1.9;margin:-4px 0 14px;padding:10px 12px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:10px;}
 .mystar-cell-tap{display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--goldlt);margin-top:7px;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);border-radius:999px;padding:3px 9px;font-weight:700;}
-.life-structure-btn{width:100%;display:flex;align-items:center;gap:12px;margin:-2px 0 14px;padding:12px;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.3);border-radius:12px;color:inherit;text-align:left;cursor:pointer;font-family:inherit;}
+.life-structure-btn{width:100%;display:flex;align-items:center;gap:12px;margin:-2px 0 14px;padding:12px;background:linear-gradient(135deg,rgba(255,250,238,.98),rgba(255,255,255,.78));border:1.6px solid rgba(196,160,67,.55);border-radius:12px;color:inherit;text-align:left;cursor:pointer;font-family:inherit;box-shadow:0 10px 24px rgba(138,104,32,.08), inset 0 0 0 1px rgba(255,255,255,.72);position:relative;}
 .life-structure-btn:active{transform:scale(.99);}
+.life-structure-btn::before{content:"まずここをタップ";position:absolute;right:12px;top:-10px;background:#fff8e6;border:1px solid rgba(196,160,67,.5);color:var(--goldlt);border-radius:999px;padding:2px 9px;font-size:.52rem;font-weight:800;letter-spacing:.04em;box-shadow:0 4px 10px rgba(138,104,32,.08);}
 .life-structure-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(196,160,67,.16);color:var(--goldlt);font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;flex-shrink:0;}
 .life-structure-title{font-size:.74rem;color:var(--goldlt);font-weight:800;margin-bottom:3px;letter-spacing:.04em;}
 .life-structure-text{font-size:.62rem;color:var(--mist);line-height:1.65;}
-.life-structure-arrow{margin-left:auto;color:var(--gold);font-weight:800;font-size:.9rem;}
+.life-structure-arrow{margin-left:auto;color:#fff;background:var(--goldlt);width:28px;height:28px;border-radius:999px;display:grid;place-items:center;font-weight:800;font-size:1rem;box-shadow:0 0 0 5px rgba(196,160,67,.12);}
 .avatar-name{font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.04em;font-weight:700;}
 .avatar-jp{font-size:.58rem;color:var(--mist);margin-top:1px;}
 .kitoku-report{margin-top:12px;background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.7));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:14px;}
@@ -259,7 +260,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         <span class="life-structure-icon">5</span>
         <span>
           <span class="life-structure-title">5層の人生構造を見る</span>
-          <span class="life-structure-text">本命星・月命星・同会・傾斜・納音の関係が一枚でわかります。</span>
+          <span class="life-structure-text">本命星・月命星・同会・傾斜・納音が、どう重なって自分になるのかを先に確認します。</span>
         </span>
         <span class="life-structure-arrow">›</span>
       </button>
