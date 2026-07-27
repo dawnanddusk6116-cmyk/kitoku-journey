@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-font-v20260727k';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-basic02-v20260727l';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -6,6 +6,7 @@ const KITOKU_CORE = [
   './academy.html',
   './academy_pdf_00.html',
   './academy_pdf_01.html',
+  './academy_pdf_basic_02.html',
   './academy_pdf_start_01.html',
   './academy_pdf_start_02.html',
   './academy_pdf_start_03.html',
@@ -19,6 +20,7 @@ const KITOKU_CORE = [
   './kitoku-icon-512.png',
   './kitoku_academy_00.pdf',
   './kitoku_academy_01.pdf',
+  './kitoku_academy_basic_02.pdf',
   './kitoku_academy_start_01.pdf',
   './kitoku_academy_start_02.pdf',
   './kitoku_academy_start_03.pdf',

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f0ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<title>BASIC 02 自分の星が持つ意味・本命星の世界 | KITOKU Academy</title>
+<style>
+:root{
+  --bg:#f4f0ea;
+  --paper:#fffdf8;
+  --ink:#4b2f12;
+  --muted:#746556;
+  --line:#dfd3c3;
+  --gold:#a87918;
+  --amber:#d7ad50;
+  --green:#3f7c57;
+  --green-bg:#f1f8f0;
+  --soft:#fbf7ee;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.85}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(244,240,234,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:920px;width:100%;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.brand{letter-spacing:.26em;font-size:1rem;color:#7a5017;white-space:nowrap}
+.nav{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn{border:1px solid #d6bf93;border-radius:10px;padding:7px 11px;background:#fffaf0;color:#5b3a13;font-size:.86rem;font-weight:700}
+.title{max-width:920px;width:100%;margin:0 auto;padding:12px 14px 10px;min-width:0}
+.eyebrow{letter-spacing:.25em;color:#7b5ea7;font-size:.68rem;font-weight:700}
+h1{font-size:1.18rem;line-height:1.45;margin:3px 0 0;font-weight:600;overflow-wrap:anywhere}
+.pages{max-width:920px;width:100%;margin:0 auto;padding:0 10px 28px;min-width:0}
+.sheet{position:relative;min-height:1120px;margin:0 0 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 24px rgba(70,44,14,.05);padding:54px 54px 58px}
+.pdf-head,.pdf-foot{position:absolute;left:54px;right:54px;display:flex;justify-content:space-between;align-items:center;color:#9a8260;font-size:.68rem;letter-spacing:.12em}
+.pdf-head{top:24px;border-bottom:1px solid #eadfce;padding-bottom:8px}
+.pdf-foot{bottom:22px;border-top:1px solid #eadfce;padding-top:8px}
+.cover{display:flex;min-height:1000px;align-items:center;justify-content:center;text-align:center}
+.cover-inner{width:100%}
+.label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #d8ba74;background:#fff8e8;color:#7a5017;border-radius:999px;padding:7px 18px;font-weight:800;letter-spacing:.18em;font-size:.82rem}
+.cover h2{font-size:2.05rem;line-height:1.55;letter-spacing:.09em;margin:22px 0 12px;font-weight:600}
+.lead{max-width:620px;margin:0 auto 28px;color:#665545;font-size:1rem;line-height:2}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0}
+.step{border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:18px 14px;text-align:left}
+.step-k{font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:7px}
+.step-title{font-size:1rem;font-weight:800;color:var(--ink);line-height:1.5;margin-bottom:5px}
+.step-text{font-size:.78rem;color:var(--muted);line-height:1.75}
+.purpose{border:1px solid #d8ba74;background:#fff8e8;border-radius:16px;padding:18px 20px;text-align:left;margin-top:26px}
+.purpose-title{font-weight:800;color:#7a5017;letter-spacing:.08em;margin-bottom:6px}
+.purpose p{margin:0;color:#5f4f3f;font-size:.9rem;line-height:1.95}
+.section-title{display:flex;align-items:center;gap:12px;margin:8px 0 22px}
+.section-num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;border:1px solid #d8ba74;color:var(--gold);font-weight:800}
+.section-title h2{font-size:1.45rem;line-height:1.5;margin:0;font-weight:700;letter-spacing:.06em}
+.intro{color:#665545;font-size:.92rem;margin:0 0 18px}
+.two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+.note-box,.green-box,.amber-box{border-radius:14px;padding:16px 18px;margin:18px 0}
+.amber-box{border:1px solid #d8ba74;background:#fff8e8}
+.green-box{border:1px solid rgba(63,124,87,.35);background:var(--green-bg)}
+.note-box{border:1px solid #dfd3c3;background:#fbf7ee}
+.box-title{font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.box-title.amber{color:#7a5017}.box-title.green{color:var(--green)}
+.note-box p,.green-box p,.amber-box p{margin:0;font-size:.86rem;color:#5f4f3f;line-height:1.9}
+.nine-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #dfd3c3;border-radius:14px;overflow:hidden;background:#fff}
+.nine-table th{background:#f6ecd6;color:#6c4715;font-size:.72rem;letter-spacing:.08em;text-align:left;padding:9px 10px;border-bottom:1px solid #dfd3c3;white-space:nowrap}
+.nine-table td{padding:9px 10px;border-bottom:1px solid #eee3d4;vertical-align:top;font-size:.72rem;line-height:1.65;color:#4f4034}
+.nine-table tr:last-child td{border-bottom:none}
+.star-name{font-weight:800;color:#4b2f12;white-space:nowrap}
+.role-card{border:1px solid #dfd3c3;background:#fffdf8;border-radius:14px;padding:15px;margin-bottom:14px}
+.role-k{font-size:.7rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:4px}
+.role-title{font-size:1.06rem;font-weight:800;color:#4b2f12;margin-bottom:4px}
+.role-card p{font-size:.84rem;color:#5f4f3f;line-height:1.9;margin:0}
+.mini-screen{border:1px solid #dfd3c3;border-radius:18px;background:linear-gradient(180deg,#fffdf8,#fbf7ee);padding:18px;box-shadow:0 10px 22px rgba(70,44,14,.05)}
+.screen-head{font-size:.65rem;letter-spacing:.18em;color:#9b7a2a;font-weight:800;text-align:center;margin-bottom:14px}
+.screen-main{border:1px solid #eadfce;border-radius:14px;background:#fff;padding:14px}
+.big-num{font-size:2.3rem;color:#b7d2ed;line-height:1;font-weight:600}
+.screen-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-top:-8px}
+.screen-sub{font-size:.74rem;color:#6c5b47;margin-bottom:12px}
+.screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.screen-card{border:1px solid #eadfce;border-radius:12px;background:#fffdf8;padding:10px}
+.screen-card small{display:block;color:#a87918;font-weight:800;font-size:.62rem;margin-bottom:2px}
+.screen-card strong{display:block;font-size:.84rem;color:#4b2f12}
+.screen-card span{font-size:.68rem;color:#6c5b47}
+.contrast{display:grid;gap:14px;margin-top:10px}
+.contrast-card{display:grid;grid-template-columns:1fr 1fr;gap:9px;border:1px solid #dfd3c3;border-radius:14px;background:#fff;padding:10px}
+.north,.sun{border-radius:12px;padding:9px}
+.north{background:#f4efe9;border:1px solid #e4d8ca}
+.sun{background:#fff8e8;border:1px solid #d8ba74}
+.contrast-k{font-size:.68rem;letter-spacing:.12em;font-weight:800;margin-bottom:4px}
+.north .contrast-k{color:#7c6b5b}.sun .contrast-k{color:#7a5017}
+.contrast-title{font-weight:800;font-size:.84rem;margin-bottom:4px}
+.contrast p{font-size:.7rem;color:#5f4f3f;line-height:1.6;margin:0}
+.amber-box.compact{padding:11px 14px;margin:12px 0}
+.amber-box.compact p{font-size:.74rem;line-height:1.7}
+.summary-list{display:grid;gap:12px;margin:20px 0}
+.summary-item{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:14px}
+.summary-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;color:#a87918;border:1px solid #d8ba74;font-weight:800}
+.summary-item strong{display:block;color:#4b2f12;margin-bottom:3px}
+.summary-item span{font-size:.86rem;color:#5f4f3f;line-height:1.8}
+.next-card{border:1px solid rgba(63,124,87,.35);background:linear-gradient(135deg,#f1f8f0,#fffdf8);border-radius:16px;padding:20px;margin-top:18px}
+.next-card h3{margin:0 0 7px;color:var(--green);font-size:1.05rem;letter-spacing:.06em}
+.next-card p{margin:0;color:#4f4034;font-size:.88rem}
+.print-btn{position:fixed;right:18px;bottom:18px;z-index:10;border:1px solid #d6bf93;background:#fffaf0;color:#5b3a13;border-radius:999px;padding:11px 16px;font-weight:800;box-shadow:0 8px 20px rgba(70,44,14,.12)}
+.fallback{max-width:920px;margin:0 auto;padding:0 14px 18px;color:#6c5b47;font-size:.82rem}
+.fallback a{text-decoration:underline;color:#5b3a13}
+@media(max-width:760px){
+  .brand{font-size:.92rem;letter-spacing:.2em}
+  .btn{font-size:.82rem;padding:6px 9px;white-space:nowrap}
+  .pages{padding:0 8px 24px}
+  .sheet{min-height:auto;border-radius:10px;padding:46px 18px 50px}
+  .pdf-head,.pdf-foot{left:18px;right:18px}
+  .cover{min-height:auto;padding:60px 0}
+  .cover h2{font-size:1.5rem}
+  .steps,.two-col,.contrast-card{grid-template-columns:1fr}
+  .nine-table{font-size:.75rem}
+  .nine-table th:nth-child(2),.nine-table td:nth-child(2){display:none}
+  .print-btn{display:none}
+}
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  .topbar,.title,.print-btn,.fallback,#kitoku-badge-mount{display:none!important}
+  .pages{max-width:none;padding:0;margin:0}
+  .sheet{width:210mm;height:297mm;min-height:297mm;margin:0;border:0;border-radius:0;box-shadow:none;page-break-after:always;padding:18mm 17mm 17mm}
+  .sheet:last-child{page-break-after:auto}
+  .pdf-head,.pdf-foot{left:17mm;right:17mm}
+  .cover{min-height:250mm}
+}
+</style>
+</head>
+<body>
+<div id="kitoku-badge-mount"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="top.html">KITOKU</a>
+    <nav class="nav">
+      <a class="btn" href="academy.html">← Academyへ</a>
+      <a class="btn" href="top.html">入口へ</a>
+    </nav>
+  </div>
+</header>
+<section class="title">
+  <div class="eyebrow">KITOKU ACADEMY</div>
+  <h1>BASIC 02 自分の星が持つ意味・本命星の世界</h1>
+</section>
+<button class="print-btn" type="button" onclick="window.print()">PDF保存・印刷</button>
+
+<main class="pages">
+  <section class="sheet cover">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 02</span><span>自分の星が持つ意味</span></div>
+    <div class="cover-inner">
+      <div class="label">BASIC 02</div>
+      <h2>自分の星が持つ意味<br>本命星の世界</h2>
+      <p class="lead">BASIC 01で自分の星を出したら、次はその星が何を意味するのかを知ります。九つの星にはそれぞれ役割があり、強みと、運勢を落としやすい癖があります。</p>
+      <div class="steps">
+        <div class="step"><div class="step-k">STEP 1</div><div class="step-title">九星の本質を知る</div><div class="step-text">九つの星の役割と強みを見る</div></div>
+        <div class="step"><div class="step-k">STEP 2</div><div class="step-title">運勢を落とす癖を知る</div><div class="step-text">不調な時に出やすい行動を知る</div></div>
+        <div class="step"><div class="step-k">STEP 3</div><div class="step-title">本命と月命を使い分ける</div><div class="step-text">表の使命と内側の素顔を見る</div></div>
+      </div>
+      <div class="purpose">
+        <div class="purpose-title">このPDFの目的</div>
+        <p>星を良い悪いで判断するためではありません。自分の星の傾向を知り、長所を活かし、落とし穴を避けるための地図として使ってください。</p>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>1</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 02</span><span>九星それぞれの本質</span></div>
+    <div class="section-title"><div class="section-num">1</div><h2>九星それぞれの本質</h2></div>
+    <p class="intro">この表は、性格を決めつけるためのものではありません。九星を「命の傾向と手当て」として見るための地図です。自分の星を知るほど、強みの出し方と、力を落としやすい場面が見えてきます。</p>
+    <table class="nine-table">
+      <thead><tr><th>星</th><th>居場所</th><th>本質</th><th>運勢を落とす行動</th></tr></thead>
+      <tbody>
+        <tr><td><span class="star-name">一白水星</span></td><td>北</td><td>信念が強く人間関係の天才。ただし決断が遅い</td><td>切り替えができないと停滞する</td></tr>
+        <tr><td><span class="star-name">二黒土星</span></td><td>南西</td><td>深い母性と忍耐力。決意が固まると誰より強い</td><td>優柔不断のまま動かないと力を失う</td></tr>
+        <tr><td><span class="star-name">三碧木星</span></td><td>東</td><td>元気・積極性・言葉の力</td><td>嘘・遅刻が多いと急速に運勢が落ちる</td></tr>
+        <tr><td><span class="star-name">四緑木星</span></td><td>東南</td><td>爽やかさ・調和・縁をつなぐ力</td><td>気難しく閉じると縁が切れていく</td></tr>
+        <tr><td><span class="star-name">五黄土星</span></td><td>中央</td><td>王の星。愛が深く影響力が大きい</td><td>思いやりを失うと凶の力が出る</td></tr>
+        <tr><td><span class="star-name">六白金星</span></td><td>北西</td><td>剣のような鋭さと行動力、健康な体</td><td>折れると一気に弱くなる</td></tr>
+        <tr><td><span class="star-name">七赤金星</span></td><td>西</td><td>人を喜ばせる才能。料理・会話・もてなし</td><td>批判・愚痴が多いと魅力が失われる</td></tr>
+        <tr><td><span class="star-name">八白土星</span></td><td>東北</td><td>変化・転換・相続の星。高い視点</td><td>上から目線が続くと人が離れる</td></tr>
+        <tr><td><span class="star-name">九紫火星</span></td><td>南</td><td>智慧と情熱の星。見えないものを見る力</td><td>本音を言わず溜め込むと焦燥する</td></tr>
+      </tbody>
+    </table>
+    <div class="amber-box"><div class="box-title amber">決めつけではなく、手当てとして見る</div><p>運勢を落とす行動を知ることは、あなたを責めるためではありません。何を意識すれば楽になるか、どこで自分の力を取り戻せるかを教えてくれます。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>2</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 02</span><span>本命星と月命星</span></div>
+    <div class="section-title"><div class="section-num">2</div><h2>本命星と月命星の使い分け</h2></div>
+    <div class="two-col">
+      <div>
+        <div class="role-card"><div class="role-k">HONMEI</div><div class="role-title">本命星 - 人生の幹</div><p>この世で果たすべき使命、社会で出やすい表の力です。十歳を過ぎる頃から、本命星の力が人生の中心として表に出やすくなります。</p></div>
+        <div class="role-card"><div class="role-k">GETSUMEI</div><div class="role-title">月命星 - 命の根</div><p>肉体、幼少期のインナーチャイルド、安心感に関わる内側の感覚です。十歳未満は月命が中心ですが、月命は生涯にわたり健康と最大吉方に関わります。</p></div>
+        <div class="green-box"><div class="box-title green">幹と根を一緒に見る</div><p>幹（本命）だけ見ても木の全体は見えません。十歳未満は月命が中心、十歳以上は本命が中心。ただし月命は生涯、内側の安心感・健康・最大吉方に関わります。</p></div>
+      </div>
+      <div class="mini-screen" aria-label="kyusei_v2の画面例">
+        <div class="screen-head">KYUSEI V2 SCREEN IMAGE</div>
+        <div class="screen-main">
+          <div class="big-num">6</div>
+          <div class="screen-title">六白金星</div>
+          <div class="screen-sub">Royal Sky / 気高き天</div>
+          <div class="screen-grid">
+            <div class="screen-card"><small>本命星</small><strong>六白金星</strong><span>魂の設計図</span></div>
+            <div class="screen-card"><small>月命星</small><strong>一白水星</strong><span>内なる深淵</span></div>
+            <div class="screen-card"><small>傾斜</small><strong>一白水星</strong><span>才能の方向</span></div>
+            <div class="screen-card"><small>同会</small><strong>二黒土星</strong><span>社会との響き</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>3</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 02</span><span>裏性格の翻訳</span></div>
+    <div class="section-title"><div class="section-num">3</div><h2>裏性格 - 占い本に載らない生々しい顔</h2></div>
+    <p class="intro">各星には、表からは見えない生々しい癖があります。KITOKUはそれを否定せず、北風の言葉ではなく、太陽の言葉に翻訳します。</p>
+    <div class="contrast">
+      <div class="contrast-card">
+        <div class="north"><div class="contrast-k">北風の言葉</div><div class="contrast-title">六白金星：頑固・プライドが高い</div><p>高く、正しく、完璧であろうとする力が、周りには硬さとして見えることがあります。</p></div>
+        <div class="sun"><div class="contrast-k">KITOKUの見方</div><div class="contrast-title">天高く輝く太陽</div><p>高い志は魂の使命。ただし太陽は皆を照らすために輝きます。人の話を最後まで聞くと、器が広がります。</p></div>
+      </div>
+      <div class="contrast-card">
+        <div class="north"><div class="contrast-k">北風の言葉</div><div class="contrast-title">五黄土星：最凶・帝王だから孤独</div><p>影響力が大きい分、思いやりを失うと場を支配してしまうことがあります。</p></div>
+        <div class="sun"><div class="contrast-k">KITOKUの見方</div><div class="contrast-title">大地の帝王</div><p>腐ったものを再生させる力。謙虚さの器に入った時、強い影響力は深い慈愛に変わります。</p></div>
+      </div>
+      <div class="contrast-card">
+        <div class="north"><div class="contrast-k">北風の言葉</div><div class="contrast-title">七赤金星：口が悪い・遊んでばかり</div><p>場を明るくする言葉が、疲れている時には批判や愚痴として出ることがあります。</p></div>
+        <div class="sun"><div class="contrast-k">KITOKUの見方</div><div class="contrast-title">喜びの実り</div><p>人を笑わせ、場を和ませる天才。批判を感謝の言葉に変えると、魅力が大きく育ちます。</p></div>
+      </div>
+    </div>
+    <div class="amber-box compact"><div class="box-title amber">欠点ではなく、向きを変える力</div><p>裏性格は欠点ではありません。使い方を誤ると出るクセであり、向きを変えれば最大の魅力になります。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>4</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 02</span><span>まとめ</span></div>
+    <div class="section-title"><div class="section-num">4</div><h2>まとめ / 次に見るもの</h2></div>
+    <div class="summary-list">
+      <div class="summary-item"><div class="summary-icon">1</div><div><strong>星の本質と落とし穴を知る</strong><span>自分の星の強みだけでなく、運勢を落としやすい行動も確認しました。</span></div></div>
+      <div class="summary-item"><div class="summary-icon">2</div><div><strong>本命と月命の役割を分ける</strong><span>本命は人生の幹、月命は命の根。どちらか一方だけでは、自分の全体像は見えません。</span></div></div>
+      <div class="summary-item"><div class="summary-icon">3</div><div><strong>裏性格を魅力に変える</strong><span>生々しい癖は、向きを変えればその人の強い魅力になります。</span></div></div>
+    </div>
+    <div class="next-card">
+      <h3>次に見るもの：BASIC 03 隠れた才能と人生の舞台</h3>
+      <p>次は、傾斜（潜在能力）・同会（環境）・最大吉方（第3の星）へ進みます。星の構造を立体的に見ることで、自分の内側と社会での役割がつながっていきます。</p>
+    </div>
+    <div class="green-box"><div class="box-title green">Y理論の締め</div><p>星は「こう生きなさい」という命令ではありません。自分の傾向を知り、長所を活かし、自分で選ぶための地図です。答えを外に預けず、自分で理解し、自分で決めるために使ってください。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>5</span></div>
+  </section>
+</main>
+<p class="fallback">PDFファイルとして開く場合は <a href="kitoku_academy_basic_02.pdf">こちら</a></p>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('kitoku-sw.js').catch(function(){});});
+}
+</script>
+<script src="kitoku-badge.js?v=20260727d"></script>
+</body>
+</html>
