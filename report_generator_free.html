@@ -1191,6 +1191,34 @@ function selGender(g){
   document.getElementById('gb-f').classList.toggle('on',g==='f');
   document.getElementById('gb-m').classList.toggle('on',g==='m');
 }
+
+(function prefillFromOwner(){
+  try{
+    var birth=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'';
+    if(birth){
+      var p=String(birth).trim().replace(/\//g,'-').split('-');
+      if(p.length===3){
+        var y=document.getElementById('inY'),m=document.getElementById('inM'),d=document.getElementById('inD');
+        if(y&&!y.value)y.value=parseInt(p[0],10)||'';
+        if(m&&!m.value)m.value=parseInt(p[1],10)||'';
+        if(d&&!d.value)d.value=parseInt(p[2],10)||'';
+      }
+    }
+
+    var raw=localStorage.getItem('kitoku-life-reading');
+    if(raw){
+      var data=JSON.parse(raw);
+      var sei=document.getElementById('inSei'),mei=document.getElementById('inMei');
+      if(sei&&!sei.value&&data.sei)sei.value=data.sei;
+      if(mei&&!mei.value&&data.mei)mei.value=data.mei;
+    }
+
+    var g=localStorage.getItem('kitoku-gender')||'';
+    if(g==='male')g='m';
+    if(g==='female')g='f';
+    if((g==='m'||g==='f')&&typeof selGender==='function')selGender(g);
+  }catch(e){}
+})();
 function togOpt(id){
   const el=document.getElementById('opt-'+id);
   if(selectedOpts.has(id)){selectedOpts.delete(id);el.classList.remove('on');}
