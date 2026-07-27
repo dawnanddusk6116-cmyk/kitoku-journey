@@ -1111,7 +1111,6 @@ function runDealFree(){
   var m=parseInt(document.getElementById('dealMonth').value)||0;
   var d=parseInt(document.getElementById('dealDay').value)||1;
   if(!y||!m){alert('生年月日を入力してください');return;}
-  localStorage.setItem('kitoku-birth',y+'-'+m+'-'+d);
 
   var h=calcH(y,m), t=calcT(y,m);
   var hs=STARS[h]||STARS[1], ts=STARS[t]||STARS[1];
@@ -1829,8 +1828,6 @@ function analyze(){
   if(!nm){alert('候補者のお名前を入力してください');return;}
   if(!cY||!cM){alert('候補者の生年月日を入力してください');return;}
 
-  localStorage.setItem('kitoku-birth',mY+'-'+mM+'-'+(parseInt(document.getElementById('myDay').value)||1));
-
   var myN=calcH(mY,mM);var cN=calcH(cY,cM);
   var myS=STARS[myN];var cS=STARS[cN];
   var myTN=calcT(mY,mM);var cTN=calcT(cY,cM);
@@ -2029,6 +2026,6 @@ function closeSettings(){const p=document.getElementById('settingPanel');if(p)p.
 })();
 
 </script>
-<script src="kitoku-badge.js?v=20260727b"></script>
+<script src="kitoku-badge.js?v=20260727c"></script>
 </body>
 </html>

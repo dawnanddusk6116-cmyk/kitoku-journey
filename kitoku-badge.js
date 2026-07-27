@@ -10,6 +10,89 @@
     return m[1]+'-'+String(Number(m[2])).padStart(2,'0')+'-'+String(Number(m[3])).padStart(2,'0');
   }
 
+  var PAIR_STARS={
+    1:{k:'一白水星',e:'水',nature:'水'},
+    2:{k:'二黒土星',e:'土',nature:'大地'},
+    3:{k:'三碧木星',e:'木',nature:'雷と新緑'},
+    4:{k:'四緑木星',e:'木',nature:'風'},
+    5:{k:'五黄土星',e:'土',nature:'中心'},
+    6:{k:'六白金星',e:'金',nature:'天'},
+    7:{k:'七赤金星',e:'金',nature:'実り'},
+    8:{k:'八白土星',e:'土',nature:'山'},
+    9:{k:'九紫火星',e:'火',nature:'火'}
+  };
+
+  function calcPairHonmei(y,m){
+    y=Number(y)||0;
+    m=Number(m)||0;
+    if(!y||!m) return 0;
+    var ky=(m<=2)?y-1:y;
+    var ds=(ky%9+9)%9||9;
+    return ((11-ds-1)%9+9)%9+1;
+  }
+
+  function getEl(id){
+    return document.getElementById(id);
+  }
+
+  function getPairConfig(){
+    var path=(location.pathname||'').split('/').pop();
+    if(path==='relations.html'){
+      return {
+        kind:'relations',
+        pageLabel:'相性を見る二人',
+        myLabel:'あなた',
+        partnerLabel:'相手',
+        myY:'mY', myM:'mM', myD:'mD',
+        partnerName:'pName', partnerY:'pY', partnerM:'pM', partnerD:'pD'
+      };
+    }
+    if(path==='business.html'){
+      return {
+        kind:'business',
+        pageLabel:'仕事で見る二人',
+        myLabel:'あなた側',
+        partnerLabel:'相手側',
+        myY:'myYear', myM:'myMonth', myD:'myDay',
+        partnerName:'candidateName', partnerY:'cYear', partnerM:'cMonth', partnerD:'cDay'
+      };
+    }
+    return null;
+  }
+
+  function getPairSide(yId,mId,dId,nameId,label){
+    var y=getEl(yId), m=getEl(mId), d=getEl(dId), n=nameId?getEl(nameId):null;
+    var yy=y?Number(y.value)||0:0;
+    var mm=m?Number(m.value)||0:0;
+    var dd=d?Number(d.value)||0:0;
+    var name=n?String(n.value||'').trim():'';
+    var starNo=yy&&mm?calcPairHonmei(yy,mm):0;
+    var star=starNo?PAIR_STARS[starNo]:null;
+    var birth=yy&&mm?(String(yy)+'.'+String(mm)+(dd?'.'+String(dd):'')):'';
+    return {label:label,name:name,birth:birth,starNo:starNo,star:star};
+  }
+
+  function pairSideText(side){
+    var who=side.name||side.label;
+    if(side.star) return who+'：'+(side.birth||'生年月日未入力')+'（'+side.star.k+'）';
+    return who+'：未入力';
+  }
+
+  function getPairState(cfg){
+    var me=getPairSide(cfg.myY,cfg.myM,cfg.myD,null,cfg.myLabel);
+    var partner=getPairSide(cfg.partnerY,cfg.partnerM,cfg.partnerD,cfg.partnerName,cfg.partnerLabel);
+    var complete=!!(me.star && partner.star);
+    var label=complete ? me.star.k+' × '+partner.star.k+' の関係を見ています' : '相性を見る二人を入力してください';
+    var desc=pairSideText(me)+' × '+pairSideText(partner);
+    var detail='';
+    if(complete){
+      detail=(me.name||cfg.myLabel)+'（'+me.star.nature+'） × '+(partner.name||cfg.partnerLabel)+'（'+partner.star.nature+'）';
+    }else{
+      detail='入力欄の生年月日を変えると、この表示も自動で変わります。全体の本人データは上書きしません。';
+    }
+    return {kind:'pair',label:label,birth:desc,desc:detail,pageLabel:cfg.pageLabel};
+  }
+
   function getStorage(key){
     try{return localStorage.getItem(key)||'';}catch(e){return '';}
   }
@@ -108,6 +191,7 @@
       '.kitoku-badge.is-self .kitoku-badge-ico,.kitoku-badge.is-self .kitoku-badge-chevron{color:#BA7517;border:1px solid rgba(186,117,23,.22);}',
       '.kitoku-badge.is-self .kitoku-badge-kicker,.kitoku-badge.is-self .kitoku-badge-name{color:#8a5b12;}',
       '.kitoku-badge.is-partner details{background:#FDF0F4;border-color:rgba(153,53,86,.28);}',
+      '.kitoku-badge.is-partner .kitoku-badge-body{color:#6d2a41;}',
       '.kitoku-badge.is-partner .kitoku-badge-ico,.kitoku-badge.is-partner .kitoku-badge-chevron{color:#993556;border:1px solid rgba(153,53,86,.22);}',
       '.kitoku-badge.is-partner .kitoku-badge-kicker,.kitoku-badge.is-partner .kitoku-badge-name{color:#993556;}',
       '.kitoku-badge.is-warn details{background:#FBF4E4;border-color:rgba(133,79,11,.32);}',
@@ -125,14 +209,17 @@
     var mount=document.getElementById('kitoku-badge-mount');
     if(!mount) return;
     injectStyle();
-    var state=getState();
-    var cls=state.kind==='self'?'is-self':state.kind==='partner'?'is-partner':'is-warn';
-    var icon=state.kind==='self'?'人':state.kind==='partner'?'縁':'!';
-    var kicker=state.kind==='self'?'いま見ているのは':state.kind==='partner'?'いま見ている相手':'確認が必要です';
-    var birthHtml=state.birth ? '生年月日：'+state.birth : '生年月日：未登録';
+    var pairConfig=getPairConfig();
+    var state=pairConfig?getPairState(pairConfig):getState();
+    var cls=state.kind==='self'?'is-self':state.kind==='partner'?'is-partner':state.kind==='pair'?'is-partner':'is-warn';
+    var icon=state.kind==='self'?'人':state.kind==='partner'?'縁':state.kind==='pair'?'縁':'!';
+    var kicker=state.kind==='self'?'いま見ているのは':state.kind==='partner'?'いま見ている相手':state.kind==='pair'?state.pageLabel:'確認が必要です';
+    var birthHtml=state.kind==='pair' ? state.birth : (state.birth ? '生年月日：'+state.birth : '生年月日：未登録');
     var actions='';
     if(state.kind==='partner'){
       actions='<button type="button" data-kitoku-badge-self>本人に戻す</button><a href="relations.html">人を切り替える</a>';
+    }else if(state.kind==='pair'){
+      actions='<span style="font-size:.58rem;font-weight:800;">この画面の入力だけで表示しています</span>';
     }else if(state.kind==='self'){
       actions='<a href="life.html">姓名鑑定を確認</a><a href="top.html">入口へ戻る</a>';
     }else{
@@ -165,9 +252,23 @@
     }
   }
 
+  function bindPairInputs(){
+    var cfg=getPairConfig();
+    if(!cfg) return;
+    [cfg.myY,cfg.myM,cfg.myD,cfg.partnerName,cfg.partnerY,cfg.partnerM,cfg.partnerD].forEach(function(id){
+      var el=getEl(id);
+      if(el && !el.dataset.kitokuBadgeBound){
+        el.dataset.kitokuBadgeBound='1';
+        el.addEventListener('input',render);
+        el.addEventListener('change',render);
+      }
+    });
+  }
+
   if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',render);
+    document.addEventListener('DOMContentLoaded',function(){bindPairInputs();render();});
   }else{
+    bindPairInputs();
     render();
   }
   window.addEventListener('storage',render);

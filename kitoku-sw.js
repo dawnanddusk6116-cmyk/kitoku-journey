@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-relations-birth-key';
+const KITOKU_CACHE = 'kitoku-pwa-v6-pair-badge-v20260727c';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
