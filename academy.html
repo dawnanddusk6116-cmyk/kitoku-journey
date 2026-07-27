@@ -48,6 +48,21 @@ a{color:inherit;text-decoration:none}
   padding:7px 13px;background:#fffaf0;color:#5b3a13;
   font-size:.9rem;font-weight:700;
 }
+.academy-toolbar{
+  max-width:720px;margin:0 auto;
+  padding:9px 18px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  border-bottom:1px solid rgba(223,211,195,.72);
+  background:rgba(255,253,248,.56);
+}
+.toolbar-label{font-size:.72rem;color:#7a6855;letter-spacing:.08em}
+.font-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid #d6bf93;background:#fffaf0;color:#7a5017;
+  font-family:inherit;font-size:.76rem;font-weight:800;
+  cursor:pointer;
+}
+.font-btn.active{background:var(--gold);border-color:var(--gold);color:#fff}
 .hero{text-align:center;padding:44px 0 28px}
 .eyebrow{letter-spacing:.32em;color:var(--purple);font-size:.72rem;font-weight:700}
 h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
@@ -150,6 +165,57 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
   background:#f8f1df;border:1px solid #dec894;
   font-size:.86rem;color:#6c512b;
 }
+.curriculum{
+  margin-top:16px;
+  background:rgba(255,253,248,.72);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+}
+.curriculum-title{
+  color:var(--ink);
+  font-size:1.08rem;
+  letter-spacing:.08em;
+  font-weight:800;
+  margin:0 0 6px;
+}
+.curriculum-lead{
+  color:#6c5b47;
+  font-size:.86rem;
+  margin:0 0 14px;
+}
+.map-group{margin-top:14px}
+.map-heading{
+  display:flex;align-items:center;gap:10px;
+  color:#7a5017;
+  font-size:.76rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  margin:0 0 8px;
+}
+.map-heading::after{content:'';height:1px;background:#eadfce;flex:1}
+.map-list{display:grid;gap:7px}
+.map-item{
+  display:grid;grid-template-columns:46px 1fr auto;
+  gap:10px;align-items:center;
+  background:#fffdf8;
+  border:1px solid #eadfce;
+  border-radius:10px;
+  padding:9px 10px;
+}
+.map-num{color:var(--gold);font-weight:800;font-size:.78rem}
+.map-title{color:var(--ink);font-weight:700;font-size:.82rem;line-height:1.5}
+.status{
+  border:1px solid rgba(168,121,24,.25);
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:.62rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+.status.done{background:#f4fff3;color:#3a7a4e;border-color:rgba(58,122,78,.28)}
+.status.ready{background:#fff9ec;color:#7a5017}
+.status.pending{background:#f3efe7;color:#8b7b68}
 .footer{text-align:center;margin-top:38px;color:#9c8b78;font-size:.75rem;letter-spacing:.18em}
 @media(max-width:560px){
   .page{padding:0 14px 48px}
@@ -178,6 +244,13 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
   </div>
 </header>
 
+<div class="academy-toolbar" aria-label="文字サイズ">
+  <span class="toolbar-label">文字</span>
+  <button class="font-btn" id="academy-font-s" type="button" onclick="setAcademyFontSize('s')">小</button>
+  <button class="font-btn" id="academy-font-m" type="button" onclick="setAcademyFontSize('m')">中</button>
+  <button class="font-btn" id="academy-font-l" type="button" onclick="setAcademyFontSize('l')">大</button>
+</div>
+
 <main class="page">
   <section class="hero">
     <div class="eyebrow">KITOKU ACADEMY</div>
@@ -196,18 +269,13 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
         <span class="chevron" aria-hidden="true">▼</span>
       </summary>
       <div class="line-body">
-
         <article class="lesson">
           <div class="lesson-head">
             <div class="num word">01</div>
             <div>
               <h2 class="lesson-title">生年月日を入れて、自分の星を知る</h2>
               <p class="desc">最初の入力画面から、自分の本命星・月命星・傾斜・同会・納音を確認するまでを体験します。</p>
-              <div class="tag-row">
-                <span class="tag">START</span>
-                <span class="tag">入口</span>
-                <span class="tag">自分の星</span>
-              </div>
+              <div class="tag-row"><span class="tag">START</span><span class="tag">入口</span><span class="tag">自分の星</span></div>
             </div>
           </div>
           <div class="actions">
@@ -222,11 +290,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
             <div>
               <h2 class="lesson-title">自分の今を知る</h2>
               <p class="desc">無料パーソナルレポート、九年サイクル、今年の吉方位や香りを使って、今の自分と次の流れを確認します。</p>
-              <div class="tag-row">
-                <span class="tag">START</span>
-                <span class="tag">今を見る</span>
-                <span class="tag">レポート</span>
-              </div>
+              <div class="tag-row"><span class="tag">START</span><span class="tag">今を見る</span><span class="tag">レポート</span></div>
             </div>
           </div>
           <div class="actions">
@@ -241,11 +305,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
             <div>
               <h2 class="lesson-title">KITOKUでできること</h2>
               <p class="desc">トップ画面、自分専用KITOKU、Academy、Premium Compassを見ながら、KITOKU全体の入口を確認します。</p>
-              <div class="tag-row">
-                <span class="tag">START</span>
-                <span class="tag">全体マップ</span>
-                <span class="tag">使い方</span>
-              </div>
+              <div class="tag-row"><span class="tag">START</span><span class="tag">全体マップ</span><span class="tag">使い方</span></div>
             </div>
           </div>
           <div class="actions">
@@ -260,11 +320,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
             <div>
               <h2 class="lesson-title">スマホでアプリのように使う</h2>
               <p class="desc">iPhoneとAndroidで、KITOKUをホーム画面に追加して開きやすくする方法を確認します。</p>
-              <div class="tag-row">
-                <span class="tag">付録</span>
-                <span class="tag">スマホ設定</span>
-                <span class="tag">ホーム画面</span>
-              </div>
+              <div class="tag-row"><span class="tag">付録</span><span class="tag">スマホ設定</span><span class="tag">ホーム画面</span></div>
             </div>
           </div>
           <div class="actions">
@@ -291,10 +347,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
             <div>
               <h2 class="lesson-title">東洋思想の地図</h2>
               <p class="desc">気学・納音・姓名鑑定・家相の全体像を、ひとつの地図として見る入口です。</p>
-              <div class="tag-row">
-                <span class="tag">思想の土台</span>
-                <span class="tag">東洋OS</span>
-              </div>
+              <div class="tag-row"><span class="tag">思想の土台</span><span class="tag">東洋OS</span><span class="tag">PDFあり</span></div>
             </div>
           </div>
           <div class="actions">
@@ -309,10 +362,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
             <div>
               <h2 class="lesson-title">自分の九星を知る</h2>
               <p class="desc">本命星・月命星を入口に、自分の気質や使い方を読み解きます。</p>
-              <div class="tag-row">
-                <span class="tag">基礎</span>
-                <span class="tag">自分を知る</span>
-              </div>
+              <div class="tag-row"><span class="tag">基礎</span><span class="tag">自分を知る</span><span class="tag">PDFあり</span></div>
             </div>
           </div>
           <div class="actions">
@@ -325,18 +375,48 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           <div class="lesson-head">
             <div class="num">02</div>
             <div>
-              <h2 class="lesson-title">方位の見方</h2>
-              <p class="desc">吉方位、凶方位、日盤・月盤・年盤の使い分けを整理します。</p>
-              <div class="tag-row">
-                <span class="tag">準備中</span>
-                <span class="tag">PDF化予定</span>
-              </div>
+              <h2 class="lesson-title">自分の星が持つ意味</h2>
+              <p class="desc">九星それぞれの自然の言葉と役割を見ながら、本命星の世界を深めます。</p>
+              <div class="tag-row"><span class="tag">準備中</span><span class="tag">九星</span><span class="tag">本命星</span></div>
             </div>
           </div>
-          <div class="actions">
-            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-            <span class="action pending" aria-disabled="true">▶ YouTube準備中</span>
+          <div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num">03</div>
+            <div>
+              <h2 class="lesson-title">隠れた才能と人生の舞台</h2>
+              <p class="desc">傾斜・同会・最大吉方を、自分の内側の力と社会での役割として整理します。</p>
+              <div class="tag-row"><span class="tag">準備中</span><span class="tag">傾斜</span><span class="tag">同会</span><span class="tag">最大吉方</span></div>
+            </div>
           </div>
+          <div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num">04</div>
+            <div>
+              <h2 class="lesson-title">名前を入れてみよう・姓名鑑定の見方</h2>
+              <p class="desc">名前を点数ではなく、意志や気質を育てる器として読むための基礎ガイドです。</p>
+              <div class="tag-row"><span class="tag">準備中</span><span class="tag">姓名鑑定</span><span class="tag">名前</span></div>
+            </div>
+          </div>
+          <div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div class="num">05</div>
+            <div>
+              <h2 class="lesson-title">今日の方位盤の見方</h2>
+              <p class="desc">吉方位、凶方位、日盤・月盤・年盤の使い分けを、最初に使える形で整理します。</p>
+              <div class="tag-row"><span class="tag">準備中</span><span class="tag">方位盤</span><span class="tag">日盤・月盤・年盤</span></div>
+            </div>
+          </div>
+          <div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div>
         </article>
       </div>
     </details>
@@ -357,11 +437,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
             <div>
               <h2 class="lesson-title">家族との関係を整える</h2>
               <p class="desc">介護・見守り・親子の距離感を考えるための公開中ガイドです。</p>
-              <div class="tag-row">
-                <span class="tag">PDFあり</span>
-                <span class="tag">家族</span>
-                <span class="tag">介護</span>
-              </div>
+              <div class="tag-row"><span class="tag">PDFあり</span><span class="tag">家族</span><span class="tag">介護</span></div>
             </div>
           </div>
           <div class="actions">
@@ -370,18 +446,13 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           </div>
         </article>
 
-
         <article class="lesson">
           <div class="lesson-head">
             <div class="num word">旅行</div>
             <div>
               <h2 class="lesson-title">旅行吉方位の見方</h2>
               <p class="desc">泊数に応じて年盤・月盤・日盤を使い分け、旅行の方位と行く日を整えるガイドです。</p>
-              <div class="tag-row">
-                <span class="tag">PDFあり</span>
-                <span class="tag">旅行</span>
-                <span class="tag">方位</span>
-              </div>
+              <div class="tag-row"><span class="tag">PDFあり</span><span class="tag">旅行</span><span class="tag">方位</span></div>
             </div>
           </div>
           <div class="actions">
@@ -390,43 +461,53 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           </div>
         </article>
 
-        <article class="lesson">
-          <div class="lesson-head">
-            <div class="num word">名前</div>
-            <div>
-              <h2 class="lesson-title">姓名鑑定の見方</h2>
-              <p class="desc">名前を点数ではなく、意志や気質を育てる器として読むためのガイドです。</p>
-              <div class="tag-row">
-                <span class="tag">準備中</span>
-                <span class="tag">目的別</span>
-              </div>
-            </div>
-          </div>
-          <div class="actions">
-            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-            <span class="action pending" aria-disabled="true">▶ YouTube準備中</span>
-          </div>
-        </article>
-
-        <article class="lesson">
-          <div class="lesson-head">
-            <div class="num word">香り</div>
-            <div>
-              <h2 class="lesson-title">香りの使い方</h2>
-              <p class="desc">日々の気分や九星に合わせて、香りを整える入口をまとめます。</p>
-              <div class="tag-row">
-                <span class="tag">準備中</span>
-                <span class="tag">目的別</span>
-              </div>
-            </div>
-          </div>
-          <div class="actions">
-            <span class="action pending" aria-disabled="true">📄 PDF準備中</span>
-            <span class="action pending" aria-disabled="true">▶ YouTube準備中</span>
-          </div>
-        </article>
+        <article class="lesson"><div class="lesson-head"><div class="num word">名前</div><div><h2 class="lesson-title">姓名鑑定の見方</h2><p class="desc">名前が持つ意味、画数、五行、陰陽、響きをどう読むかを整理します。</p><div class="tag-row"><span class="tag">準備中</span><span class="tag">目的別</span><span class="tag">姓名鑑定</span></div></div></div><div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div></article>
+        <article class="lesson"><div class="lesson-head"><div class="num word">香り</div><div><h2 class="lesson-title">香りの使い方</h2><p class="desc">日々の気分や九星に合わせて、香りを整える入口をまとめます。</p><div class="tag-row"><span class="tag">準備中</span><span class="tag">目的別</span><span class="tag">香り</span></div></div></div><div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div></article>
+        <article class="lesson"><div class="lesson-head"><div class="num word">仕事</div><div><h2 class="lesson-title">ビジネスに気学を使う</h2><p class="desc">採用・商談・社名・朝礼など、仕事の判断材料としてKITOKUを使う入口です。</p><div class="tag-row"><span class="tag">準備中</span><span class="tag">目的別</span><span class="tag">ビジネス</span></div></div></div><div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div></article>
+        <article class="lesson"><div class="lesson-head"><div class="num word">移動</div><div><h2 class="lesson-title">転職・引越し・開業のタイミング</h2><p class="desc">動く時期、移る場所、始める日をどう整えるかを目的別に整理します。</p><div class="tag-row"><span class="tag">準備中</span><span class="tag">目的別</span><span class="tag">移動</span></div></div></div><div class="actions"><span class="action pending" aria-disabled="true">📄 PDF準備中</span><span class="action pending" aria-disabled="true">▶ YouTube準備中</span></div></article>
       </div>
     </details>
+  </section>
+
+  <section class="curriculum" aria-label="Academy全体目次">
+    <h2 class="curriculum-title">Academy 全体目次</h2>
+    <p class="curriculum-lead">まず棚を作り、PDFと動画を順番に埋めていきます。完成済み・準備中・未着手が一目で分かるようにしています。</p>
+
+    <div class="map-group">
+      <div class="map-heading">導入・基礎編</div>
+      <div class="map-list">
+        <div class="map-item"><span class="map-num">00</span><span class="map-title">東洋思想の地図</span><span class="status done">PDF/動画</span></div>
+        <div class="map-item"><span class="map-num">01</span><span class="map-title">自分の九星を知る・初期設定</span><span class="status done">PDF/動画</span></div>
+        <div class="map-item"><span class="map-num">02</span><span class="map-title">自分の星が持つ意味・本命星の世界</span><span class="status pending">未着手</span></div>
+        <div class="map-item"><span class="map-num">03</span><span class="map-title">隠れた才能と人生の舞台</span><span class="status pending">未着手</span></div>
+        <div class="map-item"><span class="map-num">04</span><span class="map-title">名前を入れてみよう・姓名鑑定の見方</span><span class="status ready">棚あり</span></div>
+        <div class="map-item"><span class="map-num">05</span><span class="map-title">今日の方位盤の見方</span><span class="status ready">棚あり</span></div>
+      </div>
+    </div>
+
+    <div class="map-group">
+      <div class="map-heading">応用編・上級編</div>
+      <div class="map-list">
+        <div class="map-item"><span class="map-num">06</span><span class="map-title">吉方位の使い方・毎日の処方箋</span><span class="status pending">未着手</span></div>
+        <div class="map-item"><span class="map-num">07</span><span class="map-title">転職・引越し・開業のタイミング</span><span class="status ready">棚あり</span></div>
+        <div class="map-item"><span class="map-num">08</span><span class="map-title">人間関係・商談をうまくいかせる</span><span class="status ready">棚あり</span></div>
+        <div class="map-item"><span class="map-num">09</span><span class="map-title">子育て・家族・健康への活用</span><span class="status done">関連PDF/動画</span></div>
+        <div class="map-item"><span class="map-num">10</span><span class="map-title">五大凶方・うまくいかない理由</span><span class="status pending">未着手</span></div>
+        <div class="map-item"><span class="map-num">11</span><span class="map-title">自宅から750mの風水マップ</span><span class="status pending">未着手</span></div>
+        <div class="map-item"><span class="map-num">12</span><span class="map-title">ビジネスに気学を使う</span><span class="status ready">棚あり</span></div>
+        <div class="map-item"><span class="map-num">13</span><span class="map-title">吉方位旅行・引越しで人生を変える</span><span class="status done">関連PDF/動画</span></div>
+        <div class="map-item"><span class="map-num">14</span><span class="map-title">過去の失敗をリセットしたい方へ</span><span class="status pending">未着手</span></div>
+        <div class="map-item"><span class="map-num">15</span><span class="map-title">AIと気学を組み合わせて使う</span><span class="status pending">未着手</span></div>
+      </div>
+    </div>
+
+    <div class="map-group">
+      <div class="map-heading">番外編・追加候補</div>
+      <div class="map-list">
+        <div class="map-item"><span class="map-num">番外</span><span class="map-title">転職・新規事業・子育て・夫婦関係・引越し・坎入のケーススタディ</span><span class="status pending">候補</span></div>
+        <div class="map-item"><span class="map-num">16</span><span class="map-title">恵方の操縦術</span><span class="status pending">候補</span></div>
+      </div>
+    </div>
   </section>
 
   <div class="note">動画はYouTubeの限定公開で順次追加しています。AIツールを活用しながら個人で制作している試作教材のため、漢字の読み違いや表現の相違が含まれる場合があります。PDFとあわせて、内容をご考慮の上でお使いください。</div>
@@ -434,6 +515,24 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
   <div class="footer">KITOKU @ JOURNEY<br>自分で決めるための東洋OS</div>
 </main>
 <script>
+function setAcademyFontSize(size){
+  var sizes={s:'15px',m:'17px',l:'19px'};
+  document.documentElement.style.fontSize=sizes[size]||sizes.s;
+  try{localStorage.setItem('kitoku-fontsize',size);}catch(e){}
+  ['s','m','l'].forEach(function(key){
+    var btn=document.getElementById('academy-font-'+key);
+    if(btn) btn.classList.toggle('active',key===size);
+  });
+}
+(function(){
+  var saved='s';
+  try{saved=localStorage.getItem('kitoku-fontsize')||'s';}catch(e){}
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){setAcademyFontSize(saved);});
+  }else{
+    setAcademyFontSize(saved);
+  }
+})();
 document.querySelectorAll('.line').forEach(line=>{
   line.addEventListener('toggle',()=>{
     if(!line.open) return;

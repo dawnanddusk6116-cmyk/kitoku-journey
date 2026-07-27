@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-report-owner-prefill-v20260727h';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-font-v20260727k';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
