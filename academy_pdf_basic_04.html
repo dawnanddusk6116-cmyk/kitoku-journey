@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f0ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<title>BASIC 04 名前を入れてみよう・姓名鑑定の見方 | KITOKU Academy</title>
+<style>
+:root{
+  --bg:#f4f0ea;
+  --paper:#fffdf8;
+  --ink:#4b2f12;
+  --muted:#746556;
+  --line:#dfd3c3;
+  --gold:#a87918;
+  --amber:#d7ad50;
+  --green:#3f7c57;
+  --green-bg:#f1f8f0;
+  --soft:#fbf7ee;
+  --blue:#386d96;
+  --blue-bg:#eef7fb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.85}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(244,240,234,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:920px;width:100%;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.brand{letter-spacing:.26em;font-size:1rem;color:#7a5017;white-space:nowrap}
+.nav{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn{border:1px solid #d6bf93;border-radius:10px;padding:7px 11px;background:#fffaf0;color:#5b3a13;font-size:.86rem;font-weight:700}
+.title{max-width:920px;width:100%;margin:0 auto;padding:12px 14px 10px;min-width:0}
+.eyebrow{letter-spacing:.25em;color:#7b5ea7;font-size:.68rem;font-weight:700}
+h1{font-size:1.18rem;line-height:1.45;margin:3px 0 0;font-weight:600;overflow-wrap:anywhere}
+.pages{max-width:920px;width:100%;margin:0 auto;padding:0 10px 28px;min-width:0}
+.sheet{position:relative;min-height:1120px;margin:0 0 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 24px rgba(70,44,14,.05);padding:54px 54px 58px}
+.pdf-head,.pdf-foot{position:absolute;left:54px;right:54px;display:flex;justify-content:space-between;align-items:center;color:#9a8260;font-size:.68rem;letter-spacing:.12em}
+.pdf-head{top:24px;border-bottom:1px solid #eadfce;padding-bottom:8px}
+.pdf-foot{bottom:22px;border-top:1px solid #eadfce;padding-top:8px}
+.cover{display:flex;min-height:1000px;align-items:center;justify-content:center;text-align:center}
+.cover-inner{width:100%}
+.label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #d8ba74;background:#fff8e8;color:#7a5017;border-radius:999px;padding:7px 18px;font-weight:800;letter-spacing:.18em;font-size:.82rem}
+.cover h2{font-size:2.02rem;line-height:1.55;letter-spacing:.08em;margin:22px 0 12px;font-weight:600}
+.lead{max-width:650px;margin:0 auto 28px;color:#665545;font-size:1rem;line-height:2}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0}
+.step{border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:18px 14px;text-align:left}
+.step-k{font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:7px}
+.step-title{font-size:1rem;font-weight:800;color:var(--ink);line-height:1.5;margin-bottom:5px}
+.step-text{font-size:.78rem;color:var(--muted);line-height:1.75}
+.purpose{border:1px solid #d8ba74;background:#fff8e8;border-radius:16px;padding:18px 20px;text-align:left;margin-top:26px}
+.purpose-title{font-weight:800;color:#7a5017;letter-spacing:.08em;margin-bottom:6px}
+.purpose p{margin:0;color:#5f4f3f;font-size:.9rem;line-height:1.95}
+.section-title{display:flex;align-items:center;gap:12px;margin:8px 0 22px}
+.section-num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;border:1px solid #d8ba74;color:var(--gold);font-weight:800}
+.section-title h2{font-size:1.42rem;line-height:1.5;margin:0;font-weight:700;letter-spacing:.05em}
+.intro{color:#665545;font-size:.92rem;margin:0 0 18px}
+.two-col{display:grid;grid-template-columns:1.08fr .92fr;gap:22px;align-items:start}
+.note-box,.green-box,.amber-box,.blue-box{border-radius:14px;padding:16px 18px;margin:18px 0}
+.amber-box{border:1px solid #d8ba74;background:#fff8e8}
+.green-box{border:1px solid rgba(63,124,87,.35);background:var(--green-bg)}
+.blue-box{border:1px solid rgba(56,109,150,.3);background:var(--blue-bg)}
+.note-box{border:1px solid #dfd3c3;background:#fbf7ee}
+.box-title{font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.box-title.amber{color:#7a5017}.box-title.green{color:var(--green)}.box-title.blue{color:var(--blue)}
+.note-box p,.green-box p,.amber-box p,.blue-box p{margin:0;font-size:.86rem;color:#5f4f3f;line-height:1.9}
+.role-card{border:1px solid #dfd3c3;background:#fffdf8;border-radius:14px;padding:15px;margin-bottom:14px}
+.role-k{font-size:.7rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:4px}
+.role-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-bottom:4px}
+.role-card p{font-size:.84rem;color:#5f4f3f;line-height:1.9;margin:0}
+.mini-screen{border:1px solid #dfd3c3;border-radius:18px;background:linear-gradient(180deg,#fffdf8,#fbf7ee);padding:18px;box-shadow:0 10px 22px rgba(70,44,14,.05)}
+.screen-head{font-size:.65rem;letter-spacing:.18em;color:#9b7a2a;font-weight:800;text-align:center;margin-bottom:14px}
+.screen-main{border:1px solid #eadfce;border-radius:14px;background:#fff;padding:14px}
+.screen-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-bottom:5px}
+.screen-sub{font-size:.74rem;color:#6c5b47;margin-bottom:12px}
+.screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.screen-card{border:1px solid #eadfce;border-radius:12px;background:#fffdf8;padding:10px}
+.screen-card.focus{background:#fff8e8;border-color:#d8ba74}
+.screen-card small{display:block;color:#a87918;font-weight:800;font-size:.62rem;margin-bottom:2px}
+.screen-card strong{display:block;font-size:.84rem;color:#4b2f12}
+.screen-card span{font-size:.68rem;color:#6c5b47}
+.truth-table,.summary-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #dfd3c3;border-radius:14px;overflow:hidden;background:#fff}
+.truth-table th,.summary-table th{background:#f6ecd6;color:#6c4715;font-size:.75rem;letter-spacing:.08em;text-align:left;padding:10px;border-bottom:1px solid #dfd3c3}
+.truth-table td,.summary-table td{padding:10px;border-bottom:1px solid #eee3d4;vertical-align:top;font-size:.8rem;line-height:1.7;color:#4f4034}
+.truth-table tr:last-child td,.summary-table tr:last-child td{border-bottom:none}
+.truth-name{font-weight:800;color:#4b2f12;white-space:nowrap}
+.big-statement{border:1px solid #d8ba74;background:linear-gradient(135deg,#fff8e8,#fffdf8);border-radius:18px;padding:22px;margin:18px 0}
+.big-statement h3{font-size:1.15rem;margin:0 0 8px;color:#7a5017;letter-spacing:.05em}
+.big-statement p{font-size:.92rem;line-height:2;margin:0;color:#4f4034}
+.practice-list{display:grid;gap:12px;margin:16px 0}
+.practice-item{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:14px}
+.practice-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;color:#a87918;border:1px solid #d8ba74;font-weight:800}
+.practice-item strong{display:block;color:#4b2f12;margin-bottom:3px}
+.practice-item span{font-size:.86rem;color:#5f4f3f;line-height:1.8}
+.next-card{border:1px solid rgba(63,124,87,.35);background:linear-gradient(135deg,#f1f8f0,#fffdf8);border-radius:16px;padding:20px;margin-top:18px}
+.next-card h3{margin:0 0 7px;color:var(--green);font-size:1.05rem;letter-spacing:.06em}
+.next-card p{margin:0;color:#4f4034;font-size:.88rem}
+.print-btn{position:fixed;right:18px;bottom:18px;z-index:10;border:1px solid #d6bf93;background:#fffaf0;color:#5b3a13;border-radius:999px;padding:11px 16px;font-weight:800;box-shadow:0 8px 20px rgba(70,44,14,.12)}
+.fallback{max-width:920px;margin:0 auto;padding:0 14px 18px;color:#6c5b47;font-size:.82rem}
+.fallback a{text-decoration:underline;color:#5b3a13}
+@media(max-width:760px){
+  .brand{font-size:.92rem;letter-spacing:.2em}
+  .btn{font-size:.82rem;padding:6px 9px;white-space:nowrap}
+  .pages{padding:0 8px 24px}
+  .sheet{min-height:auto;border-radius:10px;padding:46px 18px 50px}
+  .pdf-head,.pdf-foot{left:18px;right:18px}
+  .cover{min-height:auto;padding:60px 0}
+  .cover h2{font-size:1.5rem}
+  .steps,.two-col{grid-template-columns:1fr}
+  .print-btn{display:none}
+}
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  .topbar,.title,.print-btn,.fallback,#kitoku-badge-mount{display:none!important}
+  .pages{max-width:none;padding:0;margin:0}
+  .sheet{width:210mm;height:297mm;min-height:297mm;margin:0;border:0;border-radius:0;box-shadow:none;page-break-after:always;padding:18mm 17mm 17mm}
+  .sheet:last-child{page-break-after:auto}
+  .two-col{grid-template-columns:1.08fr .92fr}
+  .pdf-head,.pdf-foot{left:17mm;right:17mm}
+  .cover{min-height:250mm}
+}
+</style>
+</head>
+<body>
+<div id="kitoku-badge-mount"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="top.html">KITOKU</a>
+    <nav class="nav">
+      <a class="btn" href="academy.html">← Academyへ</a>
+      <a class="btn" href="top.html">入口へ</a>
+    </nav>
+  </div>
+</header>
+<section class="title">
+  <div class="eyebrow">KITOKU ACADEMY</div>
+  <h1>BASIC 04 名前を入れてみよう・姓名鑑定の見方</h1>
+</section>
+<button class="print-btn" type="button" onclick="window.print()">PDF保存・印刷</button>
+
+<main class="pages">
+  <section class="sheet cover">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 04</span><span>姓名鑑定の見方</span></div>
+    <div class="cover-inner">
+      <div class="label">BASIC 04</div>
+      <h2>名前を入れてみよう<br>姓名鑑定の見方</h2>
+      <p class="lead">生年月日の星に加えて、名前もあなたを形づくっています。姓名鑑定は、名前を点数で裁くものではありません。名前という器の構造を知り、どう活かすかを考える入口です。</p>
+      <div class="steps">
+        <div class="step"><div class="step-k">STEP 1</div><div class="step-title">五格を知る</div><div class="step-text">名前を5つの部位で読む</div></div>
+        <div class="step"><div class="step-k">STEP 2</div><div class="step-title">五大真理を知る</div><div class="step-text">画数だけじゃない5つの見方</div></div>
+        <div class="step"><div class="step-k">STEP 3</div><div class="step-title">点数に縛られない</div><div class="step-text">名前は器、活かすのは意志</div></div>
+      </div>
+      <div class="purpose">
+        <div class="purpose-title">このPDFの目的</div>
+        <p>姓名鑑定は「良い名前・悪い名前」を決めるものではありません。名前の構造を知り、自分の傾向を理解し、意志で活かすための地図です。</p>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>1</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 04</span><span>五格 - 名前の5つの窓</span></div>
+    <div class="section-title"><div class="section-num">1</div><h2>五格 - 名前を5つの部位で読む</h2></div>
+    <div class="two-col">
+      <div>
+        <p class="intro">名前は、ひとつの点数だけで見るものではありません。5つの格に分けることで、家系、性格の中心、幼少期、対人関係、人生全体をそれぞれ確認します。</p>
+        <table class="truth-table">
+          <thead><tr><th>格</th><th>何を見る</th><th>どう出す</th></tr></thead>
+          <tbody>
+            <tr><td><span class="truth-name">天格</span></td><td>家系・先祖から受け継ぐもの</td><td>姓の合計画数</td></tr>
+            <tr><td><span class="truth-name">人格</span></td><td>性格の中心・才能</td><td>姓の最後の字＋名の最初の字</td></tr>
+            <tr><td><span class="truth-name">地格</span></td><td>幼少期・基礎・才能の芽</td><td>名の合計画数</td></tr>
+            <tr><td><span class="truth-name">外格</span></td><td>対人関係・社会からの見られ方</td><td>総格から人格を引く</td></tr>
+            <tr><td><span class="truth-name">総格</span></td><td>人生全体・晩年</td><td>姓名すべての合計画数</td></tr>
+          </tbody>
+        </table>
+        <div class="amber-box"><div class="box-title amber">5つの窓から見る</div><p>5つの格は、名前を5つの窓から見るようなもの。どれか一つが全てではなく、重なりで一人の名前を形づくります。</p></div>
+      </div>
+      <div class="mini-screen" aria-label="life.html姓名鑑定結果の画面例">
+        <div class="screen-head">LIFE NAME READING IMAGE</div>
+        <div class="screen-main">
+          <div class="screen-title">姓名鑑定</div>
+          <div class="screen-sub">名前を点数ではなく、構造として見る</div>
+          <div class="screen-grid">
+            <div class="screen-card focus"><small>人格</small><strong>性格の中心</strong><span>才能・判断の軸</span></div>
+            <div class="screen-card"><small>地格</small><strong>基礎の力</strong><span>幼少期・才能の芽</span></div>
+            <div class="screen-card"><small>外格</small><strong>社会の窓</strong><span>人からの見られ方</span></div>
+            <div class="screen-card"><small>総格</small><strong>人生全体</strong><span>晩年までの流れ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>2</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 04</span><span>五大真理</span></div>
+    <div class="section-title"><div class="section-num">2</div><h2>五大真理 - 画数だけじゃない5つの見方</h2></div>
+    <p class="intro">名前の吉凶は、画数だけでは決まりません。KITOKUでは、名前を5つの真理で総合的に見ます。数字は大切ですが、数字だけで名前を裁かないことが大切です。</p>
+    <table class="summary-table">
+      <thead><tr><th>真理</th><th>見るもの</th></tr></thead>
+      <tbody>
+        <tr><td><span class="truth-name">読み下し</span></td><td>音・形・意味の響き。KITOKUで最も重視する見方です。</td></tr>
+        <tr><td><span class="truth-name">五行の配列</span></td><td>木・火・土・金・水のバランスを見ます。</td></tr>
+        <tr><td><span class="truth-name">陰陽の配列</span></td><td>画数の奇数（陽）・偶数（陰）の並びを見ます。</td></tr>
+        <tr><td><span class="truth-name">天地の配合</span></td><td>姓と名の最初の字の関係を見ます。</td></tr>
+        <tr><td><span class="truth-name">画数</span></td><td>各格の画数が持つ気質を見ます。</td></tr>
+      </tbody>
+    </table>
+    <div class="green-box"><div class="box-title green">画数は5つのうちの1つ</div><p>多くの姓名判断は画数だけで決めますが、KITOKUでは画数は5つのうちの1つ。しかも一番重視するのは、読み下し（響き）です。だから画数の点数が低くても、それだけで悪い名前とは限りません。</p></div>
+    <div class="blue-box"><div class="box-title blue">不安になるためではなく、理解するために見る</div><p>気になる結果が出た時ほど、ひとつの数字だけで判断しないでください。音、意味、五行、陰陽、天地、画数を重ねて、名前という器の全体を見ます。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>3</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 04</span><span>点数に縛られない</span></div>
+    <div class="section-title"><div class="section-num">3</div><h2>点数に縛られない - 名前は器、活かすのは意志</h2></div>
+    <p class="intro">姓名鑑定を見ると、点数や気になる配列が出ることがあります。でも、それはあなたを縛るためのものではありません。</p>
+    <div class="big-statement">
+      <h3>この世に絶対100点の名前はない</h3>
+      <p>どんな名前にも、強みと課題があります。課題のある配列は呪いではありません。どんな摩擦を通して自分を磨くかを教えてくれる、砥石（といし）のようなテーマです。</p>
+    </div>
+    <div class="practice-list">
+      <div class="practice-item"><div class="practice-icon">心</div><div><strong>名前の法則を超えるもの</strong><span>名前の法則を超えるのは、あなた自身の生き方と心構えです。結果を知った上で、どう使うかを選びます。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">器</div><div><strong>同じ器でも、使い方で変わる</strong><span>名前は器です。同じ器でも、何を入れて、どう扱うかで人生の響きは変わります。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">補</div><div><strong>気になる時は補う方法もある</strong><span>どうしても気になる時は、呼び名や通名で気質を補う方法があります。深掘りの回で扱います。</span></div></div>
+    </div>
+    <div class="amber-box"><div class="box-title amber">採点表ではなく、地図として見る</div><p>点数に一喜一憂しないでください。姓名鑑定は、あなたを裁く採点表ではなく、自分の器を知って活かすための地図です。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>4</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 04</span><span>実践と次に見るもの</span></div>
+    <div class="section-title"><div class="section-num">4</div><h2>名前を入れてみよう</h2></div>
+    <p class="intro">life.html やパーソナルレポートで、自分の名前（漢字フルネーム）を入れて鑑定してみましょう。見るポイントは、点数よりも構造です。</p>
+    <div class="practice-list">
+      <div class="practice-item"><div class="practice-icon">1</div><div><strong>どの格が強いかを見る</strong><span>人格、地格、外格、総格など、どこに特徴が出ているかを眺めます。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">2</div><div><strong>五行の多い・足りないを見る</strong><span>木火土金水のバランスを見ます。足りない五行は、色・食・方位で補う考え方につながります。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">3</div><div><strong>点数ではなく傾向を見る</strong><span>点数は入口です。大切なのは、自分の名前がどんな器で、どう活かせるかです。</span></div></div>
+    </div>
+    <div class="green-box"><div class="box-title green">まずは眺めるだけでいい</div><p>最初から判断しようとしなくて大丈夫です。5つの格と五行のバランスを眺めるだけでも、自分の名前との向き合い方が変わります。</p></div>
+    <div class="next-card">
+      <h3>次に見るもの：BASIC 05 今日の方位盤の見方</h3>
+      <p>生年月日の星・名前を知ったら、次は動き方です。方位盤で、日々の吉方と整え方を読んでいきます。</p>
+    </div>
+    <div class="green-box"><div class="box-title green">Y理論の締め</div><p>名前は変えられなくても、活かし方は選べます。姓名鑑定は「あなたはこういう名前です」で終わるのではなく、「だからこう活かそう」と自分で決めるための地図です。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>5</span></div>
+  </section>
+</main>
+<p class="fallback">PDFファイルとして開く場合は <a href="kitoku_academy_basic_04.pdf">こちら</a></p>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('kitoku-sw.js').catch(function(){});
+  });
+}
+</script>
+<script src="kitoku-badge.js"></script>
+</body>
+</html>
