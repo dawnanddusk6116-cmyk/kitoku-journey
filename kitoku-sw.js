@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-basic02-video-v20260727m';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-basic03-v20260727n';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -7,6 +7,7 @@ const KITOKU_CORE = [
   './academy_pdf_00.html',
   './academy_pdf_01.html',
   './academy_pdf_basic_02.html',
+  './academy_pdf_basic_03.html',
   './academy_pdf_start_01.html',
   './academy_pdf_start_02.html',
   './academy_pdf_start_03.html',
@@ -21,6 +22,7 @@ const KITOKU_CORE = [
   './kitoku_academy_00.pdf',
   './kitoku_academy_01.pdf',
   './kitoku_academy_basic_02.pdf',
+  './kitoku_academy_basic_03.pdf',
   './kitoku_academy_start_01.pdf',
   './kitoku_academy_start_02.pdf',
   './kitoku_academy_start_03.pdf',
@@ -67,6 +69,11 @@ const KITOKU_CORE = [
   './academy_pages/guide_travel/page-6.png',
   './academy_pages/guide_travel/page-7.png',
   './academy_pages/guide_travel/page-8.png',
+  './academy_pages/basic03/page-1.png',
+  './academy_pages/basic03/page-2.png',
+  './academy_pages/basic03/page-3.png',
+  './academy_pages/basic03/page-4.png',
+  './academy_pages/basic03/page-5.png',
   './academy_pages/00/page-1.png',
   './academy_pages/00/page-2.png',
   './academy_pages/00/page-3.png',

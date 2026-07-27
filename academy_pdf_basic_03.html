@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f0ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<title>BASIC 03 隠れた才能と人生の舞台 | KITOKU Academy</title>
+<style>
+:root{
+  --bg:#f4f0ea;
+  --paper:#fffdf8;
+  --ink:#4b2f12;
+  --muted:#746556;
+  --line:#dfd3c3;
+  --gold:#a87918;
+  --amber:#d7ad50;
+  --green:#3f7c57;
+  --green-bg:#f1f8f0;
+  --soft:#fbf7ee;
+  --blue:#386d96;
+  --blue-bg:#eef7fb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.85}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(244,240,234,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:920px;width:100%;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.brand{letter-spacing:.26em;font-size:1rem;color:#7a5017;white-space:nowrap}
+.nav{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn{border:1px solid #d6bf93;border-radius:10px;padding:7px 11px;background:#fffaf0;color:#5b3a13;font-size:.86rem;font-weight:700}
+.title{max-width:920px;width:100%;margin:0 auto;padding:12px 14px 10px;min-width:0}
+.eyebrow{letter-spacing:.25em;color:#7b5ea7;font-size:.68rem;font-weight:700}
+h1{font-size:1.18rem;line-height:1.45;margin:3px 0 0;font-weight:600;overflow-wrap:anywhere}
+.pages{max-width:920px;width:100%;margin:0 auto;padding:0 10px 28px;min-width:0}
+.sheet{position:relative;min-height:1120px;margin:0 0 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 24px rgba(70,44,14,.05);padding:54px 54px 58px}
+.pdf-head,.pdf-foot{position:absolute;left:54px;right:54px;display:flex;justify-content:space-between;align-items:center;color:#9a8260;font-size:.68rem;letter-spacing:.12em}
+.pdf-head{top:24px;border-bottom:1px solid #eadfce;padding-bottom:8px}
+.pdf-foot{bottom:22px;border-top:1px solid #eadfce;padding-top:8px}
+.cover{display:flex;min-height:1000px;align-items:center;justify-content:center;text-align:center}
+.cover-inner{width:100%}
+.label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #d8ba74;background:#fff8e8;color:#7a5017;border-radius:999px;padding:7px 18px;font-weight:800;letter-spacing:.18em;font-size:.82rem}
+.cover h2{font-size:2.05rem;line-height:1.55;letter-spacing:.09em;margin:22px 0 12px;font-weight:600}
+.lead{max-width:640px;margin:0 auto 28px;color:#665545;font-size:1rem;line-height:2}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0}
+.step{border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:18px 14px;text-align:left}
+.step-k{font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:7px}
+.step-title{font-size:1rem;font-weight:800;color:var(--ink);line-height:1.5;margin-bottom:5px}
+.step-text{font-size:.78rem;color:var(--muted);line-height:1.75}
+.purpose{border:1px solid #d8ba74;background:#fff8e8;border-radius:16px;padding:18px 20px;text-align:left;margin-top:26px}
+.purpose-title{font-weight:800;color:#7a5017;letter-spacing:.08em;margin-bottom:6px}
+.purpose p{margin:0;color:#5f4f3f;font-size:.9rem;line-height:1.95}
+.section-title{display:flex;align-items:center;gap:12px;margin:8px 0 22px}
+.section-num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;border:1px solid #d8ba74;color:var(--gold);font-weight:800}
+.section-title h2{font-size:1.45rem;line-height:1.5;margin:0;font-weight:700;letter-spacing:.06em}
+.intro{color:#665545;font-size:.92rem;margin:0 0 18px}
+.two-col{display:grid;grid-template-columns:1.08fr .92fr;gap:22px;align-items:start}
+.note-box,.green-box,.amber-box,.blue-box{border-radius:14px;padding:16px 18px;margin:18px 0}
+.amber-box{border:1px solid #d8ba74;background:#fff8e8}
+.green-box{border:1px solid rgba(63,124,87,.35);background:var(--green-bg)}
+.blue-box{border:1px solid rgba(56,109,150,.3);background:var(--blue-bg)}
+.note-box{border:1px solid #dfd3c3;background:#fbf7ee}
+.box-title{font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.box-title.amber{color:#7a5017}.box-title.green{color:var(--green)}.box-title.blue{color:var(--blue)}
+.note-box p,.green-box p,.amber-box p,.blue-box p{margin:0;font-size:.86rem;color:#5f4f3f;line-height:1.9}
+.role-card{border:1px solid #dfd3c3;background:#fffdf8;border-radius:14px;padding:15px;margin-bottom:14px}
+.role-k{font-size:.7rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:4px}
+.role-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-bottom:4px}
+.role-card p{font-size:.84rem;color:#5f4f3f;line-height:1.9;margin:0}
+.mini-screen{border:1px solid #dfd3c3;border-radius:18px;background:linear-gradient(180deg,#fffdf8,#fbf7ee);padding:18px;box-shadow:0 10px 22px rgba(70,44,14,.05)}
+.screen-head{font-size:.65rem;letter-spacing:.18em;color:#9b7a2a;font-weight:800;text-align:center;margin-bottom:14px}
+.screen-main{border:1px solid #eadfce;border-radius:14px;background:#fff;padding:14px}
+.big-num{font-size:2.3rem;color:#b7d2ed;line-height:1;font-weight:600}
+.screen-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-top:-8px}
+.screen-sub{font-size:.74rem;color:#6c5b47;margin-bottom:12px}
+.screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.screen-card{border:1px solid #eadfce;border-radius:12px;background:#fffdf8;padding:10px}
+.screen-card.focus{background:#fff8e8;border-color:#d8ba74}
+.screen-card small{display:block;color:#a87918;font-weight:800;font-size:.62rem;margin-bottom:2px}
+.screen-card strong{display:block;font-size:.84rem;color:#4b2f12}
+.screen-card span{font-size:.68rem;color:#6c5b47}
+.use-list{display:grid;gap:12px;margin:16px 0}
+.use-item{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:13px}
+.use-icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;color:#a87918;border:1px solid #d8ba74;font-weight:800}
+.use-item strong{display:block;color:#4b2f12;margin-bottom:3px}
+.use-item span{font-size:.84rem;color:#5f4f3f;line-height:1.75}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.compare-card{border:1px solid #dfd3c3;border-radius:16px;background:#fff;padding:16px}
+.compare-card.inner{border-color:#d8ba74;background:#fff8e8}
+.compare-card.outer{border-color:rgba(63,124,87,.35);background:#f1f8f0}
+.compare-card h3{margin:0 0 7px;font-size:1rem;letter-spacing:.06em}
+.compare-card p{margin:0;color:#5f4f3f;font-size:.86rem;line-height:1.9}
+.max-table,.summary-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #dfd3c3;border-radius:14px;overflow:hidden;background:#fff}
+.max-table th,.summary-table th{background:#f6ecd6;color:#6c4715;font-size:.75rem;letter-spacing:.08em;text-align:left;padding:10px;border-bottom:1px solid #dfd3c3}
+.max-table td,.summary-table td{padding:10px;border-bottom:1px solid #eee3d4;vertical-align:top;font-size:.8rem;line-height:1.7;color:#4f4034}
+.max-table tr:last-child td,.summary-table tr:last-child td{border-bottom:none}
+.taste-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0 18px}
+.taste{border:1px solid #eadfce;background:#fffdf8;border-radius:12px;padding:10px;text-align:center}
+.taste strong{display:block;color:#4b2f12;font-size:.82rem}
+.taste span{display:block;color:#7a5017;font-size:.72rem;margin-top:3px}
+.summary-list{display:grid;gap:12px;margin:18px 0}
+.summary-item{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:14px}
+.summary-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;color:#a87918;border:1px solid #d8ba74;font-weight:800}
+.summary-item strong{display:block;color:#4b2f12;margin-bottom:3px}
+.summary-item span{font-size:.86rem;color:#5f4f3f;line-height:1.8}
+.next-card{border:1px solid rgba(63,124,87,.35);background:linear-gradient(135deg,#f1f8f0,#fffdf8);border-radius:16px;padding:20px;margin-top:18px}
+.next-card h3{margin:0 0 7px;color:var(--green);font-size:1.05rem;letter-spacing:.06em}
+.next-card p{margin:0;color:#4f4034;font-size:.88rem}
+.print-btn{position:fixed;right:18px;bottom:18px;z-index:10;border:1px solid #d6bf93;background:#fffaf0;color:#5b3a13;border-radius:999px;padding:11px 16px;font-weight:800;box-shadow:0 8px 20px rgba(70,44,14,.12)}
+.fallback{max-width:920px;margin:0 auto;padding:0 14px 18px;color:#6c5b47;font-size:.82rem}
+.fallback a{text-decoration:underline;color:#5b3a13}
+@media(max-width:760px){
+  .brand{font-size:.92rem;letter-spacing:.2em}
+  .btn{font-size:.82rem;padding:6px 9px;white-space:nowrap}
+  .pages{padding:0 8px 24px}
+  .sheet{min-height:auto;border-radius:10px;padding:46px 18px 50px}
+  .pdf-head,.pdf-foot{left:18px;right:18px}
+  .cover{min-height:auto;padding:60px 0}
+  .cover h2{font-size:1.5rem}
+  .steps,.two-col,.compare{grid-template-columns:1fr}
+  .taste-grid{grid-template-columns:1fr 1fr}
+  .print-btn{display:none}
+}
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  .topbar,.title,.print-btn,.fallback,#kitoku-badge-mount{display:none!important}
+  .pages{max-width:none;padding:0;margin:0}
+  .sheet{width:210mm;height:297mm;min-height:297mm;margin:0;border:0;border-radius:0;box-shadow:none;page-break-after:always;padding:18mm 17mm 17mm}
+  .sheet:last-child{page-break-after:auto}
+  .two-col{grid-template-columns:1.08fr .92fr}
+  .compare{grid-template-columns:1fr 1fr}
+  .taste-grid{grid-template-columns:repeat(5,1fr)}
+  .pdf-head,.pdf-foot{left:17mm;right:17mm}
+  .cover{min-height:250mm}
+}
+</style>
+</head>
+<body>
+<div id="kitoku-badge-mount"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="top.html">KITOKU</a>
+    <nav class="nav">
+      <a class="btn" href="academy.html">← Academyへ</a>
+      <a class="btn" href="top.html">入口へ</a>
+    </nav>
+  </div>
+</header>
+<section class="title">
+  <div class="eyebrow">KITOKU ACADEMY</div>
+  <h1>BASIC 03 隠れた才能と人生の舞台</h1>
+</section>
+<button class="print-btn" type="button" onclick="window.print()">PDF保存・印刷</button>
+
+<main class="pages">
+  <section class="sheet cover">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 03</span><span>隠れた才能と人生の舞台</span></div>
+    <div class="cover-inner">
+      <div class="label">BASIC 03</div>
+      <h2>隠れた才能と<br>人生の舞台</h2>
+      <p class="lead">本命星・月命星の他にも、あなたには隠れた3つの星があります。傾斜（隠れた才能）、同会（活躍する舞台）、最大吉方（幸せへの最短ルート）。この3つを使い分けると、動き方が見えてきます。</p>
+      <div class="steps">
+        <div class="step"><div class="step-k">STEP 1</div><div class="step-title">傾斜を知る</div><div class="step-text">自分でも気づいていない潜在能力</div></div>
+        <div class="step"><div class="step-k">STEP 2</div><div class="step-title">同会を知る</div><div class="step-text">求められる舞台と、縁が広がる場所</div></div>
+        <div class="step"><div class="step-k">STEP 3</div><div class="step-title">最大吉方を使う</div><div class="step-text">色と食べ物で日常に取り入れる</div></div>
+      </div>
+      <div class="purpose">
+        <div class="purpose-title">このPDFの目的</div>
+        <p>計算を覚える必要はありません。アプリが3つの星を出してくれます。大事なのは、どの星を・どんな時に使うか。この使い分けが、気学を人生の道具にします。</p>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>1</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 03</span><span>傾斜 - 隠れた才能</span></div>
+    <div class="section-title"><div class="section-num">1</div><h2>傾斜 - 隠れた才能</h2></div>
+    <div class="two-col">
+      <div>
+        <p class="intro">傾斜は、自分の内面・潜在意識に眠る才能です。自分では当たり前すぎて気づきにくい力であり、困難な時に自分を助けてくれる「隠れた助っ人」の星でもあります。</p>
+        <div class="role-card"><div class="role-k">HOW TO USE</div><div class="role-title">能力を伸ばしたい時に使う</div><p>成長したい、苦手を乗り越えたい、自分の力をもう一段引き出したい。そんな時は、傾斜の星が示す性質を意識します。</p></div>
+        <div class="role-card"><div class="role-k">BACKGROUND</div><div class="role-title">算出はアプリに任せる</div><p>背景としては、月命星を中心にした盤で、本命星が座る方位の星を見ます。ただし、この回で計算方法を覚える必要はありません。</p></div>
+        <div class="amber-box"><div class="box-title amber">自分では才能に見えない力</div><p>傾斜は、当たり前すぎて自分では才能と気づかない力です。人に「それ、すごいね」と言われるのに、自分ではピンと来ないこと。それが傾斜かもしれません。</p></div>
+      </div>
+      <div class="mini-screen" aria-label="kyusei_v2の傾斜カード例">
+        <div class="screen-head">KYUSEI V2 CARD IMAGE</div>
+        <div class="screen-main">
+          <div class="big-num">6</div>
+          <div class="screen-title">六白金星</div>
+          <div class="screen-sub">Royal Sky / 気高き天</div>
+          <div class="screen-grid">
+            <div class="screen-card"><small>本命星</small><strong>六白金星</strong><span>魂の設計図</span></div>
+            <div class="screen-card"><small>月命星</small><strong>一白水星</strong><span>内なる深淵</span></div>
+            <div class="screen-card focus"><small>傾斜</small><strong>一白水星</strong><span>才能の方向</span></div>
+            <div class="screen-card"><small>同会</small><strong>二黒土星</strong><span>社会との響き</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>2</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 03</span><span>同会 - 人生の舞台</span></div>
+    <div class="section-title"><div class="section-num">2</div><h2>同会 - 人生の舞台と縁</h2></div>
+    <p class="intro">同会は、社会から求められる役割、活躍する環境、引き寄せるご縁を見ます。自分の中にある力ではなく、外の世界でどんな舞台に立ちやすいかを教えてくれる星です。</p>
+    <div class="use-list">
+      <div class="use-item"><div class="use-icon">外</div><div><strong>人脈を広げたい時に使う</strong><span>営業、発信、紹介、チームづくりなど、外に向かって広がりたい時は、同会の星を意識します。</span></div></div>
+      <div class="use-item"><div class="use-icon">縁</div><div><strong>キーパーソンを見つける</strong><span>同会星に該当する人物は、舞台を広げるキーパーソンです。その人と組むことで、役割や縁が自然に広がることがあります。</span></div></div>
+    </div>
+    <div class="compare">
+      <div class="compare-card inner">
+        <h3>傾斜 = 自分を育てる星</h3>
+        <p>内側の才能・潜在能力を伸ばす星です。成長したい時、困難を越えたい時、自分の力を育てたい時に見ます。</p>
+      </div>
+      <div class="compare-card outer">
+        <h3>同会 = 自分を広げる星</h3>
+        <p>社会で立つ舞台・ご縁・キーパーソンを見ます。人脈、営業、事業の広がりを考える時に使います。</p>
+      </div>
+    </div>
+    <div class="green-box"><div class="box-title green">内と外を分けて使う</div><p>傾斜が「自分を育てる星」なら、同会は「自分を広げる星」。内と外、両方を知ると、伸びる時と広がる時の動き方が分かります。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>3</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 03</span><span>最大吉方 - 日常の使い方</span></div>
+    <div class="section-title"><div class="section-num">3</div><h2>最大吉方 - 幸せへの最短ルート</h2></div>
+    <p class="intro">最大吉方は、本命星と月命星の両方を満たす、その人固有の最強の方位・星です。旅行や引越しだけでなく、色や食べ物として日常に取り入れることができます。</p>
+    <div class="two-col">
+      <div>
+        <div class="role-card"><div class="role-k">COLOR</div><div class="role-title">色として身につける</div><p>最大吉方の星が示す色を、服・小物・名刺・部屋の小さなアクセントに入れます。毎日少しずつ整える使い方です。</p></div>
+        <div class="role-card"><div class="role-k">FOOD</div><div class="role-title">味として取り入れる</div><p>最大吉方の星に合う味覚・食物を、食事の中に取り入れます。無理に特別なものを選ばず、日常に寄せるのが続けるコツです。</p></div>
+      </div>
+      <div>
+        <table class="max-table">
+          <thead><tr><th>味覚</th><th>星</th></tr></thead>
+          <tbody>
+            <tr><td>塩味</td><td>一白水星</td></tr>
+            <tr><td>甘味</td><td>二黒土星・五黄土星・八白土星</td></tr>
+            <tr><td>酸味</td><td>三碧木星・四緑木星</td></tr>
+            <tr><td>辛味</td><td>六白金星・七赤金星</td></tr>
+            <tr><td>苦味</td><td>九紫火星</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="amber-box"><div class="box-title amber">今日からできる最大吉方</div><p>最大吉方の色と食べ物は、旅行や引越しができなくても、今日から取り入れられます。ラッキーカラーの服、その星の味の食事。小さな一歩から始めてください。</p></div>
+    <div class="blue-box"><div class="box-title blue">効いたサイン</div><p>最大吉方に行った後、その方位の食べ物や色が無性に好きになることがあります。些細なことで笑えるようになるのも、幸福度のバロメーターです。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>4</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 03</span><span>3つの星の使い分け</span></div>
+    <div class="section-title"><div class="section-num">4</div><h2>3つの星の使い分け</h2></div>
+    <table class="summary-table">
+      <thead><tr><th>星</th><th>何を見る</th><th>いつ使う</th></tr></thead>
+      <tbody>
+        <tr><td><strong>傾斜</strong></td><td>隠れた才能・潜在能力（内）</td><td>能力を伸ばしたい・成長したい時</td></tr>
+        <tr><td><strong>同会</strong></td><td>活躍する舞台・縁・キーパーソン（外）</td><td>人脈や事業を広げたい時</td></tr>
+        <tr><td><strong>最大吉方</strong></td><td>幸せへの最短ルート（色・食）</td><td>日常で運を整えたい時</td></tr>
+      </tbody>
+    </table>
+    <div class="summary-list">
+      <div class="summary-item"><div class="summary-icon">内</div><div><strong>自分の力を育てるなら、傾斜</strong><span>自分の中に眠る才能を伸ばしたい時に見ます。</span></div></div>
+      <div class="summary-item"><div class="summary-icon">外</div><div><strong>舞台と縁を広げるなら、同会</strong><span>人脈、営業、事業、紹介など、外へ広がる時に見ます。</span></div></div>
+      <div class="summary-item"><div class="summary-icon">日</div><div><strong>毎日を整えるなら、最大吉方</strong><span>色や食べ物として、今日から小さく取り入れます。</span></div></div>
+    </div>
+    <div class="next-card">
+      <h3>次に見るもの：BASIC 04 名前を入れてみよう・姓名鑑定の見方</h3>
+      <p>生年月日の星に加えて、名前（姓名）から自分を読みます。名前を点数ではなく、意志や気質を育てる器として見るための基礎へ進みます。</p>
+    </div>
+    <div class="green-box"><div class="box-title green">Y理論の締め</div><p>3つの星は「こう使いなさい」という命令ではありません。自分の中にある力と舞台を知り、どう動くかを自分で選ぶための地図です。焦らず、一つずつ試してみてください。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>5</span></div>
+  </section>
+</main>
+<p class="fallback">PDFファイルとして開く場合は <a href="kitoku_academy_basic_03.pdf">こちら</a></p>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('kitoku-sw.js').catch(function(){});
+  });
+}
+</script>
+<script src="kitoku-badge.js"></script>
+</body>
+</html>
