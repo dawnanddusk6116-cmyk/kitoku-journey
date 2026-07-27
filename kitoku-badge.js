@@ -10,6 +10,16 @@
     return m[1]+'-'+String(Number(m[2])).padStart(2,'0')+'-'+String(Number(m[3])).padStart(2,'0');
   }
 
+  function isValidBirthDate(y,m,d){
+    y=parseInt(y,10);m=parseInt(m,10);d=parseInt(d,10);
+    if(!Number.isInteger(y)||!Number.isInteger(m)||!Number.isInteger(d))return false;
+    if(y<1900||y>2100)return false;
+    if(m<1||m>12)return false;
+    if(d<1||d>31)return false;
+    var dt=new Date(y,m-1,d);
+    return dt.getFullYear()===y&&dt.getMonth()===(m-1)&&dt.getDate()===d;
+  }
+
   var PAIR_STARS={
     1:{k:'一白水星',e:'水',nature:'水'},
     2:{k:'二黒土星',e:'土',nature:'大地'},
@@ -66,14 +76,18 @@
     var mm=m?Number(m.value)||0:0;
     var dd=d?Number(d.value)||0:0;
     var name=n?String(n.value||'').trim():'';
-    var starNo=yy&&mm?calcPairHonmei(yy,mm):0;
+    var hasAny=!!(yy||mm||dd);
+    var valid=yy&&mm&&dd&&isValidBirthDate(yy,mm,dd);
+    var invalid=hasAny&&!valid;
+    var starNo=valid?calcPairHonmei(yy,mm):0;
     var star=starNo?PAIR_STARS[starNo]:null;
-    var birth=yy&&mm?(String(yy)+'.'+String(mm)+(dd?'.'+String(dd):'')):'';
-    return {label:label,name:name,birth:birth,starNo:starNo,star:star};
+    var birth=hasAny?(String(yy||'?')+'.'+String(mm||'?')+'.'+String(dd||'?')):'';
+    return {label:label,name:name,birth:birth,starNo:starNo,star:star,invalid:invalid};
   }
 
   function pairSideText(side){
     var who=side.name||side.label;
+    if(side.invalid) return who+'：日付が正しくありません';
     if(side.star) return who+'：'+(side.birth||'生年月日未入力')+'（'+side.star.k+'）';
     return who+'：未入力';
   }
@@ -82,11 +96,14 @@
     var me=getPairSide(cfg.myY,cfg.myM,cfg.myD,null,cfg.myLabel);
     var partner=getPairSide(cfg.partnerY,cfg.partnerM,cfg.partnerD,cfg.partnerName,cfg.partnerLabel);
     var complete=!!(me.star && partner.star);
-    var label=complete ? me.star.k+' × '+partner.star.k+' の関係を見ています' : '相性を見る二人を入力してください';
+    var invalid=!!(me.invalid||partner.invalid);
+    var label=invalid ? '生年月日が正しくありません' : (complete ? me.star.k+' × '+partner.star.k+' の関係を見ています' : '相性を見る二人を入力してください');
     var desc=pairSideText(me)+' × '+pairSideText(partner);
     var detail='';
     if(complete){
       detail=(me.name||cfg.myLabel)+'（'+me.star.nature+'） × '+(partner.name||cfg.partnerLabel)+'（'+partner.star.nature+'）';
+    }else if(invalid){
+      detail='実在する日付を入力すると、二人の星を表示します。全体の本人データは上書きしません。';
     }else{
       detail='入力欄の生年月日を変えると、この表示も自動で変わります。全体の本人データは上書きしません。';
     }
