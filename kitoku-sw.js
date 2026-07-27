@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-alltools-self-order-v20260727u';
+const KITOKU_CACHE = 'kitoku-pwa-v6-alltools-text-fix-v20260727v';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
