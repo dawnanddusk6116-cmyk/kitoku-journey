@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-basic02-v20260727l';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-basic02-video-v20260727m';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
