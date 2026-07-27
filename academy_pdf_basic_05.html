@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f0ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KITOKU">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="kitoku-manifest.json">
+<link rel="apple-touch-icon" href="kitoku-icon-180.png">
+<title>BASIC 05 今日の方位盤の見方 | KITOKU Academy</title>
+<style>
+:root{
+  --bg:#f4f0ea;
+  --paper:#fffdf8;
+  --ink:#4b2f12;
+  --muted:#746556;
+  --line:#dfd3c3;
+  --gold:#a87918;
+  --amber:#d7ad50;
+  --green:#3f7c57;
+  --green-bg:#f1f8f0;
+  --soft:#fbf7ee;
+  --blue:#386d96;
+  --blue-bg:#eef7fb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.85}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(244,240,234,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:920px;width:100%;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.brand{letter-spacing:.26em;font-size:1rem;color:#7a5017;white-space:nowrap}
+.nav{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn{border:1px solid #d6bf93;border-radius:10px;padding:7px 11px;background:#fffaf0;color:#5b3a13;font-size:.86rem;font-weight:700}
+.title{max-width:920px;width:100%;margin:0 auto;padding:12px 14px 10px;min-width:0}
+.eyebrow{letter-spacing:.25em;color:#7b5ea7;font-size:.68rem;font-weight:700}
+h1{font-size:1.18rem;line-height:1.45;margin:3px 0 0;font-weight:600;overflow-wrap:anywhere}
+.pages{max-width:920px;width:100%;margin:0 auto;padding:0 10px 28px;min-width:0}
+.sheet{position:relative;min-height:1120px;margin:0 0 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 24px rgba(70,44,14,.05);padding:54px 54px 58px}
+.pdf-head,.pdf-foot{position:absolute;left:54px;right:54px;display:flex;justify-content:space-between;align-items:center;color:#9a8260;font-size:.68rem;letter-spacing:.12em}
+.pdf-head{top:24px;border-bottom:1px solid #eadfce;padding-bottom:8px}
+.pdf-foot{bottom:22px;border-top:1px solid #eadfce;padding-top:8px}
+.cover{display:flex;min-height:1000px;align-items:center;justify-content:center;text-align:center}
+.cover-inner{width:100%}
+.label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #d8ba74;background:#fff8e8;color:#7a5017;border-radius:999px;padding:7px 18px;font-weight:800;letter-spacing:.18em;font-size:.82rem}
+.cover h2{font-size:2.02rem;line-height:1.55;letter-spacing:.08em;margin:22px 0 12px;font-weight:600}
+.lead{max-width:650px;margin:0 auto 28px;color:#665545;font-size:1rem;line-height:2}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0}
+.step{border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:18px 14px;text-align:left}
+.step-k{font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:7px}
+.step-title{font-size:1rem;font-weight:800;color:var(--ink);line-height:1.5;margin-bottom:5px}
+.step-text{font-size:.78rem;color:var(--muted);line-height:1.75}
+.purpose{border:1px solid #d8ba74;background:#fff8e8;border-radius:16px;padding:18px 20px;text-align:left;margin-top:26px}
+.purpose-title{font-weight:800;color:#7a5017;letter-spacing:.08em;margin-bottom:6px}
+.purpose p{margin:0;color:#5f4f3f;font-size:.9rem;line-height:1.95}
+.section-title{display:flex;align-items:center;gap:12px;margin:8px 0 22px}
+.section-num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;border:1px solid #d8ba74;color:var(--gold);font-weight:800}
+.section-title h2{font-size:1.42rem;line-height:1.5;margin:0;font-weight:700;letter-spacing:.05em}
+.intro{color:#665545;font-size:.92rem;margin:0 0 18px}
+.two-col{display:grid;grid-template-columns:1.08fr .92fr;gap:22px;align-items:start}
+.note-box,.green-box,.amber-box,.blue-box{border-radius:14px;padding:16px 18px;margin:18px 0}
+.amber-box{border:1px solid #d8ba74;background:#fff8e8}
+.green-box{border:1px solid rgba(63,124,87,.35);background:var(--green-bg)}
+.blue-box{border:1px solid rgba(56,109,150,.3);background:var(--blue-bg)}
+.note-box{border:1px solid #dfd3c3;background:#fbf7ee}
+.box-title{font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.box-title.amber{color:#7a5017}.box-title.green{color:var(--green)}.box-title.blue{color:var(--blue)}
+.note-box p,.green-box p,.amber-box p,.blue-box p{margin:0;font-size:.86rem;color:#5f4f3f;line-height:1.9}
+.role-card{border:1px solid #dfd3c3;background:#fffdf8;border-radius:14px;padding:15px;margin-bottom:14px}
+.role-k{font-size:.7rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:4px}
+.role-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-bottom:4px}
+.role-card p{font-size:.84rem;color:#5f4f3f;line-height:1.9;margin:0}
+.mini-screen{border:1px solid #dfd3c3;border-radius:18px;background:linear-gradient(180deg,#fffdf8,#fbf7ee);padding:18px;box-shadow:0 10px 22px rgba(70,44,14,.05)}
+.screen-head{font-size:.65rem;letter-spacing:.18em;color:#9b7a2a;font-weight:800;text-align:center;margin-bottom:14px}
+.screen-main{border:1px solid #eadfce;border-radius:14px;background:#fff;padding:14px}
+.screen-title{font-size:1.08rem;font-weight:800;color:#4b2f12;margin-bottom:5px}
+.screen-sub{font-size:.74rem;color:#6c5b47;margin-bottom:12px}
+.screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.screen-card{border:1px solid #eadfce;border-radius:12px;background:#fffdf8;padding:10px}
+.screen-card.focus{background:#fff8e8;border-color:#d8ba74}
+.screen-card small{display:block;color:#a87918;font-weight:800;font-size:.62rem;margin-bottom:2px}
+.screen-card strong{display:block;font-size:.84rem;color:#4b2f12}
+.screen-card span{font-size:.68rem;color:#6c5b47}
+.truth-table,.summary-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #dfd3c3;border-radius:14px;overflow:hidden;background:#fff}
+.truth-table th,.summary-table th{background:#f6ecd6;color:#6c4715;font-size:.75rem;letter-spacing:.08em;text-align:left;padding:10px;border-bottom:1px solid #dfd3c3}
+.truth-table td,.summary-table td{padding:10px;border-bottom:1px solid #eee3d4;vertical-align:top;font-size:.8rem;line-height:1.7;color:#4f4034}
+.truth-table tr:last-child td,.summary-table tr:last-child td{border-bottom:none}
+.truth-name{font-weight:800;color:#4b2f12;white-space:nowrap}
+.big-statement{border:1px solid #d8ba74;background:linear-gradient(135deg,#fff8e8,#fffdf8);border-radius:18px;padding:22px;margin:18px 0}
+.big-statement h3{font-size:1.15rem;margin:0 0 8px;color:#7a5017;letter-spacing:.05em}
+.big-statement p{font-size:.92rem;line-height:2;margin:0;color:#4f4034}
+.practice-list{display:grid;gap:12px;margin:16px 0}
+.practice-item{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;border:1px solid #dfd3c3;background:#fffaf1;border-radius:14px;padding:14px}
+.practice-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#fff4d8;color:#a87918;border:1px solid #d8ba74;font-weight:800}
+.practice-item strong{display:block;color:#4b2f12;margin-bottom:3px}
+.practice-item span{font-size:.86rem;color:#5f4f3f;line-height:1.8}
+.next-card{border:1px solid rgba(63,124,87,.35);background:linear-gradient(135deg,#f1f8f0,#fffdf8);border-radius:16px;padding:20px;margin-top:18px}
+.next-card h3{margin:0 0 7px;color:var(--green);font-size:1.05rem;letter-spacing:.06em}
+.next-card p{margin:0;color:#4f4034;font-size:.88rem}
+.print-btn{position:fixed;right:18px;bottom:18px;z-index:10;border:1px solid #d6bf93;background:#fffaf0;color:#5b3a13;border-radius:999px;padding:11px 16px;font-weight:800;box-shadow:0 8px 20px rgba(70,44,14,.12)}
+.fallback{max-width:920px;margin:0 auto;padding:0 14px 18px;color:#6c5b47;font-size:.82rem}
+.fallback a{text-decoration:underline;color:#5b3a13}
+@media(max-width:760px){
+  .brand{font-size:.92rem;letter-spacing:.2em}
+  .btn{font-size:.82rem;padding:6px 9px;white-space:nowrap}
+  .pages{padding:0 8px 24px}
+  .sheet{min-height:auto;border-radius:10px;padding:46px 18px 50px}
+  .pdf-head,.pdf-foot{left:18px;right:18px}
+  .cover{min-height:auto;padding:60px 0}
+  .cover h2{font-size:1.5rem}
+  .steps,.two-col{grid-template-columns:1fr}
+  .print-btn{display:none}
+}
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  .topbar,.title,.print-btn,.fallback,#kitoku-badge-mount{display:none!important}
+  .pages{max-width:none;padding:0;margin:0}
+  .sheet{width:210mm;height:297mm;min-height:297mm;margin:0;border:0;border-radius:0;box-shadow:none;page-break-after:always;padding:18mm 17mm 17mm}
+  .sheet:last-child{page-break-after:auto}
+  .two-col{grid-template-columns:1.08fr .92fr}
+  .pdf-head,.pdf-foot{left:17mm;right:17mm}
+  .cover{min-height:250mm}
+}
+</style>
+</head>
+<body>
+<div id="kitoku-badge-mount"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="top.html">KITOKU</a>
+    <nav class="nav"><a class="btn" href="academy.html">← Academyへ</a><a class="btn" href="top.html">入口へ</a></nav>
+  </div>
+</header>
+<section class="title"><div class="eyebrow">KITOKU ACADEMY</div><h1>BASIC 05 今日の方位盤の見方</h1></section>
+<button class="print-btn" type="button" onclick="window.print()">PDF保存・印刷</button>
+
+<main class="pages">
+  <section class="sheet cover">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 05</span><span>今日の方位盤の見方</span></div>
+    <div class="cover-inner">
+      <div class="label">BASIC 05</div>
+      <h2>今日の方位盤の見方</h2>
+      <p class="lead">自分の星と名前を知ったら、次は「動き方」。方位盤は、いつ・どちらへ動くと運が整うかを教えてくれる地図です。まずは3つの盤の違いと、読み方のコツから確認します。</p>
+      <div class="steps">
+        <div class="step"><div class="step-k">STEP 1</div><div class="step-title">3つの盤を知る</div><div class="step-text">年盤・月盤・日盤の使い分け</div></div>
+        <div class="step"><div class="step-k">STEP 2</div><div class="step-title">有効期間を読む</div><div class="step-text">いつからいつまで効くか</div></div>
+        <div class="step"><div class="step-k">STEP 3</div><div class="step-title">南上と北上</div><div class="step-text">気学式と地図式の違い</div></div>
+      </div>
+      <div class="purpose"><div class="purpose-title">このPDFの目的</div><p>盤の計算を覚える必要はありません。アプリが盤を出してくれます。大事なのは「どの盤を・何に使うか」。この使い分けが、方位を人生の道具にします。</p></div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>1</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 05</span><span>3つの盤の使い分け</span></div>
+    <div class="section-title"><div class="section-num">1</div><h2>3つの盤の使い分け</h2></div>
+    <p class="intro">方位盤には、年盤・月盤・日盤の3種類があります。大きな行動ほど重い盤から、日々の行動ほど軽い盤で見ます。優先順位は、年盤 ＞ 月盤 ＞ 日盤です。</p>
+    <div class="two-col">
+      <div>
+        <table class="summary-table">
+          <thead><tr><th>盤</th><th>何に使う</th><th>例</th></tr></thead>
+          <tbody>
+            <tr><td><span class="truth-name">年盤</span></td><td>人生の大きな決断。1年単位の大きな流れ。</td><td>引越し・転職・結婚・長期旅行</td></tr>
+            <tr><td><span class="truth-name">月盤</span></td><td>実際に動く日程。中期の行動。</td><td>旅行・商談・手術・数週間の移動</td></tr>
+            <tr><td><span class="truth-name">日盤</span></td><td>日々の細かい行動の最終確認。</td><td>今日の外出・買い物・勝負の日</td></tr>
+          </tbody>
+        </table>
+        <div class="amber-box"><div class="box-title amber">行動の重さで盤を選ぶ</div><p>重い決断は年盤から。軽い行動は日盤だけでOK。車のギアのように、年盤は重いギア、月盤は中間ギア、日盤は軽いギアとして使い分けます。</p></div>
+        <div class="green-box"><div class="box-title green">ハザードを混ぜない</div><p>年盤・月盤・日盤は、それぞれ独立した別の地図です。今日の外出を見るのに、年盤の凶方まで気にする必要はありません。見る目的に合う盤を選びます。</p></div>
+      </div>
+      <div class="mini-screen" aria-label="today.html方位盤の画面例">
+        <div class="screen-head">TODAY DIRECTION IMAGE</div>
+        <div class="screen-main">
+          <div class="screen-title">今日の方位盤</div>
+          <div class="screen-sub">目的に合わせて盤を切り替える</div>
+          <div class="screen-grid">
+            <div class="screen-card focus"><small>年盤</small><strong>大きな流れ</strong><span>引越し・転職</span></div>
+            <div class="screen-card focus"><small>月盤</small><strong>実際の日程</strong><span>旅行・商談</span></div>
+            <div class="screen-card"><small>日盤</small><strong>今日の確認</strong><span>外出・買い物</span></div>
+            <div class="screen-card"><small>吉方</small><strong>追い風</strong><span>動く方角の目安</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>2</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 05</span><span>有効期間</span></div>
+    <div class="section-title"><div class="section-num">2</div><h2>有効期間の読み方</h2></div>
+    <p class="intro">盤がいつ切り替わるかを知っておくと、迷いが減ります。気学の暦は、普段のカレンダーと少し違うところがあります。</p>
+    <table class="summary-table">
+      <thead><tr><th>盤</th><th>切り替わり</th><th>有効期間</th></tr></thead>
+      <tbody>
+        <tr><td><span class="truth-name">年盤</span></td><td>2月4日（立春）</td><td>2月4日〜翌年2月3日</td></tr>
+        <tr><td><span class="truth-name">月盤</span></td><td>毎月の節入り（4〜8日頃）</td><td>節入り日〜翌月の節入り前日</td></tr>
+        <tr><td><span class="truth-name">日盤</span></td><td>夜11時（23時）</td><td>その日の23時まで</td></tr>
+      </tbody>
+    </table>
+    <div class="amber-box"><div class="box-title amber">1年は立春から始まる</div><p>気学の1年は1月1日ではなく、2月4日（立春）から始まります。だから2月上旬生まれの人は、前の年の星になることがあります。</p></div>
+    <div class="practice-list">
+      <div class="practice-item"><div class="practice-icon">年</div><div><strong>引越し・転職など</strong><span>人生の土台を動かす時は、まず年盤の大きな流れを確認します。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">月</div><div><strong>旅行・商談など</strong><span>実際に動く月や日程を決める時は、月盤で中期の流れを見ます。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">日</div><div><strong>今日の外出など</strong><span>日々の外出や買い物は、日盤で今日の追い風を確認します。</span></div></div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>3</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 05</span><span>南上と北上</span></div>
+    <div class="section-title"><div class="section-num">3</div><h2>南上と北上 - 2つの盤の向き</h2></div>
+    <div class="two-col">
+      <div>
+        <p class="intro">方位盤には、2つの向きの描き方があります。ひとつは伝統的な気学の「南上」、もうひとつは普段の地図と同じ「北上」です。</p>
+        <div class="role-card"><div class="role-k">KIGAKU STYLE</div><div class="role-title">南上（気学式）</div><p>上が南、下が北。伝統的な気学の盤の描き方です。KITOKUの盤面表示でも使われます。</p></div>
+        <div class="role-card"><div class="role-k">MAP STYLE</div><div class="role-title">北上（地図式）</div><p>上が北、下が南。普段見る地図と同じ向きです。地図感覚で見たい時に分かりやすい表示です。</p></div>
+        <div class="green-box"><div class="box-title green">どちらでも判定は同じ</div><p>最初は「上が南」に戸惑うかもしれません。慣れない間は、地図と同じ北上に切り替えて見てもかまいません。どちらでも方位の判定は同じです。</p></div>
+      </div>
+      <div class="mini-screen" aria-label="南上北上の画面例">
+        <div class="screen-head">DIRECTION VIEW</div>
+        <div class="screen-main">
+          <div class="screen-title">表示の向き</div>
+          <div class="screen-sub">見やすい向きで確認する</div>
+          <div class="practice-list">
+            <div class="practice-item"><div class="practice-icon">南</div><div><strong>南上</strong><span>気学の伝統的な盤。上が南。</span></div></div>
+            <div class="practice-item"><div class="practice-icon">北</div><div><strong>北上</strong><span>地図と同じ向き。上が北。</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>4</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="pdf-head"><span>KITOKU ACADEMY - BASIC 05</span><span>今日の盤と基礎編の修了</span></div>
+    <div class="section-title"><div class="section-num">4</div><h2>まず今日の盤を見てみよう</h2></div>
+    <p class="intro">最初から大きな方位取りを考えなくても大丈夫です。まずはtoday.htmlで今日の日盤を開き、今日の吉方をひとつ覚えるところから始めます。</p>
+    <div class="practice-list">
+      <div class="practice-item"><div class="practice-icon">1</div><div><strong>今日の吉方を見る</strong><span>動くと良い方角を1つ確認します。散歩、外食、買い物の方角を少し寄せてみます。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">2</div><div><strong>凶方は無理に怖がらない</strong><span>避けたい方角を知ることは大切ですが、必要な移動まで止める道具ではありません。</span></div></div>
+      <div class="practice-item"><div class="practice-icon">3</div><div><strong>小さく試す</strong><span>今日の吉方へ少し歩く、買い物に行く。小さな一歩から方位取りは始まります。</span></div></div>
+    </div>
+    <div class="amber-box"><div class="box-title amber">基礎編で学んだこと</div><p>自分の星を知り、星の意味を読み、隠れた才能を見て、名前の器を知り、方位盤で動き方を確認する。これで「自分を知り、動き方を知る」土台ができました。</p></div>
+    <div class="next-card"><h3>次に見るもの - 応用編へ</h3><p>吉方位の使い方、毎日の処方箋、人間関係、ビジネスなど、ここからは場面別の実践へ進みます。</p></div>
+    <div class="green-box"><div class="box-title green">Y理論の締め</div><p>方位盤は「この日は動くな」という禁止の道具ではありません。いつ動けば追い風に乗れるかを知り、自分でタイミングを選ぶための地図です。基礎編おつかれさまでした。ここからは、実際の場面で使っていきましょう。</p></div>
+    <div class="pdf-foot"><span>KITOKU @ JOURNEY</span><span>5</span></div>
+  </section>
+</main>
+<p class="fallback">PDFとして保存する場合は、画面右下の「PDF保存・印刷」から印刷画面を開き、「PDFに保存」を選んでください。</p>
+<script src="kitoku-badge.js"></script>
+</body>
+</html>
