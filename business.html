@@ -1834,6 +1834,51 @@ function alertInvalidBirthDate(){
   alert('生年月日が正しくありません。実在する日付を入力してください。');
 }
 
+function pal(n,C){return((n-C+4)%9+9)%9+1;}
+function calcK(h,t){return pal(h,t);}
+
+var KEISHA_BIZ={
+  1:{talent:'静かに深く観察し、相手の本音や課題を汲み取る才能があります。',coach:'一人で考える時間と、安心して相談できる場を用意すると力が出ます。',action:'情報整理・聞き役・顧客理解の役割を任せると活きます。'},
+  2:{talent:'継続力と現場を支える力があります。小さな改善を積み重ねる才能です。',coach:'急がせすぎず、手順と目的を明確にすると安定します。',action:'運用・管理・育成補助など、土台を作る仕事を任せると活きます。'},
+  3:{talent:'新しい流れを起こし、停滞した場を動かす才能があります。',coach:'短い目標と変化のある役割を与えると勢いが出ます。',action:'企画・発信・新規開拓など、最初の一歩を任せると活きます。'},
+  4:{talent:'人と人をつなぎ、場の空気を整える才能があります。',coach:'意見を求め、調整役として信頼すると力を発揮します。',action:'接客・調整・紹介・チーム連携の役割を任せると活きます。'},
+  5:{talent:'中心に立ち、混乱した場をまとめる才能があります。',coach:'責任範囲を明確にし、任せることで存在感が整います。',action:'責任者・判断役・再建役など、核になる仕事を任せると活きます。'},
+  6:{talent:'高い基準を持ち、完成度を引き上げる才能があります。',coach:'敬意を持って任せ、理想と現実の橋渡しを支えると力が出ます。',action:'品質管理・リーダー補佐・重要判断の役割を任せると活きます。'},
+  7:{talent:'人を楽しませ、場を明るくする才能があります。',coach:'成果だけでなく喜びや反応を伝えると動機が高まります。',action:'営業・接客・広報・雰囲気作りを任せると活きます。'},
+  8:{talent:'変化の節目で踏ん張り、形を作り替える才能があります。',coach:'長期目標を示し、焦らず積み上げる時間を与えると力が出ます。',action:'改革・引き継ぎ・再設計など、山を越える仕事を任せると活きます。'},
+  9:{talent:'全体を見渡し、本質や違和感を見抜く才能があります。',coach:'感性を尊重し、表現できる場を用意すると輝きます。',action:'企画判断・デザイン・発信・評価の役割を任せると活きます。'}
+};
+
+var KERETSU_BIZ={
+  1:{name:'水の系列',stars:'一白水星',praise:'深く考えてくれて助かります。細かな気づきが信頼につながっています。',ng:'もっと早く決めて、考えすぎ、気にしすぎ。',action:'まず話を聞き、整理した上で一つだけ次の行動を決めます。'},
+  2:{name:'土の系列',stars:'二黒土星・五黄土星・八白土星',praise:'積み重ねる力が場を支えています。任せると安心できます。',ng:'遅い、頑固、もっと柔軟に。',action:'目的と手順を明確にし、期限を区切って進めます。'},
+  3:{name:'木の系列',stars:'三碧木星・四緑木星',praise:'動き出しの速さと、人をつなぐ力がありがたいです。',ng:'落ち着いて、また変えたの、軽い。',action:'短いゴールを置き、発信・調整の役割を任せます。'},
+  4:{name:'火の系列',stars:'九紫火星',praise:'本質を見抜く視点が場の質を上げています。',ng:'細かい、理屈っぽい、上から目線。',action:'判断基準を共有し、表現や評価の場を用意します。'},
+  5:{name:'金の系列',stars:'六白金星・七赤金星',praise:'完成度と場を明るくする力が成果につながっています。',ng:'厳しすぎる、調子がいい、完璧主義。',action:'敬意と期待を伝え、品質・営業・接客の役割を明確にします。'}
+};
+function getKeretsu(starNo){
+  if(starNo===1)return KERETSU_BIZ[1];
+  if(starNo===2||starNo===5||starNo===8)return KERETSU_BIZ[2];
+  if(starNo===3||starNo===4)return KERETSU_BIZ[3];
+  if(starNo===9)return KERETSU_BIZ[4];
+  return KERETSU_BIZ[5];
+}
+
+var SETTAI_RX={
+  水木:{bridge:'水と木',food:'魚料理・野菜・柑橘',color:'白・黒・青・緑',place:'水辺の店、緑のあるカフェ'},
+  木火:{bridge:'木と火',food:'野菜料理・トマト・コーヒー',color:'青・緑・赤・紫',place:'明るく活気のある店'},
+  火土:{bridge:'火と土',food:'温かい料理・牛肉・発酵食品',color:'赤・紫・黄・茶',place:'落ち着いた和食、老舗'},
+  土金:{bridge:'土と金',food:'鍋・鶏肉・天ぷら・甘味',color:'黄・茶・白・金',place:'上質で安心感のある店'},
+  金水:{bridge:'金と水',food:'鶏肉・海産物・炭酸・日本酒',color:'白・金・黒・紺',place:'静かで清潔感のある店'}
+};
+function getSettai(e1,e2){
+  var key=ckKey(e1,e2);
+  if(SETTAI_RX[key])return SETTAI_RX[key];
+  var reverse=e2+e1;
+  return SETTAI_RX[reverse]||null;
+}
+
+
 function analyze(){
   var mY=parseInt(document.getElementById('myYear').value)||0;
   var mM=parseInt(document.getElementById('myMonth').value)||0;

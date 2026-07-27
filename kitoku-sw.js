@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-business-badge-simple-v20260727f';
+const KITOKU_CACHE = 'kitoku-pwa-v6-business-helpers-v20260727g';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
