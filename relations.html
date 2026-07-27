@@ -603,7 +603,7 @@ function loadSaved(){
     items.innerHTML=sv.map(function(p,i){var s=STARS[calcH(p.year,p.month)];return '<div class="sd"><div onclick="fillSv('+i+')" style="flex:1;cursor:pointer;"><div class="sn">'+p.name+'</div><div class="ss">'+(s?s.k:'')+'</div></div><button class="del-btn" onclick="delOne('+i+')">✕</button></div>';}).join('');
   }else{list.style.display='none';}
 }
-function fillSv(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var p=sv[i];document.getElementById('pName').value=p.name;document.getElementById('pY').value=p.year;document.getElementById('pM').value=p.month;document.getElementById('pD').value=p.day||'';}
+function fillSv(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');var p=sv[i];document.getElementById('pName').value=p.name;document.getElementById('pY').value=p.year;document.getElementById('pM').value=p.month;document.getElementById('pD').value=p.day||'';['pName','pY','pM','pD'].forEach(function(id){var el=document.getElementById(id);if(el){el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}});if(window.KitokuBadge&&typeof window.KitokuBadge.render==='function')window.KitokuBadge.render();}
 function delOne(i){var sv=JSON.parse(localStorage.getItem('kitoku_relations')||'[]');sv.splice(i,1);localStorage.setItem('kitoku_relations',JSON.stringify(sv));loadSaved();}
 function delAll(){if(confirm('登録済みの人をすべて削除しますか？')){localStorage.removeItem('kitoku_relations');loadSaved();}}
 

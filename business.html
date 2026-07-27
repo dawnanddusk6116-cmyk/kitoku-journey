@@ -1548,6 +1548,17 @@ var SCENES={
   ]
 };
 
+function refreshBusinessPairBadge(){
+  ['myYear','myMonth','myDay','candidateName','cYear','cMonth','cDay'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){
+      el.dispatchEvent(new Event('input',{bubbles:true}));
+      el.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+  });
+  if(window.KitokuBadge&&typeof window.KitokuBadge.render==='function')window.KitokuBadge.render();
+}
+
 function selCat(cat){
   curCat=cat;
   var cl=CAT_LABELS[cat];
@@ -1567,6 +1578,7 @@ function selCat(cat){
   document.querySelectorAll('.sc2').forEach(function(c){c.classList.remove('on');});
   var kc=document.getElementById('c-kitoku');if(kc)kc.classList.add('on');
   showScreen('s1');
+  refreshBusinessPairBadge();
 }
 
 function renderScenes(cat){
@@ -2013,6 +2025,8 @@ function genReport(){
   updateCount();
   renderScenes('hire');
   try{var b=localStorage.getItem('kitoku-birth');if(b){var a=b.split('-').map(Number);if(a[0])document.getElementById('myYear').value=a[0];if(a[1])document.getElementById('myMonth').value=a[1];if(a[2])document.getElementById('myDay').value=a[2];}}catch(e){}
+  setTimeout(refreshBusinessPairBadge,0);
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshBusinessPairBadge,0);});
 })();
 
 function setTheme(t){
