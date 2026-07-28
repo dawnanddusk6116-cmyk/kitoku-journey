@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-premium-route-closed-v20260728a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-purpose-entry-v20260728b';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

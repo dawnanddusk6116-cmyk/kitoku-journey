@@ -240,6 +240,57 @@ body{
 }
 .beginner-step-title{font-size:.66rem;font-weight:800;color:var(--goldlt);line-height:1.45;}
 .beginner-step-desc{font-size:.58rem;color:var(--mist);line-height:1.65;margin-top:1px;}
+.beginner-step{text-decoration:none;color:inherit;}
+.beginner-step:active{background:rgba(255,255,255,.9);transform:scale(.99);}
+.purpose-note{
+  border-color:rgba(138,104,32,.26);
+  border-left-color:#a97818;
+  background:linear-gradient(135deg,rgba(255,252,244,.98),rgba(255,255,255,.96));
+  box-shadow:0 14px 30px rgba(138,104,32,.1), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.purpose-note::before{background:#a97818;}
+.purpose-note .beginner-note-num{background:#a97818;box-shadow:0 8px 18px rgba(138,104,32,.18);}
+.purpose-note .beginner-note-sub{color:#8a6820;}
+.purpose-note .beginner-note-arrow{color:#8a6820;border-color:rgba(138,104,32,.24);box-shadow:0 0 0 7px rgba(138,104,32,.08),0 8px 18px rgba(138,104,32,.1);}
+.purpose-note .beginner-note-body{padding:0 16px 16px;}
+.purpose-groups{display:grid;gap:10px;}
+.purpose-group{
+  border:1px solid rgba(138,104,32,.14);
+  background:rgba(255,255,255,.66);
+  border-radius:12px;
+  padding:10px;
+}
+.purpose-group-title{
+  font-size:.72rem;
+  font-weight:900;
+  color:var(--goldlt);
+  letter-spacing:.04em;
+  margin-bottom:7px;
+}
+.purpose-links{display:grid;gap:6px;}
+.purpose-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:34px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(100,80,40,.08);
+  color:var(--snow);
+  text-decoration:none;
+}
+.purpose-link strong{font-size:.66rem;line-height:1.5;color:var(--goldlt);}
+.purpose-link small{display:block;font-size:.54rem;line-height:1.45;color:var(--mist);margin-top:1px;}
+.purpose-link span:last-child{color:rgba(100,80,40,.34);font-weight:900;flex-shrink:0;}
+.purpose-link:active{background:rgba(138,104,32,.06);transform:scale(.99);}
+@media (max-width:420px){
+  .purpose-note .beginner-note-body{padding:0 13px 15px;}
+  .purpose-group{padding:9px;}
+  .purpose-link{padding:8px 9px;}
+  .purpose-link strong{font-size:.64rem;}
+}
 
 .entry-card{
   background:var(--card);border-radius:var(--radius);
@@ -749,10 +800,66 @@ body{
   <div class="beginner-note-body">
     <div class="beginner-note-text">最初に「自分の星を見る」で、本命星・月命星・傾斜・同会・納音を確認します。そのあと3点セットを順番に見ると、KITOKUで自分を読む流れがつかめます。</div>
     <div class="beginner-note-steps">
-      <div class="beginner-step"><span class="beginner-step-label">入口</span><div><div class="beginner-step-title">自分の星を見る</div><div class="beginner-step-desc">まず自分の基本構造を確認します。</div></div></div>
-      <div class="beginner-step"><span class="beginner-step-label">1</span><div><div class="beginner-step-title">はじめてのKITOKU診断</div><div class="beginner-step-desc">名前と生年月日で入口レポートを見ます。</div></div></div>
-      <div class="beginner-step"><span class="beginner-step-label">2</span><div><div class="beginner-step-title">九年サイクル</div><div class="beginner-step-desc">昨年を振り返り、これからの9年の流れを見ます。</div></div></div>
-      <div class="beginner-step"><span class="beginner-step-label">3</span><div><div class="beginner-step-title">姓名鑑定</div><div class="beginner-step-desc">名前の構造を詳しく確認します。</div></div></div>
+      <a class="beginner-step" href="kyusei_v2.html"><span class="beginner-step-label">入口</span><div><div class="beginner-step-title">自分の星を見る</div><div class="beginner-step-desc">まず自分の基本構造を確認します。</div></div></a>
+      <a class="beginner-step" href="report_generator_free.html"><span class="beginner-step-label">1</span><div><div class="beginner-step-title">はじめてのKITOKU診断</div><div class="beginner-step-desc">名前と生年月日で入口レポートを見ます。</div></div></a>
+      <a class="beginner-step" href="roadmap.html"><span class="beginner-step-label">2</span><div><div class="beginner-step-title">九年サイクル</div><div class="beginner-step-desc">昨年を振り返り、これからの9年の流れを見ます。</div></div></a>
+      <a class="beginner-step" href="life.html"><span class="beginner-step-label">3</span><div><div class="beginner-step-title">姓名鑑定</div><div class="beginner-step-desc">名前の構造を詳しく確認します。</div></div></a>
+    </div>
+  </div>
+</details>
+
+<details class="beginner-note purpose-note">
+  <summary>
+    <span class="beginner-note-num">目的</span>
+    <span>
+      <span class="beginner-note-title">目的から選ぶ</span>
+      <span class="beginner-note-sub">今知りたいことから入口を選ぶ</span>
+    </span>
+    <span class="beginner-note-arrow">▼</span>
+  </summary>
+  <div class="beginner-note-body">
+    <div class="beginner-note-text">機能名が分からなくても大丈夫です。いまの目的に近い言葉を選ぶと、裏側でKITOKUの道具につながります。</div>
+    <div class="purpose-groups">
+      <div class="purpose-group">
+        <div class="purpose-group-title">自分について知りたい</div>
+        <div class="purpose-links">
+          <a class="purpose-link" href="kyusei_v2.html"><span><strong>自分の基本タイプを知りたい</strong><small>自分の星を見る</small></span><span>›</span></a>
+          <a class="purpose-link" href="report_generator_free.html"><span><strong>自分の強みを、もっと知りたい</strong><small>はじめてのKITOKU診断</small></span><span>›</span></a>
+          <a class="purpose-link" href="roadmap.html"><span><strong>これからの流れを知りたい</strong><small>九年サイクル</small></span><span>›</span></a>
+          <a class="purpose-link" href="life.html"><span><strong>名前から自分を知りたい</strong><small>姓名鑑定</small></span><span>›</span></a>
+          <a class="purpose-link" href="ai.html"><span><strong>いまの気持ちを整理したい</strong><small>AI相談</small></span><span>›</span></a>
+          <a class="purpose-link" href="astro64.html"><span><strong>自分の奥にあるテーマを知りたい</strong><small>64卦・人生の読み解き</small></span><span>›</span></a>
+        </div>
+      </div>
+      <div class="purpose-group">
+        <div class="purpose-group-title">人間関係を整えたい</div>
+        <div class="purpose-links">
+          <a class="purpose-link" href="relations.html"><span><strong>好きなあの人との関係を縮めたい</strong><small>相性レポート</small></span><span>›</span></a>
+          <a class="purpose-link" href="relations.html"><span><strong>親や家族との関係を見つめ直したい</strong><small>相性・家族の縁</small></span><span>›</span></a>
+          <a class="purpose-link" href="relations.html"><span><strong>介護する親と、無理なく関わりたい</strong><small>相性・家族の距離感</small></span><span>›</span></a>
+          <a class="purpose-link" href="relations.html"><span><strong>子どもとの関わり方を考えたい</strong><small>相性レポート</small></span><span>›</span></a>
+          <a class="purpose-link" href="business.html"><span><strong>上司・部下とうまく付き合いたい</strong><small>仕事・面談・育成</small></span><span>›</span></a>
+        </div>
+      </div>
+      <div class="purpose-group">
+        <div class="purpose-group-title">今日の自分を整えたい</div>
+        <div class="purpose-links">
+          <a class="purpose-link" href="scent.html"><span><strong>今日の気分に合う香りを選びたい</strong><small>香りAI先生</small></span><span>›</span></a>
+          <a class="purpose-link" href="scent.html"><span><strong>デートや仕事で印象を整えたい</strong><small>香り・色の入口</small></span><span>›</span></a>
+          <a class="purpose-link" href="today.html"><span><strong>今日をどう過ごすとよいか知りたい</strong><small>今日の盤面・日盤</small></span><span>›</span></a>
+          <a class="purpose-link" href="ai.html"><span><strong>気持ちを整理して次の一手を知りたい</strong><small>AI相談</small></span><span>›</span></a>
+        </div>
+      </div>
+      <div class="purpose-group">
+        <div class="purpose-group-title">行動に良い流れを取り入れたい</div>
+        <div class="purpose-links">
+          <a class="purpose-link" href="direction_v2.html"><span><strong>今日、どこへ行くとよいか知りたい</strong><small>方位ナビ</small></span><span>›</span></a>
+          <a class="purpose-link" href="travel.html"><span><strong>旅行の日程や行き先を決めたい</strong><small>旅行吉方位ナビ</small></span><span>›</span></a>
+          <a class="purpose-link" href="pilgrimage.html"><span><strong>聖地巡礼の日程を考えたい</strong><small>聖地巡礼ナビ</small></span><span>›</span></a>
+          <a class="purpose-link" href="move.html"><span><strong>引越しの時期や場所を考えたい</strong><small>引越しナビ</small></span><span>›</span></a>
+          <a class="purpose-link" href="kaso.html"><span><strong>今の家や部屋を見直したい</strong><small>家相診断</small></span><span>›</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </details>
