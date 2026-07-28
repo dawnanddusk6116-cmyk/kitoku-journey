@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-alltools-text-fix-v20260727v';
+const KITOKU_CACHE = 'kitoku-pwa-v6-premium-route-closed-v20260728a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
