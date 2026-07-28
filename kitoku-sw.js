@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-purpose-entry-v20260728b';
+const KITOKU_CACHE = 'kitoku-pwa-v6-purpose-heading-v20260728c';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
