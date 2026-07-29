@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-relations-toolbar-v20260729d';
+const KITOKU_CACHE = 'kitoku-pwa-v6-action-guide-copy-v20260730b';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
