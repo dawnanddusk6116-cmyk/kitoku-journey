@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-action-guide-mustread-v20260730a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-travel-pilgrimage-soften-v20260730a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
