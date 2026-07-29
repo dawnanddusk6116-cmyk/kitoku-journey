@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-purpose-heading-v20260728c';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy06-v20260729a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -10,6 +10,7 @@ const KITOKU_CORE = [
   './academy_pdf_basic_03.html',
   './academy_pdf_basic_04.html',
   './academy_pdf_basic_05.html',
+  './academy_pdf_06.html',
   './academy_pdf_start_01.html',
   './academy_pdf_start_02.html',
   './academy_pdf_start_03.html',
@@ -27,6 +28,7 @@ const KITOKU_CORE = [
   './kitoku_academy_basic_03.pdf',
   './kitoku_academy_basic_04.pdf',
   './kitoku_academy_basic_05.pdf',
+  './kitoku_academy_06.pdf',
   './kitoku_academy_start_01.pdf',
   './kitoku_academy_start_02.pdf',
   './kitoku_academy_start_03.pdf',
@@ -83,6 +85,12 @@ const KITOKU_CORE = [
   './academy_pages/basic05/page-3.png',
   './academy_pages/basic05/page-4.png',
   './academy_pages/basic05/page-5.png',
+  './academy_pages/06/page-1.png',
+  './academy_pages/06/page-2.png',
+  './academy_pages/06/page-3.png',
+  './academy_pages/06/page-4.png',
+  './academy_pages/06/page-5.png',
+  './academy_pages/06/page-6.png',
   './academy_pages/basic03/page-1.png',
   './academy_pages/basic03/page-2.png',
   './academy_pages/basic03/page-3.png',
