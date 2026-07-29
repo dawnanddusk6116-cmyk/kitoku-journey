@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy06-v20260729a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy06-shots-v20260729b';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -91,6 +91,10 @@ const KITOKU_CORE = [
   './academy_pages/06/page-4.png',
   './academy_pages/06/page-5.png',
   './academy_pages/06/page-6.png',
+  './academy_assets/06/ss1_today_compass.png',
+  './academy_assets/06/ss2_direction_prescription.png',
+  './academy_assets/06/ss3_direction_map_full.png',
+  './academy_assets/06/ss4_spot_search.png',
   './academy_pages/basic03/page-1.png',
   './academy_pages/basic03/page-2.png',
   './academy_pages/basic03/page-3.png',
