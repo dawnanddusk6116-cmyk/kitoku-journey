@@ -1,8 +1,10 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-travel-pilgrimage-soften-v20260730a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-report-generator-fix-v20260730a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
   './kyusei_v2.html',
+  './report_generator_free.html',
+  './kitoku-engine.js',
   './academy.html',
   './academy_pdf_00.html',
   './academy_pdf_01.html',
