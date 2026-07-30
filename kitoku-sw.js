@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-report-generator-fix-v20260730a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-academy-07-v20260730a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -13,6 +13,7 @@ const KITOKU_CORE = [
   './academy_pdf_basic_04.html',
   './academy_pdf_basic_05.html',
   './academy_pdf_06.html',
+  './academy_pdf_07.html',
   './academy_pdf_start_01.html',
   './academy_pdf_start_02.html',
   './academy_pdf_start_03.html',
@@ -97,6 +98,10 @@ const KITOKU_CORE = [
   './academy_assets/06/ss2_direction_prescription.png',
   './academy_assets/06/ss3_direction_map_full.png',
   './academy_assets/06/ss4_spot_search.png',
+  './academy_assets/07/ss4_move_calendar_senro.png',
+  './academy_assets/07/ss3_kari_kippou_modal.png',
+  './academy_assets/07/ss2_move_direction_check.png',
+  './academy_assets/07/ss1_move_top.png',
   './academy_pages/basic03/page-1.png',
   './academy_pages/basic03/page-2.png',
   './academy_pages/basic03/page-3.png',
