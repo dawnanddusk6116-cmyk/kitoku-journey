@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-09-status-v20260731a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-sekki-relation-v20260731a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

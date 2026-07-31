@@ -32,11 +32,19 @@
     9:{k:'九紫火星',e:'火',nature:'火'}
   };
 
-  function calcPairHonmei(y,m){
-    y=Number(y)||0;
-    m=Number(m)||0;
-    if(!y||!m) return 0;
-    var ky=(m<=2)?y-1:y;
+  var SEKKI_DAYS={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};
+  var SEKKI_DB={2020:{1:6,2:4,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2021:{1:5,2:3,3:5,4:5,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2022:{1:5,2:4,3:6,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2023:{1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:8,9:8,10:8,11:8,12:7},2024:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:8,11:7,12:7},2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{1:5,2:4,3:5,4:5,5:5,6:6,7:7,8:7,9:8,10:8,11:7,12:7},2027:{1:5,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:7,10:8,11:7,12:7},2028:{1:6,2:4,3:5,4:4,5:5,6:5,7:6,8:7,9:7,10:7,11:7,12:6}};
+  function getSekkiDay(y,m){return (SEKKI_DB[y]&&SEKKI_DB[y][m])||SEKKI_DAYS[m]||1;}
+  function getKigakuYear(y,m,d){
+    y=Number(y)||0;m=Number(m)||0;d=Number(d)||1;
+    if(!y||!m)return 0;
+    var sd=getSekkiDay(y,m);
+    if(d<sd)return m<=2?y-1:y;
+    return m===1?y-1:y;
+  }
+  function calcPairHonmei(y,m,d){
+    var ky=getKigakuYear(y,m,d);
+    if(!ky)return 0;
     var ds=(ky%9+9)%9||9;
     return ((11-ds-1)%9+9)%9+1;
   }
@@ -79,7 +87,7 @@
     var hasAny=!!(yy||mm||dd);
     var valid=yy&&mm&&dd&&isValidBirthDate(yy,mm,dd);
     var invalid=hasAny&&!valid;
-    var starNo=valid?calcPairHonmei(yy,mm):0;
+    var starNo=valid?calcPairHonmei(yy,mm,dd):0;
     var star=starNo?PAIR_STARS[starNo]:null;
     var birth=hasAny?(String(yy||'?')+'.'+String(mm||'?')+'.'+String(dd||'?')):'';
     return {label:label,name:name,birth:birth,starNo:starNo,star:star,invalid:invalid};
