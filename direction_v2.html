@@ -1815,6 +1815,17 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
             <button onclick="openFullscreenMap()" style="background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:5px;color:var(--goldlt);font-size:.6rem;padding:4px 10px;cursor:pointer;font-family:'Noto Serif JP',serif;">⛶ 全画面</button>
           </div>
           <div style="padding:6px 12px;font-size:.58rem;color:var(--mist);line-height:1.7;background:rgba(0,0,0,.02);">📍 地図は<strong style="color:var(--goldlt);">北が上</strong>です（上の方位盤＝南上とは上下が逆になります）。実際の地図の方角に合わせて吉凶を確認できます。750m以上離れた場所への外出で吉方を取ることができます。</div>
+          <div id="directionTapPanel" style="padding:10px 12px;border-top:1px solid var(--rim);background:rgba(196,160,67,.04);">
+            <div style="font-size:.64rem;letter-spacing:.1em;color:var(--gold);font-weight:800;margin-bottom:6px;">🧭 任意の場所の方位を確かめる</div>
+            <div id="directionTapResult" style="font-size:.62rem;color:var(--mist);line-height:1.75;background:rgba(255,255,255,.04);border:1px solid rgba(196,160,67,.18);border-radius:8px;padding:8px 10px;margin-bottom:8px;">地図上の気になる場所をタップすると、中心地点から見た方位と距離だけを表示します。</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+              <button type="button" onclick="toggleDirectionPlaces()" id="directionPlacesBtn" style="flex:1;min-width:120px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:7px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">⭐ 登録地点 ▾</button>
+              <button type="button" onclick="registerDirectionCenter()" style="flex:1;min-width:120px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:7px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">＋ 中心地点を登録</button>
+            </div>
+            <div id="directionPlacesList" style="display:none;background:rgba(255,255,255,.05);border:1px solid rgba(196,160,67,.18);border-radius:8px;overflow:hidden;">
+              <div id="directionPlacesItems" style="padding:5px 8px;max-height:145px;overflow:auto;"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -2080,6 +2091,10 @@ function createDirMap(lat, lng) {
     }).addTo(dirMapInstance).bindPopup('現在地');
 
     drawDirectionLines(lat, lng);
+    updateDirectionTapIntro('現在地');
+    loadDirectionPlaces();
+    renderDirectionPlaces();
+    dirMapInstance.on('click', handleDirectionMapTap);
     setTimeout(() => dirMapInstance.invalidateSize(), 200);
 
     // ズーム時に方位盤オーバーレイを再描画（サイズを750m円に追従）
@@ -2322,14 +2337,144 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
   dirMapLines.push(mapCompassOverlay);
 }
 
+const DIRECTION_PLACE_KEY = 'kitoku-direction-map-places';
+const DIRECTION_PLACE_LIMIT = 3;
+const DIRECTION_JP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+const DIRECTION_SPANS = [
+  {key:'N',from:345,to:15},{key:'NE',from:15,to:75},{key:'E',from:75,to:105},{key:'SE',from:105,to:165},
+  {key:'S',from:165,to:195},{key:'SW',from:195,to:255},{key:'W',from:255,to:285},{key:'NW',from:285,to:345}
+];
+let directionTapMarker = null;
+let directionPlaces = [];
+
+function directionEsc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function loadDirectionPlaces(){
+  try{ directionPlaces = JSON.parse(localStorage.getItem(DIRECTION_PLACE_KEY)||'[]'); }
+  catch(e){ directionPlaces = []; }
+  if(!Array.isArray(directionPlaces)) directionPlaces = [];
+}
+function saveDirectionPlaces(){
+  try{ localStorage.setItem(DIRECTION_PLACE_KEY, JSON.stringify(directionPlaces)); }
+  catch(e){}
+}
+function bearingBetween(lat1,lng1,lat2,lng2){
+  const r = Math.PI / 180;
+  const d = 180 / Math.PI;
+  const p1 = lat1 * r;
+  const p2 = lat2 * r;
+  const dlng = (lng2 - lng1) * r;
+  const y = Math.sin(dlng) * Math.cos(p2);
+  const x = Math.cos(p1) * Math.sin(p2) - Math.sin(p1) * Math.cos(p2) * Math.cos(dlng);
+  return (Math.atan2(y, x) * d + 360) % 360;
+}
+function directionFromBearing(b){
+  for(const span of DIRECTION_SPANS){
+    if(span.from > span.to){ if(b >= span.from || b < span.to) return span.key; }
+    else if(b >= span.from && b < span.to) return span.key;
+  }
+  return 'N';
+}
+function distanceMeters(lat1,lng1,lat2,lng2){
+  const R = 6371000;
+  const r = Math.PI / 180;
+  const dlat = (lat2 - lat1) * r;
+  const dlng = (lng2 - lng1) * r;
+  const a = Math.sin(dlat/2) ** 2 + Math.cos(lat1*r) * Math.cos(lat2*r) * Math.sin(dlng/2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function formatDistance(m){
+  return m >= 1000 ? (m/1000).toFixed(m >= 10000 ? 0 : 1) + 'km' : Math.round(m) + 'm';
+}
+function updateDirectionTapIntro(label){
+  const box = document.getElementById('directionTapResult');
+  if(box) box.textContent = '中心地点：' + (label || '現在地') + '。地図上の気になる場所をタップすると、方位と距離だけを確認できます。';
+}
+function setDirectionMapCenter(lat,lng,label){
+  lat = Number(lat); lng = Number(lng);
+  if(!Number.isFinite(lat) || !Number.isFinite(lng) || !dirMapInstance) return;
+  dirMapCenter = { lat, lng };
+  dirMapInstance.setView([lat, lng], 12);
+  drawDirectionLines(lat, lng);
+  if(directionTapMarker){ dirMapInstance.removeLayer(directionTapMarker); directionTapMarker = null; }
+  updateDirectionTapIntro(label || '登録地点');
+}
+function handleDirectionMapTap(e){
+  if(!dirMapCenter || !dirMapInstance) return;
+  const lat = e.latlng.lat;
+  const lng = e.latlng.lng;
+  if(directionTapMarker) directionTapMarker.setLatLng(e.latlng);
+  else directionTapMarker = L.marker(e.latlng, {title:'確認地点'}).addTo(dirMapInstance);
+  const bearing = bearingBetween(dirMapCenter.lat, dirMapCenter.lng, lat, lng);
+  const dir = directionFromBearing(bearing);
+  const dist = distanceMeters(dirMapCenter.lat, dirMapCenter.lng, lat, lng);
+  const box = document.getElementById('directionTapResult');
+  if(box){
+    box.innerHTML = '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span>';
+  }
+}
+function toggleDirectionPlaces(){
+  const list = document.getElementById('directionPlacesList');
+  const btn = document.getElementById('directionPlacesBtn');
+  if(!list || !btn) return;
+  const open = getComputedStyle(list).display !== 'none';
+  list.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '⭐ 登録地点 ▾' : '⭐ 登録地点 ▴';
+  if(!open) renderDirectionPlaces();
+}
+function renderDirectionPlaces(){
+  const box = document.getElementById('directionPlacesItems');
+  if(!box) return;
+  if(!directionPlaces.length){
+    box.innerHTML = '<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ登録した場所がありません</div>';
+    return;
+  }
+  let html = '';
+  directionPlaces.forEach((p,i) => {
+    const lat = Number(p.lat);
+    const lng = Number(p.lng);
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(196,160,67,.12);">'
+      + '<button type="button" onclick="selectDirectionPlace('+i+')" style="flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:&quot;Noto Serif JP&quot;,serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;">' + directionEsc(p.name || '登録地点')
+      + '<span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">' + (Number.isFinite(lat) ? lat.toFixed(4) : '-') + ', ' + (Number.isFinite(lng) ? lng.toFixed(4) : '-') + '</span></button>'
+      + '<button type="button" onclick="deleteDirectionPlace('+i+')" style="width:24px;height:24px;border:1px solid rgba(196,160,67,.2);border-radius:6px;background:rgba(255,255,255,.05);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>'
+      + '</div>';
+  });
+  box.innerHTML = html;
+}
+function selectDirectionPlace(i){
+  const p = directionPlaces[i];
+  if(!p) return;
+  setDirectionMapCenter(p.lat, p.lng, p.name || '登録地点');
+  const list = document.getElementById('directionPlacesList');
+  const btn = document.getElementById('directionPlacesBtn');
+  if(list) list.style.display = 'none';
+  if(btn) btn.textContent = '⭐ 登録地点 ▾';
+}
+function deleteDirectionPlace(i){
+  if(!directionPlaces[i]) return;
+  if(!confirm('この登録地点を削除しますか？')) return;
+  directionPlaces.splice(i,1);
+  saveDirectionPlaces();
+  renderDirectionPlaces();
+}
+function registerDirectionCenter(){
+  if(!dirMapCenter){ alert('中心地点がまだ設定されていません。'); return; }
+  if(directionPlaces.length >= DIRECTION_PLACE_LIMIT){ alert('登録地点は最大3件までです。'); return; }
+  const name = prompt('登録地点の名前を入力してください', '登録地点');
+  if(!name) return;
+  directionPlaces.push({name:String(name).slice(0,24),lat:dirMapCenter.lat,lng:dirMapCenter.lng});
+  saveDirectionPlaces();
+  renderDirectionPlaces();
+  const list = document.getElementById('directionPlacesList');
+  const btn = document.getElementById('directionPlacesBtn');
+  if(list) list.style.display = 'block';
+  if(btn) btn.textContent = '⭐ 登録地点 ▴';
+}
 function centerDirectionMap() {
   if (!navigator.geolocation || !dirMapInstance) return;
   navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    dirMapCenter = { lat, lng };
-    dirMapInstance.setView([lat, lng], 12);
-    drawDirectionLines(lat, lng);
+    setDirectionMapCenter(pos.coords.latitude, pos.coords.longitude, '現在地');
   });
 }
 
