@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-academy-10-video-v20260801a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-kyusei-map-v20260802a';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

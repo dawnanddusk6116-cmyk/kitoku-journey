@@ -89,6 +89,34 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .report-next-card.world .report-next-badge{background:var(--goldlt);}
 .report-next-note{font-size:.58rem;color:var(--mist);line-height:1.65;text-align:center;margin-top:2px;}
 
+
+/* 方位マップ */
+.kymap-section{margin:16px;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:16px;}
+.kymap-label{font-size:.56rem;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.kymap-title{font-size:.95rem;font-weight:700;margin-bottom:8px;}
+.kymap-lead{font-size:.66rem;color:var(--mist);line-height:1.8;margin-bottom:12px;}
+.kymap-box{width:100%;height:240px;border-radius:10px;overflow:hidden;border:1px solid var(--rim);margin-bottom:10px;background:#eee;}
+.kymap-center-info{font-size:.62rem;color:var(--goldlt);font-weight:700;margin-bottom:8px;}
+.kymap-btnrow{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.kymap-btn{flex:1;min-width:0;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.64rem;font-weight:700;cursor:pointer;}
+.kymap-btn:active{transform:scale(.98);}
+.kymap-places{display:none;margin-bottom:8px;background:rgba(255,255,255,.72);border:1px solid rgba(138,104,32,.18);border-radius:9px;overflow:hidden;}
+.kymap-places-items{padding:6px 8px;max-height:150px;overflow-y:auto;}
+.kymap-place-row{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(138,104,32,.1);}
+.kymap-place-row:last-child{border-bottom:none;}
+.kymap-place-name{flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;}
+.kymap-place-sub{display:block;font-size:.52rem;color:var(--mist);font-weight:500;}
+.kymap-place-del{width:24px;height:24px;border:1px solid rgba(138,104,32,.2);border-radius:6px;background:rgba(255,255,255,.72);color:var(--mist);font-size:.65rem;cursor:pointer;}
+.kymap-empty{font-size:.6rem;color:var(--mist);padding:8px;text-align:center;}
+.kymap-tapinfo{display:none;margin-top:4px;padding:12px 14px;background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.24);border-radius:10px;}
+.kymap-tapinfo-main{font-size:1rem;font-weight:800;color:var(--goldlt);margin-bottom:4px;}
+.kymap-tapinfo-sub{font-size:.62rem;color:var(--mist);line-height:1.7;}
+.kymap-note{margin-top:10px;font-size:.6rem;color:var(--mist);line-height:1.8;padding:8px 10px;background:rgba(100,80,40,.04);border-radius:8px;}
+[data-theme="dark"] .kymap-section{background:#12152a;border-color:rgba(212,175,55,.18);}
+[data-theme="dark"] .kymap-btn,[data-theme="dark"] .kymap-places{background:rgba(255,255,255,.045);border-color:rgba(212,175,55,.2);}
+[data-theme="dark"] .kymap-box{background:#1a1d33;border-color:rgba(212,175,55,.18);}
+[data-theme="dark"] .kymap-note{background:rgba(255,255,255,.035);}
+
 /* 納音 */
 .nouin-row{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:13px;cursor:pointer;}
 .nouin-lbl{font-size:.62rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;font-weight:800;}
@@ -207,6 +235,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
 @media(max-width:390px){.app-header{padding:9px 11px;gap:7px}.app-title{font-size:.92rem;letter-spacing:.1em}.header-actions{gap:5px}.header-reset{font-size:.66rem;padding:7px 8px;min-height:31px}.toolbar{justify-content:flex-start}.tb-btn{padding:5px 10px}}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 </head>
 <body>
 <div id="kitoku-badge-mount"></div>
@@ -392,6 +422,28 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       ⚠️ 1月・2月生まれの方は前年の星になる場合があります。<br>生年月日を入力すると正確に計算されます。
     </div>
   </div>
+
+  <div class="kymap-section">
+    <div class="kymap-label">✦ 自分の場所から見る</div>
+    <div class="kymap-title">🧭 方位を確かめる</div>
+    <div class="kymap-lead">地図をタップすると、中心地点から見た方位と距離がわかります。実家・勤め先など、大切な場所を登録しておけば、いつでも中心を切り替えられます。</div>
+    <div class="kymap-box" id="kymapBox"></div>
+    <div class="kymap-center-info" id="kymapCenterInfo">中心地点：—</div>
+    <div class="kymap-btnrow">
+      <button class="kymap-btn" type="button" onclick="kyUseCurrentLocation()">📍 現在地を使う</button>
+      <button class="kymap-btn" type="button" onclick="kyTogglePlaces()" id="kymapPlacesBtn">⭐ 登録地点 ▾</button>
+      <button class="kymap-btn" type="button" onclick="kyRegisterCurrentCenter()">＋ 中心地点を登録</button>
+    </div>
+    <div class="kymap-places" id="kymapPlacesList">
+      <div class="kymap-places-items" id="kymapPlacesItems"></div>
+    </div>
+    <div class="kymap-tapinfo" id="kymapTapInfo">
+      <div class="kymap-tapinfo-main" id="kymapTapMain">—</div>
+      <div class="kymap-tapinfo-sub" id="kymapTapSub">—</div>
+    </div>
+    <div class="kymap-note">✳ ここでは方位と距離のみを確認できます。吉凶の判定は、プレミアの「地図×方位盤」でご確認いただけます。</div>
+  </div>
+
 </div>
 
 <div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
@@ -1056,6 +1108,209 @@ function closeSettings(){}
     document.documentElement.style.fontSize=fm[fs]||'15px';
     ['s','m','l'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.classList.toggle('active',x===fs);});
   });
+})();
+
+
+// 方位マップ（KYUSEI無料版・Leaflet専用）
+(function(){
+const KY_PLACE_LIMIT = 3;
+const KY_JP_DIR = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+const KY_SPANS = [
+  {key:'N',from:345,to:15},{key:'NE',from:15,to:75},{key:'E',from:75,to:105},{key:'SE',from:105,to:165},
+  {key:'S',from:165,to:195},{key:'SW',from:195,to:255},{key:'W',from:255,to:285},{key:'NW',from:285,to:345}
+];
+const KY_FALLBACK = {lat:35.681236,lng:139.767125,label:'東京駅（初期値）'};
+let kyMap = null;
+let kyCenter = null;
+let kyCenterMarker = null;
+let kyTapMarker = null;
+let kyPlaces = [];
+
+function kyEsc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
+}
+function kyLoadPlaces(){
+  try{ kyPlaces = JSON.parse(localStorage.getItem('kitoku-kyusei-map-places')||'[]'); }
+  catch(e){ kyPlaces = []; }
+  if(!Array.isArray(kyPlaces)) kyPlaces = [];
+}
+function kySavePlaces(){
+  try{ localStorage.setItem('kitoku-kyusei-map-places', JSON.stringify(kyPlaces)); }
+  catch(e){}
+}
+function kyBearing(lat1,lng1,lat2,lng2){
+  const toRad = Math.PI / 180;
+  const toDeg = 180 / Math.PI;
+  const p1 = lat1 * toRad;
+  const p2 = lat2 * toRad;
+  const dLng = (lng2 - lng1) * toRad;
+  const y = Math.sin(dLng) * Math.cos(p2);
+  const x = Math.cos(p1) * Math.sin(p2) - Math.sin(p1) * Math.cos(p2) * Math.cos(dLng);
+  return (Math.atan2(y, x) * toDeg + 360) % 360;
+}
+function kyDirectionFromBearing(b){
+  for(const s of KY_SPANS){
+    if(s.from > s.to){ if(b >= s.from || b < s.to) return s.key; }
+    else if(b >= s.from && b < s.to) return s.key;
+  }
+  return 'N';
+}
+function kyDistance(lat1,lng1,lat2,lng2){
+  const R = 6371000;
+  const toRad = Math.PI / 180;
+  const dLat = (lat2-lat1) * toRad;
+  const dLng = (lng2-lng1) * toRad;
+  const a = Math.sin(dLat/2) ** 2 + Math.cos(lat1*toRad) * Math.cos(lat2*toRad) * Math.sin(dLng/2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function kyFmtDist(m){
+  return m >= 1000 ? (m/1000).toFixed(m >= 10000 ? 0 : 1) + 'km' : Math.round(m) + 'm';
+}
+function kySetLoadError(msg){
+  const info = document.getElementById('kymapCenterInfo');
+  if(info) info.textContent = msg || '地図を読み込めませんでした。通信環境を確認してください。';
+}
+function kyInitMap(){
+  const el = document.getElementById('kymapBox');
+  if(!el) return;
+  if(typeof L === 'undefined'){
+    kySetLoadError('地図を読み込めませんでした。通信環境を確認してください。');
+    return;
+  }
+  kyMap = L.map(el, {zoomControl:true}).setView([KY_FALLBACK.lat, KY_FALLBACK.lng], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom:19,
+    attribution:'&copy; OpenStreetMap'
+  }).addTo(kyMap);
+  kyMap.on('click', kyOnMapClick);
+  let home = null;
+  try{ home = JSON.parse(localStorage.getItem('kitoku-home')||'null'); }catch(e){}
+  const homeLng = home ? (home.lng != null ? home.lng : home.lon) : null;
+  if(home && home.lat != null && homeLng != null){
+    kySetCenter(Number(home.lat), Number(homeLng), home.label || '自宅');
+  }else if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(pos){
+      kySetCenter(pos.coords.latitude, pos.coords.longitude, '現在地');
+    }, function(){
+      kySetCenter(KY_FALLBACK.lat, KY_FALLBACK.lng, KY_FALLBACK.label);
+    }, {enableHighAccuracy:false,timeout:6000,maximumAge:300000});
+  }else{
+    kySetCenter(KY_FALLBACK.lat, KY_FALLBACK.lng, KY_FALLBACK.label);
+  }
+  kyRenderPlaces();
+}
+function kySetCenter(lat,lng,label){
+  lat = Number(lat); lng = Number(lng);
+  if(!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+  kyCenter = {lat:lat,lng:lng,label:label||'中心地点'};
+  if(kyMap){ kyMap.setView([lat,lng], 14); }
+  if(kyCenterMarker){ kyCenterMarker.setLatLng([lat,lng]); }
+  else if(kyMap && typeof L !== 'undefined'){
+    kyCenterMarker = L.marker([lat,lng], {title:'中心地点'}).addTo(kyMap);
+  }
+  const info = document.getElementById('kymapCenterInfo');
+  if(info) info.textContent = '中心地点：' + kyCenter.label;
+  kyClearTap();
+}
+function kyClearTap(){
+  const box = document.getElementById('kymapTapInfo');
+  if(box) box.style.display = 'none';
+  if(kyTapMarker){ kyMap.removeLayer(kyTapMarker); kyTapMarker = null; }
+}
+function kyOnMapClick(e){
+  if(!kyCenter || !kyMap || typeof L === 'undefined') return;
+  const lat = e.latlng.lat;
+  const lng = e.latlng.lng;
+  if(kyTapMarker){ kyTapMarker.setLatLng(e.latlng); }
+  else{ kyTapMarker = L.marker(e.latlng, {title:'確認地点'}).addTo(kyMap); }
+  const bearing = kyBearing(kyCenter.lat, kyCenter.lng, lat, lng);
+  const dir = kyDirectionFromBearing(bearing);
+  const dist = kyDistance(kyCenter.lat, kyCenter.lng, lat, lng);
+  const main = document.getElementById('kymapTapMain');
+  const sub = document.getElementById('kymapTapSub');
+  const box = document.getElementById('kymapTapInfo');
+  if(main) main.textContent = KY_JP_DIR[dir] + '方位';
+  if(sub) sub.textContent = '中心地点から約 ' + kyFmtDist(dist) + ' / 方位角 ' + Math.round(bearing) + '°';
+  if(box) box.style.display = 'block';
+}
+function kyUseCurrentLocation(){
+  if(!navigator.geolocation){ alert('現在地を取得できません。'); return; }
+  navigator.geolocation.getCurrentPosition(function(pos){
+    kySetCenter(pos.coords.latitude, pos.coords.longitude, '現在地');
+  }, function(){
+    alert('現在地を取得できませんでした。端末の位置情報設定をご確認ください。');
+  }, {enableHighAccuracy:false,timeout:8000,maximumAge:60000});
+}
+function kyTogglePlaces(){
+  const list = document.getElementById('kymapPlacesList');
+  const btn = document.getElementById('kymapPlacesBtn');
+  if(!list || !btn) return;
+  const isOpen = getComputedStyle(list).display !== 'none';
+  list.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '⭐ 登録地点 ▾' : '⭐ 登録地点 ▴';
+  if(!isOpen) kyRenderPlaces();
+}
+function kyRenderPlaces(){
+  const c = document.getElementById('kymapPlacesItems');
+  if(!c) return;
+  if(!kyPlaces.length){
+    c.innerHTML = '<div class="kymap-empty">まだ登録した場所がありません</div>';
+    return;
+  }
+  let html = '';
+  kyPlaces.forEach(function(p,i){
+    const lat = Number(p.lat);
+    const lng = Number(p.lng);
+    html += '<div class="kymap-place-row">'
+      + '<button class="kymap-place-name" type="button" onclick="kySelectPlace('+i+')">' + kyEsc(p.name || '登録地点')
+      + '<span class="kymap-place-sub">' + (Number.isFinite(lat) ? lat.toFixed(4) : '-') + ', ' + (Number.isFinite(lng) ? lng.toFixed(4) : '-') + '</span></button>'
+      + '<button class="kymap-place-del" type="button" onclick="kyDeletePlace('+i+')">✕</button>'
+      + '</div>';
+  });
+  c.innerHTML = html;
+}
+function kySelectPlace(i){
+  const p = kyPlaces[i];
+  if(!p) return;
+  kySetCenter(p.lat, p.lng, p.name || '登録地点');
+  const list = document.getElementById('kymapPlacesList');
+  const btn = document.getElementById('kymapPlacesBtn');
+  if(list) list.style.display = 'none';
+  if(btn) btn.textContent = '⭐ 登録地点 ▾';
+}
+function kyDeletePlace(i){
+  if(!kyPlaces[i]) return;
+  if(!confirm('この登録地点を削除しますか？')) return;
+  kyPlaces.splice(i,1);
+  kySavePlaces();
+  kyRenderPlaces();
+}
+function kyRegisterCurrentCenter(){
+  if(!kyCenter){ alert('中心地点がまだ設定されていません。'); return; }
+  if(kyPlaces.length >= KY_PLACE_LIMIT){ alert('登録地点は最大3件までです。'); return; }
+  const name = prompt('登録地点の名前を入力してください', kyCenter.label || '登録地点');
+  if(!name) return;
+  kyPlaces.push({name:String(name).slice(0,24),lat:kyCenter.lat,lng:kyCenter.lng});
+  kySavePlaces();
+  kyRenderPlaces();
+  const list = document.getElementById('kymapPlacesList');
+  const btn = document.getElementById('kymapPlacesBtn');
+  if(list) list.style.display = 'block';
+  if(btn) btn.textContent = '⭐ 登録地点 ▴';
+}
+
+window.kyUseCurrentLocation = kyUseCurrentLocation;
+window.kyTogglePlaces = kyTogglePlaces;
+window.kyRegisterCurrentCenter = kyRegisterCurrentCenter;
+window.kySelectPlace = kySelectPlace;
+window.kyDeletePlace = kyDeletePlace;
+
+document.addEventListener('DOMContentLoaded', function(){
+  kyLoadPlaces();
+  kyInitMap();
+});
 })();
 
 </script>
