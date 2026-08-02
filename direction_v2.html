@@ -1978,12 +1978,13 @@ function handleFullscreenMapTap(e){
   fullscreenLastTapAt = Date.now();
   if(!fsMapInstance || !e || !e.latlng) return;
   const c = dirMapCenter || { lat: 33.8456, lng: 132.7658 };
+  directionLastTappedPoint = {lat:e.latlng.lat,lng:e.latlng.lng};
   if(fsTapMarker) fsTapMarker.setLatLng(e.latlng);
   else fsTapMarker = L.marker(e.latlng, {title:'確認地点'}).addTo(fsMapInstance);
   const bearing = bearingBetween(c.lat, c.lng, e.latlng.lat, e.latlng.lng);
   const dir = directionFromBearing(bearing);
   const dist = distanceMeters(c.lat, c.lng, e.latlng.lat, e.latlng.lng);
-  const html = buildDirectionTapHtml(dir, bearing, dist);
+  const html = buildDirectionTapHtml(dir, bearing, dist, e.latlng.lat, e.latlng.lng);
   const fsBox = document.getElementById('fullscreenTapResult');
   if(fsBox) fsBox.innerHTML = html;
   const normalBox = document.getElementById('directionTapResult');
@@ -2532,14 +2533,22 @@ function handleDirectionMapTap(e){
   const dir = directionFromBearing(bearing);
   const dist = distanceMeters(dirMapCenter.lat, dirMapCenter.lng, lat, lng);
   const box = document.getElementById('directionTapResult');
-  if(box) box.innerHTML = buildDirectionTapHtml(dir, bearing, dist);
+  if(box) box.innerHTML = buildDirectionTapHtml(dir, bearing, dist, lat, lng);
 }
-function buildDirectionTapHtml(dir, bearing, dist){
-  return '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span><br><button type="button" onclick="setTappedPointAsDirectionCenter()" style="margin-top:7px;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.36);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:6px 10px;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;font-weight:700;">この地点を中心にする</button>';
+function buildDirectionTapHtml(dir, bearing, dist, lat, lng){
+  const hasPoint = Number.isFinite(Number(lat)) && Number.isFinite(Number(lng));
+  const action = hasPoint ? 'setTappedPointAsDirectionCenter(' + Number(lat).toFixed(7) + ',' + Number(lng).toFixed(7) + ')' : 'setTappedPointAsDirectionCenter()';
+  return '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span><br><button type="button" onclick="' + action + '" style="margin-top:7px;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.36);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:6px 10px;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;font-weight:700;">この地点を中心にする</button>';
 }
-function setTappedPointAsDirectionCenter(){
-  if(!directionLastTappedPoint){ alert('先に地図上の地点をタップしてください。'); return; }
-  const p = directionLastTappedPoint;
+function setTappedPointAsDirectionCenter(lat, lng){
+  let p = null;
+  if(Number.isFinite(Number(lat)) && Number.isFinite(Number(lng))){
+    p = {lat:Number(lat), lng:Number(lng)};
+    directionLastTappedPoint = p;
+  } else {
+    p = directionLastTappedPoint;
+  }
+  if(!p){ alert('先に地図上の地点をタップしてください。'); return; }
   setDirectionMapCenter(p.lat, p.lng, '選択地点', true);
   if(fsMapInstance){
     fsMapInstance.setView([p.lat, p.lng], fsMapInstance.getZoom() || 12);
