@@ -701,13 +701,23 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <!-- 中心地点コントロール -->
       <div style="display:flex;gap:8px;margin-bottom:8px;">
         <button onclick="locateUser()" id="locateBtn" style="flex:1;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(138,104,32,.08);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">📍 現在地を登録</button>
-        <button onclick="toggleSavedPlaces()" id="savedPlacesBtn" style="flex:1;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">⭐ よく行く場所 ▾</button>
+        <button onclick="toggleMapCenters()" id="mapCentersBtn" style="flex:1;padding:9px 8px;border:1px solid rgba(138,104,32,.28);border-radius:8px;background:rgba(255,255,255,.72);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">◎ 中心地点 ▾</button>
+      </div>
+
+      <!-- 中心地点リスト -->
+      <div id="mapCentersList" style="display:none;margin-bottom:8px;background:rgba(255,255,255,.72);border:1px solid rgba(138,104,32,.18);border-radius:9px;overflow:hidden;">
+        <div style="font-size:.57rem;color:var(--mist);line-height:1.65;padding:8px 10px;border-bottom:1px solid rgba(138,104,32,.1);">方位線の起点として使う場所を最大3件まで保存できます。</div>
+        <div id="mapCentersItems" style="padding:6px 8px;max-height:150px;overflow-y:auto;"></div>
+        <button onclick="saveCurrentAsCenter()" style="width:100%;padding:8px;border:0;border-top:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.06);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">＋ 現在の中心地点を保存</button>
       </div>
 
       <!-- よく行く場所リスト -->
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button onclick="toggleSavedPlaces()" id="savedPlacesBtn" style="flex:1;padding:9px 8px;border:1px solid rgba(138,104,32,.22);border-radius:8px;background:rgba(255,255,255,.62);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;">⭐ よく行く場所 ▾</button>
+      </div>
       <div id="savedPlacesList" style="display:none;margin-bottom:8px;background:rgba(255,255,255,.72);border:1px solid rgba(138,104,32,.18);border-radius:9px;overflow:hidden;">
+        <div style="font-size:.57rem;color:var(--mist);line-height:1.65;padding:8px 10px;border-bottom:1px solid rgba(138,104,32,.1);">地図をタップして「この場所を保存」から登録できます。保存した場所を選ぶと中心地点として開きます。</div>
         <div id="savedPlacesItems" style="padding:6px 8px;max-height:160px;overflow-y:auto;"></div>
-        <button onclick="saveCurrentAsPlace()" style="width:100%;padding:8px;border:0;border-top:1px solid rgba(138,104,32,.12);background:rgba(138,104,32,.06);color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:700;cursor:pointer;">＋ 現在の中心地点を保存</button>
       </div>
 
       <!-- 中心地点表示 -->
@@ -4506,6 +4516,7 @@ let kitokuMapCompassOverlay = null;
 let kitokuMapMode   = 'daily';
 let kitokuMapReady  = false;
 let kitokuMapPlaces = [];     // よく行く場所
+let kitokuMapCenters = [];    // 方位線の中心地点
 let kitokuMapLastTap= null;   // 最後にタップした座標
 let kitokuTapMarker = null;   // タップ地点のピンマーカー
 let kitokuTapLine   = null;   // タップ地点と中心を結ぶ線
@@ -4524,6 +4535,7 @@ let kitokuFsEhouNextLabel = null;
 function initMapSection(){
   updateMapModeGuide();
   try{ const s=localStorage.getItem('kitoku-map-places'); if(s) kitokuMapPlaces=JSON.parse(s); }catch(e){}
+  try{ const s=localStorage.getItem('kitoku-map-centers'); if(s) kitokuMapCenters=JSON.parse(s); }catch(e){}
 }
 
 // ── 地図生成 ──────────────────────────────────────────
@@ -5211,17 +5223,72 @@ function onKitokuMapTap(e){
   document.getElementById('mapTapInfo').style.display='block';
 }
 
-// ── よく行く場所 ──────────────────────────────────────
+// ── 中心地点・よく行く場所 ──────────────────────────────
+function closeMapPickers(except){
+  const centers=document.getElementById('mapCentersList');
+  const centerBtn=document.getElementById('mapCentersBtn');
+  const places=document.getElementById('savedPlacesList');
+  const placesBtn=document.getElementById('savedPlacesBtn');
+  if(except!=='centers' && centers){centers.style.display='none'; if(centerBtn)centerBtn.textContent='◎ 中心地点 ▾';}
+  if(except!=='places' && places){places.style.display='none'; if(placesBtn)placesBtn.textContent='⭐ よく行く場所 ▾';}
+}
+function toggleMapCenters(){
+  const list=document.getElementById('mapCentersList');
+  const btn=document.getElementById('mapCentersBtn');
+  const isOpen=list.style.display!=='none';
+  closeMapPickers('centers');
+  list.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'◎ 中心地点 ▾':'◎ 中心地点 ▴';
+  if(!isOpen) renderMapCenters();
+}
+function renderMapCenters(){
+  const c=document.getElementById('mapCentersItems');
+  if(!c)return;
+  if(!kitokuMapCenters.length){
+    c.innerHTML='<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ中心地点がありません</div>';return;
+  }
+  c.innerHTML=kitokuMapCenters.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(138,104,32,.1);">
+      <button onclick="loadMapCenter(${i})" style="flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;">
+        保存${i+1}：${p.name}<span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</span>
+      </button>
+      <button onclick="deleteMapCenter(${i})" style="width:24px;height:24px;border:1px solid rgba(138,104,32,.2);border-radius:6px;background:rgba(255,255,255,.72);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>
+    </div>`).join('');
+}
+function loadMapCenter(idx){
+  const p=kitokuMapCenters[idx];if(!p)return;
+  setMapCenter(p.lat,p.lng,p.name);
+  closeMapPickers();
+}
+function deleteMapCenter(idx){
+  kitokuMapCenters.splice(idx,1);saveMapCentersToStorage();renderMapCenters();
+}
+function saveCurrentAsCenter(){
+  if(!kitokuMapCenter){alert('中心地点が設定されていません。');return;}
+  if(kitokuMapCenters.length>=3){alert('中心地点の保存は3件までです。不要な保存先を削除してから登録してください。');return;}
+  const def='中心'+(kitokuMapCenters.length+1);
+  const name=prompt('中心地点の名前を入力してください（例：自宅・松山城・職場）',def);
+  if(!name)return;
+  kitokuMapCenters.push({name,lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng});
+  saveMapCentersToStorage();
+  renderMapCenters();
+  alert(`「${name}」を中心地点に保存しました。`);
+}
+function saveMapCentersToStorage(){
+  try{localStorage.setItem('kitoku-map-centers',JSON.stringify(kitokuMapCenters));}catch(e){}
+}
 function toggleSavedPlaces(){
   const list=document.getElementById('savedPlacesList');
   const btn=document.getElementById('savedPlacesBtn');
   const isOpen=list.style.display!=='none';
+  closeMapPickers('places');
   list.style.display=isOpen?'none':'block';
   btn.textContent=isOpen?'⭐ よく行く場所 ▾':'⭐ よく行く場所 ▴';
   if(!isOpen) renderSavedPlaces();
 }
 function renderSavedPlaces(){
   const c=document.getElementById('savedPlacesItems');
+  if(!c)return;
   if(!kitokuMapPlaces.length){
     c.innerHTML='<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ保存した場所がありません</div>';return;
   }
@@ -5236,19 +5303,13 @@ function renderSavedPlaces(){
 function loadSavedPlace(idx){
   const p=kitokuMapPlaces[idx];if(!p)return;
   setMapCenter(p.lat,p.lng,p.name);
-  document.getElementById('savedPlacesList').style.display='none';
-  document.getElementById('savedPlacesBtn').textContent='⭐ よく行く場所 ▾';
+  closeMapPickers();
 }
 function deleteSavedPlace(idx){
   kitokuMapPlaces.splice(idx,1);savePlacesToStorage();renderSavedPlaces();
 }
 function saveCurrentAsPlace(){
-  if(!kitokuMapCenter){alert('中心地点が設定されていません。');return;}
-  const name=prompt('場所の名前を入力してください（例：自宅・実家・会社）','');
-  if(!name)return;
-  kitokuMapPlaces.push({name,lat:kitokuMapCenter.lat,lng:kitokuMapCenter.lng});
-  savePlacesToStorage();
-  alert(`「${name}」を保存しました。`);
+  saveCurrentAsCenter();
 }
 function saveTapAsPlace(){
   if(!kitokuMapLastTap)return;
@@ -5256,6 +5317,7 @@ function saveTapAsPlace(){
   if(!name)return;
   kitokuMapPlaces.push({name,lat:kitokuMapLastTap.lat,lng:kitokuMapLastTap.lng});
   savePlacesToStorage();
+  renderSavedPlaces();
   alert(`「${name}」を保存しました。`);
 }
 function savePlacesToStorage(){
