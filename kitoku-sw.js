@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-direction-map-tap-v20260802a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-direction-map-tap-v20260802c';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

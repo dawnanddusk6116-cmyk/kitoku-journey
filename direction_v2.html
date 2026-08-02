@@ -2027,7 +2027,10 @@ function drawFullscreenContent(lat, lng) {
 let dirMapInstance = null;
 let dirMapLines = [];
 let dirMapCenter = null;
+let dirMapCenterMarker = null;
 let dirMapOpen = false;
+let directionMapContainerTapBound = false;
+let directionLastLeafletClickAt = 0;
 
 // 方位角（度）の定義
 const DIR_ANGLES = {
@@ -2050,29 +2053,40 @@ function toggleDirectionMap() {
 }
 
 function initDirectionMap() {
+  loadDirectionPlaces();
+  const savedCenter = readDirectionSavedCenter();
+  if (savedCenter) {
+    if (!dirMapInstance) createDirMap(savedCenter.lat, savedCenter.lng, savedCenter.label);
+    else setDirectionMapCenter(savedCenter.lat, savedCenter.lng, savedCenter.label, true);
+    return;
+  }
+  const homeCenter = readDirectionHomeCenter();
+  if (homeCenter) {
+    if (!dirMapInstance) createDirMap(homeCenter.lat, homeCenter.lng, homeCenter.label);
+    else setDirectionMapCenter(homeCenter.lat, homeCenter.lng, homeCenter.label, true);
+    return;
+  }
   if (!navigator.geolocation) {
-    if (!dirMapInstance) createDirMap(33.8416, 132.7657);
+    if (!dirMapInstance) createDirMap(33.8456, 132.7658, '松山城');
     return;
   }
   navigator.geolocation.getCurrentPosition(
     pos => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
-      dirMapCenter = { lat, lng };
       if (!dirMapInstance) {
-        createDirMap(lat, lng);
+        createDirMap(lat, lng, '現在地');
       } else {
-        dirMapInstance.setView([lat, lng], 12);
-        drawDirectionLines(lat, lng);
+        setDirectionMapCenter(lat, lng, '現在地', true);
       }
     },
     () => {
-      if (!dirMapInstance) createDirMap(33.8416, 132.7657);
+      if (!dirMapInstance) createDirMap(33.8456, 132.7658, '松山城');
     }
   );
 }
 
-function createDirMap(lat, lng) {
+function createDirMap(lat, lng, label) {
   dirMapCenter = { lat, lng };
   setTimeout(() => {
     dirMapInstance = L.map('directionMap', {
@@ -2084,17 +2098,15 @@ function createDirMap(lat, lng) {
       maxZoom: 19
     }).addTo(dirMapInstance);
 
-    // 現在地マーカー
-    L.circleMarker([lat, lng], {
-      radius: 8, fillColor: '#c4a043', color: '#fff',
-      weight: 2, opacity: 1, fillOpacity: 1
-    }).addTo(dirMapInstance).bindPopup('現在地');
+    // 中心地点マーカー
+    updateDirectionCenterMarker(lat, lng, label || '現在地');
 
     drawDirectionLines(lat, lng);
-    updateDirectionTapIntro('現在地');
+    updateDirectionTapIntro(label || '現在地');
     loadDirectionPlaces();
     renderDirectionPlaces();
     dirMapInstance.on('click', handleDirectionMapTap);
+    bindDirectionMapTapFallback();
     setTimeout(() => dirMapInstance.invalidateSize(), 200);
 
     // ズーム時に方位盤オーバーレイを再描画（サイズを750m円に追従）
@@ -2165,7 +2177,7 @@ function drawDirectionLines(lat, lng) {
       const rad = deg * Math.PI / 180;
       const dlat = Math.cos(rad) * (LINE_LENGTH / 111);
       const dlng = Math.sin(rad) * (LINE_LENGTH / (111 * Math.cos(lat * Math.PI / 180)));
-      const opts = { color, weight: w, opacity: op };
+      const opts = { color, weight: w, opacity: op, interactive: false };
       if (dash) opts.dashArray = dash;
       const line = L.polyline([[lat, lng], [lat + dlat, lng + dlng]], opts);
       line.addTo(dirMapInstance);
@@ -2191,7 +2203,7 @@ function drawDirectionLines(lat, lng) {
       const fanOpacity = dd.rank >= 4 ? 0.18 : dd.rank >= 3 ? 0.14 : 0.1;
       const fan = L.polygon(pts, {
         color: fanColor, weight: 1, opacity: 0.4,
-        fillColor: fanColor, fillOpacity: fanOpacity
+        fillColor: fanColor, fillOpacity: fanOpacity, interactive: false
       });
       fan.addTo(dirMapInstance);
       dirMapLines.push(fan);
@@ -2225,7 +2237,7 @@ function drawDirectionLines(lat, lng) {
   [[0.75,'rgba(196,160,67,.2)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.06)']].forEach(([r, fill]) => {
     const circle = L.circle([lat, lng], {
       radius: r * 1000, color: 'rgba(196,160,67,.3)',
-      weight: 1, fill: true, fillColor: fill, fillOpacity: 0.3
+      weight: 1, fill: true, fillColor: fill, fillOpacity: 0.3, interactive: false
     }).addTo(dirMapInstance);
     dirMapLines.push(circle);
   });
@@ -2338,6 +2350,7 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
 }
 
 const DIRECTION_PLACE_KEY = 'kitoku-direction-map-places';
+const DIRECTION_CENTER_KEY = 'kitoku-direction-map-center';
 const DIRECTION_PLACE_LIMIT = 3;
 const DIRECTION_JP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
 const DIRECTION_SPANS = [
@@ -2349,6 +2362,60 @@ let directionPlaces = [];
 
 function directionEsc(v){
   return String(v == null ? '' : v).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function normalizeDirectionPoint(obj, fallbackLabel){
+  if(!obj || typeof obj !== 'object') return null;
+  const lat = Number(obj.lat != null ? obj.lat : (obj.latitude != null ? obj.latitude : obj.homeLat));
+  const lng = Number(obj.lng != null ? obj.lng : (obj.lon != null ? obj.lon : (obj.longitude != null ? obj.longitude : obj.homeLon)));
+  if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  return {lat:lat,lng:lng,label:obj.label || obj.name || obj.title || fallbackLabel || '中心地点'};
+}
+function readDirectionSavedCenter(){
+  try{ return normalizeDirectionPoint(JSON.parse(localStorage.getItem(DIRECTION_CENTER_KEY)||'null'), '登録地点'); }
+  catch(e){ return null; }
+}
+function readDirectionHomeCenter(){
+  try{ return normalizeDirectionPoint(JSON.parse(localStorage.getItem('kitoku-home')||'null'), '自宅'); }
+  catch(e){ return null; }
+}
+function saveDirectionCenter(lat,lng,label){
+  try{ localStorage.setItem(DIRECTION_CENTER_KEY, JSON.stringify({lat:lat,lng:lng,label:label || '中心地点'})); }
+  catch(e){}
+}
+function updateDirectionCenterMarker(lat,lng,label){
+  if(!dirMapInstance) return;
+  if(dirMapCenterMarker){
+    dirMapCenterMarker.setLatLng([lat,lng]);
+    dirMapCenterMarker.bindPopup(label || '中心地点');
+  }else{
+    dirMapCenterMarker = L.circleMarker([lat, lng], {
+      radius: 8, fillColor: '#c4a043', color: '#fff',
+      weight: 2, opacity: 1, fillOpacity: 1, interactive: false
+    }).addTo(dirMapInstance).bindPopup(label || '中心地点');
+  }
+}
+function bindDirectionMapTapFallback(){
+  if(!dirMapInstance || directionMapContainerTapBound) return;
+  const container = dirMapInstance.getContainer();
+  if(!container) return;
+  const run = function(ev){
+    if(Date.now() - directionLastLeafletClickAt < 250) return;
+    if(ev.target && ev.target.closest && ev.target.closest('.leaflet-control')) return;
+    let clientX = ev.clientX;
+    let clientY = ev.clientY;
+    if((clientX == null || clientY == null) && ev.changedTouches && ev.changedTouches[0]){
+      clientX = ev.changedTouches[0].clientX;
+      clientY = ev.changedTouches[0].clientY;
+    }
+    if(clientX == null || clientY == null) return;
+    const rect = container.getBoundingClientRect();
+    const point = L.point(clientX - rect.left, clientY - rect.top);
+    handleDirectionMapTap({latlng:dirMapInstance.containerPointToLatLng(point)});
+  };
+  container.addEventListener('click', run, true);
+  container.addEventListener('pointerup', run, true);
+  container.addEventListener('touchend', run, true);
+  directionMapContainerTapBound = true;
 }
 function loadDirectionPlaces(){
   try{ directionPlaces = JSON.parse(localStorage.getItem(DIRECTION_PLACE_KEY)||'[]'); }
@@ -2391,17 +2458,21 @@ function updateDirectionTapIntro(label){
   const box = document.getElementById('directionTapResult');
   if(box) box.textContent = '中心地点：' + (label || '現在地') + '。地図上の気になる場所をタップすると、方位と距離だけを確認できます。';
 }
-function setDirectionMapCenter(lat,lng,label){
+function setDirectionMapCenter(lat,lng,label,skipSave){
   lat = Number(lat); lng = Number(lng);
   if(!Number.isFinite(lat) || !Number.isFinite(lng) || !dirMapInstance) return;
+  const centerLabel = label || '登録地点';
   dirMapCenter = { lat, lng };
   dirMapInstance.setView([lat, lng], 12);
+  updateDirectionCenterMarker(lat, lng, centerLabel);
   drawDirectionLines(lat, lng);
   if(directionTapMarker){ dirMapInstance.removeLayer(directionTapMarker); directionTapMarker = null; }
-  updateDirectionTapIntro(label || '登録地点');
+  updateDirectionTapIntro(centerLabel);
+  if(!skipSave) saveDirectionCenter(lat, lng, centerLabel);
 }
 function handleDirectionMapTap(e){
-  if(!dirMapCenter || !dirMapInstance) return;
+  directionLastLeafletClickAt = Date.now();
+  if(!dirMapCenter || !dirMapInstance || !e || !e.latlng) return;
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
   if(directionTapMarker) directionTapMarker.setLatLng(e.latlng);
