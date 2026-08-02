@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-direction-map-slots-v20260802a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-direction-map-current-first-v20260802c';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
