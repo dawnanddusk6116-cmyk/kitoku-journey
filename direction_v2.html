@@ -2392,7 +2392,8 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
   dirMapLines.push(mapCompassOverlay);
 }
 
-const DIRECTION_PLACE_KEY = 'kitoku-direction-map-place-slots-v1';
+const DIRECTION_PLACE_KEY = 'kitoku-saved-places';
+const DIRECTION_OLD_PLACE_KEY = 'kitoku-direction-map-place-slots-v1';
 const DIRECTION_CENTER_KEY = 'kitoku-direction-map-center-v2';
 const DIRECTION_PLACE_LIMIT = 3;
 const DIRECTION_JP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
@@ -2461,18 +2462,30 @@ function bindDirectionMapTapFallback(){
   container.addEventListener('touchend', run, true);
   directionMapContainerTapBound = true;
 }
+function normalizeDirectionPlaceList(list){
+  if(!Array.isArray(list)) return [];
+  return list.map((item, idx)=>{
+    const p = normalizeDirectionPoint(item, '保存' + (idx + 1));
+    if(!p) return null;
+    return {name:String(p.label || ('保存' + (idx + 1))).slice(0,32), lat:p.lat, lng:p.lng};
+  }).filter(Boolean);
+}
+function migrateDirectionPlacesIfNeeded(){
+  try{
+    if(localStorage.getItem(DIRECTION_PLACE_KEY)) return;
+    const raw = localStorage.getItem(DIRECTION_OLD_PLACE_KEY);
+    if(!raw) return;
+    const migrated = normalizeDirectionPlaceList(JSON.parse(raw));
+    if(migrated.length) localStorage.setItem(DIRECTION_PLACE_KEY, JSON.stringify(migrated));
+  }catch(e){}
+}
 function loadDirectionPlaces(){
-  try{ directionPlaces = JSON.parse(localStorage.getItem(DIRECTION_PLACE_KEY)||'[]'); }
+  migrateDirectionPlacesIfNeeded();
+  try{ directionPlaces = normalizeDirectionPlaceList(JSON.parse(localStorage.getItem(DIRECTION_PLACE_KEY)||'[]')); }
   catch(e){ directionPlaces = []; }
-  if(!Array.isArray(directionPlaces)) directionPlaces = [];
-  const slots = [];
-  for(let i=0;i<DIRECTION_PLACE_LIMIT;i++){
-    const p = normalizeDirectionPoint(directionPlaces[i], '保存' + (i+1));
-    slots.push(p ? {name:p.label || ('保存' + (i+1)), lat:p.lat, lng:p.lng} : null);
-  }
-  directionPlaces = slots;
 }
 function saveDirectionPlaces(){
+  directionPlaces = normalizeDirectionPlaceList(directionPlaces);
   try{ localStorage.setItem(DIRECTION_PLACE_KEY, JSON.stringify(directionPlaces)); }
   catch(e){}
 }
@@ -2570,7 +2583,7 @@ function renderDirectionPlaces(){
   const box = document.getElementById('directionPlacesItems');
   if(!box) return;
   loadDirectionPlaces();
-  let html = '<div style="font-size:.58rem;color:var(--mist);line-height:1.7;padding:7px 4px 8px;">中心地点を保存1〜3に入れておくと、よく使う場所をすぐ切り替えられます。</div>';
+  let html = '<div style="font-size:.58rem;color:var(--mist);line-height:1.7;padding:7px 4px 8px;">中心地点を保存1〜3に入れておくと、よく使う場所をすぐ切り替えられます。Premiumの登録地点と共通で使えます。</div>';
   for(let i=0;i<DIRECTION_PLACE_LIMIT;i++){
     const p = directionPlaces[i];
     const filled = !!p;
@@ -2578,14 +2591,19 @@ function renderDirectionPlaces(){
     const lng = filled ? Number(p.lng) : NaN;
     html += '<div style="display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px;padding:8px 4px;border-top:1px solid rgba(196,160,67,.12);">'
       + '<div style="min-width:0;"><div style="font-size:.66rem;color:var(--goldlt);font-weight:800;">保存' + (i+1) + '：' + (filled ? directionEsc(p.name || '登録地点') : '未登録') + '</div>'
-      + '<div style="font-size:.52rem;color:var(--mist);line-height:1.5;">' + (filled && Number.isFinite(lat) ? lat.toFixed(4) + ', ' + lng.toFixed(4) : '現在の中心地点をここに保存できます') + '</div></div>'
-      + (filled ? '<button type="button" onclick="selectDirectionPlace('+i+')" style="border:1px solid rgba(196,160,67,.28);border-radius:7px;background:rgba(196,160,67,.1);color:var(--goldlt);font-size:.6rem;padding:6px 8px;font-weight:700;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;">使う</button>' : '<button type="button" onclick="saveDirectionSlot('+i+')" style="border:1px solid rgba(196,160,67,.28);border-radius:7px;background:rgba(196,160,67,.1);color:var(--goldlt);font-size:.6rem;padding:6px 8px;font-weight:700;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;">保存</button>')
-      + (filled ? '<button type="button" onclick="deleteDirectionPlace('+i+')" style="width:28px;height:28px;border:1px solid rgba(196,160,67,.2);border-radius:7px;background:rgba(255,255,255,.05);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>' : '<span></span>')
-      + '</div>';
+      + '<div style="font-size:.52rem;color:var(--mist);line-height:1.5;">' + (filled ? lat.toFixed(4) + ', ' + lng.toFixed(4) : '現在の中心地点を保存できます') + '</div></div>';
+    if(filled){
+      html += '<button type="button" onclick="selectDirectionPlace(' + i + ')" style="border:1px solid rgba(196,160,67,.35);border-radius:9px;background:#fffaf1;color:var(--gold);font-size:.58rem;padding:7px 10px;font-weight:800;">使う</button>'
+        + '<button type="button" onclick="deleteDirectionPlace(' + i + ')" style="border:1px solid rgba(160,120,70,.25);border-radius:9px;background:#fff;color:var(--mist);font-size:.58rem;padding:7px 9px;">削除</button>';
+    }else{
+      html += '<button type="button" onclick="saveDirectionSlot(' + i + ')" style="grid-column:2 / span 2;border:1px solid rgba(196,160,67,.35);border-radius:9px;background:#fffaf1;color:var(--gold);font-size:.58rem;padding:7px 10px;font-weight:800;">ここに保存</button>';
+    }
+    html += '</div>';
   }
   box.innerHTML = html;
 }
 function selectDirectionPlace(i){
+  loadDirectionPlaces();
   const p = directionPlaces[i];
   if(!p) return;
   setDirectionMapCenter(p.lat, p.lng, p.name || ('保存' + (i+1)));
@@ -2595,26 +2613,31 @@ function selectDirectionPlace(i){
   if(btn) btn.textContent = '⭐ 保存1〜3 ▾';
 }
 function deleteDirectionPlace(i){
+  loadDirectionPlaces();
   if(!directionPlaces[i]) return;
   if(!confirm('保存' + (i+1) + 'を削除しますか？')) return;
-  directionPlaces[i] = null;
+  directionPlaces.splice(i, 1);
   saveDirectionPlaces();
   renderDirectionPlaces();
 }
 function saveDirectionSlot(i){
   if(!dirMapCenter){ alert('中心地点がまだ設定されていません。'); return; }
+  loadDirectionPlaces();
   const current = directionPlaces[i];
   const defaultName = current && current.name ? current.name : '保存' + (i+1);
   const name = prompt('保存' + (i+1) + 'の名前を入力してください', defaultName);
   if(!name) return;
-  directionPlaces[i] = {name:String(name).slice(0,24),lat:dirMapCenter.lat,lng:dirMapCenter.lng};
+  const entry = {name:String(name).slice(0,24),lat:dirMapCenter.lat,lng:dirMapCenter.lng};
+  if(i < directionPlaces.length) directionPlaces.splice(i, 1, entry);
+  else directionPlaces.splice(i, 0, entry);
   saveDirectionPlaces();
   saveDirectionCenter(dirMapCenter.lat, dirMapCenter.lng, String(name).slice(0,24));
   renderDirectionPlaces();
 }
 function registerDirectionCenter(){
   if(!dirMapCenter){ alert('中心地点がまだ設定されていません。'); return; }
-  let slot = directionPlaces.findIndex(p => !p);
+  loadDirectionPlaces();
+  let slot = directionPlaces.length < DIRECTION_PLACE_LIMIT ? directionPlaces.length : -1;
   if(slot < 0){
     const input = prompt('保存1〜3のどこに上書きしますか？（1, 2, 3）', '1');
     slot = parseInt(input, 10) - 1;

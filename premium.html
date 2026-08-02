@@ -4517,6 +4517,8 @@ let kitokuMapMode   = 'daily';
 let kitokuMapReady  = false;
 let kitokuMapPlaces = [];     // よく行く場所
 let kitokuMapCenters = [];    // 方位線の中心地点
+const KITOKU_SAVED_PLACES_KEY = 'kitoku-saved-places';
+const KITOKU_LEGACY_MAP_PLACES_KEY = 'kitoku-map-places';
 let kitokuMapLastTap= null;   // 最後にタップした座標
 let kitokuTapMarker = null;   // タップ地点のピンマーカー
 let kitokuTapLine   = null;   // タップ地点と中心を結ぶ線
@@ -4531,10 +4533,32 @@ let kitokuEhouNextLabel   = null;
 let kitokuFsEhouNextLine  = null; // 来年の恵方ライン（全画面）
 let kitokuFsEhouNextLabel = null;
 
+
+function normalizeKitokuSavedPlaces(list){
+  if(!Array.isArray(list)) return [];
+  return list.map((item, idx)=>{
+    const lat = Number(item && (item.lat != null ? item.lat : item.latitude));
+    const lng = Number(item && (item.lng != null ? item.lng : (item.lon != null ? item.lon : item.longitude)));
+    if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+    const name = item.name || item.label || item.title || ('登録地点' + (idx + 1));
+    return {name:String(name).slice(0,32), lat:lat, lng:lng};
+  }).filter(Boolean);
+}
+function migrateKitokuSavedPlaces(){
+  try{
+    if(localStorage.getItem(KITOKU_SAVED_PLACES_KEY)) return;
+    const legacy = localStorage.getItem(KITOKU_LEGACY_MAP_PLACES_KEY);
+    if(!legacy) return;
+    const migrated = normalizeKitokuSavedPlaces(JSON.parse(legacy));
+    if(migrated.length) localStorage.setItem(KITOKU_SAVED_PLACES_KEY, JSON.stringify(migrated));
+  }catch(e){}
+}
+
 // ── 初期化 ────────────────────────────────────────────
 function initMapSection(){
   updateMapModeGuide();
-  try{ const s=localStorage.getItem('kitoku-map-places'); if(s) kitokuMapPlaces=JSON.parse(s); }catch(e){}
+  migrateKitokuSavedPlaces();
+  try{ const s=localStorage.getItem(KITOKU_SAVED_PLACES_KEY); if(s) kitokuMapPlaces=normalizeKitokuSavedPlaces(JSON.parse(s)); }catch(e){}
   try{ const s=localStorage.getItem('kitoku-map-centers'); if(s) kitokuMapCenters=JSON.parse(s); }catch(e){}
 }
 
@@ -5321,7 +5345,7 @@ function saveTapAsPlace(){
   alert(`「${name}」を保存しました。`);
 }
 function savePlacesToStorage(){
-  try{localStorage.setItem('kitoku-map-places',JSON.stringify(kitokuMapPlaces));}catch(e){}
+  try{localStorage.setItem(KITOKU_SAVED_PLACES_KEY,JSON.stringify(normalizeKitokuSavedPlaces(kitokuMapPlaces)));}catch(e){}
 }
 
 // ── 全画面（direction_v2方式モーダル） ────────────────

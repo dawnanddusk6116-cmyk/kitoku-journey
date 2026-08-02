@@ -1165,6 +1165,15 @@ html.font-large .font-btn{font-size:.8rem;}
       <button class="change-btn" onclick="changeHome()">変更する</button>
     </div>
   </div>
+
+  <div class="temp-base-tools" style="margin-top:10px;padding:10px;border:1px solid rgba(196,160,67,.28);border-radius:10px;background:rgba(196,160,67,.07);">
+    <div style="font-size:.62rem;color:var(--gold);font-weight:800;margin-bottom:6px;">一時的な基準地点</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button class="btn-secondary" onclick="useTemporaryCurrentLocation()" style="margin:0;">📍 今いる場所で一時計算</button>
+      <button class="btn-secondary" onclick="restoreRegisteredHome()" style="margin:0;">🏠 自宅に戻す</button>
+    </div>
+    <div id="temporaryLocationStatus" style="font-size:.6rem;color:var(--gold);margin-top:6px;line-height:1.7;"></div>
+  </div>
   <div style="font-size:.6rem;color:var(--mist);margin-top:8px;line-height:1.7;">
     ※ 位置情報はこの端末のみに保存されます。サーバーには送信しません。
   </div>
@@ -2000,6 +2009,9 @@ function getGeoLocation() {
     document.getElementById('homeStatus').textContent = 'このブラウザでは位置情報が使えません。';
     return;
   }
+  if (localStorage.getItem('kitoku-home') && !confirm('現在の自宅登録を、今いる場所で上書きします。よろしいですか？')) {
+    return;
+  }
   document.getElementById('homeStatus').textContent = '現在地を取得中...';
   navigator.geolocation.getCurrentPosition(pos => {
     gState.homeLat = pos.coords.latitude;
@@ -2007,11 +2019,60 @@ function getGeoLocation() {
     gState.homeLabel = '現在地';
     saveHome();
     showHomeRegistered();
+    setTemporaryLocationStatus('');
     document.getElementById('homeStatus').textContent = '';
     if (gState.destLat) calcAndShowDir();
   }, err => {
     document.getElementById('homeStatus').textContent = '現在地の取得に失敗しました。住所で入力してください。';
   });
+}
+
+
+function setTemporaryLocationStatus(message) {
+  const el = document.getElementById('temporaryLocationStatus');
+  if (el) el.textContent = message || '';
+}
+function useTemporaryCurrentLocation() {
+  if (!navigator.geolocation) {
+    setTemporaryLocationStatus('このブラウザでは位置情報が使えません。');
+    return;
+  }
+  setTemporaryLocationStatus('現在地を取得中...');
+  navigator.geolocation.getCurrentPosition(pos => {
+    gState.homeLat = pos.coords.latitude;
+    gState.homeLon = pos.coords.longitude;
+    gState.homeLabel = '現在地（一時）';
+    showHomeRegistered();
+    const label = document.getElementById('homeLabel');
+    if (label) label.textContent = '現在地（一時・保存なし）';
+    setTemporaryLocationStatus('一時的な基準地点で計算中です。自宅登録は変更していません。');
+    const status = document.getElementById('homeStatus');
+    if (status) status.textContent = '';
+    if (gState.destLat) calcAndShowDir();
+  }, err => {
+    setTemporaryLocationStatus('現在地の取得に失敗しました。端末の位置情報設定をご確認ください。');
+  });
+}
+function restoreRegisteredHome() {
+  const raw = localStorage.getItem('kitoku-home');
+  if (!raw) {
+    alert('登録済みの自宅がありません。先に自宅を登録してください。');
+    return;
+  }
+  try {
+    const h = JSON.parse(raw);
+    const lat = Number(h.lat);
+    const lon = Number(h.lon != null ? h.lon : h.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) throw new Error('invalid home');
+    gState.homeLat = lat;
+    gState.homeLon = lon;
+    gState.homeLabel = h.label || '登録済み自宅';
+    showHomeRegistered();
+    setTemporaryLocationStatus('登録済みの自宅に戻しました。');
+    if (gState.destLat) calcAndShowDir();
+  } catch(e) {
+    alert('登録済みの自宅データを読み込めませんでした。');
+  }
 }
 
 function saveHome() {
@@ -2033,6 +2094,7 @@ function changeHome() {
   document.getElementById('homeRegistered').style.display = 'none';
   document.getElementById('homeInput').value = '';
   document.getElementById('homeStatus').textContent = '';
+  setTemporaryLocationStatus('');
   gState.homeLat = null;
   gState.homeLon = null;
   localStorage.removeItem('kitoku-home');
