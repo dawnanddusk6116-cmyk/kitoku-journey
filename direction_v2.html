@@ -1819,8 +1819,8 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
             <div style="font-size:.64rem;letter-spacing:.1em;color:var(--gold);font-weight:800;margin-bottom:6px;">🧭 任意の場所の方位を確かめる</div>
             <div id="directionTapResult" style="font-size:.62rem;color:var(--mist);line-height:1.75;background:rgba(255,255,255,.04);border:1px solid rgba(196,160,67,.18);border-radius:8px;padding:8px 10px;margin-bottom:8px;">地図上の気になる場所をタップすると、中心地点から見た方位と距離だけを表示します。</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-              <button type="button" onclick="toggleDirectionPlaces()" id="directionPlacesBtn" style="flex:1;min-width:120px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:7px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">⭐ 登録地点 ▾</button>
-              <button type="button" onclick="registerDirectionCenter()" style="flex:1;min-width:120px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:7px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">＋ 中心地点を登録</button>
+              <button type="button" onclick="toggleDirectionPlaces()" id="directionPlacesBtn" style="flex:1;min-width:120px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:7px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">⭐ 保存1〜3 ▾</button>
+              <button type="button" onclick="registerDirectionCenter()" style="flex:1;min-width:120px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.3);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:7px 8px;cursor:pointer;font-family:'Noto Serif JP',serif;font-weight:700;">＋ 空き枠に保存</button>
             </div>
             <div id="directionPlacesList" style="display:none;background:rgba(255,255,255,.05);border:1px solid rgba(196,160,67,.18);border-radius:8px;overflow:hidden;">
               <div id="directionPlacesItems" style="padding:5px 8px;max-height:145px;overflow:auto;"></div>
@@ -1909,16 +1909,20 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   <div id="fullscreenMap" style="width:100%;height:100%;"></div>
   <button onclick="closeFullscreenMap()" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10000;background:rgba(255,255,255,.95);border:none;border-radius:50%;width:44px;height:44px;font-size:1.3rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);color:#333;">✕</button>
   <div style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:6px 14px;font-size:.62rem;color:#5c4010;font-family:'Noto Serif JP',serif;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">📍 地図は北が上 ・ ピンク＝吉方</div>
-  <div style="position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.92);border-radius:8px;padding:7px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 6px rgba(0,0,0,.2);white-space:nowrap;">ピンクの扇形が吉方位 ・ 750m以上で吉方取り</div>
+  <div id="fullscreenTapResult" style="position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:50%;transform:translateX(-50%);z-index:10000;background:rgba(255,255,255,.94);border-radius:10px;padding:8px 14px;font-size:.6rem;color:#5e503d;font-family:'Noto Serif JP',serif;box-shadow:0 2px 6px rgba(0,0,0,.2);line-height:1.55;max-width:calc(100vw - 28px);white-space:normal;text-align:center;">地図をタップすると方位と距離を確認できます</div>
 </div>
 
 <script>
 // 全画面地図
 let fsMapInstance = null;
+let fsMapLayers = [];
+let fsTapMarker = null;
+let fullscreenMapTapBound = false;
+let fullscreenLastTapAt = 0;
 function openFullscreenMap() {
   const modal = document.getElementById('fullscreenMapModal');
   modal.style.display = 'block';
-  const c = dirMapCenter || { lat: 33.8416, lng: 132.7657 };
+  const c = dirMapCenter || { lat: 33.8456, lng: 132.7658 };
   setTimeout(() => {
     if (!fsMapInstance) {
       fsMapInstance = L.map('fullscreenMap', { center: [c.lat, c.lng], zoom: 12, zoomControl: false });
@@ -1926,19 +1930,66 @@ function openFullscreenMap() {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap', maxZoom: 19
       }).addTo(fsMapInstance);
+      bindFullscreenMapTapFallback();
     } else {
-      fsMapInstance.setView([c.lat, c.lng], 11);
+      fsMapInstance.setView([c.lat, c.lng], 12);
     }
     fsMapInstance.invalidateSize();
     drawFullscreenContent(c.lat, c.lng);
-    fsMapInstance.off('zoomend').on('zoomend', () => drawFullscreenContent(c.lat, c.lng));
+    fsMapInstance.off('zoomend').on('zoomend', () => {
+      const nowCenter = dirMapCenter || c;
+      drawFullscreenContent(nowCenter.lat, nowCenter.lng);
+    });
+    updateFullscreenTapIntro();
   }, 100);
 }
 function closeFullscreenMap() {
   document.getElementById('fullscreenMapModal').style.display = 'none';
 }
+function updateFullscreenTapIntro(){
+  const box = document.getElementById('fullscreenTapResult');
+  if(box) box.textContent = '地図をタップすると、中心地点から見た方位と距離を確認できます';
+}
+function bindFullscreenMapTapFallback(){
+  if(!fsMapInstance || fullscreenMapTapBound) return;
+  fsMapInstance.on('click', handleFullscreenMapTap);
+  const container = fsMapInstance.getContainer();
+  if(!container) return;
+  const run = function(ev){
+    if(Date.now() - fullscreenLastTapAt < 250) return;
+    if(ev.target && ev.target.closest && ev.target.closest('.leaflet-control')) return;
+    let clientX = ev.clientX;
+    let clientY = ev.clientY;
+    if((clientX == null || clientY == null) && ev.changedTouches && ev.changedTouches[0]){
+      clientX = ev.changedTouches[0].clientX;
+      clientY = ev.changedTouches[0].clientY;
+    }
+    if(clientX == null || clientY == null) return;
+    const rect = container.getBoundingClientRect();
+    const point = L.point(clientX - rect.left, clientY - rect.top);
+    handleFullscreenMapTap({latlng:fsMapInstance.containerPointToLatLng(point)});
+  };
+  container.addEventListener('click', run, true);
+  container.addEventListener('pointerup', run, true);
+  container.addEventListener('touchend', run, true);
+  fullscreenMapTapBound = true;
+}
+function handleFullscreenMapTap(e){
+  fullscreenLastTapAt = Date.now();
+  if(!fsMapInstance || !e || !e.latlng) return;
+  const c = dirMapCenter || { lat: 33.8456, lng: 132.7658 };
+  if(fsTapMarker) fsTapMarker.setLatLng(e.latlng);
+  else fsTapMarker = L.marker(e.latlng, {title:'確認地点'}).addTo(fsMapInstance);
+  const bearing = bearingBetween(c.lat, c.lng, e.latlng.lat, e.latlng.lng);
+  const dir = directionFromBearing(bearing);
+  const dist = distanceMeters(c.lat, c.lng, e.latlng.lat, e.latlng.lng);
+  const html = buildDirectionTapHtml(dir, bearing, dist);
+  const fsBox = document.getElementById('fullscreenTapResult');
+  if(fsBox) fsBox.innerHTML = html;
+  const normalBox = document.getElementById('directionTapResult');
+  if(normalBox) normalBox.innerHTML = html;
+}
 
-let fsMapLayers = [];
 function drawFullscreenContent(lat, lng) {
   if (!fsMapInstance) return;
   fsMapLayers.forEach(l => fsMapInstance.removeLayer(l));
@@ -1963,12 +2014,12 @@ function drawFullscreenContent(lat, lng) {
   const kyouSet = new Set(kyouItems.filter(k => !k.name.includes('定位対冲')).map(k => k.dir));
 
   // 中心マーカー
-  const cm = L.circleMarker([lat, lng], { radius: 7, fillColor: '#c4a043', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(fsMapInstance);
+  const cm = L.circleMarker([lat, lng], { radius: 7, fillColor: '#c4a043', color: '#fff', weight: 2, fillOpacity: 1, interactive: false }).addTo(fsMapInstance);
   fsMapLayers.push(cm);
 
   // 距離円
   [[0.75,'rgba(196,160,67,.25)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.05)']].forEach(([r, fill]) => {
-    const circle = L.circle([lat, lng], { radius: r*1000, color: 'rgba(196,160,67,.3)', weight: 1, fill: true, fillColor: fill, fillOpacity: 0.3 }).addTo(fsMapInstance);
+    const circle = L.circle([lat, lng], { radius: r*1000, color: 'rgba(196,160,67,.3)', weight: 1, fill: true, fillColor: fill, fillOpacity: 0.3, interactive: false }).addTo(fsMapInstance);
     fsMapLayers.push(circle);
   });
 
@@ -1994,7 +2045,7 @@ function drawFullscreenContent(lat, lng) {
       }
       const fanColor = dd.rank >= 4 ? '#e84d80' : dd.rank >= 3 ? '#f06a98' : '#f5a8c0';
       const fanOpacity = dd.rank >= 4 ? 0.2 : dd.rank >= 3 ? 0.15 : 0.11;
-      const fan = L.polygon(pts, { color: fanColor, weight: 1.5, opacity: 0.5, fillColor: fanColor, fillOpacity: fanOpacity });
+      const fan = L.polygon(pts, { color: fanColor, weight: 1.5, opacity: 0.5, fillColor: fanColor, fillOpacity: fanOpacity, interactive: false });
       fan.addTo(fsMapInstance);
       fsMapLayers.push(fan);
       // 吉方ラベル
@@ -2060,12 +2111,6 @@ function initDirectionMap() {
     else setDirectionMapCenter(savedCenter.lat, savedCenter.lng, savedCenter.label, true);
     return;
   }
-  const homeCenter = readDirectionHomeCenter();
-  if (homeCenter) {
-    if (!dirMapInstance) createDirMap(homeCenter.lat, homeCenter.lng, homeCenter.label);
-    else setDirectionMapCenter(homeCenter.lat, homeCenter.lng, homeCenter.label, true);
-    return;
-  }
   if (!navigator.geolocation) {
     if (!dirMapInstance) createDirMap(33.8456, 132.7658, '松山城');
     return;
@@ -2082,10 +2127,10 @@ function initDirectionMap() {
     },
     () => {
       if (!dirMapInstance) createDirMap(33.8456, 132.7658, '松山城');
-    }
+    },
+    { enableHighAccuracy: true, timeout: 7000, maximumAge: 300000 }
   );
 }
-
 function createDirMap(lat, lng, label) {
   dirMapCenter = { lat, lng };
   setTimeout(() => {
@@ -2349,8 +2394,8 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
   dirMapLines.push(mapCompassOverlay);
 }
 
-const DIRECTION_PLACE_KEY = 'kitoku-direction-map-places';
-const DIRECTION_CENTER_KEY = 'kitoku-direction-map-center';
+const DIRECTION_PLACE_KEY = 'kitoku-direction-map-place-slots-v1';
+const DIRECTION_CENTER_KEY = 'kitoku-direction-map-center-v2';
 const DIRECTION_PLACE_LIMIT = 3;
 const DIRECTION_JP = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
 const DIRECTION_SPANS = [
@@ -2421,6 +2466,12 @@ function loadDirectionPlaces(){
   try{ directionPlaces = JSON.parse(localStorage.getItem(DIRECTION_PLACE_KEY)||'[]'); }
   catch(e){ directionPlaces = []; }
   if(!Array.isArray(directionPlaces)) directionPlaces = [];
+  const slots = [];
+  for(let i=0;i<DIRECTION_PLACE_LIMIT;i++){
+    const p = normalizeDirectionPoint(directionPlaces[i], '保存' + (i+1));
+    slots.push(p ? {name:p.label || ('保存' + (i+1)), lat:p.lat, lng:p.lng} : null);
+  }
+  directionPlaces = slots;
 }
 function saveDirectionPlaces(){
   try{ localStorage.setItem(DIRECTION_PLACE_KEY, JSON.stringify(directionPlaces)); }
@@ -2481,9 +2532,10 @@ function handleDirectionMapTap(e){
   const dir = directionFromBearing(bearing);
   const dist = distanceMeters(dirMapCenter.lat, dirMapCenter.lng, lat, lng);
   const box = document.getElementById('directionTapResult');
-  if(box){
-    box.innerHTML = '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span>';
-  }
+  if(box) box.innerHTML = buildDirectionTapHtml(dir, bearing, dist);
+}
+function buildDirectionTapHtml(dir, bearing, dist){
+  return '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span>';
 }
 function toggleDirectionPlaces(){
   const list = document.getElementById('directionPlacesList');
@@ -2491,62 +2543,74 @@ function toggleDirectionPlaces(){
   if(!list || !btn) return;
   const open = getComputedStyle(list).display !== 'none';
   list.style.display = open ? 'none' : 'block';
-  btn.textContent = open ? '⭐ 登録地点 ▾' : '⭐ 登録地点 ▴';
+  btn.textContent = open ? '⭐ 保存1〜3 ▾' : '⭐ 保存1〜3 ▴';
   if(!open) renderDirectionPlaces();
 }
 function renderDirectionPlaces(){
   const box = document.getElementById('directionPlacesItems');
   if(!box) return;
-  if(!directionPlaces.length){
-    box.innerHTML = '<div style="font-size:.6rem;color:var(--mist);padding:8px;text-align:center;">まだ登録した場所がありません</div>';
-    return;
-  }
-  let html = '';
-  directionPlaces.forEach((p,i) => {
-    const lat = Number(p.lat);
-    const lng = Number(p.lng);
-    html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(196,160,67,.12);">'
-      + '<button type="button" onclick="selectDirectionPlace('+i+')" style="flex:1;text-align:left;background:none;border:none;color:var(--goldlt);font-family:&quot;Noto Serif JP&quot;,serif;font-size:.65rem;font-weight:700;cursor:pointer;padding:0;">' + directionEsc(p.name || '登録地点')
-      + '<span style="display:block;font-size:.52rem;color:var(--mist);font-weight:500;">' + (Number.isFinite(lat) ? lat.toFixed(4) : '-') + ', ' + (Number.isFinite(lng) ? lng.toFixed(4) : '-') + '</span></button>'
-      + '<button type="button" onclick="deleteDirectionPlace('+i+')" style="width:24px;height:24px;border:1px solid rgba(196,160,67,.2);border-radius:6px;background:rgba(255,255,255,.05);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>'
+  loadDirectionPlaces();
+  let html = '<div style="font-size:.58rem;color:var(--mist);line-height:1.7;padding:7px 4px 8px;">中心地点を保存1〜3に入れておくと、よく使う場所をすぐ切り替えられます。</div>';
+  for(let i=0;i<DIRECTION_PLACE_LIMIT;i++){
+    const p = directionPlaces[i];
+    const filled = !!p;
+    const lat = filled ? Number(p.lat) : NaN;
+    const lng = filled ? Number(p.lng) : NaN;
+    html += '<div style="display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px;padding:8px 4px;border-top:1px solid rgba(196,160,67,.12);">'
+      + '<div style="min-width:0;"><div style="font-size:.66rem;color:var(--goldlt);font-weight:800;">保存' + (i+1) + '：' + (filled ? directionEsc(p.name || '登録地点') : '未登録') + '</div>'
+      + '<div style="font-size:.52rem;color:var(--mist);line-height:1.5;">' + (filled && Number.isFinite(lat) ? lat.toFixed(4) + ', ' + lng.toFixed(4) : '現在の中心地点をここに保存できます') + '</div></div>'
+      + (filled ? '<button type="button" onclick="selectDirectionPlace('+i+')" style="border:1px solid rgba(196,160,67,.28);border-radius:7px;background:rgba(196,160,67,.1);color:var(--goldlt);font-size:.6rem;padding:6px 8px;font-weight:700;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;">使う</button>' : '<button type="button" onclick="saveDirectionSlot('+i+')" style="border:1px solid rgba(196,160,67,.28);border-radius:7px;background:rgba(196,160,67,.1);color:var(--goldlt);font-size:.6rem;padding:6px 8px;font-weight:700;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;">保存</button>')
+      + (filled ? '<button type="button" onclick="deleteDirectionPlace('+i+')" style="width:28px;height:28px;border:1px solid rgba(196,160,67,.2);border-radius:7px;background:rgba(255,255,255,.05);color:var(--mist);font-size:.65rem;cursor:pointer;">✕</button>' : '<span></span>')
       + '</div>';
-  });
+  }
   box.innerHTML = html;
 }
 function selectDirectionPlace(i){
   const p = directionPlaces[i];
   if(!p) return;
-  setDirectionMapCenter(p.lat, p.lng, p.name || '登録地点');
+  setDirectionMapCenter(p.lat, p.lng, p.name || ('保存' + (i+1)));
   const list = document.getElementById('directionPlacesList');
   const btn = document.getElementById('directionPlacesBtn');
   if(list) list.style.display = 'none';
-  if(btn) btn.textContent = '⭐ 登録地点 ▾';
+  if(btn) btn.textContent = '⭐ 保存1〜3 ▾';
 }
 function deleteDirectionPlace(i){
   if(!directionPlaces[i]) return;
-  if(!confirm('この登録地点を削除しますか？')) return;
-  directionPlaces.splice(i,1);
+  if(!confirm('保存' + (i+1) + 'を削除しますか？')) return;
+  directionPlaces[i] = null;
   saveDirectionPlaces();
+  renderDirectionPlaces();
+}
+function saveDirectionSlot(i){
+  if(!dirMapCenter){ alert('中心地点がまだ設定されていません。'); return; }
+  const current = directionPlaces[i];
+  const defaultName = current && current.name ? current.name : '保存' + (i+1);
+  const name = prompt('保存' + (i+1) + 'の名前を入力してください', defaultName);
+  if(!name) return;
+  directionPlaces[i] = {name:String(name).slice(0,24),lat:dirMapCenter.lat,lng:dirMapCenter.lng};
+  saveDirectionPlaces();
+  saveDirectionCenter(dirMapCenter.lat, dirMapCenter.lng, String(name).slice(0,24));
   renderDirectionPlaces();
 }
 function registerDirectionCenter(){
   if(!dirMapCenter){ alert('中心地点がまだ設定されていません。'); return; }
-  if(directionPlaces.length >= DIRECTION_PLACE_LIMIT){ alert('登録地点は最大3件までです。'); return; }
-  const name = prompt('登録地点の名前を入力してください', '登録地点');
-  if(!name) return;
-  directionPlaces.push({name:String(name).slice(0,24),lat:dirMapCenter.lat,lng:dirMapCenter.lng});
-  saveDirectionPlaces();
-  renderDirectionPlaces();
+  let slot = directionPlaces.findIndex(p => !p);
+  if(slot < 0){
+    const input = prompt('保存1〜3のどこに上書きしますか？（1, 2, 3）', '1');
+    slot = parseInt(input, 10) - 1;
+    if(slot < 0 || slot >= DIRECTION_PLACE_LIMIT) return;
+  }
+  saveDirectionSlot(slot);
   const list = document.getElementById('directionPlacesList');
   const btn = document.getElementById('directionPlacesBtn');
   if(list) list.style.display = 'block';
-  if(btn) btn.textContent = '⭐ 登録地点 ▴';
+  if(btn) btn.textContent = '⭐ 保存1〜3 ▴';
 }
 function centerDirectionMap() {
-  if (!navigator.geolocation || !dirMapInstance) return;
+  if (!navigator.geolocation || !dirMapInstance) { alert('現在地を取得できません。'); return; }
   navigator.geolocation.getCurrentPosition(pos => {
     setDirectionMapCenter(pos.coords.latitude, pos.coords.longitude, '現在地');
-  });
+  }, () => alert('現在地を取得できませんでした。端末の位置情報設定をご確認ください。'), { enableHighAccuracy: true, timeout: 7000, maximumAge: 300000 });
 }
 
 // ══════════════════════════════════════════════════════
