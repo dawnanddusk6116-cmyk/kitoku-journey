@@ -12,7 +12,7 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="kitoku-engine.js"></script>
+<script src="kitoku-engine.js?v=20260803h"></script>
 <style>
 /* ═══════════════════════════════════════
    KITOKU 国内旅行 吉方位ナビ
@@ -2556,7 +2556,7 @@ function calcAndShowDir() {
         </div>
       </div>
       ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
-      ${generateTravelYoshiAlert(yearRank, monthRank, false)}
+      ${generateTravelYoshiAlert(yearRank, monthRank, false, yearBranch.k, monthBranch)}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
         <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
         <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
@@ -3468,7 +3468,7 @@ function generateTravelKyoAlert(yearBadges, monthBadges, isPilgrimage) {
 
 
 // ── 旅行・巡礼用 吉方アラート ──
-function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
+function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearBranchKey, monthBranchKey) {
   const yr = yearRank.rank || 0;
   const mr = monthRank.rank || 0;
   const yb = yearRank.badges || [];
@@ -3480,9 +3480,19 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
   const isMax  = yr >= 5 || mr >= 5 ||
     [...yb,...mb].some(b => b.includes('三合') || b.includes('条件が重なる'));
   const SANGO_PURPOSE_P={'木局':'発展・成長・教育・営業活動に最適。','火局':'知的・芸術・文化活動に最適。','金局':'経済活動が盛ん。人生の悦びを得て感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。'};
-  const sangoMatch=[...yb,...mb].find(b=>Object.keys(SANGO_PURPOSE_P).some(k=>b.includes(k)));
-  const sangoGroup=sangoMatch?Object.keys(SANGO_PURPOSE_P).find(k=>sangoMatch.includes(k)):'';
-  const sangoPurpose=sangoGroup?SANGO_PURPOSE_P[sangoGroup]:'';
+  const sangoEntries=[];
+  if(yb.some(b=>b.includes('三合'))){
+    const group=((SANGO_MAP[yearBranchKey]||{}).group)||'';
+    if(group) sangoEntries.push({label:'年盤',group});
+  }
+  if(mb.some(b=>b.includes('三合'))){
+    const group=((SANGO_MAP[monthBranchKey]||{}).group)||'';
+    if(group) sangoEntries.push({label:'月盤',group});
+  }
+  const sangoPurpose=sangoEntries.map(e=>{
+    const prefix=sangoEntries.length>1?e.label+'・':'';
+    return prefix+e.group+'：'+(SANGO_PURPOSE_P[e.group]||'');
+  }).filter(Boolean).join(' / ');
   const isBoth = yr >= 4 && mr >= 2;
   const badges = [...new Set([...yb,...mb])].filter(b=>!b.includes('⚠')).join('・');
   const senroMsg = isPilgrimage

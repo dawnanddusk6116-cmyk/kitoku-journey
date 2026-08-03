@@ -379,7 +379,7 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
   const inBonus55=is55&&bonus55&&starN===bonus55;
-  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 後押しが重なる吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inBonus55)return{rank:3,badges:['✦ 特大ボーナス方位','⭐ 5-5特例',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
@@ -705,7 +705,7 @@ function renderKichiList(dirData,p2s){
     let cls='kichi-item';
     if(dd.rank>=5||dd.rank>=4)cls+=' saiko';
     else if(dd.rank>=3)cls+=' dai';
-    const rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方':dd.rank>=4?'本命・月命　ともに吉方':dd.rank>=3?'吉方（三合の後押しあり）':'吉方（人に与える日）';
+    const rankLabel=dd.rank>=5?'本命・月命・三合が重なる吉方':dd.rank>=4?'本命・月命　ともに吉方':dd.rank>=3?'吉方（三合の後押しあり）':'吉方（人に与える日）';
     return `<div class="${cls}">
       <div class="kichi-dir-badge">
         <div class="kichi-dir">${EN[dir]}</div>
