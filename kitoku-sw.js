@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260803a';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260803b';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -17,6 +17,7 @@ const KITOKU_CORE = [
   './academy_pdf_08.html',
   './academy_pdf_09.html',
   './academy_pdf_10.html',
+  './academy_pdf_11.html',
   './academy_assets/08/ss1_relations_top.png',
   './academy_assets/08/ss2_relations_input.png',
   './academy_assets/08/ss3_relations_result.png',
@@ -31,6 +32,11 @@ const KITOKU_CORE = [
   './academy_assets/10/ss3_today_bad_directions.png',
   './academy_assets/10/ss4_amber_prescription.png',
   './academy_assets/10/ss5_good_spots.png',
+  './academy_assets/11/ss1_kyusei_star.png',
+  './academy_assets/11/ss2_map_panel.png',
+  './academy_assets/11/ss3_top_entry.png',
+  './academy_assets/11/ss4_today_board.png',
+  './academy_assets/11/ss5_map_close.png',
   './academy_pdf_start_01.html',
   './academy_pdf_start_02.html',
   './academy_pdf_start_03.html',
@@ -53,6 +59,7 @@ const KITOKU_CORE = [
   './kitoku_academy_08.pdf',
   './kitoku_academy_09.pdf',
   './kitoku_academy_10.pdf',
+  './kitoku_academy_11.pdf',
   './kitoku_academy_start_01.pdf',
   './kitoku_academy_start_02.pdf',
   './kitoku_academy_start_03.pdf',
