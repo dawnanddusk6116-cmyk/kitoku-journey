@@ -2487,12 +2487,14 @@ function calcAndShowDir() {
   const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];
 
-  const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [] };
-  const dSangoInfo = SANGO_MAP[dayBranchName] || { dirs: [] };
+  const yearBranchKey = (yearBranch && yearBranch.k) || yearBranch;
+  const ySangoInfo = SANGO_MAP[yearBranchKey] || { dirs: [], group: '' };
+  const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [], group: '' };
+  const dSangoInfo = SANGO_MAP[dayBranchName] || { dirs: [], group: '' };
 
-  const ySangoSet = new Set(SANGO_MAP[yearBranch.k]?.dirs || []);
-  const mSangoSet = new Set(mSangoInfo.dirs);
-  const dSangoSet = new Set(dSangoInfo.dirs);
+  const ySangoSet = new Set(ySangoInfo.dirs || []);
+  const mSangoSet = new Set(mSangoInfo.dirs || []);
+  const dSangoSet = new Set(dSangoInfo.dirs || []);
 
   const tendo = getTendoDir(viewY, viewM, viewD);
 
@@ -2556,7 +2558,7 @@ function calcAndShowDir() {
         </div>
       </div>
       ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
-      ${generateTravelYoshiAlert(yearRank, monthRank, false, yearBranch.k, monthBranch)}
+      ${generateTravelYoshiAlert(yearRank, monthRank, false, ySangoInfo.group, mSangoInfo.group)}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
         <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
         <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
@@ -3468,7 +3470,7 @@ function generateTravelKyoAlert(yearBadges, monthBadges, isPilgrimage) {
 
 
 // ── 旅行・巡礼用 吉方アラート ──
-function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearBranchKey, monthBranchKey) {
+function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGroup, monthSangoGroup) {
   const yr = yearRank.rank || 0;
   const mr = monthRank.rank || 0;
   const yb = yearRank.badges || [];
@@ -3482,17 +3484,18 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearBranchK
   const SANGO_PURPOSE_P={'木局':'発展・成長・教育・営業活動に最適。','火局':'知的・芸術・文化活動に最適。','金局':'経済活動が盛ん。人生の悦びを得て感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。'};
   const sangoEntries=[];
   if(yb.some(b=>b.includes('三合'))){
-    const group=((SANGO_MAP[yearBranchKey]||{}).group)||'';
+    const group=yearSangoGroup || '';
     if(group) sangoEntries.push({label:'年盤',group});
   }
   if(mb.some(b=>b.includes('三合'))){
-    const group=((SANGO_MAP[monthBranchKey]||{}).group)||'';
+    const group=monthSangoGroup || '';
     if(group) sangoEntries.push({label:'月盤',group});
   }
   const sangoPurpose=sangoEntries.map(e=>{
     const prefix=sangoEntries.length>1?e.label+'・':'';
     return prefix+e.group+'：'+(SANGO_PURPOSE_P[e.group]||'');
   }).filter(Boolean).join(' / ');
+  const sangoHelp=sangoEntries.length?'<details style="margin-top:10px;background:rgba(255,255,255,.68);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:9px 10px;"><summary style="cursor:pointer;font-size:.64rem;font-weight:700;color:var(--goldlt);list-style:none;">？ 三合の後押しとは？</summary><div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-top:7px;">三合は、十二支の流れが三つの方角で支え合う組み合わせです。吉方に三合が重なる時は、その旅の目的に沿った後押しが強まる、と見ます。木局は発展、火局は学びや表現、金局は喜びや実り、水局は回復や家族の調和。これは必ず行くべきという命令ではなく、旅の質を上げるための目安です。</div></details>':'';
   const isBoth = yr >= 4 && mr >= 2;
   const badges = [...new Set([...yb,...mb])].filter(b=>!b.includes('⚠')).join('・');
   const senroMsg = isPilgrimage
@@ -3508,6 +3511,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearBranchK
       <strong style="color:var(--goldlt);">✦ ぜひこの方角・この時期に動いてください。</strong><br>
       遠くへ行くほど・長く滞在するほど吉のエネルギーが大きくなります。
       ${sangoPurpose?'<br>🎯 三合の目的：<strong style="color:var(--goldlt);">'+sangoPurpose+'</strong>':''}
+      ${sangoHelp}
     </div>
     ${senroMsg}
   </div>`;
