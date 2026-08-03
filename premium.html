@@ -1315,7 +1315,7 @@ function dirInfo(dir,dirData){
   const dd=dirData[dir]||{};
   if(dd.isKyo)return {nameClass:'kyo',badgeClass:'kyo',sub:dd.kyoNames.join('・')||'凶方'};
   if(dd.isCaution)return {nameClass:dd.rank>=2?'kichi':'caution',badgeClass:'caution',sub:dd.rank>=2?'吉方・定位注意':(dd.cautionNames||[]).join('・')||'定位注意'};
-  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'最高吉方'};
+  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'条件重なり'};
   if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:'本命・月命 吉'};
   if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方・三合'};
   if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方'};
@@ -2219,7 +2219,7 @@ ${boardSummary}${senroSummary}
 
 ▌同会の右腕ハック
 ・事業規模を爆発的に広げるのは、経営者の「同会の星」を持つ人間
-・その人を右腕・営業トップに配置すると、経営者が動かなくても新しい人脈・顧客を次々と引き寄せる
+・その人を右腕・営業の中心に配置すると、経営者が動かなくても新しい人脈・顧客を次々と引き寄せる
 
 ▌五黄クレーム処理ハック
 ・誰も解決できないドロドロのクレーム・不良債権は「五黄土星（または同会五黄）」の社員に任せると最速で解決される
@@ -2701,7 +2701,7 @@ ${teachingCorpus || '※ 現在、156本の本文データは未接続です。�
 Vol.53「啐啄同時」
 卵が内から叩く前に
 外から割ってはならない。
-待つことが最高の愛です。
+待つことが深い愛です。
 ─ 禅語より
 
 【生成ルール】
@@ -3793,7 +3793,7 @@ const STAR_SHOUI = {
   5:{name:'五黄土星',gogyo:'土',colors:['黄','茶','オード色'],taste:'甘味',
      foods:['発酵食品（味噌・納豆・チーズ）','根菜','甘いもの'],
      items:['首相・大統領など頂点に立つ人物の置物や写真','黄色・茶色の置物や絵','発酵食品','黄色・茶色のゴミ箱（綺麗なもの）','帝王・中心を表すもの'],
-     keyword:'帝王・中心・支配・トップ'}
+     keyword:'帝王・中心・支配・リーダー'}
 };
 
 // 恵方の度数を八方位に変換（最も近い方位を返す）
@@ -4009,7 +4009,7 @@ function renderEhouMairiNav(){
       const which=checkNear(sw.natsu,d.getFullYear())?'陽遁→陰遁（九紫中宮）':'陰遁→陽遁（一白中宮）';
       todayAlertHtml=`<div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(135deg,rgba(232,77,128,.12),rgba(212,160,40,.12));border:2px solid rgba(232,77,128,.4);border-radius:11px;">
         <div style="font-size:.74rem;color:#d24a78;font-weight:900;margin-bottom:4px;">⭐ 今日は「日盤の切り替わり」です！</div>
-        <div style="font-size:.62rem;color:var(--snow);line-height:1.85;">天のエネルギーが反転する特異点（${which}）。運気のズレが大きくなるこの2日間に<strong>恵方参り</strong>へ行くと、ズレが修正され、巨大なチャンスを掴めます。今年最高クラスのボーナス日です。</div>
+        <div style="font-size:.62rem;color:var(--snow);line-height:1.85;">天のエネルギーが反転する特異点（${which}）。運気のズレが大きくなるこの2日間に<strong>恵方参り</strong>へ行くと、ズレが修正され、巨大なチャンスを掴めます。今年の大きな後押し日です。</div>
       </div>`;
     }
     if(sw.natsu||sw.fuyu){
@@ -5179,7 +5179,7 @@ function judgeDirForMap(dir){
     if(dd.rank>=2) return { kind:'kichi', label:'吉方', color:'#e84d80', sub:'吉方・定位注意' };
     return { kind:'normal', label:'注意', color:'#b8860b', sub:(dd.cautionNames||[]).join('・')||'定位注意' };
   }
-  if(dd.rank>=5) return { kind:'kichi', label:'最高吉方', color:'#e84d80', sub:'最高吉方' };
+  if(dd.rank>=5) return { kind:'kichi', label:'条件重なり', color:'#e84d80', sub:'条件が重なる吉方' };
   if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'本命・月命 吉' };
   if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方・三合' };
   if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方' };
@@ -5735,7 +5735,7 @@ function closeDirPopup(){
 
 function dpBuildRankMeter(rank){
   const safe=Math.max(0,Math.min(5,Number(rank)||0));
-  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','最高ランク'];
+  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','条件がすべて重なる吉方'];
   const dots=Array.from({length:5},(_,i)=>`<span class="dp-rank-dot ${i<safe?'on':''}"></span>`).join('');
   return `<div class="dp-rank-meter">
     <div class="dp-rank-head">
@@ -5781,7 +5781,7 @@ function openDirPopupPremium(dir,center,dirData,extra){
   // 吉方ランクラベル
   const sangoSet=getSangoSetForPremiumDate();
   const isSango=sangoSet.has(dir);
-  const rankLabel=rank>=5?'本命・月命・三合　最高の吉方':rank>=4?'本命・月命　ともに吉方':rank>=3?'吉方（三合の後押しあり）':rank>=2?'吉方（人に与える日）':'吉方情報なし';
+  const rankLabel=rank>=5?'本命・月命・三合が重なる吉方':rank>=4?'本命・月命　ともに吉方':rank>=3?'吉方（三合の後押しあり）':rank>=2?'吉方（人に与える日）':'吉方情報なし';
   const rankColor=isKyo?'#b03028':isCaution?'#c08a2c':rank>=4?'#1d7a6a':'#1d7a6a';
 
   // 飲食処方箋
@@ -6227,6 +6227,6 @@ if(document.readyState === 'loading'){
   kitokuInitAuth();
 }
 </script>
-<script src="kitoku-badge.js?v=20260731sekki"></script>
+<script src="kitoku-badge.js?v=20260803rank"></script>
 </body>
 </html>

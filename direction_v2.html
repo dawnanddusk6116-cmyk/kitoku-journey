@@ -2843,13 +2843,13 @@ const NT=[
   {n:'海中金', r:'かいちゅうきん', e:'金', kw:'秘められた宝・深い誠実さ・時間で輝く才能',
    body:'深海に眠る金のように、派手に自己主張しないが内側に揺るぎない誠実さと深い洞察力を持つ。真に価値を分かってくれる人との出会いで一気に輝き出す。'},
   {n:'炉中火', r:'ろちゅうか', e:'火', kw:'創造の炎・情熱・人を温める力',
-   body:'鍛冶屋の炉のようにあらゆるものを精錬する創造の炎。目標が定まった時の集中力は30種中最高クラス。人の心を温め勇気を与えるエネルギー。'},
+   body:'鍛冶屋の炉のようにあらゆるものを精錬する創造の炎。目標が定まった時の集中力は30種の中でも大きな力を持ちます。人の心を温め勇気を与えるエネルギー。'},
   {n:'大林木', r:'だいりんぼく', e:'木', kw:'大きな森・包容力・揺るぎない存在感',
    body:'大きな森のように多くの命を包み育てる存在。組織の中で縁の下の力持ちとして輝く。雨（天河水）に潤われると最大限に成長する。'},
   {n:'路傍土', r:'ろぼうど', e:'土', kw:'揺るぎない道・誠実・踏まれるほど強くなる',
    body:'多くの人が安心して歩ける道のエネルギー。踏まれるほどに硬く強くなる30種屈指の忍耐力と誠実さ。目立たなくても努力は必ず豊かな実りとなる。'},
   {n:'剣鋒金', r:'けんぽうきん', e:'金', kw:'智慧の刃・一言で本質を切る・鋭い洞察',
-   body:'30種中最も鋭く研ぎ澄まされた智慧の刃。一言で本質を切り取り誰も気づかない真実を照らす。その鋭さは欠点ではなく最高の才能。'},
+   body:'30種中最も鋭く研ぎ澄まされた智慧の刃。一言で本質を切り取り誰も気づかない真実を照らす。その鋭さは欠点ではなく、大きな才能。'},
   {n:'山頭火', r:'さんとうか', e:'火', kw:'山頂の炎・高い理想・人を照らす光',
    body:'山の頂上に燃える炎。遠くから見ても希望の灯台となる存在。高い理想と孤高の輝きを持つが、その炎が人の道を照らす時に最も美しく燃える。'},
   {n:'澗下水', r:'かんかすい', e:'水', kw:'谷の清流・浄化・見えない場所で潤す',
@@ -2883,7 +2883,7 @@ const NT=[
   {n:'覆燈火', r:'ふくとうか', e:'火', kw:'隠れた知性・静寂の力・夜の羅針盤',
    body:'覆いの中で燃える灯火。表には出ないが静かに確実に周囲を照らす知性を持つ。夜の羅針盤として人々の道を導く力がある。'},
   {n:'天河水', r:'てんがすい', e:'水', kw:'博愛・高い視座・慈雨・人を導く才能',
-   body:'30種の中でも最も高い場所に源を持つ最強の水のエネルギー。誰にでも平等に注ぐ博愛と高い視点から世界を見渡す洞察力は、コーチング・教育・人を導く役割において最高の才能を発揮する。少し孤独を感じるのは、それだけ高い場所に立っているから。ただそこにいて潤いを放つだけで砂漠はオアシスになる。'},
+   body:'30種の中でも高い場所に源を持つ大きな水のエネルギー。誰にでも平等に注ぐ博愛と高い視点から世界を見渡す洞察力は、コーチング・教育・人を導く役割において大きな才能を発揮する。少し孤独を感じるのは、それだけ高い場所に立っているから。ただそこにいて潤いを放つだけで砂漠はオアシスになる。'},
   {n:'大駅土', r:'たいえきど', e:'土', kw:'夢の実現力・ハブ・循環させる力',
    body:'多くの人が行き交う宿場の土。人と情報と夢を循環させるハブとしての才能を持つ。動くほどに縁が広がり夢を現実に変える実現力がある。'},
   {n:'釵釧金', r:'さいせんきん', e:'金', kw:'完成された美・品格・不変の価値',
@@ -2983,7 +2983,7 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
   const inBonus55=is55&&bonus55&&starN===bonus55;
-  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 最高の吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
+  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['✦ 本命・月命・三合','🔥 後押しが重なる吉方',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inTsuki)return{rank:4,badges:['✦ 本命・月命　ともに吉',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inBonus55)return{rank:3,badges:['✦ 特大ボーナス方位','⭐ 5-5特例',(inTendo?'☀️ 天道':null)].filter(Boolean)};
   if(inHon&&inSango)return{rank:3,badges:['✦ 吉方','🔥 三合の後押しあり',(inTendo?'☀️ 天道':null)].filter(Boolean)};
@@ -3387,7 +3387,7 @@ async function openDaily(){
       var s=STARS[dd.starN];
       if(!s)return;
       var db=KITOKU_DAILY_DB[s.elem]||KITOKU_DAILY_DB['土'];
-      var rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方'
+      var rankLabel=dd.rank>=5?'本命・月命・三合が重なる吉方'
         :dd.rank>=4?'本命・月命　ともに吉方'
         :dd.rank>=3?'吉方（三合の後押しあり）'
         :'吉方（人に与える日）';
@@ -3691,7 +3691,7 @@ function showBanGuide(){
         <div class="gogyou-title">🟢 吉方ランク — 数字が大きいほど条件が重なる</div>
         <div class="gogyou-text">
           ランクは、吉方の条件がどれだけ重なっているかを見るKITOKU内の目安です。運勢を点数化するものではなく、方位を選ぶ時の判断材料です。<br><br>
-          <strong style="color:var(--goldlt);">5/5</strong>：本命・月命・三合が重なる最高ランク<br>
+          <strong style="color:var(--goldlt);">5/5</strong>：本命・月命・三合がすべて重なる吉方<br>
           <strong style="color:var(--goldlt);">4/5</strong>：本命・月命がともに吉方<br>
           <strong style="color:var(--goldlt);">3/5</strong>：本命吉方に三合などの後押し<br>
           <strong style="color:var(--goldlt);">2/5</strong>：本命吉方<br>
@@ -4089,7 +4089,7 @@ function renderKichiList(dirData,p2s){
     let cls='kichi-item';
     if(dd.rank>=5||dd.rank>=4)cls+=' saiko';
     else if(dd.rank>=3)cls+=' dai';
-    const rankLabel=dd.rank>=5?'本命・月命・三合　最高の吉方':dd.rank>=4?'本命・月命　ともに吉方':dd.rank>=3?'吉方（三合の後押しあり）':'吉方（人に与える日）';
+    const rankLabel=dd.rank>=5?'本命・月命・三合が重なる吉方':dd.rank>=4?'本命・月命　ともに吉方':dd.rank>=3?'吉方（三合の後押しあり）':'吉方（人に与える日）';
     return `<div class="${cls}">
       <div class="kichi-dir-badge">
         <div class="kichi-dir">${EN[dir]}</div>
@@ -4203,7 +4203,7 @@ function buildAmberActionPlaceholder(star){
 
 function buildRankMeter(rank){
   const safe=Math.max(0,Math.min(5,Number(rank)||0));
-  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','最高ランク'];
+  const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','条件がすべて重なる吉方'];
   const dots=Array.from({length:5},(_,i)=>`<span class="rank-dot ${i<safe?'on':''}"></span>`).join('');
   return `<div class="rank-meter">
     <div class="rank-meter-head">
@@ -4260,7 +4260,7 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
 
   const isKyo=kyouSet?kyouSet.has(dir):(dirData&&dirData[dir]?dirData[dir].isKyo:false);
   const isCaution=dirData&&dirData[dir]?dirData[dir].isCaution:false;
-  const rankLabel=rankInfo.rank>=5?'本命・月命・三合　最高の吉方':rankInfo.rank>=4?'本命・月命　ともに吉方':rankInfo.rank>=3?'吉方（三合の後押しあり）':rankInfo.rank>=2?'吉方（人に与える日）':'吉方情報なし';
+  const rankLabel=rankInfo.rank>=5?'本命・月命・三合が重なる吉方':rankInfo.rank>=4?'本命・月命　ともに吉方':rankInfo.rank>=3?'吉方（三合の後押しあり）':rankInfo.rank>=2?'吉方（人に与える日）':'吉方情報なし';
 
   // 飲食提案
   const foods=s.conbini||[];
@@ -4627,7 +4627,7 @@ const STAR_MSG={
 
 const TODAY_WORDS=[
   '目的地へ急ぐあまり、足元に咲く小さな花を見落としていませんか？\n幸せは「どこに着くか」ではなく、「どう歩くか」に宿っています。今日は深呼吸をひとつして、今の景色を味わう旅に出ましょう。',
-  '今日の心のエネルギーはどれくらいですか？\n元気な日も、少し疲れている日も、すべてがあなたの大切な歴史です。どんな状態の自分とも仲良く歩むこと。それが最高の「旅の仕方」ですね。',
+  '今日の心のエネルギーはどれくらいですか？\n元気な日も、少し疲れている日も、すべてがあなたの大切な歴史です。どんな状態の自分とも仲良く歩むこと。それが自分にやさしい「旅の仕方」ですね。',
   '計画通りにいかないことも、旅の醍醐味のひとつです。\nもし道が塞がってしまったら、それは新しい景色を楽しむチャンス。視点を少しだけ切り替えて、今日の変化を面白がってみませんか？',
   '幸福へのパスポートは、今、あなたのその手の中にあります。\n特別な場所へ行かなくても、今の呼吸や鼓動をそっと慈しむこと。そこから、あなただけの優しい旅が始まります。',
   'いつも頑張って着ている分厚い鎧を、今日は少しだけ緩めてみませんか？\n完璧な正解なんて、本当はどこにもないのです。「今日は70点でもいいか」と微笑めるような心の余白が、長旅を楽しむための特効薬になります。',
@@ -5913,6 +5913,6 @@ function copyAIPrompt(){
 })();
 
 </script>
-<script src="kitoku-badge.js?v=20260731sekki"></script>
+<script src="kitoku-badge.js?v=20260803rank"></script>
 </body>
 </html>
