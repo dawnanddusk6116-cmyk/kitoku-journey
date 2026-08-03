@@ -2696,7 +2696,7 @@ function switchBan(type) {
 }
 
 function rankLabel(rank) {
-  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 最高吉'];
+  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 条件が重なる吉方'];
   return labels[rank] || '—';
 }
 
@@ -3506,7 +3506,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
   if (yr <= 1 && mr <= 1) return '';
 
   const isMax  = yr >= 5 || mr >= 5 ||
-    [...yb,...mb].some(b => b.includes('三合') || b.includes('最高'));
+    [...yb,...mb].some(b => b.includes('三合') || b.includes('条件が重なる'));
   // 三合の目的テキスト
   const SANGO_PURPOSE_P={'木局':'発展・成長・教育・営業活動に最適。','火局':'知的・芸術・文化活動に最適。','金局':'経済活動が盛ん。人生の悦びを得て感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。'};
   const sangoMatch=[...yb,...mb].find(b=>Object.keys(SANGO_PURPOSE_P).some(k=>b.includes(k)));
@@ -3521,7 +3521,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
   if (isMax) {
     return `
   <div style="margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.6));border:2px solid rgba(138,104,32,.4);border-radius:10px;padding:12px 14px;">
-    <div style="font-size:.75rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">★ 最高吉 — 最高のタイミングです</div>
+    <div style="font-size:.75rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">★ 条件が重なる吉方 — 動くなら今です</div>
     <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
       ${badges ? badges + '<br>' : ''}
       <strong style="color:var(--goldlt);">✦ ぜひこの方角・この時期に動いてください。</strong><br>
@@ -3628,8 +3628,8 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
       <div class="nav-modal-sec-body">
         <div class="rule-item"><div class="rule-num">①</div><div><strong>日帰りでも「年盤」を最優先</strong><br>聖地巡礼は観光旅行とは異なる「魂の旅」です。期間が短くても年盤のハザード（五黄殺・暗剣殺など）の確認を最優先に行います。</div></div>
         <div class="rule-item"><div class="rule-num">②</div><div><strong>全行程のルートをチェック</strong><br>出発地から最初のお寺だけでなく、寺→寺のすべての移動区間の方角を確認します。道中に凶方位が含まれる場合は事前にお知らせします。</div></div>
-        <div class="rule-item"><div class="rule-num">③</div><div><strong>スタートは「線路の日」が最高</strong><br>長く真っ直ぐに発展する旅の着火スイッチです。<br>天の系列（3・6・9星）：丑・辰・未・戌の日<br>人の系列（1・4・7星）：子・卯・午・酉の日<br>地の系列（2・5・8星）：寅・巳・申・亥の日</div></div>
-        <div class="rule-item"><div class="rule-num">④</div><div><strong>順番にこだわらず「パズル型」で回る</strong><br>必ずしも1番から順番に回る必要はありません。今年の自分にとって安全で吉となるエリアから、パズルのようにピースを埋めていくのが最高の軍略です。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>スタートは「線路の日」を目安にする</strong><br>長く真っ直ぐに発展する旅の着火スイッチです。<br>天の系列（3・6・9星）：丑・辰・未・戌の日<br>人の系列（1・4・7星）：子・卯・午・酉の日<br>地の系列（2・5・8星）：寅・巳・申・亥の日</div></div>
+        <div class="rule-item"><div class="rule-num">④</div><div><strong>順番にこだわらず「パズル型」で回る</strong><br>必ずしも1番から順番に回る必要はありません。今年の自分にとって安全で吉となるエリアから、パズルのようにピースを埋めていくのが現実的な巡り方です。</div></div>
         <div class="rule-item"><div class="rule-num">⑤</div><div><strong>帰着日の日盤の凶はスルーでOK</strong><br>年盤・月盤という大きなレールが吉方で揃っていれば、帰る日の日盤凶は完全に無視して構いません。</div></div>
       </div>
     </div>
@@ -3697,6 +3697,6 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
   </div>
 
 </div>
-<script src="kitoku-badge.js?v=20260731sekki"></script>
+<script src="kitoku-badge.js?v=20260803rank2"></script>
 </body>
 </html>

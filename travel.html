@@ -2669,7 +2669,7 @@ function switchBan(type) {
 }
 
 function rankLabel(rank) {
-  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 最高吉'];
+  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 条件が重なる吉方'];
   return labels[rank] || '—';
 }
 
@@ -3478,7 +3478,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
   if (yr <= 1 && mr <= 1) return '';
 
   const isMax  = yr >= 5 || mr >= 5 ||
-    [...yb,...mb].some(b => b.includes('三合') || b.includes('最高'));
+    [...yb,...mb].some(b => b.includes('三合') || b.includes('条件が重なる'));
   const SANGO_PURPOSE_P={'木局':'発展・成長・教育・営業活動に最適。','火局':'知的・芸術・文化活動に最適。','金局':'経済活動が盛ん。人生の悦びを得て感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。'};
   const sangoMatch=[...yb,...mb].find(b=>Object.keys(SANGO_PURPOSE_P).some(k=>b.includes(k)));
   const sangoGroup=sangoMatch?Object.keys(SANGO_PURPOSE_P).find(k=>sangoMatch.includes(k)):'';
@@ -3492,7 +3492,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
   if (isMax) {
     return `
   <div style="margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.6));border:2px solid rgba(138,104,32,.4);border-radius:10px;padding:12px 14px;">
-    <div style="font-size:.75rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">★ 最高吉 — 最高のタイミングです</div>
+    <div style="font-size:.75rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">★ 条件が重なる吉方 — 動くなら今です</div>
     <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
       ${badges ? badges + '<br>' : ''}
       <strong style="color:var(--goldlt);">✦ ぜひこの方角・この時期に動いてください。</strong><br>
@@ -3611,7 +3611,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage) {
         <strong>盾１：日常の日盤吉方で免疫力を高める</strong><br>
         出発前から近所の吉方カフェなどで小さな運の貯金を作っておく。日々の積み重ねが凶を弾き返すバリアになります。<br><br>
         <strong>盾２：心が先、行動が後</strong><br>
-        怯えるのではなく「この旅でどんな自分と向き合えるか」と準備しておく。その心構えひとつで凶のエネルギーは最高の成長の糧へ反転します。<br><br>
+        怯えるのではなく「この旅でどんな自分と向き合えるか」と準備しておく。その心構えひとつで凶のエネルギーは大きな成長の糧へ反転します。<br><br>
         <strong>各凶方の心がけ：</strong><br>
         🔸 五黄殺 → 自分から「ありがとう」を先に言う。自己主張を手放す<br>
         🔸 暗剣殺 → 言葉を選び、準備を念入りに。感謝の言葉を意識する<br>
@@ -3693,6 +3693,6 @@ function goPreviousPage(){
 
 </script>
 </div>
-<script src="kitoku-badge.js?v=20260731sekki"></script>
+<script src="kitoku-badge.js?v=20260803rank2"></script>
 </body>
 </html>
