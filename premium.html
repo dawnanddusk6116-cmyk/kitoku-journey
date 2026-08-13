@@ -103,6 +103,23 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .senro-date{font-size:.78rem;font-weight:800;color:var(--goldlt);}
 .senro-branch{font-size:.58rem;color:var(--mist);margin-top:3px;}
 .unlock{margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.75));border:1px solid rgba(138,104,32,.22);border-radius:10px;padding:10px;font-size:.64rem;color:var(--mist);line-height:1.8;text-align:center;}
+
+.timing-level-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0 12px;}
+.timing-level-btn{border:1px solid var(--rim);border-radius:9px;background:rgba(255,255,255,.76);color:var(--mist);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:800;line-height:1.35;padding:8px 4px;cursor:pointer;text-align:center;min-height:48px;}
+.timing-level-btn small{display:block;margin-top:2px;font-size:.48rem;color:var(--mist);font-weight:500;line-height:1.25;}
+.timing-level-btn.active{background:rgba(138,104,32,.13);border-color:rgba(138,104,32,.45);color:var(--goldlt);}
+.timing-list{display:grid;gap:8px;margin-top:10px;}
+.timing-card{border:1px solid rgba(138,104,32,.18);border-radius:10px;background:rgba(255,255,255,.68);padding:10px 11px;}
+.timing-card.special{background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.76));border-color:rgba(138,104,32,.34);}
+.timing-date{font-size:.78rem;color:var(--goldlt);font-weight:800;letter-spacing:.04em;}
+.timing-dirs{font-size:.63rem;color:var(--mist);line-height:1.7;margin-top:4px;}
+.timing-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;padding:2px 7px;border-radius:999px;border:1px solid rgba(138,104,32,.22);background:rgba(138,104,32,.07);color:var(--goldlt);font-size:.56rem;font-weight:800;}
+.timing-chip.rinju{border-color:rgba(138,104,32,.42);background:rgba(138,104,32,.16);}
+.timing-action-grid{display:grid;gap:7px;margin-top:10px;}
+.timing-action{border:1px solid rgba(138,104,32,.16);border-radius:9px;background:rgba(138,104,32,.045);padding:9px 10px;}
+.timing-action-title{font-size:.66rem;color:var(--goldlt);font-weight:800;}
+.timing-action-text{font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:3px;}
+
 .missing{margin:18px 16px;background:var(--card);border:1px solid rgba(176,64,64,.22);border-radius:12px;padding:16px;text-align:center;color:var(--mist);font-size:.72rem;line-height:1.9;}
 .self-accordion{margin:12px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:0;overflow:hidden;}
 .self-accordion summary{list-style:none;cursor:pointer;padding:14px 15px;font-size:.72rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;display:flex;align-items:center;justify-content:space-between;gap:12px;}
@@ -793,10 +810,32 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
+    <details class="panel panel-details" id="specialTimingPanel">
+      <summary>
+        <span>
+          <span class="panel-details-title">④ 特別なタイミングを見つける</span>
+          <span class="panel-details-note">あなたにとって条件が重なる年月と方位を見る</span>
+        </span>
+      </summary>
+      <div class="panel-details-body">
+        <div style="font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:10px;">
+          輪重吉方の定義には諸説があります。KITOKUでは、判定の厳しさを選べる形にして、特別な巡り合わせを落ち着いて確認できるようにしています。
+        </div>
+        <div class="timing-level-tabs" id="rinjuLevelTabs">
+          <button type="button" class="timing-level-btn" data-level="special" onclick="setRinjuLevel('special')">特別<small>数年に1回</small></button>
+          <button type="button" class="timing-level-btn" data-level="strict" onclick="setRinjuLevel('strict')">しっかり<small>約1〜2年に1回</small></button>
+          <button type="button" class="timing-level-btn" data-level="loose" onclick="setRinjuLevel('loose')">ゆるやか<small>年に数回</small></button>
+        </div>
+        <div class="note" id="rinjuLevelNote"></div>
+        <div class="timing-list" id="specialTimingList"></div>
+        <div class="timing-action-grid" id="rinjuActionGuide"></div>
+      </div>
+    </details>
+
     <details class="panel panel-details" id="senroPanel">
       <summary>
         <span>
-          <span class="panel-details-title">④ 線路の日</span>
+          <span class="panel-details-title">⑤ 線路の日</span>
           <span class="panel-details-note">契約・開始・出発など、動かす日の候補を見る</span>
         </span>
       </summary>
@@ -807,7 +846,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </details>
 
     <div class="panel" id="aiChatPanel">
-      <div class="panel-title">⑤ KIGAKU先生AIで深掘り</div>
+      <div class="panel-title">⑥ KIGAKU先生AIで深掘り</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
         あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
         コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
@@ -1146,6 +1185,7 @@ function init(){
     document.getElementById('starInfoText').textContent=starLine(state.info);
     renderBoard();
     renderSenro();
+    renderSpecialTiming();
     renderAiContextSummary();
     renderKichiOkiNav();
     renderEhouMairiNav();
@@ -1188,6 +1228,7 @@ function moveDate(delta){
   renderBoard();
   refreshDestinationPrem();
   renderSenro();
+  renderSpecialTiming();
   renderAiContextSummary();
   redrawMapIfReady();
   if(typeof renderEhouMairiNav==='function') renderEhouMairiNav();
@@ -1349,6 +1390,119 @@ function renderBoard(){
   drawOctagonPremium(wrap,center,dirData,{breakDir,branchName});
   // 全画面の小型方位盤を同期（全画面が開いているときのみ動作）
   if(typeof updateFsMiniCompass==='function') setTimeout(updateFsMiniCompass, 50);
+}
+
+
+const RINJU_LEVELS={
+  loose:{label:'ゆるやか',minRank:0,requireSango:false,note:'年盤と月盤の中宮が一致し、凶方位を外した候補を広めに見ます。'},
+  strict:{label:'しっかり',minRank:4,requireSango:false,note:'中宮一致に加えて、本命星・月命星の両方が吉方として重なる候補を見ます。'},
+  special:{label:'特別',minRank:4,requireSango:true,note:'中宮一致、本命・月命の吉方、さらに三合まで重なる特別な巡り合わせを見ます。'}
+};
+const RINJU_ACTION_LEVELS=[
+  {action:'日帰り・数日の旅行',effect:'一時的な後押しは受け取れますが、過去のリセット効果としては扱いません。',requirement:null},
+  {action:'自宅から2km以上の移動',effect:'輪重吉方として扱う最低ラインです。これ未満は候補から外します。',requirement:'2km以上'},
+  {action:'75日以上の仮住まい、または引っ越し',effect:'過去の凶方位のリセットや、人生の土台への定着を狙う段階です。',requirement:'75日以上の滞在 or 定住'}
+];
+let rinjuLevel='special';
+
+function getSangoSetForTiming(type,y,m,d){
+  let branchName=getZodiac(y).k;
+  if(type==='month')branchName=BRANCH_NAME_P[getMonthBranch(y,m,d)];
+  if(type==='day')branchName=BRANCH_NAME_P[getDayBranch(y,m,d)];
+  return new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
+}
+function buildTimingDirData(type,y,m,d,honmei,tsukimei){
+  const center=type==='year'?yearCenter(y):type==='month'?getMonthCenter(y,m,d):getDayCenter(y,m,d);
+  const breakDir=type==='year'?OPP[getZodiac(y).d]:type==='month'?OPP[BRANCH_DIR[getMonthBranch(y,m,d)]]:OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
+  const p2s=buildBoardFromCenter(center);
+  const sangoSet=getSangoSetForTiming(type,y,m,d);
+  const tendoDir=type==='year'?null:getTendoDir(y,m,d);
+  const kyou=getKyouDirs(center,honmei,breakDir,tsukimei,type,{teiiAsKyo:localStorage.getItem('kitoku-teii-kyo')==='1',tsukimeiSatsu:localStorage.getItem('kitoku-tsukimei-satsu')||'on'});
+  const strictItems=(kyou.items||[]).filter(x=>!String(x.name||'').includes('定位対冲'));
+  const strictKyouSet=new Set(strictItems.map(x=>x.dir));
+  const dirData={};
+  ALL8.forEach(dir=>{
+    const starN=p2s[dir];
+    const r=rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir);
+    dirData[dir]={starN,rank:r.rank,badges:r.badges,isKyo:strictKyouSet.has(dir)};
+  });
+  return {center,p2s,dirData};
+}
+function detectRinjuKippo(y,m,d,honmei,tsukimei,level='special'){
+  const cfg=RINJU_LEVELS[level]||RINJU_LEVELS.special;
+  if(yearCenter(y)!==getMonthCenter(y,m,d))return [];
+  const yearBoard=buildTimingDirData('year',y,6,1,honmei,tsukimei);
+  const monthBoard=buildTimingDirData('month',y,m,d,honmei,tsukimei);
+  const results=[];
+  ALL8.forEach(dir=>{
+    const yv=yearBoard.dirData[dir],mv=monthBoard.dirData[dir];
+    if(!yv||!mv||yv.isKyo||mv.isKyo)return;
+    if(yv.rank<cfg.minRank)return;
+    if(cfg.requireSango&&yv.rank<5)return;
+    results.push({dir,level});
+  });
+  return results;
+}
+function detectSpecialTiming(y,m,d,honmei,tsukimei){
+  const yearBoard=buildTimingDirData('year',y,6,1,honmei,tsukimei);
+  const monthBoard=buildTimingDirData('month',y,m,d,honmei,tsukimei);
+  const yc=yearCenter(y),mc=getMonthCenter(y,m,d);
+  const results=[];
+  ALL8.forEach(dir=>{
+    const yv=yearBoard.dirData[dir],mv=monthBoard.dirData[dir];
+    if(!yv||!mv||yv.isKyo||mv.isKyo)return;
+    let tier=null;
+    if(yv.rank>=4)tier='base';
+    if(yv.rank>=5)tier='sango';
+    if(yc===mc&&yv.rank>=5)tier='rinju';
+    if(tier)results.push({dir,tier});
+  });
+  return results;
+}
+function listUpcomingRinjuKippo(honmei,tsukimei,level='special',yearsAhead=10){
+  const now=new Date();
+  const startY=now.getFullYear();
+  const startM=now.getMonth()+1;
+  const results=[];
+  for(let y=startY;y<startY+yearsAhead;y++){
+    for(let m=1;m<=12;m++){
+      if(y===startY&&m<startM)continue;
+      const dirs=detectRinjuKippo(y,m,15,honmei,tsukimei,level);
+      if(dirs.length)results.push({y,m,dirs:dirs.map(x=>x.dir),timings:detectSpecialTiming(y,m,15,honmei,tsukimei)});
+    }
+  }
+  return results;
+}
+function setRinjuLevel(level){
+  rinjuLevel=RINJU_LEVELS[level]?level:'special';
+  try{localStorage.setItem('kitoku-rinju-level',rinjuLevel);}catch(e){}
+  renderSpecialTiming();
+}
+function renderSpecialTiming(){
+  const list=document.getElementById('specialTimingList');
+  const note=document.getElementById('rinjuLevelNote');
+  const actions=document.getElementById('rinjuActionGuide');
+  if(!list||!state.info)return;
+  rinjuLevel=localStorage.getItem('kitoku-rinju-level')||rinjuLevel||'special';
+  if(!RINJU_LEVELS[rinjuLevel])rinjuLevel='special';
+  document.querySelectorAll('#rinjuLevelTabs .timing-level-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.level===rinjuLevel));
+  const cfg=RINJU_LEVELS[rinjuLevel];
+  if(note)note.textContent=cfg.note;
+  const rows=listUpcomingRinjuKippo(state.info.honmei,state.info.tsukimei,rinjuLevel,10);
+  list.innerHTML=rows.slice(0,18).map(row=>{
+    const chips=row.dirs.map(dir=>`<span class="timing-chip rinju">${JP[dir]}方位</span>`).join('');
+    const support=(row.timings||[]).filter(x=>!row.dirs.includes(x.dir)).slice(0,4).map(x=>`<span class="timing-chip">${JP[x.dir]} ${x.tier==='sango'?'三合':'基本'}</span>`).join('');
+    return `<div class="timing-card ${rinjuLevel==='special'?'special':''}">
+      <div class="timing-date">${row.y}年${row.m}月</div>
+      <div class="timing-dirs">${chips}${support}</div>
+    </div>`;
+  }).join('')||'<div class="note">今後10年では、この条件に該当する年月は見つかりませんでした。判定を「しっかり」または「ゆるやか」にすると候補が広がります。</div>';
+  if(actions){
+    actions.innerHTML=RINJU_ACTION_LEVELS.map((x,i)=>`<div class="timing-action">
+      <div class="timing-action-title">${i+1}. ${x.action}${x.requirement?`（${x.requirement}）`:''}</div>
+      <div class="timing-action-text">${x.effect}</div>
+    </div>`).join('');
+  }
 }
 
 // ══════════════════════════════
