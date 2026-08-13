@@ -453,6 +453,7 @@ const JP={N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW
 const ZODIAC=[{k:'子',d:'N'},{k:'丑',d:'NE'},{k:'寅',d:'NE'},{k:'卯',d:'E'},{k:'辰',d:'SE'},{k:'巳',d:'SE'},{k:'午',d:'S'},{k:'未',d:'SW'},{k:'申',d:'SW'},{k:'酉',d:'W'},{k:'戌',d:'NW'},{k:'亥',d:'NW'}];
 const BRANCH_DIR=['N','NE','NE','E','SE','SE','S','SW','SW','W','NW','NW'];
 const SANGO_MAP={子:{dirs:['N','SE','SW']},丑:{dirs:['SE','W','NE']},寅:{dirs:['NE','S','NW']},卯:{dirs:['NW','E','SW']},辰:{dirs:['N','SE','SW']},巳:{dirs:['SE','W','NE']},午:{dirs:['NE','S','NW']},未:{dirs:['NW','E','SW']},申:{dirs:['N','SE','SW']},酉:{dirs:['SE','W','NE']},戌:{dirs:['NE','S','NW']},亥:{dirs:['NW','E','SW']}};
+const TENDO_BY_BRANCH_GROUP={申:'N',子:'N',辰:'N',巳:'W',酉:'W',丑:'W',寅:'S',午:'S',戌:'S',亥:'E',卯:'E',未:'E'};
 const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
 const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -480,7 +481,7 @@ function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS
 function getDayCenter(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return(((2-1+diff)%9)+9)%9+1;}return dd.star;}
 function getDayBranch(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return((1+diff)%12+12)%12;}return dd.branch;}
 function getDayStem(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 0;return dd.stem;}
-function getTendoDir(y,m,d){const TENDO=[6,7,8,9,1,2,3,4,5,6,7,8];const ni=getNodeMonthIdx(y,m,d);const ts=TENDO[ni];const p=buildBoard(getMonthCenter(y,m,d));return Object.keys(p).find(dir=>p[dir]===ts&&dir!=='C')||null;}
+function getTendoDir(y,m,d){const monthBranch=SHI[getMonthBranch(y,m,d)];return TENDO_BY_BRANCH_GROUP[monthBranch]||null;}
 const AISEI={1:[1,3,4,6,7],2:[2,6,7,8,9],3:[1,3,4,9],4:[1,3,4,9],5:[2,6,7,8,9],6:[1,2,6,7,8],7:[1,2,6,7,8],8:[2,6,7,8,9],9:[2,3,4,8,9]};
 function aiseiList(s,tsukimei){
   if(s===5&&tsukimei===5){return new Set([2,6,7,8,9]);}

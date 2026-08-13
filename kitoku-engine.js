@@ -358,16 +358,18 @@ function _getDayData(y,mo,d){const t=new Date(y,mo-1,d);const a=NICHIBAN_ANCHORS
 function getDayCenter(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return(((2-1+diff)%9)+9)%9+1;}return dd.star;}
 function getDayBranch(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd){const ref=new Date(2026,2,4);const diff=Math.round((new Date(y,mo-1,d)-ref)/86400000);return((1+diff)%12+12)%12;}return dd.branch;}
 function getDayStem(y,mo,d){const dd=_getDayData(y,mo,d);if(!dd)return 0;return dd.stem;}
-// 天道：月の十干（天干）から算出
-// 甲乙→NE, 丙丁→S, 戊己→N, 庚辛→SW, 壬癸→N
-const TENDO_BY_STEM=['NE','NE','S','S','N','N','SW','SW','N','N'];
+// 天道：月の十二支が属する三合局の五行から算出
+// 申子辰(水局)→N／巳酉丑(金局)→W／寅午戌(火局)→S／亥卯未(木局)→E
+const TENDO_BY_BRANCH_GROUP={
+  '申':'N','子':'N','辰':'N',
+  '巳':'W','酉':'W','丑':'W',
+  '寅':'S','午':'S','戌':'S',
+  '亥':'E','卯':'E','未':'E',
+};
 function getTendoDir(ty,tm,td){
-  // 月の天干を計算
-  const yearStem=((ty-4)%10+10)%10;
-  const baseStems=[2,4,6,8,0,2,4,6,8,0];
-  const ni=getNodeMonthIdx(ty,tm,td); // 0-11
-  const mStem=(baseStems[yearStem]+ni)%10;
-  return TENDO_BY_STEM[mStem];
+  const monthBranchIdx=getMonthBranch(ty,tm,td);
+  const monthBranch=SHI[monthBranchIdx];
+  return TENDO_BY_BRANCH_GROUP[monthBranch]||null;
 }
 function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   if(dir==='C')return{rank:0,badges:[]};
