@@ -115,6 +115,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
 .timing-dirs{font-size:.63rem;color:var(--mist);line-height:1.7;margin-top:4px;}
 .timing-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;padding:2px 7px;border-radius:999px;border:1px solid rgba(138,104,32,.22);background:rgba(138,104,32,.07);color:var(--goldlt);font-size:.56rem;font-weight:800;}
 .timing-chip.rinju{border-color:rgba(138,104,32,.42);background:rgba(138,104,32,.16);}
+.timing-explain-toggle{margin:0 0 8px;padding:9px 10px;border:1px solid rgba(138,104,32,.2);border-radius:9px;background:rgba(138,104,32,.055);color:var(--goldlt);font-size:.62rem;font-weight:800;line-height:1.5;cursor:pointer;}
+.timing-explain-body{margin:-2px 0 10px;padding:10px 11px;border:1px solid rgba(138,104,32,.16);border-radius:9px;background:rgba(255,255,255,.62);color:var(--mist);font-size:.6rem;line-height:1.85;}
+.timing-reason{font-size:.56rem;color:rgba(94,80,61,.78);line-height:1.65;margin-top:3px;}
+.timing-peak{font-size:.58rem;color:var(--mist);line-height:1.75;margin-top:6px;padding-top:6px;border-top:1px solid rgba(138,104,32,.12);}
+.timing-peak strong{color:var(--goldlt);font-weight:800;}
 .timing-action-grid{display:grid;gap:7px;margin-top:10px;}
 .timing-action{border:1px solid rgba(138,104,32,.16);border-radius:9px;background:rgba(138,104,32,.045);padding:9px 10px;}
 .timing-action-title{font-size:.66rem;color:var(--goldlt);font-weight:800;}
@@ -826,6 +831,12 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           <button type="button" class="timing-level-btn" data-level="strict" onclick="setRinjuLevel('strict')">しっかり<small>約1〜2年に1回</small></button>
           <button type="button" class="timing-level-btn" data-level="loose" onclick="setRinjuLevel('loose')">ゆるやか<small>年に数回</small></button>
         </div>
+        <div class="timing-explain-toggle" onclick="toggleTimingExplain()">？ なぜこのタイミングが特別なのか？</div>
+        <div class="timing-explain-body" id="timingExplainBody" style="display:none;">
+          方位の力は、年ごと・月ごとに姿を変えながら巡っています。ごくまれに、年の流れと月の流れがぴったり重なる瞬間があり、そこにあなたの吉方位が乗ると、後押しの力が普段より強くなります。<br><br>
+          「特別」レベルは、そこにさらに三合（十二支の結びつき）という後押しが重なった、条件の揃ったタイミングだけを選んでいます。「しっかり」は三合までは求めず、本命・月命の両方が揃った状態まで。「ゆるやか」は、年と月の巡りが重なっているだけの、より広い候補です。<br><br>
+          条件が多く重なるほど頻度は下がりますが、どれを選んでも悪い方向に転ぶことはありません。目的に合わせて選んでください。
+        </div>
         <div class="note" id="rinjuLevelNote"></div>
         <div class="timing-list" id="specialTimingList"></div>
         <div class="timing-action-grid" id="rinjuActionGuide"></div>
@@ -1403,6 +1414,11 @@ const RINJU_ACTION_LEVELS=[
   {action:'自宅から2km以上の移動',effect:'輪重吉方として扱う最低ラインです。これ未満は候補から外します。',requirement:'2km以上'},
   {action:'75日以上の仮住まい、または引っ越し',effect:'過去の凶方位のリセットや、人生の土台への定着を狙う段階です。',requirement:'75日以上の滞在 or 定住'}
 ];
+const TIMING_REASON_TEXT={
+  special:'中宮一致・本命月命吉・三合が重なる',
+  strict:'中宮一致・本命月命ともに吉方',
+  loose:'中宮一致（凶方位は除外済み）'
+};
 let rinjuLevel='special';
 
 function getSangoSetForTiming(type,y,m,d){
@@ -1459,6 +1475,43 @@ function detectSpecialTiming(y,m,d,honmei,tsukimei){
   });
   return results;
 }
+function findPeakDaysInMonth(y,m,dir,honmei,tsukimei){
+  const startDay=getSekkiDay(y,m);
+  const nextM=m===12?1:m+1;
+  const nextY=m===12?y+1:y;
+  const endDay=getSekkiDay(nextY,nextM)-1;
+  const cursor=new Date(y,m-1,startDay);
+  const endDate=new Date(nextY,nextM-1,endDay);
+  const results=[];
+  while(cursor<=endDate){
+    const cy=cursor.getFullYear(),cm=cursor.getMonth()+1,cd=cursor.getDate();
+    const dayBoard=buildTimingDirData('day',cy,cm,cd,honmei,tsukimei);
+    const dv=dayBoard.dirData[dir];
+    if(dv&&!dv.isKyo&&dv.rank>=4)results.push({date:new Date(cursor),dayRank:dv.rank});
+    cursor.setDate(cursor.getDate()+1);
+  }
+  return results;
+}
+function formatPeakDate(dt){
+  return `${dt.getMonth()+1}月${dt.getDate()}日`;
+}
+function buildPeakText(row){
+  const items=[];
+  (row.dirs||[]).forEach(dir=>{
+    const peaks=((row.peakByDir||{})[dir]||[]).slice(0,3);
+    if(peaks.length){
+      const dates=peaks.map(x=>formatPeakDate(x.date)).join('・');
+      items.push(`${JP[dir]}方位は <strong>${dates}</strong>`);
+    }
+  });
+  if(items.length)return `✦ 中でも ${items.join('、')} は、日盤も重なる特に力の強い日です。月全体でも後押しを受け取れます。`;
+  return '✦ この月であれば、いつ動いても後押しを受け取れます。日盤まで重なる日がない場合も、月全体の巡りは有効です。';
+}
+function toggleTimingExplain(){
+  const body=document.getElementById('timingExplainBody');
+  if(!body)return;
+  body.style.display=body.style.display==='none'||!body.style.display?'block':'none';
+}
 function listUpcomingRinjuKippo(honmei,tsukimei,level='special',yearsAhead=10){
   const now=new Date();
   const startY=now.getFullYear();
@@ -1468,7 +1521,12 @@ function listUpcomingRinjuKippo(honmei,tsukimei,level='special',yearsAhead=10){
     for(let m=1;m<=12;m++){
       if(y===startY&&m<startM)continue;
       const dirs=detectRinjuKippo(y,m,15,honmei,tsukimei,level);
-      if(dirs.length)results.push({y,m,dirs:dirs.map(x=>x.dir),timings:detectSpecialTiming(y,m,15,honmei,tsukimei)});
+      if(dirs.length){
+        const dirList=dirs.map(x=>x.dir);
+        const peakByDir={};
+        dirList.forEach(dir=>{peakByDir[dir]=findPeakDaysInMonth(y,m,dir,honmei,tsukimei);});
+        results.push({y,m,dirs:dirList,peakByDir,timings:detectSpecialTiming(y,m,15,honmei,tsukimei)});
+      }
     }
   }
   return results;
@@ -1490,11 +1548,13 @@ function renderSpecialTiming(){
   if(note)note.textContent=cfg.note;
   const rows=listUpcomingRinjuKippo(state.info.honmei,state.info.tsukimei,rinjuLevel,10);
   list.innerHTML=rows.slice(0,18).map(row=>{
-    const chips=row.dirs.map(dir=>`<span class="timing-chip rinju">${JP[dir]}方位</span>`).join('');
+    const chips=row.dirs.map(dir=>`<span class="timing-chip rinju" title="${TIMING_REASON_TEXT[rinjuLevel]||''}">${JP[dir]}方位</span>`).join('');
     const support=(row.timings||[]).filter(x=>!row.dirs.includes(x.dir)).slice(0,4).map(x=>`<span class="timing-chip">${JP[x.dir]} ${x.tier==='sango'?'三合':'基本'}</span>`).join('');
     return `<div class="timing-card ${rinjuLevel==='special'?'special':''}">
       <div class="timing-date">${row.y}年${row.m}月</div>
       <div class="timing-dirs">${chips}${support}</div>
+      <div class="timing-reason">${TIMING_REASON_TEXT[rinjuLevel]||''}</div>
+      <div class="timing-peak">${buildPeakText(row)}</div>
     </div>`;
   }).join('')||'<div class="note">今後10年では、この条件に該当する年月は見つかりませんでした。判定を「しっかり」または「ゆるやか」にすると候補が広がります。</div>';
   if(actions){
