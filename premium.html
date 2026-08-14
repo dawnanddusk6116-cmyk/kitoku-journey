@@ -1322,6 +1322,16 @@ function buildBreakBranchTextPremium(items){
   const labels=breaks.map(item=>`${item.breakKind}（${item.branch}）`).join('・');
   return `${labels}：年・月・日の干支の反対側に出る破れです。通常表示では判断しやすいよう八方位にまとめて表示しています。`;
 }
+function kitokuSplitKyoLabels(name){
+  return String(name||'').split(/[・/]/).map(x=>x.trim()).filter(Boolean);
+}
+function kitokuHasTeiiLabel(name){
+  return kitokuSplitKyoLabels(name).some(x=>x.includes('定位対冲'));
+}
+function kitokuHasStrictKyoLabel(name){
+  return kitokuSplitKyoLabels(name).some(x=>!x.includes('定位対冲'));
+}
+
 function getSangoSetForPremiumDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   let branchName=getZodiac(y).k;
@@ -1340,8 +1350,8 @@ function buildDirData(center){
   const _soukouOff=localStorage.getItem('kitoku-soukou-off')==='1';
   const kyou=getKyouDirs(center,state.info.honmei,getBreakDirForDate(),state.info.tsukimei,state.banType,{teiiAsKyo:_teiiKyo,tsukimeiSatsu:_tmSatsu});
   annotateBreakItemsPremium(kyou.items,getBreakNameForBan(),getBreakBranchForDate().name);
-  const cautionItems=(kyou.items||[]).filter(x=>x.name.includes('定位対冲'));
-  const strictItems=(kyou.items||[]).filter(x=>!x.name.includes('定位対冲'));
+  const cautionItems=(kyou.items||[]).filter(x=>kitokuHasTeiiLabel(x.name));
+  const strictItems=(kyou.items||[]).filter(x=>kitokuHasStrictKyoLabel(x.name));
   const strictKyouSet=new Set(strictItems.map(x=>x.dir));
   const cautionSet=new Set(cautionItems.map(x=>x.dir));
   const dirData={};
@@ -1434,7 +1444,7 @@ function buildTimingDirData(type,y,m,d,honmei,tsukimei){
   const sangoSet=getSangoSetForTiming(type,y,m,d);
   const tendoDir=type==='year'?null:getTendoDir(y,m,d);
   const kyou=getKyouDirs(center,honmei,breakDir,tsukimei,type,{teiiAsKyo:localStorage.getItem('kitoku-teii-kyo')==='1',tsukimeiSatsu:localStorage.getItem('kitoku-tsukimei-satsu')||'on'});
-  const strictItems=(kyou.items||[]).filter(x=>!String(x.name||'').includes('定位対冲'));
+  const strictItems=(kyou.items||[]).filter(x=>kitokuHasStrictKyoLabel(x.name));
   const strictKyouSet=new Set(strictItems.map(x=>x.dir));
   const dirData={};
   ALL8.forEach(dir=>{
@@ -4843,7 +4853,7 @@ function drawKitokuMapLines(lat, lng){
 
   // 吉凶判定（buildDirDataを流用→方位盤と完全同一）
   const {kyouItems} = buildDirData(center);
-  const kyouSet = new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+  const kyouSet = new Set(kyouItems.filter(k=>kitokuHasStrictKyoLabel(k.name)).map(k=>k.dir));
 
   const _zoom = KitokuMap.getZoom(kitokuMapInst);
   // モードに応じて最大線長を変える
@@ -4865,7 +4875,7 @@ function drawKitokuMapLines(lat, lng){
     Object.entries(MAP_DIR_ANGLES).forEach(([dir])=>{
       const starN0=p2s[dir];
       const dd0=rankDir(dir,starN0,honmei,tsukimei,sangoSet,null);
-      const kns0=kyouItems.filter(k=>k.dir===dir).filter(k=>!k.name.includes('定位対冲'));
+      const kns0=kyouItems.filter(k=>k.dir===dir).filter(k=>kitokuHasStrictKyoLabel(k.name));
       const isKyo0=kns0.length>0||kyouSet.has(dir)||dd0.isKyo;
       dirIsKichi[dir] = (!isKyo0 && dd0.rank>=2);
       dirRankMap[dir] = dd0.rank;
@@ -4929,7 +4939,7 @@ function drawKitokuMapLines(lat, lng){
     const starN = p2s[dir];
     const dd = rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
     const kns = kyouItems.filter(k=>k.dir===dir);
-    const realKns = kns.filter(k=>!k.name.includes('定位対冲'));
+    const realKns = kns.filter(k=>kitokuHasStrictKyoLabel(k.name));
     const isKyo = realKns.length>0 || kyouSet.has(dir) || dd.isKyo;
 
     let color,weight,opacity,dashArray;
@@ -5044,9 +5054,9 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
     const starN=p2s[dir];
     const dd=rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
     const kns=kyouItems.filter(k=>k.dir===dir);
-    const realKyoItems=kns.filter(k=>!k.name.includes('定位対冲'));
+    const realKyoItems=kns.filter(k=>kitokuHasStrictKyoLabel(k.name));
     const isKyo=realKyoItems.length>0||kyouSet.has(dir)||dd.isKyo;
-    const isCautionDir = !isKyo && kns.some(k=>k.name.includes('定位対冲')) && dd.rank<2;
+    const isCautionDir = !isKyo && kns.some(k=>kitokuHasTeiiLabel(k.name)) && dd.rank<2;
     const start=c-span/2,end=c+span/2;
 
     let fill='rgba(40,50,60,.4)';
@@ -5062,7 +5072,7 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
     const fsN=Math.max(13,R_OUT*0.1);
     cells+=`<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${fsN.toFixed(0)}" font-family="'Cormorant Garamond',serif" font-weight="600" style="paint-order:stroke;stroke:rgba(0,0,0,.5);stroke-width:2px">${starN||''}</text>`;
 
-    const realKyo=kns.filter(k=>!k.name.includes('定位対冲'));
+    const realKyo=kns.filter(k=>kitokuHasStrictKyoLabel(k.name));
     let kyoLabel='';
     if(isKyo&&realKyo.length) kyoLabel=realKyo[0].name.split('/')[0][0];
     else if(!isKyo&&dd.rank>=2) kyoLabel='吉';
@@ -5693,7 +5703,7 @@ function updateFsMiniCompass(){
   const ANGLES={N:270,NE:315,E:0,SE:45,S:90,SW:135,W:180,NW:225};
   const STAR_N={1:'一白',2:'二黒',3:'三碧',4:'四緑',5:'五黄',6:'六白',7:'七赤',8:'八白',9:'九紫'};
   const {kyouItems}=buildDirData(center);
-  const kyouSet=new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+  const kyouSet=new Set(kyouItems.filter(k=>kitokuHasStrictKyoLabel(k.name)).map(k=>k.dir));
   const cx=55,cy=55,r=42;
   let svg=`<svg width="110" height="110" viewBox="0 0 110 110">
     <circle cx="${cx}" cy="${cy}" r="${r+8}" fill="rgba(30,25,15,.15)" stroke="rgba(196,160,67,.3)" stroke-width="1"/>`;
@@ -5728,7 +5738,7 @@ function drawFsMapContent(lat,lng){
   const z=getZodiac(y);
   const sangoSet=new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
   const{kyouItems}=buildDirData(center);
-  const kyouSet=new Set(kyouItems.filter(k=>!k.name.includes('定位対冲')).map(k=>k.dir));
+  const kyouSet=new Set(kyouItems.filter(k=>kitokuHasStrictKyoLabel(k.name)).map(k=>k.dir));
 
   // 距離円
   [[0.75,'rgba(196,160,67,.25)'],[3,'rgba(196,160,67,.12)'],[10,'rgba(196,160,67,.05)']].forEach(([r,fill])=>{
@@ -5752,7 +5762,7 @@ function drawFsMapContent(lat,lng){
     Object.entries(MAP_DIR_ANGLES).forEach(([dir])=>{
       const sN=p2s[dir];
       const dd0=rankDir(dir,sN,honmei,tsukimei,sangoSet,null);
-      const kns0=kyouItems.filter(k=>k.dir===dir).filter(k=>!k.name.includes('定位対冲'));
+      const kns0=kyouItems.filter(k=>k.dir===dir).filter(k=>kitokuHasStrictKyoLabel(k.name));
       const isKyo0=kns0.length>0||kyouSet.has(dir)||dd0.isKyo;
       dirIsKichi[dir]=(!isKyo0&&dd0.rank>=2);
       dirRankMap[dir]=dd0.rank;
@@ -5803,7 +5813,7 @@ function drawFsMapContent(lat,lng){
     const starN=p2s[dir];
     const dd=rankDir(dir,starN,honmei,tsukimei,sangoSet,null);
     const kns=kyouItems.filter(k=>k.dir===dir);
-    const realKns=kns.filter(k=>!k.name.includes('定位対冲'));
+    const realKns=kns.filter(k=>kitokuHasStrictKyoLabel(k.name));
     const isKyo=realKns.length>0||kyouSet.has(dir)||dd.isKyo;
     let color,weight,opacity,dashArray;
     if(isKyo){color='#9aa0aa';weight=1.5;opacity=0.55;dashArray='4,4';}
