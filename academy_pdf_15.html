@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KITOKU Academy 15｜AIの答えを、賢く受け取る力</title>
+<style>
+:root{--bg:#f4f0ea;--paper:#fffdf8;--ink:#4b2f12;--muted:#8b765f;--line:#dfcfb5;--amber-soft:#fff6df;--green-soft:#edf8f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.9;letter-spacing:.02em}
+.toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:12px;padding:12px;background:rgba(244,240,234,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.toolbar button,.toolbar a{border:1px solid #caa96f;background:#fffaf0;color:#5b350e;border-radius:999px;padding:9px 18px;font-weight:700;text-decoration:none;cursor:pointer}
+.book{max-width:920px;margin:0 auto;padding:28px 18px 60px}.page{background:var(--paper);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(80,55,20,.06);padding:34px 42px;margin:0 auto 24px;min-height:980px;position:relative;overflow:hidden}
+.page:before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,#9f6b10,#d8b35a,#9f6b10);opacity:.75}
+.header,.footer{display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}.footer{position:absolute;left:42px;right:42px;bottom:24px;border-top:1px solid #eadfcd;padding-top:10px}
+.cover{display:flex;flex-direction:column;justify-content:center;text-align:center;gap:20px}.label{display:inline-flex;align-self:center;border:1px solid #cfa95e;color:#8b5a08;border-radius:999px;padding:6px 18px;font-size:13px;font-weight:700;letter-spacing:.18em;background:#fff8e7}
+h1{font-size:38px;line-height:1.35;margin:4px 0 0;font-weight:600;letter-spacing:.08em}.subtitle{font-size:20px;color:#76502a;margin-top:-4px}.lead{max-width:720px;margin:0 auto;color:#5e4932;font-size:16px;text-align:left;background:#fffaf1;border:1px solid #ead8b6;border-radius:8px;padding:18px 22px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 0}.step{border:1px solid #dfc391;background:#fff9e9;border-radius:8px;padding:16px;text-align:left;min-height:128px}.step b{display:block;color:#9a6a14;font-size:12px;letter-spacing:.16em;margin-bottom:8px}.step strong{font-size:18px;display:block;line-height:1.5}
+.purpose{border:1px solid #d7b06f;background:var(--amber-soft);border-radius:8px;padding:18px 22px;text-align:left;font-weight:600}h2{font-size:25px;line-height:1.45;margin:24px 0 14px;letter-spacing:.04em}p{margin:0 0 13px}.small{font-size:13px;color:var(--muted)}
+.note{border:1px solid #d6b36f;border-radius:8px;background:var(--amber-soft);padding:16px 18px;margin:16px 0}.note.green{border-color:#a8ccb5;background:var(--green-soft)}.note.amber{border-color:#d6b36f;background:var(--amber-soft)}
+table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0 18px;border:1px solid #dccbb1;border-radius:8px;overflow:hidden;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid #eadfcd;vertical-align:top;text-align:left}th{background:#f7edda;color:#6b4115;font-weight:700}tr:last-child td{border-bottom:0}
+.shot{border:1px solid #dfcfb5;border-radius:8px;background:#fff;padding:10px;margin:16px 0 12px;break-inside:avoid}.shot img{width:100%;max-height:510px;object-fit:contain;display:block;border-radius:6px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+.next{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}.next div{border:1px solid #dfcfb5;border-radius:8px;background:#fffaf2;padding:14px}.next b{display:block;color:#8b5a08;margin-bottom:4px}
+@media print{body{background:white}.toolbar{display:none}.book{padding:0;max-width:none}.page{page-break-after:always;border:0;box-shadow:none;border-radius:0;min-height:277mm;margin:0;padding:18mm 16mm}.footer{left:16mm;right:16mm;bottom:10mm}.page:before{display:none}.shot{break-inside:avoid}a{color:inherit;text-decoration:none}}
+@media(max-width:720px){.page{padding:24px 18px;min-height:auto}.steps,.next{grid-template-columns:1fr}h1{font-size:30px}.footer{position:static;margin-top:28px}}
+</style>
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">PDF保存・印刷</button><a href="academy.html">Academyへ戻る</a></div>
+<main class="book">
+
+  <section class="page cover">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>AI LITERACY</span></div>
+
+    <span class="label">ADVANCED 15</span>
+    <div>
+      <h1>AIの答えを、賢く受け取る力</h1>
+      <div class="subtitle">〜 情報を、知恵に変える方法 〜</div>
+    </div>
+    <p class="lead">AIに気学を聞く方法そのものではなく、AIの答えをどう受け取り、どう確かめ、自分の判断に変えていくかを学ぶ回です。</p>
+    <div class="steps"><div class="step"><b>STEP 1</b><strong>AIの答えは、まず疑ってみる</strong><p class="small">もっともらしさと正しさを分けて見る。</p></div><div class="step"><b>STEP 2</b><strong>検証する3つの方法を知る</strong><p class="small">数字、聞き方、一次資料で答えを確かめる。</p></div><div class="step"><b>STEP 3</b><strong>知識を知恵に変える</strong><p class="small">最後にどう動くかは、自分の判断として選ぶ。</p></div></div>
+    <div class="purpose">AIは完璧ではありません。作っている側も、日々検証しながら学んでいます。それは弱みではなく、KITOKUが大切にしている正直さです。</div>
+
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>1</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>AIと情報</span></div>
+<h2>1. AIは百科事典ではない</h2><p>AIはとても賢く、たくさんのことを知っています。でも、知っていることと、正しいことは、実はイコールではありません。</p><p>AIの答えは、もっともらしく聞こえるように文章を組み立てるのが得意です。それは「正確である」こととは、別の能力です。</p><div class="note amber">情報 → 知識 → アイデア → 知恵。AIが出してくれるのは、その手前の「情報」です。それを「知恵」に変えるのは、受け取ったあなた自身の仕事です。</div><h2>2. KITOKUを作る過程で、実際にあったこと</h2><p>実は、KITOKUというアプリを作る過程でも、AIの答えに振り回されたことが何度もあります。</p><p>ある機能の正確な条件をAIに確認したところ、1回目の答えと、2回目に別の角度から聞いた答えが真っ向から食い違っていました。しかも、どちらの答えも、自分で示した条件を計算し直すと、自分の主張と矛盾していました。</p><p>最終的に決着がついたのは、AIへの質問を重ねてではなく、昔の紙のノートを1冊、実際に開いて確認したときでした。AIの答えを何往復も重ねるより、実物の資料1枚の方が、ずっと確実だったのです。</p><div class="note green">これは特別な話ではありません。AIを使えば使うほど、必ず出会う場面です。大事なのは「AIを信じるか疑うか」ではなく、「どう確かめるか」を知っておくことです。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>2</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>5つの習慣</span></div>
+<h2>3. AIの答えを賢く受け取る、5つの習慣</h2><p>AIの答えを使う時は、受け取った瞬間に結論へ飛ばず、少しだけ検証の時間を挟みます。難しいことではありません。次の5つを覚えておくだけで、答えの見え方が変わります。</p><table><thead><tr><th>習慣</th><th>やること</th></tr></thead><tbody><tr><td>1. 数字は検算する</td><td>「数年に一度」などの頻度・数値の主張は、実際に計算し直せないか考える</td></tr><tr><td>2. 聞き方を変えて再確認する</td><td>同じ質問を、時間や角度を変えてもう一度投げてみる</td></tr><tr><td>3. 理由と根拠を区別する</td><td>もっともらしい理由と、確かめられる根拠は別物と心得る</td></tr><tr><td>4. 答えが割れたら一次資料に戻る</td><td>AI同士で矛盾したら、AIに聞き続けず、元の資料や実物を確認する</td></tr><tr><td>5. わからないと言うAIを信用する</td><td>知ったかぶりで答えるAIより、正直に限界を認めるAIの方が頼れる</td></tr></tbody></table><div class="note amber">この5つは、AIが今後どれだけ賢くなっても、色あせません。覚えておいて損はない、一生使えるスキルです。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>3</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>今の使い方</span></div>
+<h2>4. 星情報をAIに渡す方法</h2><p>KITOKUには「AIに聞く」という入口があります。ここでKITOKUの星データをAIに渡して、自分専用の相談文を作れます。</p><p>これは今のところの使い方です。今後、アプリの中だけで相談が完結する機能が増えていくので、この方法自体は少しずつ役目を終えていく予定です。今すぐ使いたい方のために、手順だけ簡単に紹介します。</p><table><thead><tr><th>STEP</th><th>やること</th></tr></thead><tbody><tr><td>1</td><td>下の「1〜4」から、今いちばん聞きたいテーマを一つ選ぶ</td></tr><tr><td>2</td><td>黄色い欄を、自分の状況に書き換える</td></tr><tr><td>3</td><td>コピーして、ChatGPT・Claude・Gemini・NotebookLM等に貼る</td></tr></tbody></table><div class="note green">「大切なのは、答えを一回で決めることではなく、AIとの対話を重ねて自分の判断軸を育てることです。」これはKITOKU「AIに聞く」画面に、実際に書かれている言葉です。</div><figure class="shot"><img src="academy_assets/15/ss1_ai_ask.png" alt="「AIに聞く」画面。3ステップの案内と、判断軸を育てる一文を確認できます。"><figcaption>「AIに聞く」画面。3ステップの案内と、判断軸を育てる一文を確認できます。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>4</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>星とAI</span></div>
+<h2>5. あなたの星とAIとの付き合い方</h2><p>気学の五行で見ると、AIは「知性・情報」を象徴する火（九紫）の気質に近いとされています。星によって、AIとの付き合い方の型が少し変わります。</p><table><thead><tr><th>系統の星</th><th>AIとの付き合い方の型</th></tr></thead><tbody><tr><td>木・火・土の星（三碧・四緑・九紫・二黒・五黄・八白）</td><td>AIのアイデアを、すぐに行動や形に落とし込みやすい</td></tr><tr><td>金・水の星（一白・六白・七赤）</td><td>AIの答えに、いったん立ち止まって吟味してから使うのが得意</td></tr></tbody></table><div class="note amber">どちらが優れているという話ではありません。「すぐ動ける」のも「立ち止まって考える」のも、どちらもAIを使いこなす上で価値のある力です。違和感を覚えたら、それは自分にない要素を取り込むチャンスだと捉えてください。</div><figure class="shot"><img src="academy_assets/15/ss2_top_ai_entry.png" alt="TOPページからも、AIで悩みを整理する入口を確認できます。"><figcaption>TOPページからも、AIで悩みを整理する入口を確認できます。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>5</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>学びの途中</span></div>
+<h2>6. KITOKUという場所自体が、学びの旅の途中</h2><p>ここまで15回にわたって、気学の基礎から、方位・引越し・ビジネス・輪重吉方まで、幅広くお伝えしてきました。</p><p>実はKITOKUというアプリ自体も、「気学の権威が作った教科書」ではありません。AIと一緒に、試行錯誤しながら形にしてきた、学びの記録です。今日この回を読んでいるあなたと、同じ立場から始まっています。</p><div class="note green">完璧な知識を持っているから使う、のではありません。学びながら使い、使いながら学ぶ。それがKITOKUの、そしてAI時代の、自然な付き合い方です。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>6</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>締め</span></div>
+<h2>7. 情報を、あなたの知恵に変える</h2><p>AIは、答えをくれる存在ではありません。考えるための材料を、たくさん見せてくれる存在です。</p><p>最後にその材料をどう組み合わせ、何を信じ、どう動くか。それを決めるのは、いつだってあなた自身です。</p><p>KITOKUも、AIも、あなたの代わりに決めることはできません。でも、あなたがより良く決めるための、良き相棒にはなれます。</p><div class="next"><div><b>第00回</b>東洋思想の地図（基礎の振り返り）</div><div><b>全15回</b>KITOKU Academy、お疲れ様でした</div></div><div class="purpose">情報を集めるだけで終わらせず、自分の人生に合う形へ変えていく。それが、AI時代の学び方です。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>7</span></div>
+  </section>
+</main>
+</body>
+</html>
