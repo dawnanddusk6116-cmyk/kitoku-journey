@@ -505,6 +505,15 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   if(inTendo)return{rank:1,badges:['天道']};
   return{rank:0,badges:[]};
 }
+function kitokuSplitKyoLabels(name){
+  return String(name||'').split(/[・/]/).map(x=>x.trim()).filter(Boolean);
+}
+function kitokuHasTeiiLabel(name){
+  return kitokuSplitKyoLabels(name).some(x=>x.includes('定位対冲'));
+}
+function kitokuHasStrictKyoLabel(name){
+  return kitokuSplitKyoLabels(name).some(x=>!x.includes('定位対冲'));
+}
 function getKyouDirs(center,honmei,breakDir,tsukimei,banType){
   const p=buildBoard(center);
   const goDir=Object.keys(p).find(d=>p[d]===5)||null;
@@ -528,8 +537,8 @@ function getKyouDirs(center,honmei,breakDir,tsukimei,banType){
     if(tmDir&&tmDir!=='C'){const ex=items.find(i=>i.dir===tmDir);if(ex)ex.name+='・月命殺';else items.push({name:'月命殺',dir:tmDir});}
     if(tmTDir&&tmTDir!=='C'){const ex=items.find(i=>i.dir===tmTDir);if(ex)ex.name+='・月命的殺';else items.push({name:'月命的殺',dir:tmTDir});}
   }
-  const cautionItems=items.filter(i=>i.name.includes('定位対冲'));
-  const strictKyouItems=items.filter(i=>!i.name.includes('定位対冲'));
+  const cautionItems=items.filter(i=>kitokuHasTeiiLabel(i.name));
+  const strictKyouItems=items.filter(i=>kitokuHasStrictKyoLabel(i.name));
   return{
     items,
     kyouSet:new Set(strictKyouItems.map(i=>i.dir)),
@@ -924,7 +933,7 @@ function openPopup(dir,type,dirData,kyouItems){
     const kokoroItems=KYOUHOU_TB[kyouLabel];
     if(kokoroItems&&kokoroItems.length)html+=`<div class="popup-row"><span class="popup-lbl">心構え</span><span class="popup-val" style="font-size:.72rem;color:#8a5008;">${kokoroItems.map((t,i)=>'①②③④⑤'[i]+t).join('<br>')}</span></div>`;
   }else if(dd.isCaution){
-    const names=kyouItems.filter(k=>k.dir===dir&&k.name.includes('定位対冲')).map(k=>k.name).join('・')||'定位対冲';
+    const names=kyouItems.filter(k=>k.dir===dir&&kitokuHasTeiiLabel(k.name)).map(k=>k.name).join('・')||'定位対冲';
     html+=`<div class="popup-row"><span class="popup-lbl">注意</span><span class="popup-val" style="color:#8a5f12;">🔸 ${names}<br><span style="font-size:.75rem;">五大凶方ではありません。慢心・過去の不調の再発・突発的な予定変更に注意してください。</span></span></div>`;
     if(dd.rank>=2){
       html+=`<div class="popup-row"><span class="popup-lbl">吉方</span><span class="popup-val" style="color:#0f766e;">✦ 吉方ランク ${dd.rank}/5</span></div>${buildRankMeter(dd.rank)}`;
