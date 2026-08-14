@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>姓名鑑定の見方 | KITOKU Academy</title>
+<style>
+:root{--bg:#f4f0ea;--paper:#fffdf8;--ink:#4b2f12;--muted:#8b765f;--line:#dfcfb5;--amber-soft:#fff6df;--green-soft:#edf8f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.9;letter-spacing:.02em}
+.toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:12px;padding:12px;background:rgba(244,240,234,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.toolbar button,.toolbar a{border:1px solid #caa96f;background:#fffaf0;color:#5b350e;border-radius:999px;padding:9px 18px;font-weight:700;text-decoration:none;cursor:pointer}
+.book{max-width:920px;margin:0 auto;padding:28px 18px 60px}.page{background:var(--paper);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(80,55,20,.06);padding:34px 42px;margin:0 auto 24px;min-height:980px;position:relative;overflow:hidden}
+.page:before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,#9f6b10,#d8b35a,#9f6b10);opacity:.75}
+.header,.footer{display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}.footer{position:absolute;left:42px;right:42px;bottom:24px;border-top:1px solid #eadfcd;padding-top:10px}
+.cover{display:flex;flex-direction:column;justify-content:center;text-align:center;gap:20px}.label{display:inline-flex;align-self:center;border:1px solid #cfa95e;color:#8b5a08;border-radius:999px;padding:6px 18px;font-size:13px;font-weight:700;letter-spacing:.18em;background:#fff8e7}
+h1{font-size:38px;line-height:1.35;margin:4px 0 0;font-weight:600;letter-spacing:.08em}.subtitle{font-size:20px;color:#76502a;margin-top:-4px}.lead{max-width:720px;margin:0 auto;color:#5e4932;font-size:16px;text-align:left;background:#fffaf1;border:1px solid #ead8b6;border-radius:8px;padding:18px 22px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 0}.step{border:1px solid #dfc391;background:#fff9e9;border-radius:8px;padding:16px;text-align:left;min-height:128px}.step b{display:block;color:#9a6a14;font-size:12px;letter-spacing:.16em;margin-bottom:8px}.step strong{font-size:18px;display:block;line-height:1.5}
+.purpose{border:1px solid #d7b06f;background:var(--amber-soft);border-radius:8px;padding:18px 22px;text-align:left;font-weight:600}h2{font-size:25px;line-height:1.45;margin:24px 0 14px;letter-spacing:.04em}p{margin:0 0 13px}.small{font-size:13px;color:var(--muted)}
+.note{border:1px solid #d6b36f;border-radius:8px;background:var(--amber-soft);padding:16px 18px;margin:16px 0}.note.green{border-color:#a8ccb5;background:var(--green-soft)}.note.amber{border-color:#d6b36f;background:var(--amber-soft)}
+table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0 18px;border:1px solid #dccbb1;border-radius:8px;overflow:hidden;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid #eadfcd;vertical-align:top;text-align:left}th{background:#f7edda;color:#6b4115;font-weight:700}tr:last-child td{border-bottom:0}
+.shot{border:1px solid #dfcfb5;border-radius:8px;background:#fff;padding:10px;margin:16px 0 12px;break-inside:avoid}.shot img{width:100%;max-height:560px;object-fit:contain;display:block;border-radius:6px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+.next{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}.next div{border:1px solid #dfcfb5;border-radius:8px;background:#fffaf2;padding:14px}.next b{display:block;color:#8b5a08;margin-bottom:4px}
+@media print{body{background:white}.toolbar{display:none}.book{padding:0;max-width:none}.page{page-break-after:always;border:0;box-shadow:none;border-radius:0;min-height:277mm;margin:0;padding:18mm 16mm}.footer{left:16mm;right:16mm;bottom:10mm}.page:before{display:none}.shot{break-inside:avoid}a{color:inherit;text-decoration:none}}
+@media(max-width:720px){.page{padding:24px 18px;min-height:auto}.steps,.next{grid-template-columns:1fr}h1{font-size:30px}.footer{position:static;margin-top:28px}}
+</style>
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">PDF保存・印刷</button><a href="academy.html">Academyへ戻る</a></div>
+<main class="book">
+
+  <section class="page cover">
+    <div class="header"><span>KITOKU GUIDE</span><span>NAME READING</span></div>
+
+    <span class="label">KITOKU GUIDE</span>
+    <div>
+      <h1>姓名鑑定の見方</h1>
+      <div class="subtitle">〜 名前は、点数ではなく傾向を教えてくれる 〜</div>
+    </div>
+    <p class="lead">姓名鑑定を、名前に点数をつける道具としてではなく、自分の傾向や努力の仕方の癖を知るための鏡として見ていきます。</p>
+    <div class="steps"><div class="step"><b>STEP 1</b><strong>名前は点数ではなく傾向だと知る</strong><p class="small">良い悪いで裁かず、名前が持つ型を眺める。</p></div><div class="step"><b>STEP 2</b><strong>5つの見方を知る</strong><p class="small">響き、五行、陰陽、天地、画数を重ねて読む。</p></div><div class="step"><b>STEP 3</b><strong>名前が教える癖を行動に活かす</strong><p class="small">努力の仕方や補い方を、自分で選ぶ。</p></div></div>
+    <div class="purpose">具体的な凶数や怖い象意は、このガイドでは扱いません。判定そのものはKITOKUアプリの姓名鑑定機能に委ね、ここでは見方と受け取り方だけを整理します。</div>
+
+    <div class="footer"><span>KITOKU @ LIFE</span><span>1</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>点数ではない</span></div>
+<h2>1. 姓名は生命そのもの。ただし、点数ではない</h2><p>「姓名とは生命なり」。姓名鑑定の世界には、そう伝えられています。名前は、あなたの人生に長く寄り添う、大切な要素の一つです。</p><p>ただし、名前が仮に「完璧」だったとしても、それだけで人生が良くなることはありません。名前は、あなたに何かを強制するものではなく、あなたの傾向・癖を映す鏡です。</p><div class="note amber">100点の名前を持っていても、動かなければ何も変わりません。逆に、厳しい配列を持っていても、その傾向を知って活かし方を工夫すれば、十分に良い人生を築けます。姓名鑑定は、点数をつける道具ではなく、自分の取扱説明書を読むための道具です。</div><h2>2. 名前だけで完結しない。トータルで見る視点</h2><p>気学では、名前だけを切り離して判断することはしません。本命星・月命星と、名前が持つ五行を重ね合わせて見ることで、初めて意味が出てきます。</p><p>生まれ持った星に足りない要素を名前が補っていることもあれば、同じ傾向が重なって強く出ていることもあります。名前単体の吉凶より、「自分の星と名前を合わせて、今どんなバランスにあるか」を見るのが、KITOKU流の姓名鑑定です。</p><div class="note green">名前を変えなくても、大丈夫です。今の名前が持つ傾向を知り、日々の色・方位・食べ物などで足りない部分を補う。これだけで、十分にバランスは整います。</div>
+    <div class="footer"><span>KITOKU @ LIFE</span><span>2</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>五大真理</span></div>
+<h2>3. 5つの見方。五大真理をやさしく言うと</h2><p>姓名鑑定では、名前を5つの角度から見ます。専門用語としては難しく見えますが、ひとつずつやさしく言い換えると、名前の見方がぐっと近くなります。</p><table><thead><tr><th>専門用語</th><th>やさしく言うと</th></tr></thead><tbody><tr><td>読み下し（音）</td><td>名前の響きが持つ雰囲気</td></tr><tr><td>五行の配列</td><td>名前全体が、木火土金水のどの気質に寄っているか</td></tr><tr><td>陰陽の配列</td><td>エネルギーの流れ方。粘り強く続くタイプか、切り替わりが多いタイプか</td></tr><tr><td>天地の配合</td><td>姓と名のつながり方。バランスよく噛み合っているか</td></tr><tr><td>画数</td><td>名前が持つ、大まかな気質・エネルギーの量</td></tr></tbody></table><div class="note amber">この5つは、どれか1つが悪ければアウト、という減点方式ではありません。5つを重ねて見た時に、どんな癖・傾向が浮かび上がるかを読み取るものです。傾向が分かれば、それをどう活かすかは、あなた次第です。</div>
+    <div class="footer"><span>KITOKU @ LIFE</span><span>3</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>画数の見方</span></div>
+<h2>4. 画数は点数ではなく、エンジンの気質</h2><p>画数と聞くと、「良い画数・悪い画数」という点数のイメージを持たれがちです。でも本来は、その人が持つエネルギーのタイプを表すものです。</p><p>例えば、じっくり型か、瞬発力型か。組織を率いるタイプか、独立して動くタイプか。画数が教えてくれるのは、「どう努力すれば力を発揮しやすいか」という傾向であって、幸不幸を決める通知表ではありません。</p><div class="note green">厳しい配列が出たとしても、それは摩擦を通して磨かれるテーマを持っているという意味です。平坦な道より、乗り越える力を育てやすい、とも言えます。具体的な画数の意味を知りたい方は、KITOKUアプリの姓名鑑定機能で、ご自身の名前を直接確認してみてください。</div>
+    <div class="footer"><span>KITOKU @ LIFE</span><span>4</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>努力の型</span></div>
+<h2>5. 名前が教えてくれるのは、努力の仕方の癖</h2><p>姓名鑑定を通じて一番役立つのは、「この名前は吉か凶か」ではありません。自分は、どういう努力の仕方が向いているかという傾向をつかむことです。</p><p>コツコツ型か、一気に駆け上がる型か。一人で完結させたいタイプか、人と組んで進めたいタイプか。波が来た時に踏ん張れるタイプか、身軽に切り替えるタイプか。</p><p>こうした傾向を知っておくと、なぜかいつも同じところでつまずく、という悩みの理由が少し見えてくることがあります。</p><div class="note amber">名前は運命を決めるものではなく、あなたが元々持っている努力の型を教えてくれるものです。その型に逆らって頑張るより、型に合わせて力を使う方が、ずっと楽に結果が出ます。</div>
+    <div class="footer"><span>KITOKU @ LIFE</span><span>5</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>KITOKUで見る</span></div>
+<h2>6. KITOKUでの見方。命の器を読む</h2><p>KITOKUアプリには「命の器を読む」という姓名鑑定の入口があります。そこには、名前は人生を決めつけるものではなく、毎日呼ばれ、使い続ける言葉が少しずつ意識と行動を整えていく、という考え方が書かれています。</p><p>KITOKUでは、名前を点数だけで判断せず、自分を知り、意志を持って活かすための器として読みます。姓・名それぞれの画数は自動計算でき、フリガナから音の五行も判定できます。</p><p>入口は「自分」「命名」「改名」「他の人」「相性」から選べます。結果画面には個別の診断が出るため、このガイドでは入力画面だけを使います。</p><figure class="shot"><img src="academy_assets/guide_name/ss1_name_input.png" alt="「命の器を読む」入力画面。姓名入力、画数自動計算、KITOKUの画数基準を確認できます。"><figcaption>「命の器を読む」入力画面。姓名入力、画数自動計算、KITOKUの画数基準を確認できます。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ LIFE</span><span>6</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>締め</span></div>
+<h2>7. 決めるのは、名前ではなく、あなたです</h2><p>名前は、あなたを縛るものではありません。あなたがどんな癖を持って生まれてきたかを教えてくれる、一枚の地図のようなものです。</p><p>100点の名前を探す必要はありません。今の名前が持つ傾向を知り、それを活かす工夫をする。それだけで、十分に人生は良くなっていきます。</p><p>決めるのは、名前ではなく、あなたです。</p><div class="next"><div><b>BASIC 04</b>名前を入れてみよう・姓名鑑定の見方</div><div><b>KITOKU @ LIFE</b>命の器を読む</div></div><div class="purpose">姓名鑑定は、あなたを裁くためではなく、自分を扱いやすくするための地図です。</div>
+    <div class="footer"><span>KITOKU @ LIFE</span><span>7</span></div>
+  </section>
+</main>
+</body>
+</html>
