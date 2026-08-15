@@ -1740,6 +1740,12 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     </div>
     <div id="compassWrap" style="overflow:hidden;width:100%;"></div>
     <div class="ban-tap-hint">方位をタップすると、吉凶の理由と今日の処方箋が開きます。</div>
+    <details id="directionSangoHelp" style="display:none;margin:10px 0 0;background:rgba(255,255,255,.045);border:1px dashed rgba(196,160,67,.34);border-radius:10px;padding:9px 10px;">
+      <summary style="cursor:pointer;font-size:.64rem;font-weight:700;color:var(--goldlt);list-style:none;">？ 三合の後押しとは？</summary>
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-top:7px;">
+        三合は、十二支の流れが三つの方角で支え合う組み合わせです。吉方に三合が重なる時は、その後押しが強まる、と見ます。木局は発展、火局は学びや表現、金局は喜びや実り、水局は回復や家族の調和。これは必ず行くべきという命令ではなく、日々の行動の質を上げるための目安です。
+      </div>
+    </details>
 
     <!-- シェア用画像保存ボタン -->
     <div style="margin:10px 0 4px;text-align:center;display:grid;gap:8px;">
@@ -4009,6 +4015,16 @@ function drawOctagonCompass(wrap,center,dirData,kyouItems,kyouSet,extra){
   wrap.appendChild(svg);
 }
 
+function updateDirectionSangoHelp(dirData){
+  const box=document.getElementById('directionSangoHelp');
+  if(!box)return;
+  const hasSango=ALL8.some(dir=>{
+    const dd=dirData&&dirData[dir];
+    return dd&&!dd.isKyo&&(dd.badges||[]).some(b=>String(b).includes('三合'));
+  });
+  box.style.display=hasSango?'block':'none';
+}
+
 function renderBan(type){
   try {
   const {honmei,tsukimei,ty,tm,td,dayCenter,monthCenter,yearCent}=gState;
@@ -4051,6 +4067,7 @@ function renderBan(type){
 
   // DAILYで使えるよう日盤のdirDataをgStateに保存
   if(type==='day'){ gState.dayDirData=dirData; if(typeof renderRxAiMap==='function') setTimeout(renderRxAiMap,0); }
+  updateDirectionSangoHelp(dirData);
 
   // コンパス盤描画（八角形SVG）
   const wrap=document.getElementById('compassWrap');

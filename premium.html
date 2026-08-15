@@ -636,6 +636,12 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="arrow" onclick="moveDate(1)">▶</button>
       </div>
       <div class="compass" id="compassWrap"></div>
+      <details id="premiumSangoHelp" style="display:none;margin:10px 0 0;background:rgba(255,255,255,.68);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:9px 10px;">
+        <summary style="cursor:pointer;font-size:.64rem;font-weight:700;color:var(--goldlt);list-style:none;">？ 三合の後押しとは？</summary>
+        <div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-top:7px;">
+          三合は、十二支の流れが三つの方角で支え合う組み合わせです。吉方に三合が重なる時は、その後押しが強まる、と見ます。木局は発展、火局は学びや表現、金局は喜びや実り、水局は回復や家族の調和。これは必ず行くべきという命令ではなく、日々の行動の質を上げるための目安です。
+        </div>
+      </details>
       <div class="angle-rule-note" id="breakBranchNote"></div>
       <div class="angle-rule-note">※ KITOKUは気学式の「正方位30度・斜方位60度」で判定します。Googleマップ等の45度均等表示とは境界が異なる場合があります。</div>
 
@@ -1366,6 +1372,7 @@ function buildDirData(center){
       rank,
       isKyo:strictKyouSet.has(dir),
       isCaution:cautionSet.has(dir),
+      badges:rankObj.badges||[],
       kyoNames:strictItems.filter(x=>x.dir===dir).map(x=>formatKyoLabelPremium(x).split('/')[0]),
       cautionNames:cautionItems.filter(x=>x.dir===dir).map(x=>formatKyoLabelPremium(x).split('/')[0])
     };
@@ -1391,6 +1398,16 @@ function dirCell(dir,dirData,side=false){
     ${meta.sub?`<div class="dir-badge ${meta.badgeClass}">${meta.sub}</div>`:''}
   </div>`;
 }
+function updatePremiumSangoHelp(dirData){
+  const box=document.getElementById('premiumSangoHelp');
+  if(!box)return;
+  const hasSango=ALL8.some(dir=>{
+    const dd=dirData&&dirData[dir];
+    return dd&&!dd.isKyo&&(dd.badges||[]).some(b=>String(b).includes('三合'));
+  });
+  box.style.display=hasSango?'block':'none';
+}
+
 function renderBoard(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   const center=centerForDate();
@@ -1409,6 +1426,7 @@ function renderBoard(){
   if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(_y,_m,_d)];
   if(state.banType==='day')branchName=BRANCH_NAME_P[getDayBranch(_y,_m,_d)];
   drawOctagonPremium(wrap,center,dirData,{breakDir,branchName});
+  updatePremiumSangoHelp(dirData);
   // 全画面の小型方位盤を同期（全画面が開いているときのみ動作）
   if(typeof updateFsMiniCompass==='function') setTimeout(updateFsMiniCompass, 50);
 }
