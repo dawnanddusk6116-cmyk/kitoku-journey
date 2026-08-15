@@ -415,6 +415,87 @@ body{
   border-radius:6px;padding:5px 10px;cursor:pointer;
   font-family:'Noto Serif JP',serif;white-space:nowrap;flex-shrink:0;
 }
+.home-order-wrap{
+  margin:0 0 12px;
+  border:1px solid rgba(138,104,32,.18);
+  border-radius:12px;
+  background:rgba(255,255,255,.58);
+  overflow:hidden;
+}
+.home-order-toggle{
+  width:100%;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 12px;
+  border:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(250,245,235,.82));
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.66rem;
+  font-weight:800;
+  letter-spacing:.05em;
+  cursor:pointer;
+}
+.home-order-toggle span:last-child{color:var(--gold);font-size:.9rem;}
+.home-order-editor{
+  display:none;
+  padding:9px 10px 10px;
+  border-top:1px solid rgba(138,104,32,.12);
+}
+.home-order-wrap.open .home-order-editor{display:block;}
+.home-order-note{
+  font-size:.56rem;
+  color:var(--mist);
+  line-height:1.65;
+  margin:0 0 7px;
+}
+.home-order-list{display:grid;gap:6px;}
+.home-order-row{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  align-items:center;
+  gap:6px;
+  min-height:38px;
+  padding:6px 7px 6px 10px;
+  border:1px solid rgba(100,80,40,.1);
+  border-radius:9px;
+  background:rgba(255,255,255,.72);
+}
+.home-order-name{
+  font-size:.63rem;
+  color:var(--goldlt);
+  font-weight:800;
+  line-height:1.45;
+}
+.home-order-btn{
+  width:32px;
+  height:28px;
+  border:1px solid rgba(138,104,32,.2);
+  border-radius:8px;
+  background:rgba(255,255,255,.76);
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.72rem;
+  font-weight:900;
+  cursor:pointer;
+}
+.home-order-btn:disabled{opacity:.32;cursor:not-allowed;}
+.home-order-reset{
+  width:100%;
+  margin-top:8px;
+  padding:8px 10px;
+  border:1px solid rgba(138,104,32,.18);
+  border-radius:9px;
+  background:rgba(138,104,32,.05);
+  color:var(--goldlt);
+  font-family:'Noto Serif JP',serif;
+  font-size:.6rem;
+  font-weight:800;
+  cursor:pointer;
+}
 /* 今日の日付バッジ */
 .today-badge{
   display:inline-flex;align-items:center;gap:5px;
@@ -839,7 +920,15 @@ body{
   </div>
   <button class="birth-bar-btn" id="birthBarBtn" onclick="changeBirth()">✎ 変更</button>
 </div>
-<details class="beginner-note">
+<div class="home-order-wrap" id="homeOrderWrap">
+  <button class="home-order-toggle" type="button" onclick="toggleHomeOrderEditor()"><span id="homeOrderToggleText">入口の順序を編集</span><span id="homeOrderToggleIcon">▾</span></button>
+  <div class="home-order-editor" id="homeOrderEditor">
+    <div class="home-order-note">よく使う入口を上にできます。この端末だけに保存されます。</div>
+    <div class="home-order-list" id="homeOrderList"></div>
+    <button class="home-order-reset" type="button" onclick="resetHomeOrder()">標準の順序に戻す</button>
+  </div>
+</div>
+<details class="beginner-note" data-home-section="start">
   <summary>
     <span class="beginner-note-num">START</span>
     <span>
@@ -859,7 +948,7 @@ body{
   </div>
 </details>
 
-<details class="beginner-note purpose-note">
+<details class="beginner-note purpose-note" data-home-section="purpose">
   <summary>
     <span class="beginner-note-num">目的</span>
     <span>
@@ -914,7 +1003,7 @@ body{
     </div>
   </div>
 </details>
-<div class="three-cats-wrap">
+<div class="three-cats-wrap" data-home-section="main">
 
     <!-- ① 自分を知る -->
     <div class="cat-accordion">
@@ -1055,7 +1144,7 @@ body{
   
 
   <!-- ② 自分専用KITOKUを作る -->
-  <a class="entry-card e-my" href="my_kitoku.html">
+  <a class="entry-card e-my" href="my_kitoku.html" data-home-section="my">
     <div class="entry-icon">⚙️</div>
     <div class="entry-info">
       <div class="my-badge">自分専用<span class="new-badge">NEW</span></div>
@@ -1067,7 +1156,7 @@ body{
   </a>
 
   <!-- ③ KITOKU Academy -->
-  <a class="entry-card e-academy" href="academy.html">
+  <a class="entry-card e-academy" href="academy.html" data-home-section="academy">
     <div class="entry-icon">📖</div>
     <div class="entry-info">
       <div class="entry-en">KITOKU ACADEMY</div>
@@ -1082,7 +1171,7 @@ body{
   
 
   <!-- すべてのツール（確認・管理用） -->
-  <div class="all-tools-wrap">
+  <div class="all-tools-wrap" data-home-section="tools">
     <button class="all-tools-btn" onclick="toggleAllTools()">
       <span class="all-tools-main">
         <span id="allToolsLabel" class="all-tools-title">✦ すべてのツールを見る</span>
@@ -1260,6 +1349,76 @@ function renderBirthBar(){
   }catch(e){}
 }
 renderBirthBar();
+
+const HOME_ORDER_KEY='kitoku-top-home-order-v1';
+const HOME_ORDER_DEFAULT=['start','purpose','main','my','academy','tools'];
+const HOME_ORDER_LABELS={
+  start:'初めての入口',
+  purpose:'目的から選ぶ',
+  main:'自分・関係・行動の入口',
+  my:'自分専用KITOKUを作る',
+  academy:'気学を学ぶ',
+  tools:'すべてのツールを見る'
+};
+function getHomeOrder(){
+  let saved=[];
+  try{saved=JSON.parse(localStorage.getItem(HOME_ORDER_KEY)||'[]')||[];}catch(e){saved=[];}
+  const clean=saved.filter(id=>HOME_ORDER_DEFAULT.includes(id));
+  HOME_ORDER_DEFAULT.forEach(id=>{if(!clean.includes(id))clean.push(id);});
+  return clean;
+}
+function saveHomeOrder(order){
+  try{localStorage.setItem(HOME_ORDER_KEY,JSON.stringify(order));}catch(e){}
+}
+function applyHomeOrder(){
+  const section=document.querySelector('.entry-section');
+  if(!section)return;
+  getHomeOrder().forEach(id=>{
+    const el=document.querySelector('[data-home-section="'+id+'"]');
+    if(el)section.appendChild(el);
+  });
+}
+function renderHomeOrderList(){
+  const list=document.getElementById('homeOrderList');
+  if(!list)return;
+  const order=getHomeOrder();
+  list.innerHTML=order.map((id,idx)=>`
+    <div class="home-order-row">
+      <div class="home-order-name">${idx+1}. ${HOME_ORDER_LABELS[id]||id}</div>
+      <button class="home-order-btn" type="button" onclick="moveHomeSection('${id}',-1)" ${idx===0?'disabled':''}>↑</button>
+      <button class="home-order-btn" type="button" onclick="moveHomeSection('${id}',1)" ${idx===order.length-1?'disabled':''}>↓</button>
+    </div>`).join('');
+}
+function moveHomeSection(id,delta){
+  const order=getHomeOrder();
+  const idx=order.indexOf(id);
+  const next=idx+delta;
+  if(idx<0||next<0||next>=order.length)return;
+  const tmp=order[idx];
+  order[idx]=order[next];
+  order[next]=tmp;
+  saveHomeOrder(order);
+  applyHomeOrder();
+  renderHomeOrderList();
+}
+function resetHomeOrder(){
+  saveHomeOrder(HOME_ORDER_DEFAULT.slice());
+  applyHomeOrder();
+  renderHomeOrderList();
+}
+function toggleHomeOrderEditor(){
+  const wrap=document.getElementById('homeOrderWrap');
+  const icon=document.getElementById('homeOrderToggleIcon');
+  const text=document.getElementById('homeOrderToggleText');
+  if(!wrap)return;
+  const open=!wrap.classList.contains('open');
+  wrap.classList.toggle('open',open);
+  if(icon)icon.textContent=open?'▴':'▾';
+  if(text)text.textContent=open?'入口の順序を保存中':'入口の順序を編集';
+  if(open)renderHomeOrderList();
+}
+applyHomeOrder();
+renderHomeOrderList();
 
 function isValidBirthDate(y,m,d){
   y=parseInt(y,10);m=parseInt(m,10);d=parseInt(d,10);
