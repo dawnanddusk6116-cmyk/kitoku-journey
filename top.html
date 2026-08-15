@@ -253,26 +253,29 @@ body{
 .purpose-note .beginner-note-sub{color:#8a6820;}
 .purpose-note .beginner-note-arrow{color:#8a6820;border-color:rgba(138,104,32,.24);box-shadow:0 0 0 7px rgba(138,104,32,.08),0 8px 18px rgba(138,104,32,.1);}
 .purpose-note .beginner-note-body{padding:0 16px 16px;}
-.purpose-groups{display:grid;gap:10px;}
+.purpose-groups{display:grid;gap:12px;}
 .purpose-group{
-  border:1px solid rgba(138,104,32,.14);
-  background:rgba(255,255,255,.66);
-  border-radius:12px;
-  padding:10px;
+  border:1px solid rgba(138,104,32,.16);
+  background:
+    linear-gradient(180deg,rgba(255,253,247,.9),rgba(255,255,255,.72));
+  border-radius:14px;
+  padding:11px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.86);
 }
 .purpose-group-title{
   position:relative;
   display:flex;
   align-items:center;
-  gap:7px;
-  min-height:32px;
-  padding:7px 10px 7px 13px;
-  margin:0 0 8px;
-  border-radius:10px;
-  background:linear-gradient(90deg,rgba(138,104,32,.13),rgba(255,255,255,.72));
-  border:1px solid rgba(138,104,32,.16);
+  justify-content:space-between;
+  gap:10px;
+  min-height:34px;
+  padding:7px 10px 7px 14px;
+  margin:0 0 9px;
+  border-radius:11px;
+  background:linear-gradient(90deg,rgba(169,120,24,.15),rgba(255,255,255,.78));
+  border:1px solid rgba(138,104,32,.18);
   color:var(--goldlt);
-  font-size:.76rem;
+  font-size:.74rem;
   font-weight:900;
   letter-spacing:.04em;
   line-height:1.45;
@@ -286,28 +289,57 @@ body{
   background:#a97818;
   box-shadow:0 0 0 3px rgba(169,120,24,.08);
 }
-.purpose-links{display:grid;gap:6px;}
-.purpose-link{
-  display:flex;
+.purpose-group-title-text{flex:1;min-width:0;}
+.purpose-group-count{
+  display:inline-flex;
   align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  min-height:34px;
-  padding:8px 10px;
-  border-radius:10px;
-  background:rgba(255,255,255,.76);
-  border:1px solid rgba(100,80,40,.08);
+  justify-content:center;
+  min-width:38px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(138,104,32,.18);
+  color:#8a6820;
+  font-size:.52rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  white-space:nowrap;
+}
+.purpose-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+.purpose-link{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:8px;
+  min-height:54px;
+  padding:9px 10px;
+  border-radius:11px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(100,80,40,.1);
   color:var(--snow);
   text-decoration:none;
+  box-shadow:0 4px 12px rgba(100,80,40,.04);
 }
-.purpose-link strong{font-size:.66rem;line-height:1.5;color:var(--goldlt);}
-.purpose-link small{display:block;font-size:.54rem;line-height:1.45;color:var(--mist);margin-top:1px;}
-.purpose-link span:last-child{color:rgba(100,80,40,.34);font-weight:900;flex-shrink:0;}
+.purpose-link strong{display:block;font-size:.62rem;line-height:1.45;color:var(--goldlt);}
+.purpose-link small{display:block;font-size:.51rem;line-height:1.42;color:var(--mist);margin-top:2px;}
+.purpose-link span:first-child{min-width:0;}
+.purpose-link span:last-child{
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(138,104,32,.06);
+  color:rgba(100,80,40,.42);
+  font-weight:900;
+  flex-shrink:0;
+}
 .purpose-link:active{background:rgba(138,104,32,.06);transform:scale(.99);}
 @media (max-width:420px){
   .purpose-note .beginner-note-body{padding:0 13px 15px;}
   .purpose-group{padding:9px;}
-  .purpose-link{padding:8px 9px;}
+  .purpose-links{grid-template-columns:1fr;}
+  .purpose-link{min-height:45px;padding:8px 9px;}
   .purpose-link strong{font-size:.64rem;}
 }
 
@@ -840,7 +872,7 @@ body{
     <div class="beginner-note-text">機能名が分からなくても大丈夫です。いまの目的に近い言葉を選ぶと、裏側でKITOKUの道具につながります。</div>
     <div class="purpose-groups">
       <div class="purpose-group">
-        <div class="purpose-group-title">自分について知りたい</div>
+        <div class="purpose-group-title"><span class="purpose-group-title-text">自分について知りたい</span><span class="purpose-group-count">6項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="kyusei_v2.html"><span><strong>自分の基本タイプを知りたい</strong><small>自分の星を見る</small></span><span>›</span></a>
           <a class="purpose-link" href="report_generator_free.html"><span><strong>自分の強みを、もっと知りたい</strong><small>はじめてのKITOKU診断</small></span><span>›</span></a>
@@ -851,7 +883,7 @@ body{
         </div>
       </div>
       <div class="purpose-group">
-        <div class="purpose-group-title">人間関係を整えたい</div>
+        <div class="purpose-group-title"><span class="purpose-group-title-text">人間関係を整えたい</span><span class="purpose-group-count">5項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="relations.html"><span><strong>好きなあの人との関係を縮めたい</strong><small>相性レポート</small></span><span>›</span></a>
           <a class="purpose-link" href="relations.html"><span><strong>親や家族との関係を見つめ直したい</strong><small>相性・家族の縁</small></span><span>›</span></a>
@@ -861,7 +893,7 @@ body{
         </div>
       </div>
       <div class="purpose-group">
-        <div class="purpose-group-title">今日の自分を整えたい</div>
+        <div class="purpose-group-title"><span class="purpose-group-title-text">今日の自分を整えたい</span><span class="purpose-group-count">4項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="scent.html"><span><strong>今日の気分に合う香りを選びたい</strong><small>香りAI先生</small></span><span>›</span></a>
           <a class="purpose-link" href="scent.html"><span><strong>デートや仕事で印象を整えたい</strong><small>香り・色の入口</small></span><span>›</span></a>
@@ -870,7 +902,7 @@ body{
         </div>
       </div>
       <div class="purpose-group">
-        <div class="purpose-group-title">行動に良い流れを取り入れたい</div>
+        <div class="purpose-group-title"><span class="purpose-group-title-text">行動に良い流れを取り入れたい</span><span class="purpose-group-count">5項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="direction_v2.html"><span><strong>今日、どこへ行くとよいか知りたい</strong><small>方位ナビ</small></span><span>›</span></a>
           <a class="purpose-link" href="travel.html"><span><strong>旅行の日程や行き先を決めたい</strong><small>旅行吉方位ナビ</small></span><span>›</span></a>
