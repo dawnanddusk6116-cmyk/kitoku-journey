@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>香りの使い方 | KITOKU Academy</title>
+<style>
+:root{--bg:#f4f0ea;--paper:#fffdf8;--ink:#4b2f12;--muted:#8b765f;--line:#dfcfb5;--amber-soft:#fff6df;--green-soft:#edf8f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;line-height:1.9;letter-spacing:.02em}
+.toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:12px;padding:12px;background:rgba(244,240,234,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.toolbar button,.toolbar a{border:1px solid #caa96f;background:#fffaf0;color:#5b350e;border-radius:999px;padding:9px 18px;font-weight:700;text-decoration:none;cursor:pointer}
+.book{max-width:920px;margin:0 auto;padding:28px 18px 60px}.page{background:var(--paper);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(80,55,20,.06);padding:34px 42px;margin:0 auto 24px;min-height:980px;position:relative;overflow:hidden}
+.page:before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,#9f6b10,#d8b35a,#9f6b10);opacity:.75}
+.header,.footer{display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}.footer{position:absolute;left:42px;right:42px;bottom:24px;border-top:1px solid #eadfcd;padding-top:10px}
+.cover{display:flex;flex-direction:column;justify-content:center;text-align:center;gap:20px}.label{display:inline-flex;align-self:center;border:1px solid #cfa95e;color:#8b5a08;border-radius:999px;padding:6px 18px;font-size:13px;font-weight:700;letter-spacing:.18em;background:#fff8e7}
+h1{font-size:38px;line-height:1.35;margin:4px 0 0;font-weight:600;letter-spacing:.08em}.subtitle{font-size:20px;color:#76502a;margin-top:-4px}.lead{max-width:720px;margin:0 auto;color:#5e4932;font-size:16px;text-align:left;background:#fffaf1;border:1px solid #ead8b6;border-radius:8px;padding:18px 22px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 0}.step{border:1px solid #dfc391;background:#fff9e9;border-radius:8px;padding:16px;text-align:left;min-height:128px}.step b{display:block;color:#9a6a14;font-size:12px;letter-spacing:.16em;margin-bottom:8px}.step strong{font-size:18px;display:block;line-height:1.5}
+.purpose{border:1px solid #d7b06f;background:var(--amber-soft);border-radius:8px;padding:18px 22px;text-align:left;font-weight:600}h2{font-size:25px;line-height:1.45;margin:24px 0 14px;letter-spacing:.04em}p{margin:0 0 13px}.small{font-size:13px;color:var(--muted)}
+.note{border:1px solid #d6b36f;border-radius:8px;background:var(--amber-soft);padding:16px 18px;margin:16px 0}.note.green{border-color:#a8ccb5;background:var(--green-soft)}.note.amber{border-color:#d6b36f;background:var(--amber-soft)}
+table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0 18px;border:1px solid #dccbb1;border-radius:8px;overflow:hidden;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid #eadfcd;vertical-align:top;text-align:left}th{background:#f7edda;color:#6b4115;font-weight:700}tr:last-child td{border-bottom:0}
+.shot{border:1px solid #dfcfb5;border-radius:8px;background:#fff;padding:10px;margin:16px 0 12px;break-inside:avoid}.shot img{width:100%;max-height:560px;object-fit:contain;display:block;border-radius:6px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+@media print{body{background:white}.toolbar{display:none}.book{padding:0;max-width:none}.page{page-break-after:always;border:0;box-shadow:none;border-radius:0;min-height:277mm;margin:0;padding:18mm 16mm}.footer{left:16mm;right:16mm;bottom:10mm}.page:before{display:none}.shot{break-inside:avoid}a{color:inherit;text-decoration:none}}
+@media(max-width:720px){.page{padding:24px 18px;min-height:auto}.steps{grid-template-columns:1fr}h1{font-size:30px}.footer{position:static;margin-top:28px}}
+</style>
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">PDF保存・印刷</button><a href="academy.html">Academyへ戻る</a></div>
+<main class="book">
+
+  <section class="page cover">
+    <div class="header"><span>KITOKU GUIDE</span><span>SCENT</span></div>
+
+    <span class="label">KITOKU GUIDE</span>
+    <div>
+      <h1>香りの使い方</h1>
+      <div class="subtitle">〜 今日を整える香りと、人と場をつなぐ香水 〜</div>
+    </div>
+    <p class="lead">KITOKUには、香りに関わる入口が2つあります。その場で提案が出る「今日の香りAI」と、AIに相談するための「香りAI先生」。役割の違いを知ると、香りはぐっと実用的になります。</p>
+    <div class="steps"><div class="step"><b>STEP 1</b><strong>2つの入口の役割を知る</strong><p class="small">その場で整える道具と、相談文を作る入口を分けて見る。</p></div><div class="step"><b>STEP 2</b><strong>五行と香りの対応を知る</strong><p class="small">木火土金水の香りを、欲しい気分に合わせて選ぶ。</p></div><div class="step"><b>STEP 3</b><strong>場面・相手・なりたい自分で選ぶ</strong><p class="small">今日の自分や会う人に合わせて、香りを使い分ける。</p></div></div>
+    <div class="purpose">特定の香りを悪いものとして扱いません。高価な香水やブランド名ではなく、素材の本質・香りの系統で見ていきます。</div>
+
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>1</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>2つの入口</span></div>
+<h2>1. 香りは、気を一番手軽に動かせる入口</h2><p>方位を変えるには移動が要り、名前を変えるのは大ごとです。でも香りは、一吹きで今すぐ気分を変えられる、一番手軽な調律の道具です。</p><p>KITOKUには、香りに関わる入口が2つあります。役割が違うので、使い分けると、ぐっと実用的になります。</p><table><thead><tr><th>入口</th><th>性質</th><th>こんな時に</th></tr></thead><tbody><tr><td>今日の色／今日の香りAI</td><td>その場で提案が出る</td><td>毎朝、気分を整えたい時</td></tr><tr><td>香りAI先生</td><td>AIに相談する入口</td><td>商談・贈り物・手持ちの整理など、深く相談したい時</td></tr></tbody></table>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>2</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>今日を整える</span></div>
+<h2>2. 今日を整える。足りない気を、シーンに合わせて補う</h2><p>毎日、方位や運気の流れは変化します。その日、自分に足りていない気を、香りと色で一時的に補うのが「今日の色」「今日の香りAI」の役割です。</p><p>今日の自分の星と、その日の星を重ねて、今日の処方星が決まります。そこから、色と香り、両方の提案が出てきます。</p><p>さらに、朝の準備／仕事・商談／リラックス／特別な日という4つのシーンを選ぶと、同じ処方の中でも提案が変わります。今日は何をする日かに合わせて選んでみてください。</p><table><thead><tr><th>層</th><th>内容</th></tr></thead><tbody><tr><td>取り入れ方</td><td>手首の内側に軽くつける等、基本の使い方</td></tr><tr><td>香水で整える</td><td>手首や首筋に少量。外へ出る前に</td></tr><tr><td>ボディケアで整える</td><td>香りを強く出さず、気分を立ち上げる</td></tr><tr><td>空間で整える</td><td>ルームフレグランス等で、場所そのものを整える</td></tr></tbody></table><div class="note green">難しく考える必要はありません。シーンを1つ選ぶだけで、色・香りの両方が今日仕様に整います。最後に、その日の一言キーワードも添えられているので、香りだけでなく心構えまで持ち帰れます。</div><figure class="shot"><img src="academy_assets/guide_scent/ss1_today_scent.png" alt="「今日の色」「今日の香りAI」画面。シーンタブ、処方された香り、4層の取り入れ方を確認できます。"><figcaption>「今日の色」「今日の香りAI」画面。シーンタブ、処方された香り、4層の取り入れ方を確認できます。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>3</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>香りAI先生</span></div>
+<h2>3. 香りAI先生。4つの相談モードで、外とのつながりを整える</h2><p>香りAI先生は、第15回で紹介した「AIに聞く」の香り専門版です。相談モードを選び、条件を選んで、できた相談文をChatGPT・Claude・Gemini・NotebookLM等に貼り付けて相談する、同じ3ステップの仕組みです。</p><table><thead><tr><th>モード</th><th>こんな時に</th></tr></thead><tbody><tr><td>自分の香りを選ぶ</td><td>九星・気分・シーンから、新しい香りを提案してほしい時</td></tr><tr><td>手持ち香水を使い分ける</td><td>今持っている香水を、五行・場面・タイミングで整理したい時</td></tr><tr><td>会う人に合わせる</td><td>相手の星や関係性に合わせ、場を整える香りを選びたい時</td></tr><tr><td>贈り物・救済モード</td><td>疲れている人・眠れない人・勝負前の人へ、香り・色・空間を処方したい時</td></tr></tbody></table><div class="note amber">香りの強さはHigh・Mid・Lowから選べます。Highは香水や勝負の場面、Midはボディケアや日常、Lowは空間や浄化向け。今日はどれくらいはっきり香らせたいかで選んでください。</div><figure class="shot"><img src="academy_assets/guide_scent/ss2_scent_ai_teacher.png" alt="「香りAI先生」画面。4つの相談モード、High/Mid/Low、星情報が自動で入ることを確認できます。"><figcaption>「香りAI先生」画面。4つの相談モード、High/Mid/Low、星情報が自動で入ることを確認できます。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>4</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>五行と香り</span></div>
+<h2>4. 五行と香りの対応。やさしい早見表</h2><p>5つの気には、それぞれ似合う香りの系統があります。良い・悪いではなく、今、何を引き出したいかで選んでみてください。</p><table><thead><tr><th>系統</th><th>香りの例</th><th>引き出したいもの</th></tr></thead><tbody><tr><td>木</td><td>ユーカリ・ペパーミント・レモン</td><td>閃き・やる気のスイッチ</td></tr><tr><td>火</td><td>ローズ・ジャスミン・シナモン</td><td>華やぎ・魅力・情熱</td></tr><tr><td>土</td><td>サンダルウッド・バニラ</td><td>安定・落ち着き</td></tr><tr><td>金</td><td>ベルガモット・オレンジ・柑橘系</td><td>決断力・豊かさ</td></tr><tr><td>水</td><td>ラベンダー・カモミール</td><td>休息・人間関係の潤い・直感</td></tr></tbody></table><div class="note green">自分の星と同じ系統を選んでも、逆に足りない系統を選んでも、どちらも正解です。今日は何が欲しいかを自分に聞いてから選ぶ。それだけで、香りの使い方はぐっと深くなります。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>5</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>相手に合わせる</span></div>
+<h2>5. 相手に合わせる、という視点</h2><p>気学には、相手を変えようとするのではなく、相手の気質に合わせて自分を調律する、という考え方があります。</p><p>香りも同じです。大事な商談の前に、相手の気質に近い香りをまとってみる。それだけで、無理に自分を作らなくても、場の空気が自然になじみやすくなります。</p><div class="note amber">これは相手に媚びることではありません。一時的に、相手の波長に合わせて対話の扉を開く工夫です。本音で話す準備が整ったら、自分の香りに戻れば大丈夫です。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>6</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>TPO</span></div>
+<h2>6. TPOでの使い分け例</h2><p>全部を覚える必要はありません。今日はどんな自分でいたいかを一つ選ぶだけで、十分に活用できます。</p><table><thead><tr><th>場面</th><th>おすすめの系統</th></tr></thead><tbody><tr><td>商談・プレゼン</td><td>金（決断力・信頼感）</td></tr><tr><td>デート・大切な人との時間</td><td>火（華やぎ・魅力）</td></tr><tr><td>家族との落ち着いた時間</td><td>土（安定・安らぎ）</td></tr><tr><td>新しい挑戦の前</td><td>木（閃き・やる気）</td></tr><tr><td>疲れた日の夜</td><td>水（休息・回復）</td></tr></tbody></table><div class="note green">香りは、あなたを別人に変える魔法ではありません。でも、今のあなたに少しだけ違う角度から光を当てる、やさしい後押しにはなります。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>7</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU GUIDE</span><span>締め</span></div>
+<h2>7. 一吹きから、今日を少し変えてみる</h2><p>今日の自分を整えるのも、誰かとの時間を大切にするのも、どちらもあなたが選べることです。</p><p>香りは、見えない気分を扱うための小さな道具です。忙しい朝も、大事な商談の前も、疲れた夜も、一吹きで「どう在りたいか」を思い出せます。</p><p>一吹きから、今日を少し変えてみてください。</p>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>8</span></div>
+  </section>
+</main>
+</body>
+</html>
