@@ -921,7 +921,7 @@ body{
   <button class="birth-bar-btn" id="birthBarBtn" onclick="changeBirth()">✎ 変更</button>
 </div>
 <div class="home-order-wrap" id="homeOrderWrap">
-  <button class="home-order-toggle" type="button" onclick="toggleHomeOrderEditor()"><span id="homeOrderToggleText">入口の順序を編集</span><span id="homeOrderToggleIcon">▾</span></button>
+  <button class="home-order-toggle" type="button" onclick="toggleHomeOrderEditor()"><span id="homeOrderToggleText">ホーム画面を並び替える</span><span id="homeOrderToggleIcon">▾</span></button>
   <div class="home-order-editor" id="homeOrderEditor">
     <div class="home-order-note">よく使う入口を上にできます。この端末だけに保存されます。</div>
     <div class="home-order-list" id="homeOrderList"></div>
@@ -1414,7 +1414,7 @@ function toggleHomeOrderEditor(){
   const open=!wrap.classList.contains('open');
   wrap.classList.toggle('open',open);
   if(icon)icon.textContent=open?'▴':'▾';
-  if(text)text.textContent=open?'入口の順序を保存中':'入口の順序を編集';
+  if(text)text.textContent=open?'ホーム画面を並び替え中':'ホーム画面を並び替える';
   if(open)renderHomeOrderList();
 }
 applyHomeOrder();
