@@ -87,6 +87,87 @@ body{
   gap:6px;
 }
 .home-add-link:active{transform:scale(.98);}
+.hero-promise{
+  margin:14px auto 0;
+  max-width:360px;
+  border-top:1px solid rgba(138,104,32,.16);
+  padding-top:12px;
+  font-size:.66rem;
+  color:var(--goldlt);
+  line-height:1.95;
+  letter-spacing:.04em;
+}
+.experience-flow{
+  margin:14px 0 16px;
+  border:1px solid rgba(138,104,32,.2);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,.9), transparent 34%),
+    linear-gradient(135deg, rgba(255,252,245,.96), rgba(247,244,239,.92));
+  padding:15px 15px 14px;
+  box-shadow:0 12px 28px rgba(100,80,40,.055);
+}
+.experience-kicker{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.68rem;
+  letter-spacing:.22em;
+  color:var(--gold);
+  margin-bottom:4px;
+}
+.experience-title{
+  font-size:.95rem;
+  color:var(--goldlt);
+  font-weight:700;
+  line-height:1.65;
+  margin-bottom:10px;
+}
+.experience-lead{
+  font-size:.64rem;
+  color:var(--mist);
+  line-height:1.85;
+  margin-bottom:10px;
+}
+.experience-steps{
+  display:grid;
+  gap:8px;
+}
+.experience-step{
+  display:grid;
+  grid-template-columns:26px 1fr;
+  gap:9px;
+  align-items:start;
+  padding:8px 0;
+  border-top:1px solid rgba(138,104,32,.11);
+}
+.experience-step:first-child{border-top:none;}
+.experience-num{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(138,104,32,.25);
+  background:rgba(255,255,255,.64);
+  color:var(--gold);
+  font-family:'Cormorant Garamond',serif;
+  font-size:.9rem;
+  font-weight:600;
+}
+.experience-copy{min-width:0;}
+.experience-copy strong{
+  display:block;
+  color:var(--snow);
+  font-size:.73rem;
+  line-height:1.55;
+  margin-bottom:2px;
+}
+.experience-copy span{
+  display:block;
+  color:var(--mist);
+  font-size:.62rem;
+  line-height:1.75;
+}
 
 
 /* ── 入口カード ── */
@@ -956,6 +1037,11 @@ body{
     九星・方位・姓名・家相・香りから、<br>
     いまの自分に合う選択を見つけます。
   </div>
+  <!-- 2026-08-17: KITOKUの約束。機能名より先に得られる体験を伝えるため追加。 -->
+  <div class="hero-promise">
+    気学で自分を知り、今日の選択と行動に活かす。<br>
+    星情報・方位盤・香り・姓名・家相を、日々の判断材料に整えます。
+  </div>
   <button type="button" class="home-add-link" onclick="showPwaHint()">📱 ホーム画面に追加</button>
 </div>
 
@@ -975,6 +1061,21 @@ body{
   <span class="daily-compass-main"><span class="daily-compass-title">今日の方位盤を開く</span><span class="daily-compass-sub">日盤・月盤・年盤と今日の吉凶を見る</span></span>
   <span class="daily-compass-arrow">›</span>
 </a>
+
+<!-- 2026-08-17: 体験ベースの5ステップ。下の入口カードとは分け、押せない読み物として配置。 -->
+<section class="experience-flow" aria-label="KITOKUでできること">
+  <div class="experience-kicker">WHAT KITOKU GIVES YOU</div>
+  <div class="experience-title">KITOKUでできること</div>
+  <div class="experience-lead">機能を選ぶ前に、KITOKUで得られる体験を短くまとめました。知るだけで終わらせず、日々の選択と行動につなげていきます。</div>
+  <div class="experience-steps">
+    <div class="experience-step"><div class="experience-num">1</div><div class="experience-copy"><strong>自分を知る</strong><span>九星・姓名・納音から、強みや迷いやすい癖を知る。</span></div></div>
+    <div class="experience-step"><div class="experience-num">2</div><div class="experience-copy"><strong>今日を整える</strong><span>方位盤・色・香り・食事で、今日の過ごし方を整える。</span></div></div>
+    <div class="experience-step"><div class="experience-num">3</div><div class="experience-copy"><strong>人との関係を整える</strong><span>相手の星を見て、距離感・言葉・商談前の準備を考える。</span></div></div>
+    <div class="experience-step"><div class="experience-num">4</div><div class="experience-copy"><strong>AIで深める</strong><span>星情報や方位盤をAIに渡し、自分に合う選択肢を探す。</span></div></div>
+    <div class="experience-step"><div class="experience-num">5</div><div class="experience-copy"><strong>行動して運を開く</strong><span>吉方位・旅行・引越し・日取りを、実際の行動に変える。</span></div></div>
+  </div>
+</section>
+
 <div class="home-order-wrap" id="homeOrderWrap">
   <button class="home-order-toggle" type="button" onclick="toggleHomeOrderEditor()"><span id="homeOrderToggleText">ホーム画面を並び替える</span><span id="homeOrderToggleIcon">▾</span></button>
   <div class="home-order-editor" id="homeOrderEditor">

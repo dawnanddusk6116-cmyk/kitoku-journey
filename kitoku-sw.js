@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260803ba';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260803bb';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
