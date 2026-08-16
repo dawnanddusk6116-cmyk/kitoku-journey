@@ -514,7 +514,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   <section class="hero">
     <div class="eyebrow">PREMIUM BASE</div>
     <div class="title">Premium Compass</div>
-    <div class="subtitle">地図×方位盤・三盤比較・線路の日・KIGAKU先生AIをまとめる、プレミア機能の土台ページです。</div>
+    <div class="subtitle">地図×方位盤・三盤比較・線路の日に加えて、コピーせず気学先生にそのまま相談できるプレミア機能の土台ページです。</div>
   </section>
 
   <section id="authPanel" style="display:none;">
@@ -595,13 +595,13 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           <strong>① 最初に一度だけ</strong><br>
           旅行モードで「現在地を登録」を押し、位置情報を許可します。登録済みになれば、次回から自動で読み込みます。<br><br>
           <strong>② 旅行</strong><br>
-          旅行タブで日付を合わせ、国内・海外の目的地を選びます。結果が出たら「方位盤メモ」をコピーして、気学先生に貼って相談します。<br><br>
+          旅行タブで日付を合わせ、国内・海外の目的地を選びます。基本の星情報は気学先生に自動で入ります。目的地や候補日をさらに見たい時だけ、方位盤メモを補足として送ります。<br><br>
           <strong>③ 聖地巡礼</strong><br>
-          聖地巡礼タブで出発日を確認し、線路の日と照合します。行き先と方位盤メモを気学先生に貼ると相談しやすくなります。<br><br>
+          聖地巡礼タブで出発日を確認し、線路の日と照合します。行き先や方位盤メモを補足すると、巡礼の意味や日程を相談しやすくなります。<br><br>
           <strong>④ 引越し</strong><br>
           引越しタブでは年盤・月盤を優先します。吉方位を確認し、線路の日を実行日の候補にします。<br><br>
           <strong>⑤ 相談の流れ</strong><br>
-          方位盤メモをコピー → 入力欄に貼る → 「明日○○に行きます」と追記 → 送信、の順で使います。
+          気学先生にそのまま聞く → 必要なら方位盤メモや相手の星情報を補足する → 送信、の順で使います。
         </div>
       </details>
       <div class="mode-switch" aria-label="方位盤の使い方">
@@ -863,11 +863,11 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </details>
 
     <div class="panel" id="aiChatPanel">
-      <div class="panel-title">⑥ KIGAKU先生AIで深掘り</div>
+      <div class="panel-title">⑥ 気学先生にそのまま相談する</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
-        あなたの九星情報・今日の盤面情報・線路の日は、相談文に自動で入ります。<br>
-        コピーや貼り付けをしなくても、そのまま自由に会話できます。<br>
-        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を貼ると相談しやすくなります。
+        あなたの九星情報・今日の盤面情報・線路の日は、相談の土台として自動で入ります。<br>
+        無料版のように相談文をコピーして貼る必要はありません。この画面内でそのまま会話できます。<br>
+        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を補足すると相談しやすくなります。
       </div>
 
       <details class="compact-consult" id="consultOptions">
@@ -880,7 +880,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <div class="compact-consult-body">
 
       <details class="mini-accordion">
-        <summary>AI相談に入る情報</summary>
+        <summary>気学先生に自動で入る情報</summary>
         <div class="mini-accordion-body" id="aiContextSummary">
           読み込み中...
         </div>
@@ -895,8 +895,9 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <details class="mini-accordion">
         <summary>うまく使うコツ</summary>
         <div class="mini-accordion-body">
-          ① 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を貼ると精度が上がります。<br>
-          ② 第三者との人間関係・商談・面談を聞く時は、下の「相手の星を確認する」で調べて貼ると相談しやすくなります。
+          ① 普段の相談は、そのまま入力欄に書くだけで大丈夫です。<br>
+          ② 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を補足すると精度が上がります。<br>
+          ③ 第三者との人間関係・商談・面談を聞く時は、下の「相手の星を確認する」で調べて補足すると相談しやすくなります。
         </div>
       </details>
 
@@ -1274,7 +1275,7 @@ function setCompassMode(mode,save=true){
   const guide=document.getElementById('modeGuide');
   if(guide){
     const html={
-      travel:'<strong>旅行モード</strong><br>年盤・月盤・日盤を見て、目的地の方位と出発候補日を整えます。候補日がある時は、その日の方位盤メモをAIに貼ると相談しやすくなります。',
+      travel:'<strong>旅行モード</strong><br>年盤・月盤・日盤を見て、目的地の方位と出発候補日を整えます。候補日がある時は、その日の方位盤メモを気学先生に補足すると相談しやすくなります。',
       pilgrimage:'<strong>聖地巡礼モード</strong><br>目的地への方位、出発日、線路の日を重ねて見ます。魂の旅として、年盤・月盤・日盤の順に確認します。',
       move:'<strong>引越しモード</strong><br>年盤と月盤を最優先で見ます。日盤は基本的に重視しません。引越し月が決まったら、線路の日を実行日の候補にします。'
     }[state.mode];
@@ -1856,7 +1857,7 @@ function renderAiContextSummary(){
     const lr=getLifeReading();
     if(isExternalLifeReading(lr)){
       el.innerHTML=`
-        <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
+        <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">気学先生に自動で入る情報</div>
         <div><strong style="color:var(--goldlt);">用途</strong>：姓名鑑定（${getLifeModeLabel(lr.mode)}）</div>
         <div><strong style="color:var(--goldlt);">鑑定対象</strong>：${lr.name}さん</div>
         <div><strong style="color:var(--goldlt);">読み込み</strong>：姓名鑑定結果 ${lr.score}点</div>
@@ -1867,7 +1868,7 @@ function renderAiContextSummary(){
     }
     const board=getCurrentBoardContext();
     el.innerHTML=`
-      <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">AI相談に入る情報</div>
+      <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">気学先生に自動で入る情報</div>
       <div><strong style="color:var(--goldlt);">相談テーマ</strong>：${getConsultMeta().label}</div>
       <div><strong style="color:var(--goldlt);">方位盤</strong>：${getModeMeta().label}</div>
       <div><strong style="color:var(--goldlt);">九星</strong>：${starLine(state.info).replace(/^私は/,'')}</div>
@@ -2871,7 +2872,7 @@ const TOOL_HELP = {
   },
   self: {
     title: '自分の情報はこんな時に使えます',
-    body: 'AI相談、日程判断、方位判断、姓名鑑定の土台になる情報です。普段は自動で相談文に入りますが、別のAIやメモに貼りたい時はここからコピーできます。'
+    body: 'AI相談、日程判断、方位判断、姓名鑑定の土台になる情報です。普段は気学先生に自動で入りますが、別のAIやメモに貼りたい時はここからコピーできます。'
   },
   inspiration: {
     title: '今日のインスピレーションはこんな時に使えます',
