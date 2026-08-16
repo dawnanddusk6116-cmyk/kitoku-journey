@@ -442,10 +442,10 @@ function renderMiniDiagnosis(input, rows){
   </div>`;
 }
 
-function runAstro64(updateKitoku=true){
+function runAstro64(updateKitoku=true,openResult=true){
   const input=getInput();
   const resultDetails=document.getElementById('resultDetails');
-  if(resultDetails)resultDetails.open=true;
+  if(resultDetails&&openResult)resultDetails.open=true;
   if(!input.year || !input.month || !input.day){
     document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>';
     document.getElementById('prompt').value='生年月日を入力して計算すると、AIに聞く文がここに表示されます。';
@@ -481,7 +481,7 @@ function runAstro64(updateKitoku=true){
   `).join('');
   document.getElementById('results').innerHTML=renderMiniDiagnosis(input,rows)+detailHtml;
   document.getElementById('prompt').value=buildAstroPrompt(input, rows);
-  if(resultDetails)resultDetails.scrollIntoView({behavior:'smooth',block:'start'});
+  if(resultDetails&&openResult)resultDetails.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function loadSavedBirthData(){
@@ -568,7 +568,7 @@ function setFontSize(s){
 
 const hasSavedBirth=loadSavedBirthData();
 if(hasSavedBirth){
-  runAstro64();
+  runAstro64(true,false);
 }else{
   document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>';
   document.getElementById('prompt').value='生年月日を入力して計算すると、AIに聞く文がここに表示されます。';
