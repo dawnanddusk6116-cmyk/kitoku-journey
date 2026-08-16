@@ -41,6 +41,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 }
 .life-element-banner strong{font-size:.72rem;}
 .section{padding:4px 16px 0;}
+.step-section.is-hidden{display:none;}
+.step-section.is-revealed{animation:stepReveal .22s ease;}
+@keyframes stepReveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mode-card::after{content:'›';margin-left:auto;align-self:center;color:rgba(138,104,32,.28);font-size:1.05rem;font-weight:800;}
+.mode-card.active::after{color:var(--rose);}
 .sec-label{font-size:.62rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin:8px 0 10px;display:flex;align-items:center;gap:7px;}
 .sec-num{width:24px;height:24px;border-radius:50%;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.36);color:var(--goldlt);display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;letter-spacing:0;flex-shrink:0;}
 .sec-label-text{letter-spacing:.16em;}
@@ -246,7 +251,7 @@ textarea{min-height:86px;resize:vertical;}
   </div>
 </div>
 
-<div class="section">
+<div class="section step-section is-hidden" id="conditionStep">
   <div class="sec-label"><span class="sec-num">2</span><span class="sec-label-text">条件を選ぶ</span></div>
   <div class="form-card">
     <div class="field">
@@ -336,15 +341,15 @@ textarea{min-height:86px;resize:vertical;}
   </div>
 </div>
 
-<div class="section" id="promptSection">
+<div class="section step-section is-hidden" id="promptSection">
   <details class="scent-fold prompt-fold">
     <summary>
       <span class="sec-num">3</span>
-      <span><strong>AIに渡す相談文</strong><small>条件から作った相談文を確認して、無料AIに貼り付けます。</small></span>
+      <span><strong>作成された相談文</strong><small>必要な時だけ開いて、無料AIに貼り付けます。</small></span>
       <span class="fold-mark"><span>開く</span></span>
     </summary>
     <div class="prompt-card">
-      <div class="prompt-title" id="promptTitle">香りAI先生への相談</div>
+      <div class="prompt-title" id="promptTitle">香りAI先生への相談文</div>
     <div class="prompt-box" id="promptBox">—</div>
     <button class="btn primary" onclick="copyPrompt()">📋 コピーして貼り付ける</button>
     <button class="btn secondary" onclick="sharePrompt()">📤 AIアプリに送る</button>
@@ -433,6 +438,7 @@ const SEKKI_DB={2025:{1:5,2:3,3:5,4:4,5:5,6:5,7:7,8:7,9:7,10:8,11:7,12:7},2026:{
 const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
 let gInfo=null;
 let currentMode='self';
+let hasSelectedMode=false;
 let consultFocus=new URLSearchParams(location.search).get('focus')==='color'?'color':'scent';
 
 function applyConsultFocus(){
@@ -526,8 +532,20 @@ function loadInfo(){
   buildPrompt();
 }
 
+function revealScentStep(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.remove('is-hidden');
+  el.classList.add('is-revealed');
+}
+
 function selectMode(mode){
   currentMode=mode;
+  hasSelectedMode=true;
+  revealScentStep('conditionStep');
+  revealScentStep('promptSection');
+  const condition=document.getElementById('conditionStep');
+  if(condition)condition.scrollIntoView({behavior:'smooth',block:'start'});
   document.querySelectorAll('.mode-card').forEach(c=>c.classList.toggle('active',c.dataset.mode===mode));
   document.getElementById('personField').style.display=(mode==='person'||mode==='gift')?'block':'none';
   document.getElementById('targetStarField').style.display=(mode==='person'||mode==='gift')?'block':'none';
