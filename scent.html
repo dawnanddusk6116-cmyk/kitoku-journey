@@ -229,7 +229,7 @@ textarea{min-height:86px;resize:vertical;}
   <div class="howto-steps">
     <div class="howto-step"><div class="howto-num">1</div><div><strong>相談モードを選ぶ</strong><br>自分用・手持ち香水・会う人・贈り物から選べます。</div></div>
     <div class="howto-step"><div class="howto-num">2</div><div><strong>条件を選ぶ・書き足す</strong><br>シーン、気分、目的、香りの出方を選び、黄色い欄に補足を書きます。</div></div>
-    <div class="howto-step"><div class="howto-num">3</div><div><strong>AIに渡す相談文を使う</strong><br>できた相談文をコピーして、ChatGPT・Claude・Gemini・NotebookLMなどに貼り付けます。</div></div>
+    <div class="howto-step"><div class="howto-num">3</div><div><strong>相談材料として使う</strong><br>できた文章をコピーして、AIや音声入力で相談を深めます。</div></div>
   </div>
 </div>
 
@@ -345,14 +345,14 @@ textarea{min-height:86px;resize:vertical;}
   <details class="scent-fold prompt-fold">
     <summary>
       <span class="sec-num">3</span>
-      <span><strong>作成された相談文</strong><small>必要な時だけ開いて、無料AIに貼り付けます。</small></span>
+      <span><strong>作成された相談材料</strong><small>必要な時だけ開いて、AIや音声入力で使います。</small></span>
       <span class="fold-mark"><span>開く</span></span>
     </summary>
     <div class="prompt-card">
       <div class="prompt-title" id="promptTitle">香りAI先生への相談文</div>
     <div class="prompt-box" id="promptBox">—</div>
     <button class="btn primary" onclick="copyPrompt()">📋 コピーして貼り付ける</button>
-    <button class="btn secondary" onclick="sharePrompt()">📤 AIアプリに送る</button>
+    <button class="btn secondary" onclick="sharePrompt()">📤 相談材料を共有</button>
     <button class="btn secondary" onclick="printScent()">🖨 印刷・PDF保存</button>
     </div>
   </details>
@@ -721,7 +721,7 @@ async function sharePrompt(){
     if(navigator.share){await navigator.share({title:`KITOKU ${consultFocus==='color'?'色AI先生':'香りAI先生'}`,text});return;}
   }catch(e){}
   try{await navigator.clipboard.writeText(text);}catch(e){}
-  alert('共有に対応していないため、相談文をコピーしました。AIアプリに貼り付けてください。');
+  alert('共有に対応していないため、相談材料をコピーしました。AIや音声入力で使ってください。');
 }
 function setTheme(t){
   document.body.setAttribute('data-theme',t);document.documentElement.setAttribute('data-theme',t);

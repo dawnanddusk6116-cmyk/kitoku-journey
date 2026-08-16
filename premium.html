@@ -633,7 +633,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           <strong>④ 引越し</strong><br>
           引越しタブでは年盤・月盤を優先します。吉方位を確認し、線路の日を実行日の候補にします。<br><br>
           <strong>⑤ 相談の流れ</strong><br>
-          気学先生にそのまま聞く → 必要なら方位盤メモや相手の星情報を補足する → 送信、の順で使います。
+          気学先生にそのまま話す → 必要なら方位盤メモや相手の星情報を補足する → 送信、の順で使います。
         </div>
       </details>
       <div class="mode-switch" aria-label="方位盤の使い方">
@@ -1149,7 +1149,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <summary>自分の九星情報・姓名鑑定へ <button type="button" onclick="event.stopPropagation();openToolHelp('self')" style="border:1px solid var(--rim);background:rgba(255,255,255,.5);border-radius:999px;color:var(--goldlt);font-size:.58rem;padding:3px 8px;">？</button></summary>
       <div class="self-accordion-body">
         <div class="star-text" id="starInfoText">読み込み中...</div>
-        <div class="note">この情報がプレミア機能の基本データです。AI相談・日程判断・方位判断の土台になります。</div>
+        <div class="note">この情報がプレミア機能の基本データです。相談材料・日程判断・方位判断の土台になります。</div>
         <button class="copy-btn" id="copyStarBtn" onclick="copyStarInfo()">📋 星情報だけをコピー</button>
         <a class="life-link" href="life.html">
           <div>
@@ -2908,7 +2908,7 @@ const TOOL_HELP = {
   },
   self: {
     title: '自分の情報はこんな時に使えます',
-    body: 'AI相談、日程判断、方位判断、姓名鑑定の土台になる情報です。普段は気学先生に自動で入りますが、別のAIやメモに貼りたい時はここからコピーできます。'
+    body: '相談材料、日程判断、方位判断、姓名鑑定の土台になる情報です。普段は気学先生に自動で入りますが、別のAIやメモで使いたい時はここからコピーできます。'
   },
   inspiration: {
     title: '今日のインスピレーションはこんな時に使えます',
