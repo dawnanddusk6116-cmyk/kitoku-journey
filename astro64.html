@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIに聞く文を作る | KITOKU</title>
+<title>星読みミニ診断 | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -65,6 +65,15 @@ button{width:100%;border:1px solid rgba(138,104,32,.45);border-radius:9px;backgr
 .plain-guide{margin-top:10px;background:rgba(255,255,255,.58);border:1px solid rgba(196,160,67,.22);border-radius:10px;padding:10px 11px;font-size:.68rem;color:var(--mist);line-height:1.8;}
 .plain-guide strong{color:var(--goldlt);}
 .results{display:grid;gap:8px;}
+.mini-diagnosis{display:grid;gap:10px;}
+.mini-diagnosis-head{border:1px solid rgba(196,160,67,.28);border-radius:12px;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.72));padding:12px 13px;color:var(--mist);font-size:.72rem;line-height:1.85;}
+.mini-diagnosis-head strong{display:block;color:var(--goldlt);font-size:.86rem;margin-bottom:2px;}
+.mini-diagnosis-grid{display:grid;gap:8px;}
+.mini-diagnosis-card{border:1px solid var(--rim);border-radius:11px;background:rgba(100,80,40,.025);padding:11px;}
+.mini-diagnosis-label{font-size:.6rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:2px;}
+.mini-diagnosis-main{font-size:.9rem;color:var(--goldlt);font-weight:800;line-height:1.55;}
+.mini-diagnosis-text{font-size:.68rem;color:var(--mist);line-height:1.75;margin-top:4px;}
+.detail-title{font-size:.66rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin:4px 0 2px;}
 .row{border:1px solid var(--rim);border-radius:10px;padding:10px;background:rgba(100,80,40,.025);}
 .row-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
 .planet{font-size:.82rem;color:var(--goldlt);font-weight:700;}
@@ -118,10 +127,15 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   background:rgba(255,255,255,.035);
   border-color:rgba(212,175,55,.22);
 }
-[data-theme="dark"] .mini{
+[data-theme="dark"] .mini,
+[data-theme="dark"] .mini-diagnosis-card{
   background:rgba(126,98,180,.14);
   border-color:rgba(126,98,180,.28);
   color:rgba(232,238,255,.74);
+}
+[data-theme="dark"] .mini-diagnosis-head{
+  background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));
+  border-color:rgba(196,160,67,.28);
 }
 [data-theme="dark"] .copy{
   background:rgba(255,255,255,.045);
@@ -172,12 +186,12 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 
 <header>
   <div class="logo">KITOKU STAR READING</div>
-  <h1>AIに聞く文を作る</h1>
-  <div class="lead">太陽・月・金星などを重ねて、自分の特徴をAIに相談しやすい文章へ整えるページです。</div>
+  <h1>星読みミニ診断</h1>
+  <div class="lead">生年月日を入れて、太陽・月・金星から自分の傾向をやさしく確認します。</div>
 </header>
 
 <div class="notice">
-  この画面は、ここで自動回答を出す画面ではありません。生年月日から星読みの材料を整理し、ChatGPT・Claude・Gemini、または気学先生に貼れる相談文を作ります。答えを鵜呑みにせず、自分の感覚と照らし合わせるための材料として使ってください。
+  まずは診断結果がこの画面に出ます。もっと深く知りたい時だけ、AIに聞く文をコピーしたり、プレミアムで気学先生に相談できます。
 </div>
 
 <div class="concept">
@@ -187,46 +201,19 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 </div>
 
 <div class="flow-box">
-  <div class="flow-title">この画面でできること</div>
+  <div class="flow-title">使い方はシンプルです</div>
   <div class="flow-steps">
-    <div class="flow-step"><div class="flow-num">1</div><div>生年月日を入れて、AIに渡すための星読みデータを作ります。</div></div>
-    <div class="flow-step"><div class="flow-num">2</div><div>「① AIに聞く文をコピー」を押して、ChatGPT・Claude・Geminiなどに貼ります。<br><span style="color:var(--goldlt);font-weight:700;">無料版では、相談文を作るところまでできます。</span></div></div>
-    <div class="flow-step"><div class="flow-num">3</div><div>返ってきた答えを読んで、恋愛・仕事・30日プランなどを続けて深掘りできます。プレミアムでは、コピーせず画面内で相談できる形へ広げます。</div></div>
+    <div class="flow-step"><div class="flow-num">1</div><div>生年月日を入れます。時刻が分からない場合は、12時のままで大丈夫です。</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>「診断する」を押すと、この画面にミニ診断が表示されます。</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>もっと深く知りたい時だけ、AIに聞く文や気学先生を使って相談できます。</div></div>
   </div>
   <div class="ai-link-row">
-    <a class="ai-link" href="ai.html">無料AI相談へ貼る</a>
-    <a class="ai-link" href="premium.html">気学先生で相談</a>
+    <a class="ai-link" href="#birthDataSection">診断する場所へ</a>
+    <a class="ai-link" href="#promptDetails">深く相談する</a>
   </div>
 </div>
 
-<details class="section fold-section" id="promptDetails">
-  <summary><span class="fold-icon">AI</span><span><span class="fold-title">① AIに聞く文をコピー</span><span class="fold-sub">計算後、この文章を外部AIや気学先生に貼ります</span></span></summary>
-  <div class="fold-body">
-    <div class="prompt-guide">
-      <div class="prompt-guide-title">ここをコピーすれば、そのままAIに聞けます</div>
-      生年月日・KITOKU OS DATA・星読み結果が、この文章に自動で入ります。AIには「強み・迷いやすい点・恋愛や仕事での使い方」を聞ける形に整えます。
-    </div>
-    <textarea id="prompt" readonly>計算後、AIに聞く文がここに表示されます。</textarea>
-    <div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
-      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">STEP 1 ── まずこれをコピーしてAIに貼ります</div>
-      <button class="copy" onclick="copyPrompt()" style="margin-bottom:0;">① AIに聞く文をコピー</button>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。<br>この画面では答えを出さず、相談しやすい形まで整えます。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
-    </div>
-    <button class="copy" onclick="printAstro()" style="margin-top:0;margin-bottom:10px;">🖨 印刷・PDF保存</button>
-    <div style="background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:11px 13px;">
-      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">STEP 2 ── 返答が来たら、テーマを絞って深掘り（任意）</div>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">①の返答を受け取ったら、同じAIの会話に続けて貼ります。最初の読みを土台に、恋愛・仕事・行動プランまで広げられます。</div>
-      <div class="deep-dive">
-        <button class="deep-btn" onclick="copyDeepDive('love')">② 恋愛を深掘り</button>
-        <button class="deep-btn" onclick="copyDeepDive('work')">② 仕事を整理</button>
-        <button class="deep-btn" onclick="copyDeepDive('plan')">② 30日プラン</button>
-        <button class="deep-btn" onclick="copyDeepDive('words')">② 自分への言葉</button>
-      </div>
-    </div>
-  </div>
-</details>
-
-<section class="section">
+<section class="section" id="birthDataSection">
   <div class="label">BIRTH DATA</div>
   <div class="grid">
     <div class="field"><label>年</label><input id="year" type="number" placeholder="例：1990"></div>
@@ -242,7 +229,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <input id="offset" type="number" value="0" step="0.1">
     <div class="hint">結果照合用の調整値です。後でサンプルと合わせながら検証します。</div>
   </div>
-  <button onclick="runAstro64(true)">AIに聞く文を作る</button>
+  <button onclick="runAstro64(true)">診断する</button>
 </section>
 
 <details class="section fold-section" id="kitokuDataDetails">
@@ -261,14 +248,41 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   <div class="print-astro-body" id="printAstroBody"></div>
 </div>
 <details class="section fold-section" id="resultDetails">
-  <summary><span class="fold-icon">星</span><span><span class="fold-title">計算結果を見る</span><span class="fold-sub">太陽・月・金星などの64象意を確認できます</span></span></summary>
+  <summary><span class="fold-icon">星</span><span><span class="fold-title">診断結果を見る</span><span class="fold-sub">太陽・月・金星から、自分の傾向を確認できます</span></span></summary>
   <div class="fold-body">
     <div class="plain-guide">
-      <strong>ここは計算結果です。</strong><br>
-      太陽・月・水星などの星の位置を、64個の言葉に置き換えています。難しく考えなくて大丈夫です。上の「AIに聞く文」に、この結果が自動で反映されます。
+      <strong>まずはここだけ読めば大丈夫です。</strong><br>
+      太陽・月・金星などから、自分の傾向を短くまとめます。詳しい計算結果とAI相談文は、必要な時だけ開いてください。
     </div>
     <div id="results" class="results">
-      <div class="hint">計算するとここに天体ごとの64象意が表示されます。</div>
+      <div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>
+    </div>
+  </div>
+</details>
+
+<details class="section fold-section" id="promptDetails">
+  <summary><span class="fold-icon">AI</span><span><span class="fold-title">もっと深く知りたい方へ</span><span class="fold-sub">AIに聞く文をコピーできます</span></span></summary>
+  <div class="fold-body">
+    <div class="prompt-guide">
+      <div class="prompt-guide-title">ミニ診断の先を、AIに相談できます</div>
+      生年月日・KITOKU OS DATA・星読み結果が、この文章に自動で入ります。結果を読んで、もう少し掘り下げたい時だけ使ってください。
+    </div>
+    <textarea id="prompt" readonly>計算後、AIに聞く文がここに表示されます。</textarea>
+    <div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
+      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">AI相談 ── 必要な時だけコピーします</div>
+      <button class="copy" onclick="copyPrompt()" style="margin-bottom:0;">AIに聞く文をコピー</button>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Claude・Gemini、または気学先生にそのまま貼り付けてください。<br>ミニ診断の内容を、恋愛・仕事・行動プランなどに広げたい時に使えます。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
+    </div>
+    <button class="copy" onclick="printAstro()" style="margin-top:0;margin-bottom:10px;">🖨 印刷・PDF保存</button>
+    <div style="background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:11px 13px;">
+      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">追加相談 ── 返答が来たら、テーマを絞って深掘り（任意）</div>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">AIの返答を受け取ったら、同じ会話に続けて貼ります。最初の読みを土台に、恋愛・仕事・行動プランまで広げられます。</div>
+      <div class="deep-dive">
+        <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
+        <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
+        <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
+        <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
+      </div>
     </div>
   </div>
 </details>
@@ -396,11 +410,44 @@ function buildKitokuOsText(input){
 機体のバグ：${bugText}`;
 }
 
+function findAstroPlanet(rows, key){
+  return rows.find(r=>String(r.planet||'').includes(key))||null;
+}
+
+function renderMiniDiagnosis(input, rows){
+  const cards=[
+    {label:'表に出る自分', key:'太陽', hint:'外に見せやすい自分、人生で育てていく中心です。'},
+    {label:'安心する本音', key:'月', hint:'素の自分が落ち着く場所、無理をすると疲れやすい部分です。'},
+    {label:'惹かれるもの', key:'金星', hint:'好きなもの、美意識、人との距離感に出やすい傾向です。'},
+    {label:'動き方', key:'火星', hint:'やる気の出し方、勝負どころで力を出す方向です。'}
+  ].map(c=>{
+    const r=findAstroPlanet(rows,c.key);
+    if(!r){
+      return `<div class="mini-diagnosis-card"><div class="mini-diagnosis-label">${c.label}</div><div class="mini-diagnosis-main">${c.key}</div><div class="mini-diagnosis-text">${c.hint}</div></div>`;
+    }
+    const theme=r.theme?` ${r.theme}`:'';
+    return `<div class="mini-diagnosis-card">
+      <div class="mini-diagnosis-label">${c.label}</div>
+      <div class="mini-diagnosis-main">${r.archetype}</div>
+      <div class="mini-diagnosis-text">${c.hint}<br>${theme}</div>
+    </div>`;
+  }).join('');
+  return `<div class="mini-diagnosis">
+    <div class="mini-diagnosis-head">
+      <strong>${input.year}年${input.month}月${input.day}日の星読みミニ診断</strong>
+      気になるところだけ読めば大丈夫です。もっと深く知りたい時は、下の「AIに聞く文」を使えます。
+    </div>
+    <div class="mini-diagnosis-grid">${cards}</div>
+    <div class="detail-title">詳しい計算結果</div>
+  </div>`;
+}
+
 function runAstro64(updateKitoku=true){
   const input=getInput();
-  ['promptDetails','resultDetails'].forEach(id=>{const el=document.getElementById(id); if(el) el.open=true;});
+  const resultDetails=document.getElementById('resultDetails');
+  if(resultDetails)resultDetails.open=true;
   if(!input.year || !input.month || !input.day){
-    document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「AIに聞く文を作る」を押すと、ここに天体ごとの64象意が表示されます。</div>';
+    document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>';
     document.getElementById('prompt').value='生年月日を入力して計算すると、AIに聞く文がここに表示されます。';
     return;
   }
@@ -417,7 +464,7 @@ function runAstro64(updateKitoku=true){
     if(note)note.textContent='このKITOKU星情報は、生年月日から自動入力されています。必要なら後から書き足せます。';
   }
   const rows=computeAstro64(input);
-  const html=rows.map((r)=>`
+  const detailHtml=rows.map((r)=>`
     <div class="row">
       <div class="row-head">
         <div class="planet">${r.planet}</div>
@@ -432,8 +479,9 @@ function runAstro64(updateKitoku=true){
       </div>
     </div>
   `).join('');
-  document.getElementById('results').innerHTML=html;
+  document.getElementById('results').innerHTML=renderMiniDiagnosis(input,rows)+detailHtml;
   document.getElementById('prompt').value=buildAstroPrompt(input, rows);
+  if(resultDetails)resultDetails.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function loadSavedBirthData(){
@@ -457,7 +505,7 @@ function loadSavedBirthData(){
 
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
-  navigator.clipboard.writeText(text).then(()=>alert('① AIに聞く文をコピーしました\nChatGPT・Claude・Gemini、または気学先生に貼り付けてください。'));
+  navigator.clipboard.writeText(text).then(()=>alert('AIに聞く文をコピーしました\nChatGPT・Claude・Gemini、または気学先生に貼り付けてください。'));
 }
 function printAstro(){
   const t=document.getElementById('prompt').value;
@@ -522,7 +570,7 @@ const hasSavedBirth=loadSavedBirthData();
 if(hasSavedBirth){
   runAstro64();
 }else{
-  document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「AIに聞く文を作る」を押すと、ここに天体ごとの64象意が表示されます。</div>';
+  document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>';
   document.getElementById('prompt').value='生年月日を入力して計算すると、AIに聞く文がここに表示されます。';
 }
 </script>

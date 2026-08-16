@@ -296,6 +296,38 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   line-height:1.75;
   color:rgba(92,80,61,.72);
 }
+.premium-simple-flow{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin:0 0 10px;
+}
+.premium-simple-flow div{
+  border:1px solid rgba(138,104,32,.18);
+  border-radius:10px;
+  background:rgba(138,104,32,.045);
+  padding:8px 5px;
+  text-align:center;
+}
+.premium-simple-flow strong{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  background:rgba(138,104,32,.12);
+  color:var(--goldlt);
+  font-size:.62rem;
+  margin-bottom:3px;
+}
+.premium-simple-flow span{
+  display:block;
+  color:var(--mist);
+  font-size:.55rem;
+  line-height:1.35;
+  font-weight:800;
+}
 .mini-accordion{
   border:1px solid rgba(138,104,32,.2);
   border-radius:10px;
@@ -514,7 +546,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   <section class="hero">
     <div class="eyebrow">PREMIUM BASE</div>
     <div class="title">Premium Compass</div>
-    <div class="subtitle">地図×方位盤・三盤比較・線路の日に加えて、コピーせず気学先生にそのまま相談できるプレミア機能の土台ページです。</div>
+    <div class="subtitle">方位盤・日程・相手の星を見ながら、コピーせず気学先生にそのまま相談できます。</div>
   </section>
 
   <section id="authPanel" style="display:none;">
@@ -863,18 +895,22 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </details>
 
     <div class="panel" id="aiChatPanel">
-      <div class="panel-title">⑥ 気学先生にそのまま相談する</div>
+      <div class="panel-title">⑥ 気学先生に相談する</div>
+      <div class="premium-simple-flow">
+        <div><strong>1</strong><span>テーマを選ぶ</span></div>
+        <div><strong>2</strong><span>短く書く</span></div>
+        <div><strong>3</strong><span>✦で送信</span></div>
+      </div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
-        あなたの九星情報・今日の盤面情報・線路の日は、相談の土台として自動で入ります。<br>
-        無料版のように相談文をコピーして貼る必要はありません。この画面内でそのまま会話できます。<br>
-        未来の日付や相手のことは、下の方位盤メモ・相手の星情報を補足すると相談しやすくなります。
+        コピーや貼り付けは不要です。聞きたいことを書いて、右の✦を押すだけで相談できます。<br>
+        迷ったら「自由相談」を押して、いつもの言葉で入力してください。日付・移動・相手が関わる時だけ、方位盤メモや相手の星情報を補足します。
       </div>
 
-      <details class="compact-consult" id="consultOptions">
+      <details class="compact-consult" id="consultOptions" open>
         <summary>
           <span>
-            <span class="compact-consult-title">相談内容を開く</span>
-            <span class="compact-consult-note">テーマ・話し方・入力欄をまとめています</span>
+            <span class="compact-consult-title">ここに相談を書く</span>
+            <span class="compact-consult-note">テーマを選ぶか、そのまま入力できます</span>
           </span>
         </summary>
         <div class="compact-consult-body">
@@ -895,13 +931,13 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <details class="mini-accordion">
         <summary>うまく使うコツ</summary>
         <div class="mini-accordion-body">
-          ① 普段の相談は、そのまま入力欄に書くだけで大丈夫です。<br>
-          ② 将来の日付・契約日・移動を聞く時は、下の方位盤でその日を出して「方位盤メモ」を補足すると精度が上がります。<br>
-          ③ 第三者との人間関係・商談・面談を聞く時は、下の「相手の星を確認する」で調べて補足すると相談しやすくなります。
+          迷ったら「自由相談」を押して、一文だけ書けば大丈夫です。<br>
+          日付・契約・移動を聞く時だけ、下の方位盤でその日を出して「方位盤メモ」を補足します。<br>
+          相手がいる相談だけ、下の「相手の星を確認する」で調べて補足します。
         </div>
       </details>
 
-      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ</div>
+      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ（迷ったら自由相談）</div>
       <div class="topic-grid">
         <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
@@ -956,7 +992,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
 
       <div class="chat-composer">
-        <textarea id="chatInput" placeholder="今日の過ごし方・迷っている決断・気になることを入力…"
+        <textarea id="chatInput" placeholder="例：今日は何を優先すると良いですか？ / この日程で動いて大丈夫ですか？"
           oninput="autoResizeChatInput()"
           rows="5"></textarea>
         <div class="chat-actions">
@@ -964,7 +1000,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           <button class="chat-action-btn send" onclick="sendChat()" aria-label="送信">✦</button>
         </div>
       </div>
-      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">改行できます。スマホのマイク入力でも相談できます。送信は右の ✦ ボタンを押してください。</div>
+      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">短い文章で大丈夫です。スマホのマイク入力も使えます。送信は右の ✦ ボタンです。</div>
         </div>
       </details>
     </div>
