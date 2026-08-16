@@ -33,6 +33,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-step-num{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1rem;line-height:1;}
 .lead-step-text{font-size:.58rem;color:var(--mist);line-height:1.5;margin-top:3px;}
 .lead-step-note{margin-top:10px;background:linear-gradient(135deg,rgba(255,226,140,.28),rgba(255,255,255,.55));border:1px dashed rgba(184,128,20,.42);border-radius:9px;padding:9px 10px;font-size:.66rem;color:var(--goldlt);line-height:1.85;font-weight:700;}
+.ai-flow-panel{margin-top:12px;background:linear-gradient(135deg,rgba(72,142,94,.08),rgba(255,255,255,.62));border:1px solid rgba(72,142,94,.24);border-radius:12px;padding:13px;}
+.ai-flow-kicker{font-size:.58rem;letter-spacing:.14em;color:#2f7d4c;font-weight:900;margin-bottom:5px;}
+.ai-flow-title{font-size:.82rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:8px;}
+.ai-flow-list{display:grid;gap:7px;}
+.ai-flow-item{display:grid;grid-template-columns:25px 1fr;gap:8px;align-items:start;background:rgba(255,255,255,.52);border:1px solid rgba(72,142,94,.16);border-radius:9px;padding:8px 9px;}
+.ai-flow-num{width:23px;height:23px;border-radius:999px;background:rgba(72,142,94,.12);border:1px solid rgba(72,142,94,.25);color:#2f7d4c;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;}
+.ai-flow-copy{font-size:.64rem;color:var(--mist);line-height:1.75;}
+.ai-flow-copy strong{display:block;color:var(--goldlt);font-size:.7rem;margin-bottom:1px;}
+.ai-flow-note{margin-top:8px;border:1px solid rgba(196,160,67,.28);border-radius:9px;background:rgba(196,160,67,.08);padding:9px 10px;font-size:.62rem;color:var(--mist);line-height:1.8;}
 
 /* 注意書き */
 .caution{background:rgba(176,64,64,.04);border:1px solid rgba(176,64,64,.2);border-radius:8px;padding:10px 12px;margin-top:10px;}
@@ -76,6 +85,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .cat.ai-collapsible.open a.prompt-card{display:block!important;}
 .prompt-focus{box-shadow:0 0 0 3px rgba(72,142,94,.22),0 12px 26px rgba(72,142,94,.12)!important;border-color:rgba(72,142,94,.55)!important;}
 
+[data-theme="dark"] .ai-flow-panel{background:linear-gradient(135deg,rgba(72,142,94,.14),rgba(18,21,42,.96));border-color:rgba(120,190,140,.3);}
+[data-theme="dark"] .ai-flow-item{background:rgba(255,255,255,.045);border-color:rgba(120,190,140,.2);}
+[data-theme="dark"] .ai-flow-copy,[data-theme="dark"] .ai-flow-note{color:rgba(232,238,255,.76);}
 [data-theme="dark"] .ai-recommend-panel{background:linear-gradient(135deg,rgba(63,120,168,.16),rgba(18,21,42,.96));border-color:rgba(131,183,230,.35);}
 [data-theme="dark"] .ai-recommend-card{background:rgba(255,255,255,.055);border-color:rgba(131,183,230,.26);}
 [data-theme="dark"] .cat.ai-collapsible .cat-label::after{background:rgba(18,21,42,.82);}
@@ -257,13 +269,24 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
     <div class="lead-point">
       <div class="lead-point-title">AIとの付き合い方</div>
-      <div class="lead-point-text">AIの答えは、渡す材料で深さが変わります。KITOKUでは、星情報・相手の情報・いまの悩みを、相談しやすいメモに整えます。</div>
+      <div class="lead-point-text">AIの答えは、渡す材料で深さが変わります。KITOKUでは、自分の星情報・今日の方位盤・相手の星情報を、いつものAIチャットで使いやすい相談材料に整えます。</div>
       <div class="lead-steps">
         <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">テーマを選ぶ</div></div>
         <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">自分の言葉を足す</div></div>
         <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">AIや音声入力で相談</div></div>
       </div>
       <div class="lead-step-note">迷ったら、下の「1 今日のことを相談する」か「気学マインドマップ」から始めてください。できた材料は、AIに貼っても、音声で読み上げながら相談しても使えます。</div>
+    </div>
+
+    <div class="ai-flow-panel">
+      <div class="ai-flow-kicker">KITOKU式 AI活用フロー</div>
+      <div class="ai-flow-title">最初に星情報、毎日は方位盤。必要な時だけ相手の星を足す</div>
+      <div class="ai-flow-list">
+        <div class="ai-flow-item"><div class="ai-flow-num">1</div><div class="ai-flow-copy"><strong>最初に星情報を貼る</strong>同じチャットの中では、あなたの基本情報として使えます。服・色・香り・仕事・人間関係の相談の土台になります。</div></div>
+        <div class="ai-flow-item"><div class="ai-flow-num">2</div><div class="ai-flow-copy"><strong>毎日は方位盤を足す</strong>今日の色・香り・吉方位・避けたい方位を、その日の仕事や予定に合わせて補助的に解説してもらえます。服や持ち物の写真、食事の予定も一緒に渡すと、より具体的に相談できます。</div></div>
+        <div class="ai-flow-item"><div class="ai-flow-num">3</div><div class="ai-flow-copy"><strong>必要な時だけ相手の星を足す</strong>商談相手・家族・上司・パートナーなどの星を一時的に加えると、相手に合わせた言葉・色・香り・距離感を相談できます。</div></div>
+      </div>
+      <div class="ai-flow-note">アプリ内では、まずこの基本の使い方だけ分かれば大丈夫です。写真を扱いやすいAIなら、手持ちの服・時計・小物・食事候補を見せながら、今日の方位盤に合わせた提案も受けやすくなります。さらに深い活用例は、SNS・動画・ガイドで少しずつ紹介していきます。</div>
     </div>
 
   </div>
@@ -274,14 +297,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="star-info-box">
     <div class="star-info-label">① あなたの星情報（自動生成）</div>
     <div class="star-info-text" id="starInfoText">生年月日を登録すると自動で表示されます</div>
-    <div class="star-mini-note">この星情報が、相談材料の土台です。自分の強み・迷い・相性・仕事のメモに自動で入ります。</div>
+    <div class="star-mini-note">まずはこの星情報を、いつものAIチャットに貼ってください。同じチャット内では、あなたの基本情報として相談の土台になります。</div>
   </div>
   <button class="copy-btn" onclick="copyStarInfo()">
     <span>📋</span> 星情報だけをコピー（単体使用）
   </button>
   <div class="target-box">
     <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
-    <div class="target-desc">相手の生年月日を入れると、人間関係・仕事・面談などの相談文に相手の星情報を一時的に加えられます。保存はしません。</div>
+    <div class="target-desc">商談相手・家族・上司・パートナーなどの生年月日を入れると、相手の星情報を一時的に相談材料へ加えられます。相手に合わせた言葉・色・香り・距離感を相談したい時に使ってください。保存はしません。</div>
     <div class="target-grid">
       <div>
         <label>相手の名前・メモ</label>
