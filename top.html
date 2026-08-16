@@ -415,6 +415,56 @@ body{
   border-radius:6px;padding:5px 10px;cursor:pointer;
   font-family:'Noto Serif JP',serif;white-space:nowrap;flex-shrink:0;
 }
+.daily-compass-quick{
+  margin:0 0 10px;
+  min-height:44px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border:1.5px solid rgba(196,160,67,.34);
+  border-left:5px solid var(--gold);
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(255,250,238,.98),rgba(255,255,255,.9));
+  color:var(--goldlt);
+  text-decoration:none;
+  box-shadow:0 10px 24px rgba(100,70,20,.07);
+}
+.daily-compass-mark{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:rgba(138,104,32,.1);
+  border:1px solid rgba(138,104,32,.2);
+  color:var(--goldlt);
+  font-size:.92rem;
+}
+.daily-compass-main{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+.daily-compass-title{
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.06em;
+  line-height:1.4;
+}
+.daily-compass-sub{
+  font-size:.55rem;
+  color:var(--mist);
+  line-height:1.45;
+}
+.daily-compass-arrow{
+  color:var(--gold);
+  font-size:.9rem;
+  font-weight:900;
+}
+.daily-compass-quick:active{transform:scale(.99);}
 .home-order-wrap{
   margin:0 0 12px;
   border:1px solid rgba(138,104,32,.18);
@@ -901,10 +951,10 @@ body{
 <!-- ヒーロー -->
 <div class="hero">
   <div class="hero-en">KITOKU @ JOURNEY</div>
-  <div class="hero-title">どこから始めますか？</div>
+  <div class="hero-title">気学で自分を知り、<br>自分軸を整える</div>
   <div class="hero-sub">
-    九星・方位・姓名・家相・納音<br>
-    5000年の知恵を、今日の一手へ。
+    九星・方位・姓名・家相・香りから、<br>
+    いまの自分に合う選択を見つけます。
   </div>
   <button type="button" class="home-add-link" onclick="showPwaHint()">📱 ホーム画面に追加</button>
 </div>
@@ -920,6 +970,11 @@ body{
   </div>
   <button class="birth-bar-btn" id="birthBarBtn" onclick="changeBirth()">✎ 変更</button>
 </div>
+<a class="daily-compass-quick" href="direction_v2.html">
+  <span class="daily-compass-mark">方</span>
+  <span class="daily-compass-main"><span class="daily-compass-title">今日の方位盤を開く</span><span class="daily-compass-sub">日盤・月盤・年盤と今日の吉凶を見る</span></span>
+  <span class="daily-compass-arrow">›</span>
+</a>
 <div class="home-order-wrap" id="homeOrderWrap">
   <button class="home-order-toggle" type="button" onclick="toggleHomeOrderEditor()"><span id="homeOrderToggleText">ホーム画面を並び替える</span><span id="homeOrderToggleIcon">▾</span></button>
   <div class="home-order-editor" id="homeOrderEditor">
