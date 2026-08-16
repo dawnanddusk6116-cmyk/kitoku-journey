@@ -27,6 +27,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .mystar-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;line-height:1;}
 .mystar-name{font-size:1rem;font-weight:700;margin-bottom:3px;}
 .mystar-sub{font-size:.62rem;color:var(--mist);}
+.mystar-head-main{min-width:0;flex:1;}
+.mystar-report-chip{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding:8px 11px;border:1px solid rgba(196,160,67,.34);border-radius:999px;background:linear-gradient(135deg,rgba(255,250,238,.98),rgba(255,255,255,.78));color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.62rem;font-weight:800;letter-spacing:.04em;white-space:nowrap;cursor:pointer;box-shadow:0 8px 18px rgba(138,104,32,.08);}
+.mystar-report-chip:active{transform:scale(.98);}
+.mystar-report-chip-arrow{width:20px;height:20px;display:grid;place-items:center;border-radius:999px;background:rgba(196,160,67,.16);color:var(--goldlt);font-size:.72rem;}
+@media(max-width:420px){.mystar-head{align-items:flex-start;gap:10px;}.mystar-report-chip{font-size:.58rem;padding:7px 9px;margin-top:2px;}.mystar-report-chip .mystar-report-chip-text{display:none;}}
 .mystar-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
 .mystar-cell{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;}
 .mystar-cell:active{transform:scale(.97);}
@@ -251,10 +256,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="mystar-card" id="mystarCard">
       <div class="mystar-head">
         <div class="mystar-num" id="msNum">—</div>
-        <div>
+        <div class="mystar-head-main">
           <div class="mystar-name" id="msName">—</div>
           <div class="mystar-sub" id="msSub">—</div>
         </div>
+        <button class="mystar-report-chip" type="button" onclick="openKitokuReport()">
+          <span class="mystar-report-chip-text">私のKITOKUレポート</span>
+          <span class="mystar-report-chip-arrow">↓</span>
+        </button>
       </div>
       <div class="mystar-guide">
         本命星・月命星・傾斜・同会・納音は、自分を理解するための入口です。気になるカードやバッジをタップすると詳しい説明が開きます。
@@ -315,7 +324,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="kitoku-report" id="kitokuReport">
         <div class="report-kicker">BY KITOKU INTERPRETATION</div>
         <div class="report-title">私のKITOKUレポート</div>
-        <details class="report-accordion">
+        <details class="report-accordion" id="kitokuReportAccordion">
           <summary>
             <span>レポート本文を読む<span class="report-accordion-sub">九星・納音・扱い方の詳しい解説</span></span>
           </summary>
@@ -775,6 +784,13 @@ function init(){
   document.getElementById('mainContent').style.display='block';
 
   buildStarGrid(h);
+}
+
+function openKitokuReport(){
+  const section=document.getElementById('kitokuReport');
+  const details=document.getElementById('kitokuReportAccordion');
+  if(details)details.open=true;
+  if(section)section.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function renderKitokuReport(ctx){
