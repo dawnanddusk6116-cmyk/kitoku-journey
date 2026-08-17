@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>香りAI先生 | KITOKU</title>
+<title>香りをAIで深める | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -211,9 +211,9 @@ textarea{min-height:86px;resize:vertical;}
 
 <div class="hero">
   <div class="hero-box">
-    <div class="eyebrow" id="consultEyebrow">SCENT AI TEACHER</div>
-    <div class="title" id="consultTitle">香りAI先生</div>
-    <div class="lead" id="consultLead">人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>から、香りの使い分けをAIに相談する入口です。</div>
+    <div class="eyebrow" id="consultEyebrow">SCENT AI MATERIAL</div>
+    <div class="title" id="consultTitle">香りをAIで深める</div>
+    <div class="lead" id="consultLead">人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>を整理し、AIに渡せる相談材料を作ります。最初は同じチャットに貼るだけで、自分専用の香りAIが育ちます。</div>
     <div class="triad">
       <div class="pill"><b>High</b><span>香水<br>勝負</span></div>
       <div class="pill"><b>Mid</b><span>ボディケア<br>日常</span></div>
@@ -234,13 +234,8 @@ textarea{min-height:86px;resize:vertical;}
     <div class="howto-step"><div class="howto-num">1</div><div><strong>相談モードを選ぶ</strong><br>自分用・手持ち香水・会う人・贈り物から選べます。</div></div>
     <div class="howto-step"><div class="howto-num">2</div><div><strong>条件を選ぶ・書き足す</strong><br>シーン、気分、目的、香りの出方を選び、黄色い欄に補足を書きます。</div></div>
     <div class="howto-step"><div class="howto-num">3</div><div><strong>相談材料として使う</strong><br>できた文章をコピーして、AIや音声入力で相談を深めます。</div></div>
-    <div class="howto-step"><div class="howto-num">4</div><div><strong>自分専用AIの材料にする</strong><br>星情報・手持ちの香り・好き嫌い・会う相手を、少しずつ同じチャットに蓄積します。</div></div>
+    <div class="howto-step"><div class="howto-num">4</div><div><strong>自分専用AIの材料にする</strong><br>星情報・手持ちの香り・好き嫌い・会う相手を、同じチャットやNotebookLMなどに少しずつ蓄積します。</div></div>
   </div>
-</div>
-
-<div class="personal-ai-note">
-  <div class="personal-ai-title">自分専用の香りAIを育てる</div>
-  <div class="personal-ai-text">最初は、作成された相談材料を<strong>同じチャットに貼るだけ</strong>で十分です。慣れてきたらNotebookLM、ChatGPTやClaudeのプロジェクト、GeminiのGemなどに、星情報・手持ち香水・服装・体調・商談相手の傾向を蓄積すると、香りや色の提案が自分仕様に育っていきます。個人情報や相手の情報は、必要な範囲だけ共有してください。</div>
 </div>
 
 <div class="section">
@@ -359,7 +354,7 @@ textarea{min-height:86px;resize:vertical;}
       <span class="fold-mark"><span>開く</span></span>
     </summary>
     <div class="prompt-card">
-      <div class="prompt-title" id="promptTitle">香りAI先生への相談文</div>
+      <div class="prompt-title" id="promptTitle">香りの相談材料</div>
     <div class="prompt-box" id="promptBox">—</div>
     <button class="btn primary" onclick="copyPrompt()">📋 コピーして貼り付ける</button>
     <button class="btn secondary" onclick="sharePrompt()">📤 相談材料を共有</button>
@@ -455,20 +450,20 @@ function applyConsultFocus(){
   const isColor=consultFocus==='color';
   const data=isColor
     ? {
-        eyebrow:'COLOR AI TEACHER',
-        title:'色AI先生',
-        lead:'人気や流行色だけではなく、<strong>自分の星・会う相手・場面・身につける場所</strong>から、服・名刺・資料・小物の色をAIに相談する入口です。',
+        eyebrow:'COLOR AI MATERIAL',
+        title:'色をAIで深める',
+        lead:'人気や流行色だけではなく、<strong>自分の星・会う相手・場面・身につける場所</strong>を整理し、AIに渡せる相談材料を作ります。最初は同じチャットに貼るだけで、自分専用の色AIが育ちます。',
         selfTitle:'自分の色を選ぶ',
         selfDesc:'九星・気分・シーンから、今日使う色と差し色を提案',
-        footer:'KITOKU ENGINE — 色の調律<br>服・名刺・小物で、自分の毎日を整える'
+        footer:'KITOKU ENGINE — 色の相談材料<br>服・名刺・小物で、自分専用AIを育てる'
       }
     : {
-        eyebrow:'SCENT AI TEACHER',
-        title:'香りAI先生',
-        lead:'人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>から、香りの使い分けをAIに相談する入口です。',
+        eyebrow:'SCENT AI MATERIAL',
+        title:'香りをAIで深める',
+        lead:'人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>を整理し、AIに渡せる相談材料を作ります。最初は同じチャットに貼るだけで、自分専用の香りAIが育ちます。',
         selfTitle:'自分の香りを選ぶ',
         selfDesc:'九星・気分・シーンから、High/Mid/Lowで香りを提案',
-        footer:'KITOKU ENGINE — 香りの調律<br>High / Mid / Lowで、自分の毎日を整える'
+        footer:'KITOKU ENGINE — 香りの相談材料<br>High / Mid / Lowで、自分専用AIを育てる'
       };
   document.title=`${data.title} | KITOKU`;
   document.getElementById('consultEyebrow').textContent=data.eyebrow;
@@ -579,7 +574,7 @@ function buildPrompt(){
   const elemKey=info?([3,4].indexOf(info.h)>=0?'木':info.h===9?'火':[2,5,8].indexOf(info.h)>=0?'土':[6,7].indexOf(info.h)>=0?'金':'水'):'';
   const gogyoInfo=elemKey?GOGYO_SCENT[elemKey]:null;
   const seriesInfo=info?([3,6,9].indexOf(info.h)>=0?SERIES_SCENT.ten:[2,5,8].indexOf(info.h)>=0?SERIES_SCENT.chi:SERIES_SCENT.jin):null;
-  const teacherName=consultFocus==='color'?'色AI先生':'香りAI先生';
+  const teacherName=consultFocus==='color'?'色の相談AI':'香りの相談AI';
   const modeTitle={
     self:consultFocus==='color'?'自分の色を選ぶ':'自分の香りを選ぶ',
     wardrobe:'手持ち香水を使い分ける',
@@ -587,7 +582,7 @@ function buildPrompt(){
     gift:'贈り物・救済モード'
   }[currentMode]||(consultFocus==='color'?'色相談':'香り相談');
   const targetLine=(currentMode==='person'||currentMode==='gift')?targetInfoLine():'';
-  document.getElementById('promptTitle').textContent=`${teacherName}への相談：${modeTitle}`;
+  document.getElementById('promptTitle').textContent=`${modeTitle}の相談材料`;
 
   let body=`${base}
 
@@ -728,7 +723,7 @@ function printScent(){
 async function sharePrompt(){
   const text=document.getElementById('promptBox').textContent;
   try{
-    if(navigator.share){await navigator.share({title:`KITOKU ${consultFocus==='color'?'色AI先生':'香りAI先生'}`,text});return;}
+    if(navigator.share){await navigator.share({title:`KITOKU ${consultFocus==='color'?'色の相談材料':'香りの相談材料'}`,text});return;}
   }catch(e){}
   try{await navigator.clipboard.writeText(text);}catch(e){}
   alert('共有に対応していないため、相談材料をコピーしました。AIや音声入力で使ってください。');
