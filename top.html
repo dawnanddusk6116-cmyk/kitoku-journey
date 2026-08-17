@@ -131,6 +131,76 @@ body{
   display:grid;
   gap:8px;
 }
+.experience-start{
+  display:grid;
+  grid-template-columns:44px 1fr 34px;
+  gap:12px;
+  align-items:center;
+  margin:2px 0 6px;
+  padding:13px 13px 13px 14px;
+  border:1.5px solid rgba(47,105,117,.34);
+  border-left:7px solid #2f6975;
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(232,247,245,.98),rgba(255,249,236,.96));
+  box-shadow:0 12px 26px rgba(47,105,117,.12),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.experience-start-num{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(47,105,117,.26);
+  background:rgba(255,255,255,.78);
+  color:#2f6975;
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.12rem;
+  font-weight:700;
+}
+.experience-start-copy{min-width:0;}
+.experience-start-kicker{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:2px 8px;
+  background:#2f6975;
+  color:#fff;
+  font-size:.55rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  margin-bottom:5px;
+}
+.experience-start-title{
+  display:block;
+  color:var(--snow);
+  font-size:.84rem;
+  font-weight:700;
+  line-height:1.45;
+}
+.experience-start-sub{
+  display:block;
+  color:#2f6975;
+  font-size:.61rem;
+  line-height:1.6;
+  margin-top:2px;
+}
+.experience-start-btn{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:1px solid rgba(47,105,117,.24);
+  background:rgba(255,255,255,.78);
+  color:#2f6975;
+  font-family:'Noto Serif JP',serif;
+  font-size:1.05rem;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 0 5px rgba(47,105,117,.08);
+}
+.experience-start-btn:active{transform:scale(.96);}
 .experience-step{
   display:grid;
   grid-template-columns:26px 1fr auto;
@@ -1095,6 +1165,11 @@ body{
   <div class="experience-title">KITOKUでできること</div>
   <div class="experience-lead">機能を選ぶ前に、KITOKUで得られる体験を短くまとめました。知るだけで終わらせず、日々の選択と行動につなげていきます。</div>
   <div class="experience-steps">
+    <div class="experience-start">
+      <div class="experience-start-num">0</div>
+      <div class="experience-start-copy"><span class="experience-start-kicker">START</span><span class="experience-start-title">初めての入口</span><span class="experience-start-sub">まずここを開いて、見る順番を確認</span></div>
+      <button class="experience-start-btn" type="button" onclick="jumpStartGuide()" aria-label="初めての入口へ移動">›</button>
+    </div>
     <div class="experience-step"><div class="experience-num">1</div><div class="experience-copy"><strong>自分を知る</strong><span>九星・姓名・納音から、強みや迷いやすい癖を知る。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('self')" aria-label="自分について知りたいへ移動">›</button></div>
     <div class="experience-step"><div class="experience-num">2</div><div class="experience-copy"><strong>今日を整える</strong><span>方位盤・色・香り・食事で、今日の過ごし方を整える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('today')" aria-label="今日の自分を整えたいへ移動">›</button></div>
     <div class="experience-step"><div class="experience-num">3</div><div class="experience-copy"><strong>人との関係を整える</strong><span>相手の星を見て、距離感・言葉・商談前の準備を考える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('relation')" aria-label="人間関係を整えたいへ移動">›</button></div>
@@ -1579,17 +1654,26 @@ function resetHomeOrder(){
   applyHomeOrder();
   renderHomeOrderList();
 }
-function jumpPurposeGroup(kind){
-  const purpose=document.querySelector('.purpose-note');
-  if(purpose)purpose.open=true;
-  const idMap={self:'purpose-self',today:'purpose-today',relation:'purpose-relation',action:'purpose-action',ai:'purpose-ai-link'};
-  const target=document.getElementById(idMap[kind]||'purpose-self');
+function focusGuideTarget(target){
   if(!target)return;
   target.scrollIntoView({behavior:'smooth',block:'center'});
   target.classList.remove('purpose-focus');
   void target.offsetWidth;
   target.classList.add('purpose-focus');
   setTimeout(()=>target.classList.remove('purpose-focus'),6800);
+}
+function jumpStartGuide(){
+  const start=document.querySelector('.beginner-note[data-home-section="start"]');
+  if(start)start.open=true;
+  focusGuideTarget(start);
+}
+function jumpPurposeGroup(kind){
+  const purpose=document.querySelector('.purpose-note');
+  if(purpose)purpose.open=true;
+  const idMap={self:'purpose-self',today:'purpose-today',relation:'purpose-relation',action:'purpose-action',ai:'purpose-ai-link'};
+  const target=document.getElementById(idMap[kind]||'purpose-self');
+  if(!target)return;
+  focusGuideTarget(target);
 }
 
 function toggleHomeOrderEditor(){
