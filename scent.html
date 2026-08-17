@@ -71,6 +71,10 @@ textarea{min-height:86px;resize:vertical;}
 .howto-steps{display:grid;gap:7px;}
 .howto-step{display:flex;gap:9px;align-items:flex-start;font-size:.68rem;color:var(--mist);line-height:1.7;}
 .howto-num{width:24px;height:24px;border-radius:50%;background:rgba(196,160,67,.22);color:var(--goldlt);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;flex-shrink:0;border:1px solid rgba(196,160,67,.36);}
+.personal-ai-note{margin:10px 16px 14px;background:linear-gradient(135deg,rgba(47,138,96,.08),rgba(255,255,255,.72));border:1px solid rgba(47,138,96,.22);border-radius:var(--r);padding:13px 14px;}
+.personal-ai-title{font-size:.78rem;color:#2f6f50;font-weight:800;letter-spacing:.05em;margin-bottom:6px;}
+.personal-ai-text{font-size:.66rem;color:var(--mist);line-height:1.9;}
+.personal-ai-text strong{color:var(--goldlt);}
 .prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:14px;margin-bottom:12px;}
 .scent-fold{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
 .scent-fold summary{list-style:none;display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;color:var(--snow);}
@@ -230,7 +234,13 @@ textarea{min-height:86px;resize:vertical;}
     <div class="howto-step"><div class="howto-num">1</div><div><strong>相談モードを選ぶ</strong><br>自分用・手持ち香水・会う人・贈り物から選べます。</div></div>
     <div class="howto-step"><div class="howto-num">2</div><div><strong>条件を選ぶ・書き足す</strong><br>シーン、気分、目的、香りの出方を選び、黄色い欄に補足を書きます。</div></div>
     <div class="howto-step"><div class="howto-num">3</div><div><strong>相談材料として使う</strong><br>できた文章をコピーして、AIや音声入力で相談を深めます。</div></div>
+    <div class="howto-step"><div class="howto-num">4</div><div><strong>自分専用AIの材料にする</strong><br>星情報・手持ちの香り・好き嫌い・会う相手を、少しずつ同じチャットに蓄積します。</div></div>
   </div>
+</div>
+
+<div class="personal-ai-note">
+  <div class="personal-ai-title">自分専用の香りAIを育てる</div>
+  <div class="personal-ai-text">最初は、作成された相談材料を<strong>同じチャットに貼るだけ</strong>で十分です。慣れてきたらNotebookLM、ChatGPTやClaudeのプロジェクト、GeminiのGemなどに、星情報・手持ち香水・服装・体調・商談相手の傾向を蓄積すると、香りや色の提案が自分仕様に育っていきます。個人情報や相手の情報は、必要な範囲だけ共有してください。</div>
 </div>
 
 <div class="section">
@@ -345,7 +355,7 @@ textarea{min-height:86px;resize:vertical;}
   <details class="scent-fold prompt-fold">
     <summary>
       <span class="sec-num">3</span>
-      <span><strong>作成された相談材料</strong><small>必要な時だけ開いて、AIや音声入力で使います。</small></span>
+      <span><strong>作成された相談材料</strong><small>必要な時だけ開いて、AI・音声入力・自分専用AIの記録に使います。</small></span>
       <span class="fold-mark"><span>開く</span></span>
     </summary>
     <div class="prompt-card">
