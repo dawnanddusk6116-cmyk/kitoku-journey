@@ -133,7 +133,7 @@ body{
 }
 .experience-step{
   display:grid;
-  grid-template-columns:26px 1fr;
+  grid-template-columns:26px 1fr auto;
   gap:9px;
   align-items:start;
   padding:8px 0;
@@ -167,6 +167,31 @@ body{
   color:var(--mist);
   font-size:.62rem;
   line-height:1.75;
+}
+.experience-jump{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  border:1px solid rgba(138,104,32,.18);
+  background:rgba(255,255,255,.46);
+  color:rgba(138,104,32,.72);
+  font-family:'Noto Serif JP',serif;
+  font-size:.82rem;
+  line-height:1;
+  cursor:pointer;
+  align-self:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.experience-jump:active{transform:scale(.96);}
+.purpose-focus{
+  animation:purposeFocusPulse 1.4s ease;
+  box-shadow:0 0 0 3px rgba(168,121,24,.16);
+}
+@keyframes purposeFocusPulse{
+  0%{box-shadow:0 0 0 0 rgba(168,121,24,.28);}
+  100%{box-shadow:0 0 0 12px rgba(168,121,24,0);}
 }
 
 
@@ -1068,11 +1093,11 @@ body{
   <div class="experience-title">KITOKUでできること</div>
   <div class="experience-lead">機能を選ぶ前に、KITOKUで得られる体験を短くまとめました。知るだけで終わらせず、日々の選択と行動につなげていきます。</div>
   <div class="experience-steps">
-    <div class="experience-step"><div class="experience-num">1</div><div class="experience-copy"><strong>自分を知る</strong><span>九星・姓名・納音から、強みや迷いやすい癖を知る。</span></div></div>
-    <div class="experience-step"><div class="experience-num">2</div><div class="experience-copy"><strong>今日を整える</strong><span>方位盤・色・香り・食事で、今日の過ごし方を整える。</span></div></div>
-    <div class="experience-step"><div class="experience-num">3</div><div class="experience-copy"><strong>人との関係を整える</strong><span>相手の星を見て、距離感・言葉・商談前の準備を考える。</span></div></div>
-    <div class="experience-step"><div class="experience-num">4</div><div class="experience-copy"><strong>AIで深める</strong><span>星情報や方位盤をAIに渡し、自分に合う選択肢を探す。</span></div></div>
-    <div class="experience-step"><div class="experience-num">5</div><div class="experience-copy"><strong>行動して運を開く</strong><span>吉方位・旅行・引越し・日取りを、実際の行動に変える。</span></div></div>
+    <div class="experience-step"><div class="experience-num">1</div><div class="experience-copy"><strong>自分を知る</strong><span>九星・姓名・納音から、強みや迷いやすい癖を知る。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('self')" aria-label="自分について知りたいへ移動">›</button></div>
+    <div class="experience-step"><div class="experience-num">2</div><div class="experience-copy"><strong>今日を整える</strong><span>方位盤・色・香り・食事で、今日の過ごし方を整える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('today')" aria-label="今日の自分を整えたいへ移動">›</button></div>
+    <div class="experience-step"><div class="experience-num">3</div><div class="experience-copy"><strong>人との関係を整える</strong><span>相手の星を見て、距離感・言葉・商談前の準備を考える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('relation')" aria-label="人間関係を整えたいへ移動">›</button></div>
+    <div class="experience-step"><div class="experience-num">4</div><div class="experience-copy"><strong>AIで深める</strong><span>星情報や方位盤をAIに渡し、自分に合う選択肢を探す。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('ai')" aria-label="自分専用のAIを育てたいへ移動">›</button></div>
+    <div class="experience-step"><div class="experience-num">5</div><div class="experience-copy"><strong>行動して運を開く</strong><span>吉方位・旅行・引越し・日取りを、実際の行動に変える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('action')" aria-label="行動に良い流れを取り入れたいへ移動">›</button></div>
   </div>
 </section>
 
@@ -1116,17 +1141,17 @@ body{
   <div class="beginner-note-body">
     <div class="beginner-note-text">機能名が分からなくても大丈夫です。いまの目的に近い言葉を選ぶと、裏側でKITOKUの道具につながります。</div>
     <div class="purpose-groups">
-      <div class="purpose-group">
+      <div class="purpose-group" id="purpose-self">
         <div class="purpose-group-title"><span class="purpose-group-title-text">自分について知りたい</span><span class="purpose-group-count">5項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="kyusei_v2.html"><span><strong>自分の基本タイプを知りたい</strong><small>自分の星を見る</small></span><span>›</span></a>
           <a class="purpose-link" href="report_generator_free.html"><span><strong>自分の強みを、もっと知りたい</strong><small>はじめてのKITOKU診断</small></span><span>›</span></a>
           <a class="purpose-link" href="roadmap.html"><span><strong>これからの流れを知りたい</strong><small>九年サイクル</small></span><span>›</span></a>
           <a class="purpose-link" href="life.html"><span><strong>名前から自分を知りたい</strong><small>姓名鑑定</small></span><span>›</span></a>
-          <a class="purpose-link" href="ai.html"><span><strong>自分専用のAIを育てたい</strong><small>星情報をAIで活用</small></span><span>›</span></a>
+          <a class="purpose-link" id="purpose-ai-link" href="ai.html"><span><strong>自分専用のAIを育てたい</strong><small>星情報をAIで活用</small></span><span>›</span></a>
         </div>
       </div>
-      <div class="purpose-group">
+      <div class="purpose-group" id="purpose-relation">
         <div class="purpose-group-title"><span class="purpose-group-title-text">人間関係を整えたい</span><span class="purpose-group-count">5項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="relations.html"><span><strong>好きなあの人との関係を縮めたい</strong><small>相性レポート</small></span><span>›</span></a>
@@ -1136,7 +1161,7 @@ body{
           <a class="purpose-link" href="business.html"><span><strong>上司・部下とうまく付き合いたい</strong><small>仕事・面談・育成</small></span><span>›</span></a>
         </div>
       </div>
-      <div class="purpose-group">
+      <div class="purpose-group" id="purpose-today">
         <div class="purpose-group-title"><span class="purpose-group-title-text">今日の自分を整えたい</span><span class="purpose-group-count">4項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="scent.html"><span><strong>今日の気分に合う香りを選びたい</strong><small>香りAI先生</small></span><span>›</span></a>
@@ -1145,7 +1170,7 @@ body{
           <a class="purpose-link" href="ai.html"><span><strong>気持ちを整理して次の一手を知りたい</strong><small>相談材料づくり</small></span><span>›</span></a>
         </div>
       </div>
-      <div class="purpose-group">
+      <div class="purpose-group" id="purpose-action">
         <div class="purpose-group-title"><span class="purpose-group-title-text">行動に良い流れを取り入れたい</span><span class="purpose-group-count">5項目</span></div>
         <div class="purpose-links">
           <a class="purpose-link" href="direction_v2.html"><span><strong>今日、どこへ行くとよいか知りたい</strong><small>方位ナビ</small></span><span>›</span></a>
@@ -1552,6 +1577,19 @@ function resetHomeOrder(){
   applyHomeOrder();
   renderHomeOrderList();
 }
+function jumpPurposeGroup(kind){
+  const purpose=document.querySelector('.purpose-note');
+  if(purpose)purpose.open=true;
+  const idMap={self:'purpose-self',today:'purpose-today',relation:'purpose-relation',action:'purpose-action',ai:'purpose-ai-link'};
+  const target=document.getElementById(idMap[kind]||'purpose-self');
+  if(!target)return;
+  target.scrollIntoView({behavior:'smooth',block:'center'});
+  target.classList.remove('purpose-focus');
+  void target.offsetWidth;
+  target.classList.add('purpose-focus');
+  setTimeout(()=>target.classList.remove('purpose-focus'),1600);
+}
+
 function toggleHomeOrderEditor(){
   const wrap=document.getElementById('homeOrderWrap');
   const icon=document.getElementById('homeOrderToggleIcon');
