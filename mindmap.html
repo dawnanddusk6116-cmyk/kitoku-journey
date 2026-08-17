@@ -181,7 +181,7 @@ html.kitoku-font-large button {
     <div class="mode-btn" id="modeWork" onclick="setMode('work')">仕事・決断<span class="mode-btn-sub">決断の癖を気学で知る</span></div>
   </div>
 
-  <!-- 仕事モード：星プロファイル -->
+  <!-- 星プロファイル：こころ・人生／仕事・決断の両タブで本命星から個人化 -->
   <div id="starProf" class="star-prof hidden"></div>
 
   <div class="lead">
@@ -251,7 +251,7 @@ html.kitoku-font-large button {
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== 九星 決断プロファイル（Ver.1+Ver.2.0統合・内省型）=====
+// ===== 九星 内省プロファイル（Ver.1+Ver.2.0統合・内省型）=====
 const STAR_NAMES={1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
 const DECISION_PROF={
   1:{type:'流れを読む・始める力',series:'人数系列（子・卯・午・酉の日）',odd:true,
@@ -342,7 +342,7 @@ const FIELDS=[
   {key:'q7',label:'次の一手',bar:'#8a6820'},
 ];
 
-// モードごとの問いかけ（heartは既存・workは仕事決断用）
+// モードごとの問いかけ（heartは悩み全般・workは仕事決断用）
 const MODE_HINTS={
   heart:{
     q1:['問い','いま、あなたが本当に向き合うべき問いは何ですか？「〜すべきか」より「私は本当はどうしたいのか」へ。','例：今の仕事を続けるべきか、ではなく——私は本当はどう生きたいのか？'],
@@ -384,23 +384,37 @@ function setMode(mode){
       if(ta)ta.setAttribute('placeholder',h[2]);
     }
   });
-  // 仕事モードなら星プロファイルを表示
+  // 両モードで星プロファイルを表示し、文言だけモードに合わせる
   const sp=document.getElementById('starProf');
-  if(mode==='work'){
-    sp.classList.remove('hidden');
-    renderStarProfile();
-  }else{
-    sp.classList.add('hidden');
-  }
+  if(sp)sp.classList.remove('hidden');
+  renderStarProfile();
   try{localStorage.setItem('kitoku-mindmap-mode',mode);}catch(e){}
 }
 
 function renderStarProfile(){
   const sp=document.getElementById('starProf');
+  if(!sp)return;
+  const isWork=gMode==='work';
+  const profileCopy=isWork
+    ? {
+        head:'⚙ あなたの決断の癖（本命星から）',
+        emptyHead:'⚙ あなたの決断の癖を、九星から映します',
+        emptyText:'生年月日を入れると、あなたの本命星から「決断・お金・仕事の癖」と「いまの気の流れ」を表示します。',
+        mainLabel:'お金・決断の癖',
+        trapLabel:'陥りやすい罠',
+        disclaimer:'※ これは「あなたの心の癖を映す鏡」であり、投資や売買の助言ではありません。実際の判断はご自身で、必要に応じて専門家にも相談しながら行ってください。'
+      }
+    : {
+        head:'⚙ あなたのこころの癖（本命星から）',
+        emptyHead:'⚙ あなたのこころの癖を、九星から映します',
+        emptyText:'生年月日を入れると、あなたの本命星から「悩み方・迷いやすい癖」と「いまの気の流れ」を表示します。',
+        mainLabel:'悩み方・向き合い方の癖',
+        trapLabel:'心が絡まりやすい罠',
+        disclaimer:'※ これは「あなたの心の癖を映す鏡」です。答えを決めつけるものではなく、自分で気づき、自分で選ぶための補助として使ってください。'
+      };
   if(!gHonmei){
-    // 生年月日入力を促す
-    sp.innerHTML=`<div class="sp-head">⚙ あなたの決断の癖を、九星から映します</div>
-      <div class="sp-text">生年月日を入れると、あなたの本命星から「決断・お金・仕事の癖」と「いまの気の流れ」を表示します。</div>
+    sp.innerHTML=`<div class="sp-head">${profileCopy.emptyHead}</div>
+      <div class="sp-text">${profileCopy.emptyText}</div>
       <div class="sp-birth">
         <input id="spY" type="number" inputmode="numeric" placeholder="年" min="1920" max="2030">
         <input id="spM" type="number" inputmode="numeric" placeholder="月" min="1" max="12">
@@ -420,11 +434,11 @@ function renderStarProfile(){
   const pos=((gHonmei-c+4)%9+9)%9+1||9;
   const flow=FLOW_BY_POS[pos];
   sp.innerHTML=`
-    <div class="sp-head">⚙ あなたの決断の癖（本命星から）</div>
+    <div class="sp-head">${profileCopy.head}</div>
     <div class="sp-star">${STAR_NAMES[gHonmei]} — ${p.type}</div>
     ${p.series?`<div style="font-size:.6rem;color:var(--gold);margin-bottom:8px;font-weight:700;">📅 ${p.series}</div>`:''}
-    <div class="sp-row"><div class="sp-label">お金・決断の癖</div><div class="sp-text">${p.habit}</div></div>
-    <div class="sp-row"><div class="sp-label">陥りやすい罠</div><div class="sp-text">${p.trap}</div></div>
+    <div class="sp-row"><div class="sp-label">${profileCopy.mainLabel}</div><div class="sp-text">${p.habit}</div></div>
+    <div class="sp-row"><div class="sp-label">${profileCopy.trapLabel}</div><div class="sp-text">${p.trap}</div></div>
     ${p.bug?`<div class="sp-row" style="background:linear-gradient(135deg,rgba(176,48,48,.06),rgba(255,255,255,.4));border:1px solid rgba(176,48,48,.18);border-radius:9px;padding:9px 11px;margin-top:6px;"><div class="sp-label" style="color:#8a3020;">⚙ 機体のバグ（無意識のブレーキ）</div><div class="sp-text">${p.bug}</div></div>`:''}
     ${p.rx?`<div class="sp-row" style="background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.22);border-radius:9px;padding:9px 11px;margin-top:6px;"><div class="sp-label">💊 琥珀色の処方箋（操縦法）</div><div class="sp-text">${p.rx}</div></div>`:''}
     <div class="sp-flow">
@@ -432,7 +446,7 @@ function renderStarProfile(){
       <div class="sp-text">${flow.text}</div>
     </div>
     <div class="sp-q">自分への問い：${p.q}</div>
-    <div class="disclaimer-box">※ これは「あなたの心の癖を映す鏡」であり、投資や売買の助言ではありません。実際の判断はご自身で、必要に応じて専門家にも相談しながら行ってください。</div>`;
+    <div class="disclaimer-box">${profileCopy.disclaimer}</div>`;
 }
 
 function calcStarFromBirth(){
@@ -581,7 +595,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   try{
     const savedMode=localStorage.getItem('kitoku-mindmap-mode');
     if(savedMode==='work')setMode('work');
-  }catch(e){}
+    else setMode('heart');
+  }catch(e){setMode('heart');}
 });
 </script>
 
