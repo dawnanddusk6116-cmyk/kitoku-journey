@@ -1571,29 +1571,7 @@ body{
 function renderBirthBar(){
   try{
     const bar=document.getElementById('birthBar');
-    const label=document.getElementById('birthBarLabel');
-    const text=document.getElementById('birthBarText');
-    const btn=document.getElementById('birthBarBtn');
-    if(!bar||!label||!text||!btn)return;
-    const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
-    const g=localStorage.getItem('kitoku-gender')||'male';
-    let ok=false;
-    if(b){
-      const parts=b.split('-').map(Number);
-      if(parts[0]&&parts[1]){
-        const gLabel=g==='female'?'女性':'男性';
-        label.textContent='登録中の生年月日';
-        text.textContent=parts[0]+'年'+parts[1]+'月'+(parts[2]||1)+'日・'+gLabel;
-        btn.textContent='✎ 変更';
-        ok=true;
-      }
-    }
-    if(!ok){
-      label.textContent='生年月日が未登録です';
-      text.textContent='登録すると、あなたの星で表示されます';
-      btn.textContent='✎ 登録する';
-    }
-    bar.style.display='flex';
+    if(bar)bar.style.display='none';
   }catch(e){}
 }
 renderBirthBar();

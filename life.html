@@ -2163,8 +2163,15 @@ function onMeiInput(){
 function onFuriInput(){}
 function onStrokeManual(which){}
 
-// ── 自分の名前保存（端末内のみ） ──
+// ── 名前保存（端末内のみ・読み方ごとに分ける） ──
 const LIFE_NAME_KEY = 'kitoku-life-name';
+function lifeNameKey(mode){
+  const m = LIFE_MODE_TEXT[mode] ? mode : getLifeMode();
+  return m==='self' ? LIFE_NAME_KEY : LIFE_NAME_KEY+'-'+m;
+}
+function lifeModeSaveLabel(mode){
+  return ({self:'ご本人の名前', baby:'命名候補', rename:'改名候補', other:'他の人の名前', ai:'相性用の名前'})[mode] || 'この名前';
+}
 function setSaveMsg(msg){
   const el=document.getElementById('lifeNameSaveMsg');
   if(el)el.textContent=msg;
@@ -2186,16 +2193,18 @@ function saveLifeName(){
     return;
   }
   try{
-    localStorage.setItem(LIFE_NAME_KEY,JSON.stringify(data));
-    setSaveMsg('この名前を保存しました。次回から「保存した名前を使う」で呼び出せます。');
+    const mode = getLifeMode();
+    localStorage.setItem(lifeNameKey(mode),JSON.stringify(data));
+    setSaveMsg(lifeModeSaveLabel(mode)+'として保存しました。本人名とは別に保存しています。');
   }catch(e){
     setSaveMsg('保存できませんでした。ブラウザの保存設定を確認してください。');
   }
 }
 function saveResultName(){
+  const mode = getLifeMode();
   saveLifeName();
   const msg=document.getElementById('resultActionMsg');
-  if(msg)msg.textContent='この名前を保存しました。次回から「保存した名前を使う」で呼び出せます。';
+  if(msg)msg.textContent=lifeModeSaveLabel(mode)+'として保存しました。本人名とは別に保存しています。';
 }
 function applyLifeName(data){
   if(!data)return false;
@@ -2220,13 +2229,15 @@ function applyLifeName(data){
 }
 function loadLifeName(showMessage){
   try{
-    const raw=localStorage.getItem(LIFE_NAME_KEY);
+    const mode = getLifeMode();
+    let raw=localStorage.getItem(lifeNameKey(mode));
+    if(!raw && mode==='self') raw=localStorage.getItem(LIFE_NAME_KEY);
     if(!raw){
-      if(showMessage)setSaveMsg('まだ保存した名前がありません。');
+      if(showMessage)setSaveMsg(lifeModeSaveLabel(mode)+'はまだ保存されていません。');
       return false;
     }
     const ok=applyLifeName(JSON.parse(raw));
-    if(showMessage&&ok)setSaveMsg('保存した名前を読み込みました。');
+    if(showMessage&&ok)setSaveMsg(lifeModeSaveLabel(mode)+'を読み込みました。');
     return ok;
   }catch(e){
     if(showMessage)setSaveMsg('保存した名前を読み込めませんでした。');
@@ -3713,12 +3724,37 @@ function showScoreCard(seiStr,meiStr,furiSei,furiMei,gk,seiKs,meiKs,jinGGon){
   renderAiDeepDiveBtn(seiStr, meiStr, r, jinGGon, gk, seiKs, meiKs);
 }
 
+function updateLifeViewingContext(mode, name, birth){
+  try{
+    if(mode==='other'){
+      localStorage.setItem('kitoku-view-mode','target');
+      localStorage.setItem('kitoku-target-name',name||'他の人');
+      if(birth) localStorage.setItem('kitoku-target-birth',birth);
+      else localStorage.removeItem('kitoku-target-birth');
+      localStorage.setItem('kitoku-target-desc','姓名鑑定の「他の人」モードで確認した対象です。本人データは上書きしていません。');
+    }else if(mode==='self'){
+      localStorage.removeItem('kitoku-view-mode');
+      localStorage.removeItem('kitoku-target-name');
+      localStorage.removeItem('kitoku-target-birth');
+      localStorage.removeItem('kitoku-target-desc');
+    }
+  }catch(e){}
+}
+
+function getLifeReadingBirth(mode){
+  if(mode==='other') return normalizeLifeDateValue((document.getElementById('birth1')||{}).value||'');
+  if(mode==='self') return getSavedSelfBirth();
+  return '';
+}
+
 function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
   const area = document.getElementById('aiDeepDiveArea');
   if(!area) return;
 
   // 鑑定データをlocalStorageに保存
-  const readingBirth = getSavedSelfBirth();
+  const readingMode = getLifeMode();
+  const readingBirth = getLifeReadingBirth(readingMode);
+  updateLifeViewingContext(readingMode, sei+mei, readingBirth);
   const readingData = {
     name: sei+mei,
     sei, mei,
@@ -3733,7 +3769,7 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
     blueprint: window._kitokuLifeBlueprint || null,
     items: (scoreResult.items||[]).map(i=>({cat:i.cat,title:i.title,text:i.text})),
     jinGG,
-    mode: getLifeMode(),
+    mode: readingMode,
     birth: readingBirth,
     ts: Date.now()
   };

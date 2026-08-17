@@ -131,7 +131,36 @@
       localStorage.removeItem('kitoku-view-mode');
       localStorage.removeItem('kitoku-partner-name');
       localStorage.removeItem('kitoku-partner-birth');
+      localStorage.removeItem('kitoku-target-name');
+      localStorage.removeItem('kitoku-target-birth');
+      localStorage.removeItem('kitoku-target-desc');
     }catch(e){}
+  }
+
+  function escapeHtml(v){
+    return String(v||'').replace(/[&<>"']/g,function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+
+  function formatBirth(v){
+    var b=normalizeBirth(v);
+    var m=b.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if(!m) return b||'';
+    return Number(m[1])+'年'+Number(m[2])+'月'+Number(m[3])+'日';
+  }
+
+  function getGenderLabel(){
+    var g=getStorage('kitoku-gender')||getStorage('kitoku_gender');
+    if(g==='male'||g==='m'||g==='男性') return '男性';
+    if(g==='female'||g==='f'||g==='女性') return '女性';
+    return '';
+  }
+
+  function birthSubline(birth, gender){
+    var label=formatBirth(birth);
+    if(!label) return '生年月日：未登録';
+    return gender ? label+'・'+gender : label;
   }
 
   function getCurrentBirth(){
@@ -153,6 +182,19 @@
 
   function getState(){
     var mode=getStorage('kitoku-view-mode');
+    var targetName=getStorage('kitoku-target-name');
+    var targetBirth=normalizeBirth(getStorage('kitoku-target-birth'));
+    var targetDesc=getStorage('kitoku-target-desc');
+    if(mode==='target' && (targetName || targetBirth)){
+      return {
+        kind:'target',
+        label:(targetName||'他の人')+' さん（他の人を確認中）',
+        birth:targetBirth,
+        sub:birthSubline(targetBirth,''),
+        desc:targetDesc || '本人ではない名前・生年月日を確認しています。終わったら「本人に戻す」を押してください。'
+      };
+    }
+
     var partnerName=getStorage('kitoku-partner-name');
     var partnerBirth=normalizeBirth(getStorage('kitoku-partner-birth'));
     if(mode==='partner' && (partnerName || partnerBirth)){
@@ -160,30 +202,45 @@
         kind:'partner',
         label:(partnerName||'お相手')+' さん（お相手）',
         birth:partnerBirth,
+        sub:birthSubline(partnerBirth,''),
         desc:'人間関係で見ている相手です。'
       };
     }
 
     var birth=getCurrentBirth();
+    var gender=getGenderLabel();
     var reading=getReading();
     var readingBirth=reading && typeof reading.birth==='string' ? normalizeBirth(reading.birth) : '';
     var readingName=reading && reading.name ? String(reading.name) : '';
+    var readingMode=reading && reading.mode ? String(reading.mode) : '';
+
+    if(readingMode==='other'){
+      return {
+        kind:'target',
+        label:(readingName||'他の人')+' さん（他の人を確認中）',
+        birth:readingBirth,
+        sub:birthSubline(readingBirth,''),
+        desc:'姓名鑑定の「他の人」モードで確認した対象です。本人データは上書きしていません。'
+      };
+    }
 
     if(readingName && birth && readingBirth && readingBirth===birth){
       return {
         kind:'self',
         label:readingName+' さん（ご本人）',
         birth:birth,
+        sub:birthSubline(birth,gender),
         desc:'姓名鑑定と生年月日が一致しています。'
       };
     }
 
     if(birth){
       return {
-        kind:'warn',
-        label:'生年月日は登録済み・姓名鑑定はまだです',
+        kind:'self',
+        label:'ご本人（姓名未確認）',
         birth:birth,
-        desc:'今の生年月日と一致する姓名鑑定を行うと、名前と星を安全に照合できます。'
+        sub:birthSubline(birth,gender),
+        desc:'生年月日は登録済みです。姓名鑑定を行うと、名前と星を照合できます。'
       };
     }
 
@@ -191,6 +248,7 @@
       kind:'warn',
       label:'生年月日が未登録です',
       birth:'',
+      sub:'生年月日：未登録',
       desc:'生年月日を登録すると、各画面で同じ人を見ているか確認できます。'
     };
   }
@@ -206,7 +264,8 @@
       '.kitoku-badge-ico{width:26px;height:26px;border-radius:999px;display:grid;place-items:center;font-size:.78rem;font-weight:800;background:rgba(255,255,255,.66);}',
       '.kitoku-badge-main{min-width:0;}',
       '.kitoku-badge-kicker{display:block;font-size:.48rem;letter-spacing:.16em;font-weight:800;line-height:1.3;opacity:.78;margin-bottom:2px;}',
-      '.kitoku-badge-name{display:block;font-size:.68rem;font-weight:800;line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.kitoku-badge-name{display:block;font-size:.68rem;font-weight:800;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.kitoku-badge-sub{display:block;font-size:.56rem;line-height:1.35;opacity:.82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.kitoku-badge-chevron{width:26px;height:26px;border-radius:999px;display:grid;place-items:center;background:rgba(255,255,255,.72);font-size:.64rem;font-weight:900;transition:transform .18s ease;}',
       '.kitoku-badge details[open] .kitoku-badge-chevron{transform:rotate(180deg);}',
       '.kitoku-badge-body{padding:0 12px 11px 46px;font-size:.6rem;line-height:1.75;}',
@@ -215,10 +274,10 @@
       '.kitoku-badge.is-self details{background:linear-gradient(135deg,rgba(255,250,238,.98),rgba(255,255,255,.86));border-color:rgba(186,117,23,.3);}',
       '.kitoku-badge.is-self .kitoku-badge-ico,.kitoku-badge.is-self .kitoku-badge-chevron{color:#BA7517;border:1px solid rgba(186,117,23,.22);}',
       '.kitoku-badge.is-self .kitoku-badge-kicker,.kitoku-badge.is-self .kitoku-badge-name{color:#8a5b12;}',
-      '.kitoku-badge.is-partner details{background:#FDF0F4;border-color:rgba(153,53,86,.28);}',
-      '.kitoku-badge.is-partner .kitoku-badge-body{color:#6d2a41;}',
-      '.kitoku-badge.is-partner .kitoku-badge-ico,.kitoku-badge.is-partner .kitoku-badge-chevron{color:#993556;border:1px solid rgba(153,53,86,.22);}',
-      '.kitoku-badge.is-partner .kitoku-badge-kicker,.kitoku-badge.is-partner .kitoku-badge-name{color:#993556;}',
+      '.kitoku-badge.is-partner details,.kitoku-badge.is-target details{background:#FDF0F4;border-color:rgba(153,53,86,.28);}',
+      '.kitoku-badge.is-partner .kitoku-badge-body,.kitoku-badge.is-target .kitoku-badge-body{color:#6d2a41;}',
+      '.kitoku-badge.is-partner .kitoku-badge-ico,.kitoku-badge.is-partner .kitoku-badge-chevron,.kitoku-badge.is-target .kitoku-badge-ico,.kitoku-badge.is-target .kitoku-badge-chevron{color:#993556;border:1px solid rgba(153,53,86,.22);}',
+      '.kitoku-badge.is-partner .kitoku-badge-kicker,.kitoku-badge.is-partner .kitoku-badge-name,.kitoku-badge.is-partner .kitoku-badge-sub,.kitoku-badge.is-target .kitoku-badge-kicker,.kitoku-badge.is-target .kitoku-badge-name,.kitoku-badge.is-target .kitoku-badge-sub{color:#993556;}',
       '.kitoku-badge.is-warn details{background:#FBF4E4;border-color:rgba(133,79,11,.32);}',
       '.kitoku-badge.is-warn .kitoku-badge-ico,.kitoku-badge.is-warn .kitoku-badge-chevron{color:#854F0B;border:1px solid rgba(133,79,11,.24);}',
       '.kitoku-badge.is-warn .kitoku-badge-kicker,.kitoku-badge.is-warn .kitoku-badge-name{color:#854F0B;}',
@@ -236,19 +295,22 @@
     injectStyle();
     var pairConfig=getPairConfig();
     var state=pairConfig?getPairState(pairConfig):getState();
-    var cls=state.kind==='self'?'is-self':state.kind==='partner'?'is-partner':state.kind==='pair'?'is-partner':'is-warn';
-    var icon=state.kind==='self'?'人':state.kind==='partner'?'縁':state.kind==='pair'?'縁':'!';
-    var kicker=state.kind==='self'?'いま見ているのは':state.kind==='partner'?'いま見ている相手':state.kind==='pair'?state.pageLabel:'確認が必要です';
-    var birthHtml=state.kind==='pair' ? state.birth : (state.birth ? '生年月日：'+state.birth : '生年月日：未登録');
+    var cls=state.kind==='self'?'is-self':state.kind==='partner'?'is-partner':state.kind==='target'?'is-target':state.kind==='pair'?'is-partner':'is-warn';
+    var icon=state.kind==='self'?'人':state.kind==='partner'?'縁':state.kind==='target'?'他':state.kind==='pair'?'縁':'!';
+    var kicker=state.kind==='self'?'いま見ているのは':state.kind==='partner'?'いま見ている相手':state.kind==='target'?'いま確認しているのは':state.kind==='pair'?state.pageLabel:'確認が必要です';
+    var sub=state.sub || (state.kind==='pair' ? state.birth : birthSubline(state.birth,''));
+    var birthHtml=state.kind==='pair' ? state.birth : (state.birth ? '生年月日：'+formatBirth(state.birth) : '生年月日：未登録');
     var actions='';
     if(state.kind==='partner'){
       actions='<button type="button" data-kitoku-badge-self>本人に戻す</button><a href="relations.html">人を切り替える</a>';
+    }else if(state.kind==='target'){
+      actions='<button type="button" data-kitoku-badge-self>本人に戻す</button><a href="life.html">名前を切り替える</a>';
     }else if(state.kind==='pair'){
       actions='<span style="font-size:.58rem;font-weight:800;">この画面の入力だけで表示しています</span>';
     }else if(state.kind==='self'){
-      actions='<a href="life.html">姓名鑑定を確認</a><a href="top.html">入口へ戻る</a>';
+      actions='<button type="button" data-kitoku-badge-birth>登録情報を変更</button><a href="life.html">姓名鑑定を確認</a>';
     }else{
-      actions='<a href="life.html">この生年月日で姓名鑑定をする</a><a href="top.html">生年月日を確認</a>';
+      actions='<button type="button" data-kitoku-badge-birth>生年月日を登録する</button><a href="life.html">姓名鑑定を確認</a>';
     }
     mount.innerHTML=
       '<div class="kitoku-badge '+cls+'">'+
@@ -256,14 +318,15 @@
           '<summary>'+
             '<span class="kitoku-badge-ico">'+icon+'</span>'+
             '<span class="kitoku-badge-main">'+
-              '<span class="kitoku-badge-kicker">'+kicker+'</span>'+
-              '<span class="kitoku-badge-name">'+state.label+'</span>'+
+              '<span class="kitoku-badge-kicker">'+escapeHtml(kicker)+'</span>'+
+              '<span class="kitoku-badge-name">'+escapeHtml(state.label)+'</span>'+
+              '<span class="kitoku-badge-sub">'+escapeHtml(sub)+'</span>'+
             '</span>'+
             '<span class="kitoku-badge-chevron">▼</span>'+
           '</summary>'+
           '<div class="kitoku-badge-body">'+
-            '<div>'+birthHtml+'</div>'+
-            '<div>'+state.desc+'</div>'+
+            '<div>'+escapeHtml(birthHtml)+'</div>'+
+            '<div>'+escapeHtml(state.desc)+'</div>'+
             '<div class="kitoku-badge-actions">'+actions+'</div>'+
           '</div>'+
         '</details>'+
@@ -273,6 +336,17 @@
       btn.addEventListener('click',function(){
         clearPartner();
         render();
+      });
+    }
+    var birthBtn=mount.querySelector('[data-kitoku-badge-birth]');
+    if(birthBtn){
+      birthBtn.addEventListener('click',function(){
+        if(typeof window.changeBirth==='function'){
+          window.changeBirth();
+          render();
+        }else{
+          location.href='top.html';
+        }
       });
     }
   }
