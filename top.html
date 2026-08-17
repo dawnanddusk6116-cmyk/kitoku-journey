@@ -186,7 +186,7 @@ body{
 }
 .experience-jump:active{transform:scale(.96);}
 .purpose-focus{
-  animation:purposeGuidePulse 1.8s ease-in-out 2;
+  animation:purposeGuidePulse 2.2s ease-in-out 3;
   border-color:rgba(196,160,67,.68)!important;
   background:linear-gradient(135deg,rgba(255,236,178,.58),rgba(255,255,255,.94))!important;
   box-shadow:0 0 0 4px rgba(196,160,67,.16),0 10px 24px rgba(138,104,32,.1)!important;
@@ -1589,7 +1589,7 @@ function jumpPurposeGroup(kind){
   target.classList.remove('purpose-focus');
   void target.offsetWidth;
   target.classList.add('purpose-focus');
-  setTimeout(()=>target.classList.remove('purpose-focus'),3800);
+  setTimeout(()=>target.classList.remove('purpose-focus'),6800);
 }
 
 function toggleHomeOrderEditor(){
