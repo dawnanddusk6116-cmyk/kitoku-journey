@@ -30,8 +30,17 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 /* ① 今日の一言 */
 .kotoba-card{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.04));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:18px;margin-bottom:12px;}
 .kotoba-date{font-size:.62rem;letter-spacing:.14em;color:var(--gold);margin-bottom:8px;}
-.kotoba-text{font-size:.9rem;line-height:2.1;color:var(--goldlt);}
+.kotoba-text{font-size:.9rem;line-height:2.1;color:var(--goldlt);white-space:pre-line;}
 .kotoba-kanshi{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(100,80,40,.3);float:right;margin-top:-4px;}
+.date-nav{clear:both;display:grid;grid-template-columns:38px 1fr 38px auto;gap:7px;align-items:center;margin:10px 0 12px;}
+.date-nav-btn,.date-today-btn{min-height:36px;border:1px solid rgba(196,160,67,.38);background:rgba(255,255,255,.58);color:var(--goldlt);border-radius:10px;font-family:'Noto Serif JP',serif;font-weight:800;cursor:pointer;}
+.date-nav-btn{font-size:.92rem;line-height:1;}
+.date-today-btn{padding:0 10px;font-size:.66rem;white-space:nowrap;}
+.date-today-btn:disabled{opacity:.45;cursor:default;}
+.date-input-wrap{display:flex;align-items:center;gap:7px;min-height:36px;border:1px solid rgba(196,160,67,.24);border-radius:10px;background:rgba(255,255,255,.42);padding:0 10px;}
+.date-input-wrap span{font-size:.55rem;letter-spacing:.1em;color:var(--gold);font-weight:800;white-space:nowrap;}
+.date-input-wrap input{width:100%;border:0;background:transparent;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-size:.78rem;font-weight:700;outline:none;}
+@media(max-width:390px){.date-nav{grid-template-columns:34px 1fr 34px;}.date-today-btn{grid-column:1 / -1;min-height:32px;}}
 
 /* ② 今日の色 */
 .color-swatch{width:100%;height:56px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:800;letter-spacing:.08em;text-align:center;padding:0 12px;}
@@ -156,6 +165,15 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="kotoba-card">
       <div class="kotoba-date" id="todayDate">—</div>
       <div class="kotoba-kanshi" id="todayKanshi">—</div>
+      <div class="date-nav" aria-label="日付を選ぶ">
+        <button class="date-nav-btn" type="button" onclick="movePrescriptionDate(-1)" aria-label="前の日">◀</button>
+        <label class="date-input-wrap">
+          <span>日付</span>
+          <input id="todayDateInput" type="date" onchange="setPrescriptionDate(this.value)">
+        </label>
+        <button class="date-nav-btn" type="button" onclick="movePrescriptionDate(1)" aria-label="次の日">▶</button>
+        <button class="date-today-btn" id="todayResetBtn" type="button" onclick="resetPrescriptionDate()">今日へ戻す</button>
+      </div>
       <div class="kotoba-text" id="todayKotoba">—</div>
     </div>
   </div>
@@ -191,7 +209,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         🎨 色AI先生で深く相談する
       </button>
       <div style="font-size:.58rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;">
-        今日の色をもとに、服・名刺・資料・小物・会う相手に合わせた使い方を相談できます。
+        この日の色をもとに、服・名刺・資料・小物・会う相手に合わせた使い方を相談できます。
       </div>
       <div class="affiliate-row">
         <button class="affiliate-btn prepare" type="button" disabled><span class="affiliate-badge">準備中</span>今日の色の小物を探す</button>
@@ -205,7 +223,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="sec-label">✦ 今日の香りAI</div>
     <div class="card">
       <!-- シーン選択 -->
-      <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">シーンを選ぶと、今日の星に合わせた香りを提案します</div>
+      <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">シーンを選ぶと、選んだ日の星に合わせた香りを提案します</div>
       <div class="scene-tabs">
         <button class="scene-tab active" data-scene="朝の準備" onclick="selectScene(this)">🌅 朝の準備</button>
         <button class="scene-tab" data-scene="仕事・商談" onclick="selectScene(this)">💼 仕事・商談</button>
@@ -222,7 +240,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         🧴 香りAI先生で深く相談する
       </button>
       <div style="font-size:.58rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;">
-        今日の提案をもとに、シーン・相手・手持ちの香水まで相談できます。
+        この日の提案をもとに、シーン・相手・手持ちの香水まで相談できます。
       </div>
       <div class="affiliate-row">
         <button class="affiliate-btn prepare" type="button" disabled><span class="affiliate-badge">準備中</span>香りを少量で試す</button>
@@ -426,21 +444,78 @@ function getTodayPrescStar(honmei, dayStar){
 // ============================================================
 // アプリ状態
 // ============================================================
-let gStar={honmei:6,tsukimei:1,honmeiNachin:'天河水',tsukimeiNachin:'天河水',dayNachin:'大駅土',dayStar:7,prescStar:7};
+let gStar={honmei:6,tsukimei:1,honmeiNachin:'天河水',tsukimeiNachin:'天河水',dayNachin:'大駅土',dayStar:7,prescStar:7,navYear:0,navMonth:0,navDay:0};
 let curColorScene='朝の準備';
 let curScene='朝の準備';
+let selectedPrescriptionDate=null;
+
+function getJstTodayParts(){
+  const now=new Date();
+  const jst=new Date(now.getTime()+9*3600000);
+  return {y:jst.getUTCFullYear(),m:jst.getUTCMonth()+1,d:jst.getUTCDate()};
+}
+function makeLocalDate(y,m,d){return new Date(y,m-1,d);}
+function getSelectedPrescriptionParts(){
+  if(!selectedPrescriptionDate){
+    const t=getJstTodayParts();
+    selectedPrescriptionDate=makeLocalDate(t.y,t.m,t.d);
+  }
+  return {y:selectedPrescriptionDate.getFullYear(),m:selectedPrescriptionDate.getMonth()+1,d:selectedPrescriptionDate.getDate()};
+}
+function formatDateInput(y,m,d){
+  return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+}
+function isJstToday(y,m,d){
+  const t=getJstTodayParts();
+  return t.y===y&&t.m===m&&t.d===d;
+}
+function selectedDayLabel(){
+  return isJstToday(gStar.navYear,gStar.navMonth,gStar.navDay)?'今日':'この日';
+}
+function updatePrescriptionDateControl(y,m,d){
+  const input=document.getElementById('todayDateInput');
+  if(input) input.value=formatDateInput(y,m,d);
+  const reset=document.getElementById('todayResetBtn');
+  if(reset) reset.disabled=isJstToday(y,m,d);
+}
+function movePrescriptionDate(delta){
+  const p=getSelectedPrescriptionParts();
+  const next=makeLocalDate(p.y,p.m,p.d);
+  next.setDate(next.getDate()+delta);
+  selectedPrescriptionDate=next;
+  init();
+}
+function setPrescriptionDate(value){
+  const arr=String(value||'').split('-').map(Number);
+  const y=arr[0],m=arr[1],d=arr[2];
+  if(!y||!m||!d) return;
+  selectedPrescriptionDate=makeLocalDate(y,m,d);
+  init();
+}
+function resetPrescriptionDate(){
+  const t=getJstTodayParts();
+  selectedPrescriptionDate=makeLocalDate(t.y,t.m,t.d);
+  init();
+}
+function getDayCenterT(y,m,d){
+  const dd=_getDayData(y,m,d);
+  if(dd) return dd.star;
+  const ref=new Date(2026,2,4);
+  const diff=Math.round((new Date(y,m-1,d)-ref)/86400000);
+  return (((2-1+diff)%9)+9)%9+1;
+}
 
 // ============================================================
 // 描画
 // ============================================================
 function init(){
-  // 日付（JST）
-  const now=new Date();
-  const jst=new Date(now.getTime()+9*3600000);
-  const ty=jst.getUTCFullYear(),tm=jst.getUTCMonth()+1,td=jst.getUTCDate();
+  // 日付（JST基準。今日以外も指定できる）
+  const selected=getSelectedPrescriptionParts();
+  const ty=selected.y,tm=selected.m,td=selected.d;
   const weekday=['日','月','火','水','木','金','土'];
   const wd=new Date(ty,tm-1,td).getDay();
   const dks=getDayKanshi(ty,tm,td);
+  updatePrescriptionDateControl(ty,tm,td);
 
   document.getElementById('todayDate').textContent=`${ty}年${tm}月${td}日（${weekday[wd]}）`;
   document.getElementById('todayKanshi').textContent=dks.kan+dks.shi;
@@ -462,11 +537,10 @@ function init(){
   const yI=yIdx(by),mI=mIdx(by,bm),dI=dIdx(by,bm,bd);
   const yNac=nc(yI),mNac=nc(mI),dNac=nc(dI);
 
-  gStar={honmei:h,tsukimei:tFK,honmeiNachin:yNac,tsukimeiNachin:mNac,dayNachin:dNac};
+  gStar={honmei:h,tsukimei:tFK,honmeiNachin:yNac,tsukimeiNachin:mNac,dayNachin:dNac,navYear:ty,navMonth:tm,navDay:td};
 
-  // 日盤中宮星と今日の処方星を計算
-  const dayData=_getDayData(ty,tm,td);
-  const dayStar=dayData?dayData.star:h;
+  // 日盤中宮星と選択日の処方星を計算
+  const dayStar=getDayCenterT(ty,tm,td);
   const prescStar=getTodayPrescStar(h,dayStar);
   gStar.dayStar=dayStar;
   gStar.prescStar=prescStar;
@@ -518,8 +592,7 @@ function ensureScentRendered(){
 
 // ① 今日の一言
 function drawKotoba(kan,shi,honmei,ty,tm,td){
-  const dayData=_getDayData(ty,tm,td);
-  const dayStar=dayData?dayData.star:honmei;
+  const dayStar=getDayCenterT(ty,tm,td);
   const prescStar=gStar.prescStar||honmei;
   const sDay=STAR_DATA[dayStar]||{};
   const sPresc=STAR_DATA[prescStar]||{};
@@ -530,9 +603,9 @@ function drawKotoba(kan,shi,honmei,ty,tm,td){
     土:'大地のように静かに、しかし確実に積み上げる日です。',
     金:'天命の輝きを発揮する日。高い視点で物事を見渡して。'
   };
-  const dayMsg=elemMsgs[sDay.elem]||'今日も一歩一歩、着実に。';
+  const dayMsg=(elemMsgs[sDay.elem]||'今日も一歩一歩、着実に。').replace(/今日は/g,selectedDayLabel());
   document.getElementById('todayKotoba').textContent=
-    `今日は${kan}${shi}の日。${sDay.j}の気が流れています。\nあなたには${sPresc.j}の力が共鳴する日。${dayMsg}`;
+    `${selectedDayLabel()}は${kan}${shi}の日。${sDay.j}の気が流れています。\nあなたには${sPresc.j}の力が共鳴する日。${dayMsg}`;
 }
 
 // ② 今日の色
@@ -597,10 +670,11 @@ function drawColor(prescStar){
   if(reasonEl){
     const dayS=STAR_DATA[gStar.dayStar]||{};
     const honS=STAR_DATA[gStar.honmei]||{};
+    const label=selectedDayLabel();
     if(gStar.dayStar===prescStar){
-      reasonEl.textContent=`今日は${dayS.j}の日。あなた（${honS.j}）と今日の気をつなぐ補助星として、${s.colorName}を使います。`;
+      reasonEl.textContent=`${label}は${dayS.j}の日。あなた（${honS.j}）と${label}の気をつなぐ補助星として、${s.colorName}を使います。`;
     } else {
-      reasonEl.textContent=`あなた（${honS.j}）× 今日（${dayS.j}）をつなぐ今日の処方星は${s.j}。その色「${s.colorName}」で、今日の不足をやさしく補います。`;
+      reasonEl.textContent=`あなた（${honS.j}）× ${label}（${dayS.j}）をつなぐ処方星は${s.j}。その色「${s.colorName}」で、${label}の不足をやさしく補います。`;
     }
   }
   // スウォッチ（グラデーション）
@@ -752,7 +826,8 @@ function renderScent(d){
 function drawKeyword(honmei,tsukimei){
   const s=STAR_DATA[honmei]||{};
   const kws=s.keywords||[];
-  const kw=kws[Math.floor(Math.random()*kws.length)]||'今日も着実に';
+  const seed=(gStar.navYear*10000+gStar.navMonth*100+gStar.navDay+honmei+(tsukimei||0));
+  const kw=kws.length?kws[Math.abs(seed)%kws.length]:'今日も着実に';
   document.getElementById('todayKeyword').textContent='「 '+kw+' 」';
   document.getElementById('todayKeywordSub').textContent=s.kwSub||'';
 }
