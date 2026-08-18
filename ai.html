@@ -35,24 +35,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-step-num{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1rem;line-height:1;}
 .lead-step-text{font-size:.58rem;color:var(--mist);line-height:1.5;margin-top:3px;}
 .lead-step-note{margin-top:10px;background:linear-gradient(135deg,rgba(255,226,140,.28),rgba(255,255,255,.55));border:1px dashed rgba(184,128,20,.42);border-radius:9px;padding:9px 10px;font-size:.66rem;color:var(--goldlt);line-height:1.85;font-weight:700;}
-.ai-flow-panel{margin-top:12px;background:linear-gradient(135deg,rgba(72,142,94,.08),rgba(255,255,255,.62));border:1px solid rgba(72,142,94,.24);border-radius:12px;padding:13px;}
-.ai-flow-kicker{font-size:.58rem;letter-spacing:.14em;color:#2f7d4c;font-weight:900;margin-bottom:5px;}
-.ai-flow-title{font-size:.82rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:8px;}
-.ai-flow-list{display:grid;gap:7px;margin-top:10px;}
-.ai-flow-item{display:grid;grid-template-columns:25px 1fr;gap:8px;align-items:start;background:rgba(255,255,255,.52);border:1px solid rgba(72,142,94,.16);border-radius:9px;padding:8px 9px;}
-.ai-flow-num{width:23px;height:23px;border-radius:999px;background:rgba(72,142,94,.12);border:1px solid rgba(72,142,94,.25);color:#2f7d4c;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;}
-.ai-flow-copy{font-size:.64rem;color:var(--mist);line-height:1.75;}
-.ai-flow-copy strong{display:block;color:var(--goldlt);font-size:.7rem;margin-bottom:1px;}
-.ai-flow-note{margin-top:8px;border:1px solid rgba(196,160,67,.28);border-radius:9px;background:rgba(196,160,67,.08);padding:9px 10px;font-size:.62rem;color:var(--mist);line-height:1.8;}
-.ai-levels{margin-top:10px;display:grid;gap:8px;}
-.ai-level-card{background:rgba(255,255,255,.62);border:1px solid rgba(72,142,94,.18);border-radius:10px;padding:10px 11px;}
-.ai-level-label{display:inline-flex;align-items:center;border:1px solid rgba(72,142,94,.25);background:rgba(72,142,94,.1);color:#2f7d4c;border-radius:999px;padding:2px 7px;font-size:.55rem;font-weight:900;margin-bottom:5px;}
-.ai-level-title{font-size:.7rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:2px;}
-.ai-level-text{font-size:.62rem;color:var(--mist);line-height:1.8;}
 .ai-tree-panel{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,250,240,.82));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:14px;box-shadow:0 10px 26px rgba(100,80,40,.045);}
 .ai-tree-kicker{font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:900;margin-bottom:5px;}
 .ai-tree-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
 .ai-tree-text{font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:11px;}
+.ai-tree-levels{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;}
+.ai-tree-level{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(72,142,94,.22);background:rgba(72,142,94,.08);color:#2f7d4c;border-radius:999px;padding:5px 8px;font-size:.56rem;font-weight:900;line-height:1.35;}
 .ai-tree-root{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;background:linear-gradient(135deg,rgba(72,142,94,.12),rgba(255,255,255,.72));border:1px solid rgba(72,142,94,.28);border-radius:12px;padding:11px 12px;text-decoration:none;color:inherit;}
 .ai-tree-root-mark{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(72,142,94,.13);border:1px solid rgba(72,142,94,.28);color:#2f7d4c;font-size:.78rem;font-weight:900;}
 .ai-tree-root-title{display:block;font-size:.76rem;color:var(--snow);font-weight:900;line-height:1.45;}
@@ -112,13 +100,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .cat.ai-collapsible.open a.prompt-card{display:block!important;}
 .prompt-focus{box-shadow:0 0 0 3px rgba(72,142,94,.22),0 12px 26px rgba(72,142,94,.12)!important;border-color:rgba(72,142,94,.55)!important;}
 
-[data-theme="dark"] .ai-flow-panel{background:linear-gradient(135deg,rgba(72,142,94,.14),rgba(18,21,42,.96));border-color:rgba(120,190,140,.3);}
 [data-theme="dark"] .ai-tree-panel{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
 [data-theme="dark"] .ai-tree-root,[data-theme="dark"] .ai-tree-branch{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.18);}
 [data-theme="dark"] .ai-tree-chip{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.2);}
-[data-theme="dark"] .ai-flow-item{background:rgba(255,255,255,.045);border-color:rgba(120,190,140,.2);}
-[data-theme="dark"] .ai-flow-copy,[data-theme="dark"] .ai-flow-note,[data-theme="dark"] .ai-level-text{color:rgba(232,238,255,.76);}
-[data-theme="dark"] .ai-level-card{background:rgba(255,255,255,.045);border-color:rgba(120,190,140,.2);}
+[data-theme="dark"] .ai-tree-level{background:rgba(72,142,94,.12);border-color:rgba(120,190,140,.24);}
 [data-theme="dark"] .ai-recommend-panel{background:linear-gradient(135deg,rgba(63,120,168,.16),rgba(18,21,42,.96));border-color:rgba(131,183,230,.35);}
 [data-theme="dark"] .ai-recommend-card{background:rgba(255,255,255,.055);border-color:rgba(131,183,230,.26);}
 [data-theme="dark"] .cat.ai-collapsible .cat-label::after{background:rgba(18,21,42,.82);}
@@ -312,22 +297,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="lead-step-note">例：今日の商談に合う服、疲れている日の食事、相手に合わせた色や香りなど。音声入力でそのまま聞いても使えます。</div>
     </div>
 
-    <div class="ai-flow-panel">
-      <div class="ai-flow-kicker">KITOKU式 AI活用フロー</div>
-      <div class="ai-flow-title">使い方は、初級から上級へ少しずつ広げる</div>
-      <div class="ai-levels">
-        <div class="ai-level-card"><div class="ai-level-label">初級</div><div class="ai-level-title">1つのチャットで始める</div><div class="ai-level-text">星情報と今日の方位盤を、同じチャットに貼って相談します。まずは「今日どう整える？」と聞くだけで十分です。</div></div>
-        <div class="ai-level-card"><div class="ai-level-label">中級</div><div class="ai-level-title">テーマごとに分けて育てる</div><div class="ai-level-text">ファッション・体調と食事・仕事と商談・人間関係など、相談内容ごとにチャットを分けます。ワードローブや持ち物、予定を見せながら相談できます。</div></div>
-        <div class="ai-level-card"><div class="ai-level-label">上級</div><div class="ai-level-title">自分専用の知恵の蔵を作る</div><div class="ai-level-text">NotebookLMやObsidian、ProjectやGemなどに、星情報・診断結果・日々の記録・AIとのやり取りを蓄積していきます。</div></div>
-      </div>
-      <div class="ai-flow-list">
-        <div class="ai-flow-item"><div class="ai-flow-num">星</div><div class="ai-flow-copy"><strong>最初の土台</strong>本命星・月命星・傾斜・同会・納音などを、あなたの基本情報として渡します。</div></div>
-        <div class="ai-flow-item"><div class="ai-flow-num">日</div><div class="ai-flow-copy"><strong>毎日の材料</strong>今日の方位盤、色、香り、食事、予定、会う相手を足すと、具体的な提案に変わります。</div></div>
-        <div class="ai-flow-item"><div class="ai-flow-num">人</div><div class="ai-flow-copy"><strong>相手に合わせる時</strong>商談相手・家族・上司・パートナーの星を一時的に足し、言葉・距離感・印象づくりを相談します。</div></div>
-      </div>
-      <div class="ai-flow-note">個人情報や相手の情報は、必要な範囲だけ共有してください。大切なのは、AIに決めてもらうことではなく、良い材料を渡して自分の判断軸を育てることです。</div>
-    </div>
-
   </div>
 </div>
 
@@ -335,7 +304,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="ai-tree-kicker">AI USE TREE</div>
   <div class="ai-tree-title">AI活用ツリー</div>
   <div class="ai-tree-text">
-    どの相談でも、まずは自分の星情報を渡します。そこに、目的に合わせて今日の材料や相手の情報を足していきます。
+    どの相談でも、まずは自分の星情報から。慣れてきたら、目的に合わせて材料を足していきます。
+  </div>
+  <div class="ai-tree-levels">
+    <span class="ai-tree-level">初級：1つのチャット</span>
+    <span class="ai-tree-level">中級：テーマ別</span>
+    <span class="ai-tree-level">上級：知恵の蔵</span>
   </div>
   <a class="ai-tree-root" href="#starMaterial">
     <span class="ai-tree-root-mark">星</span>
