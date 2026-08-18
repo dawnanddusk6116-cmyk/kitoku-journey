@@ -434,11 +434,47 @@ const KO_GOGYO={'水':'木','木':'火','火':'土','土':'金','金':'水'};
 function sojoSet_t(star){const g=GOGYO_OF_STAR[star];const s=new Set();(STARS_OF_GOGYO[g]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[OYA_GOGYO[g]]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[KO_GOGYO[g]]||[]).forEach(x=>s.add(x));return s;}
 function getSaidaiKichi_t(h,t){if(!h)return[];if(!t)t=h;const sh=sojoSet_t(h),st=sojoSet_t(t);const c=[...sh].filter(s=>st.has(s));return c.filter(s=>s!==h&&s!==t).filter(s=>s!==5).sort((a,b)=>a-b);}
 
-// 今日の処方星（本命星×日盤中宮をつなぐ補助星。最大吉方があれば採用）
-function getTodayPrescStar(honmei, dayStar){
-  const bridge=getSaidaiKichi_t(honmei, dayStar);
-  if(bridge.length>0) return bridge[0]; // 今日の処方星
-  return dayStar; // 補助星がなければ日盤中宮
+// 今日の処方星（本命星・月命星・日盤中宮をつなぐ補助星）
+function getTodayPrescStar(honmei, tsukimei, dayStar){
+  const bridgeWithHonmei=getSaidaiKichi_t(honmei, dayStar);
+  const bridgeWithTsukimei=(tsukimei&&tsukimei!==honmei)
+    ? getSaidaiKichi_t(tsukimei, dayStar)
+    : bridgeWithHonmei;
+  const common=bridgeWithHonmei.filter(s=>bridgeWithTsukimei.includes(s));
+  if(common.length>0) return common[0];
+  if(bridgeWithHonmei.length>0) return bridgeWithHonmei[0];
+  if(bridgeWithTsukimei.length>0) return bridgeWithTsukimei[0];
+  return dayStar;
+}
+
+function getGogyoLinkText(fromGogyo,toGogyo,finalVerb){
+  if(!fromGogyo||!toGogyo) return '';
+  if(fromGogyo===toGogyo) return `${fromGogyo}の気を重ね${finalVerb?'ます':'る'}`;
+  if(KO_GOGYO[fromGogyo]===toGogyo) return `${fromGogyo}は${toGogyo}を${finalVerb?'育てます':'生み'}`;
+  if(OYA_GOGYO[fromGogyo]===toGogyo) return `${toGogyo}から${fromGogyo}へ力を受け取り${finalVerb?'ます':''}`;
+  return `${fromGogyo}と${toGogyo}の間を${finalVerb?'整えます':'整え'}`;
+}
+
+function getGogyoBridgeExplain(honmei, tsukimei, dayStar, prescStar){
+  const gHon=GOGYO_OF_STAR[honmei];
+  const gTsuki=GOGYO_OF_STAR[tsukimei];
+  const gDay=GOGYO_OF_STAR[dayStar];
+  const gPresc=GOGYO_OF_STAR[prescStar];
+  if(!gDay||!gPresc) return '';
+
+  const honBridge=getSaidaiKichi_t(honmei,dayStar).includes(prescStar);
+  const tsukiBridge=(tsukimei&&tsukimei!==honmei)
+    ? getSaidaiKichi_t(tsukimei,dayStar).includes(prescStar)
+    : honBridge;
+  const baseGogyo=(tsukiBridge&&!honBridge&&gTsuki)?gTsuki:gHon;
+  const first=getGogyoLinkText(baseGogyo,gPresc,false);
+  const second=getGogyoLinkText(gPresc,gDay,true);
+  const note=(honBridge&&tsukiBridge&&tsukimei&&tsukimei!==honmei)
+    ? '本命と月命の両方から見ても、無理のない橋渡しです。'
+    : (tsukiBridge&&!honBridge)
+      ? '月命側の流れも見て、この星を選んでいます。'
+      : '月命側も確認した上で、本命側の橋渡しを優先しています。';
+  return `五行では、${first}、${second}。${note}`;
 }
 
 // ============================================================
@@ -541,7 +577,7 @@ function init(){
 
   // 日盤中宮星と選択日の処方星を計算
   const dayStar=getDayCenterT(ty,tm,td);
-  const prescStar=getTodayPrescStar(h,dayStar);
+  const prescStar=getTodayPrescStar(h,tFK,dayStar);
   gStar.dayStar=dayStar;
   gStar.prescStar=prescStar;
 
@@ -671,10 +707,12 @@ function drawColor(prescStar){
     const dayS=STAR_DATA[gStar.dayStar]||{};
     const honS=STAR_DATA[gStar.honmei]||{};
     const label=selectedDayLabel();
+    const bridgeExplain=getGogyoBridgeExplain(gStar.honmei,gStar.tsukimei,gStar.dayStar,prescStar);
+    const bridgeText=bridgeExplain?bridgeExplain+' ':'';
     if(gStar.dayStar===prescStar){
-      reasonEl.textContent=`${label}は${dayS.j}の日。あなた（${honS.j}）と${label}の気をつなぐ補助星として、${s.colorName}を使います。`;
+      reasonEl.textContent=`${label}は${dayS.j}の日。あなた（${honS.j}）と${label}の気をつなぐ補助星として、${s.colorName}を使います。${bridgeText}`;
     } else {
-      reasonEl.textContent=`あなた（${honS.j}）× ${label}（${dayS.j}）をつなぐ処方星は${s.j}。その色「${s.colorName}」で、${label}の不足をやさしく補います。`;
+      reasonEl.textContent=`あなた（${honS.j}）× ${label}（${dayS.j}）をつなぐ処方星は${s.j}。${bridgeText}その色「${s.colorName}」で、${label}の不足をやさしく補います。`;
     }
   }
   // スウォッチ（グラデーション）
@@ -727,14 +765,19 @@ async function fetchScent(){
 
   if(USE_API){
     // ── 将来のAPI切替用（USE_API=trueにするだけで動く）──
-    const s=STAR_DATA[gStar.prescStar||gStar.honmei]||{};
+    const honS=STAR_DATA[gStar.honmei]||{};
+    const tsukiS=STAR_DATA[gStar.tsukimei]||{};
+    const prescS=STAR_DATA[gStar.prescStar||gStar.honmei]||{};
     result.innerHTML='<div class="scent-loading">✨ あなた専用の香りを選んでいます…</div>';
     try{
       const res=await fetch('/api/scent',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          honmei:s.j||'',elem:s.elem||'',
+          honmei:honS.j||'',
+          tsukimei:tsukiS.j||'',
+          prescStar:prescS.j||'',
+          elem:prescS.elem||'',
           honmeiNachin:gStar.honmeiNachin,
           tsukimeiNachin:gStar.tsukimeiNachin,
           dayNachin:gStar.dayNachin,
@@ -789,6 +832,8 @@ function scentUseGuide(d){
 
 function renderScent(d){
   const result=document.getElementById('scentResult');
+  const bridgeExplain=getGogyoBridgeExplain(gStar.honmei,gStar.tsukimei,gStar.dayStar,gStar.prescStar||gStar.honmei);
+  const bridgeHtml=bridgeExplain?`<div style="font-size:.66rem;color:var(--goldlt);line-height:1.9;margin-bottom:7px;">${bridgeExplain}</div>`:'';
   const useGuide=scentUseGuide(d).map(([label,text])=>`
     <div class="scent-use-card">
       <div class="scent-use-label">✦ ${label}</div>
@@ -799,7 +844,7 @@ function renderScent(d){
     <div style="font-size:.6rem;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;">✦ ${curScene}の香り</div>
     <div class="scent-name">${d.name||'—'}</div>
     <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;font-style:italic;">${d.keyword||''}</div>
-    <div class="scent-reason">${d.reason||'—'}</div>
+    <div class="scent-reason">${bridgeHtml}${d.reason||'—'}</div>
     <div class="scent-how">
       <div class="scent-how-label">✦ 取り入れ方</div>
       ${d.howto||'—'}
@@ -813,6 +858,8 @@ function renderScent(d){
     </div>`;
 
   window._scentData={
+    honmeiName:STAR_DATA[gStar.honmei]?.j||'',
+    tsukimeiName:STAR_DATA[gStar.tsukimei]?.j||'',
     starName:STAR_DATA[gStar.prescStar||gStar.honmei]?.j||'',
     nachinName:gStar.honmeiNachin,
     sceneName:curScene,
