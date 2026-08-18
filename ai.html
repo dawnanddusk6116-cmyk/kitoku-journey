@@ -49,17 +49,26 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-level-label{display:inline-flex;align-items:center;border:1px solid rgba(72,142,94,.25);background:rgba(72,142,94,.1);color:#2f7d4c;border-radius:999px;padding:2px 7px;font-size:.55rem;font-weight:900;margin-bottom:5px;}
 .ai-level-title{font-size:.7rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:2px;}
 .ai-level-text{font-size:.62rem;color:var(--mist);line-height:1.8;}
-.daily-material-panel{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(255,250,240,.82));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:14px;box-shadow:0 10px 26px rgba(100,80,40,.045);}
-.daily-material-kicker{font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:900;margin-bottom:5px;}
-.daily-material-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
-.daily-material-text{font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:11px;}
-.daily-material-grid{display:grid;gap:8px;}
-.daily-material-link{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;text-decoration:none;color:inherit;background:rgba(255,255,255,.72);border:1px solid rgba(100,80,40,.14);border-radius:11px;padding:11px 12px;}
-.daily-material-link:active{transform:scale(.99);}
-.daily-material-mark{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);color:var(--goldlt);font-size:.72rem;font-weight:900;flex-shrink:0;}
-.daily-material-name{display:block;font-size:.72rem;color:var(--snow);font-weight:900;line-height:1.45;margin-bottom:1px;}
-.daily-material-desc{display:block;font-size:.58rem;color:var(--mist);line-height:1.55;}
-.daily-material-arrow{color:rgba(100,80,40,.45);font-size:.9rem;font-weight:900;}
+.ai-tree-panel{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,250,240,.82));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:14px;box-shadow:0 10px 26px rgba(100,80,40,.045);}
+.ai-tree-kicker{font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:900;margin-bottom:5px;}
+.ai-tree-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
+.ai-tree-text{font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:11px;}
+.ai-tree-root{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;background:linear-gradient(135deg,rgba(72,142,94,.12),rgba(255,255,255,.72));border:1px solid rgba(72,142,94,.28);border-radius:12px;padding:11px 12px;text-decoration:none;color:inherit;}
+.ai-tree-root-mark{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(72,142,94,.13);border:1px solid rgba(72,142,94,.28);color:#2f7d4c;font-size:.78rem;font-weight:900;}
+.ai-tree-root-title{display:block;font-size:.76rem;color:var(--snow);font-weight:900;line-height:1.45;}
+.ai-tree-root-desc{display:block;font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:1px;}
+.ai-tree-branches{position:relative;margin:10px 0 0 16px;padding-left:14px;display:grid;gap:8px;}
+.ai-tree-branches::before{content:'';position:absolute;left:0;top:0;bottom:12px;width:1px;background:rgba(138,104,32,.22);}
+.ai-tree-branch{position:relative;background:rgba(255,255,255,.72);border:1px solid rgba(100,80,40,.14);border-radius:12px;padding:10px 11px;}
+.ai-tree-branch::before{content:'';position:absolute;left:-14px;top:19px;width:14px;height:1px;background:rgba(138,104,32,.22);}
+.ai-tree-branch-head{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;text-decoration:none;color:inherit;}
+.ai-tree-mark{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);color:var(--goldlt);font-size:.68rem;font-weight:900;}
+.ai-tree-name{display:block;font-size:.72rem;color:var(--snow);font-weight:900;line-height:1.45;}
+.ai-tree-desc{display:block;font-size:.58rem;color:var(--mist);line-height:1.55;margin-top:1px;}
+.ai-tree-arrow{color:rgba(100,80,40,.45);font-size:.9rem;font-weight:900;}
+.ai-tree-sub{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 0 37px;}
+.ai-tree-chip{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--goldlt);background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.24);border-radius:999px;padding:5px 8px;font-size:.56rem;font-weight:800;line-height:1.35;}
+.ai-tree-chip.premium{color:#7b5ea7;border-color:rgba(123,94,167,.25);background:rgba(123,94,167,.08);}
 
 /* 注意書き */
 .caution{background:rgba(176,64,64,.04);border:1px solid rgba(176,64,64,.2);border-radius:8px;padding:10px 12px;margin-top:10px;}
@@ -104,8 +113,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .prompt-focus{box-shadow:0 0 0 3px rgba(72,142,94,.22),0 12px 26px rgba(72,142,94,.12)!important;border-color:rgba(72,142,94,.55)!important;}
 
 [data-theme="dark"] .ai-flow-panel{background:linear-gradient(135deg,rgba(72,142,94,.14),rgba(18,21,42,.96));border-color:rgba(120,190,140,.3);}
-[data-theme="dark"] .daily-material-panel{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
-[data-theme="dark"] .daily-material-link{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.18);}
+[data-theme="dark"] .ai-tree-panel{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
+[data-theme="dark"] .ai-tree-root,[data-theme="dark"] .ai-tree-branch{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.18);}
+[data-theme="dark"] .ai-tree-chip{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.2);}
 [data-theme="dark"] .ai-flow-item{background:rgba(255,255,255,.045);border-color:rgba(120,190,140,.2);}
 [data-theme="dark"] .ai-flow-copy,[data-theme="dark"] .ai-flow-note,[data-theme="dark"] .ai-level-text{color:rgba(232,238,255,.76);}
 [data-theme="dark"] .ai-level-card{background:rgba(255,255,255,.045);border-color:rgba(120,190,140,.2);}
@@ -321,33 +331,66 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </div>
 
-<div class="daily-material-panel">
-  <div class="daily-material-kicker">DAILY MATERIALS</div>
-  <div class="daily-material-title">毎日AIに渡す材料を集める</div>
-  <div class="daily-material-text">
-    星情報を土台にして、今日の方位盤・色・香り・相手の星を少しずつ足していくと、いつものAIがあなた用に答えやすくなります。
+<div class="ai-tree-panel">
+  <div class="ai-tree-kicker">AI USE TREE</div>
+  <div class="ai-tree-title">AI活用ツリー</div>
+  <div class="ai-tree-text">
+    どの相談でも、まずは自分の星情報を渡します。そこに、目的に合わせて今日の材料や相手の情報を足していきます。
   </div>
-  <div class="daily-material-grid">
-    <a class="daily-material-link" href="#starMaterial">
-      <span class="daily-material-mark">星</span>
-      <span><span class="daily-material-name">自分の星情報をコピーする</span><span class="daily-material-desc">最初に一度貼る、あなたの基本情報です</span></span>
-      <span class="daily-material-arrow">›</span>
-    </a>
-    <a class="daily-material-link" href="direction_v2.html">
-      <span class="daily-material-mark">方</span>
-      <span><span class="daily-material-name">今日の羅針盤を開く</span><span class="daily-material-desc">画像保存や方位の説明を、毎日の相談材料にします</span></span>
-      <span class="daily-material-arrow">›</span>
-    </a>
-    <a class="daily-material-link" href="today.html">
-      <span class="daily-material-mark">整</span>
-      <span><span class="daily-material-name">今日を整える</span><span class="daily-material-desc">色・香り・食事・小さな行動を今日の一手にします</span></span>
-      <span class="daily-material-arrow">›</span>
-    </a>
-    <a class="daily-material-link" href="scent.html">
-      <span class="daily-material-mark">香</span>
-      <span><span class="daily-material-name">香り・色をAIで深める</span><span class="daily-material-desc">手持ちの香りや会う相手に合わせて相談できます</span></span>
-      <span class="daily-material-arrow">›</span>
-    </a>
+  <a class="ai-tree-root" href="#starMaterial">
+    <span class="ai-tree-root-mark">星</span>
+    <span><span class="ai-tree-root-title">共通の土台：自分の星情報</span><span class="ai-tree-root-desc">最初に一度貼る、すべての相談の出発点です</span></span>
+  </a>
+  <div class="ai-tree-branches">
+    <div class="ai-tree-branch">
+      <a class="ai-tree-branch-head" href="direction_v2.html">
+        <span class="ai-tree-mark">日</span>
+        <span><span class="ai-tree-name">今日を整えたい</span><span class="ai-tree-desc">方位盤・色・香り・食事・服装を今日の判断材料にする</span></span>
+        <span class="ai-tree-arrow">›</span>
+      </a>
+      <div class="ai-tree-sub">
+        <a class="ai-tree-chip" href="direction_v2.html">今日の羅針盤</a>
+        <a class="ai-tree-chip" href="today.html">今日を整える</a>
+        <a class="ai-tree-chip" href="scent.html">香り・色</a>
+      </div>
+    </div>
+    <div class="ai-tree-branch">
+      <a class="ai-tree-branch-head" href="#targetMaterial">
+        <span class="ai-tree-mark">人</span>
+        <span><span class="ai-tree-name">人に合わせたい</span><span class="ai-tree-desc">相手の星を一時的に足し、言葉・距離感・印象を相談する</span></span>
+        <span class="ai-tree-arrow">›</span>
+      </a>
+      <div class="ai-tree-sub">
+        <a class="ai-tree-chip" href="#targetMaterial">相手の星を入れる</a>
+        <a class="ai-tree-chip" href="relations.html">相性を見る</a>
+        <a class="ai-tree-chip" href="business.html">商談・仕事</a>
+      </div>
+    </div>
+    <div class="ai-tree-branch">
+      <a class="ai-tree-branch-head" href="mindmap.html">
+        <span class="ai-tree-mark">深</span>
+        <span><span class="ai-tree-name">自分を深掘りしたい</span><span class="ai-tree-desc">姓名・思考整理・九年サイクルを足して、自己理解を深める</span></span>
+        <span class="ai-tree-arrow">›</span>
+      </a>
+      <div class="ai-tree-sub">
+        <a class="ai-tree-chip" href="life.html">姓名鑑定</a>
+        <a class="ai-tree-chip" href="mindmap.html">気学マインドマップ</a>
+        <a class="ai-tree-chip" href="roadmap.html">九年サイクル</a>
+      </div>
+    </div>
+    <div class="ai-tree-branch">
+      <div class="ai-tree-branch-head">
+        <span class="ai-tree-mark">育</span>
+        <span><span class="ai-tree-name">もっと育てたい</span><span class="ai-tree-desc">慣れたらテーマ別チャットや知恵の蔵に、記録を少しずつ蓄積する</span></span>
+        <span class="ai-tree-arrow">＋</span>
+      </div>
+      <div class="ai-tree-sub">
+        <span class="ai-tree-chip">テーマ別チャット</span>
+        <span class="ai-tree-chip">Project / Gem</span>
+        <span class="ai-tree-chip premium">NotebookLM / Obsidian</span>
+        <span class="ai-tree-chip premium">線路の日はプレミアムで確認</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -361,7 +404,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <button class="copy-btn" onclick="copyStarInfo()">
     <span>📋</span> 星情報だけをコピー（単体使用）
   </button>
-  <div class="target-box">
+  <div class="target-box" id="targetMaterial">
     <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
     <div class="target-desc">商談相手・家族・上司・パートナーなどの生年月日を入れると、相手の星情報を一時的に相談材料へ加えられます。相手に合わせた言葉・色・香り・距離感を相談したい時に使ってください。保存はしません。</div>
     <div class="target-grid">
