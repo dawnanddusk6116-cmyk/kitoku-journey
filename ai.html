@@ -82,89 +82,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .target-box input,.target-box select{width:100%;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.62);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;padding:9px;}
 .target-preview{font-size:.68rem;color:var(--snow);line-height:1.8;background:rgba(255,255,255,.44);border:1px dashed rgba(138,104,32,.3);border-radius:9px;padding:9px;margin-top:8px;}
 
-/* おすすめ4つ + カテゴリアコーディオン */
-.ai-recommend-panel{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(239,248,242,.82));border:1px solid rgba(72,142,94,.26);border-radius:var(--r);padding:14px;box-shadow:0 10px 26px rgba(72,142,94,.06);}
-.ai-recommend-kicker{display:flex;align-items:center;gap:8px;font-size:.66rem;color:#2f7d4c;font-weight:800;letter-spacing:.08em;margin-bottom:5px;}
-.ai-recommend-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
-.ai-recommend-note{font-size:.64rem;color:var(--mist);line-height:1.8;margin-bottom:12px;}
-.ai-recommend-grid{display:grid;gap:8px;}
-.ai-recommend-card{width:100%;appearance:none;text-decoration:none;text-align:left;background:rgba(255,255,255,.78);border:1px solid rgba(72,142,94,.24);border-radius:11px;padding:12px 12px;display:flex;gap:10px;align-items:center;color:inherit;font-family:'Noto Serif JP',serif;cursor:pointer;box-shadow:0 6px 18px rgba(100,80,40,.035);}
-.ai-recommend-card:active{transform:scale(.99);}
-.ai-recommend-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(72,142,94,.1);font-size:1.02rem;flex-shrink:0;}
-.ai-recommend-body{flex:1;min-width:0;}
-.ai-recommend-card-title{font-size:.78rem;color:var(--snow);font-weight:900;margin-bottom:2px;line-height:1.45;}
-.ai-recommend-card-desc{font-size:.6rem;color:var(--mist);line-height:1.65;}
-.ai-recommend-chip{display:inline-flex;align-items:center;border:1px solid rgba(196,160,67,.35);background:rgba(196,160,67,.1);color:var(--goldlt);border-radius:999px;padding:1px 6px;font-size:.52rem;font-weight:800;margin-left:5px;vertical-align:middle;}
-.cat.ai-collapsible{padding-top:10px;}
-.cat.ai-collapsible .cat-label{cursor:pointer;margin-bottom:8px;align-items:center;padding-right:64px;}
-.cat.ai-collapsible .cat-label::after{content:'開く';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.62rem;color:var(--cat-accent);background:rgba(255,255,255,.64);border:1px solid var(--cat-border);border-radius:999px;padding:4px 9px;line-height:1.2;}
-.cat.ai-collapsible.open .cat-label::after{content:'閉じる';}
-.cat.ai-collapsible:not(.open) .prompt-card{display:none!important;}
-.cat.ai-collapsible.open .prompt-card{display:block!important;}
-.cat.ai-collapsible.open a.prompt-card{display:block!important;}
-.prompt-focus{box-shadow:0 0 0 3px rgba(72,142,94,.22),0 12px 26px rgba(72,142,94,.12)!important;border-color:rgba(72,142,94,.55)!important;}
-
 [data-theme="dark"] .ai-tree-panel{background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
 [data-theme="dark"] .ai-tree-root,[data-theme="dark"] .ai-tree-branch{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.18);}
 [data-theme="dark"] .ai-tree-chip{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.2);}
 [data-theme="dark"] .ai-tree-level{background:rgba(72,142,94,.12);border-color:rgba(120,190,140,.24);}
 [data-theme="dark"] .ai-tree-level.active{background:#4f9b67;color:#fff;border-color:#4f9b67;}
 [data-theme="dark"] .ai-tree-level-detail{background:rgba(72,142,94,.08);border-color:rgba(120,190,140,.22);}
-[data-theme="dark"] .ai-recommend-panel{background:linear-gradient(135deg,rgba(63,120,168,.16),rgba(18,21,42,.96));border-color:rgba(131,183,230,.35);}
-[data-theme="dark"] .ai-recommend-card{background:rgba(255,255,255,.055);border-color:rgba(131,183,230,.26);}
-[data-theme="dark"] .cat.ai-collapsible .cat-label::after{background:rgba(18,21,42,.82);}
-
-/* プロンプトカテゴリ */
-.cat{padding:16px 16px 0;}
-.cat-label{font-size:.6rem;color:var(--gold);font-weight:800;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;background:var(--cat-bg,linear-gradient(135deg,rgba(196,160,67,.1),rgba(255,255,255,.42)));border:1px solid var(--cat-border,rgba(196,160,67,.28));border-radius:12px;padding:11px 12px;position:relative;overflow:hidden;box-shadow:0 8px 22px var(--cat-shadow,rgba(100,80,40,.035));}
-.cat-label::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cat-accent,var(--gold));}
-.cat[data-tone="daily"]{--cat-accent:#b78318;--cat-bg:linear-gradient(135deg,rgba(255,221,139,.36),rgba(255,255,255,.62));--cat-border:rgba(183,131,24,.38);--cat-shadow:rgba(183,131,24,.08);--cat-soft:rgba(183,131,24,.16);}
-.cat[data-tone="self"]{--cat-accent:#3f78a8;--cat-bg:linear-gradient(135deg,rgba(110,168,214,.22),rgba(255,255,255,.66));--cat-border:rgba(63,120,168,.3);--cat-shadow:rgba(63,120,168,.08);--cat-soft:rgba(63,120,168,.13);}
-.cat[data-tone="relation"]{--cat-accent:#b46a37;--cat-bg:linear-gradient(135deg,rgba(229,152,91,.22),rgba(255,255,255,.66));--cat-border:rgba(180,106,55,.32);--cat-shadow:rgba(180,106,55,.08);--cat-soft:rgba(180,106,55,.13);}
-.cat[data-tone="future"]{--cat-accent:#4f8b5d;--cat-bg:linear-gradient(135deg,rgba(114,176,126,.22),rgba(255,255,255,.66));--cat-border:rgba(79,139,93,.32);--cat-shadow:rgba(79,139,93,.08);--cat-soft:rgba(79,139,93,.13);}
-.cat[data-tone] .cat-number{background:var(--cat-soft);border-color:var(--cat-border);color:var(--cat-accent);}
-.cat[data-tone] .cat-title{color:var(--cat-accent);}
-.cat[data-tone] .prompt-card{border-color:rgba(100,80,40,.12);}
-.cat[data-tone] .prompt-card.featured{border-color:var(--cat-border);}
-.cat[data-tone] .prompt-card.featured .prompt-head{background:linear-gradient(135deg,var(--cat-soft),rgba(255,255,255,.45));}
-.cat-label::after{content:none;}
-.cat-number{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:900;line-height:1;}
-.cat-label-main{display:flex;flex-direction:column;gap:2px;min-width:0;}
-.cat-title{font-size:.78rem;letter-spacing:.06em;color:var(--goldlt);font-weight:900;line-height:1.45;}
-.cat-hint{font-size:.58rem;letter-spacing:0;color:var(--mist);font-weight:500;line-height:1.55;}
-
-/* プロンプトカード */
-.prompt-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:all .15s;}
-.prompt-card.featured{border-color:rgba(196,160,67,.55);box-shadow:0 8px 24px rgba(100,80,40,.08);}
-.prompt-card.featured .prompt-head{background:linear-gradient(135deg,rgba(196,160,67,.1),rgba(196,160,67,.03));}
-.prompt-card:active{transform:scale(.99);}
-.prompt-head{display:flex;align-items:center;gap:10px;padding:14px;}
-.prompt-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;}
-.prompt-info{flex:1;}
-.prompt-title{font-size:.82rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.prompt-badge{display:inline-flex;align-items:center;border:1px solid rgba(196,160,67,.42);background:rgba(196,160,67,.13);color:var(--goldlt);border-radius:999px;padding:2px 7px;font-size:.55rem;font-weight:800;line-height:1.4;letter-spacing:.04em;}
-.prompt-desc{font-size:.65rem;color:var(--mist);line-height:1.7;}
-.prompt-arrow{font-size:.7rem;color:rgba(100,80,40,.3);}
-.prompt-body{display:none;padding:0 14px 14px;}
-.prompt-body.open{display:block;}
-.prompt-text{background:rgba(100,80,40,.04);border:1px solid var(--rim);border-radius:8px;padding:12px;font-size:.72rem;color:var(--snow);line-height:1.95;margin-bottom:10px;white-space:pre-wrap;}
-.replace-zone{display:block;background:linear-gradient(135deg,rgba(255,226,140,.36),rgba(255,255,255,.56));border:1px dashed rgba(184,128,20,.58);border-radius:10px;padding:10px 11px;margin:8px 0;color:var(--goldlt);font-weight:800;}
-.replace-zone::before{content:'ここを自分の言葉に書き換える';display:block;font-size:.58rem;letter-spacing:.12em;color:#a06d12;margin-bottom:5px;}
-.write-guide{background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.42);border-radius:10px;padding:11px 12px;margin-bottom:10px;}
-.write-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:5px;}
-.write-guide-text{font-size:.66rem;color:var(--mist);line-height:1.85;}
-.write-guide-example{margin-top:8px;background:rgba(255,255,255,.5);border:1px dashed rgba(138,104,32,.45);border-radius:8px;padding:8px 9px;font-size:.66rem;color:var(--goldlt);line-height:1.8;}
-.value-guide{margin-bottom:10px;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.38));border:1px solid rgba(196,160,67,.34);border-radius:10px;padding:11px 12px;}
-.value-guide-title{font-size:.72rem;color:var(--goldlt);font-weight:900;margin-bottom:6px;}
-.value-guide-text{font-size:.66rem;color:var(--mist);line-height:1.9;}
-.value-guide-list{display:grid;gap:6px;margin-top:9px;}
-.value-guide-item{display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.38);border:1px solid rgba(138,104,32,.18);border-radius:8px;padding:8px 9px;font-size:.64rem;color:var(--mist);line-height:1.7;}
-.value-guide-num{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(196,160,67,.18);border:1px solid rgba(196,160,67,.38);color:var(--goldlt);font-size:.68rem;font-weight:900;}
-.prompt-copy-btn{width:100%;background:var(--goldlt);color:#fff;border:none;border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;}
-.prompt-copy-btn:active{opacity:.85;}
-.prompt-share-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);color:var(--goldlt);border-radius:8px;padding:10px;font-size:.75rem;cursor:pointer;font-family:'Noto Serif JP',serif;letter-spacing:.06em;margin-top:8px;}
-.prompt-share-btn:active{background:rgba(100,80,40,.14);}
-.prompt-use-note{font-size:.6rem;color:var(--mist);line-height:1.7;text-align:center;margin-top:7px;}
 
 /* フッター */
 .footer{text-align:center;font-size:.58rem;color:var(--mist);padding:24px 16px 40px;opacity:.7;}
@@ -197,22 +120,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   border-color:rgba(196,160,67,.34);
 }
 [data-theme="dark"] .lead-point,
-[data-theme="dark"] .target-box,
-[data-theme="dark"] .write-guide,
-[data-theme="dark"] .value-guide{
+[data-theme="dark"] .target-box{
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.045));
   border-color:rgba(196,160,67,.34);
 }
-[data-theme="dark"] .cat[data-tone="daily"]{--cat-accent:#f0cb66;--cat-bg:linear-gradient(135deg,rgba(196,160,67,.2),rgba(18,21,42,.96));--cat-border:rgba(240,203,102,.42);--cat-shadow:rgba(196,160,67,.12);--cat-soft:rgba(240,203,102,.16);}
-[data-theme="dark"] .cat[data-tone="self"]{--cat-accent:#83b7e6;--cat-bg:linear-gradient(135deg,rgba(83,145,198,.2),rgba(18,21,42,.96));--cat-border:rgba(131,183,230,.38);--cat-shadow:rgba(83,145,198,.12);--cat-soft:rgba(131,183,230,.14);}
-[data-theme="dark"] .cat[data-tone="relation"]{--cat-accent:#e5a46e;--cat-bg:linear-gradient(135deg,rgba(202,124,70,.2),rgba(18,21,42,.96));--cat-border:rgba(229,164,110,.38);--cat-shadow:rgba(202,124,70,.12);--cat-soft:rgba(229,164,110,.14);}
-[data-theme="dark"] .cat[data-tone="future"]{--cat-accent:#91cf9a;--cat-bg:linear-gradient(135deg,rgba(93,160,106,.2),rgba(18,21,42,.96));--cat-border:rgba(145,207,154,.38);--cat-shadow:rgba(93,160,106,.12);--cat-soft:rgba(145,207,154,.14);}
-[data-theme="dark"] .cat[data-tone] .prompt-card{border-color:rgba(212,175,55,.16);}
-[data-theme="dark"] .cat[data-tone] .prompt-card.featured{border-color:var(--cat-border);}
-[data-theme="dark"] .cat[data-tone] .prompt-card.featured .prompt-head{background:linear-gradient(135deg,var(--cat-soft),rgba(255,255,255,.035));}
 [data-theme="dark"] .lead-step,
-[data-theme="dark"] .write-guide-example,
-[data-theme="dark"] .value-guide-item,
 [data-theme="dark"] .target-preview{
   background:rgba(255,255,255,.055);
   border-color:rgba(196,160,67,.22);
@@ -224,12 +136,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 }
 [data-theme="dark"] .lead-text,
 [data-theme="dark"] .lead-point-text,
-[data-theme="dark"] .write-guide-text,
-[data-theme="dark"] .value-guide-text,
-[data-theme="dark"] .value-guide-item,
 [data-theme="dark"] .star-mini-note,
-[data-theme="dark"] .prompt-desc,
-[data-theme="dark"] .prompt-use-note,
 [data-theme="dark"] .target-desc{
   color:rgba(232,238,255,.76);
 }
@@ -238,16 +145,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   background:rgba(255,255,255,.055);
   border-color:rgba(196,160,67,.24);
   color:var(--snow);
-}
-[data-theme="dark"] .replace-zone{
-  background:linear-gradient(135deg,rgba(196,160,67,.17),rgba(255,255,255,.055));
-  border-color:rgba(196,160,67,.46);
-  color:var(--goldlt);
-}
-[data-theme="dark"] .replace-zone::before{color:var(--gold);}
-[data-theme="dark"] .prompt-text{
-  background:rgba(255,255,255,.045);
-  border-color:rgba(196,160,67,.22);
 }
 [data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
@@ -412,241 +309,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 
-<section class="ai-recommend-panel" aria-label="まず試してほしい相談材料">
-  <div class="ai-recommend-kicker">まず試してほしい4つ</div>
-  <div class="ai-recommend-title">迷ったら、ここから始めてください</div>
-  <div class="ai-recommend-note">下のカテゴリは見出しだけに整理しています。気になる時だけ開いて、ほかの相談テーマを選べます。</div>
-  <div class="ai-recommend-grid">
-    <a class="ai-recommend-card" href="mindmap.html">
-      <span class="ai-recommend-icon">🧠</span>
-      <span class="ai-recommend-body">
-        <span class="ai-recommend-card-title">気学マインドマップ <span class="ai-recommend-chip">迷ったらここ</span></span>
-        <span class="ai-recommend-card-desc">問い・現状・理想・次の一手まで整理する。</span>
-      </span>
-      <span class="prompt-arrow">›</span>
-    </a>
-    <button class="ai-recommend-card" type="button" onclick="jumpAiPrompt('納音から読み解く魂の本質')">
-      <span class="ai-recommend-icon">🎵</span>
-      <span class="ai-recommend-body">
-        <span class="ai-recommend-card-title">納音から読み解く魂の本質</span>
-        <span class="ai-recommend-card-desc">年・月・日の魂の音色から、本質と才能を読む。</span>
-      </span>
-      <span class="prompt-arrow">›</span>
-    </button>
-    <a class="ai-recommend-card" href="astro64.html">
-      <span class="ai-recommend-icon">🔭</span>
-      <span class="ai-recommend-body">
-        <span class="ai-recommend-card-title">星読みで深掘りする</span>
-        <span class="ai-recommend-card-desc">九星だけでは見えにくい本音や惹かれるものを見る。</span>
-      </span>
-      <span class="prompt-arrow">›</span>
-    </a>
-  </div>
-</section>
-
-<!-- カテゴリ：今日・今この瞬間 -->
-<div class="cat ai-collapsible" data-tone="daily">
-  <div class="cat-label">
-    <div class="cat-number">1</div>
-    <div class="cat-label-main">
-      <div class="cat-title">今日のことを相談する</div>
-      <div class="cat-hint">今日の過ごし方・迷っている決断・今すぐ整理したいこと</div>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q1')">
-    <div class="prompt-head">
-      <div class="prompt-icon">🧭</div>
-      <div class="prompt-info">
-        <div class="prompt-title">今の私へのアドバイス</div>
-        <div class="prompt-desc">今の運気・時期にやるべきこと・避けるべきことを琥珀色の言葉で</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q1">
-      <div class="prompt-text" id="qt1">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt1',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q2')">
-    <div class="prompt-head">
-      <div class="prompt-icon">🎯</div>
-      <div class="prompt-info">
-        <div class="prompt-title">今日の決断を相談する</div>
-        <div class="prompt-desc">迷っていることを話して、5000年の知恵で後押ししてもらう</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q2">
-      <div class="write-guide">
-        <div class="write-guide-title">迷っていることを書き足してください</div>
-        <div class="write-guide-text">コピーしたあと、「〇〇」の部分をあなたの迷いに書き換えてください。音声入力で話し足しても大丈夫です。</div>
-        <div class="write-guide-example">例：転職するか迷っている / 今日この話を切り出すか迷っている / A案とB案で迷っている</div>
-      </div>
-      <div class="prompt-text" id="qt2">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt2',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- カテゴリ：自分を知る -->
-<div class="cat ai-collapsible" data-tone="self">
-  <div class="cat-label">
-    <div class="cat-number">2</div>
-    <div class="cat-label-main">
-      <div class="cat-title">自分を知る</div>
-      <div class="cat-hint">強み・才能・うまくいかない理由・魂の音色を知る</div>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q3')">
-    <div class="prompt-head">
-      <div class="prompt-icon">📖</div>
-      <div class="prompt-info">
-        <div class="prompt-title">私の取説を教えてください</div>
-        <div class="prompt-desc">強み・才能・動かし方・エネルギーが上がる条件を読み解く</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q3">
-      <div class="prompt-text" id="qt3">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt3',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q4')">
-    <div class="prompt-head">
-      <div class="prompt-icon">🔍</div>
-      <div class="prompt-info">
-        <div class="prompt-title">うまくいかない本当の理由</div>
-        <div class="prompt-desc">「なぜうまくいかないのか」の根本原因を星から読み解く</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q4">
-      <div class="prompt-text" id="qt4">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt4',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q5')">
-    <div class="prompt-head">
-      <div class="prompt-icon">🎵</div>
-      <div class="prompt-info">
-        <div class="prompt-title">納音から読み解く魂の本質</div>
-        <div class="prompt-desc">年・月・日の3つの納音（魂の音色）から、本質・才能・生き方を深く読む</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q5">
-      <div class="prompt-text" id="qt5">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt5',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <a class="prompt-card featured" href="astro64.html" style="text-decoration:none;color:inherit;">
-    <div class="prompt-head">
-      <div class="prompt-icon">🔭</div>
-      <div class="prompt-info">
-        <div class="prompt-title">星読みで深掘りする</div>
-        <div class="prompt-desc">九星に星読みを重ねて、表の自分・本音・惹かれるものを深掘りする</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-  </a>
-
-</div>
-
-<!-- カテゴリ：人間関係・仕事 -->
-<div class="cat ai-collapsible" data-tone="relation">
-  <div class="cat-label">
-    <div class="cat-number">3</div>
-    <div class="cat-label-main">
-      <div class="cat-title">人間関係・仕事を整える</div>
-      <div class="cat-hint">家族・職場・友人・仕事やキャリアの悩みを整理する</div>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q6')">
-    <div class="prompt-head">
-      <div class="prompt-icon">💬</div>
-      <div class="prompt-info">
-        <div class="prompt-title">人間関係で困っていること</div>
-        <div class="prompt-desc">家族・職場・友人関係の悩みを、五行と星の関係から整理する</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q6">
-      <div class="write-guide">
-        <div class="write-guide-title">相手との関係を書き足してください</div>
-        <div class="write-guide-text">コピーしたあと、「〇〇」の部分を相手との関係や悩みに書き換えてください。相手の星がわかれば一緒に入れると深く読めます。</div>
-        <div class="write-guide-example">例：上司との関係で疲れている / 家族に気持ちが伝わらない / 友人と距離を置くか迷っている</div>
-      </div>
-      <div class="prompt-text" id="qt6">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt6',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q7')">
-    <div class="prompt-head">
-      <div class="prompt-icon">💼</div>
-      <div class="prompt-info">
-        <div class="prompt-title">仕事・キャリアの相談</div>
-        <div class="prompt-desc">今の仕事が合っているか・転職・独立のタイミングを星から見る</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q7">
-      <div class="prompt-text" id="qt7">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt7',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- カテゴリ：健康・お金・未来 -->
-<div class="cat ai-collapsible" data-tone="future">
-  <div class="cat-label">
-    <div class="cat-number">4</div>
-    <div class="cat-label-main">
-      <div class="cat-title">健康・お金・未来を見る</div>
-      <div class="cat-hint">体調・金運・お金との向き合い方を相談する</div>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q8')">
-    <div class="prompt-head">
-      <div class="prompt-icon">🌿</div>
-      <div class="prompt-info">
-        <div class="prompt-title">体調・健康を五行で整える</div>
-        <div class="prompt-desc">疲れやすい・体調が優れない時の、五行的な原因と整え方</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q8">
-      <div class="prompt-text" id="qt8">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt8',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-  <div class="prompt-card" onclick="togglePrompt(this,'q9')">
-    <div class="prompt-head">
-      <div class="prompt-icon">💰</div>
-      <div class="prompt-info">
-        <div class="prompt-title">お金・豊かさの相談</div>
-        <div class="prompt-desc">金運・豊かさへの向き合い方を、自分の星の特性から読み解く</div>
-      </div>
-      <div class="prompt-arrow">›</div>
-    </div>
-    <div class="prompt-body" id="q9">
-      <div class="prompt-text" id="qt9">—</div>
-      <button class="prompt-copy-btn" onclick="copyPrompt('qt9',event)">📋 コピーして貼り付ける</button>
-    </div>
-  </div>
-
-</div>
 
 <div class="footer-note">
   ⚠ AIの回答はあくまで参考です。最終的な判断はご自身でお願いします。<br>
@@ -726,9 +388,6 @@ function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?1
 function calcKeisha(h,t){return pal(h,t);}
 function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
 
-// 年盤（今後5年分）
-function yearCenter(y){const n=((2027-y)%9+9)%9;return n===0?9:n;}
-
 // ============================================================
 // プロンプト生成
 // ============================================================
@@ -773,22 +432,12 @@ function calcInfoFromBirth(y,m,d,gender='male'){
   };
 }
 
-function targetPromptText(){
-  if(!gTargetInfo)return '';
-  const name=(document.getElementById('targetName')?.value||'相手').trim()||'相手';
-  return `
-
-【相手の星情報（この画面だけ・未保存）】
-${name}：${gTargetInfo.honmei}・月命${gTargetInfo.tsukimei}・傾斜${gTargetInfo.keisha}・同会${gTargetInfo.dokai}・納音 ${gTargetInfo.yNac}（年）${gTargetInfo.mNac}（月）${gTargetInfo.dNac}（日）です。`;
-}
-
 function updateTargetInfo(){
   const birth=document.getElementById('targetBirth')?.value||'';
   const preview=document.getElementById('targetPreview');
   if(!birth){
     gTargetInfo=null;
     if(preview)preview.textContent='相手の生年月日を入れると、ここに星情報が表示されます。';
-    if(gInfo&&gInfo.honmei)buildPrompts(gInfo);
     return;
   }
   const [y,m,d]=birth.split('-').map(Number);
@@ -796,227 +445,15 @@ function updateTargetInfo(){
   gTargetInfo=calcInfoFromBirth(y,m,d||1,gender);
   const name=(document.getElementById('targetName')?.value||'相手').trim()||'相手';
   if(preview)preview.textContent=`${name}：${gTargetInfo.honmei}・月命${gTargetInfo.tsukimei}・傾斜${gTargetInfo.keisha}・同会${gTargetInfo.dokai}・納音 ${gTargetInfo.yNac}（年）${gTargetInfo.mNac}（月）${gTargetInfo.dNac}（日）`;
-  if(gInfo&&gInfo.honmei)buildPrompts(gInfo);
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-}
-function renderPromptText(id,text){
-  const html=escapeHtml(text)
-    .replace(/＝＝＝＝ここを書き換えてください＝＝＝＝\n([\s\S]*?)\n＝＝＝＝ここまで＝＝＝＝/g,(m,inner)=>`<span class="replace-zone">${inner}</span>`);
-  document.getElementById(id).innerHTML=html;
-}
-
-function buildPrompts(info){
-  const base=buildStarText(info);
-  const target=targetPromptText();
-  const elem=ELEMS[info.h]||'';
-
-  document.getElementById('qt1').textContent=
-`${base}
-
-今の私の運気と時期について教えてください。
-・今この時期（季節・年・月）にやるべきこと
-・今この時期に避けた方がいいこと
-・今の私が意識するといい一つの言葉
-
-温かく、しかし正直に答えてください。`;
-
-  renderPromptText('qt2',
-`${base}
-${target}
-
-＝＝＝＝ここを書き換えてください＝＝＝＝
-【今日の決断】
-今、〇〇について迷っています。
-（ここに迷っていることをあなたの言葉で書いてください）
-例：転職するか迷っている / 今日この話を切り出すか迷っている / A案とB案で迷っている
-＝＝＝＝ここまで＝＝＝＝
-
-5000年の東洋の知恵と私の星から見て、
-・この迷いはどんな意味があるか
-・どちらの方向に動くべきか
-・今動くべきか、待つべきか
-
-率直に教えてください。`);
-
-  document.getElementById('qt3').textContent=
-`${base}
-
-私の「取説（トリセツ）」を教えてください。
-・私の本質的な強みと才能
-・私が力を発揮できる環境・条件
-・私のエネルギーが上がる行動パターン
-・私の弱点と、その活かし方
-
-他のMBTIや性格診断より深い、星から見た私だけの取説をお願いします。`;
-
-  document.getElementById('qt4').textContent=
-`${base}
-
-「なぜうまくいかないのか」を正直に教えてください。
-・星から見た、私がつまずきやすいパターン
-・${elem}の五行から見た、私の課題
-・今の状況を好転させるための、一番シンプルな行動
-・自分を責めずに前に進むためのアドバイス
-
-厳しくても構いません。正直に教えてください。`;
-
-  document.getElementById('qt5').textContent=
-`私の納音は 年・${info.yNac} 月・${info.mNac} 日・${info.dNac} です。
-本命星は${info.honmei}です。
-
-この3つの納音（魂の音色）を深く読み解いてください。
-・それぞれの納音の本質的な意味
-・3つの組み合わせが示す、私の魂のテーマ
-・この納音を持つ人が才能を開花させる方法
-・歴史上で同じ納音を持つ有名人がいれば教えてください`;
-
-  renderPromptText('qt6',
-`${base}
-${target}
-
-＝＝＝＝ここを書き換えてください＝＝＝＝
-【人間関係の相談】
-今、〇〇との関係で悩んでいます。
-（相手との関係・起きていることを書いてください）
-例：上司との関係で疲れている / 家族に気持ちが伝わらない / 友人と距離を置くか迷っている
-＝＝＝＝ここまで＝＝＝＝
-
-・私の星から見た、この関係のパターン
-・${elem}の五行から見た、この悩みの本質
-・相手との関係を改善するための具体的な言葉・行動
-・「手放した方がいい」か「もう少し続けるべき」か
-
-優しく、しかし的確に教えてください。`);
-
-  document.getElementById('qt7').textContent=
-`${base}
-${target}
-
-仕事・キャリアについて相談します。
-
-・私の星から見た、向いている仕事・役割の特性
-・今の仕事環境が合っているかどうかのチェックポイント
-・転職・独立・現職継続、それぞれのメリットを星から見ると
-・今の私が仕事で一番意識すべきこと
-
-具体的に教えてください。`;
-
-  document.getElementById('qt8').textContent=
-`${base}
-
-最近、体調や気力が優れません。
-
-・${elem}の五行から見た、今の体調不良のパターン
-・私の星から見た、疲れやすい状況・整えやすい状況
-・五行的に今の私に必要な食べ物・飲み物・行動
-・心と体を整えるための、今日からできる小さなこと
-
-優しく、実践的に教えてください。`;
-
-  document.getElementById('qt9').textContent=
-`${base}
-
-お金・豊かさについて相談します。
-
-・私の星から見た、お金との関係のパターン
-・${elem}の五行から見た、豊かさの受け取り方
-・私が無意識にやってしまう、お金を遠ざける行動
-・今の私が豊かさに近づくための、具体的な一歩
-
-正直に、しかし希望を持てる答えをお願いします。`;
-
-  // 今後5年（2026-2030）
-  const y=new Date().getFullYear();
-  const years=[y,y+1,y+2,y+3,y+4];
-  const yearData=years.map(yr=>`${yr}年：中宮${yearCenter(yr)}（${STARS[yearCenter(yr)]}）`).join('\n');
-  document.getElementById('qt10').textContent=
-`${base}
-
-私の今後5年間の年盤データです：
-${yearData}
-
-この5年間のロードマップを教えてください。
-・各年の大まかなテーマと運気の流れ
-・特に力を入れるべき年、慎重に動く年
-・どの年に大きな決断（転職・引越・結婚など）をするのが良いか
-・2028年に向けての準備として今何をすべきか
-
-年ごとに整理して、わかりやすく教えてください。`;
-}
 
 // ============================================================
 // UI操作
 // ============================================================
-function togglePrompt(card,id){
-  const body=document.getElementById(id);
-  const arrow=card.querySelector('.prompt-arrow');
-  const isOpen=body.classList.contains('open');
-  // 全部閉じる
-  document.querySelectorAll('.prompt-body').forEach(b=>b.classList.remove('open'));
-  document.querySelectorAll('.prompt-arrow').forEach(a=>a.textContent='›');
-  // 今開いてたなら閉じて終了、閉じてたなら開く
-  if(!isOpen){body.classList.add('open');arrow.textContent='˅';}
-}
-
 function copyStarInfo(){
   const text=gInfo.starText||document.getElementById('starInfoText').textContent;
   navigator.clipboard.writeText(text).then(()=>flashBtn('copy-btn','✅ コピーしました','📋 星情報だけをコピー（単体使用）'));
-}
-
-function copyPrompt(id,e){
-  e.stopPropagation();
-  const text=document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=e.target;
-    const orig=btn.textContent;
-    btn.textContent='✅ コピーしました！';
-    setTimeout(()=>{btn.textContent=orig;},2000);
-  });
-}
-
-function sharePrompt(id,e){
-  e.stopPropagation();
-  const text=document.getElementById(id).textContent;
-  const btn=e.target;
-  const orig=btn.textContent;
-  navigator.clipboard.writeText(text).catch(()=>{});
-  if(navigator.share){
-    navigator.share({
-      title:'KITOKU AIプロンプト',
-      text:text
-    }).then(()=>{
-      btn.textContent='✅ 送信しました';
-      setTimeout(()=>{btn.textContent=orig;},2000);
-    }).catch(()=>{
-      btn.textContent='📋 コピー済み';
-      setTimeout(()=>{btn.textContent=orig;},2000);
-    });
-  }else{
-    btn.textContent='📋 コピーしました';
-    alert('相談材料をコピーしました。\n普段使っているAIに貼るか、音声入力で話し足して使ってください。');
-    setTimeout(()=>{btn.textContent=orig;},2000);
-  }
-}
-
-function setupShareButtons(){
-  document.querySelectorAll('.prompt-body').forEach(body=>{
-    const textEl=body.querySelector('.prompt-text');
-    const copyBtn=body.querySelector('.prompt-copy-btn');
-    if(!textEl||!copyBtn||body.querySelector('.prompt-share-btn')) return;
-    const id=textEl.id;
-    const shareBtn=document.createElement('button');
-    shareBtn.className='prompt-share-btn';
-    shareBtn.textContent='📤 相談材料を共有';
-    shareBtn.onclick=function(e){sharePrompt(id,e);};
-    const note=document.createElement('div');
-    note.className='prompt-use-note';
-    note.textContent='スマホでは共有先にChatGPTなどを選べます。対応しない場合はコピーして使ってください。';
-    copyBtn.insertAdjacentElement('afterend',shareBtn);
-    shareBtn.insertAdjacentElement('afterend',note);
-  });
 }
 
 function flashBtn(cls,msg,orig){
@@ -1032,7 +469,6 @@ function flashBtn(cls,msg,orig){
 // 初期化
 // ============================================================
 window.addEventListener('DOMContentLoaded',()=>{
-  setupShareButtons();
   const b=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
   if(!b)return;
   const arr=b.split('-').map(Number);
@@ -1046,7 +482,6 @@ window.addEventListener('DOMContentLoaded',()=>{
   gInfo=info;
 
   document.getElementById('starInfoText').textContent=info.starText;
-  buildPrompts(info);
 });
 
 function setTheme(t){
@@ -1091,41 +526,8 @@ function initAiTreeLevels(){
   });
 }
 
-function initAiPromptAccordions(){
-  document.querySelectorAll('.cat.ai-collapsible .cat-label').forEach(label=>{
-    if(label.dataset.aiAccordionReady === '1') return;
-    label.dataset.aiAccordionReady = '1';
-    label.setAttribute('role','button');
-    label.setAttribute('tabindex','0');
-    const toggle = () => {
-      const cat = label.closest('.cat.ai-collapsible');
-      if(cat) cat.classList.toggle('open');
-    };
-    label.addEventListener('click', toggle);
-    label.addEventListener('keydown', ev => {
-      if(ev.key === 'Enter' || ev.key === ' '){
-        ev.preventDefault();
-        toggle();
-      }
-    });
-  });
-}
-function jumpAiPrompt(title){
-  const titles = Array.from(document.querySelectorAll('.prompt-title'));
-  const targetTitle = titles.find(el => (el.textContent || '').includes(title));
-  if(!targetTitle) return;
-  const card = targetTitle.closest('.prompt-card');
-  const cat = targetTitle.closest('.cat.ai-collapsible');
-  if(cat) cat.classList.add('open');
-  if(card){
-    card.scrollIntoView({behavior:'smooth', block:'center'});
-    card.classList.add('prompt-focus');
-    setTimeout(()=>card.classList.remove('prompt-focus'), 1400);
-  }
-}
 document.addEventListener('DOMContentLoaded', function(){
   initAiTreeLevels();
-  initAiPromptAccordions();
 });
 </script>
 
