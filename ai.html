@@ -39,8 +39,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-tree-kicker{font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:900;margin-bottom:5px;}
 .ai-tree-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
 .ai-tree-text{font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:11px;}
-.ai-tree-levels{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;}
-.ai-tree-level{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(72,142,94,.22);background:rgba(72,142,94,.08);color:#2f7d4c;border-radius:999px;padding:5px 8px;font-size:.56rem;font-weight:900;line-height:1.35;}
+.ai-tree-levels{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px;}
+.ai-tree-level{appearance:none;font-family:inherit;display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(72,142,94,.22);background:rgba(72,142,94,.08);color:#2f7d4c;border-radius:999px;padding:5px 8px;font-size:.56rem;font-weight:900;line-height:1.35;cursor:pointer;}
+.ai-tree-level.active{background:#2f7d4c;color:#fff;border-color:#2f7d4c;}
+.ai-tree-level-detail{display:none;margin:0 0 10px;padding:9px 10px;border:1px solid rgba(72,142,94,.22);background:rgba(72,142,94,.06);border-radius:10px;font-size:.61rem;color:var(--mist);line-height:1.75;}
+.ai-tree-level-detail.active{display:block;}
+.ai-tree-level-detail strong{display:block;color:var(--goldlt);font-size:.67rem;margin-bottom:2px;}
 .ai-tree-root{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;background:linear-gradient(135deg,rgba(72,142,94,.12),rgba(255,255,255,.72));border:1px solid rgba(72,142,94,.28);border-radius:12px;padding:11px 12px;text-decoration:none;color:inherit;}
 .ai-tree-root-mark{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(72,142,94,.13);border:1px solid rgba(72,142,94,.28);color:#2f7d4c;font-size:.78rem;font-weight:900;}
 .ai-tree-root-title{display:block;font-size:.76rem;color:var(--snow);font-weight:900;line-height:1.45;}
@@ -104,6 +108,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="dark"] .ai-tree-root,[data-theme="dark"] .ai-tree-branch{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.18);}
 [data-theme="dark"] .ai-tree-chip{background:rgba(255,255,255,.045);border-color:rgba(196,160,67,.2);}
 [data-theme="dark"] .ai-tree-level{background:rgba(72,142,94,.12);border-color:rgba(120,190,140,.24);}
+[data-theme="dark"] .ai-tree-level.active{background:#4f9b67;color:#fff;border-color:#4f9b67;}
+[data-theme="dark"] .ai-tree-level-detail{background:rgba(72,142,94,.08);border-color:rgba(120,190,140,.22);}
 [data-theme="dark"] .ai-recommend-panel{background:linear-gradient(135deg,rgba(63,120,168,.16),rgba(18,21,42,.96));border-color:rgba(131,183,230,.35);}
 [data-theme="dark"] .ai-recommend-card{background:rgba(255,255,255,.055);border-color:rgba(131,183,230,.26);}
 [data-theme="dark"] .cat.ai-collapsible .cat-label::after{background:rgba(18,21,42,.82);}
@@ -306,11 +312,14 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="ai-tree-text">
     どの相談でも、まずは自分の星情報から。慣れてきたら、目的に合わせて材料を足していきます。
   </div>
-  <div class="ai-tree-levels">
-    <span class="ai-tree-level">初級：1つのチャット</span>
-    <span class="ai-tree-level">中級：テーマ別</span>
-    <span class="ai-tree-level">上級：知恵の蔵</span>
+  <div class="ai-tree-levels" aria-label="AI活用レベル">
+    <button class="ai-tree-level active" type="button" data-ai-level="basic">初級：1つのチャット</button>
+    <button class="ai-tree-level" type="button" data-ai-level="middle">中級：テーマ別</button>
+    <button class="ai-tree-level" type="button" data-ai-level="advanced">上級：知恵の蔵</button>
   </div>
+  <div class="ai-tree-level-detail active" data-ai-level-detail="basic"><strong>まずは1つのチャットで十分です</strong>星情報と今日の方位盤を同じチャットに貼り、「今日どう整える？」と聞くだけで始められます。</div>
+  <div class="ai-tree-level-detail" data-ai-level-detail="middle"><strong>慣れたらテーマごとに分けます</strong>服・体調と食事・仕事と商談・人間関係など、相談内容ごとにチャットを分けると答えが具体的になります。</div>
+  <div class="ai-tree-level-detail" data-ai-level-detail="advanced"><strong>上級者は知恵の蔵として蓄積します</strong>Project、Gem、NotebookLM、Obsidianなどに、星情報・診断結果・日々の記録を少しずつ貯めていきます。</div>
   <a class="ai-tree-root" href="#starMaterial">
     <span class="ai-tree-root-mark">星</span>
     <span><span class="ai-tree-root-title">共通の土台：自分の星情報</span><span class="ai-tree-root-desc">最初に一度貼る、すべての相談の出発点です</span></span>
@@ -1068,6 +1077,20 @@ function closeSettings(){const p=document.getElementById('settingPanel');if(p)p.
 </script>
 
 <script>
+function initAiTreeLevels(){
+  const buttons = Array.from(document.querySelectorAll('[data-ai-level]'));
+  const details = Array.from(document.querySelectorAll('[data-ai-level-detail]'));
+  buttons.forEach(btn => {
+    if(btn.dataset.aiLevelReady === '1') return;
+    btn.dataset.aiLevelReady = '1';
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.aiLevel;
+      buttons.forEach(b => b.classList.toggle('active', b === btn));
+      details.forEach(d => d.classList.toggle('active', d.dataset.aiLevelDetail === key));
+    });
+  });
+}
+
 function initAiPromptAccordions(){
   document.querySelectorAll('.cat.ai-collapsible .cat-label').forEach(label=>{
     if(label.dataset.aiAccordionReady === '1') return;
@@ -1100,7 +1123,10 @@ function jumpAiPrompt(title){
     setTimeout(()=>card.classList.remove('prompt-focus'), 1400);
   }
 }
-document.addEventListener('DOMContentLoaded', initAiPromptAccordions);
+document.addEventListener('DOMContentLoaded', function(){
+  initAiTreeLevels();
+  initAiPromptAccordions();
+});
 </script>
 
 <script src="kitoku-badge.js?v=20260731sekki"></script>
