@@ -52,6 +52,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .color-scene-tab{border:1px solid var(--rim);background:transparent;border-radius:20px;padding:6px 12px;font-size:.68rem;color:var(--mist);cursor:pointer;font-family:'Noto Serif JP',serif;transition:all .2s;}
 .color-scene-tab.active{background:var(--gold);border-color:var(--gold);color:#fff;}
 .color-scene-tab:active{transform:scale(.97);}
+.personal-color-panel{background:rgba(40,140,90,.045);border:1px solid rgba(40,140,90,.18);border-radius:9px;padding:9px 10px;margin-bottom:9px;}
+.personal-color-title{font-size:.58rem;letter-spacing:.12em;color:#3f8d66;font-weight:800;margin-bottom:5px;}
+.personal-color-text{font-size:.66rem;color:var(--mist);line-height:1.8;}
+.personal-color-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.personal-color-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(196,160,67,.26);background:rgba(255,255,255,.5);border-radius:999px;padding:4px 8px;font-size:.58rem;color:var(--goldlt);font-weight:700;}
+.personal-color-dot{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);}
 
 /* ③ 香り */
 .scene-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
@@ -182,6 +188,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="section">
     <div class="sec-label">✦ 今日の色</div>
     <div class="card">
+      <div class="personal-color-panel" id="personalColorPanel" style="display:none;">
+        <div class="personal-color-title">✦ あなたの相性の良い色</div>
+        <div class="personal-color-text" id="personalColorText">—</div>
+        <div class="personal-color-chips" id="personalColorChips"></div>
+      </div>
       <div id="colorPrescReason" style="font-size:.62rem;color:var(--gold,#c4a043);background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:7px;padding:7px 10px;margin-bottom:10px;line-height:1.7;">—</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:8px;">シーンを選ぶと、色の使い方が変わります</div>
       <div class="color-scene-tabs">
@@ -434,16 +445,38 @@ const KO_GOGYO={'水':'木','木':'火','火':'土','土':'金','金':'水'};
 function sojoSet_t(star){const g=GOGYO_OF_STAR[star];const s=new Set();(STARS_OF_GOGYO[g]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[OYA_GOGYO[g]]||[]).forEach(x=>s.add(x));(STARS_OF_GOGYO[KO_GOGYO[g]]||[]).forEach(x=>s.add(x));return s;}
 function getSaidaiKichi_t(h,t){if(!h)return[];if(!t)t=h;const sh=sojoSet_t(h),st=sojoSet_t(t);const c=[...sh].filter(s=>st.has(s));return c.filter(s=>s!==h&&s!==t).filter(s=>s!==5).sort((a,b)=>a-b);}
 
-// 今日の処方星（本命星・月命星・日盤中宮をつなぐ補助星）
-function getTodayPrescStar(honmei, tsukimei, dayStar){
-  const bridgeWithHonmei=getSaidaiKichi_t(honmei, dayStar);
-  const bridgeWithTsukimei=(tsukimei&&tsukimei!==honmei)
-    ? getSaidaiKichi_t(tsukimei, dayStar)
-    : bridgeWithHonmei;
-  const common=bridgeWithHonmei.filter(s=>bridgeWithTsukimei.includes(s));
-  if(common.length>0) return common[0];
-  if(bridgeWithHonmei.length>0) return bridgeWithHonmei[0];
-  if(bridgeWithTsukimei.length>0) return bridgeWithTsukimei[0];
+function getPersonalColorPalette(honmei, tsukimei){
+  const palette=new Set([...sojoSet_t(honmei),...sojoSet_t(tsukimei||honmei)]);
+  palette.delete(honmei);
+  palette.delete(tsukimei);
+  palette.delete(5);
+  return [...palette].sort((a,b)=>a-b);
+}
+
+function getTodayPrescCandidates(honmei, tsukimei, dayStar){
+  const sh=sojoSet_t(honmei);
+  const st=sojoSet_t(tsukimei||honmei);
+  const sd=sojoSet_t(dayStar);
+  const bridgeH=[...sh].filter(s=>sd.has(s));
+  const bridgeT=[...st].filter(s=>sd.has(s));
+  const union=new Set([...bridgeH,...bridgeT]);
+  union.delete(honmei);
+  union.delete(tsukimei);
+  union.delete(dayStar);
+  union.delete(5);
+  return [...union].sort((a,b)=>a-b);
+}
+
+// 今日の処方星（相性の良い色パレットから、日盤中宮と響く星を選ぶ）
+function getTodayPrescStar(honmei, tsukimei, dayStar, y, m, d){
+  const candidates=getTodayPrescCandidates(honmei,tsukimei,dayStar);
+  if(candidates.length>0){
+    const dk=(y&&m&&d)?getDayKanshi(y,m,d):null;
+    const stem=dk?KAN.indexOf(dk.kan):0;
+    const branch=dk?SHI.indexOf(dk.shi):0;
+    const idx=((stem*2)+branch+dayStar)%candidates.length;
+    return candidates[idx];
+  }
   return dayStar;
 }
 
@@ -462,9 +495,9 @@ function getGogyoBridgeExplain(honmei, tsukimei, dayStar, prescStar){
   const gPresc=GOGYO_OF_STAR[prescStar];
   if(!gDay||!gPresc) return '';
 
-  const honBridge=getSaidaiKichi_t(honmei,dayStar).includes(prescStar);
+  const honBridge=sojoSet_t(honmei).has(prescStar)&&sojoSet_t(dayStar).has(prescStar);
   const tsukiBridge=(tsukimei&&tsukimei!==honmei)
-    ? getSaidaiKichi_t(tsukimei,dayStar).includes(prescStar)
+    ? sojoSet_t(tsukimei).has(prescStar)&&sojoSet_t(dayStar).has(prescStar)
     : honBridge;
   const baseGogyo=(tsukiBridge&&!honBridge&&gTsuki)?gTsuki:gHon;
   const first=getGogyoLinkText(baseGogyo,gPresc,false);
@@ -577,7 +610,7 @@ function init(){
 
   // 日盤中宮星と選択日の処方星を計算
   const dayStar=getDayCenterT(ty,tm,td);
-  const prescStar=getTodayPrescStar(h,tFK,dayStar);
+  const prescStar=getTodayPrescStar(h,tFK,dayStar,ty,tm,td);
   gStar.dayStar=dayStar;
   gStar.prescStar=prescStar;
 
@@ -609,6 +642,7 @@ function init(){
   }
   // 各セクション描画（処方星ベース）
   drawKotoba(dks.kan,dks.shi,h,ty,tm,td);
+  drawPersonalColorPalette();
   drawColor(prescStar);
   drawKeyword(prescStar,tFK);
   // 初期シーン（朝の準備）の香りを自動表示
@@ -697,6 +731,27 @@ function buildColorSceneGuide(s){
   return guides[curColorScene]||guides['朝の準備'];
 }
 
+function renderStarChip(star){
+  const s=STAR_DATA[star]||{};
+  const color=(s.colors&&s.colors[0])||'#c4a043';
+  return `<span class="personal-color-chip"><span class="personal-color-dot" style="background:${color};"></span>${s.j||star}</span>`;
+}
+
+function drawPersonalColorPalette(){
+  const panel=document.getElementById('personalColorPanel');
+  const text=document.getElementById('personalColorText');
+  const chips=document.getElementById('personalColorChips');
+  if(!panel||!text||!chips) return;
+  const palette=getPersonalColorPalette(gStar.honmei,gStar.tsukimei);
+  if(!palette.length){panel.style.display='none';return;}
+  const honS=STAR_DATA[gStar.honmei]||{};
+  const tsukiS=STAR_DATA[gStar.tsukimei]||{};
+  const names=palette.map(star=>(STAR_DATA[star]||{}).j||star).join('・');
+  text.textContent=`${names}です。本命${honS.j||''}・月命${tsukiS.j||''}から導かれる、あなた固有の色の系統です。`;
+  chips.innerHTML=palette.map(renderStarChip).join('');
+  panel.style.display='block';
+}
+
 function drawColor(prescStar){
   const s=STAR_DATA[prescStar]||{};
   const cols=s.colors||['#888'];
@@ -710,9 +765,9 @@ function drawColor(prescStar){
     const bridgeExplain=getGogyoBridgeExplain(gStar.honmei,gStar.tsukimei,gStar.dayStar,prescStar);
     const bridgeText=bridgeExplain?bridgeExplain+' ':'';
     if(gStar.dayStar===prescStar){
-      reasonEl.textContent=`${label}は${dayS.j}の日。あなた（${honS.j}）と${label}の気をつなぐ補助星として、${s.colorName}を使います。${bridgeText}`;
+      reasonEl.textContent=`その中でも、${label}は${dayS.j}の色「${s.colorName}」が、気の流れと響き合います。${bridgeText}`;
     } else {
-      reasonEl.textContent=`あなた（${honS.j}）× ${label}（${dayS.j}）をつなぐ処方星は${s.j}。${bridgeText}その色「${s.colorName}」で、${label}の不足をやさしく補います。`;
+      reasonEl.textContent=`その中でも、${label}は${s.j}の色「${s.colorName}」が、気の流れと響き合います。あなた（${honS.j}）× ${label}（${dayS.j}）をつなぐ処方星です。${bridgeText}`;
     }
   }
   // スウォッチ（グラデーション）
