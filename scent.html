@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>香りをAIで深める | KITOKU</title>
+<title>香り・色彩AI | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -211,8 +211,8 @@ textarea{min-height:86px;resize:vertical;}
 
 <div class="hero">
   <div class="hero-box">
-    <div class="eyebrow" id="consultEyebrow">SCENT AI MATERIAL</div>
-    <div class="title" id="consultTitle">香りをAIで深める</div>
+    <div class="eyebrow" id="consultEyebrow">SCENT & COLOR AI MATERIAL</div>
+    <div class="title" id="consultTitle">香り・色彩AI</div>
     <div class="lead" id="consultLead">人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>を整理し、AIに渡せる相談材料を作ります。最初は同じチャットに貼るだけで、自分専用の香りAIが育ちます。</div>
     <div class="triad">
       <div class="pill"><b>High</b><span>香水<br>勝負</span></div>
@@ -450,22 +450,22 @@ function applyConsultFocus(){
   const isColor=consultFocus==='color';
   const data=isColor
     ? {
-        eyebrow:'COLOR AI MATERIAL',
-        title:'色をAIで深める',
+        eyebrow:'SCENT & COLOR AI MATERIAL',
+        title:'香り・色彩AI',
         lead:'人気や流行色だけではなく、<strong>自分の星・会う相手・場面・身につける場所</strong>を整理し、AIに渡せる相談材料を作ります。最初は同じチャットに貼るだけで、自分専用の色AIが育ちます。',
         selfTitle:'自分の色を選ぶ',
         selfDesc:'九星・気分・シーンから、今日使う色と差し色を提案',
         footer:'KITOKU ENGINE — 色の相談材料<br>服・名刺・小物で、自分専用AIを育てる'
       }
     : {
-        eyebrow:'SCENT AI MATERIAL',
-        title:'香りをAIで深める',
+        eyebrow:'SCENT & COLOR AI MATERIAL',
+        title:'香り・色彩AI',
         lead:'人気やランキングだけではなく、<strong>自分の星・会う相手・場面・手持ちの香り</strong>を整理し、AIに渡せる相談材料を作ります。最初は同じチャットに貼るだけで、自分専用の香りAIが育ちます。',
         selfTitle:'自分の香りを選ぶ',
         selfDesc:'九星・気分・シーンから、High/Mid/Lowで香りを提案',
         footer:'KITOKU ENGINE — 香りの相談材料<br>High / Mid / Lowで、自分専用AIを育てる'
       };
-  document.title=`${data.title} | KITOKU`;
+  document.title='香り・色彩AI | KITOKU';
   document.getElementById('consultEyebrow').textContent=data.eyebrow;
   document.getElementById('consultTitle').textContent=data.title;
   document.getElementById('consultLead').innerHTML=data.lead;
