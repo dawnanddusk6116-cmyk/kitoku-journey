@@ -72,6 +72,7 @@ function computeAstro64(input) {
       number: gate.number,
       line: gate.line,
       archetype: word.name,
+      gogyo: word.gogyo || '',
       theme: word.theme,
       light: word.light,
       shadow: word.shadow

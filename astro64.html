@@ -73,12 +73,19 @@ button{width:100%;border:1px solid rgba(138,104,32,.45);border-radius:9px;backgr
 .mini-diagnosis-label{font-size:.6rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:2px;}
 .mini-diagnosis-main{font-size:.9rem;color:var(--goldlt);font-weight:800;line-height:1.55;}
 .mini-diagnosis-text{font-size:.68rem;color:var(--mist);line-height:1.75;margin-top:4px;}
+.astro-overlay{border:1px solid rgba(72,142,94,.24);border-radius:10px;background:linear-gradient(135deg,rgba(72,142,94,.08),rgba(255,255,255,.58));padding:9px 10px;margin-top:8px;font-size:.64rem;color:var(--mist);line-height:1.75;}
+.astro-overlay strong{color:#2f7d4c;}
+.astro-overlay-lines{display:grid;gap:4px;margin-top:5px;}
+.astro-overlay-line{display:block;}
 .detail-title{font-size:.66rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin:4px 0 2px;}
 .row{border:1px solid var(--rim);border-radius:10px;padding:10px;background:rgba(100,80,40,.025);}
 .row-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
 .planet{font-size:.82rem;color:var(--goldlt);font-weight:700;}
 .code{font-size:.76rem;color:var(--accent);font-weight:700;}
 .arch{font-size:.9rem;color:var(--snow);font-weight:700;margin-top:3px;}
+.row-gogyo{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(196,160,67,.32);background:rgba(196,160,67,.08);border-radius:999px;padding:1px 7px;font-size:.58rem;color:var(--goldlt);font-weight:800;margin-left:6px;vertical-align:middle;}
+.row-compare{margin-top:7px;border-top:1px solid rgba(100,80,40,.1);padding-top:7px;font-size:.64rem;color:var(--mist);line-height:1.75;}
+.row-compare strong{color:var(--goldlt);}
 .role,.theme{font-size:.68rem;color:var(--mist);}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
 .mini{font-size:.64rem;background:rgba(255,255,255,.55);border:1px solid rgba(100,80,40,.1);border-radius:8px;padding:7px;color:var(--mist);}
@@ -132,6 +139,16 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   background:rgba(126,98,180,.14);
   border-color:rgba(126,98,180,.28);
   color:rgba(232,238,255,.74);
+}
+[data-theme="dark"] .astro-overlay{
+  background:linear-gradient(135deg,rgba(72,142,94,.14),rgba(18,21,42,.9));
+  border-color:rgba(72,142,94,.3);
+  color:rgba(232,238,255,.72);
+}
+[data-theme="dark"] .astro-overlay strong{color:#8bd1a2;}
+[data-theme="dark"] .row-compare{
+  border-top-color:rgba(212,175,55,.16);
+  color:rgba(232,238,255,.68);
 }
 [data-theme="dark"] .mini-diagnosis-head{
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));
@@ -208,12 +225,27 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <div class="flow-step"><div class="flow-num">3</div><div>もっと深く知りたい時だけ、相談材料や気学先生を使って深掘りできます。</div></div>
   </div>
   <div class="ai-link-row">
-    <a class="ai-link" href="#birthDataSection">診断する場所へ</a>
-    <a class="ai-link" href="#promptDetails">深く相談する</a>
+    <a class="ai-link" href="#birthDataSection" onclick="openFold('birthDataSection')">診断する場所へ</a>
+    <a class="ai-link" href="#promptDetails" onclick="openFold('promptDetails')">深く相談する</a>
   </div>
 </div>
 
-<section class="section" id="birthDataSection">
+<details class="section fold-section" id="resultDetails" open>
+  <summary><span class="fold-icon">星</span><span><span class="fold-title">気学と重ねたミニ診断</span><span class="fold-sub">太陽・月・金星と本命星・月命星を重ねて確認できます</span></span></summary>
+  <div class="fold-body">
+    <div class="plain-guide">
+      <strong>保存済みの生年月日があれば、自動で表示します。</strong><br>
+      西洋の64元型は、あなたの本命星・月命星を補助する鏡として使います。詳しい設定や相談材料は、必要な時だけ開いてください。
+    </div>
+    <div id="results" class="results">
+      <div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>
+    </div>
+  </div>
+</details>
+
+<details class="section fold-section" id="birthDataSection" open>
+  <summary><span class="fold-icon">設</span><span><span class="fold-title">詳しく設定する</span><span class="fold-sub">時刻・出生地メモ・64分割オフセットを調整できます</span></span></summary>
+  <div class="fold-body">
   <div class="label">BIRTH DATA</div>
   <div class="grid">
     <div class="field"><label>年</label><input id="year" type="number" placeholder="例：1990"></div>
@@ -230,7 +262,8 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <div class="hint">結果照合用の調整値です。後でサンプルと合わせながら検証します。</div>
   </div>
   <button onclick="runAstro64(true)">診断する</button>
-</section>
+  </div>
+</details>
 
 <details class="section fold-section" id="kitokuDataDetails">
   <summary><span class="fold-icon">九</span><span><span class="fold-title">KITOKU星情報</span><span class="fold-sub">本命星・月命星・傾斜・同会・納音を確認できます</span></span></summary>
@@ -247,19 +280,6 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   <div class="print-astro-title">西洋占星術 × 気学 — 星読み相談文</div>
   <div class="print-astro-body" id="printAstroBody"></div>
 </div>
-<details class="section fold-section" id="resultDetails">
-  <summary><span class="fold-icon">星</span><span><span class="fold-title">診断結果を見る</span><span class="fold-sub">太陽・月・金星から、自分の傾向を確認できます</span></span></summary>
-  <div class="fold-body">
-    <div class="plain-guide">
-      <strong>まずはここだけ読めば大丈夫です。</strong><br>
-      太陽・月・金星などから、自分の傾向を短くまとめます。詳しい計算結果と相談材料は、必要な時だけ開いてください。
-    </div>
-    <div id="results" class="results">
-      <div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>
-    </div>
-  </div>
-</details>
-
 <details class="section fold-section" id="promptDetails">
   <summary><span class="fold-icon">AI</span><span><span class="fold-title">もっと深く知りたい方へ</span><span class="fold-sub">相談材料をコピーできます</span></span></summary>
   <div class="fold-body">
@@ -337,6 +357,8 @@ const ASTRO_STARS={
   1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',
   6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'
 };
+const ASTRO_GOGYO_OF_STAR={1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+const ASTRO_SOKOKU_GOGYO={木:'土',土:'水',水:'火',火:'金',金:'木'};
 const ASTRO_KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ASTRO_SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 const ASTRO_NT=[
@@ -384,7 +406,7 @@ function astroNayinDay(year,month,day,hour){
   const i=n-1;
   return{n:ASTRO_NT[Math.floor(i/2)],ks:ASTRO_KAN[i%10]+ASTRO_SHI[i%12]};
 }
-function buildKitokuOsText(input){
+function getKitokuCore(input){
   const {kY,kM}=astroGetKD(input.year,input.month,input.day);
   const honmei=astroHonmei(kY);
   const tsukimei=astroTsukimei(honmei,kM);
@@ -398,23 +420,51 @@ function buildKitokuOsText(input){
   const monthN=astroNayinMonth(input.year,input.month,input.day);
   const dayN=astroNayinDay(input.year,input.month,input.day,input.hour);
   const seriesKey=[3,6,9].includes(honmei)?'ten':[2,5,8].includes(honmei)?'chi':'jin';
-  const seriesInfo=ASTRO_SERIES[seriesKey];
-  const keishaTheme=ASTRO_KEISHA_THEME[keisha]||'';
-  const bugText=ASTRO_BUG[honmei]||'';
-  return `私は${ASTRO_STARS[honmei]}・月命${ASTRO_STARS[tsukimei]}・傾斜${ASTRO_STARS[keisha]}・同会${ASTRO_STARS[dokai]}・納音 ${yearN.n}（年） ${monthN.n}（月） ${dayN.n}（日）です。`
+  return {
+    kY,kM,honmei,tsukimei,tsukimeiForCalc,keisha,dokai,
+    yearN,monthN,dayN,seriesKey,seriesInfo:ASTRO_SERIES[seriesKey],
+    honmeiGogyo:ASTRO_GOGYO_OF_STAR[honmei],
+    tsukimeiGogyo:ASTRO_GOGYO_OF_STAR[tsukimei],
+    keishaTheme:ASTRO_KEISHA_THEME[keisha]||'',
+    bugText:ASTRO_BUG[honmei]||''
+  };
+}
+
+function buildKitokuOsText(input){
+  const core=getKitokuCore(input);
+  return `私は${ASTRO_STARS[core.honmei]}・月命${ASTRO_STARS[core.tsukimei]}・傾斜${ASTRO_STARS[core.keisha]}・同会${ASTRO_STARS[core.dokai]}・納音 ${core.yearN.n}（年） ${core.monthN.n}（月） ${core.dayN.n}（日）です。`
     +`
-道軌：${seriesInfo.label}（線路の日：${seriesInfo.senro}）`
+道軌：${core.seriesInfo.label}（線路の日：${core.seriesInfo.senro}）`
     +`
-傾斜の潜在能力：${keishaTheme}`
+傾斜の潜在能力：${core.keishaTheme}`
     +`
-機体のバグ：${bugText}`;
+機体のバグ：${core.bugText}`;
+}
+
+function compareGogyo(kitokuGogyo, astroGogyo){
+  if(!kitokuGogyo || !astroGogyo)return '補助的に働いています';
+  if(kitokuGogyo===astroGogyo)return '同じ方向を指しています';
+  if(ASTRO_SOKOKU_GOGYO[kitokuGogyo]===astroGogyo || ASTRO_SOKOKU_GOGYO[astroGogyo]===kitokuGogyo){
+    return '少し違う角度から見えています（緊張と学びのある組み合わせ）';
+  }
+  return '補助的に働いています';
+}
+
+function getAstroKitokuOverlay(row, core){
+  const astroGogyo=row.gogyo||'';
+  const honText=compareGogyo(core.honmeiGogyo,astroGogyo);
+  const tsukiText=compareGogyo(core.tsukimeiGogyo,astroGogyo);
+  return {
+    hon:`本命${ASTRO_STARS[core.honmei]}（${core.honmeiGogyo}）とは、${honText}`,
+    tsuki:`月命${ASTRO_STARS[core.tsukimei]}（${core.tsukimeiGogyo}）とは、${tsukiText}`
+  };
 }
 
 function findAstroPlanet(rows, key){
   return rows.find(r=>String(r.planet||'').includes(key))||null;
 }
 
-function renderMiniDiagnosis(input, rows){
+function renderMiniDiagnosis(input, rows, core){
   const cards=[
     {label:'表に出る自分', key:'太陽', hint:'外に見せやすい自分、人生で育てていく中心です。'},
     {label:'安心する本音', key:'月', hint:'素の自分が落ち着く場所、無理をすると疲れやすい部分です。'},
@@ -426,10 +476,18 @@ function renderMiniDiagnosis(input, rows){
       return `<div class="mini-diagnosis-card"><div class="mini-diagnosis-label">${c.label}</div><div class="mini-diagnosis-main">${c.key}</div><div class="mini-diagnosis-text">${c.hint}</div></div>`;
     }
     const theme=r.theme?` ${r.theme}`:'';
+    const overlay=getAstroKitokuOverlay(r,core);
     return `<div class="mini-diagnosis-card">
       <div class="mini-diagnosis-label">${c.label}</div>
-      <div class="mini-diagnosis-main">${r.archetype}</div>
+      <div class="mini-diagnosis-main">${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></div>
       <div class="mini-diagnosis-text">${c.hint}<br>${theme}</div>
+      <div class="astro-overlay">
+        <strong>気学と重ねる</strong>
+        <span class="astro-overlay-lines">
+          <span class="astro-overlay-line">→ ${overlay.hon}</span>
+          <span class="astro-overlay-line">→ ${overlay.tsuki}</span>
+        </span>
+      </div>
     </div>`;
   }).join('');
   return `<div class="mini-diagnosis">
@@ -463,23 +521,32 @@ function runAstro64(updateKitoku=true,openResult=true){
     const note=document.getElementById('kitokuAutoNote');
     if(note)note.textContent='このKITOKU星情報は、生年月日から自動入力されています。必要なら後から書き足せます。';
   }
+  const core=getKitokuCore(input);
   const rows=computeAstro64(input);
-  const detailHtml=rows.map((r)=>`
+  const detailHtml=rows.map((r)=>{
+    const overlay=getAstroKitokuOverlay(r,core);
+    return `
     <div class="row">
       <div class="row-head">
         <div class="planet">${r.planet}</div>
         <div class="code">${r.number}.${r.line} / ${formatDeg(r.longitude)}</div>
       </div>
-      <div class="arch">${r.archetype}</div>
+      <div class="arch">${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></div>
       <div class="role">${r.role}</div>
       <div class="theme">${r.theme}</div>
       <div class="pair">
         <div class="mini">光：${r.light}</div>
         <div class="mini">影：${r.shadow}</div>
       </div>
+      <div class="row-compare">
+        <strong>気学と重ねる</strong><br>
+        → ${overlay.hon}<br>
+        → ${overlay.tsuki}
+      </div>
     </div>
-  `).join('');
-  document.getElementById('results').innerHTML=renderMiniDiagnosis(input,rows)+detailHtml;
+  `;
+  }).join('');
+  document.getElementById('results').innerHTML=renderMiniDiagnosis(input,rows,core)+detailHtml;
   document.getElementById('prompt').value=buildAstroPrompt(input, rows);
   if(resultDetails&&openResult)resultDetails.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -501,6 +568,11 @@ function loadSavedBirthData(){
     if(Number.isFinite(minute))document.getElementById('minute').value=minute;
   }
   return true;
+}
+
+function openFold(id){
+  const el=document.getElementById(id);
+  if(el && typeof el.open==='boolean')el.open=true;
 }
 
 function copyPrompt(){
@@ -567,9 +639,15 @@ function setFontSize(s){
 })();
 
 const hasSavedBirth=loadSavedBirthData();
+const birthDataSection=document.getElementById('birthDataSection');
+const resultDetails=document.getElementById('resultDetails');
 if(hasSavedBirth){
+  if(birthDataSection)birthDataSection.open=false;
+  if(resultDetails)resultDetails.open=true;
   runAstro64(true,false);
 }else{
+  if(birthDataSection)birthDataSection.open=true;
+  if(resultDetails)resultDetails.open=true;
   document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>';
   document.getElementById('prompt').value='生年月日を入力して計算すると、相談材料がここに表示されます。';
 }
