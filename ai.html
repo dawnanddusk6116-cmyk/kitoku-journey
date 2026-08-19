@@ -25,8 +25,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-box{background:var(--card);border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:16px;box-shadow:0 8px 24px rgba(100,80,40,.04);}
 .lead-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.1em;color:var(--goldlt);margin-bottom:8px;}
 .lead-text{font-size:.75rem;color:var(--mist);line-height:2;}
-.lead-summary{margin-top:10px;padding:10px 11px;border-radius:10px;background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.5));border:1px solid rgba(196,160,67,.22);font-size:.67rem;color:var(--mist);line-height:1.9;}
-.lead-summary strong{color:var(--goldlt);}
 .lead-point{margin-top:12px;background:rgba(255,255,255,.58);border:1px solid rgba(196,160,67,.28);border-radius:10px;padding:12px;}
 .lead-point-title{font-size:.74rem;color:var(--goldlt);font-weight:900;margin-bottom:4px;}
 .lead-point-text{font-size:.66rem;color:var(--mist);line-height:1.85;}
@@ -35,6 +33,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .lead-step-num{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1rem;line-height:1;}
 .lead-step-text{font-size:.58rem;color:var(--mist);line-height:1.5;margin-top:3px;}
 .lead-step-note{margin-top:10px;background:linear-gradient(135deg,rgba(255,226,140,.28),rgba(255,255,255,.55));border:1px dashed rgba(184,128,20,.42);border-radius:9px;padding:9px 10px;font-size:.66rem;color:var(--goldlt);line-height:1.85;font-weight:700;}
+.ai-tree-steps{margin:10px 0 0;background:rgba(255,255,255,.56);border-color:rgba(72,142,94,.2);box-shadow:none;}
+.ai-tree-steps .lead-point-title{font-size:.7rem;}
+.ai-tree-steps .lead-point-text{font-size:.62rem;}
+.ai-tree-steps .lead-step{background:rgba(72,142,94,.045);border-color:rgba(72,142,94,.16);}
+.ai-tree-steps .lead-step-note{background:rgba(255,255,255,.48);border-color:rgba(196,160,67,.28);font-size:.62rem;font-weight:700;}
 .ai-tree-panel{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,250,240,.82));border:1px solid rgba(196,160,67,.3);border-radius:var(--r);padding:14px;box-shadow:0 10px 26px rgba(100,80,40,.045);}
 .ai-tree-kicker{font-size:.58rem;letter-spacing:.14em;color:var(--gold);font-weight:900;margin-bottom:5px;}
 .ai-tree-title{font-size:.92rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:4px;}
@@ -136,6 +139,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.045));
   border-color:rgba(196,160,67,.34);
 }
+[data-theme="dark"] .ai-tree-steps{
+  background:rgba(255,255,255,.045);
+  border-color:rgba(72,142,94,.28);
+}
 [data-theme="dark"] .lead-step,
 [data-theme="dark"] .target-preview{
   background:rgba(255,255,255,.055);
@@ -196,22 +203,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       KITOKUは、あなたの星情報・今日の方位盤・香り・色・相手の星を、AIに渡しやすい相談材料に整えます。<br>
       AIに答えを丸投げするのではなく、あなたの判断を助ける相棒として育てていくための入口です。
     </div>
-    <div class="lead-summary">
-      <strong>まずは、いつものAIチャットに貼るだけで大丈夫です。</strong><br>
-      同じチャットで相談を重ねるほど、服・体調・仕事・人間関係などを、あなたの前提に合わせて考えやすくなります。
-    </div>
-
-    <div class="lead-point">
-      <div class="lead-point-title">最初にやることは3つだけ</div>
-      <div class="lead-point-text">難しい設定は不要です。星情報を貼り、今日の材料を足し、最後に自分の状況をひと言添えて相談します。</div>
-      <div class="lead-steps">
-        <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">星情報を貼る</div></div>
-        <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">今日の材料を足す</div></div>
-        <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">希望を伝える</div></div>
-      </div>
-      <div class="lead-step-note">例：今日の商談に合う服、疲れている日の食事、相手に合わせた色や香りなど。音声入力でそのまま聞いても使えます。</div>
-    </div>
-
   </div>
 </div>
 
@@ -233,6 +224,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <span class="ai-tree-root-mark">星</span>
     <span><span class="ai-tree-root-title">共通の土台：自分の星情報</span><span class="ai-tree-root-desc">最初に一度貼る、すべての相談の出発点です</span></span>
   </a>
+  <div class="lead-point ai-tree-steps">
+    <div class="lead-point-title">最初にやることは3つだけ</div>
+    <div class="lead-point-text">難しい設定は不要です。星情報を貼り、今日の材料を足し、最後に自分の状況をひと言添えて相談します。</div>
+    <div class="lead-steps">
+      <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">星情報を貼る</div></div>
+      <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">今日の材料を足す</div></div>
+      <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">希望を伝える</div></div>
+    </div>
+    <div class="lead-step-note">例：今日の商談に合う服、疲れている日の食事、相手に合わせた色や香りなど。音声入力でそのまま聞いても使えます。</div>
+  </div>
   <div class="ai-tree-branches">
     <div class="ai-tree-branch">
       <a class="ai-tree-branch-head" href="direction_v2.html">
