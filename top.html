@@ -1159,7 +1159,7 @@ body{
   <span class="daily-compass-arrow">›</span>
 </a>
 
-<!-- 2026-08-17: 体験ベースの5ステップ。下の入口カードとは分け、押せない読み物として配置。 -->
+<!-- 2026-08-19: 体験ベースの4ステップ。AI活用は「今日を整える」と統合し、下の入口カードとは分けて配置。 -->
 <section class="experience-flow" aria-label="KITOKUでできること">
   <div class="experience-kicker">WHAT KITOKU GIVES YOU</div>
   <div class="experience-title">KITOKUでできること</div>
@@ -1171,10 +1171,9 @@ body{
       <button class="experience-start-btn" type="button" onclick="jumpStartGuide()" aria-label="初めての入口へ移動">›</button>
     </div>
     <div class="experience-step"><div class="experience-num">1</div><div class="experience-copy"><strong>自分を知る</strong><span>九星・姓名・納音から、強みや迷いやすい癖を知る。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('self')" aria-label="自分について知りたいへ移動">›</button></div>
-    <div class="experience-step"><div class="experience-num">2</div><div class="experience-copy"><strong>今日を整える</strong><span>方位盤・色・香り・食事で、今日の過ごし方を整える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('today')" aria-label="今日の自分を整えたいへ移動">›</button></div>
+    <div class="experience-step"><div class="experience-num">2</div><div class="experience-copy"><strong>今日を整える・AIで深める</strong><span>方位盤・色・香りで今日を整え、星情報をAIに渡して自分に合う選択肢を探す。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('today')" aria-label="今日の自分を整えたいへ移動">›</button></div>
     <div class="experience-step"><div class="experience-num">3</div><div class="experience-copy"><strong>人との関係を整える</strong><span>相手の星を見て、距離感・言葉・商談前の準備を考える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('relation')" aria-label="人間関係を整えたいへ移動">›</button></div>
-    <div class="experience-step"><div class="experience-num">4</div><div class="experience-copy"><strong>AIで深める</strong><span>星情報や方位盤をAIに渡し、自分に合う選択肢を探す。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('ai')" aria-label="自分専用のAIを育てたいへ移動">›</button></div>
-    <div class="experience-step"><div class="experience-num">5</div><div class="experience-copy"><strong>行動して運を開く</strong><span>吉方位・旅行・引越し・日取りを、実際の行動に変える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('action')" aria-label="行動に良い流れを取り入れたいへ移動">›</button></div>
+    <div class="experience-step"><div class="experience-num">4</div><div class="experience-copy"><strong>行動して運を開く</strong><span>吉方位・旅行・引越し・日取りを、実際の行動に変える。</span></div><button class="experience-jump" type="button" onclick="jumpPurposeGroup('action')" aria-label="行動に良い流れを取り入れたいへ移動">›</button></div>
   </div>
 </section>
 
@@ -1646,7 +1645,7 @@ function jumpStartGuide(){
 function jumpPurposeGroup(kind){
   const purpose=document.querySelector('.purpose-note');
   if(purpose)purpose.open=true;
-  const idMap={self:'purpose-self',today:'purpose-today',relation:'purpose-relation',action:'purpose-action',ai:'purpose-ai-link'};
+  const idMap={self:'purpose-self',today:'purpose-today',relation:'purpose-relation',action:'purpose-action'};
   const target=document.getElementById(idMap[kind]||'purpose-self');
   if(!target)return;
   focusGuideTarget(target);
