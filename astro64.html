@@ -68,6 +68,9 @@ button{width:100%;border:1px solid rgba(138,104,32,.45);border-radius:9px;backgr
 .mini-diagnosis{display:grid;gap:10px;}
 .mini-diagnosis-head{border:1px solid rgba(196,160,67,.28);border-radius:12px;background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(255,255,255,.72));padding:12px 13px;color:var(--mist);font-size:.72rem;line-height:1.85;}
 .mini-diagnosis-head strong{display:block;color:var(--goldlt);font-size:.86rem;margin-bottom:2px;}
+.reading-headline{border:1px solid rgba(72,142,94,.25);border-radius:12px;background:linear-gradient(135deg,rgba(72,142,94,.1),rgba(255,255,255,.72));padding:13px 14px;color:var(--mist);font-size:.74rem;line-height:1.9;}
+.reading-headline-label{font-size:.58rem;letter-spacing:.16em;color:#2f7d4c;font-weight:800;margin-bottom:3px;}
+.reading-headline strong{display:block;color:var(--goldlt);font-size:.92rem;line-height:1.65;margin-bottom:4px;}
 .mini-diagnosis-grid{display:grid;gap:8px;}
 .mini-diagnosis-card{border:1px solid var(--rim);border-radius:11px;background:rgba(100,80,40,.025);padding:11px;}
 .mini-diagnosis-label{font-size:.6rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:2px;}
@@ -78,6 +81,12 @@ button{width:100%;border:1px solid rgba(138,104,32,.45);border-radius:9px;backgr
 .astro-overlay-lines{display:grid;gap:4px;margin-top:5px;}
 .astro-overlay-line{display:block;}
 .detail-title{font-size:.66rem;color:var(--goldlt);font-weight:800;letter-spacing:.08em;margin:4px 0 2px;}
+.detail-fold{border:1px solid rgba(138,104,32,.18);border-radius:12px;background:rgba(255,255,255,.36);overflow:hidden;}
+.detail-fold summary{list-style:none;display:flex;align-items:center;gap:9px;cursor:pointer;padding:11px 12px;color:var(--goldlt);font-size:.72rem;font-weight:800;}
+.detail-fold summary::-webkit-details-marker{display:none;}
+.detail-fold summary::after{content:'開く';margin-left:auto;border:1px solid rgba(138,104,32,.22);border-radius:999px;padding:3px 8px;font-size:.56rem;font-weight:800;color:var(--goldlt);background:rgba(138,104,32,.06);}
+.detail-fold[open] summary::after{content:'閉じる';}
+.detail-fold-body{display:grid;gap:8px;padding:0 10px 10px;}
 .row{border:1px solid var(--rim);border-radius:10px;padding:10px;background:rgba(100,80,40,.025);}
 .row-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
 .planet{font-size:.82rem;color:var(--goldlt);font-weight:700;}
@@ -150,9 +159,15 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   border-top-color:rgba(212,175,55,.16);
   color:rgba(232,238,255,.68);
 }
-[data-theme="dark"] .mini-diagnosis-head{
+[data-theme="dark"] .mini-diagnosis-head,
+[data-theme="dark"] .reading-headline{
   background:linear-gradient(135deg,rgba(196,160,67,.12),rgba(18,21,42,.96));
   border-color:rgba(196,160,67,.28);
+}
+[data-theme="dark"] .reading-headline-label{color:#8bd1a2;}
+[data-theme="dark"] .detail-fold{
+  background:rgba(18,21,42,.72);
+  border-color:rgba(212,175,55,.2);
 }
 [data-theme="dark"] .copy{
   background:rgba(255,255,255,.045);
@@ -441,22 +456,55 @@ function buildKitokuOsText(input){
 機体のバグ：${core.bugText}`;
 }
 
+function compareGogyoType(kitokuGogyo, astroGogyo){
+  if(!kitokuGogyo || !astroGogyo)return 'support';
+  if(kitokuGogyo===astroGogyo)return 'same';
+  if(ASTRO_SOKOKU_GOGYO[kitokuGogyo]===astroGogyo || ASTRO_SOKOKU_GOGYO[astroGogyo]===kitokuGogyo)return 'tension';
+  return 'support';
+}
+
 function compareGogyo(kitokuGogyo, astroGogyo){
-  if(!kitokuGogyo || !astroGogyo)return '補助的に働いています';
-  if(kitokuGogyo===astroGogyo)return '同じ方向を指しています';
-  if(ASTRO_SOKOKU_GOGYO[kitokuGogyo]===astroGogyo || ASTRO_SOKOKU_GOGYO[astroGogyo]===kitokuGogyo){
-    return '少し違う角度から見えています（緊張と学びのある組み合わせ）';
-  }
-  return '補助的に働いています';
+  const type=compareGogyoType(kitokuGogyo,astroGogyo);
+  if(type==='same')return '同じ方向を指しています';
+  if(type==='tension')return '違う角度から、成長のきっかけをくれます';
+  return '補助的に働き、別の使い方を教えてくれます';
 }
 
 function getAstroKitokuOverlay(row, core){
   const astroGogyo=row.gogyo||'';
-  const honText=compareGogyo(core.honmeiGogyo,astroGogyo);
-  const tsukiText=compareGogyo(core.tsukimeiGogyo,astroGogyo);
+  const honType=compareGogyoType(core.honmeiGogyo,astroGogyo);
+  const tsukiType=compareGogyoType(core.tsukimeiGogyo,astroGogyo);
   return {
-    hon:`本命${ASTRO_STARS[core.honmei]}（${core.honmeiGogyo}）とは、${honText}`,
-    tsuki:`月命${ASTRO_STARS[core.tsukimei]}（${core.tsukimeiGogyo}）とは、${tsukiText}`
+    hon:`本命${ASTRO_STARS[core.honmei]}（${core.honmeiGogyo}）とは、${compareGogyo(core.honmeiGogyo,astroGogyo)}`,
+    tsuki:`月命${ASTRO_STARS[core.tsukimei]}（${core.tsukimeiGogyo}）とは、${compareGogyo(core.tsukimeiGogyo,astroGogyo)}`,
+    honType,tsukiType
+  };
+}
+
+function getGrowthParagraph(row, label, hint){
+  return `${label}が示す「${row.archetype}」は、${row.theme}です。${hint} ${row.light}ことを意識するとこの力は育ちますが、${row.shadow}時は、少し立ち止まって整え直す合図になります。`;
+}
+
+function buildHeadlineSummary(highlights, core){
+  const sameCount=highlights.filter(h=>h.overlay.honType==='same'||h.overlay.tsukiType==='same').length;
+  const tensionCount=highlights.filter(h=>h.overlay.honType==='tension'||h.overlay.tsukiType==='tension').length;
+  const names=highlights.map(h=>h.row.archetype).join('・');
+  const base=`本命${ASTRO_STARS[core.honmei]}（${core.honmeiGogyo}）と月命${ASTRO_STARS[core.tsukimei]}（${core.tsukimeiGogyo}）に、${names}が重なっています。`;
+  if(sameCount>=3){
+    return {
+      title:'持っている質を、まっすぐ伸ばしやすい配置です。',
+      body:`${base} 気学の土台と星読みの方向が重なる部分が多く、すでに持っている強みを素直に使うほど、自己理解が深まります。`
+    };
+  }
+  if(tensionCount>=3){
+    return {
+      title:'違う角度の力を取り込むことで、伸びしろが見えます。',
+      body:`${base} 少し違う方向から照らされる要素が多いため、違和感を消すより「まだ使っていない力」として扱うと、成長の道筋が見えやすくなります。`
+    };
+  }
+  return {
+    title:'自分の土台に、別の見方を重ねて整える配置です。',
+    body:`${base} 同じ方向に伸びる部分と、補助的に働く部分が混ざっています。気学を主軸にしながら、64元型を日常の言葉に翻訳して使うと、自分の扱い方が少し具体的になります。`
   };
 }
 
@@ -465,27 +513,32 @@ function findAstroPlanet(rows, key){
 }
 
 function renderMiniDiagnosis(input, rows, core){
-  const cards=[
+  const highlightDefs=[
     {label:'表に出る自分', key:'太陽', hint:'外に見せやすい自分、人生で育てていく中心です。'},
     {label:'安心する本音', key:'月', hint:'素の自分が落ち着く場所、無理をすると疲れやすい部分です。'},
     {label:'惹かれるもの', key:'金星', hint:'好きなもの、美意識、人との距離感に出やすい傾向です。'},
     {label:'動き方', key:'火星', hint:'やる気の出し方、勝負どころで力を出す方向です。'}
-  ].map(c=>{
-    const r=findAstroPlanet(rows,c.key);
-    if(!r){
+  ];
+  const highlights=highlightDefs.map(c=>{
+    const row=findAstroPlanet(rows,c.key);
+    return row ? {def:c,row,overlay:getAstroKitokuOverlay(row,core)} : null;
+  }).filter(Boolean);
+  const summary=buildHeadlineSummary(highlights,core);
+  const cards=highlightDefs.map(c=>{
+    const h=highlights.find(item=>item.def.key===c.key);
+    if(!h){
       return `<div class="mini-diagnosis-card"><div class="mini-diagnosis-label">${c.label}</div><div class="mini-diagnosis-main">${c.key}</div><div class="mini-diagnosis-text">${c.hint}</div></div>`;
     }
-    const theme=r.theme?` ${r.theme}`:'';
-    const overlay=getAstroKitokuOverlay(r,core);
+    const r=h.row;
     return `<div class="mini-diagnosis-card">
       <div class="mini-diagnosis-label">${c.label}</div>
       <div class="mini-diagnosis-main">${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></div>
-      <div class="mini-diagnosis-text">${c.hint}<br>${theme}</div>
+      <div class="mini-diagnosis-text">${getGrowthParagraph(r,c.label,c.hint)}</div>
       <div class="astro-overlay">
         <strong>気学と重ねる</strong>
         <span class="astro-overlay-lines">
-          <span class="astro-overlay-line">→ ${overlay.hon}</span>
-          <span class="astro-overlay-line">→ ${overlay.tsuki}</span>
+          <span class="astro-overlay-line">→ ${h.overlay.hon}</span>
+          <span class="astro-overlay-line">→ ${h.overlay.tsuki}</span>
         </span>
       </div>
     </div>`;
@@ -493,10 +546,14 @@ function renderMiniDiagnosis(input, rows, core){
   return `<div class="mini-diagnosis">
     <div class="mini-diagnosis-head">
       <strong>${input.year}年${input.month}月${input.day}日の星読みミニ診断</strong>
-      気になるところだけ読めば大丈夫です。もっと深く知りたい時は、下の「相談材料」を使えます。
+      まずは一言まとめと4つの成長ポイントだけ読めば大丈夫です。詳しい全10天体は、必要な時だけ開けます。
+    </div>
+    <div class="reading-headline">
+      <div class="reading-headline-label">まず一言で</div>
+      <strong>${summary.title}</strong>
+      ${summary.body}
     </div>
     <div class="mini-diagnosis-grid">${cards}</div>
-    <div class="detail-title">詳しい計算結果</div>
   </div>`;
 }
 
@@ -546,7 +603,11 @@ function runAstro64(updateKitoku=true,openResult=true){
     </div>
   `;
   }).join('');
-  document.getElementById('results').innerHTML=renderMiniDiagnosis(input,rows,core)+detailHtml;
+  const fullDetail=`<details class="detail-fold">
+    <summary>もっと詳しく見る（全10天体）</summary>
+    <div class="detail-fold-body">${detailHtml}</div>
+  </details>`;
+  document.getElementById('results').innerHTML=renderMiniDiagnosis(input,rows,core)+fullDetail;
   document.getElementById('prompt').value=buildAstroPrompt(input, rows);
   if(resultDetails&&openResult)resultDetails.scrollIntoView({behavior:'smooth',block:'start'});
 }
