@@ -76,6 +76,12 @@ button{width:100%;border:1px solid rgba(138,104,32,.45);border-radius:9px;backgr
 .mini-diagnosis-label{font-size:.6rem;color:var(--gold);letter-spacing:.12em;font-weight:800;margin-bottom:2px;}
 .mini-diagnosis-main{font-size:.9rem;color:var(--goldlt);font-weight:800;line-height:1.55;}
 .mini-diagnosis-text{font-size:.68rem;color:var(--mist);line-height:1.75;margin-top:4px;}
+.reading-story{border:1px solid var(--rim);border-radius:12px;background:rgba(255,255,255,.46);padding:13px 14px;color:var(--mist);font-size:.72rem;line-height:1.95;}
+.reading-story-title{font-size:.58rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:6px;}
+.reading-story p{margin:0 0 10px;}
+.reading-story p:last-child{margin-bottom:0;}
+.reading-story strong{color:var(--goldlt);font-size:.88rem;}
+.reading-story .row-gogyo{margin-left:4px;}
 .astro-overlay{border:1px solid rgba(72,142,94,.24);border-radius:10px;background:linear-gradient(135deg,rgba(72,142,94,.08),rgba(255,255,255,.58));padding:9px 10px;margin-top:8px;font-size:.64rem;color:var(--mist);line-height:1.75;}
 .astro-overlay strong{color:#2f7d4c;}
 .astro-overlay-lines{display:grid;gap:4px;margin-top:5px;}
@@ -144,7 +150,8 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   border-color:rgba(212,175,55,.22);
 }
 [data-theme="dark"] .mini,
-[data-theme="dark"] .mini-diagnosis-card{
+[data-theme="dark"] .mini-diagnosis-card,
+[data-theme="dark"] .reading-story{
   background:rgba(126,98,180,.14);
   border-color:rgba(126,98,180,.28);
   color:rgba(232,238,255,.74);
@@ -485,6 +492,13 @@ function getGrowthParagraph(row, label, hint){
   return `${label}が示す「${row.archetype}」は、${row.theme}です。${hint} ${row.light}ことを意識するとこの力は育ちますが、${row.shadow}時は、少し立ち止まって整え直す合図になります。`;
 }
 
+function buildStoryParagraph(item){
+  const r=item.row;
+  const label=item.def.label;
+  const hint=item.def.hint;
+  return `<p><strong>${label}：${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></strong><br>${getGrowthParagraph(r,label,hint)} 気学と重ねると、${item.overlay.hon}。また、${item.overlay.tsuki}。</p>`;
+}
+
 function buildHeadlineSummary(highlights, core){
   const sameCount=highlights.filter(h=>h.overlay.honType==='same'||h.overlay.tsukiType==='same').length;
   const tensionCount=highlights.filter(h=>h.overlay.honType==='tension'||h.overlay.tsukiType==='tension').length;
@@ -524,36 +538,21 @@ function renderMiniDiagnosis(input, rows, core){
     return row ? {def:c,row,overlay:getAstroKitokuOverlay(row,core)} : null;
   }).filter(Boolean);
   const summary=buildHeadlineSummary(highlights,core);
-  const cards=highlightDefs.map(c=>{
-    const h=highlights.find(item=>item.def.key===c.key);
-    if(!h){
-      return `<div class="mini-diagnosis-card"><div class="mini-diagnosis-label">${c.label}</div><div class="mini-diagnosis-main">${c.key}</div><div class="mini-diagnosis-text">${c.hint}</div></div>`;
-    }
-    const r=h.row;
-    return `<div class="mini-diagnosis-card">
-      <div class="mini-diagnosis-label">${c.label}</div>
-      <div class="mini-diagnosis-main">${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></div>
-      <div class="mini-diagnosis-text">${getGrowthParagraph(r,c.label,c.hint)}</div>
-      <div class="astro-overlay">
-        <strong>気学と重ねる</strong>
-        <span class="astro-overlay-lines">
-          <span class="astro-overlay-line">→ ${h.overlay.hon}</span>
-          <span class="astro-overlay-line">→ ${h.overlay.tsuki}</span>
-        </span>
-      </div>
-    </div>`;
-  }).join('');
+  const story=highlights.map(buildStoryParagraph).join('');
   return `<div class="mini-diagnosis">
     <div class="mini-diagnosis-head">
       <strong>${input.year}年${input.month}月${input.day}日の星読みミニ診断</strong>
-      まずは一言まとめと4つの成長ポイントだけ読めば大丈夫です。詳しい全10天体は、必要な時だけ開けます。
+      まずは一言まとめと、太陽・月・金星・火星をつなげた読み物だけ読めば大丈夫です。詳しい全10天体は、必要な時だけ開けます。
     </div>
     <div class="reading-headline">
       <div class="reading-headline-label">まず一言で</div>
       <strong>${summary.title}</strong>
       ${summary.body}
     </div>
-    <div class="mini-diagnosis-grid">${cards}</div>
+    <div class="reading-story">
+      <div class="reading-story-title">自分を伸ばす読み解き</div>
+      ${story}
+    </div>
   </div>`;
 }
 
