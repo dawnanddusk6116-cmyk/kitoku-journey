@@ -110,6 +110,12 @@ textarea{width:100%;min-height:300px;border:1px dashed rgba(138,104,32,.35);bord
 .copy{background:rgba(100,80,40,.08);color:var(--goldlt);border-color:rgba(100,80,40,.25);}
 .prompt-guide{background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.72));border:1px solid rgba(196,160,67,.32);border-radius:12px;padding:12px;margin-bottom:10px;font-size:.7rem;color:var(--mist);line-height:1.85;}
 .prompt-guide-title{font-size:.78rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;}
+.ai-material-primary{border-color:rgba(196,160,67,.5);box-shadow:0 14px 34px rgba(138,104,32,.12);}
+.ai-material-primary summary{background:linear-gradient(135deg,rgba(196,160,67,.16),rgba(255,255,255,.78));}
+.ai-material-primary .fold-icon{background:rgba(196,160,67,.2);border-color:rgba(196,160,67,.32);}
+.ai-material-primary textarea{min-height:240px;}
+.ai-main-copy{background:linear-gradient(135deg,rgba(138,104,32,.96),rgba(196,160,67,.82));color:#fff;border-color:rgba(138,104,32,.45);font-size:.78rem;padding:13px 10px;}
+.ai-link-row.single{grid-template-columns:1fr;}
 .deep-dive{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
 .deep-btn{width:100%;border:1px solid rgba(196,160,67,.34);border-radius:10px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(196,160,67,.08));color:var(--goldlt);font-size:.68rem;font-weight:700;letter-spacing:.02em;line-height:1.55;padding:10px 8px;margin:0;cursor:pointer;}
 .deep-btn:active{transform:scale(.99);}
@@ -134,6 +140,13 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   background:rgba(196,160,67,.08);
   border-color:rgba(196,160,67,.24);
   color:var(--goldlt);
+}
+[data-theme="dark"] .ai-material-primary summary{
+  background:linear-gradient(135deg,rgba(196,160,67,.16),rgba(18,21,42,.96));
+}
+[data-theme="dark"] .ai-main-copy{
+  background:linear-gradient(135deg,rgba(196,160,67,.92),rgba(138,104,32,.9));
+  color:#120d06;
 }
 [data-theme="dark"] input,
 [data-theme="dark"] select,
@@ -237,7 +250,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 </header>
 
 <div class="notice">
-  この画面は、64象意の結果をAIに相談しやすい材料として整える場所です。まずは傾向を読み、深めたい時だけ相談材料をAIに渡してください。
+  この画面は、64象意の結果をAIに渡しやすい相談材料として整える場所です。コピーして、いつものAIチャットに貼るだけで、自分用の読み解きに広げられます。
 </div>
 
 <div class="concept">
@@ -247,24 +260,50 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
 </div>
 
 <div class="flow-box">
-  <div class="flow-title">AIに渡す材料を整えます</div>
+  <div class="flow-title">このページでやることは1つです</div>
   <div class="flow-steps">
-    <div class="flow-step"><div class="flow-num">1</div><div>生年月日から、太陽・月・金星・火星などの64象意を出します。時刻が分からない場合は、12時のままで大丈夫です。</div></div>
-    <div class="flow-step"><div class="flow-num">2</div><div>結果を読み、必要なら「相談材料」としてコピーします。</div></div>
-    <div class="flow-step"><div class="flow-num">3</div><div>ChatGPT・Gemini・Claude、または気学先生に渡すと、恋愛・仕事・人間関係・今日の一手まで広げられます。</div></div>
+    <div class="flow-step"><div class="flow-num">1</div><div>生年月日から、太陽・月・金星・火星などの64象意を出します。保存済みなら自動で材料が入ります。</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>下の相談材料をコピーして、いつものAIチャットに渡します。</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>恋愛・仕事・人間関係・今日の一手など、知りたいことをそのまま聞いて深めます。</div></div>
   </div>
-  <div class="ai-link-row">
-    <a class="ai-link" href="#birthDataSection" onclick="openFold('birthDataSection')">材料を作る</a>
-    <a class="ai-link" href="#promptDetails" onclick="openFold('promptDetails')">AIに渡す</a>
+  <div class="ai-link-row single">
+    <a class="ai-link" href="#promptDetails" onclick="openFold('promptDetails')">AIに渡す相談材料へ</a>
   </div>
 </div>
 
-<details class="section fold-section" id="resultDetails" open>
-  <summary><span class="fold-icon">星</span><span><span class="fold-title">AIに渡す前の星読み材料</span><span class="fold-sub">太陽・月・金星・火星の傾向を先に確認できます</span></span></summary>
+<details class="section fold-section ai-material-primary" id="promptDetails" open>
+  <summary><span class="fold-icon">AI</span><span><span class="fold-title">AIに渡す相談材料</span><span class="fold-sub">コピーして、自分専用AIで深掘りできます</span></span></summary>
+  <div class="fold-body">
+    <div class="prompt-guide">
+      <div class="prompt-guide-title">この文章をAIに渡すと、読み解きが深まります</div>
+      生年月日・KITOKU OS DATA・64象意の結果が、この文章に自動で入ります。恋愛・仕事・人間関係・今日からできる一手など、知りたいテーマを添えて相談できます。
+    </div>
+    <textarea id="prompt" readonly>計算後、相談材料がここに表示されます。</textarea>
+    <div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
+      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">相談材料 ── 必要な時だけコピーします</div>
+      <button class="copy ai-main-copy" onclick="copyPrompt()" style="margin-bottom:0;">AIに渡す相談材料をコピー</button>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Gemini・Claude、または気学先生に渡して使えます。<br>64象意の結果を、自分の星情報と重ねながら、恋愛・仕事・行動プランなどに広げるための材料です。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
+    </div>
+    <button class="copy" onclick="printAstro()" style="margin-top:0;margin-bottom:10px;">🖨 印刷・PDF保存</button>
+    <div style="background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:11px 13px;">
+      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">追加相談 ── 返答が来たら、テーマを絞って育てる（任意）</div>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">AIの返答を受け取ったら、同じ会話に続けて貼ります。星読み材料を土台に、恋愛・仕事・行動プランまで自分用に育てられます。</div>
+      <div class="deep-dive">
+        <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
+        <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
+        <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
+        <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="section fold-section" id="resultDetails">
+  <summary><span class="fold-icon">星</span><span><span class="fold-title">参考：星読みの要約</span><span class="fold-sub">AIに渡す前に、傾向だけ軽く確認できます</span></span></summary>
   <div class="fold-body">
     <div class="plain-guide">
-      <strong>保存済みの生年月日があれば、自動で材料を整えます。</strong><br>
-      ここで全部を決める必要はありません。64象意の結果を読み、深めたい部分だけAIに渡すと、自分用の読み解きに広げられます。
+      <strong>ここは参考用の短い読み物です。</strong><br>
+      詳しく知りたい時は、上の「AIに渡す相談材料」をコピーして、自分専用AIに聞いてください。
     </div>
     <div id="results" class="results">
       <div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>
@@ -309,32 +348,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
   <div class="print-astro-title">KITOKU 64象意星読み — AI相談材料</div>
   <div class="print-astro-body" id="printAstroBody"></div>
 </div>
-<details class="section fold-section" id="promptDetails">
-  <summary><span class="fold-icon">AI</span><span><span class="fold-title">AIに渡す相談材料</span><span class="fold-sub">コピーして、自分専用AIで深掘りできます</span></span></summary>
-  <div class="fold-body">
-    <div class="prompt-guide">
-      <div class="prompt-guide-title">この文章をAIに渡すと、読み解きが深まります</div>
-      生年月日・KITOKU OS DATA・64象意の結果が、この文章に自動で入ります。恋愛・仕事・人間関係・今日からできる一手など、知りたいテーマを添えて相談できます。
-    </div>
-    <textarea id="prompt" readonly>計算後、相談材料がここに表示されます。</textarea>
-    <div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
-      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">相談材料 ── 必要な時だけコピーします</div>
-      <button class="copy" onclick="copyPrompt()" style="margin-bottom:0;">AIに渡す相談材料をコピー</button>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Gemini・Claude、または気学先生に渡して使えます。<br>64象意の結果を、自分の星情報と重ねながら、恋愛・仕事・行動プランなどに広げるための材料です。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
-    </div>
-    <button class="copy" onclick="printAstro()" style="margin-top:0;margin-bottom:10px;">🖨 印刷・PDF保存</button>
-    <div style="background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:11px 13px;">
-      <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">追加相談 ── 返答が来たら、テーマを絞って育てる（任意）</div>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">AIの返答を受け取ったら、同じ会話に続けて貼ります。星読み材料を土台に、恋愛・仕事・行動プランまで自分用に育てられます。</div>
-      <div class="deep-dive">
-        <button class="deep-btn" onclick="copyDeepDive('love')">恋愛を深掘り</button>
-        <button class="deep-btn" onclick="copyDeepDive('work')">仕事を整理</button>
-        <button class="deep-btn" onclick="copyDeepDive('plan')">30日プラン</button>
-        <button class="deep-btn" onclick="copyDeepDive('words')">自分への言葉</button>
-      </div>
-    </div>
-  </div>
-</details>
+
 
 <footer><a href="kyusei_v2.html" style="color:var(--goldlt);text-decoration:none;">← 九星を知るへ戻る</a><br>KITOKU STAR READING — 自分を知り、自分を愛し、自分で動く</footer>
 
@@ -506,14 +520,14 @@ function getAstroKitokuOverlay(row, core){
 }
 
 function getGrowthParagraph(row, label, hint){
-  return `${label}が示す「${row.archetype}」は、${row.theme}です。${hint} ${row.light}ことを意識するとこの力は育ちますが、${row.shadow}時は、少し立ち止まって整え直す合図になります。`;
+  return `${label}は「${row.archetype}」。${row.theme}です。${row.light}ことを意識すると、この力を日常に活かしやすくなります。`;
 }
 
 function buildStoryParagraph(item){
   const r=item.row;
   const label=item.def.label;
   const hint=item.def.hint;
-  return `<p><strong>${label}：${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></strong><br>${getGrowthParagraph(r,label,hint)}<span class="reading-compare-note"><strong>気学と重ねると：</strong>${item.overlay.hon}。詳しい重ね合わせは、必要な時だけ「AIに渡す」で広げられます。</span></p>`;
+  return `<p><strong>${label}：${r.archetype}<span class="row-gogyo">${r.gogyo||''}</span></strong><br>${getGrowthParagraph(r,label,hint)}</p>`;
 }
 
 function buildHeadlineSummary(highlights, core){
@@ -559,7 +573,7 @@ function renderMiniDiagnosis(input, rows, core){
   return `<div class="mini-diagnosis">
     <div class="mini-diagnosis-head">
       <strong>${input.year}年${input.month}月${input.day}日の64象意星読み材料</strong>
-      ここでは、太陽・月・金星・火星それぞれが示す傾向をシンプルに読めます。気学との詳しい重ね合わせまで知りたい時は、下の「AIに渡す」から相談材料を使ってください。
+      ここは参考用の短い要約です。詳しい読み解きは、上の相談材料をAIに渡して広げてください。
     </div>
     <div class="reading-headline">
       <div class="reading-headline-label">まず一言で</div>
@@ -720,11 +734,11 @@ const birthDataSection=document.getElementById('birthDataSection');
 const resultDetails=document.getElementById('resultDetails');
 if(hasSavedBirth){
   if(birthDataSection)birthDataSection.open=false;
-  if(resultDetails)resultDetails.open=true;
+  if(resultDetails)resultDetails.open=false;
   runAstro64(true,false);
 }else{
   if(birthDataSection)birthDataSection.open=true;
-  if(resultDetails)resultDetails.open=true;
+  if(resultDetails)resultDetails.open=false;
   document.getElementById('results').innerHTML='<div class="hint">生年月日を入力して「診断する」を押すと、ここにミニ診断が表示されます。</div>';
   document.getElementById('prompt').value='生年月日を入力して計算すると、相談材料がここに表示されます。';
 }
