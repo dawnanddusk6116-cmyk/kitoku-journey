@@ -71,19 +71,20 @@ body{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   min-height:34px;
   font-size:.72rem;font-weight:700;color:var(--goldlt);text-decoration:none;
-  padding:8px 14px;
-  background:rgba(138,104,32,.07);border:1px solid rgba(138,104,32,.3);
-  border-radius:999px;cursor:pointer;letter-spacing:.04em;
-  font-family:'Noto Serif JP',serif;
+  padding:8px 13px;
+  background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);
+  border-radius:8px;cursor:pointer;letter-spacing:.04em;
+  font-family:'Noto Serif JP',serif;white-space:nowrap;
+  box-shadow:0 1px 5px rgba(60,40,10,.035);
 }
 .page-nav{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  max-width:480px;margin:14px auto 0;padding:0 16px;
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;
+  max-width:480px;margin:12px auto 0;padding:0 16px;
 }
 .back-btn.secondary{
-  background:rgba(100,80,40,.04);
-  border-color:rgba(100,80,40,.18);
-  color:var(--mist);
+  background:rgba(196,160,67,.08);
+  border-color:rgba(196,160,67,.34);
+  color:var(--goldlt);
 }
 .back-btn:active{opacity:.78;transform:translateY(1px);}
 
@@ -617,9 +618,9 @@ footer{
   </div>
 </div>
 
-<div class="page-nav">
+<div class="page-nav" aria-label="ページ移動">
   <button class="back-btn secondary" type="button" onclick="goLifeBack()">← 戻る</button>
-  <a class="back-btn" href="index.html">TOPへ</a>
+  <a class="back-btn" href="index.html">← TOPへ</a>
 </div>
 
 <div class="page">
