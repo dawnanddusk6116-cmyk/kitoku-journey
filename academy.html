@@ -198,10 +198,33 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 .map-item{
   display:grid;grid-template-columns:46px 1fr auto;
   gap:10px;align-items:center;
+  width:100%;
   background:#fffdf8;
   border:1px solid #eadfce;
   border-radius:10px;
   padding:9px 10px;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+.map-item:hover,.map-item:focus-visible{
+  background:#fff8e8;
+  border-color:#d8ba74;
+  box-shadow:0 8px 18px rgba(128,84,18,.06);
+  outline:none;
+}
+.map-item:active{transform:translateY(1px)}
+.lesson{scroll-margin-top:92px}
+.lesson.academy-focus{
+  animation:academyFocusPulse 4.8s ease;
+  border-color:#c99a38;
+}
+@keyframes academyFocusPulse{
+  0%{box-shadow:0 0 0 0 rgba(201,154,56,.42)}
+  14%{box-shadow:0 0 0 8px rgba(201,154,56,.16)}
+  42%{box-shadow:0 0 0 5px rgba(201,154,56,.11)}
+  100%{box-shadow:0 0 0 0 rgba(201,154,56,0)}
 }
 .map-num{color:var(--gold);font-weight:800;font-size:.78rem}
 .map-title{color:var(--ink);font-weight:700;font-size:.82rem;line-height:1.5}
@@ -259,7 +282,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
   </section>
 
   <section class="academy-lines" aria-label="Academyの分類">
-    <details class="line">
+    <details class="line" id="academy-start">
       <summary>
         <span class="summary-main">
           <span class="line-code">START</span>
@@ -331,7 +354,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
       </div>
     </details>
 
-    <details class="line">
+    <details class="line" id="academy-basic">
       <summary>
         <span class="summary-main">
           <span class="line-code">BASIC</span>
@@ -341,7 +364,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
         <span class="chevron" aria-hidden="true">▼</span>
       </summary>
       <div class="line-body">
-        <article class="lesson">
+        <article class="lesson" id="academy-00" tabindex="-1">
           <div class="lesson-head">
             <div class="num">00</div>
             <div>
@@ -356,7 +379,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           </div>
         </article>
 
-        <article class="lesson">
+        <article class="lesson" id="academy-01" tabindex="-1">
           <div class="lesson-head">
             <div class="num">01</div>
             <div>
@@ -371,7 +394,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           </div>
         </article>
 
-        <article class="lesson">
+        <article class="lesson" id="academy-02" tabindex="-1">
           <div class="lesson-head">
             <div class="num">02</div>
             <div>
@@ -383,7 +406,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           <div class="actions"><a class="action" href="academy_pdf_basic_02.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/4bP3gz89p0A" target="_blank" rel="noopener">▶ 動画を見る</a></div>
         </article>
 
-        <article class="lesson">
+        <article class="lesson" id="academy-03" tabindex="-1">
           <div class="lesson-head">
             <div class="num">03</div>
             <div>
@@ -395,7 +418,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           <div class="actions"><a class="action" href="academy_pdf_basic_03.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/GWPdSbe7pMo" target="_blank" rel="noopener">▶ 動画を見る</a></div>
         </article>
 
-        <article class="lesson">
+        <article class="lesson" id="academy-04" tabindex="-1">
           <div class="lesson-head">
             <div class="num">04</div>
             <div>
@@ -407,7 +430,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
           <div class="actions"><a class="action" href="academy_pdf_basic_04.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/0wsnnjQVzUw" target="_blank" rel="noopener">▶ 動画を見る</a></div>
         </article>
 
-        <article class="lesson">
+        <article class="lesson" id="academy-05" tabindex="-1">
           <div class="lesson-head">
             <div class="num">05</div>
             <div>
@@ -421,7 +444,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
       </div>
     </details>
 
-    <details class="line">
+    <details class="line" id="academy-guide">
       <summary>
         <span class="summary-main">
           <span class="line-code">GUIDE</span>
@@ -433,7 +456,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
       <div class="line-body">
 
 
-        <article class="lesson featured">
+        <article class="lesson featured" id="academy-guide-family" tabindex="-1">
           <div class="lesson-head">
             <div class="num word">家族</div>
             <div>
@@ -450,7 +473,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 
 
 
-        <article class="lesson">
+        <article class="lesson" id="academy-guide-travel" tabindex="-1">
           <div class="lesson-head">
             <div class="num word">旅行</div>
             <div>
@@ -467,14 +490,14 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 
 
 
-        <article class="lesson"><div class="lesson-head"><div class="num word">名前</div><div><h2 class="lesson-title">姓名鑑定の見方</h2><p class="desc">名前が持つ意味、画数、五行、陰陽、響きをどう読むかを整理します。</p><div class="tag-row"><span class="tag">PDF/動画</span><span class="tag">目的別</span><span class="tag">姓名鑑定</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_guide_name.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/wRSCy2B8oyA" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson" id="academy-guide-name" tabindex="-1"><div class="lesson-head"><div class="num word">名前</div><div><h2 class="lesson-title">姓名鑑定の見方</h2><p class="desc">名前が持つ意味、画数、五行、陰陽、響きをどう読むかを整理します。</p><div class="tag-row"><span class="tag">PDF/動画</span><span class="tag">目的別</span><span class="tag">姓名鑑定</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_guide_name.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/wRSCy2B8oyA" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
-        <article class="lesson"><div class="lesson-head"><div class="num word">香り</div><div><h2 class="lesson-title">香りの使い方</h2><p class="desc">今日の香りAIと香りAI先生を使い分け、色・香り・場面を整えるガイドです。</p><div class="tag-row"><span class="tag">PDF/動画</span><span class="tag">目的別</span><span class="tag">香り</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_guide_scent.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/aIIfvTkukuo" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson" id="academy-guide-scent" tabindex="-1"><div class="lesson-head"><div class="num word">香り</div><div><h2 class="lesson-title">香りの使い方</h2><p class="desc">今日の香りAIと香りAI先生を使い分け、色・香り・場面を整えるガイドです。</p><div class="tag-row"><span class="tag">PDF/動画</span><span class="tag">目的別</span><span class="tag">香り</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_guide_scent.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/aIIfvTkukuo" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
       </div>
     </details>
 
-    <details class="line">
+    <details class="line" id="academy-advanced">
       <summary>
         <span class="summary-main">
           <span class="line-code">ADVANCED</span>
@@ -485,7 +508,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
       </summary>
       <div class="line-body">
 
-        <article class="lesson featured">
+        <article class="lesson featured" id="academy-06" tabindex="-1">
           <div class="lesson-head">
             <div class="num">06</div>
             <div>
@@ -505,31 +528,31 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 
 
           
-        <article class="lesson featured"><div class="lesson-head"><div class="num">07</div><div><h2 class="lesson-title">転職・引越し・開業のタイミング</h2><p class="desc">重い決断で年盤・月盤をどう使い、仮吉方や線路の日でどう手当てするかを整理します。</p><div class="tag-row"><span class="tag">PDF/動画</span><span class="tag">応用編</span><span class="tag">引越し・開業</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_07.html">📄 PDFを開く</a><a class="action" href="https://youtu.be/rb1xTBkKmBE" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson featured" id="academy-07" tabindex="-1"><div class="lesson-head"><div class="num">07</div><div><h2 class="lesson-title">転職・引越し・開業のタイミング</h2><p class="desc">重い決断で年盤・月盤をどう使い、仮吉方や線路の日でどう手当てするかを整理します。</p><div class="tag-row"><span class="tag">PDF/動画</span><span class="tag">応用編</span><span class="tag">引越し・開業</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_07.html">📄 PDFを開く</a><a class="action" href="https://youtu.be/rb1xTBkKmBE" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
 
-        <article class="lesson featured"><div class="lesson-head"><div class="num">08</div><div><h2 class="lesson-title">人間関係・商談をうまくいかせる</h2><p class="desc">相性を良し悪しで終わらせず、間の星・色・食・言葉で関係を整える実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">人間関係</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_08.html">📄 PDFを開く</a><a class="action" href="https://youtu.be/NS4wPnk9nnI" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson featured" id="academy-08" tabindex="-1"><div class="lesson-head"><div class="num">08</div><div><h2 class="lesson-title">人間関係・商談をうまくいかせる</h2><p class="desc">相性を良し悪しで終わらせず、間の星・色・食・言葉で関係を整える実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">人間関係</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_08.html">📄 PDFを開く</a><a class="action" href="https://youtu.be/NS4wPnk9nnI" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
 
-        <article class="lesson featured"><div class="lesson-head"><div class="num">09</div><div><h2 class="lesson-title">子育て・家族への活用</h2><p class="desc">子どもを月命星で理解し、家族の違いを間の星・言葉・いたわりで整える実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">家族</span><span class="tag">子育て</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_09.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/k5NfrM3ZEgE" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson featured" id="academy-09" tabindex="-1"><div class="lesson-head"><div class="num">09</div><div><h2 class="lesson-title">子育て・家族への活用</h2><p class="desc">子どもを月命星で理解し、家族の違いを間の星・言葉・いたわりで整える実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">家族</span><span class="tag">子育て</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_09.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/k5NfrM3ZEgE" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
 
-        <article class="lesson featured"><div class="lesson-head"><div class="num">10</div><div><h2 class="lesson-title">頑張っているのにうまくいかない理由</h2><p class="desc">凶方を怖がらず、知って備えるための心構えと手当てをまとめる救いのガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">凶方</span><span class="tag">心構え</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_10.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/hBUUDotjSWs" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson featured" id="academy-10" tabindex="-1"><div class="lesson-head"><div class="num">10</div><div><h2 class="lesson-title">頑張っているのにうまくいかない理由</h2><p class="desc">凶方を怖がらず、知って備えるための心構えと手当てをまとめる救いのガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">凶方</span><span class="tag">心構え</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_10.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/hBUUDotjSWs" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
 
-        <article class="lesson featured"><div class="lesson-head"><div class="num">11</div><div><h2 class="lesson-title">自宅から750mの風水マップ</h2><p class="desc">遠くへ行けなくても、自宅周辺750mの地相と家の整え方で運を動かす実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">750m</span><span class="tag">風水</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_11.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/54UqevNP_GI" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson featured" id="academy-11" tabindex="-1"><div class="lesson-head"><div class="num">11</div><div><h2 class="lesson-title">自宅から750mの風水マップ</h2><p class="desc">遠くへ行けなくても、自宅周辺750mの地相と家の整え方で運を動かす実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">750m</span><span class="tag">風水</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_11.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/54UqevNP_GI" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
 
-        <article class="lesson featured"><div class="lesson-head"><div class="num">12</div><div><h2 class="lesson-title">ビジネスに気学を使う</h2><p class="desc">朝礼テーマ・経営テーマ・商談日・チーム編成を、環境設計として整える実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">ビジネス</span><span class="tag">環境設計</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_12.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/unK4Xg92RhU" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
+        <article class="lesson featured" id="academy-12" tabindex="-1"><div class="lesson-head"><div class="num">12</div><div><h2 class="lesson-title">ビジネスに気学を使う</h2><p class="desc">朝礼テーマ・経営テーマ・商談日・チーム編成を、環境設計として整える実践ガイドです。</p><div class="tag-row"><span class="tag">PDFあり</span><span class="tag">動画あり</span><span class="tag">応用編</span><span class="tag">ビジネス</span><span class="tag">環境設計</span></div></div></div><div class="actions"><a class="action" href="academy_pdf_12.html">📄 PDFを開く</a><a class="action video" href="https://youtu.be/unK4Xg92RhU" target="_blank" rel="noopener">▶ 動画を見る</a></div></article>
 
 
 
-<article class="lesson featured">
+<article class="lesson featured" id="academy-13" tabindex="-1">
             <div class="lesson-head">
               <div class="num">13</div>
               <div>
@@ -551,7 +574,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 
 
 
-          <article class="lesson featured">
+          <article class="lesson featured" id="academy-14" tabindex="-1">
             <div class="lesson-head">
               <div class="num">14</div>
               <div>
@@ -574,7 +597,7 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
 
 
 
-          <article class="lesson featured">
+          <article class="lesson featured" id="academy-15" tabindex="-1">
             <div class="lesson-head">
               <div class="num">15</div>
               <div>
@@ -604,38 +627,38 @@ h1{font-size:2rem;letter-spacing:.12em;margin:10px 0 8px;font-weight:500}
     <div class="map-group">
       <div class="map-heading">導入・基礎編</div>
       <div class="map-list">
-        <div class="map-item"><span class="map-num">00</span><span class="map-title">東洋思想の地図</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">01</span><span class="map-title">自分の九星を知る・初期設定</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">02</span><span class="map-title">自分の星が持つ意味・本命星の世界</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">03</span><span class="map-title">隠れた才能と人生の舞台</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">04</span><span class="map-title">名前を入れてみよう・姓名鑑定の見方</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">05</span><span class="map-title">今日の方位盤の見方</span><span class="status done">PDF/動画</span></div>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-00','academy-basic')"><span class="map-num">00</span><span class="map-title">東洋思想の地図</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-01','academy-basic')"><span class="map-num">01</span><span class="map-title">自分の九星を知る・初期設定</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-02','academy-basic')"><span class="map-num">02</span><span class="map-title">自分の星が持つ意味・本命星の世界</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-03','academy-basic')"><span class="map-num">03</span><span class="map-title">隠れた才能と人生の舞台</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-04','academy-basic')"><span class="map-num">04</span><span class="map-title">名前を入れてみよう・姓名鑑定の見方</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-05','academy-basic')"><span class="map-num">05</span><span class="map-title">今日の方位盤の見方</span><span class="status done">PDF/動画</span></button>
       </div>
     </div>
 
     <div class="map-group">
       <div class="map-heading">目的別ガイド</div>
       <div class="map-list">
-        <div class="map-item"><span class="map-num">家族</span><span class="map-title">家族との関係を整える</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">旅行</span><span class="map-title">旅行吉方位の見方</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">名前</span><span class="map-title">姓名鑑定の見方</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">香り</span><span class="map-title">香りの使い方</span><span class="status done">PDF/動画</span></div>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-guide-family','academy-guide')"><span class="map-num">家族</span><span class="map-title">家族との関係を整える</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-guide-travel','academy-guide')"><span class="map-num">旅行</span><span class="map-title">旅行吉方位の見方</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-guide-name','academy-guide')"><span class="map-num">名前</span><span class="map-title">姓名鑑定の見方</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-guide-scent','academy-guide')"><span class="map-num">香り</span><span class="map-title">香りの使い方</span><span class="status done">PDF/動画</span></button>
       </div>
     </div>
 
     <div class="map-group">
       <div class="map-heading">応用編・上級編</div>
       <div class="map-list">
-        <div class="map-item"><span class="map-num">06</span><span class="map-title">吉方位の使い方・毎日の処方箋</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">07</span><span class="map-title">転職・引越し・開業のタイミング</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">08</span><span class="map-title">人間関係・商談をうまくいかせる</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">09</span><span class="map-title">子育て・家族への活用</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">10</span><span class="map-title">頑張っているのにうまくいかない理由</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">11</span><span class="map-title">自宅から750mの風水マップ</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">12</span><span class="map-title">ビジネスに気学を使う</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">13</span><span class="map-title">吉方位旅行・引越しで人生を変える</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">14</span><span class="map-title">過去の失敗をリセットしたい方へ</span><span class="status done">PDF/動画</span></div>
-        <div class="map-item"><span class="map-num">15</span><span class="map-title">AIの答えを、賢く受け取る力</span><span class="status done">PDF/動画</span></div>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-06','academy-advanced')"><span class="map-num">06</span><span class="map-title">吉方位の使い方・毎日の処方箋</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-07','academy-advanced')"><span class="map-num">07</span><span class="map-title">転職・引越し・開業のタイミング</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-08','academy-advanced')"><span class="map-num">08</span><span class="map-title">人間関係・商談をうまくいかせる</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-09','academy-advanced')"><span class="map-num">09</span><span class="map-title">子育て・家族への活用</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-10','academy-advanced')"><span class="map-num">10</span><span class="map-title">頑張っているのにうまくいかない理由</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-11','academy-advanced')"><span class="map-num">11</span><span class="map-title">自宅から750mの風水マップ</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-12','academy-advanced')"><span class="map-num">12</span><span class="map-title">ビジネスに気学を使う</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-13','academy-advanced')"><span class="map-num">13</span><span class="map-title">吉方位旅行・引越しで人生を変える</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-14','academy-advanced')"><span class="map-num">14</span><span class="map-title">過去の失敗をリセットしたい方へ</span><span class="status done">PDF/動画</span></button>
+        <button class="map-item" type="button" onclick="jumpAcademyTarget('academy-15','academy-advanced')"><span class="map-num">15</span><span class="map-title">AIの答えを、賢く受け取る力</span><span class="status done">PDF/動画</span></button>
       </div>
     </div>
 
@@ -677,6 +700,21 @@ function setAcademyFontSize(size){
     setAcademyFontSize(saved);
   }
 })();
+
+function jumpAcademyTarget(targetId, groupId){
+  var group=document.getElementById(groupId);
+  var target=document.getElementById(targetId);
+  if(!target) return;
+  if(group && typeof group.open==='boolean') group.open=true;
+  window.requestAnimationFrame(function(){
+    target.scrollIntoView({behavior:'smooth',block:'start'});
+    target.classList.remove('academy-focus');
+    void target.offsetWidth;
+    target.classList.add('academy-focus');
+    try{target.focus({preventScroll:true});}catch(e){}
+    window.setTimeout(function(){target.classList.remove('academy-focus');},5000);
+  });
+}
 document.querySelectorAll('.line').forEach(line=>{
   line.addEventListener('toggle',()=>{
     if(!line.open) return;
