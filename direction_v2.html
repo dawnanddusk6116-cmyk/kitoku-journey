@@ -2012,7 +2012,8 @@ function drawFullscreenContent(lat, lng) {
 
   const p2s = buildBoardFromCenter(center);
   const z = getZodiac(mvY);
-  const sangoSet = new Set((SANGO_MAP[z.k] || { dirs: [] }).dirs);
+  const sangoBranchName = getSangoBranchName(gState.currentBan || 'day', mvY, mvM, mvD);
+  const sangoSet = new Set((SANGO_MAP[sangoBranchName] || { dirs: [] }).dirs);
   let mapBreakDir = OPP[z.d];
   if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(mvY, mvM, mvD)]];
   else if (gState.currentBan === 'day' || !gState.currentBan) mapBreakDir = OPP[BRANCH_DIR[getDayBranch(mvY, mvM, mvD)]];
@@ -2185,8 +2186,8 @@ function drawDirectionLines(lat, lng) {
 
   const p2s = buildBoardFromCenter(center);
   const z = getZodiac(mvY);
-  const sangoInfo = SANGO_MAP[z.k] || { dirs: [] };
-  const sangoSet = new Set(sangoInfo.dirs);
+  const sangoBranchName = getSangoBranchName(gState.currentBan || 'day', mvY, mvM, mvD);
+  const sangoSet = new Set((SANGO_MAP[sangoBranchName] || { dirs: [] }).dirs);
   // 盤の種類に応じた破方位（日盤=日破、月盤=月破、年盤=歳破）
   let mapBreakDir = OPP[z.d];
   if (gState.currentBan === 'month') mapBreakDir = OPP[BRANCH_DIR[getMonthBranch(mvY, mvM, mvD)]];
@@ -2749,6 +2750,11 @@ function aiseiList(s,tsukimei,gender){
 const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2,1,9,8,7,6,5,4,3,2,1,9]};
 const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+function getSangoBranchName(banType, ty, tm, td){
+  if(banType==='year')return getZodiac(ty).k;
+  if(banType==='month')return SHI[getMonthBranch(ty,tm,td)];
+  return SHI[getDayBranch(ty,tm,td)];
+}
 
 
 // ── KITOKU全画像マッピング ──
@@ -4035,8 +4041,8 @@ function renderBan(type){
 
   const p2s=buildBoardFromCenter(center);
   const z=getZodiac(ty);
-  const sangoInfo=SANGO_MAP[z.k]||{dirs:[]};
-  const sangoSet=new Set(sangoInfo.dirs);
+  const sangoBranchName=getSangoBranchName(type,ty,tm,td);
+  const sangoSet=new Set((SANGO_MAP[sangoBranchName]||{dirs:[]}).dirs);
 
   let breakDir='C';
   let breakZodiacBranch=''; // 破にあたる支（その日の支の対冲）
@@ -4141,7 +4147,8 @@ function renderKichiList(dirData,p2s){
       const {honmei,tsukimei,ty,tm,td,currentBan}=gState;
       const center=currentBan==='day'?gState.dayCenter:currentBan==='month'?gState.monthCenter:gState.yearCent;
       const z=getZodiac(ty);
-      const sangoSet=new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
+      const sangoBranchName=getSangoBranchName(currentBan,ty,tm,td);
+      const sangoSet=new Set((SANGO_MAP[sangoBranchName]||{dirs:[]}).dirs);
       let breakDir='C';
       if(currentBan==='year')breakDir=OPP[z.d];
       else if(currentBan==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];}
@@ -4282,8 +4289,8 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
   if(dirData&&dirData[dir]){
     rankInfo=dirData[dir];
   }else{
-    const z=getZodiac(ty);
-    const sangoSet=new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
+    const sangoBranchName=getSangoBranchName(currentBan,ty,tm,td);
+    const sangoSet=new Set((SANGO_MAP[sangoBranchName]||{dirs:[]}).dirs);
     rankInfo=rankDir(dir,starN,honmei,tsukimei,sangoSet);
   }
 
@@ -4332,8 +4339,8 @@ function openDirPopup(dir,center,dirData,kyouItems,kyouSet){
       ${buildAmberActionPlaceholder(starN)}
       ${(function(){
         // 三合吉方の目的別ブースター
-        const z=getZodiac(ty);
-        const sangoInfo=SANGO_MAP[z.k]||{group:'',dirs:[]};
+        const sangoBranchName=getSangoBranchName(currentBan,ty,tm,td);
+        const sangoInfo=SANGO_MAP[sangoBranchName]||{group:'',dirs:[]};
         const isSango=sangoInfo.dirs.includes(dir);
         if(!isSango)return '';
         const SANGO_PURPOSE={

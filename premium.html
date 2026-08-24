@@ -4901,10 +4901,8 @@ function drawKitokuMapLines(lat, lng){
   if(!center) return;
   const p2s = buildBoardFromCenter(center);
 
-  // 三合セット
-  const y=state.date.getFullYear();
-  const z=getZodiac(y);
-  const sangoSet = new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
+  // 三合セット（盤面本体と同じ日/月/年切り替えを使う）
+  const sangoSet = getSangoSetForPremiumDate();
 
   // 吉凶判定（buildDirDataを流用→方位盤と完全同一）
   const {kyouItems} = buildDirData(center);
@@ -5789,9 +5787,7 @@ function drawFsMapContent(lat,lng){
   const center=centerForDate();
   if(!center) return;
   const p2s=buildBoardFromCenter(center);
-  const y=state.date.getFullYear();
-  const z=getZodiac(y);
-  const sangoSet=new Set((SANGO_MAP[z.k]||{dirs:[]}).dirs);
+  const sangoSet=getSangoSetForPremiumDate();
   const{kyouItems}=buildDirData(center);
   const kyouSet=new Set(kyouItems.filter(k=>kitokuHasStrictKyoLabel(k.name)).map(k=>k.dir));
 
