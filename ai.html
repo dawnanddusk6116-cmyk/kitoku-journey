@@ -65,6 +65,37 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-tree-chip{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--goldlt);background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.24);border-radius:999px;padding:5px 8px;font-size:.56rem;font-weight:800;line-height:1.35;}
 .ai-tree-chip.premium{color:#7b5ea7;border-color:rgba(123,94,167,.25);background:rgba(123,94,167,.08);}
 
+.ai-section{margin:14px 16px 0;background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:15px;box-shadow:0 8px 24px rgba(100,80,40,.035);}
+.ai-section.kicker-section{background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,250,240,.78));border-color:rgba(196,160,67,.28);}
+.ai-section-label{font-size:.55rem;letter-spacing:.14em;color:var(--gold);font-weight:900;margin-bottom:6px;}
+.ai-section-title{font-size:.95rem;color:var(--goldlt);font-weight:900;line-height:1.55;margin-bottom:8px;}
+.ai-section-text{font-size:.7rem;color:var(--mist);line-height:2;}
+.ai-section-text p{margin:0 0 10px;}
+.ai-section-text p:last-child{margin-bottom:0;}
+.ai-example-grid{display:grid;gap:10px;margin-top:10px;}
+.ai-example-card{background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:12px;padding:12px;}
+.ai-example-card.primary{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.68));border-color:rgba(196,160,67,.36);}
+.ai-example-title{font-size:.78rem;color:var(--goldlt);font-weight:900;line-height:1.6;margin-bottom:6px;}
+.ai-example-body{font-size:.66rem;color:var(--mist);line-height:1.9;}
+.ai-quote{margin:9px 0;padding:10px 11px;background:rgba(100,80,40,.055);border-left:3px solid rgba(196,160,67,.72);border-radius:8px;font-size:.64rem;color:var(--snow);line-height:1.9;}
+.ai-answer{margin:9px 0;padding:10px 11px;background:rgba(72,142,94,.07);border:1px solid rgba(72,142,94,.18);border-radius:9px;font-size:.64rem;color:var(--mist);line-height:1.9;}
+.ai-tree-intro{margin:14px 16px 0;padding:12px 14px;background:rgba(72,142,94,.07);border:1px solid rgba(72,142,94,.2);border-radius:12px;font-size:.68rem;color:var(--mist);line-height:1.9;}
+.ai-mini-list{display:grid;gap:8px;margin-top:10px;}
+.ai-mini-item{padding:10px 11px;background:rgba(255,255,255,.52);border:1px solid rgba(100,80,40,.12);border-radius:10px;font-size:.65rem;color:var(--mist);line-height:1.85;}
+.ai-mini-item strong{display:block;color:var(--goldlt);font-size:.7rem;margin-bottom:2px;}
+.ai-steps-list{display:grid;gap:8px;margin-top:10px;counter-reset:aiStep;}
+.ai-step-item{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;background:rgba(100,80,40,.045);border:1px solid rgba(100,80,40,.13);border-radius:10px;padding:10px;}
+.ai-step-item::before{counter-increment:aiStep;content:counter(aiStep);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(196,160,67,.15);color:var(--goldlt);font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:900;}
+.ai-step-copy{font-size:.66rem;color:var(--mist);line-height:1.9;}
+.ai-step-copy strong{display:block;color:var(--goldlt);font-size:.72rem;margin-bottom:2px;}
+[data-theme="dark"] .ai-section{background:var(--card);border-color:var(--rim);box-shadow:none;}
+[data-theme="dark"] .ai-section.kicker-section{background:linear-gradient(135deg,rgba(196,160,67,.11),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
+[data-theme="dark"] .ai-example-card,[data-theme="dark"] .ai-mini-item,[data-theme="dark"] .ai-step-item{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.18);}
+[data-theme="dark"] .ai-example-card.primary{background:linear-gradient(135deg,rgba(196,160,67,.14),rgba(255,255,255,.055));border-color:rgba(196,160,67,.34);}
+[data-theme="dark"] .ai-quote{background:rgba(255,255,255,.055);}
+[data-theme="dark"] .ai-answer,[data-theme="dark"] .ai-tree-intro{background:rgba(72,142,94,.08);border-color:rgba(120,190,140,.22);}
+[data-theme="dark"] .ai-section-text,[data-theme="dark"] .ai-example-body,[data-theme="dark"] .ai-mini-item,[data-theme="dark"] .ai-step-copy{color:rgba(232,238,255,.76);}
+
 /* 注意書き */
 .caution{background:rgba(176,64,64,.04);border:1px solid rgba(176,64,64,.2);border-radius:8px;padding:10px 12px;margin-top:10px;}
 .caution-text{font-size:.65rem;color:#804040;line-height:1.9;}
@@ -198,16 +229,53 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- リード -->
 <div class="lead">
   <div class="lead-box">
+    <div class="ai-section-label">01 / PHILOSOPHY</div>
     <div class="lead-title">自分専用のAIを育てる</div>
     <div class="lead-text">
-      KITOKUは、あなたの星情報・今日の方位盤・香り・色・相手の星を、AIに渡しやすい相談材料に整えます。<br>
-      AIに答えを丸投げするのではなく、あなたの判断を助ける相棒として育てていくための入口です。
+      第2の脳としてAIを育てる、という使い方が広がっています。<br>
+      その多くは、仕事の効率化や成果を目的にしたものです。<br><br>
+      KITOKUがまず提案したいのは、もう一つの使い方。日々の生活の中で、自分自身と向き合うための右腕です。気学は、今日の服、香り、食べるもの、大事な人との距離感を決める時の要素になります。<br><br>
+      答えを出してくれるのではなく、選ぶための材料を増やしてくれるものです。KITOKUは、その材料をAIに渡しやすい形に整える場所です。
+    </div>
+    <div class="lead-point">
+      <div class="lead-point-title">まずは身近な生活から</div>
+      <div class="lead-point-text">ここで育てた右腕は、仕事の場面にもそのまま応用できます。AIに答えを丸投げするのではなく、あなたの判断を助ける右腕として、少しずつ育てていってください。</div>
     </div>
   </div>
 </div>
 
+<section class="ai-section kicker-section" id="dailyExamples">
+  <div class="ai-section-label">02 / HOW TO USE</div>
+  <div class="ai-section-title">こんな時、こう使う</div>
+  <div class="ai-section-text">毎日必ず訪れる場面ほど、AIも育ちやすくなります。</div>
+  <div class="ai-example-grid">
+    <article class="ai-example-card primary">
+      <div class="ai-example-title">日盤吉方を取りに行く時</div>
+      <div class="ai-example-body">気学では、日盤の吉方位へ実際に足を運ぶ「吉方取り」が、最も基本的な実践です。KITOKUは、その方向で何を取り入れるかまで処方します。</div>
+      <div class="ai-quote">「今日の吉方は西（七赤金星）です。金の五行のエネルギーに合わせた、コンビニで買える飲み物や食べ物を3つ提案してください。色はピンク・オレンジ・金が合っています。」</div>
+      <div class="ai-example-body">「コピーして使う」を押して、そのままAIに貼るだけです。方位へ向かう道すがら、実際に買うものまで、その場で具体的に決まります。</div>
+    </article>
+    <article class="ai-example-card">
+      <div class="ai-example-title">体調管理アシスタントを育てる</div>
+      <div class="ai-example-body">体重計・体組成計のデータに今日の五行を添えると、数字の変化を体調の流れとして読み解いてくれるようになります。</div>
+      <div class="ai-quote">「体重が昨日より1.3kg増えました。骨格筋量と体内水分率も上がっています。これは何が起きていると考えられますか？ 気学では今日は土のエネルギーの日です。」</div>
+      <div class="ai-answer">これは脱水からのリカバリーとして、体が正しく機能した証拠です。筋肉にグリコーゲンと水分が引き込まれたための増加で、体脂肪が増えたわけではありません。</div>
+      <div class="ai-example-body">細かい読み解きをAIに任せ、自分は大きな流れだけ見ていられることが、育てる価値のわかりやすい実感になります。</div>
+    </article>
+    <article class="ai-example-card">
+      <div class="ai-example-title">ワードローブアシスタントを育てる</div>
+      <div class="ai-example-body">手持ちの服を写真に撮って相談する時、自分の九星や今日の処方色を一緒に伝えると、選択肢の理由づけが深くなります。</div>
+      <div class="ai-quote">「私の本命星は六白金星、月命は一白水星です。手持ちの服は黒が多いのですが、紺と黒、自分にはどちらが合っていますか？」</div>
+      <div class="ai-answer">紺は、水のエネルギーを活性化させるシンボルカラー。黒は、深みと重厚感を出す相棒カラー。日常は紺を主役に、引き締めたい日は黒を使い分ける、という考え方ができます。</div>
+      <div class="ai-example-body">「どちらが正解か」ではなく、それぞれがどんな役割を持つ色かを教えてもらえるのが、育てる価値です。</div>
+    </article>
+  </div>
+</section>
+
+<div class="ai-tree-intro">②で気になった例は、下の図で確認できます。「今日を整えたい」「人に合わせたい」「自分を深掘りしたい」「育てていきたい」のどこに対応するか、確認してみてください。</div>
+
 <div class="ai-tree-panel">
-  <div class="ai-tree-kicker">AI USE TREE</div>
+  <div class="ai-tree-kicker">03 / AI USE TREE</div>
   <div class="ai-tree-title">AI活用ツリー</div>
   <div class="ai-tree-text">
     どの相談でも、まずは自分の星情報から。慣れてきたら、目的に合わせて材料を足していきます。
@@ -224,16 +292,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <span class="ai-tree-root-mark">星</span>
     <span><span class="ai-tree-root-title">共通の土台：自分の星情報</span><span class="ai-tree-root-desc">最初に一度貼る、すべての相談の出発点です</span></span>
   </a>
-  <div class="lead-point ai-tree-steps">
-    <div class="lead-point-title">最初にやることは3つだけ</div>
-    <div class="lead-point-text">難しい設定は不要です。星情報を貼り、今日の材料を足し、最後に自分の状況をひと言添えて相談します。</div>
-    <div class="lead-steps">
-      <div class="lead-step"><div class="lead-step-num">1</div><div class="lead-step-text">星情報を貼る</div></div>
-      <div class="lead-step"><div class="lead-step-num">2</div><div class="lead-step-text">今日の材料を足す</div></div>
-      <div class="lead-step"><div class="lead-step-num">3</div><div class="lead-step-text">希望を伝える</div></div>
-    </div>
-    <div class="lead-step-note">例：今日の商談に合う服、疲れている日の食事、相手に合わせた色や香りなど。音声入力でそのまま聞いても使えます。</div>
-  </div>
   <div class="ai-tree-branches">
     <div class="ai-tree-branch">
       <a class="ai-tree-branch-head" href="direction_v2.html">
@@ -288,6 +346,59 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </div>
 
+<section class="ai-section" id="moreScenes">
+  <div class="ai-section-label">04 / EXPAND</div>
+  <div class="ai-section-title">慣れてきたら、広げられる場面</div>
+  <div class="ai-section-text"><p>体調管理・服選びに慣れてきたら、他の場面にも同じやり方を応用できます。</p></div>
+  <div class="ai-mini-list">
+    <div class="ai-mini-item"><strong>手持ちの香水を、自分の九星で分析する</strong>今持っている香水を写真や名前で伝え、「自分の本命星に合っているか」「足りない五行を補うにはどれが良いか」を相談します。</div>
+    <div class="ai-mini-item"><strong>好きな香水サイトのURLを貼る</strong>「セレス」「Coén」のような少量から試せる香水サイトのURLを添えると、実在する・今買える商品の中から選びやすくなります。</div>
+    <div class="ai-mini-item"><strong>香りAI先生に進む</strong>「手持ち香水を使い分ける」「自分の香りを選ぶ」「会う人に合わせる」「贈り物・救済モード」へ、そのまま考え方を広げられます。</div>
+    <div class="ai-mini-item"><strong>仕事や人間関係にも使う</strong>商談で相手に安心感を与える香り、好きな人との距離の詰め方なども、「実際のデータ＋今日の気学情報」で相談できます。</div>
+  </div>
+</section>
+
+<section class="ai-section" id="fourBranches">
+  <div class="ai-section-label">05 / FOUR BRANCHES</div>
+  <div class="ai-section-title">日・人・深・育の詳細</div>
+  <div class="ai-section-text">今日を整える、人に合わせる、自分を深掘りする、もっと育てる。上のAI USE TREEの4つの枝が、KITOKUでAIに渡せる材料の全体像です。</div>
+</section>
+
+<section class="ai-section" id="growthSteps">
+  <div class="ai-section-label">06 / GROW</div>
+  <div class="ai-section-title">育て方の3段階</div>
+  <div class="ai-section-text">一気に全部を使いこなす必要はありません。今の自分に合う段階から、少しずつ進めてください。</div>
+  <div class="ai-mini-list">
+    <div class="ai-mini-item"><strong>初級：まず1つのチャットに貼る</strong>本命星・月命星・傾斜・同会・納音などの基本情報は最初の1回だけ。今日の方位盤・処方色・香りは日によって変わるので、その日の分を都度貼ります。</div>
+    <div class="ai-mini-item"><strong>中級：テーマごとにチャットを分ける</strong>仕事用・人間関係用・体調や美容用、と分けると、AIが混乱せず、より的確な答えを返しやすくなります。</div>
+    <div class="ai-mini-item"><strong>上級：知恵の蔵として育てる</strong>NotebookLMやObsidianなどに、相談の記録や気づきを少しずつ蓄積していく方法です。慣れてきたら試してみてください。</div>
+  </div>
+</section>
+
+<section class="ai-section" id="firstStep">
+  <div class="ai-section-label">07 / FIRST STEP</div>
+  <div class="ai-section-title">はじめの一歩</div>
+  <div class="ai-steps-list">
+    <div class="ai-step-item"><div class="ai-step-copy"><strong>基本情報をコピーする</strong>あなたの基本情報（本命星・月命星・傾斜・同会・納音）をコピーして、いつも使っているAIチャットに貼ってください。</div></div>
+    <div class="ai-step-item"><div class="ai-step-copy"><strong>最初の一言を添える</strong>「これは私の気学の基本データです。今日から、私の日常のアドバイザーとして相談に乗ってください。」</div></div>
+    <div class="ai-step-item"><div class="ai-step-copy"><strong>今日困っていることを聞く</strong>あとは、今日困っていることを、そのまま聞いてみてください。</div></div>
+  </div>
+</section>
+
+<section class="ai-section" id="memorySetup">
+  <div class="ai-section-label">08 / MEMORY</div>
+  <div class="ai-section-title">もっと手間を減らしたい方へ</div>
+  <div class="ai-section-text">
+    <p>同じチャットを固定して使う方法だけでも、日々の相談には十分です。ただ、テーマごとにチャットを分けると、新しいチャットを開くたびに基本情報を貼り直す必要が出てきます。</p>
+    <p>これを避けたい場合、多くのAIには基本情報を一度登録すれば、どのチャットを新しく開いても、最初から覚えていてくれる設定があります。</p>
+  </div>
+  <div class="ai-mini-list">
+    <div class="ai-mini-item"><strong>ChatGPT</strong>設定 → パーソナライズ → メモリ</div>
+    <div class="ai-mini-item"><strong>Gemini</strong>設定 → パーソナルインテリジェンス → カスタム指示</div>
+  </div>
+  <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、その日の方位盤や処方だけを貼れば準備完了です。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
+</section>
+
 <!-- 星情報ブロック -->
 <div class="star-block" id="starMaterial">
   <div class="star-info-box">
@@ -296,7 +407,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="star-mini-note">まずはこの星情報を、いつものAIチャットに貼ってください。同じチャット内では、あなたの基本情報として相談の土台になります。</div>
   </div>
   <button class="copy-btn" onclick="copyStarInfo()">
-    <span>📋</span> 星情報だけをコピー（単体使用）
+    <span>COPY</span> 星情報だけをコピー（単体使用）
   </button>
   <div class="target-box" id="targetMaterial">
     <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
@@ -467,7 +578,7 @@ function updateTargetInfo(){
 // ============================================================
 function copyStarInfo(){
   const text=gInfo.starText||document.getElementById('starInfoText').textContent;
-  navigator.clipboard.writeText(text).then(()=>flashBtn('copy-btn','✅ コピーしました','📋 星情報だけをコピー（単体使用）'));
+  navigator.clipboard.writeText(text).then(()=>flashBtn('copy-btn','コピーしました','COPY 星情報だけをコピー（単体使用）'));
 }
 
 function flashBtn(cls,msg,orig){
@@ -475,7 +586,7 @@ function flashBtn(cls,msg,orig){
   if(!btn)return;
   const span=btn.querySelector('span');
   const origHtml=btn.innerHTML;
-  btn.innerHTML=`<span>✅</span> ${msg}`;
+  btn.innerHTML=`<span>OK</span> ${msg}`;
   setTimeout(()=>{btn.innerHTML=origHtml;},2000);
 }
 
