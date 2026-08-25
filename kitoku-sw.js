@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260825-ai-practical-copy';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260825-ai-scent-stars';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
