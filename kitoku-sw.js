@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260825-academy15-ai';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260825-academy15-video';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
