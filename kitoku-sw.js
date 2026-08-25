@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260825-ai-scent-stars';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260825-academy15-ai';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
@@ -49,8 +49,9 @@ const KITOKU_CORE = [
   './academy_assets/14/ss1_special.png',
   './academy_assets/14/ss2_strict.png',
   './academy_assets/14/ss3_loose.png',
-  './academy_assets/15/ss1_ai_ask.png',
-  './academy_assets/15/ss2_top_ai_entry.png',
+  './academy_assets/15/ss1_ai_new_overview.png',
+  './academy_assets/15/ss2_ai_tree_practical.png',
+  './academy_assets/15/ss3_ai_grow_steps.png',
   './academy_assets/guide_name/ss1_name_input.png',
   './academy_assets/guide_scent/ss1_today_scent.png',
   './academy_assets/guide_scent/ss2_scent_ai_teacher.png',

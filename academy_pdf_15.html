@@ -18,7 +18,7 @@ h1{font-size:38px;line-height:1.35;margin:4px 0 0;font-weight:600;letter-spacing
 .purpose{border:1px solid #d7b06f;background:var(--amber-soft);border-radius:8px;padding:18px 22px;text-align:left;font-weight:600}h2{font-size:25px;line-height:1.45;margin:24px 0 14px;letter-spacing:.04em}p{margin:0 0 13px}.small{font-size:13px;color:var(--muted)}
 .note{border:1px solid #d6b36f;border-radius:8px;background:var(--amber-soft);padding:16px 18px;margin:16px 0}.note.green{border-color:#a8ccb5;background:var(--green-soft)}.note.amber{border-color:#d6b36f;background:var(--amber-soft)}
 table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0 18px;border:1px solid #dccbb1;border-radius:8px;overflow:hidden;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid #eadfcd;vertical-align:top;text-align:left}th{background:#f7edda;color:#6b4115;font-weight:700}tr:last-child td{border-bottom:0}
-.shot{border:1px solid #dfcfb5;border-radius:8px;background:#fff;padding:10px;margin:16px 0 12px;break-inside:avoid}.shot img{width:100%;max-height:510px;object-fit:contain;display:block;border-radius:6px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+.shot{border:1px solid #dfcfb5;border-radius:8px;background:#fff;padding:10px;margin:16px 0 12px;break-inside:avoid}.shot img{width:100%;max-height:510px;object-fit:contain;display:block;border-radius:6px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}.image-page{display:flex;flex-direction:column}.image-page .shot{margin:auto 0 36px}.image-page .shot img{max-height:215mm}
 .next{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}.next div{border:1px solid #dfcfb5;border-radius:8px;background:#fffaf2;padding:14px}.next b{display:block;color:#8b5a08;margin-bottom:4px}
 @media print{body{background:white}.toolbar{display:none}.book{padding:0;max-width:none}.page{page-break-after:always;border:0;box-shadow:none;border-radius:0;min-height:277mm;margin:0;padding:18mm 16mm}.footer{left:16mm;right:16mm;bottom:10mm}.page:before{display:none}.shot{break-inside:avoid}a{color:inherit;text-decoration:none}}
 @media(max-width:720px){.page{padding:24px 18px;min-height:auto}.steps,.next{grid-template-columns:1fr}h1{font-size:30px}.footer{position:static;margin-top:28px}}
@@ -54,23 +54,43 @@ table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0 18px;bo
   </section>
   <section class="page">
     <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>今の使い方</span></div>
-<h2>4. 星情報をAIに渡す方法</h2><p>KITOKUには「AIに聞く」という入口があります。ここでKITOKUの星データをAIに渡して、自分専用の相談文を作れます。</p><p>これは今のところの使い方です。今後、アプリの中だけで相談が完結する機能が増えていくので、この方法自体は少しずつ役目を終えていく予定です。今すぐ使いたい方のために、手順だけ簡単に紹介します。</p><table><thead><tr><th>STEP</th><th>やること</th></tr></thead><tbody><tr><td>1</td><td>下の「1〜4」から、今いちばん聞きたいテーマを一つ選ぶ</td></tr><tr><td>2</td><td>黄色い欄を、自分の状況に書き換える</td></tr><tr><td>3</td><td>コピーして、ChatGPT・Claude・Gemini・NotebookLM等に貼る</td></tr></tbody></table><div class="note green">「大切なのは、答えを一回で決めることではなく、AIとの対話を重ねて自分の判断軸を育てることです。」これはKITOKU「AIに聞く」画面に、実際に書かれている言葉です。</div><figure class="shot"><img src="academy_assets/15/ss1_ai_ask.png" alt="「AIに聞く」画面。3ステップの案内と、判断軸を育てる一文を確認できます。"><figcaption>「AIに聞く」画面。3ステップの案内と、判断軸を育てる一文を確認できます。</figcaption></figure>
+<h2>4. 星情報をAIに渡し、自分専用に育てる</h2><p>KITOKUの「自分専用のAIを育てる」画面では、本命星・月命星・傾斜・同会・納音などの基本情報を、AIに渡しやすい形で整えます。</p><p>大切なのは、ただ質問を投げることではありません。まず自分の星情報を前提として渡し、その上で「今日どう整えるか」「どんな香りや服が合うか」「相手にどう合わせるか」を聞くことです。AIの答えは、その前提があるほど具体的になります。</p><table><thead><tr><th>STEP</th><th>やること</th></tr></thead><tbody><tr><td>1</td><td>自分の星情報をコピーして、いつものAIチャットに貼る</td></tr><tr><td>2</td><td>日盤吉方・体調・服・香水など、今聞きたい例を選ぶ</td></tr><tr><td>3</td><td>必要に応じて、今日の方位盤や香水サイトのURLなどを追加する</td></tr></tbody></table><div class="note green">香水の相談も、自分の九星情報をAIに渡していることが前提です。星情報があるからこそ、「今買える商品」だけでなく、「自分に合う理由」まで聞けるようになります。</div>
     <div class="footer"><span>KITOKU @ JOURNEY</span><span>4</span></div>
   </section>
-  <section class="page">
-    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>星とAI</span></div>
-<h2>5. あなたの星とAIとの付き合い方</h2><p>気学の五行で見ると、AIは「知性・情報」を象徴する火（九紫）の気質に近いとされています。星によって、AIとの付き合い方の型が少し変わります。</p><table><thead><tr><th>系統の星</th><th>AIとの付き合い方の型</th></tr></thead><tbody><tr><td>木・火・土の星（三碧・四緑・九紫・二黒・五黄・八白）</td><td>AIのアイデアを、すぐに行動や形に落とし込みやすい</td></tr><tr><td>金・水の星（一白・六白・七赤）</td><td>AIの答えに、いったん立ち止まって吟味してから使うのが得意</td></tr></tbody></table><div class="note amber">どちらが優れているという話ではありません。「すぐ動ける」のも「立ち止まって考える」のも、どちらもAIを使いこなす上で価値のある力です。違和感を覚えたら、それは自分にない要素を取り込むチャンスだと捉えてください。</div><figure class="shot"><img src="academy_assets/15/ss2_top_ai_entry.png" alt="TOPページからも、AIで悩みを整理する入口を確認できます。"><figcaption>TOPページからも、AIで悩みを整理する入口を確認できます。</figcaption></figure>
+  <section class="page image-page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>AI画面</span></div>
+<figure class="shot"><img src="academy_assets/15/ss1_ai_new_overview.png" alt="新しいAI活用画面。自分専用のAIを育てる導入と、日盤吉方・体調・服・香水の相談例を確認できます。"><figcaption>新しいAI活用画面。星情報を土台に、日盤吉方・体調・服・香水の相談例へ進めます。</figcaption></figure>
     <div class="footer"><span>KITOKU @ JOURNEY</span><span>5</span></div>
   </section>
   <section class="page">
-    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>学びの途中</span></div>
-<h2>6. KITOKUという場所自体が、学びの旅の途中</h2><p>ここまで15回にわたって、気学の基礎から、方位・引越し・ビジネス・輪重吉方まで、幅広くお伝えしてきました。</p><p>実はKITOKUというアプリ自体も、「気学の権威が作った教科書」ではありません。AIと一緒に、試行錯誤しながら形にしてきた、学びの記録です。今日この回を読んでいるあなたと、同じ立場から始まっています。</p><div class="note green">完璧な知識を持っているから使う、のではありません。学びながら使い、使いながら学ぶ。それがKITOKUの、そしてAI時代の、自然な付き合い方です。</div>
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>便利な活用方法</span></div>
+<h2>5. 毎回貼る手間を減らす</h2><p>同じチャットで相談するだけでも、日々の実践には十分です。ただ、服・体調・仕事・人間関係のようにテーマごとにチャットを分けると、そのたびに基本情報を貼り直す手間が出てきます。</p><p>そこで便利なのが、ChatGPTやGemini側のメモリ・カスタム指示です。ここに基本情報を一度だけ登録しておくと、以降のやり取りはすべて「あなたの本命星・月命星はこれです」という前提で進みます。</p><div class="note amber">AI USE TREEは、何を足せば相談が深くなるかの地図です。最初は1つのチャットで十分。慣れてきたら、テーマ別のチャットや知恵の蔵へ広げていきます。</div>
     <div class="footer"><span>KITOKU @ JOURNEY</span><span>6</span></div>
+  </section>
+  <section class="page image-page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>AI USE TREE</span></div>
+<figure class="shot"><img src="academy_assets/15/ss2_ai_tree_practical.png" alt="便利な活用方法とAI USE TREE。メモリ設定と、今日・人・深・育の相談枝を確認できます。"><figcaption>便利な活用方法とAI USE TREE。基本情報を覚えさせると、相談の入口が軽くなります。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>7</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>育て方</span></div>
+<h2>6. AIとの付き合い方を段階で育てる</h2><p>気学の五行で見ると、AIは「知性・情報」を象徴する火（九紫）の気質に近いとされています。星によって、すぐ動きたくなる人もいれば、いったん吟味してから使いたい人もいます。</p><table><thead><tr><th>段階</th><th>使い方</th></tr></thead><tbody><tr><td>初級</td><td>まず1つのチャットに、自分の星情報を貼る</td></tr><tr><td>中級</td><td>仕事・人間関係・体調や美容など、テーマごとにチャットを分ける</td></tr><tr><td>上級</td><td>NotebookLMなどに日々の気づきや相談記録を蓄積し、知恵の蔵として育てる</td></tr></tbody></table><div class="note amber">どの段階でも、AIの答えを丸ごと信じる必要はありません。答えを材料として受け取り、自分の判断軸を育てることが目的です。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>8</span></div>
+  </section>
+  <section class="page image-page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>育て方</span></div>
+<figure class="shot"><img src="academy_assets/15/ss3_ai_grow_steps.png" alt="育て方の3段階とはじめの一歩。初級・中級・上級の使い方を確認できます。"><figcaption>育て方の3段階。最初は1つのチャットから、少しずつ自分専用の相談相手へ育てます。</figcaption></figure>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>9</span></div>
+  </section>
+  <section class="page">
+    <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>学びの途中</span></div>
+<h2>7. KITOKUという場所自体が、学びの旅の途中</h2><p>ここまで15回にわたって、気学の基礎から、方位・引越し・ビジネス・輪重吉方まで、幅広くお伝えしてきました。</p><p>実はKITOKUというアプリ自体も、「気学の権威が作った教科書」ではありません。AIと一緒に、試行錯誤しながら形にしてきた、学びの記録です。今日この回を読んでいるあなたと、同じ立場から始まっています。</p><div class="note green">完璧な知識を持っているから使う、のではありません。学びながら使い、使いながら学ぶ。それがKITOKUの、そしてAI時代の、自然な付き合い方です。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>10</span></div>
   </section>
   <section class="page">
     <div class="header"><span>KITOKU ACADEMY - ADVANCED 15</span><span>締め</span></div>
-<h2>7. 情報を、あなたの知恵に変える</h2><p>AIは、答えをくれる存在ではありません。考えるための材料を、たくさん見せてくれる存在です。</p><p>最後にその材料をどう組み合わせ、何を信じ、どう動くか。それを決めるのは、いつだってあなた自身です。</p><p>KITOKUも、AIも、あなたの代わりに決めることはできません。でも、あなたがより良く決めるための、良き相棒にはなれます。</p><div class="next"><div><b>第00回</b>東洋思想の地図（基礎の振り返り）</div><div><b>全15回</b>KITOKU Academy、お疲れ様でした</div></div><div class="purpose">情報を集めるだけで終わらせず、自分の人生に合う形へ変えていく。それが、AI時代の学び方です。</div>
-    <div class="footer"><span>KITOKU @ JOURNEY</span><span>7</span></div>
+<h2>8. 情報を、あなたの知恵に変える</h2><p>AIは、答えをくれる存在ではありません。考えるための材料を、たくさん見せてくれる存在です。</p><p>最後にその材料をどう組み合わせ、何を信じ、どう動くか。それを決めるのは、いつだってあなた自身です。</p><p>KITOKUも、AIも、あなたの代わりに決めることはできません。でも、あなたがより良く決めるための、良き相棒にはなれます。</p><div class="next"><div><b>第00回</b>東洋思想の地図（基礎の振り返り）</div><div><b>全15回</b>KITOKU Academy、お疲れ様でした</div></div><div class="purpose">情報を集めるだけで終わらせず、自分の人生に合う形へ変えていく。それが、AI時代の学び方です。</div>
+    <div class="footer"><span>KITOKU @ JOURNEY</span><span>11</span></div>
   </section>
 </main>
 </body>
