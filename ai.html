@@ -73,13 +73,33 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-section-text p{margin:0 0 10px;}
 .ai-section-text p:last-child{margin-bottom:0;}
 .ai-example-grid{display:grid;gap:10px;margin-top:10px;}
-.ai-example-card{background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:12px;padding:12px;}
+.ai-example-card{background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:12px;overflow:hidden;}
 .ai-example-card.primary{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.68));border-color:rgba(196,160,67,.36);}
+.ai-accordion-toggle{appearance:none;width:100%;border:0;background:transparent;color:inherit;font-family:'Noto Serif JP',serif;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;text-align:left;padding:12px;cursor:pointer;}
+.ai-accordion-toggle:focus,.ai-section-toggle:focus{outline:none;}
+.ai-accordion-toggle:focus-visible,.ai-section-toggle:focus-visible{outline:2px solid rgba(196,160,67,.55);outline-offset:-3px;}
+.ai-accordion-title{display:block;font-size:.78rem;color:var(--goldlt);font-weight:900;line-height:1.55;}
+.ai-accordion-summary{display:block;font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
+.ai-accordion-icon{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);color:var(--goldlt);font-size:.76rem;font-weight:900;transition:transform .25s ease;}
+.ai-accordion-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;border-top:1px solid transparent;}
+.ai-accordion-inner{min-height:0;overflow:hidden;padding:0 12px;}
+.ai-accordion.open .ai-accordion-content{grid-template-rows:1fr;border-top-color:rgba(100,80,40,.1);}
+.ai-accordion.open .ai-accordion-inner{padding:10px 12px 12px;}
+.ai-accordion.open .ai-accordion-icon{transform:rotate(180deg);}
 .ai-example-title{font-size:.78rem;color:var(--goldlt);font-weight:900;line-height:1.6;margin-bottom:6px;}
 .ai-example-body{font-size:.66rem;color:var(--mist);line-height:1.9;}
 .ai-quote{margin:9px 0;padding:10px 11px;background:rgba(100,80,40,.055);border-left:3px solid rgba(196,160,67,.72);border-radius:8px;font-size:.64rem;color:var(--snow);line-height:1.9;}
 .ai-answer{margin:9px 0;padding:10px 11px;background:rgba(72,142,94,.07);border:1px solid rgba(72,142,94,.18);border-radius:9px;font-size:.64rem;color:var(--mist);line-height:1.9;}
 .ai-tree-intro{margin:14px 16px 0;padding:12px 14px;background:rgba(72,142,94,.07);border:1px solid rgba(72,142,94,.2);border-radius:12px;font-size:.68rem;color:var(--mist);line-height:1.9;}
+.ai-section-accordion{padding:0;overflow:hidden;}
+.ai-section-toggle{appearance:none;width:100%;border:0;background:transparent;color:inherit;font-family:'Noto Serif JP',serif;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;text-align:left;padding:15px;cursor:pointer;}
+.ai-section-toggle .ai-section-title{margin-bottom:2px;}
+.ai-section-summary{font-size:.62rem;color:var(--mist);line-height:1.65;}
+.ai-section-accordion-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease;border-top:1px solid transparent;}
+.ai-section-accordion-inner{min-height:0;overflow:hidden;padding:0 15px;}
+.ai-section-accordion.open .ai-section-accordion-content{grid-template-rows:1fr;border-top-color:rgba(100,80,40,.1);}
+.ai-section-accordion.open .ai-section-accordion-inner{padding:13px 15px 15px;}
+.ai-section-accordion.open .ai-accordion-icon{transform:rotate(180deg);}
 .ai-mini-list{display:grid;gap:8px;margin-top:10px;}
 .ai-mini-item{padding:10px 11px;background:rgba(255,255,255,.52);border:1px solid rgba(100,80,40,.12);border-radius:10px;font-size:.65rem;color:var(--mist);line-height:1.85;}
 .ai-mini-item strong{display:block;color:var(--goldlt);font-size:.7rem;margin-bottom:2px;}
@@ -249,25 +269,40 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="ai-section-title">こんな時、こう使う</div>
   <div class="ai-section-text">毎日必ず訪れる場面ほど、AIも育ちやすくなります。</div>
   <div class="ai-example-grid">
-    <article class="ai-example-card primary">
-      <div class="ai-example-title">日盤吉方を取りに行く時</div>
-      <div class="ai-example-body">気学では、日盤の吉方位へ実際に足を運ぶ「吉方取り」が、最も基本的な実践です。KITOKUは、その方向で何を取り入れるかまで処方します。</div>
-      <div class="ai-quote">「今日の吉方は西（七赤金星）です。金の五行のエネルギーに合わせた、コンビニで買える飲み物や食べ物を3つ提案してください。色はピンク・オレンジ・金が合っています。」</div>
-      <div class="ai-example-body">「コピーして使う」を押して、そのままAIに貼るだけです。方位へ向かう道すがら、実際に買うものまで、その場で具体的に決まります。</div>
+    <article class="ai-example-card ai-accordion primary open" data-ai-accordion>
+      <button class="ai-accordion-toggle" type="button" aria-expanded="true">
+        <span><span class="ai-accordion-title">日盤吉方を取りに行く時</span><span class="ai-accordion-summary">気学学習者の一番の基本</span></span>
+        <span class="ai-accordion-icon">⌄</span>
+      </button>
+      <div class="ai-accordion-content"><div class="ai-accordion-inner">
+        <div class="ai-example-body">気学では、日盤の吉方位へ実際に足を運ぶ「吉方取り」が、最も基本的な実践です。KITOKUは、その方向で何を取り入れるかまで処方します。</div>
+        <div class="ai-quote">「今日の吉方は西（七赤金星）です。金の五行のエネルギーに合わせた、コンビニで買える飲み物や食べ物を3つ提案してください。色はピンク・オレンジ・金が合っています。」</div>
+        <div class="ai-example-body">「コピーして使う」を押して、そのままAIに貼るだけです。方位へ向かう道すがら、実際に買うものまで、その場で具体的に決まります。</div>
+      </div></div>
     </article>
-    <article class="ai-example-card">
-      <div class="ai-example-title">体調管理アシスタントを育てる</div>
-      <div class="ai-example-body">体重計・体組成計のデータに今日の五行を添えると、数字の変化を体調の流れとして読み解いてくれるようになります。</div>
-      <div class="ai-quote">「体重が昨日より1.3kg増えました。骨格筋量と体内水分率も上がっています。これは何が起きていると考えられますか？ 気学では今日は土のエネルギーの日です。」</div>
-      <div class="ai-answer">これは脱水からのリカバリーとして、体が正しく機能した証拠です。筋肉にグリコーゲンと水分が引き込まれたための増加で、体脂肪が増えたわけではありません。</div>
-      <div class="ai-example-body">細かい読み解きをAIに任せ、自分は大きな流れだけ見ていられることが、育てる価値のわかりやすい実感になります。</div>
+    <article class="ai-example-card ai-accordion" data-ai-accordion>
+      <button class="ai-accordion-toggle" type="button" aria-expanded="false">
+        <span><span class="ai-accordion-title">体調管理アシスタントを育てる</span><span class="ai-accordion-summary">数字の変化を、体調の流れとして読む</span></span>
+        <span class="ai-accordion-icon">⌄</span>
+      </button>
+      <div class="ai-accordion-content"><div class="ai-accordion-inner">
+        <div class="ai-example-body">体重計・体組成計のデータに今日の五行を添えると、数字の変化を体調の流れとして読み解いてくれるようになります。</div>
+        <div class="ai-quote">「体重が昨日より1.3kg増えました。骨格筋量と体内水分率も上がっています。これは何が起きていると考えられますか？ 気学では今日は土のエネルギーの日です。」</div>
+        <div class="ai-answer">これは脱水からのリカバリーとして、体が正しく機能した証拠です。筋肉にグリコーゲンと水分が引き込まれたための増加で、体脂肪が増えたわけではありません。</div>
+        <div class="ai-example-body">細かい読み解きをAIに任せ、自分は大きな流れだけ見ていられることが、育てる価値のわかりやすい実感になります。</div>
+      </div></div>
     </article>
-    <article class="ai-example-card">
-      <div class="ai-example-title">ワードローブアシスタントを育てる</div>
-      <div class="ai-example-body">手持ちの服を写真に撮って相談する時、自分の九星や今日の処方色を一緒に伝えると、選択肢の理由づけが深くなります。</div>
-      <div class="ai-quote">「私の本命星は六白金星、月命は一白水星です。手持ちの服は黒が多いのですが、紺と黒、自分にはどちらが合っていますか？」</div>
-      <div class="ai-answer">紺は、水のエネルギーを活性化させるシンボルカラー。黒は、深みと重厚感を出す相棒カラー。日常は紺を主役に、引き締めたい日は黒を使い分ける、という考え方ができます。</div>
-      <div class="ai-example-body">「どちらが正解か」ではなく、それぞれがどんな役割を持つ色かを教えてもらえるのが、育てる価値です。</div>
+    <article class="ai-example-card ai-accordion" data-ai-accordion>
+      <button class="ai-accordion-toggle" type="button" aria-expanded="false">
+        <span><span class="ai-accordion-title">ワードローブアシスタントを育てる</span><span class="ai-accordion-summary">服の色と役割を、自分の星から選ぶ</span></span>
+        <span class="ai-accordion-icon">⌄</span>
+      </button>
+      <div class="ai-accordion-content"><div class="ai-accordion-inner">
+        <div class="ai-example-body">手持ちの服を写真に撮って相談する時、自分の九星や今日の処方色を一緒に伝えると、選択肢の理由づけが深くなります。</div>
+        <div class="ai-quote">「私の本命星は六白金星、月命は一白水星です。手持ちの服は黒が多いのですが、紺と黒、自分にはどちらが合っていますか？」</div>
+        <div class="ai-answer">紺は、水のエネルギーを活性化させるシンボルカラー。黒は、深みと重厚感を出す相棒カラー。日常は紺を主役に、引き締めたい日は黒を使い分ける、という考え方ができます。</div>
+        <div class="ai-example-body">「どちらが正解か」ではなく、それぞれがどんな役割を持つ色かを教えてもらえるのが、育てる価値です。</div>
+      </div></div>
     </article>
   </div>
 </section>
@@ -346,16 +381,24 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </div>
 
-<section class="ai-section" id="moreScenes">
-  <div class="ai-section-label">04 / EXPAND</div>
-  <div class="ai-section-title">慣れてきたら、広げられる場面</div>
-  <div class="ai-section-text"><p>体調管理・服選びに慣れてきたら、他の場面にも同じやり方を応用できます。</p></div>
-  <div class="ai-mini-list">
-    <div class="ai-mini-item"><strong>手持ちの香水を、自分の九星で分析する</strong>今持っている香水を写真や名前で伝え、「自分の本命星に合っているか」「足りない五行を補うにはどれが良いか」を相談します。</div>
-    <div class="ai-mini-item"><strong>好きな香水サイトのURLを貼る</strong>「セレス」「Coén」のような少量から試せる香水サイトのURLを添えると、実在する・今買える商品の中から選びやすくなります。</div>
-    <div class="ai-mini-item"><strong>香りAI先生に進む</strong>「手持ち香水を使い分ける」「自分の香りを選ぶ」「会う人に合わせる」「贈り物・救済モード」へ、そのまま考え方を広げられます。</div>
-    <div class="ai-mini-item"><strong>仕事や人間関係にも使う</strong>商談で相手に安心感を与える香り、好きな人との距離の詰め方なども、「実際のデータ＋今日の気学情報」で相談できます。</div>
-  </div>
+<section class="ai-section ai-section-accordion" id="moreScenes" data-ai-section-accordion>
+  <button class="ai-section-toggle" type="button" aria-expanded="false">
+    <span>
+      <span class="ai-section-label">04 / EXPAND</span>
+      <span class="ai-section-title">慣れてきたら、広げられる場面</span>
+      <span class="ai-section-summary">応用編。香り・仕事・人間関係へ広げたい時に開いてください。</span>
+    </span>
+    <span class="ai-accordion-icon">⌄</span>
+  </button>
+  <div class="ai-section-accordion-content"><div class="ai-section-accordion-inner">
+    <div class="ai-section-text"><p>体調管理・服選びに慣れてきたら、他の場面にも同じやり方を応用できます。</p></div>
+    <div class="ai-mini-list">
+      <div class="ai-mini-item"><strong>手持ちの香水を、自分の九星で分析する</strong>今持っている香水を写真や名前で伝え、「自分の本命星に合っているか」「足りない五行を補うにはどれが良いか」を相談します。</div>
+      <div class="ai-mini-item"><strong>好きな香水サイトのURLを貼る</strong>「セレス」「Coén」のような少量から試せる香水サイトのURLを添えると、実在する・今買える商品の中から選びやすくなります。</div>
+      <div class="ai-mini-item"><strong>香りAI先生に進む</strong>香りAI先生には、4つの相談モードが用意されています。気になったら、そのまま開いてみてください。</div>
+      <div class="ai-mini-item"><strong>仕事や人間関係にも使う</strong>商談で相手に安心感を与える香り、好きな人との距離の詰め方なども、「実際のデータ＋今日の気学情報」で相談できます。</div>
+    </div>
+  </div></div>
 </section>
 
 <section class="ai-section" id="fourBranches">
@@ -385,18 +428,26 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </section>
 
-<section class="ai-section" id="memorySetup">
-  <div class="ai-section-label">08 / MEMORY</div>
-  <div class="ai-section-title">もっと手間を減らしたい方へ</div>
-  <div class="ai-section-text">
-    <p>同じチャットを固定して使う方法だけでも、日々の相談には十分です。ただ、テーマごとにチャットを分けると、新しいチャットを開くたびに基本情報を貼り直す必要が出てきます。</p>
-    <p>これを避けたい場合、多くのAIには基本情報を一度登録すれば、どのチャットを新しく開いても、最初から覚えていてくれる設定があります。</p>
-  </div>
-  <div class="ai-mini-list">
-    <div class="ai-mini-item"><strong>ChatGPT</strong>設定 → パーソナライズ → メモリ</div>
-    <div class="ai-mini-item"><strong>Gemini</strong>設定 → パーソナルインテリジェンス → カスタム指示</div>
-  </div>
-  <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、その日の方位盤や処方だけを貼れば準備完了です。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
+<section class="ai-section ai-section-accordion" id="memorySetup" data-ai-section-accordion>
+  <button class="ai-section-toggle" type="button" aria-expanded="false">
+    <span>
+      <span class="ai-section-label">08 / MEMORY</span>
+      <span class="ai-section-title">もっと手間を減らしたい方へ</span>
+      <span class="ai-section-summary">テーマ別チャットで基本情報の貼り直しを減らしたい時に。</span>
+    </span>
+    <span class="ai-accordion-icon">⌄</span>
+  </button>
+  <div class="ai-section-accordion-content"><div class="ai-section-accordion-inner">
+    <div class="ai-section-text">
+      <p>同じチャットを固定して使う方法だけでも、日々の相談には十分です。ただ、テーマごとにチャットを分けると、新しいチャットを開くたびに基本情報を貼り直す必要が出てきます。</p>
+      <p>これを避けたい場合、多くのAIには基本情報を一度登録すれば、どのチャットを新しく開いても、最初から覚えていてくれる設定があります。</p>
+    </div>
+    <div class="ai-mini-list">
+      <div class="ai-mini-item"><strong>ChatGPT</strong>設定 → パーソナライズ → メモリ</div>
+      <div class="ai-mini-item"><strong>Gemini</strong>設定 → パーソナルインテリジェンス → カスタム指示</div>
+    </div>
+    <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、その日の方位盤や処方だけを貼れば準備完了です。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
+  </div></div>
 </section>
 
 <!-- 星情報ブロック -->
@@ -662,6 +713,29 @@ function focusAiMaterial(id){
   target._focusTimer = window.setTimeout(() => target.classList.remove('star-focus'), 3800);
 }
 
+function initAiAccordions(){
+  document.querySelectorAll('[data-ai-accordion]').forEach(item => {
+    if(item.dataset.accordionReady === '1') return;
+    item.dataset.accordionReady = '1';
+    const btn = item.querySelector('.ai-accordion-toggle');
+    if(!btn) return;
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+  document.querySelectorAll('[data-ai-section-accordion]').forEach(section => {
+    if(section.dataset.accordionReady === '1') return;
+    section.dataset.accordionReady = '1';
+    const btn = section.querySelector('.ai-section-toggle');
+    if(!btn) return;
+    btn.addEventListener('click', () => {
+      const isOpen = section.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+}
+
 function initAiTreeFocusLinks(){
   document.querySelectorAll('[data-focus-target]').forEach(link => {
     if(link.dataset.focusReady === '1') return;
@@ -675,6 +749,7 @@ function initAiTreeFocusLinks(){
 
 document.addEventListener('DOMContentLoaded', function(){
   initAiTreeLevels();
+  initAiAccordions();
   initAiTreeFocusLinks();
 });
 </script>
