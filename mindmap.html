@@ -309,6 +309,26 @@ const DECISION_PROF={
      rx:'心からひれ伏す「尊敬できる師匠」を見つけ、その教えに徹底的に従うこと。九紫の機体には強力な「スプリング（バネ）」が内蔵されており、逆境に陥るほど反発して高く跳び上がる。困難な道を選ぶことで大成する。',
      q:'これは直感か、ただの熱狂か。信頼できる人の視点に照らせているか？'},
 };
+const HEART_PROF={
+  1:{rx:'一人で抱え込む時間を作らないこと。反省よりも先に、心を緩められる場所・人に自分から寄っていく。孤独に強い分、孤独に飲まれるとどこまでも沈むタイプだと知っておく。',
+     q:'この悩みは、一人で抱え込んでいないか。心を許せる誰かに、もう話しただろうか？'},
+  2:{rx:'溜め込んだ恨みや妬みは、誰かにぶつける前に、まず紙に書き出して外に出すこと。地道な積み重ねこそが自分の一番の安心材料だと思い出す。',
+     q:'この心の中の重さは、誰かへの妬みか。それとも自分への焦りか？'},
+  3:{rx:'刺激を求めて動き続けるのは自然なこと。ただし、心が落ち着かない時ほど、一つのことをやり切る小さな成功体験を意識して積む。',
+     q:'今の高揚は本物の喜びか、それとも落ち着きのなさから逃げているだけか？'},
+  4:{rx:'人に合わせすぎて疲れた時ほど、自分の本音を一度紙に書いてみる。不機嫌を顔に出す代わりに、言葉にして伝える練習をする。',
+     q:'私は今、誰かに合わせて自分を消していないか。本当はどう感じている？'},
+  5:{rx:'無理に機嫌よく振る舞う必要はない。ただ、黙り込む代わりに、身近な人に一言だけでも今の気持ちを伝えてみる。強がりを少し手放す練習を。',
+     q:'これは確信か、ただの意地か。今、本当は誰かに助けを求めたいのではないか？'},
+  6:{rx:'他人の遅さにイライラしたら、まず自分の見えない部分（心の中・生活の乱れ）を整えることに矛先を向ける。素直に頭を下げられる相手を、意識して大切にする。',
+     q:'私はこの完璧さを、誰かを追い詰める理由にしていないか。素直に頼れているか？'},
+  7:{rx:'愚痴が増えてきたら要注意のサイン。誰かのいいところを一つ見つけて言葉にする。寂しさは、他人を責めることでは埋まらないと知っておく。',
+     q:'この不満は、本当に相手のせいか。それとも自分の寂しさを他人にぶつけていないか？'},
+  8:{rx:'本音を溜め込むほど、身近な人との間に壁ができる。小さなことでいいので、思っていることをそのまま言葉にする練習を。家族には特に。',
+     q:'これは熟考か、ただの我慢か。本当は誰かに分かってほしいことがあるのではないか？'},
+  9:{rx:'熱しやすく冷めやすい心は、一人で完結させず、信頼できる人に話して落ち着かせる。自分の直感を、誰かの視点で一度確かめてみる謙虚さを持つ。',
+     q:'この気持ちは直感か、ただの熱狂か。今、心から話せる相手はいるか？'},
+};
 // いまの気の流れ（回座宮→決断の構え）
 const FLOW_BY_POS={
   1:{name:'坎（北）・充電の時',text:'守り・充電の時期。大きな勝負より、退いて力を蓄えるのに向く流れ。'},
@@ -429,6 +449,7 @@ function renderStarProfile(){
     return;
   }
   const p=DECISION_PROF[gHonmei];
+  const modeProf=isWork ? p : (HEART_PROF[gHonmei]||p);
   const thisYear=new Date().getFullYear();
   const c=yearCenter(thisYear);
   const pos=((gHonmei-c+4)%9+9)%9+1||9;
@@ -440,12 +461,12 @@ function renderStarProfile(){
     <div class="sp-row"><div class="sp-label">${profileCopy.mainLabel}</div><div class="sp-text">${p.habit}</div></div>
     <div class="sp-row"><div class="sp-label">${profileCopy.trapLabel}</div><div class="sp-text">${p.trap}</div></div>
     ${p.bug?`<div class="sp-row" style="background:linear-gradient(135deg,rgba(176,48,48,.06),rgba(255,255,255,.4));border:1px solid rgba(176,48,48,.18);border-radius:9px;padding:9px 11px;margin-top:6px;"><div class="sp-label" style="color:#8a3020;">⚙ 機体のバグ（無意識のブレーキ）</div><div class="sp-text">${p.bug}</div></div>`:''}
-    ${p.rx?`<div class="sp-row" style="background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.22);border-radius:9px;padding:9px 11px;margin-top:6px;"><div class="sp-label">💊 琥珀色の処方箋（操縦法）</div><div class="sp-text">${p.rx}</div></div>`:''}
+    ${modeProf.rx?`<div class="sp-row" style="background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border:1px solid rgba(138,104,32,.22);border-radius:9px;padding:9px 11px;margin-top:6px;"><div class="sp-label">💊 琥珀色の処方箋（操縦法）</div><div class="sp-text">${modeProf.rx}</div></div>`:''}
     <div class="sp-flow">
       <div class="sp-flow-label">いまの気の流れ（${thisYear}年）— ${flow.name}</div>
       <div class="sp-text">${flow.text}</div>
     </div>
-    <div class="sp-q">自分への問い：${p.q}</div>
+    <div class="sp-q">自分への問い：${modeProf.q}</div>
     <div class="disclaimer-box">${profileCopy.disclaimer}</div>`;
 }
 
@@ -520,7 +541,9 @@ function copyForAI(){
   const L={};
   FIELDS.forEach(f=>L[f.key]=getField(f.key));
   if(!L.q1){showToast('まず内容を書いてみてください');return;}
-  const starInfo=gHonmei?`\n\n【私の機体スペック（本命星）】\n${STAR_NAMES[gHonmei]}\n決断の癖：${DECISION_PROF[gHonmei]?.type||''}\n系列：${DECISION_PROF[gHonmei]?.series||''}\n機体のバグ：${DECISION_PROF[gHonmei]?.bug||''}\n処方箋：${DECISION_PROF[gHonmei]?.rx||''}`:'';
+  const baseProf=gHonmei?DECISION_PROF[gHonmei]:null;
+  const modeProf=gHonmei&&gMode==='heart'?(HEART_PROF[gHonmei]||baseProf):baseProf;
+  const starInfo=gHonmei?`\n\n【私の機体スペック（本命星）】\n${STAR_NAMES[gHonmei]}\n決断の癖：${baseProf?.type||''}\n系列：${baseProf?.series||''}\n機体のバグ：${baseProf?.bug||''}\n処方箋：${modeProf?.rx||''}`:'';
   const txt=`あなたはKITOKUのAI軍師です。私の悩みを、答えを押し付けるのではなく、私自身が気づき決められるよう、琥珀色の言葉で正直に導いてください。不安を煽らず、でも甘やかしすぎず。最後は「自分で選ぶための判断材料」としてまとめてください。${starInfo}
 
 以下は私が気学マインドマップで整理した内容です。

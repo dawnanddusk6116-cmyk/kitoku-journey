@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260826-sekki-db-1924-2064';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260826-mindmap-heart-prof';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
