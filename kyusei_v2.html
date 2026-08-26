@@ -203,7 +203,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .app-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rim);position:sticky;top:0;background:rgba(247,244,239,.96);z-index:20;backdrop-filter:blur(12px);}
 .app-title{font-family:'Cormorant Garamond',serif;font-size:1.06rem;letter-spacing:.14em;color:var(--gold);white-space:nowrap;min-width:0;}
 .header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
-.header-reset{display:inline-flex;align-items:center;justify-content:center;min-height:34px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.72rem;padding:7px 11px;border-radius:8px;cursor:pointer;letter-spacing:.04em;font-weight:700;font-family:'Noto Serif JP',serif;white-space:nowrap;}
+.header-reset,.header-shortcut{display:inline-flex;align-items:center;justify-content:center;min-height:34px;background:rgba(196,160,67,.1);border:1px solid rgba(196,160,67,.4);color:var(--goldlt);font-size:.72rem;padding:7px 11px;border-radius:8px;cursor:pointer;letter-spacing:.04em;font-weight:700;font-family:'Noto Serif JP',serif;white-space:nowrap;text-decoration:none;}
+.header-shortcut{margin-left:auto;background:rgba(255,250,238,.72);font-size:.68rem;padding:7px 10px;}
 /* ── ツールバー ── */
 .toolbar{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-bottom:1px solid var(--rim);background:var(--card);overflow-x:auto;}
 .tb-label{font-size:.65rem;color:var(--mist);letter-spacing:.1em;flex-shrink:0;}
@@ -212,7 +213,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 [data-theme="light"] .toolbar{background:#ffffff;border-bottom-color:rgba(100,80,40,.1);}
 [data-theme="light"] .tb-btn{background:rgba(0,0,0,.04);border-color:rgba(120,90,20,.2);}
 [data-theme="light"] .tb-btn.active{background:rgba(120,90,20,.12);border-color:rgba(120,90,20,.5);}
-@media(max-width:390px){.app-header{padding:9px 11px;gap:7px}.app-title{font-size:.92rem;letter-spacing:.1em}.header-actions{gap:5px}.header-reset{font-size:.66rem;padding:7px 8px;min-height:31px}.toolbar{justify-content:flex-start}.tb-btn{padding:5px 10px}}
+@media(max-width:390px){.app-header{padding:9px 11px;gap:6px}.app-title{font-size:.9rem;letter-spacing:.08em}.header-actions{gap:5px}.header-reset,.header-shortcut{font-size:.64rem;padding:7px 8px;min-height:31px}.header-shortcut{font-size:.62rem;padding:7px 8px}.toolbar{justify-content:flex-start}.tb-btn{padding:5px 10px}}
 </style>
 </head>
 <body>
@@ -222,6 +223,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="app-title">
     ✦ KITOKU<span style="opacity:.55;margin:0 1px;">@</span>JOURNEY
   </div>
+  <a class="header-shortcut" href="direction_v2.html">🧭 今日の方位盤</a>
   <div class="header-actions">
     <button class="header-reset" onclick="history.back()">← 戻る</button>
     <button class="header-reset" onclick="window.location.href='index.html'">TOPへ</button>
@@ -621,12 +623,37 @@ function alertInvalidBirthDate(){
   alert('生年月日が正しくありません。実在する日付を入力してください。');
 }
 
+function normalizeKitokuBirth(v){
+  const raw=String(v||'').trim().replace(/\//g,'-');
+  const m=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(!m)return raw;
+  return m[1]+'-'+String(Number(m[2])).padStart(2,'0')+'-'+String(Number(m[3])).padStart(2,'0');
+}
+function getActiveKitokuBirth(){
+  try{
+    const mode=localStorage.getItem('kitoku-view-mode')||'';
+    if(mode==='target'){
+      const b=normalizeKitokuBirth(localStorage.getItem('kitoku-target-birth')||'');
+      if(b)return b;
+    }
+    if(mode==='partner'){
+      const b=normalizeKitokuBirth(localStorage.getItem('kitoku-partner-birth')||'');
+      if(b)return b;
+    }
+    const reading=JSON.parse(localStorage.getItem('kitoku-life-reading')||'null');
+    if(reading&&reading.mode==='other'&&reading.birth){
+      const b=normalizeKitokuBirth(reading.birth);
+      if(b)return b;
+    }
+  }catch(e){}
+  return localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+}
 
 function init(){
   document.getElementById('noData').style.display='none';
   document.getElementById('mainContent').style.display='none';
 
-  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
+  const birth = getActiveKitokuBirth();
 
   if(!birth){
     // デバッグ：localStorage全キーを表示

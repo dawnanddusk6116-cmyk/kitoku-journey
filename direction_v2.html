@@ -3131,6 +3131,32 @@ function getTeiiKyoSetting(){
   }
 }
 
+function normalizeKitokuBirth(v){
+  const raw=String(v||'').trim().replace(/\//g,'-');
+  const m=raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(!m)return raw;
+  return m[1]+'-'+String(Number(m[2])).padStart(2,'0')+'-'+String(Number(m[3])).padStart(2,'0');
+}
+function getActiveKitokuBirth(){
+  try{
+    const mode=localStorage.getItem('kitoku-view-mode')||'';
+    if(mode==='target'){
+      const b=normalizeKitokuBirth(localStorage.getItem('kitoku-target-birth')||'');
+      if(b)return b;
+    }
+    if(mode==='partner'){
+      const b=normalizeKitokuBirth(localStorage.getItem('kitoku-partner-birth')||'');
+      if(b)return b;
+    }
+    const reading=JSON.parse(localStorage.getItem('kitoku-life-reading')||'null');
+    if(reading&&reading.mode==='other'&&reading.birth){
+      const b=normalizeKitokuBirth(reading.birth);
+      if(b)return b;
+    }
+  }catch(e){}
+  return localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth') || '';
+}
+
 // 今日の日付をデフォルト設定（タイムゾーン補正）
 (function(){
   // UTC+9（日本時間）で正しい日付を取得
@@ -3142,7 +3168,7 @@ function getTeiiKyoSetting(){
   document.getElementById('inputDate').value=`${yyyy}-${mm}-${dd}`;
   // 保存済み生年月日を読み込む
   try{
-    const saved=localStorage.getItem('kitoku-birth');
+    const saved=getActiveKitokuBirth();
     if(saved){
       document.getElementById('inputBirth').value=saved;
       document.getElementById('birthRegistered').style.display='flex';
@@ -5815,7 +5841,7 @@ function copyAIPrompt(){
   }catch(e){}
 
   function runInit(){
-    var birth = localStorage.getItem('kitoku-birth');
+    var birth = getActiveKitokuBirth();
     if(!birth){
       document.getElementById('noDataMsg').style.display='block';
       return;

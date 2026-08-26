@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260826-tendo-teii-spread';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-kyusei-compass-link';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
