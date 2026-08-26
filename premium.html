@@ -1703,7 +1703,8 @@ function drawOctagonPremium(wrap,center,dirData,extra){
       const bw=Math.min(subText.length*8.8+10,92),bh=14;
       let bColor,bBg;
       if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
-      else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else if(dd.isCaution&&dd.rank<1){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else if(subText==='天道'||subText==='天道・定位注意'){bColor='#8a6820';bBg='rgba(255,255,255,.88)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
       svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
       svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'7.6','font-family':"'Noto Serif JP',serif"}));
@@ -2802,6 +2803,7 @@ function evaluateDestinationPrem(dest){
   let resultText='― 中性';
   if(dd&&dd.isKyo) resultText='⚠️ 注意方位';
   else if(dd&&dd.isCaution&&dd.rank>=2) resultText='✅ 吉方位（定位注意）';
+  else if(dd&&dd.isCaution&&dd.rank>=1) resultText='☀️ 天道（定位注意）';
   else if(dd&&dd.isCaution) resultText='🔸 定位注意';
   else if(dd&&dd.rank>=2) resultText='✅ 吉方位';
   else if(dd&&dd.rank<=0) resultText='― 中性';
@@ -6062,7 +6064,7 @@ function openDirPopupPremium(dir,center,dirData,extra){
   const sangoSet=getSangoSetForPremiumDate();
   const isSango=sangoSet.has(dir);
   const rankLabel=rank>=5?'本命・月命・三合が重なる吉方':rank>=4?'本命・月命　ともに吉方':rank>=3?'吉方（三合の後押しあり）':rank>=2?'吉方（人に与える日）':'吉方情報なし';
-  const rankColor=isKyo?'#b03028':isCaution?'#c08a2c':rank>=4?'#1d7a6a':'#1d7a6a';
+  const rankColor=isKyo?'#b03028':isCaution&&rank>=1?'#8a6820':isCaution?'#c08a2c':rank>=4?'#1d7a6a':'#1d7a6a';
 
   // 飲食処方箋
   const foods=s.conbini||[];
@@ -6154,7 +6156,7 @@ function openDirPopupPremium(dir,center,dirData,extra){
     <div class="dp-head">
       <div class="dp-dir">${JP[dir]||dir} ${isSango&&!isKyo?'✦':''}</div>
       <div class="dp-star">${s.j}（${s.elem}）の方向</div>
-      <div class="dp-rank" style="color:${rankColor};">${isKyo?'⚠️ 注意が必要な方向':isCaution&&rank<2?'🔸 定位対冲の注意あり':isCaution?'✦ 吉方ですが定位対冲の注意あり':rankLabel}</div>
+      <div class="dp-rank" style="color:${rankColor};">${isKyo?'⚠️ 注意が必要な方向':isCaution?(rank>=2?'✦ 吉方ですが定位対冲の注意あり':rank>=1?'☀️ 天道ですが定位対冲の注意あり':'🔸 定位対冲の注意あり'):rankLabel}</div>
     </div>
     <div class="dp-body">${bodyHTML}</div>`;
 

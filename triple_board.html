@@ -700,7 +700,7 @@ function octa_getColors(dd){
   // ライトモードのみ（triple_boardはライト固定）
   if(dd.rincho)return{fill:'rgba(120,70,0,.2)',stroke:'rgba(120,70,0,.65)',num:'#7a4000',name:'rgba(120,70,0,.6)'};
   if(dd.isKyo)return{fill:'rgba(155,160,170,.4)',stroke:'rgba(120,125,135,.5)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)'};
-  if(dd.isCaution&&dd.rank<2)return{fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)'};
+  if(dd.isCaution&&dd.rank<1)return{fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)'};
   if(dd.rank>=5)return{fill:'rgba(245,200,212,.6)',stroke:'rgba(208,120,145,.65)',num:'#9a3050',name:'rgba(154,48,80,.7)'};
   if(dd.rank>=4)return{fill:'rgba(246,206,217,.55)',stroke:'rgba(210,130,152,.6)',num:'#9a3050',name:'rgba(154,48,80,.68)'};
   if(dd.rank>=3)return{fill:'rgba(248,216,224,.6)',stroke:'rgba(214,150,168,.55)',num:'#a04060',name:'rgba(160,64,96,.62)'};
@@ -750,7 +750,7 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
     let subText='';
     if(dd.rincho)subText=dd.isKyo?'3盤凶':'3盤吉 ✦';
     else if(dd.isKyo){const kns=kyouItems.filter(k=>k.dir===dir);if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');}
-    else if(dd.isCaution)subText=dd.rank>=2?'吉方・定位注意':'定位注意';
+    else if(dd.isCaution)subText=dd.rank>=2?'吉方・定位注意':(dd.rank>=1?'天道・定位注意':'定位注意');
     else if(dd.rank>=5)subText=dd.badges[0]||'本命・月命・三合';
     else if(dd.rank>=4)subText=dd.badges[0]||'本命・月命 吉';
     else if(dd.rank>=3)subText=dd.badges[0]||'吉方・三合';
@@ -767,8 +767,8 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
       let bColor,bBg;
       if(dd.rincho){bColor='#7a4000';bBg='rgba(120,70,0,.14)';}
       else if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
-      else if(dd.isCaution&&dd.rank<2){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
-      else if(subText==='天道'){bColor='#8a6820';bBg='rgba(255,255,255,.88)';}
+      else if(dd.isCaution&&dd.rank<1){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
+      else if(subText==='天道'||subText==='天道・定位注意'){bColor='#8a6820';bBg='rgba(255,255,255,.88)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
       svg.appendChild(octa_svgEl('rect',{x:badgeX-bw/2,y:badgeY-bh/2,width:bw,height:bh,rx:'4',fill:bBg}));
       svg.appendChild(octa_svgText(subText,{x:badgeX,y:badgeY+1,'text-anchor':'middle','dominant-baseline':'middle',fill:bColor,'font-size':'7.5','font-family':"'Noto Serif JP',serif"}));
