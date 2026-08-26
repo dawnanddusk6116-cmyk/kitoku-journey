@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-kyusei-compass-link';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-direction-star-caption';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

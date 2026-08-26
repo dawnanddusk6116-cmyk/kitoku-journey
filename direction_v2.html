@@ -622,6 +622,16 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
   font-size:1rem;color:var(--goldlt);letter-spacing:.1em;
 }
 .ban-nav-sub{font-size:.6rem;color:var(--mist);letter-spacing:.08em;margin-top:2px;}
+.ban-star-caption{
+  margin:-4px auto 10px;padding:6px 12px;max-width:420px;
+  text-align:center;font-size:.64rem;line-height:1.75;color:var(--mist);
+  border:1px solid rgba(196,160,67,.22);border-radius:999px;
+  background:rgba(196,160,67,.055);
+}
+.ban-star-caption a{color:var(--goldlt);font-weight:700;text-decoration:none;white-space:nowrap;}
+.ban-star-caption a:hover{text-decoration:underline;}
+[data-theme="light"] .ban-star-caption{background:rgba(120,90,20,.045);border-color:rgba(120,90,20,.2);color:rgba(58,43,18,.72);}
+[data-theme="light"] .ban-star-caption a{color:#7a5209;}
 [data-theme="light"] .ban-nav-btn{background:rgba(120,90,20,.08);border-color:rgba(120,90,20,.3);color:#5a3e08;}
 
 
@@ -1738,6 +1748,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       </div>
       <button class="ban-nav-btn" onclick="navBan(1)">▶</button>
     </div>
+    <div class="ban-star-caption" id="banStarCaption"></div>
     <div id="compassWrap" style="overflow:hidden;width:100%;"></div>
     <div class="ban-tap-hint">方位をタップすると、吉凶の理由と今日の処方箋が開きます。</div>
     <details id="directionSangoHelp" style="display:none;margin:10px 0 0;background:rgba(255,255,255,.045);border:1px dashed rgba(196,160,67,.34);border-radius:10px;padding:9px 10px;">
@@ -3664,6 +3675,7 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
     gState.dNayin=null;
   }
   gState.keisha=keisha;gState.dokai=dokai;gState.K=K;gState.Dk=Dk;gState.nayin=nayin;gState.mNayin=mNayin;
+  renderBanStarCaption();
 
   renderBan('day');
   updateBanNavLabel();
@@ -3845,6 +3857,24 @@ function renderBanNav(){
   // 元に戻す（gStateのnavYear/Month/Dayは保持）
   gState.ty=saved.ty;gState.tm=saved.tm;gState.td=saved.td;
   gState.dayCenter=saved.dayCenter;gState.monthCenter=saved.monthCenter;gState.yearCent=saved.yearCent;
+}
+
+function renderBanStarCaption(){
+  const el=document.getElementById('banStarCaption');
+  if(!el)return;
+  const birth=(typeof getActiveKitokuBirth==='function')?getActiveKitokuBirth():'';
+  if(!birth){
+    el.innerHTML='まず基本情報を登録してください　<a href="kyusei_v2.html">詳しく見る＞</a>';
+    return;
+  }
+  const H=gState.H||STARS[gState.honmei];
+  const T=gState.T||STARS[gState.tsukimei];
+  const K=gState.K||STARS[gState.keisha];
+  if(!H||!T||!K){
+    el.innerHTML='星情報を確認中です　<a href="kyusei_v2.html">詳しく見る＞</a>';
+    return;
+  }
+  el.innerHTML=`${H.j}（本命）・${T.j}（月命）・${K.j}（傾斜）　<a href="kyusei_v2.html">詳しく見る＞</a>`;
 }
 
 function updateBanNavLabel(){
@@ -4059,6 +4089,7 @@ function updateDirectionSangoHelp(dirData){
 
 function renderBan(type){
   try {
+  renderBanStarCaption();
   const {honmei,tsukimei,ty,tm,td,dayCenter,monthCenter,yearCent}=gState;
   let center;
   if(type==='day')center=dayCenter;
