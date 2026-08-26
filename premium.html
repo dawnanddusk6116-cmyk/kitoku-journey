@@ -1420,7 +1420,11 @@ function buildDirData(center){
 function dirInfo(dir,dirData){
   const dd=dirData[dir]||{};
   if(dd.isKyo)return {nameClass:'kyo',badgeClass:'kyo',sub:dd.kyoNames.join('・')||'凶方'};
-  if(dd.isCaution)return {nameClass:dd.rank>=2?'kichi':'caution',badgeClass:'caution',sub:dd.rank>=2?'吉方・定位注意':(dd.cautionNames||[]).join('・')||'定位注意'};
+  if(dd.isCaution)return {
+    nameClass:dd.rank>=2?'kichi':(dd.rank>=1?'tendo':'caution'),
+    badgeClass:dd.rank>=2?'caution':(dd.rank>=1?'tendo':'caution'),
+    sub:dd.rank>=2?'吉方・定位注意':(dd.rank>=1?'天道・定位注意':((dd.cautionNames||[]).join('・')||'定位注意'))
+  };
   if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'条件重なり'};
   if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:'本命・月命 吉'};
   if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方・三合'};
@@ -5454,6 +5458,7 @@ function judgeDirForMap(dir){
   if(dd.isCaution){
     // 定位対冲などの注意。ランク2以上なら吉方扱い（方位盤と同じ）
     if(dd.rank>=2) return { kind:'kichi', label:'吉方', color:'#e84d80', sub:'吉方・定位注意' };
+    if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#8a6820', sub:'天道・定位注意' };
     return { kind:'normal', label:'注意', color:'#b8860b', sub:(dd.cautionNames||[]).join('・')||'定位注意' };
   }
   if(dd.rank>=5) return { kind:'kichi', label:'条件重なり', color:'#e84d80', sub:'条件が重なる吉方' };

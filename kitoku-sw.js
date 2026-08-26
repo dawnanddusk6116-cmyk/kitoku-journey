@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260826-mindmap-heart-label';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260826-tendo-teii-label';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
