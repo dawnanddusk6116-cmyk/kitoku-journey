@@ -543,7 +543,8 @@ function copyForAI(){
   if(!L.q1){showToast('まず内容を書いてみてください');return;}
   const baseProf=gHonmei?DECISION_PROF[gHonmei]:null;
   const modeProf=gHonmei&&gMode==='heart'?(HEART_PROF[gHonmei]||baseProf):baseProf;
-  const starInfo=gHonmei?`\n\n【私の機体スペック（本命星）】\n${STAR_NAMES[gHonmei]}\n決断の癖：${baseProf?.type||''}\n系列：${baseProf?.series||''}\n機体のバグ：${baseProf?.bug||''}\n処方箋：${modeProf?.rx||''}`:'';
+  const habitLabel=gMode==='heart'?'こころの癖':'決断の癖';
+  const starInfo=gHonmei?`\n\n【私の機体スペック（本命星）】\n${STAR_NAMES[gHonmei]}\n${habitLabel}：${baseProf?.type||''}\n系列：${baseProf?.series||''}\n機体のバグ：${baseProf?.bug||''}\n処方箋：${modeProf?.rx||''}`:'';
   const txt=`あなたはKITOKUのAI軍師です。私の悩みを、答えを押し付けるのではなく、私自身が気づき決められるよう、琥珀色の言葉で正直に導いてください。不安を煽らず、でも甘やかしすぎず。最後は「自分で選ぶための判断材料」としてまとめてください。${starInfo}
 
 以下は私が気学マインドマップで整理した内容です。
