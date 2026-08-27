@@ -2452,9 +2452,9 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
     else if(col.isCaution){const hasTendo=col.badges&&col.badges.some(b=>String(b).includes('天道'));subText=col.rank>=2?(hasTendo?'吉方・天道・定位注意':'吉方・定位注意'):(col.rank>=1?'天道・定位注意':'定位注意');}
     else{
       const hasTendo=col.badges&&col.badges.some(b=>String(b).includes('天道'));
-      if(col.rank>=4)subText=hasTendo?'本命・月命・天道':'本命・月命';
-      else if(col.rank>=3)subText=hasTendo?'吉方・三合・天道':'吉方・三合';
-      else if(col.rank>=2)subText=hasTendo?'吉方・天道':'吉方';
+      if(col.rank>=4)subText=hasTendo?'本命・月命・天道':rankLabel(col.rank,col.badges);
+      else if(col.rank>=3)subText=hasTendo?`${rankLabel(col.rank,col.badges)}・天道`:rankLabel(col.rank,col.badges);
+      else if(col.rank>=2)subText=hasTendo?'吉方・天道':rankLabel(col.rank,col.badges);
       else if(col.rank>=1)subText='天道';
     }
     if(col.dest){
@@ -2629,17 +2629,17 @@ function calcAndShowDir() {
       <div class="dir-panels" style="margin-top:10px;">
         <div class="dir-panel">
           <div class="dir-panel-label">年盤（${viewY}年）</div>
-          <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank)}</div>
+          <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank, yearRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(yearRank.rank, yearRank.badges)}</div>
         </div>
         <div class="dir-panel">
           <div class="dir-panel-label">月盤（${viewM}月）</div>
-          <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank)}</div>
+          <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank, monthRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
         <div class="dir-panel" id="dayRankPanel">
           <div class="dir-panel-label" id="dayRankLabel">日盤（今日）</div>
-          <div class="dir-panel-rank rank-${dayRank.rank}" id="dayRankValue">${rankLabel(dayRank.rank)}</div>
+          <div class="dir-panel-rank rank-${dayRank.rank}" id="dayRankValue">${rankLabel(dayRank.rank, dayRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;" id="dayRankDesc">${rankDesc(dayRank.rank, dayRank.badges)}</div>
         </div>
       </div>
@@ -2714,8 +2714,15 @@ function switchBan(type) {
   });
 }
 
-function rankLabel(rank) {
-  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 三合あり', '✦ 本命・月命 吉', '★ 条件が重なる吉方'];
+function cleanRankBadgeText(text) {
+  return String(text||'').replace(/^[^0-9A-Za-z一-龥ぁ-んァ-ヶ々ー]+/,'').trim();
+}
+function rankLabel(rank, badges) {
+  const cleanBadges = Array.isArray(badges) ? badges.map(cleanRankBadgeText) : [];
+  if (cleanBadges.some(b => b.includes('5-5') || b.includes('特大'))) return '◎ 特大ボーナス';
+  if (rank === 3 && cleanBadges.some(b => b.includes('三合'))) return '◎ 三合あり';
+  if (rank === 3 && cleanBadges[0]) return '◎ ' + cleanBadges[0];
+  const labels = ['—', '△ 天道のみ', '○ 吉方', '◎ 後押しあり', '✦ 本命・月命 吉', '★ 条件が重なる吉方'];
   return labels[rank] || '—';
 }
 
@@ -2727,6 +2734,9 @@ function rankDesc(rank, badges) {
     return '吉方位ではありません';
   }
   if (rank === 1) return '天道の方位です。吉凶は中程度です';
+  if (badges && badges.some(b => b.includes('5-5') || b.includes('特大'))) {
+    return '本命星・月命星がともに五黄土星の方への特例的な後押しです';
+  }
   const parts = [];
   if (badges && badges.length) {
     badges.forEach(b => {
@@ -3042,7 +3052,7 @@ function showDayDetail(y, m, d) {
     const descEl  = document.getElementById('dayRankDesc');
     if (labelEl) labelEl.textContent = `日盤（${m}/${d}）`;
     if (valueEl) {
-      valueEl.textContent = rankLabel(finalRank);
+      valueEl.textContent = rankLabel(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
       valueEl.className = `dir-panel-rank rank-${finalRank}`;
     }
     if (descEl) descEl.textContent = rankDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);

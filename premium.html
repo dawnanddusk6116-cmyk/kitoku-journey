@@ -1426,10 +1426,10 @@ function dirInfo(dir,dirData){
     sub:dd.rank>=2?((dd.badges&&dd.badges.some(b=>String(b).includes('天道')))?'吉方・天道・定位注意':'吉方・定位注意'):(dd.rank>=1?'天道・定位注意':((dd.cautionNames||[]).join('・')||'定位注意'))
   };
   const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));
-  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'条件重なり・天道':'条件重なり'};
-  if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'本命・月命 吉・天道':'本命・月命 吉'};
-  if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'吉方・三合・天道':'吉方・三合'};
-  if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'吉方・天道':'吉方'};
+  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'条件重なり・天道':premiumRankShortLabel(dd,'条件重なり')};
+  if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'本命・月命 吉・天道':premiumRankShortLabel(dd,'本命・月命 吉')};
+  if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?`${premiumRankShortLabel(dd,'吉方・三合')}・天道`:premiumRankShortLabel(dd,'吉方・三合')};
+  if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'吉方・天道':premiumRankShortLabel(dd,'吉方')};
   if(dd.rank>=1)return {nameClass:'',badgeClass:'tendo',sub:'天道'};
   return {nameClass:'',badgeClass:'',sub:''};
 }
@@ -5111,7 +5111,8 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
   // 破の支
   const _y=state.date.getFullYear(),_m=state.date.getMonth()+1,_d=state.date.getDate();
   const z2=getZodiac(_y);
-  let breakBranch=MAP_SHI[(z2.d+6)%12]||'',breakDir2=OPP[z2.d]||'';
+  const yb2=((_y-2020)%12+12)%12;
+  let breakBranch=MAP_SHI[(yb2+6)%12]||'',breakDir2=OPP[z2.d]||'';
   if(state.banType==='month'){const mb=getMonthBranch(_y,_m,_d);breakBranch=MAP_SHI[(mb+6)%12]||'';breakDir2=OPP[BRANCH_DIR[mb]]||'';}
   else if(state.banType==='day'){const db=getDayBranch(_y,_m,_d);breakBranch=MAP_SHI[(db+6)%12]||'';breakDir2=OPP[BRANCH_DIR[db]]||'';}
 
@@ -5471,10 +5472,10 @@ function judgeDirForMap(dir){
     return { kind:'normal', label:'注意', color:'#b8860b', sub:(dd.cautionNames||[]).join('・')||'定位注意' };
   }
   const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));
-  if(dd.rank>=5) return { kind:'kichi', label:'条件重なり', color:'#e84d80', sub:hasTendo?'条件が重なる吉方・天道':'条件が重なる吉方' };
-  if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'本命・月命 吉・天道':'本命・月命 吉' };
-  if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'吉方・三合・天道':'吉方・三合' };
-  if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'吉方・天道':'吉方' };
+  if(dd.rank>=5) return { kind:'kichi', label:'条件重なり', color:'#e84d80', sub:hasTendo?'条件が重なる吉方・天道':premiumRankSentence(dd) };
+  if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'本命・月命 吉・天道':premiumRankShortLabel(dd,'本命・月命 吉') };
+  if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?`${premiumRankShortLabel(dd,'吉方・三合')}・天道`:premiumRankShortLabel(dd,'吉方・三合') };
+  if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'吉方・天道':premiumRankShortLabel(dd,'吉方') };
   // 天道（rank1）は吉方ではない。独立カテゴリ・白扱い（盤面と同じ）
   // ピンクにせず中立色＋「天道」サインのみ表示する
   if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#8a6820', sub:'天道（吉方ではない補助的な後押し）' };
@@ -6023,6 +6024,26 @@ function closeDirPopup(){
   document.body.style.overflow='';
 }
 
+function premiumCleanBadgeText(text){
+  return String(text||'').replace(/^[^0-9A-Za-z一-龥ぁ-んァ-ヶ々ー]+/,'').trim();
+}
+function premiumRankShortLabel(info,fallback){
+  const badges=Array.isArray(info&&info.badges)?info.badges.map(premiumCleanBadgeText):[];
+  if(badges.some(b=>b.includes('5-5')||b.includes('特大')))return '特大ボーナス';
+  if(badges.some(b=>b.includes('三合')))return '吉方・三合';
+  return badges[0]||fallback||'';
+}
+function premiumRankSentence(info){
+  const rank=info&&typeof info.rank==='number'?info.rank:0;
+  const badges=Array.isArray(info&&info.badges)?info.badges.map(premiumCleanBadgeText):[];
+  if(badges.some(b=>b.includes('5-5')||b.includes('特大')))return '特大ボーナス方位（5-5特例）';
+  if(rank>=5)return '本命・月命・三合が重なる吉方';
+  if(rank>=4)return '本命・月命　ともに吉方';
+  if(rank>=3)return badges.some(b=>b.includes('三合'))?'吉方（三合の後押しあり)':(badges[0]||'後押しのある吉方');
+  if(rank>=2)return '吉方（人に与える日）';
+  return '吉方情報なし';
+}
+
 function dpBuildRankMeter(rank){
   const safe=Math.max(0,Math.min(5,Number(rank)||0));
   const labels=['吉方情報なし','補助的な吉','本命吉方','後押しあり','強い吉方','条件がすべて重なる吉方'];
@@ -6071,7 +6092,7 @@ function openDirPopupPremium(dir,center,dirData,extra){
   // 吉方ランクラベル
   const sangoSet=getSangoSetForPremiumDate();
   const isSango=sangoSet.has(dir);
-  const rankLabel=rank>=5?'本命・月命・三合が重なる吉方':rank>=4?'本命・月命　ともに吉方':rank>=3?'吉方（三合の後押しあり）':rank>=2?'吉方（人に与える日）':'吉方情報なし';
+  const rankLabel=premiumRankSentence(dd);
   const rankColor=isKyo?'#b03028':isCaution&&rank>=1?'#8a6820':isCaution?'#c08a2c':rank>=4?'#1d7a6a':'#1d7a6a';
 
   // 飲食処方箋
