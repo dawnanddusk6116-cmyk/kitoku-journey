@@ -497,10 +497,10 @@ function rankDir(dir,starN,honmei,tsukimei,sangoSet,tendoDir){
   const inHon=honList.has(starN),inTsuki=tsukiList.has(starN),inSango=sangoSet.has(dir);
   const inTendo=tendoDir&&dir===tendoDir;
   const inBonus55=is55&&bonus55&&starN===bonus55;
-  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['本命・月命・三合']};
-  if(inHon&&inTsuki)return{rank:4,badges:['本命・月命 吉']};
-  if(inBonus55)return{rank:3,badges:['特大ボーナス']};
-  if(inHon&&inSango)return{rank:3,badges:['吉方・三合']};
+  if(inHon&&inTsuki&&inSango)return{rank:5,badges:['本命・月命・三合',(inTendo?'天道':null)].filter(Boolean)};
+  if(inHon&&inTsuki)return{rank:4,badges:['本命・月命 吉',(inTendo?'天道':null)].filter(Boolean)};
+  if(inBonus55)return{rank:3,badges:['特大ボーナス',(inTendo?'天道':null)].filter(Boolean)};
+  if(inHon&&inSango)return{rank:3,badges:['吉方・三合',(inTendo?'天道':null)].filter(Boolean)};
   if(inHon)return{rank:2,badges:['吉方',(inTendo?'天道':null)].filter(Boolean)};
   if(inTendo)return{rank:1,badges:['天道']};
   return{rank:0,badges:[]};
@@ -750,12 +750,15 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
     let subText='';
     if(dd.rincho)subText=dd.isKyo?'3盤凶':'3盤吉 ✦';
     else if(dd.isKyo){const kns=kyouItems.filter(k=>k.dir===dir);if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');}
-    else if(dd.isCaution)subText=dd.rank>=2?'吉方・定位注意':(dd.rank>=1?'天道・定位注意':'定位注意');
-    else if(dd.rank>=5)subText=dd.badges[0]||'本命・月命・三合';
-    else if(dd.rank>=4)subText=dd.badges[0]||'本命・月命 吉';
-    else if(dd.rank>=3)subText=dd.badges[0]||'吉方・三合';
-    else if(dd.rank>=2)subText=dd.badges[0]||'吉方';
-    else if(dd.rank>=1)subText='天道';
+    else if(dd.isCaution){const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));subText=dd.rank>=2?(hasTendo?'吉方・天道・定位注意':'吉方・定位注意'):(dd.rank>=1?'天道・定位注意':'定位注意');}
+    else{
+      const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));
+      if(dd.rank>=5)subText=hasTendo?'本命・月命・三合・天道':(dd.badges[0]||'本命・月命・三合');
+      else if(dd.rank>=4)subText=hasTendo?'本命・月命 吉・天道':(dd.badges[0]||'本命・月命 吉');
+      else if(dd.rank>=3)subText=hasTendo?`${dd.badges[0]||'吉方・三合'}・天道`:(dd.badges[0]||'吉方・三合');
+      else if(dd.rank>=2)subText=hasTendo?'吉方・天道':(dd.badges[0]||'吉方');
+      else if(dd.rank>=1)subText='天道';
+    }
 
     if(subText){
       // 東西はバッジを方位名の下に

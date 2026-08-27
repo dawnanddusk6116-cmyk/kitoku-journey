@@ -1327,7 +1327,7 @@ function centerForDate(){
 }
 function getBreakDirForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
-  if(state.banType==='year')return OPP[BRANCH_DIR[getZodiac(y).d]];
+  if(state.banType==='year')return OPP[getZodiac(y).d];
   if(state.banType==='month')return OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
   return OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
 }
@@ -1337,7 +1337,7 @@ function getBreakNameForBan(type=state.banType){
 function getBreakBranchForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   if(state.banType==='year'){
-    const idx=getZodiac(y).d;
+    const idx=((y-2020)%12+12)%12;
     return {idx,name:BRANCH_NAME_P[idx]};
   }
   if(state.banType==='month'){
@@ -1423,12 +1423,13 @@ function dirInfo(dir,dirData){
   if(dd.isCaution)return {
     nameClass:dd.rank>=2?'kichi':(dd.rank>=1?'tendo':'caution'),
     badgeClass:dd.rank>=2?'caution':(dd.rank>=1?'tendo':'caution'),
-    sub:dd.rank>=2?'吉方・定位注意':(dd.rank>=1?'天道・定位注意':((dd.cautionNames||[]).join('・')||'定位注意'))
+    sub:dd.rank>=2?((dd.badges&&dd.badges.some(b=>String(b).includes('天道')))?'吉方・天道・定位注意':'吉方・定位注意'):(dd.rank>=1?'天道・定位注意':((dd.cautionNames||[]).join('・')||'定位注意'))
   };
-  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:'条件重なり'};
-  if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:'本命・月命 吉'};
-  if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方・三合'};
-  if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:'吉方'};
+  const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));
+  if(dd.rank>=5)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'条件重なり・天道':'条件重なり'};
+  if(dd.rank>=4)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'本命・月命 吉・天道':'本命・月命 吉'};
+  if(dd.rank>=3)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'吉方・三合・天道':'吉方・三合'};
+  if(dd.rank>=2)return {nameClass:'kichi',badgeClass:'kichi',sub:hasTendo?'吉方・天道':'吉方'};
   if(dd.rank>=1)return {nameClass:'',badgeClass:'tendo',sub:'天道'};
   return {nameClass:'',badgeClass:'',sub:''};
 }
@@ -1463,9 +1464,15 @@ function renderBoard(){
   // 破方位と破の支を計算
   const _y=state.date.getFullYear(),_m=state.date.getMonth()+1,_d=state.date.getDate();
   const breakDir=getBreakDirForDate();
-  let branchName=getZodiac(_y).k;
-  if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(_y,_m,_d)];
-  if(state.banType==='day')branchName=BRANCH_NAME_P[getDayBranch(_y,_m,_d)];
+  let branchName;
+  if(state.banType==='year'){
+    const yb=((_y-2020)%12+12)%12;
+    branchName=BRANCH_NAME_P[(yb+6)%12];
+  }else if(state.banType==='month'){
+    branchName=BRANCH_NAME_P[(getMonthBranch(_y,_m,_d)+6)%12];
+  }else{
+    branchName=BRANCH_NAME_P[(getDayBranch(_y,_m,_d)+6)%12];
+  }
   drawOctagonPremium(wrap,center,dirData,{breakDir,branchName});
   updatePremiumSangoHelp(dirData);
   // 全画面の小型方位盤を同期（全画面が開いているときのみ動作）
@@ -5459,14 +5466,15 @@ function judgeDirForMap(dir){
   }
   if(dd.isCaution){
     // 定位対冲などの注意。ランク2以上なら吉方扱い（方位盤と同じ）
-    if(dd.rank>=2) return { kind:'kichi', label:'吉方', color:'#e84d80', sub:'吉方・定位注意' };
+    if(dd.rank>=2) return { kind:'kichi', label:'吉方', color:'#e84d80', sub:(dd.badges&&dd.badges.some(b=>String(b).includes('天道')))?'吉方・天道・定位注意':'吉方・定位注意' };
     if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#8a6820', sub:'天道・定位注意' };
     return { kind:'normal', label:'注意', color:'#b8860b', sub:(dd.cautionNames||[]).join('・')||'定位注意' };
   }
-  if(dd.rank>=5) return { kind:'kichi', label:'条件重なり', color:'#e84d80', sub:'条件が重なる吉方' };
-  if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'本命・月命 吉' };
-  if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方・三合' };
-  if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:'吉方' };
+  const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));
+  if(dd.rank>=5) return { kind:'kichi', label:'条件重なり', color:'#e84d80', sub:hasTendo?'条件が重なる吉方・天道':'条件が重なる吉方' };
+  if(dd.rank>=4) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'本命・月命 吉・天道':'本命・月命 吉' };
+  if(dd.rank>=3) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'吉方・三合・天道':'吉方・三合' };
+  if(dd.rank>=2) return { kind:'kichi', label:'吉方',     color:'#e84d80', sub:hasTendo?'吉方・天道':'吉方' };
   // 天道（rank1）は吉方ではない。独立カテゴリ・白扱い（盤面と同じ）
   // ピンクにせず中立色＋「天道」サインのみ表示する
   if(dd.rank>=1) return { kind:'tendo', label:'天道', color:'#8a6820', sub:'天道（吉方ではない補助的な後押し）' };
