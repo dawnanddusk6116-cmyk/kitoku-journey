@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-direction-star-caption';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-year-break-tendo-merge';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
