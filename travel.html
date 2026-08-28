@@ -947,6 +947,7 @@ html.font-large .font-btn{font-size:.8rem;}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 <div id="kitoku-badge-mount"></div>
@@ -3734,6 +3735,65 @@ function goPreviousPage(){
 
 </script>
 </div>
+
+<script>
+var KITOKU_SUPABASE_URL = 'https://uwxitxsoflafnvqalion.supabase.co';
+var KITOKU_SUPABASE_KEY = 'sb_publishable_SMNNYs9QLvrDSBnTpRkH9w_w0Wa2K8d';
+var kitokuSB = null;
+var kitokuSession = null;
+var kitokuPlan = { base:false, business:false };
+
+function updateRailwayBlurState(){
+  var blurEl = document.getElementById('railwayBlur');
+  if(!blurEl) return;
+  var isPremiumUser = !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business));
+  blurEl.style.display = isPremiumUser ? 'none' : 'flex';
+}
+
+async function kitokuLoadPlanForGate(){
+  kitokuPlan = { base:false, business:false };
+  if(!kitokuSB || !kitokuSession || !kitokuSession.user){
+    updateRailwayBlurState();
+    return;
+  }
+  try{
+    var r = await kitokuSB.from('subscribers')
+      .select('base_status,business_status')
+      .eq('user_id', kitokuSession.user.id)
+      .maybeSingle();
+    if(r && r.data){
+      kitokuPlan.base = (r.data.base_status === 'active');
+      kitokuPlan.business = (r.data.business_status === 'active');
+    }
+  }catch(e){
+    kitokuPlan = { base:false, business:false };
+  }
+  updateRailwayBlurState();
+}
+
+async function kitokuInitPremiumGate(){
+  updateRailwayBlurState();
+  if(!window.supabase || !window.supabase.createClient) return;
+  try{
+    kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY, {
+      auth: { detectSessionInUrl:true, persistSession:true, autoRefreshToken:true, flowType:'pkce' }
+    });
+    var s = await kitokuSB.auth.getSession();
+    kitokuSession = (s && s.data) ? s.data.session : null;
+    await kitokuLoadPlanForGate();
+    kitokuSB.auth.onAuthStateChange(async function(_event, session){
+      kitokuSession = session;
+      await kitokuLoadPlanForGate();
+    });
+  }catch(e){
+    kitokuPlan = { base:false, business:false };
+    updateRailwayBlurState();
+  }
+}
+
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kitokuInitPremiumGate);
+else kitokuInitPremiumGate();
+</script>
 <script src="kitoku-badge.js?v=20260803rank2"></script>
 </body>
 </html>

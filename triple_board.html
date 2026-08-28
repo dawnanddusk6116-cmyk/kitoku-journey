@@ -251,7 +251,16 @@ input[type="date"]:focus{border-color:rgba(120,90,20,.5);}
 .rank-meter-note{font-size:.56rem;color:var(--mist);line-height:1.7;margin-top:7px;}
 
 footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;color:var(--mist);opacity:.6;}
+
+.premium-lock-panel{width:calc(100% - 32px);max-width:720px;margin:18px auto;padding:22px 18px;background:rgba(255,255,255,.82);border:1px solid rgba(138,104,32,.24);border-radius:12px;text-align:center;box-shadow:0 10px 28px rgba(80,55,18,.06);}
+.premium-lock-icon{font-size:1.35rem;margin-bottom:8px;}
+.premium-lock-title{font-size:.92rem;color:var(--goldlt);font-weight:700;letter-spacing:.08em;margin-bottom:8px;}
+.premium-lock-text{font-size:.66rem;color:var(--mist);line-height:1.9;margin-bottom:12px;}
+.premium-lock-link{display:inline-flex;align-items:center;justify-content:center;background:rgba(120,90,20,.08);border:1px solid rgba(120,90,20,.3);border-radius:8px;color:var(--goldlt);font-size:.72rem;padding:8px 14px;text-decoration:none;letter-spacing:.06em;}
+body.kitoku-premium-unlocked .premium-lock-panel{display:none;}
+body:not(.kitoku-premium-unlocked) .premium-protected{display:none!important;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 <div id="kitoku-badge-mount"></div>
@@ -270,7 +279,15 @@ footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;colo
   <div class="page-sub">旅行・引越し・重要行動の徹底確認ツール</div>
 </div>
 
-<div class="input-section">
+
+<div id="triplePremiumGate" class="premium-lock-panel">
+  <div class="premium-lock-icon">🔒</div>
+  <div class="premium-lock-title">プレミアムプランで確認できます</div>
+  <div class="premium-lock-text">三盤比較は、年盤・月盤・日盤を1画面で並べて確認するためのプレミアム機能です。無料版では方位盤ページで各タブを切り替えて確認できます。</div>
+  <a href="premium.html" class="premium-lock-link">プレミアムを見る</a>
+</div>
+
+<div class="input-section premium-protected">
   <div class="input-row">
     <span class="input-lbl">生年月日</span>
     <input type="date" id="inputBirth">
@@ -305,24 +322,24 @@ footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;colo
   </div>
 </div>
 
-<div class="orient-row" id="orientRow" style="display:none;">
+<div class="orient-row premium-protected" id="orientRow" style="display:none;">
   <button class="orient-btn active" id="btn-south" onclick="setOrient('south')">南上（気学式）</button>
   <button class="orient-btn" id="btn-north" onclick="setOrient('north')">北上（地図式）</button>
 </div>
 
-<div class="star-bar" id="starBar" style="display:none;">
+<div class="star-bar premium-protected" id="starBar" style="display:none;">
   <div class="star-bar-item">本命星：<strong id="sb-honmei">—</strong></div>
   <div class="star-bar-item">月命星：<strong id="sb-tsukimei">—</strong></div>
   <div class="star-bar-item">確認日：<strong id="sb-kanshi">—</strong></div>
 </div>
 
-<div class="rincho-check-banner" id="rinchoCheckBanner">
+<div class="rincho-check-banner premium-protected" id="rinchoCheckBanner">
   <div class="rincho-check-title">🌟 輪重チェック結果</div>
   <div style="font-size:.62rem;color:rgba(120,70,0,.65);margin-bottom:5px;">年盤・月盤・日盤で吉凶が一致する方位</div>
   <div class="rincho-check-dirs" id="rinchoCheckDirs"></div>
 </div>
 
-<div class="boards-container" id="boardsContainer">
+<div class="boards-container premium-protected" id="boardsContainer">
 
   <!-- 年盤 -->
   <div class="board-card">
@@ -402,7 +419,7 @@ footer{text-align:center;padding:16px;font-size:.55rem;letter-spacing:.15em;colo
   </div>
 </div>
 
-<footer>KITOKU @ JOURNEY — journey6112.jp</footer>
+<footer class="premium-protected">KITOKU @ JOURNEY — journey6112.jp</footer>
 
 <script>
 // ══ 定数 ══
@@ -972,6 +989,63 @@ function openPopup(dir,type,dirData,kyouItems){
 function closePopup(){document.getElementById('popupOverlay').classList.remove('open');}
 document.getElementById('popupOverlay').addEventListener('click',function(e){if(e.target===this)closePopup();});
 
+</script>
+
+<script>
+var KITOKU_SUPABASE_URL = 'https://uwxitxsoflafnvqalion.supabase.co';
+var KITOKU_SUPABASE_KEY = 'sb_publishable_SMNNYs9QLvrDSBnTpRkH9w_w0Wa2K8d';
+var kitokuSB = null;
+var kitokuSession = null;
+var kitokuPlan = { base:false, business:false };
+
+function updateTripleBoardGate(){
+  var isPremiumUser = !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business));
+  document.body.classList.toggle('kitoku-premium-unlocked', isPremiumUser);
+}
+
+async function kitokuLoadPlanForGate(){
+  kitokuPlan = { base:false, business:false };
+  if(!kitokuSB || !kitokuSession || !kitokuSession.user){
+    updateTripleBoardGate();
+    return;
+  }
+  try{
+    var r = await kitokuSB.from('subscribers')
+      .select('base_status,business_status')
+      .eq('user_id', kitokuSession.user.id)
+      .maybeSingle();
+    if(r && r.data){
+      kitokuPlan.base = (r.data.base_status === 'active');
+      kitokuPlan.business = (r.data.business_status === 'active');
+    }
+  }catch(e){
+    kitokuPlan = { base:false, business:false };
+  }
+  updateTripleBoardGate();
+}
+
+async function kitokuInitPremiumGate(){
+  updateTripleBoardGate();
+  if(!window.supabase || !window.supabase.createClient) return;
+  try{
+    kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY, {
+      auth: { detectSessionInUrl:true, persistSession:true, autoRefreshToken:true, flowType:'pkce' }
+    });
+    var s = await kitokuSB.auth.getSession();
+    kitokuSession = (s && s.data) ? s.data.session : null;
+    await kitokuLoadPlanForGate();
+    kitokuSB.auth.onAuthStateChange(async function(_event, session){
+      kitokuSession = session;
+      await kitokuLoadPlanForGate();
+    });
+  }catch(e){
+    kitokuPlan = { base:false, business:false };
+    updateTripleBoardGate();
+  }
+}
+
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kitokuInitPremiumGate);
+else kitokuInitPremiumGate();
 </script>
 <script src="kitoku-badge.js?v=20260731sekki"></script>
 </body>
