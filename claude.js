@@ -84,6 +84,16 @@ async function checkAccess(requiredTier, authHeader) {
   return { ok: false, reason: 'not_subscribed' };
 }
 
+function logClaudeRequest(req, status, feature, extra = {}) {
+  console.info('[claude_request]', {
+    status,
+    feature: feature || null,
+    ip: req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '',
+    at: new Date().toISOString(),
+    ...extra
+  });
+}
+
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
 export default async function handler(req, res) {
@@ -110,23 +120,23 @@ export default async function handler(req, res) {
 
   // ── プレミアム判定 ──
   if (!FEATURE_POLICY[feature]) {
+    logClaudeRequest(req, 'rejected_invalid_feature', feature);
     return res.status(400).json({ error: 'invalid or missing feature' });
   }
   const requiredTier = FEATURE_POLICY[feature];
   const access = await checkAccess(requiredTier, req.headers.authorization);
   if (!access.ok) {
+    logClaudeRequest(req, 'rejected_premium_required', feature, {
+      requiredTier,
+      reason: access.reason
+    });
     return res.status(402).json({
       error: 'premium_required',
       reason: access.reason,
       requiredTier
     });
   }
-  console.info('[claude_request]', {
-    feature,
-    requiredTier,
-    ip: req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '',
-    at: new Date().toISOString()
-  });
+  logClaudeRequest(req, 'allowed', feature, { requiredTier });
 
   // ── メッセージ組み立て（画像添付に対応） ──
   let userContent;
