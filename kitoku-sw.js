@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-map-year-55-label';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-claude-feature-guard';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

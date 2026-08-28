@@ -790,7 +790,7 @@ function genReport(){
     '700〜900文字。見出しは「■」。最後は希望と行動で締める。日本語のみ。'
   ].join('\n');
 
-  fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})})
+  fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,feature:'relations_deep_report'})})
   .then(function(r){return r.json();})
   .then(function(data){
     loading.style.display='none';

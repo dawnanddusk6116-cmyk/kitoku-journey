@@ -11,7 +11,7 @@ const ALLOWED_ORIGINS = [
 // 'free'     = 誰でも無料
 // 'base'     = ベースプレミアム(¥500/月)以上
 // 'business' = KITOKU for BUSINESS会員
-// ※ ここに無い機能名（feature未指定含む）は 'free' 扱い
+// ※ ここに無い機能名（feature未指定含む）は拒否する
 //
 // 【運用メモ】テスト中に一時開放したい時は、該当行を 'free' に変えるだけでよい。
 //            HTML側は常に feature とトークンを送っているため、変更はこの表だけで完結する。
@@ -21,6 +21,7 @@ const FEATURE_POLICY = {
   'kigaku_quote': 'free',
 
   // business.html
+  'business_report': 'free',
   'business_candidate': 'business',
   'business_leader_member': 'business',
   'business_core_support': 'business',
@@ -29,6 +30,7 @@ const FEATURE_POLICY = {
   'business_store': 'business',
 
   // relations.html
+  'relations_deep_report': 'free',
   'relations_ai': 'base',
 
   // Phase③で順次接続
@@ -107,7 +109,10 @@ export default async function handler(req, res) {
   }
 
   // ── プレミアム判定 ──
-  const requiredTier = FEATURE_POLICY[feature] || 'free';
+  if (!FEATURE_POLICY[feature]) {
+    return res.status(400).json({ error: 'invalid or missing feature' });
+  }
+  const requiredTier = FEATURE_POLICY[feature];
   const access = await checkAccess(requiredTier, req.headers.authorization);
   if (!access.ok) {
     return res.status(402).json({
@@ -116,6 +121,12 @@ export default async function handler(req, res) {
       requiredTier
     });
   }
+  console.info('[claude_request]', {
+    feature,
+    requiredTier,
+    ip: req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '',
+    at: new Date().toISOString()
+  });
 
   // ── メッセージ組み立て（画像添付に対応） ──
   let userContent;
