@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260827-premium-gates';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260828-life-reading-report';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
