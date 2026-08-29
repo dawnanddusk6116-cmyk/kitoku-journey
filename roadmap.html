@@ -57,21 +57,18 @@ body[data-theme="dark"] .fi{background:#15110c;}
 .star-bar{background:rgba(138,104,32,.06);border:1px solid rgba(138,104,32,.18);border-radius:10px;padding:11px 14px;margin-bottom:18px;font-size:.66rem;color:var(--mist);text-align:center;line-height:1.8;}
 .star-bar strong{color:var(--goldlt);font-weight:700;}
 
-/* 五格の5行評価 */
+/* 姓名鑑定の注目点 */
 .gokaku-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:15px 16px;margin:0 0 18px;}
 .gokaku-title{font-size:.68rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:7px;}
 .gokaku-title::before{content:'';flex:0 0 18px;height:1px;background:var(--gold);}
 .gokaku-lead{font-size:.62rem;color:var(--mist);line-height:1.85;margin-bottom:10px;}
-.gogaku-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0 0;}
-.gk-cell{text-align:center;background:var(--card);border:1px solid var(--rim);border-radius:8px;padding:9px 4px;}
-.gk-lbl{font-size:.5rem;color:var(--fog);margin-bottom:3px;line-height:1.3;}
-.gk-num{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--golddk);line-height:1;margin-bottom:3px;}
-.gk-elem{font-size:.55rem;font-weight:700;}
-@media(max-width:420px){
-  .gogaku-row{gap:4px;}
-  .gk-cell{padding:8px 2px;}
-  .gk-lbl{font-size:.46rem;}
-}
+.gk-summary{font-size:.6rem;color:var(--fog);line-height:1.75;background:rgba(138,104,32,.05);border:1px solid rgba(138,104,32,.14);border-radius:8px;padding:8px 10px;margin:10px 0 12px;}
+.gk-item{background:linear-gradient(135deg,rgba(255,253,248,.9),rgba(250,246,238,.72));border:1px solid rgba(138,104,32,.16);border-radius:10px;padding:11px 12px;margin-top:9px;}
+body[data-theme="dark"] .gk-item{background:rgba(255,255,255,.03);}
+.gk-item-title{font-size:.66rem;font-weight:700;color:var(--golddk);line-height:1.6;margin-bottom:4px;}
+.gk-item-text{font-size:.62rem;color:var(--mist);line-height:1.85;}
+.gk-item-kitoku{font-size:.61rem;color:var(--gold);line-height:1.85;background:rgba(138,104,32,.07);border-left:3px solid var(--goldlt);border-radius:0 7px 7px 0;padding:8px 10px;margin-top:8px;}
+.gk-clean{font-size:.63rem;color:var(--good);line-height:1.85;background:rgba(58,122,78,.07);border:1px solid rgba(58,122,78,.22);border-radius:10px;padding:11px 12px;margin-top:10px;}
 
 /* タイムライン */
 .tl-title{font-size:.7rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin:18px 0 12px;display:flex;align-items:center;gap:7px;}
@@ -654,7 +651,7 @@ function restoreMemos(){
 }
 
 // ============================================================
-// 五格の5行評価（姓名鑑定済みなら表示）
+// 姓名鑑定の注目点（姓名鑑定済みなら表示）
 // ============================================================
 function roadmapGogyoOf(n){
   if(typeof window.gogyoOf==='function')return window.gogyoOf(n);
@@ -703,26 +700,25 @@ function buildGokakuElements(){
     return;
   }
 
-  const elemColor={木:'#3a7848',火:'#c04828',土:'#8a6020',金:'#607080',水:'#2a5888'};
-  const gkElems=[
-    {lbl:'家系の力',n:gk.ten,e:roadmapGogyoOf(gk.ten)},
-    {lbl:'あなたの核心',n:gk.jin,e:roadmapGogyoOf(gk.jin)},
-    {lbl:'若い頃の環境',n:gk.chi,e:roadmapGogyoOf(gk.chi)},
-    {lbl:'社会での縁',n:gk.gai,e:roadmapGogyoOf(gk.gai)},
-    {lbl:'一生の方向性',n:gk.so,e:roadmapGogyoOf(gk.so)},
-  ];
+  const items=(data.items||[]).slice().sort((a,b)=>(b.deduct||0)-(a.deduct||0));
+  let itemHtml='';
+  if(items.length===0){
+    itemHtml='<div class="gk-clean">音の配列にバランスが取れています。特に注意すべき凶配列は見つかりませんでした。</div>';
+  }else{
+    itemHtml=items.slice(0,3).map(item=>`
+      <div class="gk-item">
+        <div class="gk-item-title">${item.icon||''} ${item.title||''}</div>
+        <div class="gk-item-text">${item.text||''}</div>
+        ${item.kitoku?`<div class="gk-item-kitoku">💡 ${item.kitoku}</div>`:''}
+      </div>`).join('');
+  }
 
   area.innerHTML=`
     <div class="gokaku-card">
-      <div class="gokaku-title">姓名鑑定で見た5行評価</div>
-      <div class="gokaku-lead">life.htmlで保存した五格を読み込み、九年サイクルを見る前提として表示しています。このページでは画数を再計算していません。</div>
-      <div class="gogaku-row">
-        ${gkElems.map(g=>`<div class="gk-cell">
-          <div class="gk-lbl">${g.lbl}</div>
-          <div class="gk-num">${g.n}</div>
-          <div class="gk-elem" style="color:${elemColor[g.e]||'#888'};">${g.e}</div>
-        </div>`).join('')}
-      </div>
+      <div class="gokaku-title">姓名鑑定で見つかった注目点</div>
+      <div class="gokaku-lead">life.htmlで保存した鑑定結果から、特に重要な項目を表示しています。すべての詳細はlife.htmlでご確認いただけます。</div>
+      <div class="gk-summary">天格${gk.ten}・人格${gk.jin}・地格${gk.chi}・外格${gk.gai}・総格${gk.so}</div>
+      ${itemHtml}
     </div>`;
 }
 
