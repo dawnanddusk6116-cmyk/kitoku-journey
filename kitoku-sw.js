@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260829-roadmap-unified';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260829-roadmap-rename';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
