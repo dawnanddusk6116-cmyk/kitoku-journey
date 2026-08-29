@@ -1,9 +1,10 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260829-roadmap-kannyu-fix';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260829-roadmap-cycle-band';
 const KITOKU_CORE = [
   './index.html',
   './top.html',
   './kyusei_v2.html',
   './report_generator_free.html',
+  './roadmap.html',
   './kitoku-engine.js',
   './academy.html',
   './academy_pdf_00.html',
