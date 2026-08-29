@@ -606,7 +606,7 @@ function buildTimeline(h){
   for(let i=0;i<10;i++){
     const yr=startYear+i;
     const c=yearCenter(yr);
-    const pos=((h-c+4)%9+9)%9+1||9;
+    const pos=pal(h,c);
     const th=YEAR_THEME[pos]||YEAR_THEME[9];
     const color=CLS_COLOR[th.cls]||'#7a6a3a';
     const isPrev=yr===thisYear-1;
@@ -806,7 +806,7 @@ function buildRyuunen(by){
   const kannyuAges=[];
   for(let yr=1920;yr<=2100;yr++){
     const c=yearCenter(yr);
-    const pos=((gHonmei-c+4)%9+9)%9+1||9;
+    const pos=pal(gHonmei,c);
     if(pos===1) kannyuAges.push(yr-by+1);
   }
   const kannyuSet=new Set(kannyuAges);
