@@ -239,15 +239,16 @@ html.kitoku-font-large button {
 
 <div class="wrap">
   <div class="pg-title">九年サイクルで今の自分を知る</div>
-  <div class="pg-sub">姓名鑑定結果と9年の流れを重ねて読む</div>
+  <div class="pg-sub">昨年を振り返り、これからの9年を読む</div>
   <div class="pg-lead">
-    life.htmlで保存した姓名鑑定結果を読み込み、五格・流年・九星の9年サイクルを重ねて見ます。<br>
-    まず姓名鑑定で名前の骨格を確定し、そのあと今の自分がどの流れの中にいるかを確認します。
+    九星は毎年、あなたの本命星を盤上の異なる宮へと運びます。<br>
+    昨年の実感を入口に、今年から9年先までの巡りをひらきます。<br>
+    姓名鑑定を済ませていれば、五格・流年も重ねて表示されます。
   </div>
 
   <!-- 入力 -->
   <div id="inputCard" class="fc">
-    <label class="fl">読み込む姓名鑑定結果</label>
+    <label class="fl">姓名鑑定結果</label>
     <div class="life-reading-status" id="lifeReadingStatus">姓名鑑定の結果を確認しています。</div>
     <div class="life-reading-actions" id="lifeReadingActions" style="display:none;">
       <a class="life-reading-link" href="life.html">姓名鑑定をする</a>
@@ -262,7 +263,7 @@ html.kitoku-font-large button {
       <div class="gender-btn on" id="gMale" onclick="setGender('male')">男性</div>
       <div class="gender-btn" id="gFemale" onclick="setGender('female')">女性</div>
     </div>
-    <button class="go-btn" onclick="generate()">統合レポートをひらく</button>
+    <button class="go-btn" onclick="generate()">九年サイクルをひらく</button>
     <div class="limit-note" id="roadmapUsageNote">無料版は1日3回まで使えます。</div>
   </div>
 
@@ -415,7 +416,7 @@ function updateRoadmapUsageNote(){
     : '本日の無料回数（3回）を使い切りました。明日またお試しください。';
   if(btn){
     btn.disabled = remain <= 0;
-    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '統合レポートをひらく';
+    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '九年サイクルをひらく';
   }
 }
 
@@ -494,7 +495,7 @@ function renderLifeReadingStatus(){
   if(!box)return;
   const data=loadRoadmapLifeReading();
   if(!data){
-    box.innerHTML='この統合レポートは、先に姓名鑑定を済ませた結果を読み込んで作ります。<br>姓名鑑定を完了すると、五格・流年・九年サイクルをここで重ねて見られます。';
+    box.innerHTML='姓名鑑定を済ませていなくても、星ベースの九年サイクルはこのまま見られます。<br>姓名鑑定を完了すると、五格・流年も重ねて表示できます。';
     if(actions)actions.style.display='grid';
     return;
   }
@@ -502,26 +503,19 @@ function renderLifeReadingStatus(){
   if(birth)setRoadmapBirthInputs(birth);
   const gk=data.gk;
   const name=String(data.name||[data.sei,data.mei].filter(Boolean).join('')||'姓名鑑定済みの方').trim();
-  box.innerHTML=`<strong>${name}</strong> さんの姓名鑑定結果を読み込んでいます。<br>
+  box.innerHTML=`<strong>${name}</strong> さんの姓名鑑定結果があります。九年サイクルに五格・流年を重ねて表示できます。<br>
     <span style="font-size:.6rem;">生年月日：${birth||'未登録'}　天格${gk.ten}・人格${gk.jin}・地格${gk.chi}・外格${gk.gai}・総格${gk.so}</span>`;
   if(actions)actions.style.display='none';
 }
 
-function canOpenIntegratedReport(){
+function warnIfLifeReadingBirthMismatch(){
   const data=loadRoadmapLifeReading();
-  if(!data){
-    renderLifeReadingStatus();
-    alert('先に姓名鑑定を済ませてください。姓名鑑定結果を読み込んで、九年サイクルと重ねて表示します。');
-    return false;
-  }
+  if(!data)return;
   const readingBirth=getRoadmapReadingBirth(data);
   const inputBirth=getRoadmapInputBirth();
   if(!readingBirth||!inputBirth||readingBirth!==inputBirth){
-    renderLifeReadingStatus();
-    alert('表示中の生年月日と、姓名鑑定した時の生年月日が一致していません。姓名鑑定結果と同じ生年月日で開いてください。');
-    return false;
+    alert('表示中の生年月日と、姓名鑑定した時の生年月日が一致していません。今回は星ベースの九年サイクルだけを表示し、五格・流年は表示しません。');
   }
-  return true;
 }
 
 function countRoadmapUsage(){
@@ -535,7 +529,6 @@ function countRoadmapUsage(){
 // 生成
 // ============================================================
 function generate(){
-  if(!canOpenIntegratedReport())return;
   const by=parseInt(document.getElementById('by').value);
   const bm=parseInt(document.getElementById('bm').value);
   const bd=parseInt(document.getElementById('bd').value)||1;
@@ -543,6 +536,7 @@ function generate(){
     alertInvalidBirthDate();
     return;
   }
+  warnIfLifeReadingBirthMismatch();
   if(getRoadmapUsage() >= ROADMAP_FREE_LIMIT){
     updateRoadmapUsageNote();
     alert('本日の無料回数（3回）を使い切りました。明日またお試しください。');
