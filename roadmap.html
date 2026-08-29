@@ -74,6 +74,7 @@ body[data-theme="dark"] .gk-item{background:rgba(255,255,255,.03);}
 .cycle-band{display:flex;gap:3px;align-items:flex-end;margin-bottom:14px;}
 .cb-cell{flex:1;min-width:0;text-align:center;cursor:pointer;background:none;border:none;padding:0;font-family:'Noto Serif JP',serif;}
 .cb-mark{height:14px;font-size:.6rem;line-height:1;color:var(--gold);}
+.cb-mark-prev{font-size:.5rem;color:var(--fog);font-weight:400;letter-spacing:0;}
 .cb-bar{height:24px;border-radius:3px 3px 0 0;}
 .cb-label{color:#fff;font-size:.55rem;font-weight:700;padding:3px 0;border-radius:0 0 3px 3px;letter-spacing:.02em;}
 .cb-year{font-size:.55rem;color:var(--fog);margin-top:3px;}
@@ -99,6 +100,7 @@ body[data-theme="dark"] .gk-item{background:rgba(255,255,255,.03);}
 .yc-sec{margin-top:11px;}
 .yc-sec-lb{font-size:.58rem;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:4px;}
 .yc-sec-tx{font-size:.66rem;color:var(--mist);line-height:1.9;}
+.yc-recall{margin-top:11px;padding:8px 11px;background:rgba(138,104,32,.05);border:1px dashed rgba(138,104,32,.28);border-radius:8px;font-size:.62rem;color:var(--mist);line-height:1.8;}
 .yc-action{background:rgba(138,104,32,.06);border-left:3px solid var(--goldlt);border-radius:0 7px 7px 0;padding:9px 12px;font-size:.64rem;color:var(--mist);line-height:1.85;margin-top:10px;}
 .yc-dir{display:inline-flex;align-items:center;gap:5px;background:rgba(58,122,78,.08);border:1px solid rgba(58,122,78,.25);border-radius:999px;padding:3px 11px;font-size:.6rem;color:var(--good);font-weight:700;margin-top:8px;}
 .yc-ryuunen{background:linear-gradient(135deg,rgba(160,72,72,.08),rgba(192,112,32,.05));border:1px solid rgba(160,72,72,.22);border-radius:8px;padding:9px 12px;font-size:.62rem;color:#a04848;line-height:1.85;margin-top:10px;font-weight:700;}
@@ -155,7 +157,7 @@ body[data-theme="dark"] .rs-t{color:#d88;}
   .year-card .yc-body{max-height:none !important;}
   .year-card .yc-arrow{display:none;}
   .year-card{page-break-inside:avoid;break-inside:avoid;box-shadow:none !important;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .yc-badge,.yc-dir,.yc-action,.yc-ryuunen,.ryuunen-summary,.yc-memo-ta,.cb-bar,.cb-label{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .yc-badge,.yc-dir,.yc-action,.yc-ryuunen,.ryuunen-summary,.yc-memo-ta,.cb-bar,.cb-label,.yc-recall{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   /* メモ：textareaを隠し、印刷用divを表示 */
   .yc-memo-ta{display:none !important;}
   .yc-memo-hint{display:none;}
@@ -613,7 +615,7 @@ function buildTimeline(h){
     bandHtml+='<button type="button" class="cb-cell'+(isCur?' cb-cur':'')+'" '
       +'onclick="focusYearCard('+yr+')" '
       +'aria-label="'+yr+'年 '+th.badge+(isCur?'（今年）':'')+'"'
-      +'><div class="cb-mark">'+(isCur?'▼':'')+'</div>'
+      +'><div class="cb-mark">'+(isCur?'▼':(isPrev?'<span class="cb-mark-prev">昨年</span>':''))+'</div>'
       +'<div class="cb-bar" style="background:'+color+';"></div>'
       +'<div class="cb-label" style="background:'+color+';">'+(th.short||th.badge)+'</div>'
       +'<div class="cb-year">'+String(yr).slice(2)+'</div>'
@@ -638,6 +640,7 @@ function buildTimeline(h){
         <div class="yc-dir">🧭 運気が向かう方角：${dirHint}</div>
         <div class="yc-dir" style="margin-top:4px;">📅 <strong>${douki.label}</strong>の線路の日は「<strong>${douki.senro}</strong>」— この日に始めたことは長く続き、まっすぐ発展します。<br><span style="font-size:.6rem;color:var(--mist);">💡「ポッケと万年暦」アプリで今日の十二支を確認できます。<a href="https://apps.apple.com/jp/app/%E3%83%9D%E3%82%B1%E3%83%83%E3%83%88%E4%B8%87%E5%B9%B4%E6%9A%A6/id1245138589" target="_blank" rel="noopener" style="color:var(--goldlt);text-decoration:underline;">App Store</a> / <a href="https://play.google.com/store/apps/details?id=org.ametuchi.suimei.pocketreki&hl=ja" target="_blank" rel="noopener" style="color:var(--goldlt);text-decoration:underline;">Google Play</a></span></div>
         <div class="yc-ryuunen-slot" data-year="${yr}"></div>
+        <div class="yc-recall">🔁 前回この流れだったのは <strong>${yr-9}年</strong>です。あの年、何をしていましたか。思い出せることがあれば、下に書き足してみてください。</div>
         <div class="yc-memo">
           <div class="yc-memo-lb">✍ ${yr}年の自分（今していること・しようとしていること）</div>
           <textarea class="yc-memo-ta" data-year="${yr}" placeholder="例：お遍路を回っている／転職を考えている／資格の勉強中…&#10;書き込むと、今の自分がこの年の流れに乗れているか照らし合わせられます。" oninput="saveMemo(${yr},this.value)" onclick="event.stopPropagation()"></textarea>
@@ -648,7 +651,7 @@ function buildTimeline(h){
     </div>`;
   }
   document.getElementById('cycleBand').innerHTML=bandHtml;
-  document.getElementById('cycleBandNote').innerHTML='▼ が今年です。タップすると、その年の詳しい説明にジャンプします。';
+  document.getElementById('cycleBandNote').innerHTML='左端は昨年です。実際どうだったかを照らし合わせてみてください。当たっていると感じたなら、その先の流れも参考になります。▼ が今年。タップすると詳しい説明にジャンプします。';
   document.getElementById('timeline').innerHTML=html;
   restoreMemos();
 }
