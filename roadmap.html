@@ -48,6 +48,10 @@ body[data-theme="dark"] .fi{background:#15110c;}
 .go-btn:disabled{opacity:.55;cursor:not-allowed;background:#cfc6b6;}
 .limit-note{margin-top:9px;text-align:center;font-size:.68rem;line-height:1.7;color:var(--mist);}
 .limit-note.is-limit{color:#b45b5b;font-weight:700;}
+.life-reading-status{background:linear-gradient(135deg,rgba(58,122,78,.06),rgba(255,255,255,.55));border:1px solid rgba(58,122,78,.22);border-radius:10px;padding:12px 13px;margin-bottom:12px;font-size:.64rem;color:var(--mist);line-height:1.85;}
+.life-reading-status strong{color:var(--golddk);}
+.life-reading-actions{display:grid;gap:8px;margin-top:10px;}
+.life-reading-link{display:block;text-align:center;text-decoration:none;border:1px solid rgba(138,104,32,.3);border-radius:999px;background:rgba(138,104,32,.08);color:var(--goldlt);font-size:.66rem;font-weight:700;padding:8px 14px;}
 
 /* 星情報バー */
 .star-bar{background:rgba(138,104,32,.06);border:1px solid rgba(138,104,32,.18);border-radius:10px;padding:11px 14px;margin-bottom:18px;font-size:.66rem;color:var(--mist);text-align:center;line-height:1.8;}
@@ -70,7 +74,7 @@ body[data-theme="dark"] .fi{background:#15110c;}
 }
 
 /* タイムライン */
-.tl-title{font-size:.7rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:7px;}
+.tl-title{font-size:.7rem;letter-spacing:.1em;color:var(--gold);font-weight:700;margin:18px 0 12px;display:flex;align-items:center;gap:7px;}
 .tl-title::before{content:'';flex:0 0 18px;height:1px;background:var(--gold);}
 .year-card{background:var(--card);border:1px solid var(--rim);border-radius:var(--r);padding:0;margin-bottom:12px;overflow:hidden;position:relative;}
 .year-card.cur{border-color:var(--goldlt);box-shadow:0 2px 14px rgba(138,104,32,.12);}
@@ -135,7 +139,7 @@ body[data-theme="dark"] .rs-t{color:#d88;}
 @media print{
   @page{size:A4;margin:12mm 10mm;}
   body{background:#fff !important;font-size:10px;}
-  .hdr,.back-btn,#inputCard,.pdf-btn,.next-link,.ryuunen-cta-btn{display:none !important;}
+  .hdr,.back-btn,#inputCard,.pdf-btn,.next-link,.ryuunen-cta-btn,.life-reading-actions{display:none !important;}
   .wrap{max-width:100%;padding:0;}
   .pg-title{font-size:20px;margin-top:0;}
   .pg-sub{font-size:9px;}
@@ -235,14 +239,19 @@ html.kitoku-font-large button {
 
 <div class="wrap">
   <div class="pg-title">九年サイクルで今の自分を知る</div>
-  <div class="pg-sub">昨年を振り返り、これからの9年を読む</div>
+  <div class="pg-sub">姓名鑑定結果と9年の流れを重ねて読む</div>
   <div class="pg-lead">
-    九星は毎年、あなたの本命星を盤上の異なる宮へと運びます。<br>
-    昨年の実感を入口に、今年から9年先までの巡りをひらきます。<br>一周して元に戻る流れを見ながら、いつ動き、いつ整えるかの地図にします。
+    life.htmlで保存した姓名鑑定結果を読み込み、五格・流年・九星の9年サイクルを重ねて見ます。<br>
+    まず姓名鑑定で名前の骨格を確定し、そのあと今の自分がどの流れの中にいるかを確認します。
   </div>
 
   <!-- 入力 -->
   <div id="inputCard" class="fc">
+    <label class="fl">読み込む姓名鑑定結果</label>
+    <div class="life-reading-status" id="lifeReadingStatus">姓名鑑定の結果を確認しています。</div>
+    <div class="life-reading-actions" id="lifeReadingActions" style="display:none;">
+      <a class="life-reading-link" href="life.html">姓名鑑定をする</a>
+    </div>
     <label class="fl">生年月日</label>
     <div class="frow">
       <input class="fi" id="by" type="number" inputmode="numeric" placeholder="年" min="1920" max="2030">
@@ -253,17 +262,17 @@ html.kitoku-font-large button {
       <div class="gender-btn on" id="gMale" onclick="setGender('male')">男性</div>
       <div class="gender-btn" id="gFemale" onclick="setGender('female')">女性</div>
     </div>
-    <button class="go-btn" onclick="generate()">九年サイクルをひらく</button>
+    <button class="go-btn" onclick="generate()">統合レポートをひらく</button>
     <div class="limit-note" id="roadmapUsageNote">無料版は1日3回まで使えます。</div>
   </div>
 
   <!-- 結果 -->
   <div id="result" class="hidden">
     <div class="star-bar" id="starBar"></div>
-    <div class="tl-title">9年のサイクル</div>
-    <div id="timeline"></div>
     <div id="gokakuArea"></div>
     <div id="ryuunenArea"></div>
+    <div class="tl-title">9年のサイクル</div>
+    <div id="timeline"></div>
     <div class="disclaimer">
       この地図は九星気学の巡りに基づく「大局の傾向」です。<br>
       吉凶を断定するものではなく、あなた自身が動くタイミングを決めるための羅針盤として、どうぞ。
@@ -406,7 +415,7 @@ function updateRoadmapUsageNote(){
     : '本日の無料回数（3回）を使い切りました。明日またお試しください。';
   if(btn){
     btn.disabled = remain <= 0;
-    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '九年サイクルをひらく';
+    btn.textContent = remain <= 0 ? '本日の無料回数に達しました' : '統合レポートをひらく';
   }
 }
 
@@ -441,6 +450,80 @@ function getCurrentBirthString(){
   }
 }
 
+function loadRoadmapLifeReading(){
+  try{
+    const raw=localStorage.getItem('kitoku-life-reading');
+    if(!raw)return null;
+    const data=JSON.parse(raw);
+    const gk=data&&data.gk;
+    if(!gk||typeof gk.ten!=='number'||typeof gk.jin!=='number'||
+       typeof gk.chi!=='number'||typeof gk.gai!=='number'||typeof gk.so!=='number'){
+      return null;
+    }
+    return data;
+  }catch(e){
+    return null;
+  }
+}
+
+function getRoadmapReadingBirth(data){
+  if(!data||typeof data.birth!=='string')return '';
+  return normalizeRoadmapBirthValue(data.birth);
+}
+
+function getRoadmapInputBirth(){
+  const by=parseInt(document.getElementById('by').value,10);
+  const bm=parseInt(document.getElementById('bm').value,10);
+  const bd=parseInt(document.getElementById('bd').value,10)||1;
+  if(!isValidBirthDate(by,bm,bd))return '';
+  return normalizeRoadmapBirthValue(by+'-'+bm+'-'+bd);
+}
+
+function setRoadmapBirthInputs(birth){
+  const b=normalizeRoadmapBirthValue(birth);
+  const m=b.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m)return;
+  document.getElementById('by').value=Number(m[1]);
+  document.getElementById('bm').value=Number(m[2]);
+  document.getElementById('bd').value=Number(m[3]);
+}
+
+function renderLifeReadingStatus(){
+  const box=document.getElementById('lifeReadingStatus');
+  const actions=document.getElementById('lifeReadingActions');
+  if(!box)return;
+  const data=loadRoadmapLifeReading();
+  if(!data){
+    box.innerHTML='この統合レポートは、先に姓名鑑定を済ませた結果を読み込んで作ります。<br>姓名鑑定を完了すると、五格・流年・九年サイクルをここで重ねて見られます。';
+    if(actions)actions.style.display='grid';
+    return;
+  }
+  const birth=getRoadmapReadingBirth(data);
+  if(birth)setRoadmapBirthInputs(birth);
+  const gk=data.gk;
+  const name=String(data.name||[data.sei,data.mei].filter(Boolean).join('')||'姓名鑑定済みの方').trim();
+  box.innerHTML=`<strong>${name}</strong> さんの姓名鑑定結果を読み込んでいます。<br>
+    <span style="font-size:.6rem;">生年月日：${birth||'未登録'}　天格${gk.ten}・人格${gk.jin}・地格${gk.chi}・外格${gk.gai}・総格${gk.so}</span>`;
+  if(actions)actions.style.display='none';
+}
+
+function canOpenIntegratedReport(){
+  const data=loadRoadmapLifeReading();
+  if(!data){
+    renderLifeReadingStatus();
+    alert('先に姓名鑑定を済ませてください。姓名鑑定結果を読み込んで、九年サイクルと重ねて表示します。');
+    return false;
+  }
+  const readingBirth=getRoadmapReadingBirth(data);
+  const inputBirth=getRoadmapInputBirth();
+  if(!readingBirth||!inputBirth||readingBirth!==inputBirth){
+    renderLifeReadingStatus();
+    alert('表示中の生年月日と、姓名鑑定した時の生年月日が一致していません。姓名鑑定結果と同じ生年月日で開いてください。');
+    return false;
+  }
+  return true;
+}
+
 function countRoadmapUsage(){
   try{
     localStorage.setItem(getRoadmapUsageKey(), String(getRoadmapUsage() + 1));
@@ -452,6 +535,7 @@ function countRoadmapUsage(){
 // 生成
 // ============================================================
 function generate(){
+  if(!canOpenIntegratedReport())return;
   const by=parseInt(document.getElementById('by').value);
   const bm=parseInt(document.getElementById('bm').value);
   const bd=parseInt(document.getElementById('bd').value)||1;
@@ -774,6 +858,7 @@ window.addEventListener('DOMContentLoaded',()=>{
       if(arr[2])document.getElementById('bd').value=arr[2];
     }
   }catch(e){}
+  renderLifeReadingStatus();
   updateRoadmapUsageNote();
 });
 </script>
