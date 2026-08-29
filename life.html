@@ -3768,7 +3768,7 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
     },
     gk: gk || null,
     blueprint: window._kitokuLifeBlueprint || null,
-    items: (scoreResult.items||[]).map(i=>({cat:i.cat,title:i.title,text:i.text})),
+    items: (scoreResult.items||[]).map(i=>({cat:i.cat,icon:i.icon,title:i.title,text:i.text,kitoku:i.kitoku,deduct:i.deduct})),
     jinGG,
     mode: readingMode,
     birth: readingBirth,
