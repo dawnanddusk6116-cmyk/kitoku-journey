@@ -1,4 +1,4 @@
-const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260829-roadmap-gokaku-items';
+const KITOKU_CACHE = 'kitoku-pwa-v6-saved-places-v20260829-roadmap-kannyu-fix';
 const KITOKU_CORE = [
   './index.html',
   './top.html',

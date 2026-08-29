@@ -772,10 +772,10 @@ function buildRyuunen(by){
   const ages=[]; let a=en; while(a<=90){ages.push(a);a+=9;}
   // 九星坎入年（本命星hが宮1=北に回座する年齢）
   const kannyuAges=[];
-  const _kc=((gHonmei+3)%9)+1;
   for(let yr=1920;yr<=2100;yr++){
-    const c=((2024-yr)%9+9)%9+1;
-    if(c===_kc) kannyuAges.push(yr-by+1);
+    const c=yearCenter(yr);
+    const pos=((gHonmei-c+4)%9+9)%9+1||9;
+    if(pos===1) kannyuAges.push(yr-by+1);
   }
   const kannyuSet=new Set(kannyuAges);
   const ryunenSet=new Set(ages);
