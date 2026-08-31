@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>国内旅行 吉方位ナビ | KITOKU</title>
+<title>引越し 吉方位ナビ | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,10 +12,10 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="kitoku-engine.js?v=20260803h"></script>
+<script src="kitoku-engine.js" defer></script>
 <style>
 /* ═══════════════════════════════════════
-   KITOKU 国内旅行 吉方位ナビ
+   KITOKU 引越し 吉方位ナビ
    ═══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -117,6 +117,51 @@ body{
   font-size:1.02rem;
   font-weight:800;
 }
+.bonus-accordion{
+  padding:0;
+  overflow:hidden;
+}
+.bonus-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:15px 16px;
+}
+.bonus-accordion summary::-webkit-details-marker{display:none;}
+.bonus-accordion summary::after{
+  content:"開く ▶";
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(138,104,32,.1);
+  border:1px solid rgba(138,104,32,.24);
+  color:var(--goldlt);
+  font-size:.62rem;
+  font-weight:800;
+  flex-shrink:0;
+}
+.bonus-accordion[open] summary::after{content:"閉じる ▼";}
+.bonus-summary-main{
+  min-width:0;
+}
+.bonus-summary-note{
+  display:block;
+  font-size:.62rem;
+  color:var(--mist);
+  line-height:1.6;
+  margin-top:5px;
+  font-weight:400;
+  letter-spacing:0;
+}
+.bonus-accordion-body{
+  padding:0 16px 16px;
+}
 
 /* ── 星情報バー ── */
 .star-bar{
@@ -151,10 +196,10 @@ body{
   box-shadow:0 2px 10px rgba(60,40,10,.04);
 }
 .usage-tip{
-  margin-top:10px;padding:8px 10px;
-  background:rgba(196,160,67,.12);
-  border:1px solid rgba(138,104,32,.18);
-  border-radius:7px;font-size:.6rem;color:#4b3c29;line-height:1.8;
+  margin-top:12px;padding:10px 12px;
+  background:rgba(60,100,60,.08);
+  border:1px solid rgba(60,100,60,.26);
+  border-radius:8px;font-size:.62rem;color:#3f5136;line-height:1.9;
 }
 .usage-guide{
   background:linear-gradient(135deg,#fffaf1,#f5ecdc);
@@ -188,10 +233,10 @@ body{
   box-shadow:0 2px 6px rgba(80,50,10,.14);
 }
 .usage-tip{
-  background:#fff6dc;
-  border-color:rgba(138,104,32,.34);
-  color:#352615;
-  font-size:.64rem;
+  background:#f1f7ec;
+  border-color:rgba(60,110,60,.38);
+  color:#2d4b2d;
+  font-size:.65rem;
   font-weight:600;
 }
 .usage-guide{
@@ -294,6 +339,56 @@ body{
   padding:10px;
 }
 .preset-grid.open{display:grid;}
+.destination-accordion{
+  margin:10px 0 0;
+  border:1px solid rgba(138,104,32,.34);
+  border-radius:12px;
+  background:linear-gradient(135deg,#fffdf8,#f8f2e8);
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(60,40,10,.04);
+}
+.destination-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:13px 14px;
+  color:var(--goldlt);
+  font-size:.76rem;
+  font-weight:800;
+  letter-spacing:.06em;
+}
+.destination-accordion summary::-webkit-details-marker{display:none;}
+.destination-accordion summary::after{
+  content:"開く ▶";
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(138,104,32,.12);
+  border:1px solid rgba(138,104,32,.26);
+  color:var(--goldlt);
+  font-size:.62rem;
+  font-weight:800;
+}
+.destination-accordion[open] summary::after{content:"閉じる ▼";}
+.destination-accordion-note{
+  display:block;
+  font-size:.56rem;
+  color:var(--mist);
+  font-weight:400;
+  letter-spacing:0;
+  margin-top:3px;
+  line-height:1.5;
+}
+.destination-accordion-body{
+  padding:0 12px 12px;
+}
+
 .preset-btn{
   background:var(--card);
   border:1px solid var(--rim);border-radius:9px;
@@ -688,7 +783,21 @@ html.font-large .font-btn{font-size:.8rem;}
 }
 
 
-/* ── 方位盤ガイドモーダル ── */
+/* ── 空間調律 ── */
+.space-dir-btn {
+  padding:10px 0;border-radius:8px;font-size:.72rem;font-weight:700;
+  font-family:'Noto Serif JP',serif;cursor:pointer;
+  background:rgba(138,104,32,.08);color:var(--goldlt);
+  border:2px solid rgba(138,104,32,.2);transition:all .15s;
+}
+.space-dir-btn.active {
+  background:var(--goldlt);color:#fff;border-color:var(--goldlt);
+}
+.space-prescription-card {
+  background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.6));
+  border:1px solid rgba(138,104,32,.25);border-radius:12px;padding:14px;
+}
+
 .guide-modal-overlay{
   display:none;position:fixed;inset:0;z-index:9000;
   background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
@@ -821,6 +930,30 @@ html.font-large .font-btn{font-size:.8rem;}
   font-size:.68rem;color:var(--goldlt,#5c4010);font-weight:700;
   cursor:pointer;font-family:'Noto Serif JP',serif;
   letter-spacing:.06em;
+}
+.guide-action-row{
+  margin:10px 16px 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.guide-action-row .nav-open-btn,
+.guide-action-row .guide-open-btn{
+  width:100%;
+  min-height:38px;
+  justify-content:center;
+  margin:0;
+  padding:8px 6px;
+  white-space:nowrap;
+  line-height:1.2;
+}
+@media(max-width:360px){
+  .guide-action-row{gap:6px;}
+  .guide-action-row .nav-open-btn,
+  .guide-action-row .guide-open-btn{
+    font-size:.62rem;
+    padding:8px 4px;
+  }
 }
 
 /* ── STEPヒント ── */
@@ -956,7 +1089,7 @@ html.font-large .font-btn{font-size:.8rem;}
 <div class="app-header">
   <div>
     <div class="header-logo">✦ KITOKU<span style="opacity:.5;margin:0 2px;">@</span>JOURNEY</div>
-    <div class="header-sub">国内旅行 吉方位ナビ</div>
+    <div class="header-sub">引越し 吉方位ナビ</div>
   </div>
   <div class="header-actions">
     <button class="back-btn secondary" onclick="goPreviousPage()">← 前へ</button>
@@ -981,70 +1114,76 @@ html.font-large .font-btn{font-size:.8rem;}
 
 <div class="life-element-banner" id="lifeElementBanner"></div>
 
-<div class="must-read-card" style="margin:12px 0 10px;padding:12px 13px;border-radius:14px;border:1px solid rgba(43,116,127,.32);border-left:6px solid #2b747f;background:linear-gradient(135deg,rgba(43,116,127,.12),rgba(255,255,255,.72));box-shadow:0 8px 20px rgba(43,116,127,.08);">
+<div class="must-read-card" style="margin:12px 0 10px;padding:12px 13px;border-radius:14px;border:1px solid rgba(174,112,23,.34);border-left:6px solid #ae7017;background:linear-gradient(135deg,rgba(174,112,23,.13),rgba(255,255,255,.74));box-shadow:0 8px 20px rgba(174,112,23,.08);">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:#2b747f;color:white;font-size:.68rem;font-weight:700;letter-spacing:.06em;">必読</span>
-    <strong style="font-size:.76rem;color:var(--snow);">旅行は、長さで見る盤が変わります</strong>
+    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:#ae7017;color:white;font-size:.68rem;font-weight:700;letter-spacing:.06em;">必読</span>
+    <strong style="font-size:.76rem;color:var(--snow);">引越しは、年盤と月盤を重視します</strong>
   </div>
   <div style="font-size:.64rem;color:var(--mist);line-height:1.75;">
-    日帰りや1泊は日盤、数日以上は月盤を中心に見ます。長期滞在や人生の節目になる旅では、余裕があれば年盤も確認します。ただし、予定・費用・家族の都合が最優先です。方位は、行ける旅を止めるためではなく、整えられる範囲で旅の質を上げる視点です。
+    引越しは生活の土台を移す大きな行動です。まず年盤を見て、次に実際に動く月を月盤で確認します。日盤は契約日・移動日などを整える補助として見ます。
   </div>
 </div>
 
 <!-- 使い方の解説 -->
 <details class="usage-guide">
-  <summary>✦ 旅行ナビの使い方</summary>
+  <summary>🏡 引越し吉方位ナビ</summary>
   <div class="usage-guide-body">
-  <div style="font-size:.66rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.55);border:1px solid rgba(138,104,32,.16);border-radius:10px;padding:10px 12px;margin-bottom:10px;">
-    <strong style="color:var(--snow);">旅行では、長さに合わせて見る盤を変えます。</strong><br>
-    日帰りや1泊なら<strong style="color:var(--goldlt);">日盤</strong>、数日から長期の旅行なら<strong style="color:var(--goldlt);">月盤</strong>を中心に見ます。出発日は日盤で整え、長期滞在や人生の節目になる旅では必要に応じて年盤も確認します。<br>
-    方位を見るのは、行動を制限するためではありません。予定や費用を無理に変えず、選べる余地がある時に旅の質を上げる判断材料として使います。日盤が気になる日は、出発前に自宅から見て吉方位の場所へ立ち寄り、温かい飲み物を一杯いただいてから向かう方法もあります。
+  <div style="font-size:.67rem;color:var(--mist);line-height:1.8;margin-bottom:12px;">
+    引越しは、あなたが新しく根を張る「人生の土壌」を選ぶ行為です。<br>
+    生活の土台が変わるため、まずは<strong style="color:var(--snow);">年盤</strong>を最も重視し、次に実際に動く月を<strong style="color:var(--snow);">月盤</strong>で確認します。
+  </div>
+  <div style="font-size:.66rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.55);border:1px solid rgba(138,104,32,.16);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+    無料版では、引越し前に「何を確認すればいいか」を整理できます。<br>
+    旧居・引越し先・候補月をそろえ、年盤と月盤を優先して見ると判断しやすくなります。契約日・移動日・荷入れ日などは日盤で整えますが、仕事・家族・費用・契約などの現実条件が最優先です。方位は不安を増やすものではなく、選べる範囲でより良い流れを選ぶための判断材料として使います。
   </div>
   <details style="margin:0 0 12px;border:1px solid rgba(138,104,32,.18);border-radius:12px;background:rgba(255,255,255,.42);overflow:hidden;">
-    <summary style="padding:10px 12px;cursor:pointer;font-size:.68rem;font-weight:700;color:var(--snow);list-style:none;">✦ せっかくの旅を、開運も持ち帰る旅にするために</summary>
+    <summary style="padding:10px 12px;cursor:pointer;font-size:.68rem;font-weight:700;color:var(--snow);list-style:none;">✦ なぜ引越しでは、特に方角が大切なのか</summary>
     <div style="padding:0 12px 12px;font-size:.64rem;color:var(--mist);line-height:1.85;">
-      旅行は、行きたい場所へ行くだけでも十分に価値があります。そこに少しだけ方位の視点を足すと、同じ旅でもリフレッシュに加えて、その土地の良い気を持ち帰る旅として使えます。<br>
-      方位を見るとは「吉方だから北へ行け」という命令ではなく、その星の意味に合わせて、どこで何をするかを選ぶことです。
+      数ある動きの中で、引越しは最も重い移動です。旅行が一度きりの点の移動なら、引越しはこれから何年も暮らす場所を移す、人生の器の移動です。だからこそ、気学でも引越しの方位は重視されてきました。<br>
+      良い方角への引越しは、良い気の土台の上に生活を築くことにつながります。そのため引越しでは、日々の外出と違い、年盤と月盤の両方を確認します。大きな流れである年と、実際に動く時期である月、その両方の追い風に乗る考え方です。
       <div style="margin-top:8px;padding:9px 10px;border-radius:10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.14);">
-        <strong style="color:var(--snow);">例：</strong><br>
-        六白金星の方角なら、少し良い宿・由緒ある社寺・丸い果物。<br>
-        四緑木星の方角なら、遠方のご縁・自然・うどんやそばなど長いもの。<br>
-        七赤金星の方角なら、美味しい食事・会話・旬の味覚を楽しむ時間。
+        もし今回の引越し先が理想的な方角でなくても、慌てる必要はありません。方角がすべてを決めるわけではありません。選べる時は選び、難しい時は仮吉方や今の家を整える方法など、別の手当てを考えます。
       </div>
-      もちろん、行き先が決まっている旅を方角のために変える必要はありません。合わせられる時は合わせ、難しい時は思いきり楽しむ。完璧に合わせるより、できる範囲で整えることを大切にしてください。方位は、旅を豊かにするもう一つの視点です。
+      引越しは大きな節目です。方角を守らなければいけないルールとして重く受け取らず、より良い一歩を選ぶための地図として使ってください。最後に決めるのは、いつもあなた自身です。
     </div>
   </details>
   <div style="display:grid;gap:8px;">
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">自宅を登録</strong>する（住所または郵便番号）</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">現在地（旧居）を登録</strong><br>住所または郵便番号を入力してください</div>
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">行きたい旅先を選ぶ</strong>（都道府県・温泉・登山・島など）</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">引越し先を選ぶ</strong><br>同一市内・仮吉方の場合は<strong style="color:var(--goldlt);">番地まで住所入力</strong>してください<br>大まかな方角確認はリストから選べます</div>
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">方位チェック</strong>で年盤・月盤・日盤を確認<br>凶の月は避け、吉の月を選ぶ</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">年盤・月盤を確認</strong><br>年盤が赤→その方角は今年NG。年盤が吉なら月盤が吉の月を選ぶ<br><span style="color:rgba(138,104,32,.7);">✦ 引越しは年盤・月盤が主軸です。日盤は契約日・移動日などを整える補助として見ます。</span></div>
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">吉日カレンダー</strong>で旅行日程を決める<br>カレンダーの日付をタップ→日盤確認→出発日確定</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">引越し日を決める</strong><br>年盤・月盤が吉の月の中から<strong style="color:var(--goldlt);">線路の日</strong>を選ぶと吉が長く続く<br><span style="color:rgba(138,104,32,.7);">✦ 日程を選べる場合だけ、日盤も参考にします</span></div>
     </div>
   </div>
   <div class="usage-tip">
-    💡 線路の日（契約・出発・開始の目安）は方位の吉凶とは別枠で確認できます。両方重なる日が最優先です。
+    <strong style="color:#3a6e3a;">🌿 希望の場所が凶方だったら？</strong><br>
+    諦めなくて大丈夫です。「仮吉方（75日ルール）」という方法があります。<br>
+    吉方位の場所で75日間寝泊まりしてから新居に入ることで、引越しと同じ効果が得られます。<br>
+    <button onclick="openKariModal()" style="margin-top:6px;display:inline-flex;align-items:center;gap:4px;
+      background:rgba(60,100,60,.1);border:1px solid rgba(60,100,60,.3);border-radius:999px;
+      padding:5px 12px;font-size:.62rem;color:#3a6e3a;font-weight:700;cursor:pointer;
+      font-family:'Noto Serif JP',serif;">🌿 仮吉方の詳しいルールを見る</button>
   </div>
   </div>
 </details>
 
 <!-- STEP 1: 自宅登録 -->
 <div class="section step-section">
-  <div class="sec-label">STEP 1 — 自宅の場所</div>
-  <div class="sec-title">出発地点を登録する</div>
+  <div class="sec-label">STEP 1 — 現在地（旧居）</div>
+  <div class="sec-title">今住んでいる場所を登録する</div>
   <div id="homeRegArea">
     <div class="input-row">
-      <input class="input-field" id="homeInput" type="text" placeholder="住所または郵便番号（例：愛媛県松山市）">
+      <input class="input-field" id="homeInput" type="text" placeholder="住所または郵便番号（例：愛媛県松山市二番町4-7）">
       <button class="btn-primary" onclick="searchHome()">登録</button>
     </div>
     <button class="btn-secondary" onclick="getGeoLocation()">📍 現在地を使う</button>
@@ -1073,153 +1212,176 @@ html.font-large .font-btn{font-size:.8rem;}
 
   <!-- STEP1→2 ガイダンス -->
   <div class="step-hint" id="hint1">
-    ✦ 自宅を登録したら、行きたい旅先を選んでください。方位は「自宅から見た方角」で計算します。
+    ✦ 旧居を登録しました。次に引越し先を選びます。同一市内の引越しや仮吉方の検討には、番地まで入力すると正確に計算できます。
   </div>
 
 <!-- STEP 2: 目的地設定 -->
 <div class="section step-section">
-  <div class="sec-label">STEP 2 — 目的地</div>
-  <div class="sec-title">行きたい旅先を選ぶ</div>
+  <div class="sec-label">STEP 2 — 引越し先</div>
+  <div class="sec-title">引越し先を選ぶ</div>
 
-  <!-- 国内/海外タブ -->
-  <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">🗾 国内</button>
-    <button id="tabOverseas" onclick="switchTravelTab('overseas')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);">🌏 海外</button>
+  <!-- 住所直接入力（精密計算用） -->
+  <div style="margin-bottom:16px;background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(138,104,32,.02));border:1px solid rgba(138,104,32,.2);border-radius:12px;padding:14px;">
+    <div style="font-size:.7rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
+      📍 住所で精密計算（同一市内・仮吉方向けに推奨）
+    </div>
+    <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
+      同じ市内の引越しや仮吉方の計算には、<strong style="color:var(--snow);">番地まで</strong>入力してください。<br>郵便番号だけでは範囲が広く、方位が変わる場合があります。
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <input id="destAddrInput" type="text"
+        placeholder="例：愛媛県松山市二番町4-7-2"
+        style="flex:1;padding:10px 12px;border:1px solid rgba(138,104,32,.3);
+        border-radius:8px;font-size:.72rem;background:rgba(255,255,255,.85);
+        font-family:'Noto Serif JP',serif;color:var(--snow);outline:none;"
+        onkeydown="if(event.key==='Enter')searchDestAddr()">
+      <button onclick="searchDestAddr()" style="
+        padding:10px 14px;background:var(--goldlt);color:#fff;border:none;
+        border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;
+        font-family:'Noto Serif JP',serif;white-space:nowrap;">検索</button>
+    </div>
+    <div id="destAddrStatus" style="font-size:.62rem;color:var(--mist);min-height:16px;"></div>
+
+    <!-- 確認カード（検索後に表示） -->
+    <div id="destAddrConfirm" style="display:none;margin-top:10px;background:#fff;border:1px solid rgba(138,104,32,.2);border-radius:8px;padding:12px;">
+      <div style="font-size:.65rem;color:var(--mist);margin-bottom:6px;">見つかった場所を確認してください</div>
+      <div id="destAddrFound" style="font-size:.72rem;font-weight:700;color:var(--snow);margin-bottom:8px;line-height:1.6;"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a id="destAddrMapLink" href="#" target="_blank" onclick="return openExternalMap(this.href)" style="
+          display:inline-flex;align-items:center;gap:4px;
+          background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);
+          border-radius:8px;padding:7px 12px;text-decoration:none;
+          font-size:.65rem;color:#1a56a8;font-weight:600;font-family:'Noto Serif JP',serif;">
+          📍 Googleマップで確認する
+        </a>
+        <button id="destAddrConfirmBtn" onclick="confirmDestAddr()" style="
+          display:inline-flex;align-items:center;gap:4px;
+          background:rgba(40,130,60,.12);border:1px solid rgba(40,130,60,.35);
+          border-radius:8px;padding:7px 12px;
+          font-size:.65rem;color:#1a5c2a;font-weight:700;cursor:pointer;
+          font-family:'Noto Serif JP',serif;">
+          ✓ この場所で方位を計算する
+        </button>
+      </div>
+    </div>
+
+    <!-- 地図ピッカーボタン（常時表示） -->
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,104,32,.1);">
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;">
+        住所検索で場所が見つからない場合や、番地レベルで正確に指定したい場合は地図から選んでください。
+      </div>
+      <button onclick="openMapPicker()" style="
+        display:inline-flex;align-items:center;gap:6px;
+        background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.3);
+        border-radius:8px;padding:9px 14px;
+        font-size:.68rem;color:var(--goldlt);font-weight:700;cursor:pointer;
+        font-family:'Noto Serif JP',serif;width:100%;justify-content:center;">
+        🗺 地図上でピンを立てて場所を指定する
+      </button>
+    </div>
   </div>
 
-  <!-- 国内グループ -->
-  <div id="presetsDomestic">
-  <!-- 都道府県別 -->
+  <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;text-align:center;opacity:.7;">
+    ── または下のリストから大まかな方位を確認する ──
+  </div>
+
+  <details class="destination-accordion">
+    <summary>
+      <span>地域リストから選ぶ<span class="destination-accordion-note">北海道・関東・海外など、代表地点から大まかな方位を確認できます</span></span>
+    </summary>
+    <div class="destination-accordion-body">
+
+  <!-- 国内 -->
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-hokkaido')">
-      <span>北海道・東北<span class="preset-group-count">7県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-hokkaido_tohoku')">
+      <span>🏔 北海道・東北<span class="preset-group-count">7都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-hokkaido"></div>
+    <div class="preset-grid" id="grid-hokkaido_tohoku"></div>
   </div>
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-kanto')">
-      <span>関東<span class="preset-group-count">7都県</span></span>
+      <span>🏙 関東<span class="preset-group-count">7都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
     <div class="preset-grid" id="grid-kanto"></div>
   </div>
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-chubu')">
-      <span>中部・北陸<span class="preset-group-count">9県</span></span>
+      <span>🗻 中部・北陸<span class="preset-group-count">9都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
     <div class="preset-grid" id="grid-chubu"></div>
   </div>
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-kinki')">
-      <span>近畿<span class="preset-group-count">7府県</span></span>
+      <span>⛩ 近畿<span class="preset-group-count">7都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
     <div class="preset-grid" id="grid-kinki"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chugoku')">
-      <span>中国・四国<span class="preset-group-count">9県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chugoku_shikoku')">
+      <span>🌊 中国・四国<span class="preset-group-count">9都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-chugoku"></div>
+    <div class="preset-grid" id="grid-chugoku_shikoku"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kyushu')">
-      <span>九州・沖縄<span class="preset-group-count">8県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kyushu_okinawa')">
+      <span>🌺 九州・沖縄<span class="preset-group-count">8都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-kyushu"></div>
+    <div class="preset-grid" id="grid-kyushu_okinawa"></div>
   </div>
 
-  <!-- テーマ別 -->
+  <!-- 海外 -->
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-onsen')">
-      <span>🌡 温泉地<span class="preset-group-count">20湯</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-overseas_asia')">
+      <span>🌏 海外・アジア<span class="preset-group-count">9都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-onsen"></div>
+    <div class="preset-grid" id="grid-overseas_asia"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-yama')">
-      <span>⛰ 登山・山岳<span class="preset-group-count">20座</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-overseas_far')">
+      <span>✈️ 海外・欧米・オセアニア<span class="preset-group-count">9都市</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-yama"></div>
-  </div>
-  <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-shima')">
-      <span>🏝 島<span class="preset-group-count">15島</span></span>
-      <span class="preset-group-arrow">›</span>
-    </div>
-    <div class="preset-grid" id="grid-shima"></div>
+    <div class="preset-grid" id="grid-overseas_far"></div>
   </div>
 
-  </div><!-- /presetsDomestic -->
-
-  <!-- 海外グループ -->
-  <div id="presetsOverseas" style="display:none;">
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-sea')">
-        <span>🌴 東南アジア<span class="preset-group-count">28ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-sea"></div>
     </div>
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-europe')">
-        <span>🏰 ヨーロッパ<span class="preset-group-count">30ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-europe"></div>
-    </div>
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-eastasia')">
-        <span>🏯 東アジア<span class="preset-group-count">20ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-eastasia"></div>
-    </div>
-    <div style="margin:8px 0 4px;padding:8px 12px;font-size:.6rem;color:var(--mist);background:rgba(100,80,40,.05);border-radius:8px;line-height:1.8;">
-      ✦ 南アジア・中東・アメリカ・オセアニアなど他の地域は順次追加予定です
-    </div>
-  </div><!-- /presetsOverseas -->
+  </details>
 
   <div style="
     margin-top:10px;
-    background:rgba(138,104,32,.09);border:1px solid rgba(138,104,32,.22);
+    background:rgba(100,80,40,.05);border:1px solid rgba(100,80,40,.12);
     border-radius:10px;padding:11px 13px;
-    font-size:.65rem;color:var(--goldlt);line-height:1.9;
+    font-size:.65rem;color:var(--mist);line-height:1.9;
     text-align:center;
   ">
-  <!-- 地図ピッカーボタン -->
-  <div style="margin:8px 0 4px;padding:10px 12px;background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(138,104,32,.02));border:1px solid rgba(138,104,32,.22);border-radius:10px;">
-    <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;">リストにない場所や正確に指定したい場合は地図から選んでください。</div>
-    <button onclick="openMapPicker()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.3);border-radius:8px;padding:10px;font-size:.68rem;color:var(--goldlt);font-weight:700;cursor:pointer;font-family:'Noto Serif JP',serif;">
-      🗺 地図上でピンを立てて場所を指定する
-    </button>
-  </div>
-    ✦ 掲載していない旅先は順次追加予定です<br>
-    <span style="color:#6b4a12;">📍 座標は代表地点を使用しています。方位計算の参考値としてご利用いただき、正確な位置はGoogle マップ等でご確認ください。</span>
-    <span style="font-size:.6rem;color:#6b4a12;">リクエストは kitoku@journey6112.jp まで</span>
+    ✦ 掲載していない都市は順次追加予定です<br>
+    <span style="color:rgba(138,104,32,.6);">📍 座標は代表地点を使用しています。正確な位置はGoogle マップ等でご確認ください。</span>
+    <span style="font-size:.6rem;opacity:.8;">リクエストは kitoku@journey6112.jp まで</span>
   </div>
 </div>
 
   <!-- 方位盤ガイドボタン -->
-  <div style="margin:0 16px 0;display:flex;justify-content:flex-end;">
-      <button class="nav-open-btn" onclick="openNavModal()">📋 ナビの使い方</button>
-  <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
+  <div class="guide-action-row">
+    <button class="nav-open-btn" onclick="openNavModal()">📋 ナビの使い方</button>
+    <button class="guide-open-btn" onclick="openGuideModal()">❓ 方位盤の読み方</button>
+    <button class="guide-open-btn" onclick="openKariModal()" style="background:rgba(60,120,60,.08);border-color:rgba(60,120,60,.3);color:#3a6e3a;">🌿 仮吉方とは？</button>
   </div>
 
   <!-- STEP2→3 ガイダンス -->
   <div class="step-hint" id="hint2" style="display:none;">
-    ✦ 目的地を選びました。年盤・月盤・日盤の3つのギアで方位を確認します。まず「年盤」から見てください。
+    ✦ 引越し先が決まりました。まず「年盤タブ」を確認してください。年盤が赤（凶）なら今年はNG。年盤が吉なら「月盤タブ」で引越しに最適な月を選びます。
   </div>
 
 <!-- STEP 3: 方位チェック結果 -->
 <div class="section" id="dirResultSection" style="display:none;">
-  <div class="sec-label">STEP 3 — 方位チェック</div>
+  <div class="sec-label">STEP 3 — 方位チェック（年盤・月盤）</div>
   <div id="dirResultContent"></div>
 </div>
 
@@ -1241,18 +1403,18 @@ html.font-large .font-btn{font-size:.8rem;}
       padding:12px 14px;background:none;border:none;cursor:pointer;
       font-family:'Noto Serif JP',serif;
     ">
-      <span style="font-size:.72rem;color:var(--goldlt);font-weight:700;">✦ 行くべき日の決め方</span>
+      <span style="font-size:.72rem;color:var(--goldlt);font-weight:700;">✦ 引越し月・引越し日の決め方</span>
       <span id="howToArrow" style="font-size:.6rem;color:var(--mist);">▶</span>
     </button>
     <div id="howToBody" style="display:none;padding:0 14px 13px;">
       <div style="font-size:.65rem;color:var(--mist);line-height:2.1;">
         <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
           <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 1</span>
-          <span>上の方位盤で<strong style="color:var(--snow);">凶方位の月を外す</strong>（五黄殺・暗剣殺・本命殺など）</span>
+          <span>年盤で<strong style="color:var(--snow);">凶方位でないことを確認</strong>（最優先）</span>
         </div>
         <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
           <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 2</span>
-          <span>下のカレンダーの<strong style="color:var(--snow);">○吉方の日</strong>を候補にする</span>
+          <span>月盤タブで<strong style="color:var(--snow);">月盤が吉の月</strong>を引越し実行月として選ぶ</span>
         </div>
         <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px;">
           <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 3</span>
@@ -1264,7 +1426,7 @@ html.font-large .font-btn{font-size:.8rem;}
         </div>
       </div>
       <div style="margin-top:9px;padding:7px 10px;background:rgba(100,80,40,.06);border-radius:6px;font-size:.6rem;color:var(--mist);line-height:1.8;">
-        完璧な日より「凶を避けて動く」が実践的です。月盤で凶の場合は来月以降を検討するか、日盤取りで整えてから向かいましょう。
+        年盤・月盤が揃った月に、線路の日を引越し実行日として設定。日盤の凶は完全無視で大丈夫です。
       </div>
     </div>
   </div>
@@ -1272,8 +1434,16 @@ html.font-large .font-btn{font-size:.8rem;}
 
 <!-- STEP 4: 日程カレンダー -->
 <div class="section" id="calSection" style="display:none;">
-  <div class="sec-label">STEP 4 — 日程を選ぶ</div>
-  <div class="sec-title">吉日カレンダー</div>
+  <div class="sec-label">STEP 4 — 引越し日を決める</div>
+  <div class="sec-title">引越し月カレンダー</div>
+  <div style="margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.65rem;color:var(--mist);line-height:1.9;">
+    <strong style="color:var(--goldlt);">カレンダーの見方：</strong><br>
+    ★ 赤字（線路×吉方）= 最優先の引越し日<br>
+    ◆ 金字（線路の日のみ）= 吉が長続きする日<br>
+    ○ 緑字（吉方のみ）= 良い日<br><br>
+    <strong style="color:var(--snow);">引越し当日の日盤が凶でも全く問題ありません。</strong><br>
+    年盤・月盤が揃っていれば、日盤の凶はただのノイズです。安心して日程を決めてください。
+  </div>
 
   <div class="cal-header">
     <button class="cal-nav" onclick="changeYear(-1)" style="font-size:.6rem;padding:6px 8px;">◀◀年</button>
@@ -1315,7 +1485,7 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="railway-panel" style="margin-top:14px;">
     <div class="railway-title">線路の日（始める力を見る日）</div>
     <div class="railway-text">
-      契約・出発・開始など、長く続けたいことを始める目安です。方位の吉凶とは別枠で確認します。
+      年盤・月盤が吉の月が決まったら、その月の中から線路の日を引越し実行日に選びましょう。吉方位で得た幸運が長く続く着火スイッチになります。
     </div>
     <div style="position:relative;">
       <div class="railway-days" id="railwayDays"></div>
@@ -1323,7 +1493,7 @@ html.font-large .font-btn{font-size:.8rem;}
       <div id="railwayBlur" style="position:absolute;inset:-8px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:rgba(247,244,239,.5);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:12px;">
         <div style="font-size:1rem;">🔒</div>
         <div style="font-size:.65rem;color:var(--goldlt);font-weight:700;">プレミアムプランで確認できます</div>
-        <div style="font-size:.58rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日に出発すると<br>吉が長く続きます</div>
+        <div style="font-size:.58rem;color:var(--mist);text-align:center;line-height:1.7;">線路の日に引越しを実行すると<br>吉が長く続きます</div>
       </div>
     </div>
   </div>
@@ -1342,16 +1512,16 @@ html.font-large .font-btn{font-size:.8rem;}
 
 <!-- 日盤取りガイド -->
 <div class="section nichiban-section" id="nichibanSection" style="display:none;">
-  <div class="sec-label">どうしても行く日が決まっている場合</div>
-  <div class="sec-title">日盤取りで解決する</div>
+  <div class="sec-label">引越し月が確定したら</div>
+  <div class="sec-title">線路の日に引越しを実行する</div>
   <div style="font-size:.72rem;color:var(--mist);line-height:1.9;margin-bottom:4px;">
-    日程が固定で動かせない時も、出発前に吉方位の場所へ立ち寄ることで、その日の日盤の吉エネルギーを取ることができます。
+    年盤・月盤が揃ったら、引越し実行日は「線路の日」を選ぶことで、吉方位で得た幸運が長く続きます。日盤の凶は引越しに関係しません。
   </div>
   <div class="nichiban-steps">
     <div class="nichiban-step">
       <div class="step-num">1</div>
       <div class="step-text">
-        <strong>目的地へ向かう前日or当日の朝</strong>、今日の日盤で吉方位にある場所へ立ち寄ります。
+        <strong>線路の日</strong>とは、あなたの星にとって「物事が長く真っ直ぐ発展する」着火スイッチの日です。
       </div>
     </div>
     <div class="nichiban-step">
@@ -1363,7 +1533,7 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="nichiban-step">
       <div class="step-num">3</div>
       <div class="step-text">
-        日盤取りをしてから目的地へ向かうことで、<strong>「行く」という意志を吉エネルギーで包む</strong>ことができます。
+        日盤取りをしてから聖地へ向かうことで、<strong>「行く」という意志を吉エネルギーで包む</strong>ことができます。
       </div>
     </div>
   </div>
@@ -1375,7 +1545,7 @@ html.font-large .font-btn{font-size:.8rem;}
     font-size:.64rem;color:var(--mist);line-height:1.85;
   ">
     <strong style="color:var(--goldlt);">格さんからひとこと</strong><br>
-    完璧な吉日を探すより、「行くと決めた日を少しでも整える」ことが大切です。5000年の知恵は、あなたを縛るのではなく、背中を押すために使うものです。
+    年盤・月盤が揃えば、あとは自由に動いて大丈夫です。5000年の知恵は、あなたを縛るのではなく、最高のスタートを後押しするために使うものです。
   </div>
   <a href="direction_v2.html" style="
     display:block;margin-top:10px;
@@ -1386,14 +1556,167 @@ html.font-large .font-btn{font-size:.8rem;}
     display:flex;align-items:center;justify-content:space-between;
   ">
     <div>
-      <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:3px;">🧭 今日の日盤吉方位を確認する</div>
-      <div style="font-size:.62rem;color:var(--mist);">吉方位ナビ（方位盤）で正確な方位を確認できます</div>
+      <div style="font-size:.72rem;color:var(--goldlt);font-weight:600;margin-bottom:3px;">🧭 方位盤（年盤・月盤）を確認する</div>
+      <div style="font-size:.62rem;color:var(--mist);">方位盤アプリで年盤・月盤を詳しく確認できます</div>
     </div>
     <div style="color:rgba(138,104,32,.5);font-size:.8rem;">›</div>
   </a>
 </div>
 
-<!-- 注意書き -->
+<!-- 家相調律セクション -->
+<details class="section bonus-accordion" style="margin-top:12px;">
+  <summary>
+    <span class="bonus-summary-main">
+      <span class="sec-label">BONUS — 今の家を整える</span>
+      <span class="sec-title">🏡 空間の調律</span>
+      <span class="bonus-summary-note">引越しできない時や、今の家を整えたい時に開いて使います。</span>
+    </span>
+  </summary>
+  <div class="bonus-accordion-body">
+  <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:14px;">
+    引越しできない時も、今の家をパワースポットに変えられます。<br>
+    家相は「怖いもの」ではなく、<strong style="color:var(--snow);">「足りないエネルギーを補う地図」</strong>です。<br>
+    まず自分の家を観察して、当てはまるものを選んでください。
+  </div>
+
+  <!-- タブ -->
+  <div style="display:flex;gap:6px;margin-bottom:14px;">
+    <button id="spaceTab1" onclick="switchSpaceTab(1)" style="flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">張り・欠け診断</button>
+    <button id="spaceTab2" onclick="switchSpaceTab(2)" style="flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);">日常の調律</button>
+  </div>
+
+  <!-- タブ1：張り・欠け診断 -->
+  <div id="spaceTabContent1">
+    <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:12px;padding:10px 12px;background:rgba(138,104,32,.05);border-radius:8px;">
+      <strong style="color:var(--goldlt);">判断の目安：</strong><br>
+      <strong>張り</strong> = 家の外壁が出っ張っている方向（L字・コの字の凸部分）<br>
+      <strong>欠け</strong> = 家の外壁が凹んでいる方向（L字・コの字の凹部分）<br>
+      正確でなくて大丈夫です。「だいたいこの方向が出っ張ってる気がする」程度で選んでください。<br>
+      詳しく知りたい場合は、気学鑑定士に間取り図を見てもらうことをお勧めします。
+    </div>
+
+    <!-- 張り/欠けトグル -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button id="btnHari" onclick="selectHariKake('hari')" style="flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(60,120,60,.15);color:#3a6e3a;border:2px solid rgba(60,120,60,.4);">↑ 張り（出っ張り）</button>
+      <button id="btnKake" onclick="selectHariKake('kake')" style="flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:2px solid rgba(138,104,32,.2);">↓ 欠け（凹み）</button>
+    </div>
+
+    <!-- 方位選択 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;" id="dirBtnGrid">
+      <button onclick="selectSpaceDir('NW')" class="space-dir-btn">北西</button>
+      <button onclick="selectSpaceDir('N')"  class="space-dir-btn">北</button>
+      <button onclick="selectSpaceDir('NE')" class="space-dir-btn">北東</button>
+      <button onclick="selectSpaceDir('W')"  class="space-dir-btn">西</button>
+      <button style="background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:8px;padding:10px 0;font-size:.65rem;color:var(--mist);font-family:'Noto Serif JP',serif;">中心</button>
+      <button onclick="selectSpaceDir('E')"  class="space-dir-btn">東</button>
+      <button onclick="selectSpaceDir('SW')" class="space-dir-btn">南西</button>
+      <button onclick="selectSpaceDir('S')"  class="space-dir-btn">南</button>
+      <button onclick="selectSpaceDir('SE')" class="space-dir-btn">東南</button>
+    </div>
+
+    <!-- 処方箋結果 -->
+    <div id="spacePrescription" style="display:none;"></div>
+  </div>
+
+  <!-- タブ2：日常の調律 -->
+  <div id="spaceTabContent2" style="display:none;">
+    <div style="display:grid;gap:10px;">
+
+      <div style="background:#fff;border:1px solid rgba(138,104,32,.15);border-radius:10px;padding:14px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">💧 水回りのデトックス</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+          トイレ・洗面・浴室は「1日の疲れとモヤモヤを浄化するデトックスルーム」です。<br><br>
+          <strong style="color:var(--snow);">今日からできること：</strong><br>
+          ✦ 換気扇を常時回して「気の流れ」を作る<br>
+          ✦ 照明を明るくする（暗いと気が滞る）<br>
+          ✦ 清潔なタオルを置く（使い古しはNG）<br>
+          ✦ 水垢・カビを定期的に除去する<br><br>
+          <span style="font-size:.6rem;color:rgba(138,104,32,.7);">水回りが暗く湿っていると、金運と健康運が同時に滞ります。清潔にするだけで運の浄化が始まります。</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid rgba(138,104,32,.15);border-radius:10px;padding:14px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">💡 光と温度の調律</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+          家の中の「明暗の差」と「温度差」は、そのまま家族の感情の温度差になります。<br><br>
+          <strong style="color:var(--snow);">今日からできること：</strong><br>
+          ✦ 廊下・玄関・トイレを明るくする（フットライト1つでも可）<br>
+          ✦ リビングと個室の温度差を5度以内に保つ<br>
+          ✦ 玄関を常に清潔・明るく保つ（最初に気が入る場所）<br>
+          ✦ 寝室のカーテンを遮光しすぎない（朝の光を取り込む）<br><br>
+          <span style="font-size:.6rem;color:rgba(138,104,32,.7);">「廊下に小さなフットライトを置くだけで家族の会話が増えた」という声は、光が感情の温度差を埋める証拠です。</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid rgba(138,104,32,.15);border-radius:10px;padding:14px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">🌿 玄関の気の入口を整える</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
+          玄関は外の気が家に入る「唯一の門」です。ここを整えるだけで家全体の気が変わります。<br><br>
+          <strong style="color:var(--snow);">今日からできること：</strong><br>
+          ✦ 靴は出しっぱなしにしない（履く分だけ出す）<br>
+          ✦ 傘立ての古い傘・壊れた傘を捨てる<br>
+          ✦ 観葉植物や生花を1つ置く<br>
+          ✦ 鏡がある場合は常に磨く<br><br>
+          <span style="font-size:.6rem;color:rgba(138,104,32,.7);">玄関が暗く散らかっていると、良いご縁や良い機会が家に入ってくる前に引き返してしまいます。</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(60,100,60,.04);border:1px solid rgba(60,100,60,.2);border-radius:10px;padding:14px;">
+        <div style="font-size:.7rem;font-weight:700;color:#3a6e3a;margin-bottom:6px;">💬 もっと詳しく知りたい場合</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;">
+          MOVEでは引越しの方位・距離・時期を中心に見ます。家相は間取り・方角・建物の形によって個別性が高いため、このナビでは簡易的な判断基準のみをお伝えしています。<br>
+          中心・張り欠け・玄関・温度差・地相まで確認したい場合は、KITOKU @ HOMEの家相診断を使ってください。<br>
+          <a href="kaso.html" style="display:inline-block;margin-top:8px;color:#3a6e3a;font-weight:700;text-decoration:none;">✦ 家相診断を開く</a><br>
+          KITOKUの判断基準は東洋の叡智とY理論に基づく独自解釈です。
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div>
+</details>
+
+<!-- 地図ピッカーモーダル -->
+<div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:#f7f4ef;flex-direction:column;">
+
+  <!-- ヘッダー -->
+  <div style="padding:12px 16px;background:#f7f4ef;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(138,104,32,.2);flex-shrink:0;">
+    <div>
+      <div style="font-size:.82rem;font-weight:700;color:#5c4010;">🗺 地図で場所を指定する</div>
+      <div style="font-size:.62rem;color:#5e503d;margin-top:2px;">タップした場所にピンが立ちます</div>
+    </div>
+    <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.22);border-radius:50%;width:36px;height:36px;font-size:1.1rem;color:#5c4010;cursor:pointer;flex-shrink:0;">✕</button>
+  </div>
+
+  <!-- ガイド -->
+  <div style="padding:7px 16px;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border-bottom:1px solid rgba(138,104,32,.15);font-size:.65rem;color:#5e503d;flex-shrink:0;">
+    📍 引越し先の正確な場所をタップしてください。ピンが立ったら下の「計算する」ボタンを押してください。
+  </div>
+
+  <!-- 地図（高さはJSで設定） -->
+  <div id="mapPickerContainer" style="flex:1;position:relative;">
+    <div id="mapPickerMap" style="width:100%;height:100%;"></div>
+  </div>
+
+  <!-- 確定パネル（画面下部に固定） -->
+  <div id="mapPickerInfo" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9300;padding:12px 16px 24px;background:rgba(247,244,239,.97);border-top:2px solid rgba(138,104,32,.3);backdrop-filter:blur(8px);">
+    <div style="max-width:480px;margin:0 auto;">
+      <div style="font-size:.6rem;color:#5e503d;margin-bottom:3px;">📍 選択した場所</div>
+      <div id="mapPickerAddress" style="font-size:.72rem;font-weight:700;color:#1c1208;margin-bottom:10px;line-height:1.5;"></div>
+      <button onclick="confirmMapPicker()" style="width:100%;padding:13px;background:#5c4010;color:#fff;border:none;border-radius:10px;font-size:.78rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.06em;">
+        ✓ この場所で方位を計算する
+      </button>
+    </div>
+  </div>
+
+  <!-- 初期状態（固定表示） -->
+  <div id="mapPickerEmpty" style="position:fixed;bottom:0;left:0;right:0;z-index:9300;padding:10px 16px 20px;background:rgba(247,244,239,.9);border-top:1px solid rgba(138,104,32,.15);text-align:center;">
+    <div style="font-size:.65rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
+  </div>
+
+</div>
+
+<!-- 注意書き --><!-- 注意書き -->
 <div class="disclaimer">
   ⚠ 気学には流派により計算方法・吉凶の優先順位が異なります。他のアプリと比較しながら、根拠をご自身で判断する材料としてご使用ください。<br>
   KITOKU OSは東洋の叡智とY理論に基づく独自解釈です。結果は判断材料であり、最終的な決定はご自身でお願いします。
@@ -1407,373 +1730,184 @@ html.font-large .font-btn{font-size:.8rem;}
 
 <script>
 // ============================================================
-// 旅先データ
+// 聖地データ
 // ============================================================
 const SACRED_PLACES = {
-  // ── 都道府県別 ──
-  hokkaido: [
-    // 北海道
-    { name:'札幌 時計台', area:'北海道札幌市', lat:43.0645, lon:141.3508 },
-    { name:'函館山 夜景', area:'北海道函館市', lat:41.7605, lon:140.6998 },
-    { name:'富良野 ラベンダー畑', area:'北海道富良野市', lat:43.3592, lon:142.3931 },
-    { name:'小樽運河', area:'北海道小樽市', lat:43.1907, lon:140.9943 },
-    { name:'知床 五湖', area:'北海道斜里郡', lat:44.0853, lon:145.0163 },
-    // 青森
-    { name:'弘前城', area:'青森県弘前市', lat:40.6074, lon:140.4638 },
-    { name:'奥入瀬渓流', area:'青森県十和田市', lat:40.5481, lon:141.0294 },
-    { name:'恐山', area:'青森県むつ市', lat:41.3247, lon:141.0840 },
-    { name:'三内丸山遺跡', area:'青森県青森市', lat:40.7765, lon:140.6907 },
-    { name:'十和田湖', area:'青森県十和田市', lat:40.4726, lon:140.8897 },
-    // 岩手
-    { name:'平泉 中尊寺', area:'岩手県西磐井郡', lat:38.9886, lon:141.1127 },
-    { name:'龍泉洞', area:'岩手県下閉伊郡', lat:39.8023, lon:141.9775 },
-    { name:'浄土ヶ浜', area:'岩手県宮古市', lat:39.6427, lon:141.9906 },
-    { name:'遠野 カッパ淵', area:'岩手県遠野市', lat:39.3289, lon:141.5303 },
-    { name:'厳美渓', area:'岩手県一関市', lat:38.9288, lon:141.1524 },
-    // 宮城
-    { name:'松島 瑞巌寺', area:'宮城県宮城郡', lat:38.3715, lon:141.0681 },
-    { name:'蔵王 お釜', area:'宮城県刈田郡', lat:38.1327, lon:140.4441 },
-    { name:'仙台 青葉城跡', area:'宮城県仙台市', lat:38.2529, lon:140.8635 },
-    { name:'鳴子峡', area:'宮城県大崎市', lat:38.7503, lon:140.7257 },
-    { name:'金華山', area:'宮城県石巻市', lat:38.2889, lon:141.5701 },
-    // 秋田
-    { name:'角館 武家屋敷通り', area:'秋田県仙北市', lat:39.5983, lon:140.5622 },
-    { name:'田沢湖', area:'秋田県仙北市', lat:39.7193, lon:140.6604 },
-    { name:'男鹿半島 なまはげ館', area:'秋田県男鹿市', lat:39.8804, lon:139.8459 },
-    { name:'乳頭温泉郷', area:'秋田県仙北市', lat:39.7558, lon:140.7235 },
-    { name:'白神山地', area:'秋田県山本郡', lat:40.4167, lon:140.1500 },
-    // 山形
-    { name:'山寺 立石寺', area:'山形県山形市', lat:38.3467, lon:140.4340 },
-    { name:'銀山温泉', area:'山形県尾花沢市', lat:38.6183, lon:140.5633 },
-    { name:'出羽三山 羽黒山', area:'山形県鶴岡市', lat:38.7222, lon:139.9731 },
-    { name:'蔵王温泉', area:'山形県山形市', lat:38.2228, lon:140.3863 },
-    { name:'最上峡', area:'山形県新庄市', lat:38.8500, lon:140.0000 },
-    // 福島
-    { name:'会津若松城（鶴ヶ城）', area:'福島県会津若松市', lat:37.4878, lon:139.9299 },
-    { name:'五色沼', area:'福島県耶麻郡', lat:37.6708, lon:140.0610 },
-    { name:'大内宿', area:'福島県南会津郡', lat:37.2977, lon:139.8393 },
-    { name:'猪苗代湖', area:'福島県耶麻郡', lat:37.5256, lon:140.1059 },
-    { name:'塔のへつり', area:'福島県南会津郡', lat:37.2399, lon:139.8737 },
+  hokkaido_tohoku: [
+    { name:'札幌市', area:'北海道', lat:43.0642, lon:141.3469 },
+    { name:'青森市', area:'青森県', lat:40.8224, lon:140.7474 },
+    { name:'盛岡市', area:'岩手県', lat:39.7036, lon:141.1527 },
+    { name:'仙台市', area:'宮城県', lat:38.2688, lon:140.8721 },
+    { name:'秋田市', area:'秋田県', lat:39.7186, lon:140.1023 },
+    { name:'山形市', area:'山形県', lat:38.2404, lon:140.3633 },
+    { name:'福島市', area:'福島県', lat:37.7608, lon:140.4748 },
   ],
   kanto: [
-    // 茨城
-    { name:'偕楽園', area:'茨城県水戸市', lat:36.3862, lon:140.4700 },
-    { name:'袋田の滝', area:'茨城県久慈郡', lat:36.7378, lon:140.4026 },
-    { name:'筑波山', area:'茨城県つくば市', lat:36.2254, lon:140.1067 },
-    { name:'国営ひたち海浜公園', area:'茨城県ひたちなか市', lat:36.3951, lon:140.6032 },
-    { name:'大洗磯前神社', area:'茨城県東茨城郡', lat:36.3095, lon:140.5847 },
-    // 栃木
-    { name:'日光東照宮', area:'栃木県日光市', lat:36.7575, lon:139.5986 },
-    { name:'那須高原', area:'栃木県那須郡', lat:37.1038, lon:140.0452 },
-    { name:'鬼怒川温泉', area:'栃木県日光市', lat:36.8022, lon:139.6636 },
-    { name:'足尾銅山', area:'栃木県日光市', lat:36.6509, lon:139.4329 },
-    { name:'益子焼 陶芸街', area:'栃木県芳賀郡', lat:36.4717, lon:140.1046 },
-    // 群馬
-    { name:'草津温泉', area:'群馬県吾妻郡', lat:36.6219, lon:138.5959 },
-    { name:'伊香保温泉', area:'群馬県渋川市', lat:36.4755, lon:138.9137 },
-    { name:'富岡製糸場', area:'群馬県富岡市', lat:36.2566, lon:138.8894 },
-    { name:'尾瀬ヶ原', area:'群馬県利根郡', lat:36.9127, lon:139.2198 },
-    { name:'谷川岳', area:'群馬県利根郡', lat:36.8484, lon:138.9338 },
-    // 埼玉
-    { name:'三峯神社', area:'埼玉県秩父市', lat:35.9781, lon:138.9313 },
-    { name:'川越 蔵造りの街', area:'埼玉県川越市', lat:35.9255, lon:139.4861 },
-    { name:'長瀞 岩畳', area:'埼玉県秩父郡', lat:36.1163, lon:139.1133 },
-    { name:'秩父神社', area:'埼玉県秩父市', lat:35.9886, lon:139.0799 },
-    { name:'吉見百穴', area:'埼玉県比企郡', lat:36.0541, lon:139.3900 },
-    // 千葉
-    { name:'成田山新勝寺', area:'千葉県成田市', lat:35.7789, lon:140.3179 },
-    { name:'犬吠埼灯台', area:'千葉県銚子市', lat:35.7073, lon:140.8682 },
-    { name:'鴨川シーワールド', area:'千葉県鴨川市', lat:35.1213, lon:140.1177 },
-    { name:'館山 城山公園', area:'千葉県館山市', lat:34.9987, lon:139.8696 },
-    { name:'養老渓谷', area:'千葉県夷隅郡', lat:35.2603, lon:140.1432 },
-    // 東京
-    { name:'浅草寺', area:'東京都台東区', lat:35.7148, lon:139.7967 },
-    { name:'明治神宮', area:'東京都渋谷区', lat:35.6764, lon:139.6993 },
-    { name:'高尾山', area:'東京都八王子市', lat:35.6254, lon:139.2436 },
-    { name:'江戸東京博物館', area:'東京都墨田区', lat:35.6966, lon:139.7972 },
-    { name:'お台場 潮風公園', area:'東京都品川区', lat:35.6254, lon:139.7754 },
-    // 神奈川
-    { name:'鎌倉 大仏', area:'神奈川県鎌倉市', lat:35.3168, lon:139.5352 },
-    { name:'箱根 大涌谷', area:'神奈川県足柄下郡', lat:35.2375, lon:139.0204 },
-    { name:'江の島', area:'神奈川県藤沢市', lat:35.2996, lon:139.4826 },
-    { name:'横浜 中華街', area:'神奈川県横浜市', lat:35.4437, lon:139.6487 },
-    { name:'三浦海岸', area:'神奈川県三浦市', lat:35.1536, lon:139.6253 },
+    { name:'水戸市', area:'茨城県', lat:36.3418, lon:140.4468 },
+    { name:'宇都宮市', area:'栃木県', lat:36.5658, lon:139.8836 },
+    { name:'前橋市', area:'群馬県', lat:36.3895, lon:139.0634 },
+    { name:'さいたま市', area:'埼玉県', lat:35.8617, lon:139.6455 },
+    { name:'千葉市', area:'千葉県', lat:35.6074, lon:140.1065 },
+    { name:'東京都心', area:'東京都', lat:35.6895, lon:139.6917 },
+    { name:'横浜市', area:'神奈川県', lat:35.4478, lon:139.6425 },
   ],
   chubu: [
-    // 新潟
-    { name:'佐渡島 金山', area:'新潟県佐渡市', lat:38.0194, lon:138.3691 },
-    { name:'弥彦神社', area:'新潟県西蒲原郡', lat:37.7038, lon:138.8262 },
-    { name:'苗場スキー場', area:'新潟県南魚沼郡', lat:36.8440, lon:138.6957 },
-    { name:'清津峡渓谷', area:'新潟県十日町市', lat:37.0019, lon:138.7229 },
-    { name:'瓢湖（白鳥の湖）', area:'新潟県阿賀野市', lat:37.8366, lon:139.2170 },
-    // 富山
-    { name:'立山黒部 アルペンルート', area:'富山県中新川郡', lat:36.5783, lon:137.6179 },
-    { name:'五箇山 合掌造り', area:'富山県南砺市', lat:36.4308, lon:136.9002 },
-    { name:'高岡大仏', area:'富山県高岡市', lat:36.7545, lon:137.0221 },
-    { name:'雨晴海岸', area:'富山県高岡市', lat:36.7713, lon:136.9388 },
-    { name:'富山城', area:'富山県富山市', lat:36.6947, lon:137.2137 },
-    // 石川
-    { name:'兼六園', area:'石川県金沢市', lat:36.5612, lon:136.6618 },
-    { name:'金沢城', area:'石川県金沢市', lat:36.5594, lon:136.6580 },
-    { name:'能登半島 白米千枚田', area:'石川県輪島市', lat:37.3855, lon:136.8816 },
-    { name:'輪島朝市', area:'石川県輪島市', lat:37.3924, lon:136.8988 },
-    { name:'白山 白峰', area:'石川県白山市', lat:36.1530, lon:136.7714 },
-    // 福井
-    { name:'東尋坊', area:'福井県坂井市', lat:36.2330, lon:136.1544 },
-    { name:'永平寺', area:'福井県吉田郡', lat:36.0917, lon:136.5336 },
-    { name:'福井県立恐竜博物館', area:'福井県勝山市', lat:36.0675, lon:136.6061 },
-    { name:'三方五湖', area:'福井県三方上中郡', lat:35.5724, lon:135.9007 },
-    { name:'一乗谷 朝倉氏遺跡', area:'福井県福井市', lat:35.9935, lon:136.2048 },
-    // 山梨
-    { name:'富士山 五合目', area:'山梨県南都留郡', lat:35.3759, lon:138.7312 },
-    { name:'河口湖', area:'山梨県南都留郡', lat:35.5072, lon:138.7647 },
-    { name:'昇仙峡', area:'山梨県甲府市', lat:35.7196, lon:138.5784 },
-    { name:'武田神社', area:'山梨県甲府市', lat:35.6747, lon:138.5713 },
-    { name:'清里高原', area:'山梨県北杜市', lat:35.9049, lon:138.4286 },
-    // 長野
-    { name:'松本城', area:'長野県松本市', lat:36.2384, lon:137.9685 },
-    { name:'上高地', area:'長野県松本市', lat:36.2413, lon:137.6478 },
-    { name:'軽井沢 旧三笠ホテル', area:'長野県北佐久郡', lat:36.3456, lon:138.6242 },
-    { name:'善光寺', area:'長野県長野市', lat:36.6611, lon:138.1878 },
-    { name:'諏訪大社', area:'長野県諏訪市', lat:36.0219, lon:138.0761 },
-    // 岐阜
-    { name:'白川郷 合掌造り', area:'岐阜県大野郡', lat:36.2563, lon:136.9060 },
-    { name:'岐阜城', area:'岐阜県岐阜市', lat:35.4406, lon:136.7693 },
-    { name:'下呂温泉', area:'岐阜県下呂市', lat:35.8104, lon:137.2456 },
-    { name:'飛騨高山 古い町並み', area:'岐阜県高山市', lat:36.1430, lon:137.2519 },
-    { name:'馬籠宿', area:'岐阜県中津川市', lat:35.5290, lon:137.5707 },
-    // 静岡
-    { name:'富士山 田子の浦', area:'静岡県富士市', lat:35.1523, lon:138.6891 },
-    { name:'熱海温泉 来宮神社', area:'静岡県熱海市', lat:35.1023, lon:139.0730 },
-    { name:'伊豆 城ヶ崎海岸', area:'静岡県伊東市', lat:34.8967, lon:139.1438 },
-    { name:'三保の松原', area:'静岡県静岡市', lat:35.0111, lon:138.5219 },
-    { name:'久能山東照宮', area:'静岡県静岡市', lat:34.9586, lon:138.4427 },
-    // 愛知
-    { name:'名古屋城', area:'愛知県名古屋市', lat:35.1856, lon:136.8993 },
-    { name:'熱田神宮', area:'愛知県名古屋市', lat:35.1276, lon:136.9087 },
-    { name:'犬山城', area:'愛知県犬山市', lat:35.3838, lon:136.9437 },
-    { name:'常滑 やきもの散歩道', area:'愛知県常滑市', lat:34.8858, lon:136.8298 },
-    { name:'豊川稲荷', area:'愛知県豊川市', lat:34.8290, lon:137.3762 },
-    // 三重
-    { name:'伊勢神宮 内宮', area:'三重県伊勢市', lat:34.4551, lon:136.7252 },
-    { name:'熊野古道 松本峠', area:'三重県熊野市', lat:33.8851, lon:136.1035 },
-    { name:'鳥羽水族館', area:'三重県鳥羽市', lat:34.4866, lon:136.8325 },
-    { name:'夫婦岩（二見浦）', area:'三重県伊勢市', lat:34.4890, lon:136.7785 },
-    { name:'赤目四十八滝', area:'三重県名張市', lat:34.5778, lon:136.1455 },
+    { name:'新潟市', area:'新潟県', lat:37.9026, lon:139.0232 },
+    { name:'富山市', area:'富山県', lat:36.6953, lon:137.2113 },
+    { name:'金沢市', area:'石川県', lat:36.5944, lon:136.6256 },
+    { name:'福井市', area:'福井県', lat:36.0652, lon:136.2216 },
+    { name:'甲府市', area:'山梨県', lat:35.6635, lon:138.5685 },
+    { name:'長野市', area:'長野県', lat:36.6486, lon:138.1947 },
+    { name:'岐阜市', area:'岐阜県', lat:35.4232, lon:136.7608 },
+    { name:'静岡市', area:'静岡県', lat:34.9769, lon:138.3831 },
+    { name:'名古屋市', area:'愛知県', lat:35.1815, lon:136.9066 },
   ],
   kinki: [
-    // 滋賀
-    { name:'彦根城', area:'滋賀県彦根市', lat:35.2763, lon:136.2555 },
-    { name:'比叡山 延暦寺', area:'滋賀県大津市', lat:35.0716, lon:135.8409 },
-    { name:'琵琶湖 竹生島', area:'滋賀県長浜市', lat:35.4615, lon:136.1391 },
-    { name:'近江八幡 水郷', area:'滋賀県近江八幡市', lat:35.1294, lon:136.0979 },
-    { name:'メタセコイア並木', area:'滋賀県高島市', lat:35.4010, lon:135.9843 },
-    // 京都
-    { name:'金閣寺', area:'京都府京都市', lat:35.0394, lon:135.7292 },
-    { name:'清水寺', area:'京都府京都市', lat:34.9949, lon:135.7851 },
-    { name:'伏見稲荷大社', area:'京都府京都市', lat:34.9671, lon:135.7727 },
-    { name:'嵐山 渡月橋', area:'京都府京都市', lat:35.0094, lon:135.6779 },
-    { name:'天橋立', area:'京都府宮津市', lat:35.5562, lon:135.1838 },
-    // 大阪
-    { name:'大阪城', area:'大阪府大阪市', lat:34.6873, lon:135.5262 },
-    { name:'道頓堀', area:'大阪府大阪市', lat:34.6687, lon:135.5025 },
-    { name:'住吉大社', area:'大阪府大阪市', lat:34.6126, lon:135.4929 },
-    { name:'通天閣', area:'大阪府大阪市', lat:34.6523, lon:135.5063 },
-    { name:'万博記念公園 太陽の塔', area:'大阪府吹田市', lat:34.8093, lon:135.5259 },
-    // 兵庫
-    { name:'姫路城', area:'兵庫県姫路市', lat:34.8394, lon:134.6939 },
-    { name:'有馬温泉', area:'兵庫県神戸市', lat:34.7987, lon:135.2485 },
-    { name:'神戸 北野異人館', area:'兵庫県神戸市', lat:34.6987, lon:135.1872 },
-    { name:'城崎温泉', area:'兵庫県豊岡市', lat:35.6244, lon:134.8156 },
-    { name:'竹田城跡', area:'兵庫県朝来市', lat:35.2990, lon:134.8376 },
-    // 奈良
-    { name:'東大寺', area:'奈良県奈良市', lat:34.6886, lon:135.8398 },
-    { name:'春日大社', area:'奈良県奈良市', lat:34.6810, lon:135.8448 },
-    { name:'法隆寺', area:'奈良県生駒郡', lat:34.6147, lon:135.7344 },
-    { name:'吉野山 金峯山寺', area:'奈良県吉野郡', lat:34.3654, lon:135.8574 },
-    { name:'飛鳥 石舞台古墳', area:'奈良県高市郡', lat:34.4638, lon:135.8253 },
-    // 和歌山
-    { name:'熊野本宮大社', area:'和歌山県田辺市', lat:33.8375, lon:135.7876 },
-    { name:'高野山 奥の院', area:'和歌山県伊都郡', lat:34.2131, lon:135.5823 },
-    { name:'那智の滝', area:'和歌山県東牟婁郡', lat:33.6655, lon:135.9028 },
-    { name:'白浜 円月島', area:'和歌山県西牟婁郡', lat:33.6849, lon:135.3408 },
-    { name:'串本 橋杭岩', area:'和歌山県東牟婁郡', lat:33.4769, lon:135.7937 },
+    { name:'津市', area:'三重県', lat:34.7303, lon:136.5086 },
+    { name:'大津市', area:'滋賀県', lat:35.0045, lon:135.8686 },
+    { name:'京都市', area:'京都府', lat:35.0211, lon:135.7556 },
+    { name:'大阪市', area:'大阪府', lat:34.6937, lon:135.5023 },
+    { name:'神戸市', area:'兵庫県', lat:34.6913, lon:135.1830 },
+    { name:'奈良市', area:'奈良県', lat:34.6851, lon:135.8048 },
+    { name:'和歌山市', area:'和歌山県', lat:34.2261, lon:135.1675 },
   ],
-  chugoku: [
-    // 鳥取
-    { name:'鳥取砂丘', area:'鳥取県鳥取市', lat:35.5394, lon:134.2247 },
-    { name:'大山', area:'鳥取県西伯郡', lat:35.3656, lon:133.5516 },
-    { name:'皆生温泉', area:'鳥取県米子市', lat:35.4393, lon:133.3504 },
-    { name:'境港 水木しげるロード', area:'鳥取県境港市', lat:35.5431, lon:133.2318 },
-    { name:'三朝温泉', area:'鳥取県東伯郡', lat:35.3702, lon:133.8327 },
-    // 島根
-    { name:'出雲大社', area:'島根県出雲市', lat:35.4015, lon:132.6850 },
-    { name:'松江城', area:'島根県松江市', lat:35.4724, lon:133.0506 },
-    { name:'石見銀山', area:'島根県大田市', lat:35.0981, lon:132.4294 },
-    { name:'足立美術館', area:'島根県安来市', lat:35.4049, lon:133.2697 },
-    { name:'玉造温泉', area:'島根県松江市', lat:35.4183, lon:133.0124 },
-    // 岡山
-    { name:'岡山城・後楽園', area:'岡山県岡山市', lat:34.6655, lon:133.9368 },
-    { name:'倉敷美観地区', area:'岡山県倉敷市', lat:34.5948, lon:133.7717 },
-    { name:'備中松山城', area:'岡山県高梁市', lat:34.8057, lon:133.5984 },
-    { name:'蒜山高原', area:'岡山県真庭市', lat:35.2567, lon:133.5567 },
-    { name:'牛窓 オリーブ園', area:'岡山県瀬戸内市', lat:34.6745, lon:134.1588 },
-    // 広島
-    { name:'厳島神社', area:'広島県廿日市市', lat:34.2962, lon:132.3194 },
-    { name:'原爆ドーム', area:'広島県広島市', lat:34.3955, lon:132.4536 },
-    { name:'尾道 千光寺', area:'広島県尾道市', lat:34.4135, lon:133.1979 },
-    { name:'竹原 町並み保存地区', area:'広島県竹原市', lat:34.3428, lon:132.9158 },
-    { name:'三段峡', area:'広島県山県郡', lat:34.6302, lon:132.2434 },
-    // 山口
-    { name:'秋芳洞', area:'山口県美祢市', lat:34.2283, lon:131.3803 },
-    { name:'錦帯橋', area:'山口県岩国市', lat:34.1641, lon:132.1735 },
-    { name:'萩 城下町', area:'山口県萩市', lat:34.4082, lon:131.3985 },
-    { name:'角島大橋', area:'山口県下関市', lat:34.3740, lon:130.8757 },
-    { name:'下関 唐戸市場', area:'山口県下関市', lat:33.9546, lon:130.9393 },
-    // 徳島
-    { name:'大塚国際美術館', area:'徳島県鳴門市', lat:34.1744, lon:134.5264 },
-    { name:'鳴門の渦潮', area:'徳島県鳴門市', lat:34.2078, lon:134.6374 },
-    { name:'祖谷のかずら橋', area:'徳島県三好市', lat:33.8644, lon:133.8925 },
-    { name:'眉山', area:'徳島県徳島市', lat:34.0571, lon:134.5534 },
-    { name:'剣山', area:'徳島県三好郡', lat:33.8474, lon:134.0769 },
-    // 香川
-    { name:'金刀比羅宮', area:'香川県仲多度郡', lat:34.2131, lon:133.8145 },
-    { name:'栗林公園', area:'香川県高松市', lat:34.3329, lon:134.0476 },
-    { name:'直島 地中美術館', area:'香川県香川郡', lat:34.4529, lon:133.9956 },
-    { name:'小豆島 オリーブ公園', area:'香川県小豆郡', lat:34.4878, lon:134.2826 },
-    { name:'父母ヶ浜', area:'香川県三豊市', lat:34.2091, lon:133.6494 },
-    // 愛媛
-    { name:'道後温泉 本館', area:'愛媛県松山市', lat:33.8518, lon:132.7862 },
-    { name:'松山城', area:'愛媛県松山市', lat:33.8455, lon:132.7659 },
-    { name:'しまなみ海道 来島海峡大橋', area:'愛媛県今治市', lat:34.0786, lon:132.9940 },
-    { name:'内子町 古い街並み', area:'愛媛県喜多郡', lat:33.5372, lon:132.6598 },
-    { name:'四万十川 沈下橋', area:'高知県四万十市', lat:32.9965, lon:132.9498 },
-    // 高知
-    { name:'桂浜', area:'高知県高知市', lat:33.4836, lon:133.5668 },
-    { name:'高知城', area:'高知県高知市', lat:33.5609, lon:133.5311 },
-    { name:'足摺岬', area:'高知県土佐清水市', lat:32.7249, lon:133.0164 },
-    { name:'室戸岬', area:'高知県室戸市', lat:33.2491, lon:134.1759 },
-    { name:'龍河洞', area:'高知県香美市', lat:33.6136, lon:133.6945 },
+  chugoku_shikoku: [
+    { name:'鳥取市', area:'鳥取県', lat:35.5011, lon:134.2351 },
+    { name:'松江市', area:'島根県', lat:35.4723, lon:133.0505 },
+    { name:'岡山市', area:'岡山県', lat:34.6618, lon:133.9350 },
+    { name:'広島市', area:'広島県', lat:34.3853, lon:132.4553 },
+    { name:'山口市', area:'山口県', lat:34.1860, lon:131.4706 },
+    { name:'徳島市', area:'徳島県', lat:34.0657, lon:134.5593 },
+    { name:'高松市', area:'香川県', lat:34.3401, lon:134.0434 },
+    { name:'松山市', area:'愛媛県', lat:33.8416, lon:132.7657 },
+    { name:'高知市', area:'高知県', lat:33.5597, lon:133.5311 },
   ],
-  kyushu: [
-    // 福岡
-    { name:'太宰府天満宮', area:'福岡県太宰府市', lat:33.5218, lon:130.5352 },
-    { name:'糸島 二見ヶ浦', area:'福岡県糸島市', lat:33.5574, lon:130.1774 },
-    { name:'門司港 レトロ地区', area:'福岡県北九州市', lat:33.9439, lon:130.9691 },
-    { name:'柳川 川下り', area:'福岡県柳川市', lat:33.1646, lon:130.4052 },
-    { name:'英彦山', area:'福岡県田川郡', lat:33.4753, lon:130.8090 },
-    // 佐賀
-    { name:'唐津城', area:'佐賀県唐津市', lat:33.4587, lon:129.9707 },
-    { name:'吉野ヶ里遺跡', area:'佐賀県神埼郡', lat:33.3356, lon:130.3936 },
-    { name:'有田 陶磁器まつり', area:'佐賀県西松浦郡', lat:33.2199, lon:129.8804 },
-    { name:'武雄温泉', area:'佐賀県武雄市', lat:33.1942, lon:130.0180 },
-    { name:'呼子 朝市', area:'佐賀県唐津市', lat:33.5253, lon:129.8736 },
-    // 長崎
-    { name:'軍艦島（端島）', area:'長崎県長崎市', lat:32.6277, lon:129.7380 },
-    { name:'グラバー園', area:'長崎県長崎市', lat:32.7355, lon:129.8726 },
-    { name:'平和公園', area:'長崎県長崎市', lat:32.7742, lon:129.8645 },
-    { name:'雲仙岳', area:'長崎県雲仙市', lat:32.7572, lon:130.2839 },
-    { name:'ハウステンボス', area:'長崎県佐世保市', lat:33.0944, lon:129.7835 },
-    // 熊本
-    { name:'熊本城', area:'熊本県熊本市', lat:32.8033, lon:130.7058 },
-    { name:'阿蘇山 中岳', area:'熊本県阿蘇市', lat:32.8838, lon:131.0863 },
-    { name:'黒川温泉', area:'熊本県阿蘇郡', lat:33.0462, lon:131.1059 },
-    { name:'水前寺成趣園', area:'熊本県熊本市', lat:32.7901, lon:130.7331 },
-    { name:'天草 崎津集落', area:'熊本県天草市', lat:32.4572, lon:130.1683 },
-    // 大分
-    { name:'別府温泉 地獄めぐり', area:'大分県別府市', lat:33.2843, lon:131.4988 },
-    { name:'湯布院 金鱗湖', area:'大分県由布市', lat:33.2607, lon:131.3618 },
-    { name:'臼杵石仏', area:'大分県臼杵市', lat:33.1238, lon:131.8036 },
-    { name:'耶馬渓', area:'大分県中津市', lat:33.4701, lon:131.1736 },
-    { name:'国東半島 富貴寺', area:'大分県豊後高田市', lat:33.5827, lon:131.5510 },
-    // 宮崎
-    { name:'高千穂峡', area:'宮崎県西臼杵郡', lat:32.7107, lon:131.3093 },
-    { name:'鵜戸神宮', area:'宮崎県日南市', lat:31.7310, lon:131.3889 },
-    { name:'青島', area:'宮崎県宮崎市', lat:31.8509, lon:131.4773 },
-    { name:'日南海岸 サンメッセ日南', area:'宮崎県日南市', lat:31.7817, lon:131.3778 },
-    { name:'都城 関之尾滝', area:'宮崎県都城市', lat:31.8659, lon:130.9816 },
-    // 鹿児島
-    { name:'桜島', area:'鹿児島県鹿児島市', lat:31.5855, lon:130.6572 },
-    { name:'指宿温泉 砂むし会館', area:'鹿児島県指宿市', lat:31.2562, lon:130.6369 },
-    { name:'霧島神宮', area:'鹿児島県霧島市', lat:31.8950, lon:130.8631 },
-    { name:'知覧特攻平和会館', area:'鹿児島県南九州市', lat:31.3666, lon:130.4467 },
-    { name:'屋久島 白谷雲水峡', area:'鹿児島県熊毛郡', lat:30.3880, lon:130.6580 },
-    // 沖縄
-    { name:'首里城', area:'沖縄県那覇市', lat:26.2172, lon:127.7197 },
-    { name:'美ら海水族館', area:'沖縄県国頭郡', lat:26.6939, lon:127.8783 },
-    { name:'古宇利島 ハートロック', area:'沖縄県国頭郡', lat:26.8612, lon:128.0255 },
-    { name:'首里 斎場御嶽', area:'沖縄県南城市', lat:26.1430, lon:127.8206 },
-    { name:'石垣島 川平湾', area:'沖縄県石垣市', lat:24.4521, lon:124.1460 },
+  kyushu_okinawa: [
+    { name:'福岡市', area:'福岡県', lat:33.5902, lon:130.4017 },
+    { name:'佐賀市', area:'佐賀県', lat:33.2494, lon:130.2989 },
+    { name:'長崎市', area:'長崎県', lat:32.7503, lon:129.8779 },
+    { name:'熊本市', area:'熊本県', lat:32.8031, lon:130.7079 },
+    { name:'大分市', area:'大分県', lat:33.2382, lon:131.6126 },
+    { name:'宮崎市', area:'宮崎県', lat:31.9077, lon:131.4202 },
+    { name:'鹿児島市', area:'鹿児島県', lat:31.5966, lon:130.5571 },
+    { name:'那覇市', area:'沖縄県', lat:26.2124, lon:127.6809 },
   ],
-
-  // ── テーマ別 ──
-  onsen: [
-    { name:'草津温泉', area:'群馬県吾妻郡', lat:36.6219, lon:138.5959 },
-    { name:'有馬温泉', area:'兵庫県神戸市', lat:34.7987, lon:135.2485 },
-    { name:'道後温泉', area:'愛媛県松山市', lat:33.8518, lon:132.7862 },
-    { name:'別府温泉', area:'大分県別府市', lat:33.2843, lon:131.4988 },
-    { name:'登別温泉', area:'北海道登別市', lat:42.4611, lon:141.1039 },
-    { name:'黒川温泉', area:'熊本県阿蘇郡', lat:33.0462, lon:131.1059 },
-    { name:'湯布院温泉', area:'大分県由布市', lat:33.2607, lon:131.3618 },
-    { name:'城崎温泉', area:'兵庫県豊岡市', lat:35.6244, lon:134.8156 },
-    { name:'箱根温泉郷', area:'神奈川県足柄下郡', lat:35.2375, lon:139.0204 },
-    { name:'熱海温泉', area:'静岡県熱海市', lat:35.1023, lon:139.0730 },
-    { name:'下呂温泉', area:'岐阜県下呂市', lat:35.8104, lon:137.2456 },
-    { name:'乳頭温泉郷', area:'秋田県仙北市', lat:39.7558, lon:140.7235 },
-    { name:'銀山温泉', area:'山形県尾花沢市', lat:38.6183, lon:140.5633 },
-    { name:'指宿温泉', area:'鹿児島県指宿市', lat:31.2562, lon:130.6369 },
-    { name:'蔵王温泉', area:'山形県山形市', lat:38.2228, lon:140.3863 },
-    { name:'那須温泉郷', area:'栃木県那須郡', lat:37.1038, lon:140.0452 },
-    { name:'鬼怒川温泉', area:'栃木県日光市', lat:36.8022, lon:139.6636 },
-    { name:'白浜温泉', area:'和歌山県西牟婁郡', lat:33.6849, lon:135.3408 },
-    { name:'三朝温泉', area:'鳥取県東伯郡', lat:35.3702, lon:133.8327 },
-    { name:'万座温泉', area:'群馬県吾妻郡', lat:36.6383, lon:138.4960 },
+  overseas_asia: [
+    { name:'ソウル', area:'韓国', lat:37.5665, lon:126.9780 },
+    { name:'台北', area:'台湾', lat:25.0330, lon:121.5654 },
+    { name:'上海', area:'中国', lat:31.2304, lon:121.4737 },
+    { name:'北京', area:'中国', lat:39.9042, lon:116.4074 },
+    { name:'香港', area:'香港', lat:22.3193, lon:114.1694 },
+    { name:'バンコク', area:'タイ', lat:13.7563, lon:100.5018 },
+    { name:'シンガポール', area:'シンガポール', lat:1.3521, lon:103.8198 },
+    { name:'クアラルンプール', area:'マレーシア', lat:3.1390, lon:101.6869 },
+    { name:'ジャカルタ', area:'インドネシア', lat:-6.2088, lon:106.8456 },
   ],
-  yama: [
-    { name:'富士山', area:'静岡県・山梨県', lat:35.3606, lon:138.7274 },
-    { name:'北岳', area:'山梨県南アルプス市', lat:35.6742, lon:138.2389 },
-    { name:'槍ヶ岳', area:'長野県松本市', lat:36.3430, lon:137.6482 },
-    { name:'奥穂高岳', area:'長野県松本市', lat:36.2887, lon:137.6476 },
-    { name:'立山（雄山）', area:'富山県中新川郡', lat:36.5783, lon:137.6179 },
-    { name:'剱岳', area:'富山県中新川郡', lat:36.6229, lon:137.6168 },
-    { name:'白山', area:'石川県白山市', lat:36.1530, lon:136.7714 },
-    { name:'大雪山 旭岳', area:'北海道上川郡', lat:43.6633, lon:142.8571 },
-    { name:'羊蹄山', area:'北海道虻田郡', lat:42.8273, lon:140.8041 },
-    { name:'岩木山', area:'青森県弘前市', lat:40.6567, lon:140.3023 },
-    { name:'磐梯山', area:'福島県耶麻郡', lat:37.5983, lon:140.0769 },
-    { name:'那須岳 茶臼岳', area:'栃木県那須郡', lat:37.1130, lon:140.0490 },
-    { name:'雲取山', area:'東京都西多摩郡', lat:35.8543, lon:138.9427 },
-    { name:'石鎚山', area:'愛媛県西条市', lat:33.7661, lon:133.1168 },
-    { name:'九重山 久住山', area:'大分県竹田市', lat:33.0849, lon:131.2422 },
-    { name:'阿蘇山 高岳', area:'熊本県阿蘇市', lat:32.8838, lon:131.0863 },
-    { name:'宮之浦岳（屋久島）', area:'鹿児島県熊毛郡', lat:30.3204, lon:130.5329 },
-    { name:'大台ヶ原 日出ヶ岳', area:'奈良県吉野郡', lat:34.1883, lon:136.1072 },
-    { name:'御嶽山', area:'長野県木曽郡', lat:35.8934, lon:137.4800 },
-    { name:'高尾山', area:'東京都八王子市', lat:35.6254, lon:139.2436 },
-  ],
-  shima: [
-    { name:'佐渡島', area:'新潟県佐渡市', lat:38.0194, lon:138.3691 },
-    { name:'淡路島', area:'兵庫県洲本市', lat:34.3374, lon:134.8987 },
-    { name:'屋久島', area:'鹿児島県熊毛郡', lat:30.3880, lon:130.6580 },
-    { name:'奄美大島', area:'鹿児島県奄美市', lat:28.3753, lon:129.4946 },
-    { name:'石垣島', area:'沖縄県石垣市', lat:24.3399, lon:124.1556 },
-    { name:'宮古島', area:'沖縄県宮古島市', lat:24.8058, lon:125.2812 },
-    { name:'竹富島', area:'沖縄県八重山郡', lat:24.3268, lon:124.0938 },
-    { name:'西表島', area:'沖縄県八重山郡', lat:24.3334, lon:123.8016 },
-    { name:'小豆島', area:'香川県小豆郡', lat:34.4878, lon:134.2826 },
-    { name:'直島', area:'香川県香川郡', lat:34.4529, lon:133.9956 },
-    { name:'五島列島 福江島', area:'長崎県五島市', lat:32.6944, lon:128.8417 },
-    { name:'壱岐島', area:'長崎県壱岐市', lat:33.7522, lon:129.6923 },
-    { name:'対馬', area:'長崎県対馬市', lat:34.2038, lon:129.2892 },
-    { name:'江の島', area:'神奈川県藤沢市', lat:35.2996, lon:139.4826 },
+  overseas_far: [
+    { name:'シドニー', area:'オーストラリア', lat:-33.8688, lon:151.2093 },
+    { name:'ロンドン', area:'イギリス', lat:51.5074, lon:-0.1278 },
+    { name:'パリ', area:'フランス', lat:48.8566, lon:2.3522 },
+    { name:'フランクフルト', area:'ドイツ', lat:50.1109, lon:8.6821 },
+    { name:'ニューヨーク', area:'アメリカ東海岸', lat:40.7128, lon:-74.0060 },
+    { name:'ロサンゼルス', area:'アメリカ西海岸', lat:34.0522, lon:-118.2437 },
+    { name:'バンクーバー', area:'カナダ', lat:49.2827, lon:-123.1207 },
+    { name:'ホノルル（ハワイ）', area:'アメリカ・ハワイ', lat:21.3069, lon:-157.8583 },
+    { name:'ドバイ', area:'UAE', lat:25.2048, lon:55.2708 },
   ],
 };
 
 
 
 // ============================================================
-// 文字サイズ切替
+// 家相調律ロジック
 // ============================================================
+const SPACE_DATA = {
+  N:  { star:'一白水星', theme:'財運・人脈・縁', color:'#1a5c8a',
+    hari: '北側に張りがある家は、財運と人脈が自然と集まりやすい構造です。ここに静かに過ごせる椅子や、水をイメージするアイテム（小さな水鉢・青い置物）を置くと、良い縁と財の流れが加速します。',
+    kake: '北側に欠けがある場合、財運と人脈のアンテナが少し弱まりやすい構造です。欠けた方向に向かって丈の高い観葉植物（フィカス・ポトスなど）を1鉢置くだけで、エネルギーを補完できます。また、その場所を常に明るく保つことが大切です。' },
+  NE: { star:'八白土星', theme:'蓄財・変化・不動産', color:'#6b4f1a',
+    hari: '北東側に張りがある家は、蓄財力と変化対応力が高い構造です。ここは「鬼門」と呼ばれますが、張りがある場合は吉として働きます。常に清潔を保ち、白や黄色のアイテムを置くと、資産形成のエネルギーが高まります。',
+    kake: '北東側の欠けは「鬼門欠け」と呼ばれ、変化への抵抗や蓄財の難しさとして出やすい構造です。この方向を清潔に保ち、盛り塩や白い石（水晶など）を置くことで、気の補完ができます。定期的な掃除がここでは特に重要です。' },
+  E:  { star:'三碧木星', theme:'発展・活動・チャレンジ', color:'#2a6038',
+    hari: '東側に張りがある家は、発展と行動力のエネルギーが満ちた構造です。新しいことを始める力、若々しいバイタリティが育ちやすい環境です。ここに朝日が入る窓があれば最高で、緑の植物や木製のアイテムを置くとさらに発展が加速します。',
+    kake: '東側に欠けがある場合、行動力とチャレンジ精神が少し出にくくなりやすい構造です。東向きの窓に朝日を取り込む工夫をしてください。また、背の高い観葉植物を置き、その場所を活動的に使う（朝のルーティンをここで行うなど）ことで、エネルギーを補えます。' },
+  SE: { star:'四緑木星', theme:'縁・信用・コミュニケーション', color:'#3a6e3a',
+    hari: '東南側に張りがある家は、人間関係とご縁が豊かに広がりやすい構造です。ビジネスパートナー、良い友人、素晴らしい出会いが自然と舞い込んでくる環境です。ここに心地よい香りのアイテムやお気に入りの椅子を置いてリラックスすると、最高のご縁がさらに加速します。',
+    kake: '東南側に欠けがある場合、縁とコミュニケーションのエネルギーが少し弱まりやすい構造です。ここに香りの良いアイテム（アロマ・ポプリ・生花）を置いてください。風通しを良くすることも重要で、窓を定期的に開けて気の流れを作りましょう。' },
+  S:  { star:'九紫火星', theme:'名誉・直感・美・情熱', color:'#8b2020',
+    hari: '南側に張りがある家は、名誉と直感力、そして美的センスが育ちやすい構造です。人前で輝く力、インスピレーションが湧きやすい環境です。ここに明るい照明と、赤や紫のアクセントカラーを取り入れると、名誉と直感のアンテナがさらに研ぎ澄まされます。',
+    kake: '南側に欠けがある場合、直感力や情熱が少し電池切れになりやすい構造です。背の高い観葉植物を置くか、間接照明で明るく照らすだけで直感センサーが再びクリアに働き始めます。この方向だけは特に「暗くしない」ことが最重要です。' },
+  SW: { star:'二黒土星', theme:'家庭・健康・土台・母', color:'#5c3d1a',
+    hari: '南西側に張りがある家は、家庭の安定と健康、そして地に足のついた生活の土台が育ちやすい構造です。家族の絆が自然と深まる環境です。ここを家族が集まる場所（ダイニング・リビング）として使うと、安定したエネルギーがさらに高まります。',
+    kake: '南西側の欠けは「裏鬼門欠け」と呼ばれ、家庭基盤や健康面で注意が必要な構造です。黄色や茶色のアイテムを置き、この場所を常に整理整頓してください。料理をする機会を増やすなど、「土のエネルギー（育てる・養う）」を意識した行動が補完になります。' },
+  W:  { star:'七赤金星', theme:'金運・楽しみ・話術・収穫', color:'#6b5000',
+    hari: '西側に張りがある家は、金運と楽しみ、そして豊かさの収穫力が育ちやすい構造です。収入が安定し、生活に余裕が生まれやすい環境です。ここに金色や白のアイテム、観葉植物を置くと金運のエネルギーがさらに高まります。西日が入る場合はレースのカーテンで柔らかく取り込んでください。',
+    kake: '西側に欠けがある場合、金運と収穫のエネルギーが少し弱まりやすい構造です。金属製のアイテム（鈴・風鈴・金属の置物）を置くか、白・金色のファブリックをこの方向に取り入れてください。また、「夕方に西の窓を開けて外気を取り込む」ルーティンが効果的です。' },
+  NW: { star:'六白金星', theme:'リーダーシップ・権威・天・父', color:'#1a3a6e',
+    hari: '北西側に張りがある家は、リーダーシップと権威、そして大局を見渡す判断力が育ちやすい構造です。仕事での出世や信頼獲得に強い環境です。ここを書斎・仕事部屋として使うか、北西向きの椅子に座って仕事をすると、決断力が自然と高まります。',
+    kake: '北西側に欠けがある場合、権威とリーダーシップのエネルギーが出にくくなりやすい構造です。金属製・白・グレーのアイテムを置き、この場所を清潔でシンプルに保ってください。仕事に関するものをここに置く（資格証・仕事道具など）ことで、リーダーのエネルギーを呼び込めます。' },
+};
+
+let spaceMode = 'hari';
+let spaceDir = null;
+
+function selectHariKake(mode) {
+  spaceMode = mode;
+  document.getElementById('btnHari').style.cssText = mode === 'hari'
+    ? 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(60,120,60,.25);color:#2a5e2a;border:2px solid rgba(60,120,60,.6);'
+    : 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:2px solid rgba(138,104,32,.2);';
+  document.getElementById('btnKake').style.cssText = mode === 'kake'
+    ? 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(180,100,20,.2);color:#8b4a10;border:2px solid rgba(180,100,20,.5);'
+    : 'flex:1;padding:9px 0;border-radius:8px;font-size:.72rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.08);color:var(--goldlt);border:2px solid rgba(138,104,32,.2);';
+  if (spaceDir) showSpacePrescription();
+}
+
+function selectSpaceDir(dir) {
+  spaceDir = dir;
+  document.querySelectorAll('.space-dir-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  showSpacePrescription();
+}
+
+function showSpacePrescription() {
+  if (!spaceDir) return;
+  const data = SPACE_DATA[spaceDir];
+  if (!data) return;
+  const text = spaceMode === 'hari' ? data.hari : data.kake;
+  const modeLabel = spaceMode === 'hari' ? '↑ 張り（出っ張り）' : '↓ 欠け（凹み）';
+  const modeColor = spaceMode === 'hari' ? '#2a5e2a' : '#8b4a10';
+  const modeBg = spaceMode === 'hari' ? 'rgba(60,120,60,.08)' : 'rgba(180,100,20,.08)';
+  const dirJP = { N:'北', NE:'北東', E:'東', SE:'東南', S:'南', SW:'南西', W:'西', NW:'北西' };
+  const el = document.getElementById('spacePrescription');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="space-prescription-card">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="background:${modeBg};border:1px solid ${modeColor};border-radius:999px;padding:3px 10px;font-size:.62rem;font-weight:700;color:${modeColor};">${modeLabel}</span>
+        <span style="font-size:.75rem;font-weight:700;color:var(--snow);">${dirJP[spaceDir]}（${data.star}）</span>
+        <span style="font-size:.62rem;color:var(--mist);">${data.theme}</span>
+      </div>
+      <div style="font-size:.67rem;color:var(--mist);line-height:1.95;">${text}</div>
+      <div style="margin-top:10px;padding:8px 10px;background:rgba(100,80,40,.04);border-radius:7px;font-size:.6rem;color:var(--mist);line-height:1.7;">
+        ✦ これは判断の目安です。詳しい診断は気学鑑定士に間取り図を見てもらうことをお勧めします。
+      </div>
+    </div>
+  `;
+}
+
+function switchSpaceTab(tab) {
+  document.getElementById('spaceTabContent1').style.display = tab === 1 ? 'block' : 'none';
+  document.getElementById('spaceTabContent2').style.display = tab === 2 ? 'block' : 'none';
+  const btn1 = document.getElementById('spaceTab1');
+  const btn2 = document.getElementById('spaceTab2');
+  btn1.style.cssText = tab === 1
+    ? 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;'
+    : 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
+  btn2.style.cssText = tab === 2
+    ? 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:var(--goldlt);color:#fff;border:none;'
+    : 'flex:1;padding:8px 0;border-radius:999px;font-size:.7rem;font-weight:700;font-family:\'Noto Serif JP\',serif;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
+}
+
 const PILGRIMAGE_FONT_KEY = 'kitoku-pilgrimage-font-size';
 
 function applyPilgrimageFontSize(size) {
@@ -1900,7 +2034,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadStarInfo() {
-  const birth = getStoredBirth();
+  if(typeof getKD !== 'function'){
+    console.warn('kitoku-engine not loaded:', new ReferenceError('getKD is not defined'));
+    return;
+  }
+  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (!birth) return;
   const [by, bm, bd] = birth.split('-').map(Number);
   if (!by || !bm || !bd) return;
@@ -1929,23 +2067,6 @@ function loadStarInfo() {
   })();
 }
 
-function getStoredBirth() {
-  let birth = '';
-  try {
-    birth = localStorage.getItem('kitoku-birth') ||
-      localStorage.getItem('kitoku_birth') ||
-      sessionStorage.getItem('kitoku-birth') ||
-      '';
-  } catch(e) {}
-
-  // ゼロ埋めあり（1967-06-14）・なし（1967-6-14）両方に対応
-  if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(birth)) {
-    try { localStorage.setItem('kitoku-birth', birth); } catch(e) {}
-    return birth;
-  }
-  return '';
-}
-
 // ============================================================
 // 自宅登録
 // ============================================================
@@ -1958,7 +2079,7 @@ async function searchHome() {
 
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&accept-language=ja`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-travel/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
     const data = await res.json();
     if (!data.length) { status.textContent = '場所が見つかりませんでした。別の住所で試してください。'; return; }
     const r = data[0];
@@ -2081,128 +2202,14 @@ function toggleGroup(label, gridId) {
 }
 
 function renderPresets() {
-  renderPresetGrid('grid-hokkaido', SACRED_PLACES.hokkaido);
-  renderPresetGrid('grid-kanto',    SACRED_PLACES.kanto);
-  renderPresetGrid('grid-chubu',    SACRED_PLACES.chubu);
-  renderPresetGrid('grid-kinki',    SACRED_PLACES.kinki);
-  renderPresetGrid('grid-chugoku',  SACRED_PLACES.chugoku);
-  renderPresetGrid('grid-kyushu',   SACRED_PLACES.kyushu);
-  renderPresetGrid('grid-onsen',    SACRED_PLACES.onsen);
-  renderPresetGrid('grid-yama',     SACRED_PLACES.yama);
-  renderPresetGrid('grid-shima',    SACRED_PLACES.shima);
-}
-
-// ── 海外旅先データ ──
-const OVERSEAS_PLACES = {
-  sea: [
-    { name:'バンコク 王宮・ワット・プラケオ', area:'タイ・バンコク', lat:13.7516, lon:100.4920 },
-    { name:'チェンマイ ドイステープ寺院', area:'タイ・チェンマイ', lat:18.8048, lon:98.9217 },
-    { name:'プーケット パトンビーチ', area:'タイ・プーケット', lat:7.8939, lon:98.2970 },
-    { name:'アユタヤ 歴史公園', area:'タイ・アユタヤ', lat:14.3553, lon:100.5694 },
-    { name:'コ・サムイ チャウエンビーチ', area:'タイ・コサムイ', lat:9.5318, lon:100.0619 },
-    { name:'チェンライ ワット・ロンクン', area:'タイ・チェンライ', lat:19.8270, lon:99.7633 },
-    { name:'バリ島 ウブド', area:'インドネシア・バリ', lat:-8.5069, lon:115.2625 },
-    { name:'バリ島 タナロット寺院', area:'インドネシア・バリ', lat:-8.6215, lon:115.0867 },
-    { name:'バリ島 クタビーチ', area:'インドネシア・バリ', lat:-8.7183, lon:115.1685 },
-    { name:'バリ島 ヌサドゥア', area:'インドネシア・バリ', lat:-8.8010, lon:115.2307 },
-    { name:'ジョグジャカルタ ボロブドゥール', area:'インドネシア・ジャワ', lat:-7.6079, lon:110.2038 },
-    { name:'ハノイ ホアンキエム湖', area:'ベトナム・ハノイ', lat:21.0285, lon:105.8542 },
-    { name:'ホーチミン 統一会堂', area:'ベトナム・ホーチミン', lat:10.7769, lon:106.6953 },
-    { name:'ホイアン 旧市街', area:'ベトナム・ホイアン', lat:15.8801, lon:108.3380 },
-    { name:'ハロン湾', area:'ベトナム・クアンニン省', lat:20.9101, lon:107.1839 },
-    { name:'ダナン ミーケービーチ', area:'ベトナム・ダナン', lat:16.0544, lon:108.2022 },
-    { name:'シンガポール マリーナベイサンズ', area:'シンガポール', lat:1.2834, lon:103.8607 },
-    { name:'シンガポール ガーデンズバイザベイ', area:'シンガポール', lat:1.2816, lon:103.8636 },
-    { name:'アンコールワット', area:'カンボジア・シェムリアップ', lat:13.4125, lon:103.8670 },
-    { name:'アンコールトム バイヨン', area:'カンボジア・シェムリアップ', lat:13.4413, lon:103.8587 },
-    { name:'クアラルンプール ペトロナスタワー', area:'マレーシア・KL', lat:3.1579, lon:101.7116 },
-    { name:'ペナン島 ジョージタウン', area:'マレーシア・ペナン', lat:5.4164, lon:100.3327 },
-    { name:'バガン 仏塔群', area:'ミャンマー・バガン', lat:21.1717, lon:94.8585 },
-    { name:'セブ島 マクタン', area:'フィリピン・セブ', lat:10.3157, lon:123.8854 },
-    { name:'マニラ イントラムロス', area:'フィリピン・マニラ', lat:14.5890, lon:120.9749 },
-    { name:'ルアンパバーン 旧市街', area:'ラオス', lat:19.8831, lon:102.1347 },
-    { name:'ルアンパバーン クアンシーの滝', area:'ラオス', lat:19.7258, lon:101.9857 },
-    { name:'ホーチミン メコン川クルーズ', area:'ベトナム・ミトー', lat:10.3617, lon:106.3565 },
-  ],
-  europe: [
-    { name:'パリ エッフェル塔', area:'フランス・パリ', lat:48.8584, lon:2.2945 },
-    { name:'パリ ルーヴル美術館', area:'フランス・パリ', lat:48.8606, lon:2.3376 },
-    { name:'モン・サン＝ミッシェル', area:'フランス・ノルマンディー', lat:48.6361, lon:-1.5115 },
-    { name:'ヴェルサイユ宮殿', area:'フランス・イル＝ド＝フランス', lat:48.8049, lon:2.1204 },
-    { name:'ニース コート・ダジュール', area:'フランス・ニース', lat:43.7102, lon:7.2620 },
-    { name:'ローマ コロッセオ', area:'イタリア・ローマ', lat:41.8902, lon:12.4922 },
-    { name:'バチカン サン・ピエトロ大聖堂', area:'バチカン市国', lat:41.9022, lon:12.4539 },
-    { name:'フィレンツェ ドゥオーモ', area:'イタリア・フィレンツェ', lat:43.7731, lon:11.2560 },
-    { name:'ヴェネツィア サン・マルコ広場', area:'イタリア・ヴェネツィア', lat:45.4341, lon:12.3388 },
-    { name:'アマルフィ海岸', area:'イタリア・カンパニア', lat:40.6340, lon:14.6027 },
-    { name:'バルセロナ サグラダ・ファミリア', area:'スペイン・バルセロナ', lat:41.4036, lon:2.1744 },
-    { name:'マドリード プラド美術館', area:'スペイン・マドリード', lat:40.4138, lon:-3.6922 },
-    { name:'グラナダ アルハンブラ宮殿', area:'スペイン・グラナダ', lat:37.1760, lon:-3.5881 },
-    { name:'サンティアゴ・デ・コンポステーラ', area:'スペイン・ガリシア', lat:42.8805, lon:-8.5458 },
-    { name:'ロンドン 大英博物館', area:'イギリス・ロンドン', lat:51.5194, lon:-0.1270 },
-    { name:'ロンドン バッキンガム宮殿', area:'イギリス・ロンドン', lat:51.5014, lon:-0.1419 },
-    { name:'ストーンヘンジ', area:'イギリス・ウィルトシャー', lat:51.1789, lon:-1.8262 },
-    { name:'ノイシュヴァンシュタイン城', area:'ドイツ・バイエルン', lat:47.5576, lon:10.7498 },
-    { name:'ベルリン ブランデンブルク門', area:'ドイツ・ベルリン', lat:52.5163, lon:13.3777 },
-    { name:'ローテンブルク 旧市街', area:'ドイツ・バイエルン', lat:49.3774, lon:10.1800 },
-    { name:'アテネ アクロポリス', area:'ギリシャ・アテネ', lat:37.9715, lon:23.7267 },
-    { name:'サントリーニ島 イア', area:'ギリシャ・キクラデス', lat:36.4618, lon:25.3765 },
-    { name:'ウィーン シェーンブルン宮殿', area:'オーストリア・ウィーン', lat:48.1845, lon:16.3122 },
-    { name:'ザルツブルク 旧市街', area:'オーストリア・ザルツブルク', lat:47.7981, lon:13.0469 },
-    { name:'インターラーケン ユングフラウ', area:'スイス・ベルン州', lat:46.5500, lon:7.9000 },
-    { name:'ルツェルン カペル橋', area:'スイス・ルツェルン', lat:47.0502, lon:8.3093 },
-    { name:'リスボン アルファマ地区', area:'ポルトガル・リスボン', lat:38.7139, lon:-9.1334 },
-    { name:'シントラ ペーナ宮殿', area:'ポルトガル・シントラ', lat:38.7876, lon:-9.3903 },
-    { name:'プラハ 旧市街広場', area:'チェコ・プラハ', lat:50.0875, lon:14.4213 },
-    { name:'アムステルダム 運河地区', area:'オランダ・アムステルダム', lat:52.3702, lon:4.8952 },
-  ],
-  eastasia: [
-    { name:'ソウル 景福宮', area:'韓国・ソウル', lat:37.5796, lon:126.9770 },
-    { name:'ソウル 明洞', area:'韓国・ソウル', lat:37.5636, lon:126.9869 },
-    { name:'釜山 海雲台ビーチ', area:'韓国・釜山', lat:35.1587, lon:129.1604 },
-    { name:'慶州 仏国寺', area:'韓国・慶州', lat:35.7898, lon:129.3316 },
-    { name:'済州島 城山日出峰', area:'韓国・済州', lat:33.4581, lon:126.9425 },
-    { name:'台北 故宮博物院', area:'台湾・台北', lat:25.1022, lon:121.5485 },
-    { name:'台北 龍山寺', area:'台湾・台北', lat:25.0370, lon:121.4999 },
-    { name:'台南 赤崁楼', area:'台湾・台南', lat:22.9979, lon:120.2005 },
-    { name:'花蓮 太魯閣渓谷', area:'台湾・花蓮', lat:24.1569, lon:121.6211 },
-    { name:'九份 老街', area:'台湾・新北市', lat:25.1091, lon:121.8442 },
-    { name:'北京 故宮（紫禁城）', area:'中国・北京', lat:39.9163, lon:116.3972 },
-    { name:'北京 万里の長城（八達嶺）', area:'中国・北京近郊', lat:40.3592, lon:116.0200 },
-    { name:'上海 外灘', area:'中国・上海', lat:31.2400, lon:121.4900 },
-    { name:'西安 兵馬俑', area:'中国・陝西省', lat:34.3843, lon:109.2783 },
-    { name:'桂林 漓江', area:'中国・広西省', lat:25.2736, lon:110.2990 },
-    { name:'香港 ヴィクトリアピーク', area:'香港', lat:22.2759, lon:114.1455 },
-    { name:'香港 尖沙咀 プロムナード', area:'香港', lat:22.2949, lon:114.1722 },
-    { name:'マカオ 聖ポール天主堂跡', area:'マカオ', lat:22.1978, lon:113.5394 },
-    { name:'ウランバートル ゲル体験', area:'モンゴル', lat:47.8864, lon:106.9057 },
-    { name:'アグラ タージマハル', area:'インド・ウッタル・プラデーシュ', lat:27.1751, lon:78.0421 },
-  ],
-};
-
-function renderOverseasPresets() {
-  renderPresetGrid('grid-sea',      OVERSEAS_PLACES.sea);
-  renderPresetGrid('grid-europe',   OVERSEAS_PLACES.europe);
-  renderPresetGrid('grid-eastasia', OVERSEAS_PLACES.eastasia);
-}
-
-function switchTravelTab(tab) {
-  const domestic = document.getElementById('presetsDomestic');
-  const overseas = document.getElementById('presetsOverseas');
-  const btnD = document.getElementById('tabDomestic');
-  const btnO = document.getElementById('tabOverseas');
-  if (tab === 'domestic') {
-    domestic.style.display = '';
-    overseas.style.display  = 'none';
-    btnD.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;';
-    btnO.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
-  } else {
-    domestic.style.display = 'none';
-    overseas.style.display  = '';
-    btnO.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;';
-    btnD.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
-    renderOverseasPresets();
-  }
+  renderPresetGrid('grid-hokkaido_tohoku', SACRED_PLACES.hokkaido_tohoku);
+  renderPresetGrid('grid-kanto',           SACRED_PLACES.kanto);
+  renderPresetGrid('grid-chubu',           SACRED_PLACES.chubu);
+  renderPresetGrid('grid-kinki',           SACRED_PLACES.kinki);
+  renderPresetGrid('grid-chugoku_shikoku', SACRED_PLACES.chugoku_shikoku);
+  renderPresetGrid('grid-kyushu_okinawa',  SACRED_PLACES.kyushu_okinawa);
+  renderPresetGrid('grid-overseas_asia',   SACRED_PLACES.overseas_asia);
+  renderPresetGrid('grid-overseas_far',    SACRED_PLACES.overseas_far);
 }
 
 function renderPresetGrid(id, places) {
@@ -2239,7 +2246,7 @@ async function selectPresetByQuery(btn, query, name, area) {
   if (status) status.textContent = '📍 座標を取得中...';
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&accept-language=ja`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-travel/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
     const data = await res.json();
     if (!data.length) {
       if (status) status.textContent = '⚠ 座標が見つかりませんでした。住所で手動検索してください。';
@@ -2277,7 +2284,7 @@ async function searchCustomDest() {
   status.textContent = '検索中...';
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val + ' 日本')}&format=json&limit=1&accept-language=ja`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-travel/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
     const data = await res.json();
     if (!data.length) { status.textContent = '場所が見つかりませんでした。'; return; }
     const r = data[0];
@@ -2474,6 +2481,26 @@ function makeBanGrid(board, destDir, kyouItems, kyouSet, rankMap) {
 function calcAndShowDir() {
   if (!gState.homeLat || !gState.destLat || !gState.honmei) return;
 
+  // ── 750m未満チェック（引越し方位は750m以上から有効）──
+  const distCheck = calcDistance(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
+  if (distCheck < 0.75) {
+    document.getElementById('dirResultSection').style.display = 'block';
+    const hint2el = document.getElementById('hint2');
+    if (hint2el) hint2el.style.display = 'block';
+    document.getElementById('dirResultContent').innerHTML = `
+      <div style="background:rgba(180,140,40,.08);border:1px solid rgba(180,140,40,.3);border-radius:12px;padding:18px 16px;text-align:center;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📏</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">750m未満 — 方位の作用は出ない距離です</div>
+        <div style="font-size:.68rem;color:var(--mist);line-height:1.9;">
+          引越しの方位作用が発生するのは<strong style="color:var(--snow);">現在地から750m以上</strong>離れた場合のみです。<br>
+          750m未満の近距離移動は「方位」ではなく<strong style="color:var(--snow);">「家相（風水）」</strong>の領域となります。<br><br>
+          新しい家の玄関の向き・間取り・張り欠けなど、<br>家相の観点から新居を選んでください。
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   const bearing = calcBearing(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon);
   const dir = bearingToDir(bearing);
   gState.destDir = dir;
@@ -2505,14 +2532,12 @@ function calcAndShowDir() {
   const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];
 
-  const yearBranchKey = (yearBranch && yearBranch.k) || yearBranch;
-  const ySangoInfo = SANGO_MAP[yearBranchKey] || { dirs: [], group: '' };
-  const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [], group: '' };
-  const dSangoInfo = SANGO_MAP[dayBranchName] || { dirs: [], group: '' };
+  const mSangoInfo = SANGO_MAP[monthBranch] || { dirs: [] };
+  const dSangoInfo = SANGO_MAP[dayBranchName] || { dirs: [] };
 
-  const ySangoSet = new Set(ySangoInfo.dirs || []);
-  const mSangoSet = new Set(mSangoInfo.dirs || []);
-  const dSangoSet = new Set(dSangoInfo.dirs || []);
+  const ySangoSet = new Set(SANGO_MAP[yearBranch.k]?.dirs || []);
+  const mSangoSet = new Set(mSangoInfo.dirs);
+  const dSangoSet = new Set(dSangoInfo.dirs);
 
   const tendo = getTendoDir(viewY, viewM, viewD);
 
@@ -2530,6 +2555,9 @@ function calcAndShowDir() {
     yearRank.rank = 0;
     yearRank.badges = yKyoItems.filter(i => i.dir === dir).map(i => '⚠ ' + i.name);
   }
+  // ─── 引越し専用：年盤凶フラグ（最重要警告用）
+  gState.isYearKyo = isYearKyo;
+  gState.yearKyoNames = isYearKyo ? yKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・') : '';
 
   // ── 凶方位チェック（月盤）
   const monthBreakDir = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranch) + 6) % 12)];
@@ -2573,21 +2601,51 @@ function calcAndShowDir() {
         <div style="flex:1;">
           <div class="dir-dest-name">${gState.destName}</div>
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
+          ${gState.destLat ? `<div style="font-size:.58rem;color:rgba(138,104,32,.6);margin-top:3px;">📐 座標：${gState.destLat.toFixed(4)}, ${gState.destLon.toFixed(4)}　<span style="color:#c07020;">※ 住所表記は参考です。座標で計算しているため方位は正確です。</span></div>` : ''}
         </div>
       </div>
-      ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
-      ${generateTravelYoshiAlert(yearRank, monthRank, false, ySangoInfo.group, mSangoInfo.group)}
+      ${gState.isYearKyo ? `
+      <div style="background:rgba(160,30,30,.08);border:2px solid rgba(160,30,30,.4);border-radius:10px;padding:12px 14px;margin-top:10px;">
+        <div style="font-size:.75rem;font-weight:700;color:#8b2020;margin-bottom:6px;">🚫 年盤 — 引越し要注意の方角です</div>
+        <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">
+          ${viewY}年の年盤で<strong style="color:#8b2020;">${gState.yearKyoNames}</strong>に当たります。<br>
+          引越しは年盤が最優先のため、この方角への引越しは避けるか、年盤が変わる来年以降を検討してください。<br><br>
+          <strong style="color:var(--goldlt);">✦ 仮吉方という選択肢</strong><br>
+          どうしてもこの方角に引越す必要がある場合は、まず吉方位で75日間の仮吉方を実行してから新居へ入ることで、
+          エネルギーを書き換えることができます。
+          <button onclick="openKariModal()" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+            background:rgba(138,104,32,.12);border:1px solid rgba(138,104,32,.3);border-radius:999px;
+            padding:6px 12px;font-size:.65rem;color:var(--goldlt);font-weight:700;cursor:pointer;
+            font-family:'Noto Serif JP',serif;">🌿 仮吉方（75日ルール）とは？</button>
+        </div>
+      </div>` : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
-        <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
-        <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
-        <button onclick="openMapPicker()" style="display:flex;align-items:center;justify-content:center;background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);border-radius:8px;padding:9px 6px;font-size:.62rem;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-weight:600;cursor:pointer;">🗺 場所を修正</button>
+        <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);
+          border-radius:8px;padding:9px 6px;text-decoration:none;
+          font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;
+        ">📍 Googleマップ</a>
+        <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);
+          border-radius:8px;padding:9px 6px;text-decoration:none;
+          font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;
+        ">🚗 ルート</a>
+        <button onclick="openMapPicker()" style="
+          display:flex;align-items:center;justify-content:center;gap:5px;
+          background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.3);
+          border-radius:8px;padding:9px 6px;
+          font-size:.62rem;color:var(--goldlt);font-family:'Noto Serif JP',serif;font-weight:600;
+          cursor:pointer;
+        ">🗺 場所を修正</button>
       </div>
 
       <!-- 方位盤タブ -->
       <div class="ban-tabs">
         <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${viewY}年）</div>
         <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${viewM}月）</div>
-        <div class="ban-tab"        id="banTabDay"   onclick="switchBan('day')" >日盤（今日）</div>
+        <div class="ban-tab" id="banTabDay" style="display:none;" onclick="switchBan('day')">日盤（今日）</div>
       </div>
       <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;text-align:center;">
         📍 = 目的地の方向　南上（気学式）表示
@@ -2611,29 +2669,33 @@ function calcAndShowDir() {
           <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank, monthRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
-        <div class="dir-panel" id="dayRankPanel">
-          <div class="dir-panel-label" id="dayRankLabel">日盤（今日）</div>
-          <div class="dir-panel-rank rank-${dayRank.rank}" id="dayRankValue">${rankLabel(dayRank.rank, dayRank.badges)}</div>
-          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;" id="dayRankDesc">${rankDesc(dayRank.rank, dayRank.badges)}</div>
+        <div class="dir-panel" id="dayRankPanel" style="background:rgba(100,80,40,.04);border-style:dashed;">
+          <div class="dir-panel-label" style="color:var(--mist);">日盤</div>
+          <div style="font-size:.65rem;font-weight:700;color:var(--mist);margin:4px 0;">参照しない</div>
+          <div style="font-size:.58rem;color:var(--mist);line-height:1.6;">引越しに日盤は<br>関係しません</div>
         </div>
       </div>
       <div style="margin-top:8px;padding:8px 10px;background:rgba(100,80,40,.05);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.8;">
         <strong style="color:var(--goldlt);">見方：</strong>
         本命星（${STARS[gState.honmei]?.k||''}）・月命星（${STARS[gState.tsukimei]?.k||''}）の吉方位かどうかを判定しています。
         「✦ 本命・月命 吉」が最も取りやすい方位です。
-        年盤は大きな流れ、月盤は月単位の流れ、日盤はその日の状態を示します。
+        年盤は人生の根幹（最優先）、月盤は実行月の状態を示します。<strong style="color:var(--goldlt);">引越しに日盤は関係しません。</strong>
       </div>
       ${isKyo ? `
       <div class="kyo-warn">
-        ⚠ 表示中の月盤（${viewY}年${viewM}月）では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
-        他の月・日程を確認するか、日盤取りをご検討ください。
+        ⚠ ${viewY}年${viewM}月の月盤で<strong>${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}</strong>に当たります。
+        この月は引越しを避けてください。月盤が吉となる月を選んでください。
+        <button onclick="openKariModal()" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+          background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:999px;
+          padding:5px 10px;font-size:.62rem;color:var(--goldlt);font-weight:700;cursor:pointer;
+          font-family:'Noto Serif JP',serif;">🌿 仮吉方とは？</button>
       </div>` : ''}
       ${generateKyoPrescription(monthRank.badges, monthRank.rank)}
       ${!isKyo && monthRank.rank >= 2 ? `
       <div class="nichiban-guide">
         <div class="nichiban-guide-title">✦ この方向は取れます</div>
         <div class="nichiban-guide-text">
-          月盤で吉方位が確認できました。下のカレンダーで日程を選んでください。
+          年盤・月盤ともに吉方位が確認できました。引越し月が確定したら、線路の日に引越しを実行してください。
         </div>
       </div>` : ''}
 
@@ -2716,7 +2778,11 @@ function rankDesc(rank, badges) {
     badges.forEach(b => {
       if (b.includes('本命')) parts.push('本命星の吉方');
       if (b.includes('月命')) parts.push('月命星の吉方');
-      if (b.includes('三合')) parts.push('三合の吉方（後押しの力）');
+      if (b.includes('三合')) {
+        const _SANGO_P={'木局':'発展・成長・営業','火局':'知的・芸術・文化','金局':'経済・恋愛・悦び','水局':'健康回復・人間関係'};
+        const _sg=Object.keys(_SANGO_P).find(k=>b.includes(k));
+        parts.push('三合の吉方（後押し）' + (_sg?'：'+_SANGO_P[_sg]:''));
+      }
       if (b.includes('天道')) parts.push('天道の方位');
     });
   }
@@ -3160,7 +3226,7 @@ function closeNavModal(){
 
 // 初回訪問時にナビ使い方を自動表示
 (function(){
-  const KEY = 'kitoku_travel_guide_v1';
+  const KEY = 'kitoku_move_guide_v1';
   if (!localStorage.getItem(KEY)) {
     setTimeout(function(){
       openNavModal();
@@ -3178,6 +3244,8 @@ const KYO_PRESCRIPTION = {
   '本命殺': { emoji:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、意識して休息と睡眠の時間をたっぷりと取り、自分を優しく労りましょう。' },
   '月命殺': { emoji:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず、心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
   '定位対冲': { emoji:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、一緒にいる家族や同行者、足元の人間関係をいつも以上に大切にしてください。' },
+  '破壊殺':   { emoji:'🔸', title:'破壊殺への心がけ', text:'予定が崩れやすく、事故やケガに注意が必要な時です。自分の目標をしっかり持ち、予定通りに進まなくても不満を言わず柔軟に対応しましょう。あきらめずに動き続けることが吉。' },
+  '本命的殺': { emoji:'🔸', title:'本命的殺への心がけ', text:'予想と違う展開になりやすい時です。「こうあるべき」という目的を固定しすぎず、その場の流れに合わせて進んでください。驚かず受け止めることが最大の防御です。' },
 };
 
 function generateKyoPrescription(badges, rank) {
@@ -3209,6 +3277,7 @@ function generateKyoPrescription(badges, rank) {
   </div>`;
 }
 
+// ============================================================
 // 地図ピッカー（Leaflet.js）
 // ============================================================
 let mapPickerInstance = null;
@@ -3435,137 +3504,90 @@ function confirmMapPicker() {
   gState.destName = mapPickerTemp.name;
   gState.destArea = mapPickerTemp.area;
 
-  closeMapPicker();
+  document.getElementById('destAddrInput').value = mapPickerTemp.name;
+  document.getElementById('destAddrStatus').innerHTML =
+    `<span style="color:var(--goldlt);font-weight:700;">✓ 地図で選択した場所で計算します</span>`;
+  document.getElementById('destAddrFound').textContent = mapPickerTemp.area;
+  document.getElementById('destAddrConfirm').style.display = 'block';
+  document.getElementById('destAddrConfirmBtn').textContent = '✓ 確定済み（地図から選択）';
+  document.getElementById('destAddrConfirmBtn').style.background = 'rgba(40,130,60,.2)';
 
-  // 地図選択した場所をプリセット選択と同じ扱いで計算
+  closeMapPicker();
   const hint2el = document.getElementById('hint2');
   if (hint2el) hint2el.style.display = 'block';
-  if (gState.homeLat && gState.honmei) calcAndShowDir();
+  if (gState.homeLat) calcAndShowDir();
 }
 
-
-// ── 旅行・巡礼用 凶方処方箋 ──
-const TRAVEL_KYO_PRESCRIPTION = {
-  '五黄殺': { icon:'🔸', title:'五黄殺への心がけ', text:'イライラや他責の感情が出やすい時です。自分から「ありがとう」を先に言い、自己主張を手放してみてください。笑顔でいることが最大の盾になります。' },
-  '暗剣殺': { icon:'🔸', title:'暗剣殺への心がけ', text:'予期せぬトラブルが外からもたらされやすい時です。いつも以上に準備・確認を念入りに。トラブルが起きても「これで膿が出た」と感謝で受け止めれば被害は最小限に。' },
-  '歳破':   { icon:'🔸', title:'歳破への心がけ', text:'予定通りに進まないことがある方位です。こだわりを一度手放し、笑顔で柔軟に対応すれば、それがかえって未来の大きなご縁へ繋がります。' },
-  '月破':   { icon:'🔸', title:'月破への心がけ', text:'今月は計画が変わりやすい時期です。詰め込まず余白を持ったスケジュールで動きましょう。予想外の変化を楽しむ心の余裕が最大の防御です。' },
-  '本命殺': { icon:'🔸', title:'本命殺への心がけ', text:'頑張りすぎて心や体力をすり減らしやすい時です。スケジュールを詰め込まず、休息をたっぷり取って自分を労りましょう。常備薬を持参するとさらに安心です。' },
-  '月命殺': { icon:'🔸', title:'月命殺への心がけ', text:'内面が疲れやすい時期です。無理をせず心の声に素直に従ってください。常備薬（胃薬・頭痛薬など）を持参しておくと安心です。' },
-  '定位対冲': { icon:'🔸', title:'定位対冲への心がけ', text:'絶好調な時にかかる愛あるブレーキです。慢心を手放し、同行者や足元の人間関係をいつも以上に大切にしてください。' },
-  '破壊殺':   { icon:'🔸', title:'破壊殺への心がけ', text:'予定が崩れやすく、事故やケガに注意が必要な時です。自分の目標をしっかり持ち、予定通りに進まなくても不満を言わず柔軟に対応しましょう。あきらめずに動き続けることが吉。' },
-  '本命的殺': { icon:'🔸', title:'本命的殺への心がけ', text:'予想と違う展開になりやすい時です。「こうあるべき」という目的を固定しすぎず、その場の流れに合わせて進んでください。驚かず受け止めることが最大の防御です。' },
-};
-
-function generateTravelKyoAlert(yearBadges, monthBadges, isPilgrimage) {
-  const allBadges = [...(yearBadges||[]), ...(monthBadges||[])];
-  const matched = Object.keys(TRAVEL_KYO_PRESCRIPTION).filter(k =>
-    allBadges.some(b => b.includes(k))
-  );
-  if (!matched.length) return '';
-
-  const yearKyo  = (yearBadges||[]).some(b => Object.keys(TRAVEL_KYO_PRESCRIPTION).some(k => b.includes(k)));
-  const monthKyo = (monthBadges||[]).some(b => Object.keys(TRAVEL_KYO_PRESCRIPTION).some(k => b.includes(k)));
-  const kyoNames = [...new Set(matched)].join('・');
-
-  const intro = isPilgrimage
-    ? `この方角の<strong style="color:#8b5500;">${kyoNames}</strong>が確認されました。巡礼は魂の旅です。知った上で出発しましょう。`
-    : `この方角の<strong style="color:#8b5500;">${kyoNames}</strong>が確認されました。行くのはOKです。心がけを持って出発しましょう。`;
-
-  const items = matched.map(k => {
-    const p = TRAVEL_KYO_PRESCRIPTION[k];
-    return `<div style="margin-bottom:8px;padding:9px 11px;background:rgba(255,255,255,.7);border-radius:8px;border:1px solid rgba(180,120,0,.15);">
-      <div style="font-size:.67rem;font-weight:700;color:#7a4800;margin-bottom:3px;">${p.icon} ${p.title}</div>
-      <div style="font-size:.64rem;color:var(--mist);line-height:1.85;">${p.text}</div>
-    </div>`;
-  }).join('');
-
-  return `
-  <div style="margin-top:10px;background:rgba(200,140,0,.07);border:1.5px solid rgba(200,140,0,.35);border-radius:10px;padding:12px 14px;">
-    <div style="font-size:.72rem;font-weight:700;color:#7a4800;margin-bottom:8px;">⚠ 注意 — ${yearKyo ? '年盤' : ''}${yearKyo && monthKyo ? '・' : ''}${monthKyo ? '月盤' : ''}にハザードがあります</div>
-    <div style="font-size:.65rem;color:var(--mist);line-height:1.85;margin-bottom:10px;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
-      ${intro}<br>
-      <span style="color:var(--goldlt);font-weight:700;">✦ 行くのはOK。これを知って出発するだけで全然違います。</span>
-    </div>
-    ${items}
-    <div style="font-size:.6rem;color:var(--mist);margin-top:6px;opacity:.8;">
-      ✦ 出発前に近所の吉方カフェでひと息つくと、日盤の吉エネルギーが盾になります。
-    </div>
-  </div>`;
+function openKariModal(){
+  document.getElementById('kariModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeKariModal(){
+  document.getElementById('kariModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
 }
 
+// 引越し先の住所検索（精密版）
+let destAddrTemp = {}; // 確定前の一時保存
 
+async function searchDestAddr() {
+  const input = document.getElementById('destAddrInput');
+  const status = document.getElementById('destAddrStatus');
+  const confirm = document.getElementById('destAddrConfirm');
+  const val = input.value.trim();
+  if (!val) return;
 
+  status.textContent = '検索中...';
+  confirm.style.display = 'none';
 
-// ── 旅行・巡礼用 吉方アラート ──
-function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGroup, monthSangoGroup) {
-  const yr = yearRank.rank || 0;
-  const mr = monthRank.rank || 0;
-  const yb = yearRank.badges || [];
-  const mb = monthRank.badges || [];
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&accept-language=ja&countrycodes=jp`;
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-move/1.0' } });
+    const data = await res.json();
 
-  if (yr === 0 || mr === 0) return '';
-  if (yr <= 1 && mr <= 1) return '';
+    if (!data.length) {
+      status.textContent = '場所が見つかりませんでした。都道府県から番地まで入力してみてください。';
+      return;
+    }
 
-  const isMax  = yr >= 5 || mr >= 5 ||
-    [...yb,...mb].some(b => b.includes('三合') || b.includes('条件が重なる'));
-  const SANGO_PURPOSE_P={'木局':'発展・成長・教育・営業活動に最適。','火局':'知的・芸術・文化活動に最適。','金局':'経済活動が盛ん。人生の悦びを得て感動と恋愛が成就。','水局':'健康回復・家庭内の人間関係回復。'};
-  const sangoEntries=[];
-  if(yb.some(b=>b.includes('三合'))){
-    const group=yearSangoGroup || '';
-    if(group) sangoEntries.push({label:'年盤',group});
-  }
-  if(mb.some(b=>b.includes('三合'))){
-    const group=monthSangoGroup || '';
-    if(group) sangoEntries.push({label:'月盤',group});
-  }
-  const sangoPurpose=sangoEntries.map(e=>{
-    const prefix=sangoEntries.length>1?e.label+'・':'';
-    return prefix+e.group+'：'+(SANGO_PURPOSE_P[e.group]||'');
-  }).filter(Boolean).join(' / ');
-  const sangoHelp=sangoEntries.length?'<details style="margin-top:10px;background:rgba(255,255,255,.68);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:9px 10px;"><summary style="cursor:pointer;font-size:.64rem;font-weight:700;color:var(--goldlt);list-style:none;">？ 三合の後押しとは？</summary><div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-top:7px;">三合は、十二支の流れが三つの方角で支え合う組み合わせです。吉方に三合が重なる時は、その旅の目的に沿った後押しが強まる、と見ます。木局は発展、火局は学びや表現、金局は喜びや実り、水局は回復や家族の調和。これは必ず行くべきという命令ではなく、旅の質を上げるための目安です。</div></details>':'';
-  const isBoth = yr >= 4 && mr >= 2;
-  const badges = [...new Set([...yb,...mb])].filter(b=>!b.includes('⚠')).join('・');
-  const senroMsg = isPilgrimage
-    ? '<div style="font-size:.63rem;color:var(--goldlt);font-weight:600;margin-top:6px;">📿 線路の日に出発するとさらに吉が長く続きます。</div>'
-    : '<div style="font-size:.63rem;color:var(--goldlt);font-weight:600;margin-top:6px;">✈️ 出発日に線路の日を選ぶとさらに吉が長く続きます。</div>';
+    const place = data[0];
+    const lat = parseFloat(place.lat);
+    const lon = parseFloat(place.lon);
+    const displayName = place.display_name;
+    const shortName = displayName.split(',').slice(0, 4).join(' ').trim();
 
-  if (isMax) {
-    return `
-  <div style="margin-top:10px;background:linear-gradient(135deg,rgba(138,104,32,.12),rgba(255,255,255,.6));border:2px solid rgba(138,104,32,.4);border-radius:10px;padding:12px 14px;">
-    <div style="font-size:.75rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">★ 条件が重なる吉方 — 動くなら今です</div>
-    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;padding:8px 10px;background:rgba(138,104,32,.06);border-radius:6px;">
-      ${badges ? badges + '<br>' : ''}
-      <strong style="color:var(--goldlt);">✦ ぜひこの方角・この時期に動いてください。</strong><br>
-      遠くへ行くほど・長く滞在するほど吉のエネルギーが大きくなります。
-      ${sangoPurpose?'<br>🎯 三合の目的：<strong style="color:var(--goldlt);">'+sangoPurpose+'</strong>':''}
-      ${sangoHelp}
-    </div>
-    ${senroMsg}
-  </div>`;
-  } else if (isBoth) {
-    return `
-  <div style="margin-top:10px;background:rgba(40,130,60,.06);border:1.5px solid rgba(40,130,60,.3);border-radius:10px;padding:12px 14px;">
-    <div style="font-size:.72rem;font-weight:700;color:#2a6e3a;margin-bottom:8px;">✦ この方角は取れます</div>
-    <div style="font-size:.65rem;color:var(--mist);line-height:1.9;">
-      年盤・月盤ともに吉方位が確認できました。<br>
-      <strong style="color:#2a6e3a;">遠くへ行くほど・長く滞在するほど吉のエネルギーが大きくなります。</strong>
-    </div>
-    ${senroMsg}
-  </div>`;
-  } else {
-    const goodBoard = yr >= 2 ? '年盤' : '月盤';
-    return `
-  <div style="margin-top:10px;background:rgba(40,130,60,.04);border:1px solid rgba(40,130,60,.2);border-radius:10px;padding:11px 13px;">
-    <div style="font-size:.7rem;font-weight:700;color:#2a6e3a;margin-bottom:6px;">○ ${goodBoard}で吉方位です</div>
-    <div style="font-size:.64rem;color:var(--mist);line-height:1.85;">
-      ${goodBoard}が吉方位です。動いて大丈夫です。
-    </div>
-  </div>`;
+    // 一時保存
+    destAddrTemp = { lat, lon, name: val, area: shortName, displayName };
+
+    // 確認カードを表示
+    document.getElementById('destAddrFound').textContent = shortName;
+    document.getElementById('destAddrMapLink').href =
+      `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+    confirm.style.display = 'block';
+    status.textContent = '';
+
+  } catch(e) {
+    status.textContent = 'エラーが発生しました。通信環境をご確認ください。';
   }
 }
 
+function confirmDestAddr() {
+  if (!destAddrTemp.lat) return;
+  gState.destLat  = destAddrTemp.lat;
+  gState.destLon  = destAddrTemp.lon;
+  gState.destName = destAddrTemp.name;
+  gState.destArea = destAddrTemp.area;
 
+  // 確認カードを「確定済み」表示に変更
+  document.getElementById('destAddrConfirmBtn').textContent = '✓ 確定済み';
+  document.getElementById('destAddrConfirmBtn').style.background = 'rgba(40,130,60,.2)';
+  document.getElementById('destAddrStatus').innerHTML =
+    `<span style="color:var(--goldlt);font-weight:700;">✓ ${destAddrTemp.area} で計算します</span>`;
+
+  const hint2el = document.getElementById('hint2');
+  if (hint2el) hint2el.style.display = 'block';
+  if (gState.homeLat) calcAndShowDir();
+}
 </script>
 
 <!-- 方位盤ガイドモーダル -->
@@ -3622,44 +3644,37 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGr
 </div>
 
 
-<!-- 旅行ナビ使い方モーダル -->
+<!-- 聖地巡礼ナビ使い方モーダル -->
 <div class="nav-modal-overlay" id="navModalOverlay" onclick="if(event.target===this)closeNavModal()">
   <div class="nav-modal">
     <div class="nav-modal-header">
-      <div class="nav-modal-title">✈️ 旅行吉方位ナビ の使い方</div>
+      <div class="nav-modal-title">🏡 引越し吉方位ナビ の使い方</div>
       <button class="nav-modal-close" onclick="closeNavModal()">✕</button>
     </div>
 
     <div class="nav-modal-philosophy">
-      ルールは地図。歩くのはあなた。<br>
-      <span style="font-size:.62rem;font-weight:400;opacity:.8;">このナビはあなたを吉凶で縛るものではありません。<br>5000年の知恵を羅針盤として、あなた自身が決めてください。</span>
+      引越しは、人生のOSを書き換える最高の前進アクション。<br>
+      <span style="font-size:.62rem;font-weight:400;opacity:.8;">年盤と月盤さえ揃えば、あとは何日に引越しても大丈夫。<br>あなたが根を張る土壌を、自分で選んでください。</span>
     </div>
 
     <div class="nav-modal-sec">
-      <div class="nav-modal-sec-title">🧭 旅行方位選びのルール</div>
+      <div class="nav-modal-sec-title">🧭 引越し方位選びの絶対ルール</div>
       <div class="nav-modal-sec-body">
-        <div class="rule-item"><div class="rule-num">①</div><div><strong>見る盤は「月盤」と「日盤」がメイン</strong><br>数日〜数週間の旅行では、年盤のハザードを過度に恐れる必要はありません。月盤と出発日の日盤が吉方なら十分です。</div></div>
-        <div class="rule-item"><div class="rule-num">②</div><div><strong>帰着日の日盤の凶は完全スルーでOK</strong><br>出発日が吉方であれば、帰る日の日盤に凶がついていても影響はありません。ただのノイズです。安心して日程を決めてください。</div></div>
-        <div class="rule-item"><div class="rule-num">③</div><div><strong>土用殺に注意</strong><br>引越しでは無害ですが、旅行では五黄殺と同じ凶となります。土用期間（各季節の20日頃〜翌月節入りまで）中は該当方位への1泊以上の旅行を避けてください。日帰りはセーフです。</div></div>
-        <div class="rule-item"><div class="rule-num">④</div><div><strong>出発が23時以降の場合は翌日の盤で判定</strong><br>気学の1日は23時に切り替わります。深夜便・夜行バスの場合は翌日の盤で確認してください。</div></div>
-        <div class="rule-item"><div class="rule-num">⑤</div><div><strong>吉のエネルギーは「距離 × 滞在時間」</strong><br>大吉・小吉のランク付けはありません。遠くへ行くほど・長く滞在するほど吉のエネルギーは大きくなります。</div></div>
+        <div class="rule-item"><div class="rule-num">①</div><div><strong>年盤と月盤の両方が吉であること</strong><br>引越しは人生の根幹を変える行為のため、最も重い「年盤」と実行月の「月盤」が両方吉の方位・月を選ぶのが大原則です。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>日盤の凶は完全スルーでOK</strong><br>年盤・月盤が揃っていれば、引越し当日の日盤に凶がついていても全く影響しません。日盤はただのノイズです。安心して日程を決めてください。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>土用殺は引越しに関係なし</strong><br>旅行では凶となる土用殺ですが、引越し（定住）では完全に無害です。土用期間中でも吉方位への引越しは問題ありません。</div></div>
+        <div class="rule-item"><div class="rule-num">④</div><div><strong>吉のエネルギーは「距離×住んだ時間」</strong><br>遠くへ引越すほど、長く住むほど吉の力は大きくなります。大吉・小吉のランク付けはありません。</div></div>
+        <div class="rule-item"><div class="rule-num">⑤</div><div><strong>引越し日は「線路の日」を選ぶ</strong><br>年盤・月盤が揃ったら、日盤で「線路の日」に引越しを実行すると吉が長く続きます。カレンダーで確認できます。</div></div>
+        <div class="rule-item"><div class="rule-num">⑥</div><div><strong>750m未満は方位の作用なし</strong><br>現在地から750m未満の引越しは方位の吉凶が発生しません。住所入力で正確な距離を確認できます。家相（間取り・方角）を優先してください。</div></div>
       </div>
     </div>
 
-    <div class="nav-modal-warning">
-      <div class="nav-modal-warning-title">💡 どうしてもその方角へ行かなければならない時</div>
-      <div class="nav-modal-warning-body">
-        凶方は罰ではありません。<strong>「魂の器を広げるための砥石（成長の機会）」</strong>です。<br><br>
-        <strong>盾１：日常の日盤吉方で免疫力を高める</strong><br>
-        出発前から近所の吉方カフェなどで小さな運の貯金を作っておく。日々の積み重ねが凶を弾き返すバリアになります。<br><br>
-        <strong>盾２：心が先、行動が後</strong><br>
-        怯えるのではなく「この旅でどんな自分と向き合えるか」と準備しておく。その心構えひとつで凶のエネルギーは大きな成長の糧へ反転します。<br><br>
-        <strong>各凶方の心がけ：</strong><br>
-        🔸 五黄殺 → 自分から「ありがとう」を先に言う。自己主張を手放す<br>
-        🔸 暗剣殺 → 言葉を選び、準備を念入りに。感謝の言葉を意識する<br>
-        🔸 破壊殺 → 予定通りにこだわらず笑顔で柔軟に楽しむ<br>
-        🔸 本命殺 → 詰め込まず休息をたっぷり取り自分を労る<br>
-        🔸 定位対冲 → 慢心を手放し同行者・足元の縁を大切にする
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">🌿 希望の場所が凶方位だった場合</div>
+      <div class="nav-modal-sec-body">
+        諦める必要はありません。「仮吉方（75日ルール）」という最強の抜け道があります。<br><br>
+        まず吉方位の場所で75日間寝泊まりしてから新居へ引越すことで、引越しと同じ「運勢のOS書き換え」が得られます。<br><br>
+        詳しくは「🌿 仮吉方（75日ルール）とは？」ボタンをご覧ください。
       </div>
     </div>
 
@@ -3669,44 +3684,97 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGr
   </div>
 </div>
 
-<!-- 地図ピッカーモーダル -->
-<div id="mapPickerOverlay" style="display:none;position:fixed;inset:0;z-index:9200;background:#f7f4ef;flex-direction:column;">
 
-  <!-- ヘッダー -->
-  <div style="padding:12px 16px;background:#f7f4ef;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(138,104,32,.2);flex-shrink:0;">
-    <div>
-      <div style="font-size:.82rem;font-weight:700;color:#5c4010;">🗺 地図で場所を指定する</div>
-      <div style="font-size:.62rem;color:#5e503d;margin-top:2px;">タップした場所にピンが立ちます</div>
+<!-- 仮吉方モーダル -->
+<div class="nav-modal-overlay" id="kariModalOverlay" onclick="if(event.target===this)closeKariModal()">
+  <div class="nav-modal">
+    <div class="nav-modal-header">
+      <div class="nav-modal-title">🌿 仮吉方（75日ルール）とは？</div>
+      <button class="nav-modal-close" onclick="closeKariModal()">✕</button>
     </div>
-    <button onclick="closeMapPicker()" style="background:rgba(100,80,40,.12);border:1px solid rgba(100,80,40,.22);border-radius:50%;width:36px;height:36px;font-size:1.1rem;color:#5c4010;cursor:pointer;flex-shrink:0;">✕</button>
-  </div>
 
-  <!-- ガイド -->
-  <div style="padding:7px 16px;background:linear-gradient(135deg,rgba(138,104,32,.08),rgba(255,255,255,.5));border-bottom:1px solid rgba(138,104,32,.15);font-size:.65rem;color:#5e503d;flex-shrink:0;">
-    📍 引越し先の正確な場所をタップしてください。ピンが立ったら下の「計算する」ボタンを押してください。
-  </div>
+    <div class="nav-modal-philosophy">
+      引越しが難しい方への、宇宙の抜け道。<br>
+      <span style="font-size:.62rem;font-weight:400;opacity:.8;">75日間だけ吉方位に滞在することで、<br>引越しと同じ「運勢のOS書き換え」が得られます。</span>
+    </div>
 
-  <!-- 地図（高さはJSで設定） -->
-  <div id="mapPickerContainer" style="flex:1;position:relative;">
-    <div id="mapPickerMap" style="width:100%;height:100%;"></div>
-  </div>
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">🌙 なぜ「75日」なのか</div>
+      <div class="nav-modal-sec-body">
+        新月から満月のサイクル（約15日）×五行（5つ）＝75日。<br>
+        この期間、同じ場所で寝泊まりすることで「気（根）」が完全に定着します。<br>
+        KITOKUでは60日では不十分とし、<strong>実質75泊</strong>を必須としています。
+      </div>
+    </div>
 
-  <!-- 確定パネル（画面下部に固定） -->
-  <div id="mapPickerInfo" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9300;padding:12px 16px 24px;background:rgba(247,244,239,.97);border-top:2px solid rgba(138,104,32,.3);backdrop-filter:blur(8px);">
-    <div style="max-width:480px;margin:0 auto;">
-      <div style="font-size:.6rem;color:#5e503d;margin-bottom:3px;">📍 選択した場所</div>
-      <div id="mapPickerAddress" style="font-size:.72rem;font-weight:700;color:#1c1208;margin-bottom:10px;line-height:1.5;"></div>
-      <button onclick="confirmMapPicker()" style="width:100%;padding:13px;background:#5c4010;color:#fff;border:none;border-radius:10px;font-size:.78rem;font-weight:700;font-family:'Noto Serif JP',serif;cursor:pointer;letter-spacing:.06em;">
-        ✓ この場所で方位を計算する
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">📋 実行のルール</div>
+      <div class="nav-modal-sec-body">
+        <div class="rule-item"><div class="rule-num">①</div><div><strong>実質75泊</strong>すること<br>出張・旅行で外泊した日数は除外。7日外泊したら合計82日滞在が必要。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>現在地から2km以上</strong>離すこと<br>できれば市区町村を変え、水道局の水を変えるのが理想。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>場所を固定</strong>すること<br>ホテルを転々と移動するのはNG。同じ部屋・同じ場所で75泊。</div></div>
+      </div>
+    </div>
+
+    <div class="nav-modal-warning">
+      <div class="nav-modal-warning-title">🚫 旧居（元の家）でやってはいけないこと</div>
+      <div class="nav-modal-warning-body">
+        <strong>絶対NG（リセットになる）：</strong><br>
+        🔸 旧居で寝泊まりする（うっかり居眠りも含む）<br>
+        🔸 旧居の水・火を使って調理したものを食べる<br>
+        🔸 調理中の味見を飲み込む（口に含んで吐き出せばセーフ）<br>
+        🔸 旧居周辺の飲食店で食事する<br>
+        🔸 旧居に75日以上置いてあった食材を持ち込んで食べる<br><br>
+        <strong>OK（問題ない）：</strong><br>
+        ✅ お風呂・シャワー・歯磨き（飲み込まなければ）<br>
+        ✅ 掃除・洗濯・家族の世話<br>
+        ✅ 日用品・衣類の持ち出し<br>
+        ✅ 家族が仮住まいに遊びに来ること
+      </div>
+    </div>
+
+    <div class="nav-modal-sec">
+      <div class="nav-modal-sec-title">💡 家族がいる場合の特例</div>
+      <div class="nav-modal-sec-body">
+        凶方位になる人だけが仮住まいへ出て、残りの家族は新居へ直接引越すことができます。<br><br>
+        全員で仮住まいへ移る場合、<strong>吉方位にならない家族は週1回旧居に泊まる</strong>ことで、その家族だけ気を定着させないようにすることができます。
+      </div>
+    </div>
+
+    <!-- 仮吉方候補地を探す -->
+    <div style="margin-top:16px;padding:14px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.2);border-radius:12px;">
+      <div style="font-size:.68rem;font-weight:700;color:var(--goldlt);margin-bottom:8px;">🗺 仮吉方の候補地を探す</div>
+      <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
+        現在地から吉方位にある場所を自動で探します。<br>出発地が登録済みの場合、すぐに候補が表示されます。
+      </div>
+      <!-- 同一市内の説明 -->
+      <div style="margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.06);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.85;">
+        <strong style="color:var(--goldlt);">同一市内の引越しの場合：</strong><br>
+        引越し先が市内で方位が凶でも、仮吉方の滞在場所は市内・近郊でOKです。<br>
+        「近距離（2〜20km）」で吉方位の場所を探してください。<br>
+        <span style="opacity:.8;">※ 750m未満は方位の作用が発生しないため仮吉方は不要です。</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <select id="kariBanType" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.65rem;color:#3a2a10;">
+          <option value="year">年盤で探す</option>
+          <option value="month">月盤で探す</option>
+        </select>
+        <select id="kariDistRange" style="padding:8px;border:1px solid var(--rim);border-radius:8px;background:rgba(255,255,255,.9);font-size:.65rem;color:#3a2a10;">
+          <option value="near">近距離（2〜20km）</option>
+          <option value="mid" selected>中距離（20〜150km）</option>
+          <option value="far">遠距離（150〜500km）</option>
+        </select>
+      </div>
+      <button onclick="searchKariPlaces()" style="width:100%;padding:10px;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.3);border-radius:8px;font-size:.65rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;margin-bottom:10px;">
+        🌿 仮吉方の候補地を探す
       </button>
+      <div id="kariResults"></div>
+    </div>
+
+    <div style="font-size:.6rem;color:var(--mist);line-height:1.8;padding:4px 2px;margin-top:12px;">
+      ✦ 仮吉方は精神的修行でもあります。不自由な期間を笑って乗り越えられた時、新しい家には最高の幸運が定着します。
     </div>
   </div>
-
-  <!-- 初期状態（固定表示） -->
-  <div id="mapPickerEmpty" style="position:fixed;bottom:0;left:0;right:0;z-index:9300;padding:10px 16px 20px;background:rgba(247,244,239,.9);border-top:1px solid rgba(138,104,32,.15);text-align:center;">
-    <div style="font-size:.65rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
-  </div>
-
 <script>
 function goPreviousPage(){
   if (window.history.length > 1) window.history.back();
@@ -3719,22 +3787,133 @@ function goPreviousPage(){
     if(!el)return;
     var g=new URLSearchParams(location.search).get('element');
     var data={
-      木:'旅で木の気を補うなら、森・庭園・朝の散歩など成長の気配がある場所を意識します。',
-      火:'旅で火の気を補うなら、南方・夕日・芸術・祭りなど明るさを感じる場所を意識します。',
-      土:'旅で土の気を補うなら、温泉・山・古い街並みなど安定感のある場所を意識します。',
-      金:'旅で金の気を補うなら、美術館・神社仏閣・整った空間など品格のある場所を意識します。',
-      水:'旅で水の気を補うなら、海・川・湖・静かな宿など流れを感じる場所を意識します。'
+      木:'引越しで木の気を補うなら、緑・東方・成長しやすい生活動線を意識します。',
+      火:'引越しで火の気を補うなら、明るさ・南方・人に見られる場を整えることを意識します。',
+      土:'引越しで土の気を補うなら、安心して根を張れる土地・収納・寝室を意識します。',
+      金:'引越しで金の気を補うなら、整った空間・西北/西の気・上質さを意識します。',
+      水:'引越しで水の気を補うなら、水辺・静かな環境・学びに集中できる場所を意識します。'
     };
     if(!data[g])return;
-    el.innerHTML='✈️ <strong>LIFEからの補いテーマ：'+g+'</strong><br>'+data[g];
+    el.innerHTML='🏡 <strong>LIFEからの補いテーマ：'+g+'</strong><br>'+data[g];
     el.style.display='block';
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);
   else show();
 })();
 
+// ── 仮吉方候補地検索 ──
+function searchKariPlaces(){
+  const results = document.getElementById('kariResults');
+  if(!results) return;
+
+  if(!gState.homeLat || !gState.homeLon){
+    results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">出発地が未登録です。先に出発地（現在地）を登録してください。</div>';
+    return;
+  }
+
+  results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">候補地を検索中…</div>';
+
+  const banType = document.getElementById('kariBanType').value;
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth()+1, d = today.getDate();
+
+  // 年盤・月盤の中心を取得
+  let center;
+  try{
+    center = banType==='year'
+      ? yearCenter(y)
+      : (typeof getMonthCenter==='function' ? getMonthCenter(y,m,d) : yearCenter(y));
+  }catch(e){ center=5; }
+
+  // 方位盤を構築して吉方位を取得
+  const board = buildBoardFromCenter(center);
+  const kichiDirs = [];
+  ['N','NE','E','SE','S','SW','W','NW'].forEach(dir=>{
+    const starN = board[dir]||5;
+    const r = rankDir(dir, starN, gState.honmei, gState.tsukimei, new Set(), null);
+    if(r.rank >= 2) kichiDirs.push(dir);
+  });
+
+  const DIR_LABEL = {N:'北',NE:'北東',E:'東',SE:'南東',S:'南',SW:'南西',W:'西',NW:'北西'};
+
+  if(kichiDirs.length === 0){
+    results.innerHTML='<div style="font-size:.62rem;color:var(--mist);">現在の盤面では吉方位が見つかりませんでした。月盤でも確認してみてください。</div>';
+    return;
+  }
+
+  // SACRED_PLACESから吉方位の候補地を探す（10km〜500km）
+  // 距離範囲の設定
+  const distRangeEl = document.getElementById('kariDistRange');
+  const distRange = distRangeEl ? distRangeEl.value : 'mid';
+  const distMin = distRange==='near' ? 2 : distRange==='mid' ? 20 : 150;
+  const distMax = distRange==='near' ? 20 : distRange==='mid' ? 150 : 500;
+
+  const candidates = [];
+  Object.values(SACRED_PLACES).forEach(group=>{
+    group.forEach(place=>{
+      if(!place.lat || !place.lon) return;
+      const bearing = calcBearing(gState.homeLat, gState.homeLon, place.lat, place.lon);
+      const dir = bearingToDir(bearing);
+      if(kichiDirs.includes(dir)){
+        const dist = calcDist(gState.homeLat, gState.homeLon, place.lat, place.lon);
+        if(dist >= distMin && dist <= distMax){
+          candidates.push({...place, dir, dist});
+        }
+      }
+    });
+  });
+
+  candidates.sort((a,b)=>a.dist-b.dist);
+  const top = candidates.slice(0,8);
+
+  if(top.length === 0){
+    const rangeLabel = distRange==='near'?'近距離（2〜20km）':distRange==='mid'?'中距離（20〜150km）':'遠距離（150〜500km）';
+    results.innerHTML=`
+      <div style="font-size:.62rem;color:var(--mist);line-height:1.8;">
+        ${rangeLabel}の範囲で候補地が見つかりませんでした。<br>
+        ${distRange==='near'?'中距離・遠距離でも探してみてください。':'別の距離範囲でも探してみてください。'}<br><br>
+        <strong style="color:var(--goldlt);">吉方位：${kichiDirs.map(d=>DIR_LABEL[d]).join('・')}</strong><br>
+        この方向の宿・ホテルを自分で探してください。
+      </div>`;
+    return;
+  }
+
+  const distRangeLabel = distRange==='near'?'近距離（2〜20km）':distRange==='mid'?'中距離（20〜150km）':'遠距離（150〜500km）';
+  const banLabel = banType==='year'?`${y}年盤（中宮${center}）`:`${y}年${m}月盤`;
+  results.innerHTML=`
+    <div style="font-size:.6rem;color:var(--goldlt);margin-bottom:4px;">
+      ✦ ${banLabel}の吉方位：${kichiDirs.map(d=>DIR_LABEL[d]).join('・')}
+    </div>
+    <div style="font-size:.55rem;color:var(--mist);margin-bottom:8px;">${distRangeLabel}の候補</div>
+    <div style="display:grid;gap:6px;">
+      ${top.map(p=>`
+        <div style="padding:9px 11px;background:rgba(255,255,255,.7);border:1px solid rgba(138,104,32,.15);border-radius:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+            <span style="font-size:.7rem;font-weight:700;color:#3a2a10;">${p.name}</span>
+            <span style="font-size:.6rem;color:var(--goldlt);font-weight:700;">${DIR_LABEL[p.dir]} ${Math.round(p.dist)}km</span>
+          </div>
+          <div style="font-size:.58rem;color:#7a6040;">${p.area||''}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="font-size:.55rem;color:var(--mist);margin-top:8px;line-height:1.7;">
+      ※ 方位方向の参考候補です。実際の滞在場所は番地単位で方位を確認してください。
+    </div>
+  `;
+}
+
+// 距離計算（km）
+function calcDist(lat1,lon1,lat2,lon2){
+  const R=6371, r=Math.PI/180;
+  const dLat=(lat2-lat1)*r, dLon=(lon2-lon1)*r;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+
 </script>
 </div>
+
 
 <script>
 var KITOKU_SUPABASE_URL = 'https://uwxitxsoflafnvqalion.supabase.co';
@@ -3746,7 +3925,7 @@ var kitokuPlan = { base:false, business:false };
 function updateRailwayBlurState(){
   var blurEl = document.getElementById('railwayBlur');
   if(!blurEl) return;
-  var isPremiumUser = true; /* 2026-08-31 一時解放。今後の課金方針見直しに伴う措置。元の式: !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business)) */
+  var isPremiumUser = !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business));
   blurEl.style.display = isPremiumUser ? 'none' : 'flex';
 }
 
@@ -3794,6 +3973,6 @@ async function kitokuInitPremiumGate(){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kitokuInitPremiumGate);
 else kitokuInitPremiumGate();
 </script>
-<script src="kitoku-badge.js?v=20260803rank2"></script>
+<script src="kitoku-badge.js?v=20260731sekki"></script>
 </body>
 </html>

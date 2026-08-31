@@ -3749,7 +3749,7 @@ var kitokuPlan = { base:false, business:false };
 function updateRailwayBlurState(){
   var blurEl = document.getElementById('railwayBlur');
   if(!blurEl) return;
-  var isPremiumUser = !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business));
+  var isPremiumUser = true; /* 2026-08-31 一時解放。今後の課金方針見直しに伴う措置。元の式: !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business)) */
   blurEl.style.display = isPremiumUser ? 'none' : 'flex';
 }
 

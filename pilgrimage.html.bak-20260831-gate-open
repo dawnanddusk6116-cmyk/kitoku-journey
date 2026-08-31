@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>国内旅行 吉方位ナビ | KITOKU</title>
+<title>聖地巡礼 吉方位ナビ | KITOKU</title>
 <meta name="theme-color" content="#f7f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,7 +15,7 @@
 <script src="kitoku-engine.js?v=20260803h"></script>
 <style>
 /* ═══════════════════════════════════════
-   KITOKU 国内旅行 吉方位ナビ
+   KITOKU 聖地巡礼 吉方位ナビ
    ═══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -66,17 +66,11 @@ body{
   border-radius:6px;cursor:pointer;letter-spacing:.08em;
   font-family:'Noto Serif JP',serif;
 }
-.header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
-.back-btn.secondary{
-  background:rgba(100,80,40,.04);
-  border-color:rgba(100,80,40,.18);
-  color:var(--mist);
-}
-@media(max-width:390px){
-  .app-header{padding-left:12px;padding-right:12px;}
-  .header-logo{font-size:.98rem;letter-spacing:.18em;}
-  .back-btn{font-size:.68rem;padding:7px 9px;letter-spacing:.02em;}
-  .header-actions{gap:5px;}
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+@media(max-width:380px){
+  .back-btn{font-size:.66rem;padding:7px 9px;letter-spacing:.03em;}
+  .header-logo{font-size:1rem;}
+  .header-sub{font-size:.54rem;}
 }
 
 /* ── セクション共通 ── */
@@ -133,15 +127,6 @@ body{
 .star-bar-note{
   font-size:.6rem;color:#4b3c29;margin-top:5px;line-height:1.7;
 }
-.life-element-banner{
-  display:none;margin:12px 16px 0;
-  background:linear-gradient(135deg,#fffdf8,#f6efe2);
-  border:1px solid rgba(138,104,32,.34);
-  border-radius:12px;padding:11px 14px;
-  color:var(--goldlt);font-size:.68rem;line-height:1.8;
-  box-shadow:0 2px 10px rgba(60,40,10,.04);
-}
-.life-element-banner strong{font-size:.72rem;}
 .usage-guide{
   margin:12px 16px 16px;
   background:linear-gradient(135deg,#fffdf9,#f7f1e6);
@@ -294,6 +279,47 @@ body{
   padding:10px;
 }
 .preset-grid.open{display:grid;}
+.destination-accordion{
+  margin-top:12px;
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:11px;
+  background:rgba(255,255,255,.62);
+  overflow:hidden;
+}
+.destination-accordion summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 14px;
+  color:var(--goldlt);
+  font-size:.76rem;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+.destination-accordion summary::-webkit-details-marker{display:none;}
+.destination-accordion summary::after{
+  content:"▶";
+  color:var(--gold);
+  font-size:.68rem;
+  flex-shrink:0;
+}
+.destination-accordion[open] summary::after{content:"▼";}
+.destination-accordion-note{
+  display:block;
+  margin-top:3px;
+  color:var(--mist);
+  font-size:.56rem;
+  font-weight:400;
+  line-height:1.6;
+  letter-spacing:0;
+}
+.destination-accordion-body{
+  border-top:1px solid rgba(138,104,32,.14);
+  padding:10px 10px 4px;
+}
 .preset-btn{
   background:var(--card);
   border:1px solid var(--rim);border-radius:9px;
@@ -307,6 +333,93 @@ body{
 }
 .preset-name{font-size:.72rem;color:var(--snow);font-weight:600;line-height:1.3;}
 .preset-area{font-size:.58rem;color:var(--mist);margin-top:2px;}
+.route-planner{
+  margin-top:10px;
+  background:linear-gradient(135deg,rgba(138,104,32,.07),rgba(255,255,255,.62));
+  border:1px solid rgba(138,104,32,.22);
+  border-radius:10px;
+  padding:12px;
+}
+.route-title{
+  font-size:.72rem;
+  color:var(--goldlt);
+  font-weight:700;
+  letter-spacing:.05em;
+  margin-bottom:5px;
+}
+.route-note{
+  font-size:.6rem;
+  color:var(--mist);
+  line-height:1.75;
+  margin-bottom:9px;
+}
+.route-list{display:grid;gap:6px;margin-bottom:9px;}
+.route-stop{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,.72);
+  border:1px solid var(--rim);
+  border-radius:9px;
+  padding:8px;
+}
+.route-num{
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(196,160,67,.15);
+  border:1px solid rgba(196,160,67,.36);
+  color:var(--goldlt);
+  font-size:.66rem;
+  font-weight:700;
+}
+.route-name{font-size:.68rem;color:var(--snow);font-weight:700;line-height:1.35;}
+.route-area{font-size:.55rem;color:var(--mist);margin-top:1px;}
+.route-actions{display:flex;gap:3px;align-items:center;}
+.route-mini{
+  width:26px;height:26px;border-radius:7px;
+  border:1px solid rgba(138,104,32,.2);
+  background:rgba(100,80,40,.04);
+  color:var(--goldlt);
+  font-size:.58rem;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.route-map-btn{
+  width:100%;
+  margin-top:7px;
+  background:rgba(52,168,83,.1);
+  border:1px solid rgba(52,168,83,.35);
+  color:#1a6e30;
+  border-radius:9px;
+  padding:10px;
+  font-size:.68rem;
+  font-weight:700;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.route-clear-btn{
+  width:100%;
+  margin-top:6px;
+  background:rgba(100,80,40,.04);
+  border:1px solid var(--rim);
+  color:var(--mist);
+  border-radius:9px;
+  padding:8px;
+  font-size:.62rem;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.route-empty{
+  background:rgba(255,255,255,.58);
+  border:1px dashed rgba(138,104,32,.24);
+  border-radius:9px;
+  padding:10px;
+  font-size:.62rem;
+  color:var(--mist);
+  line-height:1.75;
+  text-align:center;
+}
 .divider{
   text-align:center;font-size:.6rem;color:var(--mist);
   margin:10px 0;letter-spacing:.12em;
@@ -956,11 +1069,11 @@ html.font-large .font-btn{font-size:.8rem;}
 <div class="app-header">
   <div>
     <div class="header-logo">✦ KITOKU<span style="opacity:.5;margin:0 2px;">@</span>JOURNEY</div>
-    <div class="header-sub">国内旅行 吉方位ナビ</div>
+    <div class="header-sub">聖地巡礼 吉方位ナビ</div>
   </div>
   <div class="header-actions">
-    <button class="back-btn secondary" onclick="goPreviousPage()">← 前へ</button>
-    <button class="back-btn" onclick="window.location.href='index.html'">TOPへ</button>
+    <button class="back-btn" onclick="if(window.history.length>1){window.history.back();}else{window.location.href='top.html';}">← 戻る</button>
+    <button class="back-btn" onclick="window.location.href='top.html'">TOPへ</button>
   </div>
 </div>
 
@@ -979,39 +1092,36 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="star-bar-note">この星情報をもとに、あなた専用の吉方位・線路の日を計算します。</div>
 </div>
 
-<div class="life-element-banner" id="lifeElementBanner"></div>
-
-<div class="must-read-card" style="margin:12px 0 10px;padding:12px 13px;border-radius:14px;border:1px solid rgba(43,116,127,.32);border-left:6px solid #2b747f;background:linear-gradient(135deg,rgba(43,116,127,.12),rgba(255,255,255,.72));box-shadow:0 8px 20px rgba(43,116,127,.08);">
+<div class="must-read-card" style="margin:12px 0 10px;padding:12px 13px;border-radius:14px;border:1px solid rgba(78,128,76,.32);border-left:6px solid #4e804c;background:linear-gradient(135deg,rgba(78,128,76,.13),rgba(255,255,255,.72));box-shadow:0 8px 20px rgba(78,128,76,.08);">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:#2b747f;color:white;font-size:.68rem;font-weight:700;letter-spacing:.06em;">必読</span>
-    <strong style="font-size:.76rem;color:var(--snow);">旅行は、長さで見る盤が変わります</strong>
+    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:#4e804c;color:white;font-size:.68rem;font-weight:700;letter-spacing:.06em;">必読</span>
+    <strong style="font-size:.76rem;color:var(--snow);">聖地巡礼は、目的の重さで見る盤を変えます</strong>
   </div>
   <div style="font-size:.64rem;color:var(--mist);line-height:1.75;">
-    日帰りや1泊は日盤、数日以上は月盤を中心に見ます。長期滞在や人生の節目になる旅では、余裕があれば年盤も確認します。ただし、予定・費用・家族の都合が最優先です。方位は、行ける旅を止めるためではなく、整えられる範囲で旅の質を上げる視点です。
+    日帰りの参拝は日盤、数日かける巡礼は月盤を中心に見ます。四国八十八ヶ所のような遠方・長期・人生の節目になる巡礼では、余裕があれば年盤も確認します。ただし、行ける時に行くことも大切です。方位は参拝を止めるためではなく、整えられる範囲で質を上げるための視点です。
   </div>
 </div>
 
 <!-- 使い方の解説 -->
 <details class="usage-guide">
-  <summary>✦ 旅行ナビの使い方</summary>
+  <summary>✦ 聖地巡礼ナビの使い方</summary>
   <div class="usage-guide-body">
   <div style="font-size:.66rem;color:var(--mist);line-height:1.8;background:rgba(255,255,255,.55);border:1px solid rgba(138,104,32,.16);border-radius:10px;padding:10px 12px;margin-bottom:10px;">
-    <strong style="color:var(--snow);">旅行では、長さに合わせて見る盤を変えます。</strong><br>
-    日帰りや1泊なら<strong style="color:var(--goldlt);">日盤</strong>、数日から長期の旅行なら<strong style="color:var(--goldlt);">月盤</strong>を中心に見ます。出発日は日盤で整え、長期滞在や人生の節目になる旅では必要に応じて年盤も確認します。<br>
-    方位を見るのは、行動を制限するためではありません。予定や費用を無理に変えず、選べる余地がある時に旅の質を上げる判断材料として使います。日盤が気になる日は、出発前に自宅から見て吉方位の場所へ立ち寄り、温かい飲み物を一杯いただいてから向かう方法もあります。
+    <strong style="color:var(--snow);">聖地巡礼では、目的の重さで見る盤を変えます。</strong><br>
+    日帰りの参拝なら<strong style="color:var(--goldlt);">日盤</strong>、数日かける巡礼なら<strong style="color:var(--goldlt);">月盤</strong>を中心に見ます。四国八十八ヶ所のような遠方・長期・人生の節目になる巡礼では、余裕があれば<strong style="color:var(--goldlt);">年盤</strong>も確認します。聖地巡礼は、土地の歴史や祈りに触れる行動です。<br>
+    方位を見ることで、「行きたい場所へ行く」だけでなく、自分の星に合う流れを取り入れながら参拝する形になります。年盤が合わないから行ってはいけない、という意味ではありません。仕事・家族・体力・季節・宿・交通の条件が整うことも大切です。方位は、整えられる範囲でよりよい流れを選ぶための補助線として使います。
   </div>
   <details style="margin:0 0 12px;border:1px solid rgba(138,104,32,.18);border-radius:12px;background:rgba(255,255,255,.42);overflow:hidden;">
-    <summary style="padding:10px 12px;cursor:pointer;font-size:.68rem;font-weight:700;color:var(--snow);list-style:none;">✦ せっかくの旅を、開運も持ち帰る旅にするために</summary>
+    <summary style="padding:10px 12px;cursor:pointer;font-size:.68rem;font-weight:700;color:var(--snow);list-style:none;">✦ なぜ方角を合わせると、ただの旅が開運行為になるのか</summary>
     <div style="padding:0 12px 12px;font-size:.64rem;color:var(--mist);line-height:1.85;">
-      旅行は、行きたい場所へ行くだけでも十分に価値があります。そこに少しだけ方位の視点を足すと、同じ旅でもリフレッシュに加えて、その土地の良い気を持ち帰る旅として使えます。<br>
-      方位を見るとは「吉方だから北へ行け」という命令ではなく、その星の意味に合わせて、どこで何をするかを選ぶことです。
+      多くの人は、旅行やお寺めぐりに日程や方角を気にしません。行きたい時に、行きたい場所へ行く。それで十分ですし、それを否定するものではありません。<br>
+      ただ、同じ一度の巡礼でも、自分の吉方位へ、良い日に出かけると、その旅は景色を見る旅から、気を受け取る旅へ変わります。
       <div style="margin-top:8px;padding:9px 10px;border-radius:10px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.14);">
-        <strong style="color:var(--snow);">例：</strong><br>
-        六白金星の方角なら、少し良い宿・由緒ある社寺・丸い果物。<br>
-        四緑木星の方角なら、遠方のご縁・自然・うどんやそばなど長いもの。<br>
-        七赤金星の方角なら、美味しい食事・会話・旬の味覚を楽しむ時間。
+        <strong style="color:var(--snow);">聖地は、方位の力と場の力が重なる場所です。</strong><br>
+        神社仏閣や聖地には、長い時間をかけて人々の祈りや歴史が積み重なっています。四国八十八ヶ所には弘法大師・空海の足跡があり、熊野には蘇りの地として歩き継がれた祈りの道があります。そこへ吉方位で赴くことで、土地が持つ場の力と、方位がもたらす気の力を重ねて受け取る形になります。
       </div>
-      もちろん、行き先が決まっている旅を方角のために変える必要はありません。合わせられる時は合わせ、難しい時は思いきり楽しむ。完璧に合わせるより、できる範囲で整えることを大切にしてください。方位は、旅を豊かにするもう一つの視点です。
+      気学では、遠くへ動き、長く滞在するほど、吉方の作用は積もると考えます。だから聖地巡礼は、日々の吉方取りよりも深く働く可能性があります。<br>
+      もちろん、仕事や家庭の都合で、いつも方角や日を選べるわけではありません。どうしても日盤が気になる日は、出発前に自宅から見て吉方位の場所へ立ち寄り、温かい飲み物を一杯いただいてから向かう方法もあります。大切なのは、知っていて選ぶこと。合わせられる時は合わせ、難しい時はそのまま楽しむ。この地図は、旅をより深く味わうための視点です。
     </div>
   </details>
   <div style="display:grid;gap:8px;">
@@ -1021,7 +1131,7 @@ html.font-large .font-btn{font-size:.8rem;}
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">行きたい旅先を選ぶ</strong>（都道府県・温泉・登山・島など）</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">行きたい聖地を選ぶ</strong>（お遍路・伊勢・熊野など）</div>
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
@@ -1029,7 +1139,7 @@ html.font-large .font-btn{font-size:.8rem;}
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div style="width:22px;height:22px;border-radius:50%;background:rgba(138,104,32,.15);border:1px solid rgba(138,104,32,.4);color:var(--goldlt);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
-      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">吉日カレンダー</strong>で旅行日程を決める<br>カレンダーの日付をタップ→日盤確認→出発日確定</div>
+      <div style="font-size:.65rem;color:var(--mist);line-height:1.7;"><strong style="color:var(--snow);">吉日カレンダー</strong>で日程を決める<br>カレンダーの日付をタップ→日盤確認→出発日確定</div>
     </div>
   </div>
   <div class="usage-tip">
@@ -1073,124 +1183,125 @@ html.font-large .font-btn{font-size:.8rem;}
 
   <!-- STEP1→2 ガイダンス -->
   <div class="step-hint" id="hint1">
-    ✦ 自宅を登録したら、行きたい旅先を選んでください。方位は「自宅から見た方角」で計算します。
+    ✦ 自宅を登録したら、行きたい聖地を選んでください。方位は「自宅から見た方角」で計算します。
   </div>
 
 <!-- STEP 2: 目的地設定 -->
 <div class="section step-section">
   <div class="sec-label">STEP 2 — 目的地</div>
-  <div class="sec-title">行きたい旅先を選ぶ</div>
+  <div class="sec-title">行きたい聖地を選ぶ</div>
 
-  <!-- 国内/海外タブ -->
-  <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">🗾 国内</button>
-    <button id="tabOverseas" onclick="switchTravelTab('overseas')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);">🌏 海外</button>
-  </div>
+  <details class="destination-accordion">
+    <summary><span>目的地リストを開く<span class="destination-accordion-note">お遍路・熊野・西国などをカテゴリから選びます</span></span></summary>
+    <div class="destination-accordion-body">
 
-  <!-- 国内グループ -->
-  <div id="presetsDomestic">
-  <!-- 都道府県別 -->
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-hokkaido')">
-      <span>北海道・東北<span class="preset-group-count">7県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-henro-awa')">
+      <span>四国お遍路 — 阿波（徳島）発心の道場 1〜23番<span class="preset-group-count">23ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-hokkaido"></div>
+    <div class="preset-grid" id="grid-henro-awa"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kanto')">
-      <span>関東<span class="preset-group-count">7都県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-henro-tosa')">
+      <span>四国お遍路 — 土佐（高知）修行の道場 24〜39番<span class="preset-group-count">16ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-kanto"></div>
+    <div class="preset-grid" id="grid-henro-tosa"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chubu')">
-      <span>中部・北陸<span class="preset-group-count">9県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-henro-iyo')">
+      <span>四国お遍路 — 伊予（愛媛）菩提の道場 40〜65番<span class="preset-group-count">26ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-chubu"></div>
+    <div class="preset-grid" id="grid-henro-iyo"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kinki')">
-      <span>近畿<span class="preset-group-count">7府県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-henro-sanuki')">
+      <span>四国お遍路 — 讃岐（香川）涅槃の道場 66〜88番<span class="preset-group-count">23ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-kinki"></div>
+    <div class="preset-grid" id="grid-henro-sanuki"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chugoku')">
-      <span>中国・四国<span class="preset-group-count">9県</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-major')">
+      <span>三大聖地<span class="preset-group-count">3ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-chugoku"></div>
+    <div class="preset-grid" id="grid-major"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-kumano')">
+      <span>熊野古道・熊野三山<span class="preset-group-count">12ヶ所</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-kumano"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-saigoku')">
+      <span>西国三十三所（近畿・中部）<span class="preset-group-count">33ヶ所</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-saigoku"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-bando')">
+      <span>坂東三十三所（関東）<span class="preset-group-count">33ヶ所</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-bando"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-chichibu')">
+      <span>秩父三十四所（埼玉）<span class="preset-group-count">34ヶ所</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-chichibu"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-shrines')">
+      <span>全国主要神社<span class="preset-group-count">17ヶ所</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-shrines"></div>
+  </div>
+  <div class="preset-group">
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-mountains')">
+      <span>山岳霊場<span class="preset-group-count">10ヶ所</span></span>
+      <span class="preset-group-arrow">›</span>
+    </div>
+    <div class="preset-grid" id="grid-mountains"></div>
   </div>
   <div class="preset-group">
     <div class="preset-group-label" onclick="toggleGroup(this,'grid-kyushu')">
-      <span>九州・沖縄<span class="preset-group-count">8県</span></span>
+      <span>九州西国三十三所（主要）<span class="preset-group-count">9ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
     <div class="preset-grid" id="grid-kyushu"></div>
   </div>
-
-  <!-- テーマ別 -->
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-onsen')">
-      <span>🌡 温泉地<span class="preset-group-count">20湯</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-betsugaku')">
+      <span>四国別格二十霊場<span class="preset-group-count">20ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-onsen"></div>
+    <div class="preset-grid" id="grid-betsugaku"></div>
   </div>
   <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-yama')">
-      <span>⛰ 登山・山岳<span class="preset-group-count">20座</span></span>
+    <div class="preset-group-label" onclick="toggleGroup(this,'grid-tokai')">
+      <span>東海四十九薬師（主要）<span class="preset-group-count">8ヶ所</span></span>
       <span class="preset-group-arrow">›</span>
     </div>
-    <div class="preset-grid" id="grid-yama"></div>
-  </div>
-  <div class="preset-group">
-    <div class="preset-group-label" onclick="toggleGroup(this,'grid-shima')">
-      <span>🏝 島<span class="preset-group-count">15島</span></span>
-      <span class="preset-group-arrow">›</span>
-    </div>
-    <div class="preset-grid" id="grid-shima"></div>
+    <div class="preset-grid" id="grid-tokai"></div>
   </div>
 
-  </div><!-- /presetsDomestic -->
-
-  <!-- 海外グループ -->
-  <div id="presetsOverseas" style="display:none;">
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-sea')">
-        <span>🌴 東南アジア<span class="preset-group-count">28ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-sea"></div>
     </div>
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-europe')">
-        <span>🏰 ヨーロッパ<span class="preset-group-count">30ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-europe"></div>
-    </div>
-    <div class="preset-group">
-      <div class="preset-group-label" onclick="toggleGroup(this,'grid-eastasia')">
-        <span>🏯 東アジア<span class="preset-group-count">20ヶ所</span></span>
-        <span class="preset-group-arrow">›</span>
-      </div>
-      <div class="preset-grid" id="grid-eastasia"></div>
-    </div>
-    <div style="margin:8px 0 4px;padding:8px 12px;font-size:.6rem;color:var(--mist);background:rgba(100,80,40,.05);border-radius:8px;line-height:1.8;">
-      ✦ 南アジア・中東・アメリカ・オセアニアなど他の地域は順次追加予定です
-    </div>
-  </div><!-- /presetsOverseas -->
+  </details>
 
   <div style="
     margin-top:10px;
-    background:rgba(138,104,32,.09);border:1px solid rgba(138,104,32,.22);
+    background:rgba(100,80,40,.05);border:1px solid rgba(100,80,40,.12);
     border-radius:10px;padding:11px 13px;
-    font-size:.65rem;color:var(--goldlt);line-height:1.9;
+    font-size:.65rem;color:var(--mist);line-height:1.9;
     text-align:center;
   ">
   <!-- 地図ピッカーボタン -->
@@ -1200,9 +1311,22 @@ html.font-large .font-btn{font-size:.8rem;}
       🗺 地図上でピンを立てて場所を指定する
     </button>
   </div>
-    ✦ 掲載していない旅先は順次追加予定です<br>
-    <span style="color:#6b4a12;">📍 座標は代表地点を使用しています。方位計算の参考値としてご利用いただき、正確な位置はGoogle マップ等でご確認ください。</span>
-    <span style="font-size:.6rem;color:#6b4a12;">リクエストは kitoku@journey6112.jp まで</span>
+    ✦ 掲載していない聖地は順次追加予定です<br>
+    <span style="color:rgba(138,104,32,.6);">📍 座標は代表地点を使用しています。正確な位置はGoogle マップ等でご確認ください。</span><br>
+    <span style="color:rgba(138,104,32,.6);">📎 <a href="https://88shikokuhenro.jp/" target="_blank" style="color:var(--goldlt);text-decoration:underline;">四国八十八ヶ所霊場公式サイト</a>　／　<a href="https://www.jbf.ne.jp/eventcont/hallowed" target="_blank" style="color:var(--goldlt);text-decoration:underline;">全国霊場紹介（全日本仏教会）</a></span>
+    <span style="font-size:.6rem;opacity:.8;">リクエストは kitoku@journey6112.jp まで</span>
+  </div>
+
+  <div class="route-planner" id="pilgrimageRoutePlanner">
+    <div class="route-title">🚗 巡礼ルートを作る</div>
+    <div class="route-note">
+      札所を行く順番にタップすると、Googleマップの経路に渡せます。61番→62番→63番のように並べてください。
+    </div>
+    <div class="route-list" id="pilgrimageRouteList">
+      <div class="route-empty">まだルートに札所が入っていません。</div>
+    </div>
+    <button class="route-map-btn" type="button" onclick="openPilgrimageRoute()">Googleマップで順路を開く</button>
+    <button class="route-clear-btn" type="button" onclick="clearPilgrimageRoute()">ルートをクリア</button>
   </div>
 </div>
 
@@ -1363,10 +1487,11 @@ html.font-large .font-btn{font-size:.8rem;}
     <div class="nichiban-step">
       <div class="step-num">3</div>
       <div class="step-text">
-        日盤取りをしてから目的地へ向かうことで、<strong>「行く」という意志を吉エネルギーで包む</strong>ことができます。
+        日盤取りをしてから聖地へ向かうことで、<strong>「行く」という意志を吉エネルギーで包む</strong>ことができます。
       </div>
     </div>
   </div>
+
   <div style="
     margin-top:10px;
     background:rgba(196,160,67,.08);
@@ -1407,366 +1532,297 @@ html.font-large .font-btn{font-size:.8rem;}
 
 <script>
 // ============================================================
-// 旅先データ
+// 聖地データ
 // ============================================================
 const SACRED_PLACES = {
-  // ── 都道府県別 ──
-  hokkaido: [
-    // 北海道
-    { name:'札幌 時計台', area:'北海道札幌市', lat:43.0645, lon:141.3508 },
-    { name:'函館山 夜景', area:'北海道函館市', lat:41.7605, lon:140.6998 },
-    { name:'富良野 ラベンダー畑', area:'北海道富良野市', lat:43.3592, lon:142.3931 },
-    { name:'小樽運河', area:'北海道小樽市', lat:43.1907, lon:140.9943 },
-    { name:'知床 五湖', area:'北海道斜里郡', lat:44.0853, lon:145.0163 },
-    // 青森
-    { name:'弘前城', area:'青森県弘前市', lat:40.6074, lon:140.4638 },
-    { name:'奥入瀬渓流', area:'青森県十和田市', lat:40.5481, lon:141.0294 },
-    { name:'恐山', area:'青森県むつ市', lat:41.3247, lon:141.0840 },
-    { name:'三内丸山遺跡', area:'青森県青森市', lat:40.7765, lon:140.6907 },
-    { name:'十和田湖', area:'青森県十和田市', lat:40.4726, lon:140.8897 },
-    // 岩手
-    { name:'平泉 中尊寺', area:'岩手県西磐井郡', lat:38.9886, lon:141.1127 },
-    { name:'龍泉洞', area:'岩手県下閉伊郡', lat:39.8023, lon:141.9775 },
-    { name:'浄土ヶ浜', area:'岩手県宮古市', lat:39.6427, lon:141.9906 },
-    { name:'遠野 カッパ淵', area:'岩手県遠野市', lat:39.3289, lon:141.5303 },
-    { name:'厳美渓', area:'岩手県一関市', lat:38.9288, lon:141.1524 },
-    // 宮城
-    { name:'松島 瑞巌寺', area:'宮城県宮城郡', lat:38.3715, lon:141.0681 },
-    { name:'蔵王 お釜', area:'宮城県刈田郡', lat:38.1327, lon:140.4441 },
-    { name:'仙台 青葉城跡', area:'宮城県仙台市', lat:38.2529, lon:140.8635 },
-    { name:'鳴子峡', area:'宮城県大崎市', lat:38.7503, lon:140.7257 },
-    { name:'金華山', area:'宮城県石巻市', lat:38.2889, lon:141.5701 },
-    // 秋田
-    { name:'角館 武家屋敷通り', area:'秋田県仙北市', lat:39.5983, lon:140.5622 },
-    { name:'田沢湖', area:'秋田県仙北市', lat:39.7193, lon:140.6604 },
-    { name:'男鹿半島 なまはげ館', area:'秋田県男鹿市', lat:39.8804, lon:139.8459 },
-    { name:'乳頭温泉郷', area:'秋田県仙北市', lat:39.7558, lon:140.7235 },
-    { name:'白神山地', area:'秋田県山本郡', lat:40.4167, lon:140.1500 },
-    // 山形
-    { name:'山寺 立石寺', area:'山形県山形市', lat:38.3467, lon:140.4340 },
-    { name:'銀山温泉', area:'山形県尾花沢市', lat:38.6183, lon:140.5633 },
-    { name:'出羽三山 羽黒山', area:'山形県鶴岡市', lat:38.7222, lon:139.9731 },
-    { name:'蔵王温泉', area:'山形県山形市', lat:38.2228, lon:140.3863 },
-    { name:'最上峡', area:'山形県新庄市', lat:38.8500, lon:140.0000 },
-    // 福島
-    { name:'会津若松城（鶴ヶ城）', area:'福島県会津若松市', lat:37.4878, lon:139.9299 },
-    { name:'五色沼', area:'福島県耶麻郡', lat:37.6708, lon:140.0610 },
-    { name:'大内宿', area:'福島県南会津郡', lat:37.2977, lon:139.8393 },
-    { name:'猪苗代湖', area:'福島県耶麻郡', lat:37.5256, lon:140.1059 },
-    { name:'塔のへつり', area:'福島県南会津郡', lat:37.2399, lon:139.8737 },
+  henro_awa: [
+    { name:'1番 霊山寺', area:'徳島県鳴門市', lat:34.1533, lon:134.5469 },
+    { name:'2番 極楽寺', area:'徳島県鳴門市', lat:34.1557212, lon:134.4904316 },
+    { name:'3番 金泉寺', area:'徳島県板野郡', lat:34.1557212, lon:134.4904316 },
+    { name:'4番 大日寺', area:'徳島県板野郡', lat:34.1517184, lon:134.4307531 },
+    { name:'5番 地蔵寺', area:'徳島県板野郡', lat:34.1372037, lon:134.4320316 },
+    { name:'6番 安楽寺', area:'徳島県板野郡', lat:34.1181096, lon:134.3884768 },
+    { name:'7番 十楽寺', area:'徳島県阿波市', lat:34.1206639, lon:134.3780484 },
+    { name:'8番 熊谷寺', area:'徳島県阿波市', lat:34.1226876, lon:134.3399892 },
+    { name:'9番 法輪寺', area:'徳島県阿波市', lat:34.1042117, lon:134.3338234 },
+    { name:'10番 切幡寺', area:'徳島県阿波市', lat:34.1076083, lon:134.3040917 },
+    { name:'11番 藤井寺', area:'徳島県吉野川市', lat:34.0515438, lon:134.3487633 },
+    { name:'12番 焼山寺', area:'徳島県名西郡神山町', lat:33.984868, lon:134.3104171 },
+    { name:'13番 大日寺', area:'徳島県徳島市', lat:34.0381354, lon:134.4628758 },
+    { name:'14番 常楽寺', area:'徳島県徳島市', lat:34.0501713, lon:134.4758955 },
+    { name:'15番 國分寺', area:'徳島県徳島市', lat:34.0557035, lon:134.4735965 },
+    { name:'16番 観音寺', area:'徳島県徳島市', lat:34.0684058, lon:134.4743916 },
+    { name:'17番 井戸寺', area:'徳島県徳島市', lat:34.0852256, lon:134.4854545 },
+    { name:'18番 恩山寺', area:'徳島県小松島市', lat:33.9859935, lon:134.5782947 },
+    { name:'19番 立江寺', area:'徳島県小松島市', lat:33.9677729, lon:134.6061674 },
+    { name:'20番 鶴林寺', area:'徳島県勝浦郡', lat:33.9141336, lon:134.5052321 },
+    { name:'21番 太龍寺', area:'徳島県阿南市', lat:33.882509, lon:134.5217357 },
+    { name:'22番 平等寺', area:'徳島県阿南市', lat:33.8519654, lon:134.5826882 },
+    { name:'23番 薬王寺', area:'徳島県海部郡美波町', lat:33.7323139, lon:134.5276412 },
   ],
-  kanto: [
-    // 茨城
-    { name:'偕楽園', area:'茨城県水戸市', lat:36.3862, lon:140.4700 },
-    { name:'袋田の滝', area:'茨城県久慈郡', lat:36.7378, lon:140.4026 },
-    { name:'筑波山', area:'茨城県つくば市', lat:36.2254, lon:140.1067 },
-    { name:'国営ひたち海浜公園', area:'茨城県ひたちなか市', lat:36.3951, lon:140.6032 },
-    { name:'大洗磯前神社', area:'茨城県東茨城郡', lat:36.3095, lon:140.5847 },
-    // 栃木
-    { name:'日光東照宮', area:'栃木県日光市', lat:36.7575, lon:139.5986 },
-    { name:'那須高原', area:'栃木県那須郡', lat:37.1038, lon:140.0452 },
-    { name:'鬼怒川温泉', area:'栃木県日光市', lat:36.8022, lon:139.6636 },
-    { name:'足尾銅山', area:'栃木県日光市', lat:36.6509, lon:139.4329 },
-    { name:'益子焼 陶芸街', area:'栃木県芳賀郡', lat:36.4717, lon:140.1046 },
-    // 群馬
-    { name:'草津温泉', area:'群馬県吾妻郡', lat:36.6219, lon:138.5959 },
-    { name:'伊香保温泉', area:'群馬県渋川市', lat:36.4755, lon:138.9137 },
-    { name:'富岡製糸場', area:'群馬県富岡市', lat:36.2566, lon:138.8894 },
-    { name:'尾瀬ヶ原', area:'群馬県利根郡', lat:36.9127, lon:139.2198 },
-    { name:'谷川岳', area:'群馬県利根郡', lat:36.8484, lon:138.9338 },
-    // 埼玉
-    { name:'三峯神社', area:'埼玉県秩父市', lat:35.9781, lon:138.9313 },
-    { name:'川越 蔵造りの街', area:'埼玉県川越市', lat:35.9255, lon:139.4861 },
-    { name:'長瀞 岩畳', area:'埼玉県秩父郡', lat:36.1163, lon:139.1133 },
-    { name:'秩父神社', area:'埼玉県秩父市', lat:35.9886, lon:139.0799 },
-    { name:'吉見百穴', area:'埼玉県比企郡', lat:36.0541, lon:139.3900 },
-    // 千葉
-    { name:'成田山新勝寺', area:'千葉県成田市', lat:35.7789, lon:140.3179 },
-    { name:'犬吠埼灯台', area:'千葉県銚子市', lat:35.7073, lon:140.8682 },
-    { name:'鴨川シーワールド', area:'千葉県鴨川市', lat:35.1213, lon:140.1177 },
-    { name:'館山 城山公園', area:'千葉県館山市', lat:34.9987, lon:139.8696 },
-    { name:'養老渓谷', area:'千葉県夷隅郡', lat:35.2603, lon:140.1432 },
-    // 東京
-    { name:'浅草寺', area:'東京都台東区', lat:35.7148, lon:139.7967 },
-    { name:'明治神宮', area:'東京都渋谷区', lat:35.6764, lon:139.6993 },
-    { name:'高尾山', area:'東京都八王子市', lat:35.6254, lon:139.2436 },
-    { name:'江戸東京博物館', area:'東京都墨田区', lat:35.6966, lon:139.7972 },
-    { name:'お台場 潮風公園', area:'東京都品川区', lat:35.6254, lon:139.7754 },
-    // 神奈川
-    { name:'鎌倉 大仏', area:'神奈川県鎌倉市', lat:35.3168, lon:139.5352 },
-    { name:'箱根 大涌谷', area:'神奈川県足柄下郡', lat:35.2375, lon:139.0204 },
-    { name:'江の島', area:'神奈川県藤沢市', lat:35.2996, lon:139.4826 },
-    { name:'横浜 中華街', area:'神奈川県横浜市', lat:35.4437, lon:139.6487 },
-    { name:'三浦海岸', area:'神奈川県三浦市', lat:35.1536, lon:139.6253 },
+  henro_tosa: [
+    { name:'24番 最御崎寺', area:'高知県室戸市', lat:33.2491022, lon:134.1758741 },
+    { name:'25番 津照寺', area:'高知県室戸市', lat:33.2882462, lon:134.1483076 },
+    { name:'26番 金剛頂寺', area:'高知県室戸市', lat:33.3071837, lon:134.122824 },
+    { name:'27番 神峯寺', area:'高知県安芸郡安田町', lat:33.4675598, lon:133.9747351 },
+    { name:'28番 大日寺', area:'高知県香南市', lat:33.5777502, lon:133.7050581 },
+    { name:'29番 国分寺', area:'高知県南国市', lat:33.5987623, lon:133.6405277 },
+    { name:'30番 善楽寺', area:'高知県高知市', lat:33.5919723, lon:133.5777323 },
+    { name:'31番 竹林寺', area:'高知県高知市', lat:33.5465393, lon:133.5765793 },
+    { name:'32番 禅師峰寺', area:'高知県南国市', lat:33.526902, lon:133.6115671 },
+    { name:'33番 雪蹊寺', area:'高知県高知市', lat:33.5008218, lon:133.5430577 },
+    { name:'34番 種間寺', area:'高知県高知市春野町', lat:33.4917265, lon:133.4875302 },
+    { name:'35番 清滝寺', area:'高知県土佐市', lat:33.5124517, lon:133.4095132 },
+    { name:'36番 青龍寺', area:'高知県土佐市', lat:33.4260131, lon:133.4520627 },
+    { name:'37番 岩本寺', area:'高知県高岡郡四万十町', lat:33.2080162, lon:133.1346769 },
+    { name:'38番 金剛福寺', area:'高知県土佐清水市', lat:32.725582, lon:133.0186713 },
+    { name:'39番 延光寺', area:'高知県宿毛市', lat:32.9613232, lon:132.7740828 },
   ],
-  chubu: [
-    // 新潟
-    { name:'佐渡島 金山', area:'新潟県佐渡市', lat:38.0194, lon:138.3691 },
-    { name:'弥彦神社', area:'新潟県西蒲原郡', lat:37.7038, lon:138.8262 },
-    { name:'苗場スキー場', area:'新潟県南魚沼郡', lat:36.8440, lon:138.6957 },
-    { name:'清津峡渓谷', area:'新潟県十日町市', lat:37.0019, lon:138.7229 },
-    { name:'瓢湖（白鳥の湖）', area:'新潟県阿賀野市', lat:37.8366, lon:139.2170 },
-    // 富山
-    { name:'立山黒部 アルペンルート', area:'富山県中新川郡', lat:36.5783, lon:137.6179 },
-    { name:'五箇山 合掌造り', area:'富山県南砺市', lat:36.4308, lon:136.9002 },
-    { name:'高岡大仏', area:'富山県高岡市', lat:36.7545, lon:137.0221 },
-    { name:'雨晴海岸', area:'富山県高岡市', lat:36.7713, lon:136.9388 },
-    { name:'富山城', area:'富山県富山市', lat:36.6947, lon:137.2137 },
-    // 石川
-    { name:'兼六園', area:'石川県金沢市', lat:36.5612, lon:136.6618 },
-    { name:'金沢城', area:'石川県金沢市', lat:36.5594, lon:136.6580 },
-    { name:'能登半島 白米千枚田', area:'石川県輪島市', lat:37.3855, lon:136.8816 },
-    { name:'輪島朝市', area:'石川県輪島市', lat:37.3924, lon:136.8988 },
-    { name:'白山 白峰', area:'石川県白山市', lat:36.1530, lon:136.7714 },
-    // 福井
-    { name:'東尋坊', area:'福井県坂井市', lat:36.2330, lon:136.1544 },
-    { name:'永平寺', area:'福井県吉田郡', lat:36.0917, lon:136.5336 },
-    { name:'福井県立恐竜博物館', area:'福井県勝山市', lat:36.0675, lon:136.6061 },
-    { name:'三方五湖', area:'福井県三方上中郡', lat:35.5724, lon:135.9007 },
-    { name:'一乗谷 朝倉氏遺跡', area:'福井県福井市', lat:35.9935, lon:136.2048 },
-    // 山梨
-    { name:'富士山 五合目', area:'山梨県南都留郡', lat:35.3759, lon:138.7312 },
-    { name:'河口湖', area:'山梨県南都留郡', lat:35.5072, lon:138.7647 },
-    { name:'昇仙峡', area:'山梨県甲府市', lat:35.7196, lon:138.5784 },
-    { name:'武田神社', area:'山梨県甲府市', lat:35.6747, lon:138.5713 },
-    { name:'清里高原', area:'山梨県北杜市', lat:35.9049, lon:138.4286 },
-    // 長野
-    { name:'松本城', area:'長野県松本市', lat:36.2384, lon:137.9685 },
-    { name:'上高地', area:'長野県松本市', lat:36.2413, lon:137.6478 },
-    { name:'軽井沢 旧三笠ホテル', area:'長野県北佐久郡', lat:36.3456, lon:138.6242 },
-    { name:'善光寺', area:'長野県長野市', lat:36.6611, lon:138.1878 },
-    { name:'諏訪大社', area:'長野県諏訪市', lat:36.0219, lon:138.0761 },
-    // 岐阜
-    { name:'白川郷 合掌造り', area:'岐阜県大野郡', lat:36.2563, lon:136.9060 },
-    { name:'岐阜城', area:'岐阜県岐阜市', lat:35.4406, lon:136.7693 },
-    { name:'下呂温泉', area:'岐阜県下呂市', lat:35.8104, lon:137.2456 },
-    { name:'飛騨高山 古い町並み', area:'岐阜県高山市', lat:36.1430, lon:137.2519 },
-    { name:'馬籠宿', area:'岐阜県中津川市', lat:35.5290, lon:137.5707 },
-    // 静岡
-    { name:'富士山 田子の浦', area:'静岡県富士市', lat:35.1523, lon:138.6891 },
-    { name:'熱海温泉 来宮神社', area:'静岡県熱海市', lat:35.1023, lon:139.0730 },
-    { name:'伊豆 城ヶ崎海岸', area:'静岡県伊東市', lat:34.8967, lon:139.1438 },
-    { name:'三保の松原', area:'静岡県静岡市', lat:35.0111, lon:138.5219 },
-    { name:'久能山東照宮', area:'静岡県静岡市', lat:34.9586, lon:138.4427 },
-    // 愛知
-    { name:'名古屋城', area:'愛知県名古屋市', lat:35.1856, lon:136.8993 },
-    { name:'熱田神宮', area:'愛知県名古屋市', lat:35.1276, lon:136.9087 },
-    { name:'犬山城', area:'愛知県犬山市', lat:35.3838, lon:136.9437 },
-    { name:'常滑 やきもの散歩道', area:'愛知県常滑市', lat:34.8858, lon:136.8298 },
-    { name:'豊川稲荷', area:'愛知県豊川市', lat:34.8290, lon:137.3762 },
-    // 三重
-    { name:'伊勢神宮 内宮', area:'三重県伊勢市', lat:34.4551, lon:136.7252 },
-    { name:'熊野古道 松本峠', area:'三重県熊野市', lat:33.8851, lon:136.1035 },
-    { name:'鳥羽水族館', area:'三重県鳥羽市', lat:34.4866, lon:136.8325 },
-    { name:'夫婦岩（二見浦）', area:'三重県伊勢市', lat:34.4890, lon:136.7785 },
-    { name:'赤目四十八滝', area:'三重県名張市', lat:34.5778, lon:136.1455 },
+  henro_iyo: [
+    { name:'40番 観自在寺', area:'愛媛県宇和郡愛南町', lat:32.9645975, lon:132.5640911 },
+    { name:'41番 龍光寺', area:'愛媛県宇和島市', lat:33.2951608, lon:132.5985247 },
+    { name:'42番 仏木寺', area:'愛媛県宇和島市', lat:33.3106302, lon:132.5814719 },
+    { name:'43番 明石寺', area:'愛媛県西予市', lat:33.369242, lon:132.5189911 },
+    { name:'44番 大寶寺', area:'愛媛県上浮穴郡久万高原町', lat:33.6611396, lon:132.9114812 },
+    { name:'45番 岩屋寺', area:'愛媛県上浮穴郡久万高原町', lat:33.6587196, lon:132.980803 },
+    { name:'46番 浄瑠璃寺', area:'愛媛県松山市', lat:33.7536359, lon:132.819178 },
+    { name:'47番 八坂寺', area:'愛媛県松山市', lat:33.757985, lon:132.8128166 },
+    { name:'48番 西林寺', area:'愛媛県松山市', lat:33.7937303, lon:132.813982 },
+    { name:'49番 浄土寺', area:'愛媛県松山市', lat:33.8167592, lon:132.8079001 },
+    { name:'50番 繁多寺', area:'愛媛県松山市', lat:33.8281398, lon:132.8045148 },
+    { name:'51番 石手寺', area:'愛媛県松山市', lat:33.8478959, lon:132.7964742 },
+    { name:'52番 太山寺', area:'愛媛県松山市', lat:33.885051, lon:132.714991 },
+    { name:'53番 円明寺', area:'愛媛県松山市', lat:33.8917163, lon:132.7396797 },
+    { name:'54番 延命寺', area:'愛媛県今治市', lat:34.0667512, lon:132.964046 },
+    { name:'55番 南光坊', area:'愛媛県今治市', lat:34.0682521, lon:132.9952296 },
+    { name:'56番 泰山寺', area:'愛媛県今治市', lat:34.0501493, lon:132.9745376 },
+    { name:'57番 栄福寺', area:'愛媛県今治市', lat:34.029828, lon:132.9781264 },
+    { name:'58番 仙遊寺', area:'愛媛県今治市', lat:34.0134348, lon:132.9775316 },
+    { name:'59番 国分寺', area:'愛媛県今治市', lat:34.026204, lon:133.0254638 },
+    { name:'60番 横峰寺', area:'愛媛県西条市', lat:33.8376667, lon:133.1110441 },
+    { name:'61番 香園寺', area:'愛媛県西条市', lat:33.8933894, lon:133.1034442 },
+    { name:'62番 宝寿寺', area:'愛媛県西条市', lat:33.8971908, lon:133.1149774 },
+    { name:'63番 吉祥寺', area:'愛媛県西条市', lat:33.8961214, lon:133.1293727 },
+    { name:'64番 前神寺', area:'愛媛県西条市', lat:33.8918706, lon:133.1602224 },
+    { name:'65番 三角寺', area:'愛媛県四国中央市', lat:33.9675831, lon:133.586606 },
   ],
-  kinki: [
-    // 滋賀
-    { name:'彦根城', area:'滋賀県彦根市', lat:35.2763, lon:136.2555 },
-    { name:'比叡山 延暦寺', area:'滋賀県大津市', lat:35.0716, lon:135.8409 },
-    { name:'琵琶湖 竹生島', area:'滋賀県長浜市', lat:35.4615, lon:136.1391 },
-    { name:'近江八幡 水郷', area:'滋賀県近江八幡市', lat:35.1294, lon:136.0979 },
-    { name:'メタセコイア並木', area:'滋賀県高島市', lat:35.4010, lon:135.9843 },
-    // 京都
-    { name:'金閣寺', area:'京都府京都市', lat:35.0394, lon:135.7292 },
-    { name:'清水寺', area:'京都府京都市', lat:34.9949, lon:135.7851 },
-    { name:'伏見稲荷大社', area:'京都府京都市', lat:34.9671, lon:135.7727 },
-    { name:'嵐山 渡月橋', area:'京都府京都市', lat:35.0094, lon:135.6779 },
-    { name:'天橋立', area:'京都府宮津市', lat:35.5562, lon:135.1838 },
-    // 大阪
-    { name:'大阪城', area:'大阪府大阪市', lat:34.6873, lon:135.5262 },
-    { name:'道頓堀', area:'大阪府大阪市', lat:34.6687, lon:135.5025 },
-    { name:'住吉大社', area:'大阪府大阪市', lat:34.6126, lon:135.4929 },
-    { name:'通天閣', area:'大阪府大阪市', lat:34.6523, lon:135.5063 },
-    { name:'万博記念公園 太陽の塔', area:'大阪府吹田市', lat:34.8093, lon:135.5259 },
-    // 兵庫
-    { name:'姫路城', area:'兵庫県姫路市', lat:34.8394, lon:134.6939 },
-    { name:'有馬温泉', area:'兵庫県神戸市', lat:34.7987, lon:135.2485 },
-    { name:'神戸 北野異人館', area:'兵庫県神戸市', lat:34.6987, lon:135.1872 },
-    { name:'城崎温泉', area:'兵庫県豊岡市', lat:35.6244, lon:134.8156 },
-    { name:'竹田城跡', area:'兵庫県朝来市', lat:35.2990, lon:134.8376 },
-    // 奈良
-    { name:'東大寺', area:'奈良県奈良市', lat:34.6886, lon:135.8398 },
-    { name:'春日大社', area:'奈良県奈良市', lat:34.6810, lon:135.8448 },
-    { name:'法隆寺', area:'奈良県生駒郡', lat:34.6147, lon:135.7344 },
-    { name:'吉野山 金峯山寺', area:'奈良県吉野郡', lat:34.3654, lon:135.8574 },
-    { name:'飛鳥 石舞台古墳', area:'奈良県高市郡', lat:34.4638, lon:135.8253 },
-    // 和歌山
-    { name:'熊野本宮大社', area:'和歌山県田辺市', lat:33.8375, lon:135.7876 },
-    { name:'高野山 奥の院', area:'和歌山県伊都郡', lat:34.2131, lon:135.5823 },
-    { name:'那智の滝', area:'和歌山県東牟婁郡', lat:33.6655, lon:135.9028 },
-    { name:'白浜 円月島', area:'和歌山県西牟婁郡', lat:33.6849, lon:135.3408 },
-    { name:'串本 橋杭岩', area:'和歌山県東牟婁郡', lat:33.4769, lon:135.7937 },
+  henro_sanuki: [
+    { name:'66番 雲辺寺', area:'徳島県三好市', lat:34.0354189, lon:133.723446 },
+    { name:'67番 大興寺', area:'香川県三豊市', lat:34.1020798, lon:133.7192067 },
+    { name:'68番 神恵院', area:'香川県観音寺市', lat:34.1339955, lon:133.6473334 },
+    { name:'69番 観音寺', area:'香川県観音寺市', lat:34.1344896, lon:133.6475575 },
+    { name:'70番 本山寺', area:'香川県三豊市', lat:34.1397672, lon:133.694143 },
+    { name:'71番 弥谷寺', area:'香川県三豊市', lat:34.2299816, lon:133.7243429 },
+    { name:'72番 曼荼羅寺', area:'香川県善通寺市', lat:34.2232788, lon:133.7501444 },
+    { name:'73番 出釈迦寺', area:'香川県善通寺市', lat:34.2192283, lon:133.7503038 },
+    { name:'74番 甲山寺', area:'香川県善通寺市', lat:34.2331837, lon:133.7658081 },
+    { name:'75番 善通寺', area:'香川県善通寺市', lat:34.2263325, lon:133.7761791 },
+    { name:'76番 金倉寺', area:'香川県善通寺市', lat:34.2499522, lon:133.7811187 },
+    { name:'77番 道隆寺', area:'香川県仲多度郡多度津町', lat:34.2767458, lon:133.7627199 },
+    { name:'78番 郷照寺', area:'香川県綾歌郡宇多津町', lat:34.3067002, lon:133.8245858 },
+    { name:'79番 天皇寺', area:'香川県坂出市', lat:34.3108413, lon:133.8830178 },
+    { name:'80番 国分寺', area:'香川県高松市', lat:34.3031594, lon:133.9441635 },
+    { name:'81番 白峯寺', area:'香川県坂出市', lat:34.3334763, lon:133.9267842 },
+    { name:'82番 根香寺', area:'香川県高松市', lat:34.3443846, lon:133.9607227 },
+    { name:'83番 一宮寺', area:'香川県高松市', lat:34.2864543, lon:134.0261973 },
+    { name:'84番 屋島寺', area:'香川県高松市', lat:34.357939, lon:134.1013011 },
+    { name:'85番 八栗寺', area:'香川県高松市', lat:34.3599239, lon:134.139874 },
+    { name:'86番 志度寺', area:'香川県さぬき市', lat:34.3243962, lon:134.1795947 },
+    { name:'87番 長尾寺', area:'香川県さぬき市', lat:34.2666969, lon:134.1716926 },
+    { name:'88番 大窪寺', area:'香川県さぬき市', lat:34.1913526, lon:134.2068739 },
   ],
-  chugoku: [
-    // 鳥取
-    { name:'鳥取砂丘', area:'鳥取県鳥取市', lat:35.5394, lon:134.2247 },
-    { name:'大山', area:'鳥取県西伯郡', lat:35.3656, lon:133.5516 },
-    { name:'皆生温泉', area:'鳥取県米子市', lat:35.4393, lon:133.3504 },
-    { name:'境港 水木しげるロード', area:'鳥取県境港市', lat:35.5431, lon:133.2318 },
-    { name:'三朝温泉', area:'鳥取県東伯郡', lat:35.3702, lon:133.8327 },
-    // 島根
+  major: [
+    { name:'伊勢神宮（内宮）', area:'三重県伊勢市', lat:34.4551, lon:136.7252 },
     { name:'出雲大社', area:'島根県出雲市', lat:35.4015, lon:132.6850 },
-    { name:'松江城', area:'島根県松江市', lat:35.4724, lon:133.0506 },
-    { name:'石見銀山', area:'島根県大田市', lat:35.0981, lon:132.4294 },
-    { name:'足立美術館', area:'島根県安来市', lat:35.4049, lon:133.2697 },
-    { name:'玉造温泉', area:'島根県松江市', lat:35.4183, lon:133.0124 },
-    // 岡山
-    { name:'岡山城・後楽園', area:'岡山県岡山市', lat:34.6655, lon:133.9368 },
-    { name:'倉敷美観地区', area:'岡山県倉敷市', lat:34.5948, lon:133.7717 },
-    { name:'備中松山城', area:'岡山県高梁市', lat:34.8057, lon:133.5984 },
-    { name:'蒜山高原', area:'岡山県真庭市', lat:35.2567, lon:133.5567 },
-    { name:'牛窓 オリーブ園', area:'岡山県瀬戸内市', lat:34.6745, lon:134.1588 },
-    // 広島
-    { name:'厳島神社', area:'広島県廿日市市', lat:34.2962, lon:132.3194 },
-    { name:'原爆ドーム', area:'広島県広島市', lat:34.3955, lon:132.4536 },
-    { name:'尾道 千光寺', area:'広島県尾道市', lat:34.4135, lon:133.1979 },
-    { name:'竹原 町並み保存地区', area:'広島県竹原市', lat:34.3428, lon:132.9158 },
-    { name:'三段峡', area:'広島県山県郡', lat:34.6302, lon:132.2434 },
-    // 山口
-    { name:'秋芳洞', area:'山口県美祢市', lat:34.2283, lon:131.3803 },
-    { name:'錦帯橋', area:'山口県岩国市', lat:34.1641, lon:132.1735 },
-    { name:'萩 城下町', area:'山口県萩市', lat:34.4082, lon:131.3985 },
-    { name:'角島大橋', area:'山口県下関市', lat:34.3740, lon:130.8757 },
-    { name:'下関 唐戸市場', area:'山口県下関市', lat:33.9546, lon:130.9393 },
-    // 徳島
-    { name:'大塚国際美術館', area:'徳島県鳴門市', lat:34.1744, lon:134.5264 },
-    { name:'鳴門の渦潮', area:'徳島県鳴門市', lat:34.2078, lon:134.6374 },
-    { name:'祖谷のかずら橋', area:'徳島県三好市', lat:33.8644, lon:133.8925 },
-    { name:'眉山', area:'徳島県徳島市', lat:34.0571, lon:134.5534 },
-    { name:'剣山', area:'徳島県三好郡', lat:33.8474, lon:134.0769 },
-    // 香川
-    { name:'金刀比羅宮', area:'香川県仲多度郡', lat:34.2131, lon:133.8145 },
-    { name:'栗林公園', area:'香川県高松市', lat:34.3329, lon:134.0476 },
-    { name:'直島 地中美術館', area:'香川県香川郡', lat:34.4529, lon:133.9956 },
-    { name:'小豆島 オリーブ公園', area:'香川県小豆郡', lat:34.4878, lon:134.2826 },
-    { name:'父母ヶ浜', area:'香川県三豊市', lat:34.2091, lon:133.6494 },
-    // 愛媛
-    { name:'道後温泉 本館', area:'愛媛県松山市', lat:33.8518, lon:132.7862 },
-    { name:'松山城', area:'愛媛県松山市', lat:33.8455, lon:132.7659 },
-    { name:'しまなみ海道 来島海峡大橋', area:'愛媛県今治市', lat:34.0786, lon:132.9940 },
-    { name:'内子町 古い街並み', area:'愛媛県喜多郡', lat:33.5372, lon:132.6598 },
-    { name:'四万十川 沈下橋', area:'高知県四万十市', lat:32.9965, lon:132.9498 },
-    // 高知
-    { name:'桂浜', area:'高知県高知市', lat:33.4836, lon:133.5668 },
-    { name:'高知城', area:'高知県高知市', lat:33.5609, lon:133.5311 },
-    { name:'足摺岬', area:'高知県土佐清水市', lat:32.7249, lon:133.0164 },
-    { name:'室戸岬', area:'高知県室戸市', lat:33.2491, lon:134.1759 },
-    { name:'龍河洞', area:'高知県香美市', lat:33.6136, lon:133.6945 },
+    { name:'高野山 奥の院', area:'和歌山県高野町', lat:34.2131, lon:135.5823 },
+  ],
+  kumano: [
+    { name:'熊野本宮大社', area:'和歌山県田辺市', lat:33.8405706, lon:135.7734753 },
+    { name:'熊野那智大社', area:'和歌山県那智勝浦町', lat:33.6686506, lon:135.8901334 },
+    { name:'熊野速玉大社', area:'和歌山県新宮市', lat:33.7322225, lon:135.9835101 },
+    { name:'青岸渡寺', area:'和歌山県那智勝浦町', lat:33.6691482, lon:135.889849 },
+    { name:'那智の滝（飛瀧神社）', area:'和歌山県那智勝浦町', lat:33.6737613, lon:135.8881657 },
+    { name:'花の窟神社', area:'和歌山県熊野市', lat:33.8799852, lon:136.0935406 },
+    { name:'阿須賀神社', area:'和歌山県新宮市', lat:33.7285616, lon:135.9972677 },
+    { name:'補陀洛山寺', area:'和歌山県那智勝浦町', lat:33.6446892, lon:135.9345017 },
+    { name:'産田神社', area:'和歌山県熊野市', lat:33.880649, lon:136.0783468 },
+    { name:'玉置神社', area:'奈良県十津川村', lat:33.9248073, lon:135.829974 },
+    { name:'丹倉神社', area:'三重県御浜町', lat:33.9060502, lon:136.0169958 },
+    { name:'獅子巖', area:'和歌山県那智勝浦町', lat:33.8842887, lon:136.0984396 },
+  ],
+  shrines: [
+    { name:'伏見稲荷大社', area:'京都府京都市', lat:34.9676945, lon:135.7791876 },
+    { name:'春日大社', area:'奈良県奈良市', lat:34.6815454, lon:135.8484719 },
+    { name:'東大寺', area:'奈良県奈良市', lat:34.6889851, lon:135.8398158 },
+    { name:'嚴島神社', area:'広島県廿日市市', lat:34.2959896, lon:132.3198285 },
+    { name:'太宰府天満宮', area:'福岡県太宰府市', lat:33.5213697, lon:130.5348239 },
+    { name:'浅草寺', area:'東京都台東区', lat:35.7147651, lon:139.7966553 },
+    { name:'日光東照宮', area:'栃木県日光市', lat:36.7580878, lon:139.5987466 },
+    { name:'鶴岡八幡宮', area:'神奈川県鎌倉市', lat:35.3259856, lon:139.5563462 },
+    { name:'諏訪大社（上社本宮）', area:'長野県諏訪市', lat:35.9982782, lon:138.1191482 },
+    { name:'出羽三山神社', area:'山形県鶴岡市', lat:38.7023491, lon:139.981353 },
+  ],
+  saigoku: [
+    { name:'1番 青岸渡寺', area:'和歌山県那智勝浦町', lat:33.6691482, lon:135.889849 },
+    { name:'2番 紀三井寺', area:'和歌山県和歌山市', lat:34.1821273, lon:135.1892299 },
+    { name:'3番 粉河寺', area:'和歌山県紀の川市', lat:34.2809364, lon:135.4059828 },
+    { name:'4番 施福寺', area:'大阪府和泉市', lat:34.392891, lon:135.511536 },
+    { name:'5番 葛井寺', area:'大阪府藤井寺市', lat:34.5700588, lon:135.596607 },
+    { name:'6番 壺阪寺', area:'奈良県高取町', lat:34.4264652, lon:135.8099277 },
+    { name:'7番 岡寺', area:'奈良県明日香村', lat:34.4718322, lon:135.8282623 },
+    { name:'8番 長谷寺', area:'奈良県桜井市', lat:34.535885, lon:135.906794 },
+    { name:'9番 興福寺南円堂', area:'奈良県奈良市', lat:34.6832311, lon:135.8311589 },
+    { name:'10番 三室戸寺', area:'京都府宇治市', lat:34.9004953, lon:135.8191632 },
+    { name:'11番 醍醐寺', area:'京都市伏見区', lat:34.9511172, lon:135.8193543 },
+    { name:'12番 岩間寺', area:'滋賀県大津市', lat:34.9328719, lon:135.8787728 },
+    { name:'13番 石山寺', area:'滋賀県大津市', lat:34.958559, lon:135.9015922 },
+    { name:'14番 三井寺', area:'滋賀県大津市', lat:35.0133981, lon:135.852861 },
+    { name:'15番 今熊野観音寺', area:'京都市東山区', lat:34.9797874, lon:135.7811855 },
+    { name:'16番 清水寺', area:'京都市東山区', lat:34.9946662, lon:135.784661 },
+    { name:'17番 六波羅蜜寺', area:'京都市東山区', lat:34.9970888, lon:135.7733663 },
+    { name:'18番 六角堂', area:'京都市中京区', lat:35.0077132, lon:135.7602563 },
+    { name:'19番 革堂', area:'京都市上京区', lat:35.0163188, lon:135.7676212 },
+    { name:'20番 善峯寺', area:'京都市西京区', lat:34.9380666, lon:135.644566 },
+    { name:'21番 穴太寺', area:'京都府亀岡市', lat:35.0066478, lon:135.5492127 },
+    { name:'22番 総持寺', area:'大阪府茨木市', lat:34.8298642, lon:135.5824115 },
+    { name:'23番 勝尾寺', area:'大阪府箕面市', lat:34.8657752, lon:135.491087 },
+    { name:'24番 中山寺', area:'兵庫県宝塚市', lat:34.8179294, lon:135.369142 },
+    { name:'25番 播州清水寺', area:'兵庫県加東市', lat:34.9723344, lon:135.0811147 },
+    { name:'26番 一乗寺', area:'兵庫県加西市', lat:34.8592896, lon:134.8189792 },
+    { name:'27番 圓教寺', area:'兵庫県姫路市', lat:34.8889826, lon:134.6605038 },
+    { name:'28番 成相寺', area:'京都府宮津市', lat:35.5952739, lon:135.187512 },
+    { name:'29番 松尾寺', area:'京都府舞鶴市', lat:35.4970776, lon:135.4690224 },
+    { name:'30番 宝厳寺', area:'滋賀県長浜市竹生島', lat:35.421367, lon:136.1433466 },
+    { name:'31番 長命寺', area:'滋賀県近江八幡市', lat:35.1627722, lon:136.0638583 },
+    { name:'32番 観音正寺', area:'滋賀県近江八幡市', lat:35.1449585, lon:136.160614 },
+    { name:'33番 華厳寺', area:'岐阜県揖斐川町', lat:35.5371834, lon:136.6079514 },
+  ],
+  bando: [
+    { name:'1番 杉本寺',       area:'神奈川県鎌倉市',   lat:35.3194, lon:139.5553 },
+    { name:'2番 岩殿寺',       area:'神奈川県逗子市',   lat:35.2978, lon:139.5800 },
+    { name:'3番 安養院',       area:'神奈川県鎌倉市',   lat:35.3036, lon:139.5508 },
+    { name:'4番 長谷寺',       area:'神奈川県鎌倉市',   lat:35.3169, lon:139.5344 },
+    { name:'5番 勝福寺',       area:'神奈川県小田原市', lat:35.2492, lon:139.1417 },
+    { name:'6番 長谷寺',       area:'神奈川県厚木市',   lat:35.3978, lon:139.3303 },
+    { name:'7番 光明寺',       area:'神奈川県座間市',   lat:35.4828, lon:139.4000 },
+    { name:'8番 星谷寺',       area:'神奈川県座間市',   lat:35.4897, lon:139.4094 },
+    { name:'9番 慈光寺',       area:'埼玉県ときがわ町', lat:35.9922, lon:139.2647 },
+    { name:'10番 正法寺',      area:'埼玉県小川町',     lat:36.0022, lon:139.3058 },
+    { name:'11番 安楽寺',      area:'埼玉県吉見町',     lat:36.0572, lon:139.4361 },
+    { name:'12番 慈恩寺',      area:'埼玉県さいたま市', lat:35.9603, lon:139.7061 },
+    { name:'13番 浅草寺',      area:'東京都台東区',     lat:35.7148, lon:139.7967 },
+    { name:'14番 弘明寺',      area:'神奈川県横浜市',   lat:35.3933, lon:139.5831 },
+    { name:'15番 長谷寺',      area:'群馬県高崎市',     lat:36.2839, lon:138.9217 },
+    { name:'16番 水澤寺',      area:'群馬県渋川市',     lat:36.5178, lon:138.9658 },
+    { name:'17番 出流山満願寺',area:'栃木県栃木市',     lat:36.4319, lon:139.8281 },
+    { name:'18番 中禅寺',      area:'栃木県日光市',     lat:36.7356, lon:139.4969 },
+    { name:'19番 大谷寺',      area:'栃木県宇都宮市',   lat:36.6011, lon:139.8458 },
+    { name:'20番 西明寺',      area:'栃木県益子町',     lat:36.4689, lon:140.1992 },
+    { name:'21番 日輪寺',      area:'茨城県常陸太田市', lat:36.6639, lon:140.4947 },
+    { name:'22番 佐竹寺',      area:'茨城県常陸太田市', lat:36.6408, lon:140.4703 },
+    { name:'23番 観音寺',      area:'茨城県つくば市',   lat:36.2253, lon:140.1006 },
+    { name:'24番 楽法寺',      area:'茨城県桜川市',     lat:36.3133, lon:140.0650 },
+    { name:'25番 大御堂',      area:'茨城県坂東市',     lat:36.0358, lon:139.8828 },
+    { name:'26番 清滝寺',      area:'茨城県土浦市',     lat:36.0794, lon:140.2058 },
+    { name:'27番 円福寺',      area:'千葉県銚子市',     lat:35.7217, lon:140.8264 },
+    { name:'28番 龍正院',      area:'千葉県成田市',     lat:35.7636, lon:140.2986 },
+    { name:'29番 千葉寺',      area:'千葉県千葉市',     lat:35.6072, lon:140.1272 },
+    { name:'30番 高蔵寺',      area:'千葉県木更津市',   lat:35.4183, lon:139.9625 },
+    { name:'31番 笠森寺',      area:'千葉県長南町',     lat:35.4225, lon:140.2533 },
+    { name:'32番 清澄寺',      area:'千葉県鴨川市',     lat:35.2000, lon:140.1622 },
+    { name:'33番 那古寺',      area:'千葉県館山市',     lat:34.9817, lon:139.8839 },
+  ],
+  chichibu: [
+    { name:'1番 四萬部寺',   area:'埼玉県小鹿野町', lat:35.9764, lon:139.0158 },
+    { name:'2番 真福寺',     area:'埼玉県秩父市',   lat:35.9853, lon:139.0494 },
+    { name:'3番 常泉寺',     area:'埼玉県秩父市',   lat:35.9878, lon:139.0753 },
+    { name:'4番 金昌寺',     area:'埼玉県秩父市',   lat:35.9894, lon:139.0931 },
+    { name:'5番 語歌堂',     area:'埼玉県秩父市',   lat:35.9969, lon:139.1086 },
+    { name:'6番 卜雲寺',     area:'埼玉県秩父市',   lat:36.0056, lon:139.1086 },
+    { name:'7番 法長寺',     area:'埼玉県秩父市',   lat:36.0186, lon:139.1319 },
+    { name:'8番 西善寺',     area:'埼玉県秩父市',   lat:36.0258, lon:139.1439 },
+    { name:'9番 明智寺',     area:'埼玉県秩父市',   lat:36.0386, lon:139.1292 },
+    { name:'10番 大慈寺',    area:'埼玉県秩父市',   lat:36.0469, lon:139.1622 },
+    { name:'11番 常楽寺',    area:'埼玉県秩父市',   lat:36.0519, lon:139.1756 },
+    { name:'12番 野坂寺',    area:'埼玉県秩父市',   lat:36.0578, lon:139.1897 },
+    { name:'13番 慈眼寺',    area:'埼玉県秩父市',   lat:36.0019, lon:139.0753 },
+    { name:'14番 今宮坊',    area:'埼玉県秩父市',   lat:36.0047, lon:139.0906 },
+    { name:'15番 蔵福寺',    area:'埼玉県秩父市',   lat:35.9989, lon:139.0978 },
+    { name:'16番 西光寺',    area:'埼玉県秩父市',   lat:35.9953, lon:139.0975 },
+    { name:'17番 定林寺',    area:'埼玉県秩父市',   lat:35.9933, lon:139.0947 },
+    { name:'18番 神門寺',    area:'埼玉県秩父市',   lat:35.9892, lon:139.0878 },
+    { name:'19番 龍石寺',    area:'埼玉県秩父市',   lat:35.9872, lon:139.0875 },
+    { name:'20番 岩之上堂',  area:'埼玉県秩父市',   lat:35.9842, lon:139.1003 },
+    { name:'21番 観音寺',    area:'埼玉県秩父市',   lat:35.9828, lon:139.0892 },
+    { name:'22番 童子堂',    area:'埼玉県秩父市',   lat:35.9811, lon:139.0947 },
+    { name:'23番 音楽寺',    area:'埼玉県秩父市',   lat:35.9819, lon:139.0931 },
+    { name:'24番 法泉寺',    area:'埼玉県秩父市',   lat:35.9939, lon:139.0867 },
+    { name:'25番 久昌寺',    area:'埼玉県秩父市',   lat:35.9958, lon:139.0825 },
+    { name:'26番 円融寺',    area:'埼玉県秩父市',   lat:36.0033, lon:139.0839 },
+    { name:'27番 大淵寺',    area:'埼玉県秩父市',   lat:36.0047, lon:139.0861 },
+    { name:'28番 橋立堂',    area:'埼玉県秩父市',   lat:36.0319, lon:139.0772 },
+    { name:'29番 長泉院',    area:'埼玉県秩父市',   lat:36.0606, lon:139.0672 },
+    { name:'30番 法雲寺',    area:'埼玉県秩父市',   lat:36.0644, lon:139.0694 },
+    { name:'31番 観音院',    area:'埼玉県小鹿野町', lat:36.0753, lon:139.0561 },
+    { name:'32番 法性寺',    area:'埼玉県小鹿野町', lat:36.0756, lon:139.0372 },
+    { name:'33番 菊水寺',    area:'埼玉県秩父市',   lat:36.0736, lon:139.0250 },
+    { name:'34番 水潜寺',    area:'埼玉県小鹿野町', lat:36.0703, lon:139.0083 },
+  ],
+  mountains: [
+    { name:'高野山奥の院',    area:'和歌山県高野町',   lat:34.2136, lon:135.5897 },
+    { name:'比叡山延暦寺',    area:'滋賀県大津市',     lat:35.0686, lon:135.8408 },
+    { name:'大山（伯耆大山）',area:'鳥取県大山町',     lat:35.3672, lon:133.5425 },
+    { name:'羽黒山出羽三山',  area:'山形県鶴岡市',     lat:38.7208, lon:139.9731 },
+    { name:'白山比咩神社',    area:'石川県白山市',     lat:36.1597, lon:136.7711 },
+    { name:'立山雄山神社',    area:'富山県立山町',     lat:36.5817, lon:137.6181 },
+    { name:'恵那山（光前寺）',area:'長野県駒ヶ根市',   lat:35.7286, lon:137.9239 },
+    { name:'金峯山寺',        area:'奈良県吉野町',     lat:34.3728, lon:135.8536 },
+    { name:'大峯山寺',        area:'奈良県天川村',     lat:34.2219, lon:135.8906 },
+    { name:'英彦山神宮',      area:'福岡県添田町',     lat:33.4833, lon:130.8500 },
   ],
   kyushu: [
-    // 福岡
-    { name:'太宰府天満宮', area:'福岡県太宰府市', lat:33.5218, lon:130.5352 },
-    { name:'糸島 二見ヶ浦', area:'福岡県糸島市', lat:33.5574, lon:130.1774 },
-    { name:'門司港 レトロ地区', area:'福岡県北九州市', lat:33.9439, lon:130.9691 },
-    { name:'柳川 川下り', area:'福岡県柳川市', lat:33.1646, lon:130.4052 },
-    { name:'英彦山', area:'福岡県田川郡', lat:33.4753, lon:130.8090 },
-    // 佐賀
-    { name:'唐津城', area:'佐賀県唐津市', lat:33.4587, lon:129.9707 },
-    { name:'吉野ヶ里遺跡', area:'佐賀県神埼郡', lat:33.3356, lon:130.3936 },
-    { name:'有田 陶磁器まつり', area:'佐賀県西松浦郡', lat:33.2199, lon:129.8804 },
-    { name:'武雄温泉', area:'佐賀県武雄市', lat:33.1942, lon:130.0180 },
-    { name:'呼子 朝市', area:'佐賀県唐津市', lat:33.5253, lon:129.8736 },
-    // 長崎
-    { name:'軍艦島（端島）', area:'長崎県長崎市', lat:32.6277, lon:129.7380 },
-    { name:'グラバー園', area:'長崎県長崎市', lat:32.7355, lon:129.8726 },
-    { name:'平和公園', area:'長崎県長崎市', lat:32.7742, lon:129.8645 },
-    { name:'雲仙岳', area:'長崎県雲仙市', lat:32.7572, lon:130.2839 },
-    { name:'ハウステンボス', area:'長崎県佐世保市', lat:33.0944, lon:129.7835 },
-    // 熊本
-    { name:'熊本城', area:'熊本県熊本市', lat:32.8033, lon:130.7058 },
-    { name:'阿蘇山 中岳', area:'熊本県阿蘇市', lat:32.8838, lon:131.0863 },
-    { name:'黒川温泉', area:'熊本県阿蘇郡', lat:33.0462, lon:131.1059 },
-    { name:'水前寺成趣園', area:'熊本県熊本市', lat:32.7901, lon:130.7331 },
-    { name:'天草 崎津集落', area:'熊本県天草市', lat:32.4572, lon:130.1683 },
-    // 大分
-    { name:'別府温泉 地獄めぐり', area:'大分県別府市', lat:33.2843, lon:131.4988 },
-    { name:'湯布院 金鱗湖', area:'大分県由布市', lat:33.2607, lon:131.3618 },
-    { name:'臼杵石仏', area:'大分県臼杵市', lat:33.1238, lon:131.8036 },
-    { name:'耶馬渓', area:'大分県中津市', lat:33.4701, lon:131.1736 },
-    { name:'国東半島 富貴寺', area:'大分県豊後高田市', lat:33.5827, lon:131.5510 },
-    // 宮崎
-    { name:'高千穂峡', area:'宮崎県西臼杵郡', lat:32.7107, lon:131.3093 },
-    { name:'鵜戸神宮', area:'宮崎県日南市', lat:31.7310, lon:131.3889 },
-    { name:'青島', area:'宮崎県宮崎市', lat:31.8509, lon:131.4773 },
-    { name:'日南海岸 サンメッセ日南', area:'宮崎県日南市', lat:31.7817, lon:131.3778 },
-    { name:'都城 関之尾滝', area:'宮崎県都城市', lat:31.8659, lon:130.9816 },
-    // 鹿児島
-    { name:'桜島', area:'鹿児島県鹿児島市', lat:31.5855, lon:130.6572 },
-    { name:'指宿温泉 砂むし会館', area:'鹿児島県指宿市', lat:31.2562, lon:130.6369 },
-    { name:'霧島神宮', area:'鹿児島県霧島市', lat:31.8950, lon:130.8631 },
-    { name:'知覧特攻平和会館', area:'鹿児島県南九州市', lat:31.3666, lon:130.4467 },
-    { name:'屋久島 白谷雲水峡', area:'鹿児島県熊毛郡', lat:30.3880, lon:130.6580 },
-    // 沖縄
-    { name:'首里城', area:'沖縄県那覇市', lat:26.2172, lon:127.7197 },
-    { name:'美ら海水族館', area:'沖縄県国頭郡', lat:26.6939, lon:127.8783 },
-    { name:'古宇利島 ハートロック', area:'沖縄県国頭郡', lat:26.8612, lon:128.0255 },
-    { name:'首里 斎場御嶽', area:'沖縄県南城市', lat:26.1430, lon:127.8206 },
-    { name:'石垣島 川平湾', area:'沖縄県石垣市', lat:24.4521, lon:124.1460 },
+    { name:'1番 馬頭観音堂',  area:'福岡県北九州市',    lat:33.8833, lon:130.8833 },
+    { name:'5番 大興善寺',    area:'佐賀県基山町',      lat:33.4069, lon:130.5494 },
+    { name:'10番 誓願寺',     area:'熊本県人吉市',      lat:32.2108, lon:130.7614 },
+    { name:'15番 清水寺',     area:'鹿児島県薩摩川内市',lat:31.9233, lon:130.4194 },
+    { name:'20番 最教寺',     area:'長崎県平戸市',      lat:33.3642, lon:129.5536 },
+    { name:'25番 岩屋寺',     area:'大分県豊後大野市',  lat:32.9897, lon:131.5483 },
+    { name:'28番 龍岩寺',     area:'大分県宇佐市',      lat:33.5778, lon:131.3014 },
+    { name:'30番 両子寺',     area:'大分県国東市',      lat:33.5317, lon:131.5583 },
+    { name:'33番 太平寺',     area:'宮崎県延岡市',      lat:32.5817, lon:131.6619 },
   ],
-
-  // ── テーマ別 ──
-  onsen: [
-    { name:'草津温泉', area:'群馬県吾妻郡', lat:36.6219, lon:138.5959 },
-    { name:'有馬温泉', area:'兵庫県神戸市', lat:34.7987, lon:135.2485 },
-    { name:'道後温泉', area:'愛媛県松山市', lat:33.8518, lon:132.7862 },
-    { name:'別府温泉', area:'大分県別府市', lat:33.2843, lon:131.4988 },
-    { name:'登別温泉', area:'北海道登別市', lat:42.4611, lon:141.1039 },
-    { name:'黒川温泉', area:'熊本県阿蘇郡', lat:33.0462, lon:131.1059 },
-    { name:'湯布院温泉', area:'大分県由布市', lat:33.2607, lon:131.3618 },
-    { name:'城崎温泉', area:'兵庫県豊岡市', lat:35.6244, lon:134.8156 },
-    { name:'箱根温泉郷', area:'神奈川県足柄下郡', lat:35.2375, lon:139.0204 },
-    { name:'熱海温泉', area:'静岡県熱海市', lat:35.1023, lon:139.0730 },
-    { name:'下呂温泉', area:'岐阜県下呂市', lat:35.8104, lon:137.2456 },
-    { name:'乳頭温泉郷', area:'秋田県仙北市', lat:39.7558, lon:140.7235 },
-    { name:'銀山温泉', area:'山形県尾花沢市', lat:38.6183, lon:140.5633 },
-    { name:'指宿温泉', area:'鹿児島県指宿市', lat:31.2562, lon:130.6369 },
-    { name:'蔵王温泉', area:'山形県山形市', lat:38.2228, lon:140.3863 },
-    { name:'那須温泉郷', area:'栃木県那須郡', lat:37.1038, lon:140.0452 },
-    { name:'鬼怒川温泉', area:'栃木県日光市', lat:36.8022, lon:139.6636 },
-    { name:'白浜温泉', area:'和歌山県西牟婁郡', lat:33.6849, lon:135.3408 },
-    { name:'三朝温泉', area:'鳥取県東伯郡', lat:35.3702, lon:133.8327 },
-    { name:'万座温泉', area:'群馬県吾妻郡', lat:36.6383, lon:138.4960 },
+  betsugaku: [
+    { name:'1番 大山寺',      area:'徳島県鳴門市',     lat:34.1750, lon:134.5500 },
+    { name:'2番 童学寺',      area:'徳島県石井町',     lat:34.0872, lon:134.4317 },
+    { name:'3番 慈眼寺',      area:'徳島県勝浦町',     lat:33.9333, lon:134.5167 },
+    { name:'4番 鯖大師本坊',  area:'徳島県海陽町',     lat:33.5917, lon:134.3083 },
+    { name:'5番 大善寺',      area:'高知県香南市',     lat:33.5756, lon:133.7036 },
+    { name:'6番 龍光院',      area:'高知県宿毛市',     lat:32.9383, lon:132.7303 },
+    { name:'7番 出石寺',      area:'愛媛県大洲市',     lat:33.5044, lon:132.5803 },
+    { name:'8番 十夜ヶ橋',    area:'愛媛県大洲市',     lat:33.5097, lon:132.5444 },
+    { name:'9番 文殊院',      area:'愛媛県西条市',     lat:33.9147, lon:133.1819 },
+    { name:'10番 興隆寺',     area:'愛媛県西条市',     lat:33.8833, lon:133.2167 },
+    { name:'11番 生木地蔵',   area:'愛媛県西条市',     lat:33.9217, lon:133.1217 },
+    { name:'12番 延命寺',     area:'愛媛県今治市',     lat:34.0661, lon:132.9447 },
+    { name:'13番 仙龍寺',     area:'愛媛県四国中央市', lat:33.9956, lon:133.5583 },
+    { name:'14番 椿堂',       area:'愛媛県四国中央市', lat:34.0019, lon:133.5372 },
+    { name:'15番 箸蔵寺',     area:'徳島県三好市',     lat:34.0019, lon:133.8783 },
+    { name:'16番 萩原寺',     area:'香川県観音寺市',   lat:34.1239, lon:133.6494 },
+    { name:'17番 神野寺',     area:'香川県まんのう町', lat:34.1819, lon:133.7936 },
+    { name:'18番 海岸寺',     area:'香川県多度津町',   lat:34.2742, lon:133.7528 },
+    { name:'19番 香西寺',     area:'香川県高松市',     lat:34.3383, lon:134.0028 },
+    { name:'20番 大瀧寺',     area:'徳島県美馬市',     lat:33.9750, lon:133.9833 },
   ],
-  yama: [
-    { name:'富士山', area:'静岡県・山梨県', lat:35.3606, lon:138.7274 },
-    { name:'北岳', area:'山梨県南アルプス市', lat:35.6742, lon:138.2389 },
-    { name:'槍ヶ岳', area:'長野県松本市', lat:36.3430, lon:137.6482 },
-    { name:'奥穂高岳', area:'長野県松本市', lat:36.2887, lon:137.6476 },
-    { name:'立山（雄山）', area:'富山県中新川郡', lat:36.5783, lon:137.6179 },
-    { name:'剱岳', area:'富山県中新川郡', lat:36.6229, lon:137.6168 },
-    { name:'白山', area:'石川県白山市', lat:36.1530, lon:136.7714 },
-    { name:'大雪山 旭岳', area:'北海道上川郡', lat:43.6633, lon:142.8571 },
-    { name:'羊蹄山', area:'北海道虻田郡', lat:42.8273, lon:140.8041 },
-    { name:'岩木山', area:'青森県弘前市', lat:40.6567, lon:140.3023 },
-    { name:'磐梯山', area:'福島県耶麻郡', lat:37.5983, lon:140.0769 },
-    { name:'那須岳 茶臼岳', area:'栃木県那須郡', lat:37.1130, lon:140.0490 },
-    { name:'雲取山', area:'東京都西多摩郡', lat:35.8543, lon:138.9427 },
-    { name:'石鎚山', area:'愛媛県西条市', lat:33.7661, lon:133.1168 },
-    { name:'九重山 久住山', area:'大分県竹田市', lat:33.0849, lon:131.2422 },
-    { name:'阿蘇山 高岳', area:'熊本県阿蘇市', lat:32.8838, lon:131.0863 },
-    { name:'宮之浦岳（屋久島）', area:'鹿児島県熊毛郡', lat:30.3204, lon:130.5329 },
-    { name:'大台ヶ原 日出ヶ岳', area:'奈良県吉野郡', lat:34.1883, lon:136.1072 },
-    { name:'御嶽山', area:'長野県木曽郡', lat:35.8934, lon:137.4800 },
-    { name:'高尾山', area:'東京都八王子市', lat:35.6254, lon:139.2436 },
-  ],
-  shima: [
-    { name:'佐渡島', area:'新潟県佐渡市', lat:38.0194, lon:138.3691 },
-    { name:'淡路島', area:'兵庫県洲本市', lat:34.3374, lon:134.8987 },
-    { name:'屋久島', area:'鹿児島県熊毛郡', lat:30.3880, lon:130.6580 },
-    { name:'奄美大島', area:'鹿児島県奄美市', lat:28.3753, lon:129.4946 },
-    { name:'石垣島', area:'沖縄県石垣市', lat:24.3399, lon:124.1556 },
-    { name:'宮古島', area:'沖縄県宮古島市', lat:24.8058, lon:125.2812 },
-    { name:'竹富島', area:'沖縄県八重山郡', lat:24.3268, lon:124.0938 },
-    { name:'西表島', area:'沖縄県八重山郡', lat:24.3334, lon:123.8016 },
-    { name:'小豆島', area:'香川県小豆郡', lat:34.4878, lon:134.2826 },
-    { name:'直島', area:'香川県香川郡', lat:34.4529, lon:133.9956 },
-    { name:'五島列島 福江島', area:'長崎県五島市', lat:32.6944, lon:128.8417 },
-    { name:'壱岐島', area:'長崎県壱岐市', lat:33.7522, lon:129.6923 },
-    { name:'対馬', area:'長崎県対馬市', lat:34.2038, lon:129.2892 },
-    { name:'江の島', area:'神奈川県藤沢市', lat:35.2996, lon:139.4826 },
-  ],
+  tokai: [
+    { name:'1番 観福寺',   area:'愛知県豊川市',   lat:34.8272, lon:137.3764 },
+    { name:'5番 財賀寺',   area:'愛知県豊川市',   lat:34.8400, lon:137.4158 },
+    { name:'10番 鳳来寺',  area:'愛知県新城市',   lat:34.9319, lon:137.5897 },
+    { name:'20番 甲賀寺',  area:'三重県津市',     lat:34.7194, lon:136.5022 },
+    { name:'25番 岩屋観音',area:'三重県亀山市',   lat:34.8572, lon:136.3817 },
+    { name:'35番 法雲寺',  area:'岐阜県関市',     lat:35.4917, lon:136.9167 },
+    { name:'40番 横蔵寺',  area:'岐阜県揖斐川町', lat:35.4978, lon:136.5333 },
+    { name:'49番 清龍寺',  area:'静岡県浜松市',   lat:34.7500, lon:137.8167 },
+  ]
 };
 
 
@@ -1803,6 +1859,7 @@ let gState = {
   destName: '',
   destArea: '',
   destDir: null,
+  routeStops: [],
   honmei: null,
   tsukimei: null,
   calYear: null,
@@ -1880,6 +1937,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // プリセットボタン描画（常に実行）
   try { renderPresets(); } catch(e) { console.warn('renderPresets error:', e); }
+  try { renderPilgrimageRoute(); } catch(e) { console.warn('renderPilgrimageRoute error:', e); }
 
   // 今月のカレンダー初期化
   const now = new Date();
@@ -1900,7 +1958,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadStarInfo() {
-  const birth = getStoredBirth();
+  const birth = localStorage.getItem('kitoku-birth') || localStorage.getItem('kitoku_birth');
   if (!birth) return;
   const [by, bm, bd] = birth.split('-').map(Number);
   if (!by || !bm || !bd) return;
@@ -1929,23 +1987,6 @@ function loadStarInfo() {
   })();
 }
 
-function getStoredBirth() {
-  let birth = '';
-  try {
-    birth = localStorage.getItem('kitoku-birth') ||
-      localStorage.getItem('kitoku_birth') ||
-      sessionStorage.getItem('kitoku-birth') ||
-      '';
-  } catch(e) {}
-
-  // ゼロ埋めあり（1967-06-14）・なし（1967-6-14）両方に対応
-  if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(birth)) {
-    try { localStorage.setItem('kitoku-birth', birth); } catch(e) {}
-    return birth;
-  }
-  return '';
-}
-
 // ============================================================
 // 自宅登録
 // ============================================================
@@ -1958,7 +1999,7 @@ async function searchHome() {
 
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&accept-language=ja`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-travel/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
     const data = await res.json();
     if (!data.length) { status.textContent = '場所が見つかりませんでした。別の住所で試してください。'; return; }
     const r = data[0];
@@ -2081,128 +2122,20 @@ function toggleGroup(label, gridId) {
 }
 
 function renderPresets() {
-  renderPresetGrid('grid-hokkaido', SACRED_PLACES.hokkaido);
-  renderPresetGrid('grid-kanto',    SACRED_PLACES.kanto);
-  renderPresetGrid('grid-chubu',    SACRED_PLACES.chubu);
-  renderPresetGrid('grid-kinki',    SACRED_PLACES.kinki);
-  renderPresetGrid('grid-chugoku',  SACRED_PLACES.chugoku);
-  renderPresetGrid('grid-kyushu',   SACRED_PLACES.kyushu);
-  renderPresetGrid('grid-onsen',    SACRED_PLACES.onsen);
-  renderPresetGrid('grid-yama',     SACRED_PLACES.yama);
-  renderPresetGrid('grid-shima',    SACRED_PLACES.shima);
-}
-
-// ── 海外旅先データ ──
-const OVERSEAS_PLACES = {
-  sea: [
-    { name:'バンコク 王宮・ワット・プラケオ', area:'タイ・バンコク', lat:13.7516, lon:100.4920 },
-    { name:'チェンマイ ドイステープ寺院', area:'タイ・チェンマイ', lat:18.8048, lon:98.9217 },
-    { name:'プーケット パトンビーチ', area:'タイ・プーケット', lat:7.8939, lon:98.2970 },
-    { name:'アユタヤ 歴史公園', area:'タイ・アユタヤ', lat:14.3553, lon:100.5694 },
-    { name:'コ・サムイ チャウエンビーチ', area:'タイ・コサムイ', lat:9.5318, lon:100.0619 },
-    { name:'チェンライ ワット・ロンクン', area:'タイ・チェンライ', lat:19.8270, lon:99.7633 },
-    { name:'バリ島 ウブド', area:'インドネシア・バリ', lat:-8.5069, lon:115.2625 },
-    { name:'バリ島 タナロット寺院', area:'インドネシア・バリ', lat:-8.6215, lon:115.0867 },
-    { name:'バリ島 クタビーチ', area:'インドネシア・バリ', lat:-8.7183, lon:115.1685 },
-    { name:'バリ島 ヌサドゥア', area:'インドネシア・バリ', lat:-8.8010, lon:115.2307 },
-    { name:'ジョグジャカルタ ボロブドゥール', area:'インドネシア・ジャワ', lat:-7.6079, lon:110.2038 },
-    { name:'ハノイ ホアンキエム湖', area:'ベトナム・ハノイ', lat:21.0285, lon:105.8542 },
-    { name:'ホーチミン 統一会堂', area:'ベトナム・ホーチミン', lat:10.7769, lon:106.6953 },
-    { name:'ホイアン 旧市街', area:'ベトナム・ホイアン', lat:15.8801, lon:108.3380 },
-    { name:'ハロン湾', area:'ベトナム・クアンニン省', lat:20.9101, lon:107.1839 },
-    { name:'ダナン ミーケービーチ', area:'ベトナム・ダナン', lat:16.0544, lon:108.2022 },
-    { name:'シンガポール マリーナベイサンズ', area:'シンガポール', lat:1.2834, lon:103.8607 },
-    { name:'シンガポール ガーデンズバイザベイ', area:'シンガポール', lat:1.2816, lon:103.8636 },
-    { name:'アンコールワット', area:'カンボジア・シェムリアップ', lat:13.4125, lon:103.8670 },
-    { name:'アンコールトム バイヨン', area:'カンボジア・シェムリアップ', lat:13.4413, lon:103.8587 },
-    { name:'クアラルンプール ペトロナスタワー', area:'マレーシア・KL', lat:3.1579, lon:101.7116 },
-    { name:'ペナン島 ジョージタウン', area:'マレーシア・ペナン', lat:5.4164, lon:100.3327 },
-    { name:'バガン 仏塔群', area:'ミャンマー・バガン', lat:21.1717, lon:94.8585 },
-    { name:'セブ島 マクタン', area:'フィリピン・セブ', lat:10.3157, lon:123.8854 },
-    { name:'マニラ イントラムロス', area:'フィリピン・マニラ', lat:14.5890, lon:120.9749 },
-    { name:'ルアンパバーン 旧市街', area:'ラオス', lat:19.8831, lon:102.1347 },
-    { name:'ルアンパバーン クアンシーの滝', area:'ラオス', lat:19.7258, lon:101.9857 },
-    { name:'ホーチミン メコン川クルーズ', area:'ベトナム・ミトー', lat:10.3617, lon:106.3565 },
-  ],
-  europe: [
-    { name:'パリ エッフェル塔', area:'フランス・パリ', lat:48.8584, lon:2.2945 },
-    { name:'パリ ルーヴル美術館', area:'フランス・パリ', lat:48.8606, lon:2.3376 },
-    { name:'モン・サン＝ミッシェル', area:'フランス・ノルマンディー', lat:48.6361, lon:-1.5115 },
-    { name:'ヴェルサイユ宮殿', area:'フランス・イル＝ド＝フランス', lat:48.8049, lon:2.1204 },
-    { name:'ニース コート・ダジュール', area:'フランス・ニース', lat:43.7102, lon:7.2620 },
-    { name:'ローマ コロッセオ', area:'イタリア・ローマ', lat:41.8902, lon:12.4922 },
-    { name:'バチカン サン・ピエトロ大聖堂', area:'バチカン市国', lat:41.9022, lon:12.4539 },
-    { name:'フィレンツェ ドゥオーモ', area:'イタリア・フィレンツェ', lat:43.7731, lon:11.2560 },
-    { name:'ヴェネツィア サン・マルコ広場', area:'イタリア・ヴェネツィア', lat:45.4341, lon:12.3388 },
-    { name:'アマルフィ海岸', area:'イタリア・カンパニア', lat:40.6340, lon:14.6027 },
-    { name:'バルセロナ サグラダ・ファミリア', area:'スペイン・バルセロナ', lat:41.4036, lon:2.1744 },
-    { name:'マドリード プラド美術館', area:'スペイン・マドリード', lat:40.4138, lon:-3.6922 },
-    { name:'グラナダ アルハンブラ宮殿', area:'スペイン・グラナダ', lat:37.1760, lon:-3.5881 },
-    { name:'サンティアゴ・デ・コンポステーラ', area:'スペイン・ガリシア', lat:42.8805, lon:-8.5458 },
-    { name:'ロンドン 大英博物館', area:'イギリス・ロンドン', lat:51.5194, lon:-0.1270 },
-    { name:'ロンドン バッキンガム宮殿', area:'イギリス・ロンドン', lat:51.5014, lon:-0.1419 },
-    { name:'ストーンヘンジ', area:'イギリス・ウィルトシャー', lat:51.1789, lon:-1.8262 },
-    { name:'ノイシュヴァンシュタイン城', area:'ドイツ・バイエルン', lat:47.5576, lon:10.7498 },
-    { name:'ベルリン ブランデンブルク門', area:'ドイツ・ベルリン', lat:52.5163, lon:13.3777 },
-    { name:'ローテンブルク 旧市街', area:'ドイツ・バイエルン', lat:49.3774, lon:10.1800 },
-    { name:'アテネ アクロポリス', area:'ギリシャ・アテネ', lat:37.9715, lon:23.7267 },
-    { name:'サントリーニ島 イア', area:'ギリシャ・キクラデス', lat:36.4618, lon:25.3765 },
-    { name:'ウィーン シェーンブルン宮殿', area:'オーストリア・ウィーン', lat:48.1845, lon:16.3122 },
-    { name:'ザルツブルク 旧市街', area:'オーストリア・ザルツブルク', lat:47.7981, lon:13.0469 },
-    { name:'インターラーケン ユングフラウ', area:'スイス・ベルン州', lat:46.5500, lon:7.9000 },
-    { name:'ルツェルン カペル橋', area:'スイス・ルツェルン', lat:47.0502, lon:8.3093 },
-    { name:'リスボン アルファマ地区', area:'ポルトガル・リスボン', lat:38.7139, lon:-9.1334 },
-    { name:'シントラ ペーナ宮殿', area:'ポルトガル・シントラ', lat:38.7876, lon:-9.3903 },
-    { name:'プラハ 旧市街広場', area:'チェコ・プラハ', lat:50.0875, lon:14.4213 },
-    { name:'アムステルダム 運河地区', area:'オランダ・アムステルダム', lat:52.3702, lon:4.8952 },
-  ],
-  eastasia: [
-    { name:'ソウル 景福宮', area:'韓国・ソウル', lat:37.5796, lon:126.9770 },
-    { name:'ソウル 明洞', area:'韓国・ソウル', lat:37.5636, lon:126.9869 },
-    { name:'釜山 海雲台ビーチ', area:'韓国・釜山', lat:35.1587, lon:129.1604 },
-    { name:'慶州 仏国寺', area:'韓国・慶州', lat:35.7898, lon:129.3316 },
-    { name:'済州島 城山日出峰', area:'韓国・済州', lat:33.4581, lon:126.9425 },
-    { name:'台北 故宮博物院', area:'台湾・台北', lat:25.1022, lon:121.5485 },
-    { name:'台北 龍山寺', area:'台湾・台北', lat:25.0370, lon:121.4999 },
-    { name:'台南 赤崁楼', area:'台湾・台南', lat:22.9979, lon:120.2005 },
-    { name:'花蓮 太魯閣渓谷', area:'台湾・花蓮', lat:24.1569, lon:121.6211 },
-    { name:'九份 老街', area:'台湾・新北市', lat:25.1091, lon:121.8442 },
-    { name:'北京 故宮（紫禁城）', area:'中国・北京', lat:39.9163, lon:116.3972 },
-    { name:'北京 万里の長城（八達嶺）', area:'中国・北京近郊', lat:40.3592, lon:116.0200 },
-    { name:'上海 外灘', area:'中国・上海', lat:31.2400, lon:121.4900 },
-    { name:'西安 兵馬俑', area:'中国・陝西省', lat:34.3843, lon:109.2783 },
-    { name:'桂林 漓江', area:'中国・広西省', lat:25.2736, lon:110.2990 },
-    { name:'香港 ヴィクトリアピーク', area:'香港', lat:22.2759, lon:114.1455 },
-    { name:'香港 尖沙咀 プロムナード', area:'香港', lat:22.2949, lon:114.1722 },
-    { name:'マカオ 聖ポール天主堂跡', area:'マカオ', lat:22.1978, lon:113.5394 },
-    { name:'ウランバートル ゲル体験', area:'モンゴル', lat:47.8864, lon:106.9057 },
-    { name:'アグラ タージマハル', area:'インド・ウッタル・プラデーシュ', lat:27.1751, lon:78.0421 },
-  ],
-};
-
-function renderOverseasPresets() {
-  renderPresetGrid('grid-sea',      OVERSEAS_PLACES.sea);
-  renderPresetGrid('grid-europe',   OVERSEAS_PLACES.europe);
-  renderPresetGrid('grid-eastasia', OVERSEAS_PLACES.eastasia);
-}
-
-function switchTravelTab(tab) {
-  const domestic = document.getElementById('presetsDomestic');
-  const overseas = document.getElementById('presetsOverseas');
-  const btnD = document.getElementById('tabDomestic');
-  const btnO = document.getElementById('tabOverseas');
-  if (tab === 'domestic') {
-    domestic.style.display = '';
-    overseas.style.display  = 'none';
-    btnD.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;';
-    btnO.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
-  } else {
-    domestic.style.display = 'none';
-    overseas.style.display  = '';
-    btnO.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;';
-    btnD.style.cssText = 'flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:\'Noto Serif JP\',serif;letter-spacing:.06em;cursor:pointer;background:rgba(138,104,32,.1);color:var(--goldlt);border:1px solid rgba(138,104,32,.3);';
-    renderOverseasPresets();
-  }
+  renderPresetGrid('grid-henro-awa',    SACRED_PLACES.henro_awa);
+  renderPresetGrid('grid-henro-tosa',   SACRED_PLACES.henro_tosa);
+  renderPresetGrid('grid-henro-iyo',    SACRED_PLACES.henro_iyo);
+  renderPresetGrid('grid-henro-sanuki', SACRED_PLACES.henro_sanuki);
+  renderPresetGrid('grid-major',        SACRED_PLACES.major);
+  renderPresetGrid('grid-kumano',       SACRED_PLACES.kumano);
+  renderPresetGrid('grid-shrines',      SACRED_PLACES.shrines);
+  renderPresetGrid('grid-saigoku',      SACRED_PLACES.saigoku);
+  renderPresetGrid('grid-bando',        SACRED_PLACES.bando);
+  renderPresetGrid('grid-chichibu',     SACRED_PLACES.chichibu);
+  renderPresetGrid('grid-mountains',    SACRED_PLACES.mountains);
+  renderPresetGrid('grid-kyushu',       SACRED_PLACES.kyushu);
+  renderPresetGrid('grid-betsugaku',    SACRED_PLACES.betsugaku);
+  renderPresetGrid('grid-tokai',        SACRED_PLACES.tokai);
 }
 
 function renderPresetGrid(id, places) {
@@ -2239,7 +2172,7 @@ async function selectPresetByQuery(btn, query, name, area) {
   if (status) status.textContent = '📍 座標を取得中...';
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&accept-language=ja`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-travel/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
     const data = await res.json();
     if (!data.length) {
       if (status) status.textContent = '⚠ 座標が見つかりませんでした。住所で手動検索してください。';
@@ -2249,6 +2182,7 @@ async function selectPresetByQuery(btn, query, name, area) {
     gState.destLon = parseFloat(data[0].lon);
     gState.destName = name;
     gState.destArea = area;
+    addPilgrimageStop({lat:gState.destLat, lon:gState.destLon, name, area});
     if (status) status.textContent = '';
     if (gState.homeLat && gState.honmei) {
       calcAndShowDir();
@@ -2266,6 +2200,7 @@ function selectPreset(btn, lat, lon, name, area) {
   btn.classList.add('selected');
   gState.destLat = lat; gState.destLon = lon;
   gState.destName = name; gState.destArea = area;
+  addPilgrimageStop({lat, lon, name, area});
   if (gState.homeLat && gState.honmei) calcAndShowDir();
   else if (!gState.homeLat) showHomePrompt();
 }
@@ -2277,7 +2212,7 @@ async function searchCustomDest() {
   status.textContent = '検索中...';
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val + ' 日本')}&format=json&limit=1&accept-language=ja`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-travel/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'KITOKU-pilgrimage/1.0' } });
     const data = await res.json();
     if (!data.length) { status.textContent = '場所が見つかりませんでした。'; return; }
     const r = data[0];
@@ -2286,6 +2221,7 @@ async function searchCustomDest() {
     gState.destLon = parseFloat(r.lon);
     gState.destName = val;
     gState.destArea = r.display_name.split(',').slice(1, 3).join(' ');
+    addPilgrimageStop({lat:gState.destLat, lon:gState.destLon, name:gState.destName, area:gState.destArea});
     status.textContent = `📍 ${r.display_name.split(',').slice(0, 2).join(' ')}`;
     if (gState.homeLat) calcAndShowDir();
     else showHomePrompt();
@@ -2338,6 +2274,97 @@ function mapSearchUrl(lat, lon) {
 
 function mapRouteUrl(originLat, originLon, destLat, destLon) {
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originLat + ',' + originLon)}&destination=${encodeURIComponent(destLat + ',' + destLon)}&travelmode=driving`;
+}
+
+function mapMultiRouteUrl(stops) {
+  if (!stops || !stops.length) return '';
+  if (stops.length === 1) {
+    if (gState.homeLat && gState.homeLon) {
+      return mapRouteUrl(gState.homeLat, gState.homeLon, stops[0].lat, stops[0].lon);
+    }
+    return mapSearchUrl(stops[0].lat, stops[0].lon);
+  }
+  const origin = (gState.homeLat && gState.homeLon)
+    ? `${gState.homeLat},${gState.homeLon}`
+    : `${stops[0].lat},${stops[0].lon}`;
+  const routeStops = (gState.homeLat && gState.homeLon) ? stops : stops.slice(1);
+  const destination = routeStops[routeStops.length - 1];
+  const waypoints = routeStops.slice(0, -1).map(p => `${p.lat},${p.lon}`).join('|');
+  let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination.lat + ',' + destination.lon)}&travelmode=driving`;
+  if (waypoints) url += `&waypoints=${encodeURIComponent(waypoints)}`;
+  return url;
+}
+
+function escapeHtml(str) {
+  return String(str||'').replace(/[&<>"']/g, s => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[s]));
+}
+
+function addPilgrimageStop(place) {
+  if (!place || !place.lat || !place.lon) return;
+  const key = `${Number(place.lat).toFixed(5)},${Number(place.lon).toFixed(5)}`;
+  const exists = gState.routeStops.some(p => p.key === key);
+  if (!exists) {
+    gState.routeStops.push({
+      key,
+      lat: Number(place.lat),
+      lon: Number(place.lon),
+      name: place.name || '選択した場所',
+      area: place.area || ''
+    });
+  }
+  renderPilgrimageRoute();
+}
+
+function renderPilgrimageRoute() {
+  const list = document.getElementById('pilgrimageRouteList');
+  if (!list) return;
+  if (!gState.routeStops.length) {
+    list.innerHTML = '<div class="route-empty">まだルートに札所が入っていません。</div>';
+    return;
+  }
+  list.innerHTML = gState.routeStops.map((p, idx) => `
+    <div class="route-stop">
+      <div class="route-num">${idx + 1}</div>
+      <div>
+        <div class="route-name">${escapeHtml(p.name)}</div>
+        <div class="route-area">${escapeHtml(p.area)}</div>
+      </div>
+      <div class="route-actions">
+        <button class="route-mini" type="button" onclick="movePilgrimageStop(${idx},-1)" aria-label="上へ">↑</button>
+        <button class="route-mini" type="button" onclick="movePilgrimageStop(${idx},1)" aria-label="下へ">↓</button>
+        <button class="route-mini" type="button" onclick="removePilgrimageStop(${idx})" aria-label="削除">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function movePilgrimageStop(index, dir) {
+  const next = index + dir;
+  if (next < 0 || next >= gState.routeStops.length) return;
+  const item = gState.routeStops[index];
+  gState.routeStops.splice(index, 1);
+  gState.routeStops.splice(next, 0, item);
+  renderPilgrimageRoute();
+}
+
+function removePilgrimageStop(index) {
+  gState.routeStops.splice(index, 1);
+  renderPilgrimageRoute();
+}
+
+function clearPilgrimageRoute() {
+  gState.routeStops = [];
+  renderPilgrimageRoute();
+}
+
+function openPilgrimageRoute() {
+  if (!gState.routeStops.length) {
+    alert('行きたい札所を順番にタップしてください。');
+    return;
+  }
+  openExternalMap(mapMultiRouteUrl(gState.routeStops));
 }
 
 function openExternalMap(url) {
@@ -2575,8 +2602,8 @@ function calcAndShowDir() {
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
         </div>
       </div>
-      ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
-      ${generateTravelYoshiAlert(yearRank, monthRank, false, ySangoInfo.group, mSangoInfo.group)}
+      ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, true)}
+      ${generateTravelYoshiAlert(yearRank, monthRank, true, ySangoInfo.group, mSangoInfo.group)}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
         <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
         <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
@@ -3160,7 +3187,7 @@ function closeNavModal(){
 
 // 初回訪問時にナビ使い方を自動表示
 (function(){
-  const KEY = 'kitoku_travel_guide_v1';
+  const KEY = 'kitoku_pilgrimage_guide_v1';
   if (!localStorage.getItem(KEY)) {
     setTimeout(function(){
       openNavModal();
@@ -3434,6 +3461,7 @@ function confirmMapPicker() {
   gState.destLon  = mapPickerTemp.lon;
   gState.destName = mapPickerTemp.name;
   gState.destArea = mapPickerTemp.area;
+  addPilgrimageStop({lat:gState.destLat, lon:gState.destLon, name:gState.destName, area:gState.destArea});
 
   closeMapPicker();
 
@@ -3523,7 +3551,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGr
     const prefix=sangoEntries.length>1?e.label+'・':'';
     return prefix+e.group+'：'+(SANGO_PURPOSE_P[e.group]||'');
   }).filter(Boolean).join(' / ');
-  const sangoHelp=sangoEntries.length?'<details style="margin-top:10px;background:rgba(255,255,255,.68);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:9px 10px;"><summary style="cursor:pointer;font-size:.64rem;font-weight:700;color:var(--goldlt);list-style:none;">？ 三合の後押しとは？</summary><div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-top:7px;">三合は、十二支の流れが三つの方角で支え合う組み合わせです。吉方に三合が重なる時は、その旅の目的に沿った後押しが強まる、と見ます。木局は発展、火局は学びや表現、金局は喜びや実り、水局は回復や家族の調和。これは必ず行くべきという命令ではなく、旅の質を上げるための目安です。</div></details>':'';
+  const sangoHelp=sangoEntries.length?'<details style="margin-top:10px;background:rgba(255,255,255,.68);border:1px dashed rgba(138,104,32,.34);border-radius:10px;padding:9px 10px;"><summary style="cursor:pointer;font-size:.64rem;font-weight:700;color:var(--goldlt);list-style:none;">？ 三合の後押しとは？</summary><div style="font-size:.62rem;color:var(--mist);line-height:1.85;margin-top:7px;">聖地巡礼で三合が重なる時は、場の力と方位の後押しが同じ目的へ向きやすい、と見ます。木局は発展、火局は学びや表現、金局は喜びや実り、水局は回復や家族の調和。これは必ず行くべきという命令ではなく、巡礼の意味を深く味わうための目安です。</div></details>':'';
   const isBoth = yr >= 4 && mr >= 2;
   const badges = [...new Set([...yb,...mb])].filter(b=>!b.includes('⚠')).join('・');
   const senroMsg = isPilgrimage
@@ -3564,6 +3592,7 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGr
   </div>`;
   }
 }
+
 
 
 </script>
@@ -3622,43 +3651,44 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGr
 </div>
 
 
-<!-- 旅行ナビ使い方モーダル -->
+<!-- 聖地巡礼ナビ使い方モーダル -->
 <div class="nav-modal-overlay" id="navModalOverlay" onclick="if(event.target===this)closeNavModal()">
   <div class="nav-modal">
     <div class="nav-modal-header">
-      <div class="nav-modal-title">✈️ 旅行吉方位ナビ の使い方</div>
+      <div class="nav-modal-title">📿 聖地巡礼ナビ の使い方</div>
       <button class="nav-modal-close" onclick="closeNavModal()">✕</button>
     </div>
 
     <div class="nav-modal-philosophy">
       ルールは地図。歩くのはあなた。<br>
-      <span style="font-size:.62rem;font-weight:400;opacity:.8;">このナビはあなたを吉凶で縛るものではありません。<br>5000年の知恵を羅針盤として、あなた自身が決めてください。</span>
+      <span style="font-size:.62rem;font-weight:400;opacity:.8;">このナビはあなたを吉凶で縛るものではありません。<br>何を優先するかは、あなた自身が決めてください。</span>
     </div>
 
     <div class="nav-modal-sec">
-      <div class="nav-modal-sec-title">🧭 旅行方位選びのルール</div>
+      <div class="nav-modal-sec-title">🧭 聖地巡礼の絶対ルール</div>
       <div class="nav-modal-sec-body">
-        <div class="rule-item"><div class="rule-num">①</div><div><strong>見る盤は「月盤」と「日盤」がメイン</strong><br>数日〜数週間の旅行では、年盤のハザードを過度に恐れる必要はありません。月盤と出発日の日盤が吉方なら十分です。</div></div>
-        <div class="rule-item"><div class="rule-num">②</div><div><strong>帰着日の日盤の凶は完全スルーでOK</strong><br>出発日が吉方であれば、帰る日の日盤に凶がついていても影響はありません。ただのノイズです。安心して日程を決めてください。</div></div>
-        <div class="rule-item"><div class="rule-num">③</div><div><strong>土用殺に注意</strong><br>引越しでは無害ですが、旅行では五黄殺と同じ凶となります。土用期間（各季節の20日頃〜翌月節入りまで）中は該当方位への1泊以上の旅行を避けてください。日帰りはセーフです。</div></div>
-        <div class="rule-item"><div class="rule-num">④</div><div><strong>出発が23時以降の場合は翌日の盤で判定</strong><br>気学の1日は23時に切り替わります。深夜便・夜行バスの場合は翌日の盤で確認してください。</div></div>
-        <div class="rule-item"><div class="rule-num">⑤</div><div><strong>吉のエネルギーは「距離 × 滞在時間」</strong><br>大吉・小吉のランク付けはありません。遠くへ行くほど・長く滞在するほど吉のエネルギーは大きくなります。</div></div>
+        <div class="rule-item"><div class="rule-num">①</div><div><strong>日帰りでも「年盤」を最優先</strong><br>聖地巡礼は観光旅行とは異なる「魂の旅」です。期間が短くても年盤のハザード（五黄殺・暗剣殺など）の確認を最優先に行います。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>全行程のルートをチェック</strong><br>出発地から最初のお寺だけでなく、寺→寺のすべての移動区間の方角を確認します。道中に凶方位が含まれる場合は事前にお知らせします。</div></div>
+        <div class="rule-item"><div class="rule-num">③</div><div><strong>スタートは「線路の日」を目安にする</strong><br>長く真っ直ぐに発展する旅の着火スイッチです。<br>天の系列（3・6・9星）：丑・辰・未・戌の日<br>人の系列（1・4・7星）：子・卯・午・酉の日<br>地の系列（2・5・8星）：寅・巳・申・亥の日</div></div>
+        <div class="rule-item"><div class="rule-num">④</div><div><strong>順番にこだわらず「パズル型」で回る</strong><br>必ずしも1番から順番に回る必要はありません。今年の自分にとって安全で吉となるエリアから、パズルのようにピースを埋めていくのが現実的な巡り方です。</div></div>
+        <div class="rule-item"><div class="rule-num">⑤</div><div><strong>帰着日の日盤の凶はスルーでOK</strong><br>年盤・月盤という大きなレールが吉方で揃っていれば、帰る日の日盤凶は完全に無視して構いません。</div></div>
       </div>
     </div>
 
     <div class="nav-modal-warning">
       <div class="nav-modal-warning-title">💡 どうしてもその方角へ行かなければならない時</div>
       <div class="nav-modal-warning-body">
-        凶方は罰ではありません。<strong>「魂の器を広げるための砥石（成長の機会）」</strong>です。<br><br>
+        気学は「だから行ってはダメ」と縛るものではありません。<strong>凶方とは「魂の器を広げるための砥石」</strong>です。<br><br>
+        ほとんどの人が方位を気にせずお遍路を歩いています。それはそれで尊い旅です。だからこそ、この羅針盤を手にしたあなたが「何を優先するか」を自分で決めることに意味があります。<br><br>
         <strong>盾１：日常の日盤吉方で免疫力を高める</strong><br>
-        出発前から近所の吉方カフェなどで小さな運の貯金を作っておく。日々の積み重ねが凶を弾き返すバリアになります。<br><br>
+        出発前から近所の吉方カフェなどで小さな運の貯金を作っておく。<br><br>
         <strong>盾２：心が先、行動が後</strong><br>
-        怯えるのではなく「この旅でどんな自分と向き合えるか」と準備しておく。その心構えひとつで凶のエネルギーは大きな成長の糧へ反転します。<br><br>
+        「悪いことが起きるかも」と怯えるのではなく「この逆風は魂の砥石だ」と覚悟を決めて進む。<br><br>
         <strong>各凶方の心がけ：</strong><br>
         🔸 五黄殺 → 自分から「ありがとう」を先に言う。自己主張を手放す<br>
-        🔸 暗剣殺 → 言葉を選び、準備を念入りに。感謝の言葉を意識する<br>
-        🔸 破壊殺 → 予定通りにこだわらず笑顔で柔軟に楽しむ<br>
-        🔸 本命殺 → 詰め込まず休息をたっぷり取り自分を労る<br>
+        🔸 暗剣殺 → 言葉を選び準備を念入りに。感謝の言葉を意識する<br>
+        🔸 破壊殺 → 予定通りにこだわらず笑顔で柔軟に対応する<br>
+        🔸 本命殺 → スケジュールを詰め込まず休息をたっぷり取る<br>
         🔸 定位対冲 → 慢心を手放し同行者・足元の縁を大切にする
       </div>
     </div>
@@ -3707,33 +3737,6 @@ function generateTravelYoshiAlert(yearRank, monthRank, isPilgrimage, yearSangoGr
     <div style="font-size:.65rem;color:#5e503d;">地図上をタップすると場所が選択されます</div>
   </div>
 
-<script>
-function goPreviousPage(){
-  if (window.history.length > 1) window.history.back();
-  else window.location.href = 'index.html';
-}
-
-(function initLifeElementBanner(){
-  function show(){
-    var el=document.getElementById('lifeElementBanner');
-    if(!el)return;
-    var g=new URLSearchParams(location.search).get('element');
-    var data={
-      木:'旅で木の気を補うなら、森・庭園・朝の散歩など成長の気配がある場所を意識します。',
-      火:'旅で火の気を補うなら、南方・夕日・芸術・祭りなど明るさを感じる場所を意識します。',
-      土:'旅で土の気を補うなら、温泉・山・古い街並みなど安定感のある場所を意識します。',
-      金:'旅で金の気を補うなら、美術館・神社仏閣・整った空間など品格のある場所を意識します。',
-      水:'旅で水の気を補うなら、海・川・湖・静かな宿など流れを感じる場所を意識します。'
-    };
-    if(!data[g])return;
-    el.innerHTML='✈️ <strong>LIFEからの補いテーマ：'+g+'</strong><br>'+data[g];
-    el.style.display='block';
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show);
-  else show();
-})();
-
-</script>
 </div>
 
 <script>
@@ -3746,7 +3749,7 @@ var kitokuPlan = { base:false, business:false };
 function updateRailwayBlurState(){
   var blurEl = document.getElementById('railwayBlur');
   if(!blurEl) return;
-  var isPremiumUser = true; /* 2026-08-31 一時解放。今後の課金方針見直しに伴う措置。元の式: !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business)) */
+  var isPremiumUser = !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business));
   blurEl.style.display = isPremiumUser ? 'none' : 'flex';
 }
 

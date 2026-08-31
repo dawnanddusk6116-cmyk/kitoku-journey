@@ -999,7 +999,7 @@ var kitokuSession = null;
 var kitokuPlan = { base:false, business:false };
 
 function updateTripleBoardGate(){
-  var isPremiumUser = true; /* 2026-08-31 一時解放。今後の課金方針見直しに伴う措置。元の式: !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business)) */
+  var isPremiumUser = !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business));
   document.body.classList.toggle('kitoku-premium-unlocked', isPremiumUser);
 }
 
