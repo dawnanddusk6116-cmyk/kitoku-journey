@@ -2048,12 +2048,13 @@ function drawFullscreenContent(lat, lng) {
   if (!honmei) return;
   // 地図表示用の日付（ナビした日付を優先）
   const mvY = gState.mapViewY || gState.ty, mvM = gState.mapViewM || gState.tm, mvD = gState.mapViewD || gState.td;
+  const kigakuY = getKigakuYear(mvY, mvM, mvD);
   const center = gState.currentBan === 'day' ? getDayCenter(mvY, mvM, mvD)
-    : gState.currentBan === 'month' ? getMonthCenter(mvY, mvM, mvD) : yearCenter(mvY);
+    : gState.currentBan === 'month' ? getMonthCenter(mvY, mvM, mvD) : yearCenter(kigakuY);
   if (!center) return;
 
   const p2s = buildBoardFromCenter(center);
-  const z = getZodiac(getKigakuYear(mvY, mvM, mvD));
+  const z = getZodiac(kigakuY);
   const sangoBranchName = getSangoBranchName(gState.currentBan || 'day', mvY, mvM, mvD);
   const sangoSet = new Set((SANGO_MAP[sangoBranchName] || { dirs: [] }).dirs);
   let mapBreakDir = OPP[z.d];
@@ -2223,12 +2224,13 @@ function drawDirectionLines(lat, lng) {
   const mvM = gState.mapViewM || gState.tm;
   const mvD = gState.mapViewD || gState.td;
   // 地図用の中宮を計算
+  const kigakuY = getKigakuYear(mvY, mvM, mvD);
   let center = gState.currentBan === 'day' ? getDayCenter(mvY, mvM, mvD)
-    : gState.currentBan === 'month' ? getMonthCenter(mvY, mvM, mvD) : yearCenter(mvY);
+    : gState.currentBan === 'month' ? getMonthCenter(mvY, mvM, mvD) : yearCenter(kigakuY);
   if (!center) return;
 
   const p2s = buildBoardFromCenter(center);
-  const z = getZodiac(getKigakuYear(mvY, mvM, mvD));
+  const z = getZodiac(kigakuY);
   const sangoBranchName = getSangoBranchName(gState.currentBan || 'day', mvY, mvM, mvD);
   const sangoSet = new Set((SANGO_MAP[sangoBranchName] || { dirs: [] }).dirs);
   // 盤の種類に応じた破方位（日盤=日破、月盤=月破、年盤=歳破）

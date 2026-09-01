@@ -1519,14 +1519,16 @@ const TIMING_REASON_TEXT={
 let rinjuLevel='special';
 
 function getSangoSetForTiming(type,y,m,d){
-  let branchName=getZodiac(y).k;
+  const kigakuY=type==='year'?getKigakuYear(y,m,d):y;
+  let branchName=getZodiac(kigakuY).k;
   if(type==='month')branchName=BRANCH_NAME_P[getMonthBranch(y,m,d)];
   if(type==='day')branchName=BRANCH_NAME_P[getDayBranch(y,m,d)];
   return new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
 }
 function buildTimingDirData(type,y,m,d,honmei,tsukimei){
-  const center=type==='year'?yearCenter(y):type==='month'?getMonthCenter(y,m,d):getDayCenter(y,m,d);
-  const breakDir=type==='year'?OPP[getZodiac(y).d]:type==='month'?OPP[BRANCH_DIR[getMonthBranch(y,m,d)]]:OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
+  const kigakuY=type==='year'?getKigakuYear(y,m,d):y;
+  const center=type==='year'?yearCenter(kigakuY):type==='month'?getMonthCenter(y,m,d):getDayCenter(y,m,d);
+  const breakDir=type==='year'?OPP[getZodiac(kigakuY).d]:type==='month'?OPP[BRANCH_DIR[getMonthBranch(y,m,d)]]:OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
   const p2s=buildBoardFromCenter(center);
   const sangoSet=getSangoSetForTiming(type,y,m,d);
   const tendoDir=type==='year'?null:getTendoDir(y,m,d);
@@ -1543,8 +1545,9 @@ function buildTimingDirData(type,y,m,d,honmei,tsukimei){
 }
 function detectRinjuKippo(y,m,d,honmei,tsukimei,level='special'){
   const cfg=RINJU_LEVELS[level]||RINJU_LEVELS.special;
-  if(yearCenter(y)!==getMonthCenter(y,m,d))return [];
-  const yearBoard=buildTimingDirData('year',y,6,1,honmei,tsukimei);
+  const kigakuY=getKigakuYear(y,m,d);
+  if(yearCenter(kigakuY)!==getMonthCenter(y,m,d))return [];
+  const yearBoard=buildTimingDirData('year',kigakuY,6,1,honmei,tsukimei);
   const monthBoard=buildTimingDirData('month',y,m,d,honmei,tsukimei);
   const results=[];
   ALL8.forEach(dir=>{
@@ -1557,9 +1560,10 @@ function detectRinjuKippo(y,m,d,honmei,tsukimei,level='special'){
   return results;
 }
 function detectSpecialTiming(y,m,d,honmei,tsukimei){
-  const yearBoard=buildTimingDirData('year',y,6,1,honmei,tsukimei);
+  const kigakuY=getKigakuYear(y,m,d);
+  const yearBoard=buildTimingDirData('year',kigakuY,6,1,honmei,tsukimei);
   const monthBoard=buildTimingDirData('month',y,m,d,honmei,tsukimei);
-  const yc=yearCenter(y),mc=getMonthCenter(y,m,d);
+  const yc=yearCenter(kigakuY),mc=getMonthCenter(y,m,d);
   const results=[];
   ALL8.forEach(dir=>{
     const yv=yearBoard.dirData[dir],mv=monthBoard.dirData[dir];
@@ -5315,7 +5319,7 @@ function drawEhouLine(){
     const cm=d.getMonth()+1;
     const cd=d.getDate();
     // adjYearは立春基準の今年→それに+1して来年の恵方を取得
-    const adjYear=(cm===1||(cm===2&&cd<4))?cy-1:cy;
+    const adjYear=getKigakuYear(cy,cm,cd);
     const nextEhouYear=adjYear+1;
     const nextK=((nextEhouYear%10)+10)%10;
     const EHOU_TABLE={
@@ -5371,7 +5375,7 @@ function updateEhouLabel(){
   if(el2){
     const d=state.date;
     const cy=d.getFullYear(); const cm=d.getMonth()+1; const cd=d.getDate();
-    const adjYear=(cm===1||(cm===2&&cd<4))?cy-1:cy;
+    const adjYear=getKigakuYear(cy,cm,cd);
     const nextYear=adjYear+1;
     const nextK=((nextYear%10)+10)%10;
     const EHOU_TABLE={4:{kan:'甲',label:'東微北'},9:{kan:'甲',label:'東微北'},5:{kan:'庚',label:'西微南'},0:{kan:'庚',label:'西微南'},6:{kan:'丙',label:'南微東'},1:{kan:'丙',label:'南微東'},8:{kan:'丙',label:'南微東'},3:{kan:'丙',label:'南微東'},7:{kan:'壬',label:'北微西'},2:{kan:'壬',label:'北微西'}};
@@ -5706,7 +5710,8 @@ function updateFsDateBar(){
   const el=document.getElementById('fsDateLabel');
   if(!el) return;
   if(type==='year'){
-    el.textContent=d.getFullYear()+'年（年盤）';
+    const y=d.getFullYear(),m=d.getMonth()+1,day=d.getDate();
+    el.textContent=getKigakuYear(y,m,day)+'年（年盤）';
   } else if(type==='month'){
     el.textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月（月盤）';
   } else {
