@@ -1914,6 +1914,21 @@ function getMonthBoardDay(y, m) {
   return 15;
 }
 
+function getSekkiRangeInfo(y, m) {
+  const startDay = getSekkiDay(y, m);
+  let nextY = y, nextM = m + 1;
+  if (nextM > 12) { nextM = 1; nextY++; }
+  const endDay = getSekkiDay(nextY, nextM) - 1;
+  const todayForCheck = new Date();
+  const startDate = new Date(y, m - 1, startDay);
+  const daysToSekkiStart = Math.round((startDate - todayForCheck) / 86400000);
+  return {
+    short: `${m}/${startDay}〜${nextM}/${endDay}`,
+    full: `${y}年${m}月${startDay}日〜${nextY}年${nextM}月${endDay}日`,
+    warning: (daysToSekkiStart >= 0 && daysToSekkiStart <= 3) ? `⚠ ${m}/${startDay}から月盤が切り替わります` : ''
+  };
+}
+
 // ============================================================
 // 初期化
 // ============================================================
@@ -2512,6 +2527,7 @@ function calcAndShowDir() {
   const viewY = gState.calYear || todayY;
   const viewM = gState.calMonth || todayM;
   const viewD = getMonthBoardDay(viewY, viewM);
+  const monthSekkiInfo = getSekkiRangeInfo(viewY, viewM);
 
   // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
   const monthCenter = getMonthCenter(viewY, viewM, viewD);
@@ -2613,7 +2629,7 @@ function calcAndShowDir() {
       <!-- 方位盤タブ -->
       <div class="ban-tabs">
         <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${viewY}年）</div>
-        <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${viewM}月）</div>
+        <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${monthSekkiInfo.short}）</div>
         <div class="ban-tab"        id="banTabDay"   onclick="switchBan('day')" >日盤（今日）</div>
       </div>
       <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;text-align:center;">
@@ -2634,7 +2650,8 @@ function calcAndShowDir() {
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(yearRank.rank, yearRank.badges)}</div>
         </div>
         <div class="dir-panel">
-          <div class="dir-panel-label">月盤（${viewM}月）</div>
+          <div class="dir-panel-label">月盤（${monthSekkiInfo.short}）</div>
+          <div style="font-size:.52rem;color:var(--mist);line-height:1.5;margin-bottom:4px;">${monthSekkiInfo.warning || `節入り基準（${monthSekkiInfo.full}）`}</div>
           <div class="dir-panel-rank rank-${monthRank.rank}">${rankLabel(monthRank.rank, monthRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
