@@ -3124,6 +3124,11 @@ function buildBoardFromCenter(c){const p2s={};for(let s=1;s<=9;s++){const d=star
 function getNodeMonthIdx(year,month,day){const sd=getSekkiDay(year,month);let m=day>=sd?month:(month===1?12:month-1);if(m===2)return 0;if(m>=3)return m-2;return 11;}
 function getMonthCenter(year,month,day){const ni=getNodeMonthIdx(year,month,day);const cycleYear=(ni===11&&month<=2)?year-1:year;const c=yearCenter(cycleYear);const grp=[1,4,7].includes(c)?'A':[3,6,9].includes(c)?'B':'C';return TSUKI_MATRIX[grp][ni];}
 function getMonthBranch(year,month,day){return(getNodeMonthIdx(year,month,day)+2)%12;}
+function getMonthBoardDay(y, m) {
+  const now = new Date();
+  if (y === now.getFullYear() && m === now.getMonth() + 1) return now.getDate();
+  return 15;
+}
 
 // 月盤の有効期間を返す（節入り日ベース）
 function getMonthPeriod(year, month) {
@@ -3982,9 +3987,7 @@ function navBan(dir){
     if(m>12){m=1;y++;}
     if(m<1){m=12;y--;}
     gState.navYear=y;gState.navMonth=m;
-    // 月の最終日に調整
-    const lastDay=new Date(y,m,0).getDate();
-    if(gState.navDay>lastDay)gState.navDay=lastDay;
+    gState.navDay=getMonthBoardDay(y,m);
   }else{
     const cur=new Date(gState.navYear,gState.navMonth-1,gState.navDay);
     cur.setDate(cur.getDate()+dir);
