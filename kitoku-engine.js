@@ -327,6 +327,12 @@ const SEKKI_DB={1924:{1:6,2:5,3:6,4:5,5:6,6:6,7:7,8:8,9:8,10:8,11:8,12:7},1925:{
 const SEKKI_KM={1:12,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8,10:9,11:10,12:11};
 const SEKKI_SHI=['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'];
 function getSekkiDay(y,m){if(SEKKI_DB[y]&&SEKKI_DB[y][m])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};const key=y+'-'+m;getSekkiDay._warned=getSekkiDay._warned||{};if(!getSekkiDay._warned[key]&&typeof console!=='undefined'&&console.warn){console.warn('[KITOKU] SEKKI_DB range missing; fallback used',{year:y,month:m});getSekkiDay._warned[key]=true;}return A[m]||1;}
+function getKigakuYear(y, m, d){
+  const risshunDay = getSekkiDay(y, 2);
+  if(m === 1) return y - 1;
+  if(m === 2 && d < risshunDay) return y - 1;
+  return y;
+}
 function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
 function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}

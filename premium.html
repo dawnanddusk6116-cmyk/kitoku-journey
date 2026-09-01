@@ -1321,7 +1321,7 @@ function setCompassMode(mode,save=true){
 }
 function centerForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
-  if(state.banType==='year')return yearCenter(y);
+  if(state.banType==='year')return yearCenter(getKigakuYear(y,m,d));
   if(state.banType==='month')return getMonthCenter(y,m,d);
   return getDayCenter(y,m,d);
 }

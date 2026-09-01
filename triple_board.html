@@ -483,6 +483,12 @@ function ds9(y){let s=0;String(Math.abs(y)).split('').forEach(d=>s+=+d);return s
 function m9(n){return((n-1)%9+9)%9+1;}
 function red(n){return((n-1)%9+9)%9+1;}
 function getSekkiDay(y,m){if(SEKKI_DB[y]&&SEKKI_DB[y][m])return SEKKI_DB[y][m];const A={1:6,2:4,3:6,4:5,5:6,6:6,7:7,8:7,9:8,10:8,11:7,12:7};const key=y+'-'+m;getSekkiDay._warned=getSekkiDay._warned||{};if(!getSekkiDay._warned[key]&&typeof console!=='undefined'&&console.warn){console.warn('[KITOKU] SEKKI_DB range missing; fallback used',{year:y,month:m});getSekkiDay._warned[key]=true;}return A[m]||1;}
+function getKigakuYear(y, m, d){
+  const risshunDay = getSekkiDay(y, 2);
+  if(m === 1) return y - 1;
+  if(m === 2 && d < risshunDay) return y - 1;
+  return y;
+}
 function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
 function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
@@ -631,7 +637,7 @@ function compute(){
   const {kY,kM}=getKD(by,bm,bd);
   const honmei=calcHonmei(kY),tsukimei=calcTsukimei(honmei,kM);
   gState.honmei=honmei;gState.tsukimei=tsukimei;gState.by=by;gState.bm=bm;gState.bd=bd;
-  gState.yearNav={y:ty};gState.monthNav={y:ty,m:tm,d:td};gState.dayNav={y:ty,m:tm,d:td};
+  gState.yearNav={y:ty,m:tm,d:td};gState.monthNav={y:ty,m:tm,d:td};gState.dayNav={y:ty,m:tm,d:td};
   document.getElementById('sb-honmei').textContent=STARS[honmei].j;
   document.getElementById('sb-tsukimei').textContent=STARS[tsukimei].j;
   const doukiTB=getDoukiTB(honmei);
@@ -650,7 +656,7 @@ function renderBoard(type){
   const {honmei,tsukimei}=gState;
   let y,m,d,center,breakDir,lbl,sub;
   if(type==='year'){
-    y=gState.yearNav.y;m=6;d=1;center=yearCenter(y);breakDir=OPP[getZodiac(y).d];
+    ({y,m,d}=gState.yearNav);center=yearCenter(getKigakuYear(y,m,d));breakDir=OPP[getZodiac(y).d];
     lbl=`${y}年`;sub=`${y}年2月4日〜${y+1}年2月3日`;
   }else if(type==='month'){
     ({y,m,d}=gState.monthNav);center=getMonthCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
@@ -854,12 +860,12 @@ function redrawBoardOnly(type){
   const dirData=gState.dirData[type];
   if(!dirData)return;
   let center;
-  if(type==='year')center=yearCenter(gState.yearNav.y);
+  if(type==='year'){const {y,m,d}=gState.yearNav;center=yearCenter(getKigakuYear(y,m,d));}
   else if(type==='month'){const{y,m,d}=gState.monthNav;center=getMonthCenter(y,m,d);}
   else{const{y,m,d}=gState.dayNav;center=getDayCenter(y,m,d);}
   // kyouItems再取得
   let y,m,d,breakDir;
-  if(type==='year'){y=gState.yearNav.y;breakDir=OPP[getZodiac(y).d];}
+  if(type==='year'){({y,m,d}=gState.yearNav);breakDir=OPP[getZodiac(y).d];}
   else if(type==='month'){({y,m,d}=gState.monthNav);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];}
   else{({y,m,d}=gState.dayNav);breakDir=OPP[BRANCH_DIR[getDayBranch(y,m,d)]];}
   const {items:kyouItems}=getKyouDirs(center,gState.honmei,breakDir,gState.tsukimei,type);
@@ -877,6 +883,8 @@ function navBoard(type,delta){
   if(type==='year'){
     gState.yearNav.y+=delta;
     const y=gState.yearNav.y;
+    gState.yearNav.m=gState.yearNav.m||gState.monthNav.m||6;
+    gState.yearNav.d=gState.yearNav.d||gState.monthNav.d||1;
     const m=gState.monthNav.m||6;
     const d=getSekkiDay(y,m);
     gState.monthNav={y,m,d};

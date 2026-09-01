@@ -2505,7 +2505,7 @@ function calcAndShowDir() {
   // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
   const monthCenter = getMonthCenter(viewY, viewM, viewD);
   const dayCenter = getDayCenter(todayY, todayM, todayD);
-  const yearCenterN = yearCenter(viewY);
+  const yearCenterN = yearCenter(getKigakuYear(viewY, viewM, viewD));
 
   const monthBoard = buildBoardFromCenter(monthCenter);
   const dayBoard = buildBoardFromCenter(dayCenter);
