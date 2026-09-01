@@ -4047,9 +4047,10 @@ function updateBanNavLabel(){
   const sub=document.getElementById('banNavSub');
   if(!lbl)return;
   if(type==='year'){
-    // 年盤の有効期間：立春（2月4日）〜翌年立春前日（2月3日）
-    lbl.textContent=`${y}年`;
-    sub.textContent=`年盤 — ${y}年2月4日〜${y+1}年2月3日`;
+    // 年盤の有効期間：立春〜翌年立春前日
+    const kigakuY=getKigakuYear(y,m,d);
+    lbl.textContent=`${kigakuY}年`;
+    sub.textContent=`年盤 — ${kigakuY}年2月${getSekkiDay(kigakuY,2)}日〜${kigakuY+1}年2月${getSekkiDay(kigakuY+1,2)-1}日`;
   }else if(type==='month'){
     // 月盤の有効期間：節入り日を計算
     const {start,end}=getMonthPeriod(y,m);

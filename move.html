@@ -2527,12 +2527,13 @@ function calcAndShowDir() {
   const viewY = gState.calYear || todayY;
   const viewM = gState.calMonth || todayM;
   const viewD = getMonthBoardDay(viewY, viewM);
+  const kigakuYear = getKigakuYear(viewY, viewM, viewD);
   const monthSekkiInfo = getSekkiRangeInfo(viewY, viewM);
 
   // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
   const monthCenter = getMonthCenter(viewY, viewM, viewD);
   const dayCenter = getDayCenter(todayY, todayM, todayD);
-  const yearCenterN = yearCenter(getKigakuYear(viewY, viewM, viewD));
+  const yearCenterN = yearCenter(kigakuYear);
 
   const monthBoard = buildBoardFromCenter(monthCenter);
   const dayBoard = buildBoardFromCenter(dayCenter);
@@ -2543,7 +2544,7 @@ function calcAndShowDir() {
   const yearStarN = yearBoard[dir] || 5;
 
   // 三合
-  const yearBranch = getZodiac(getKigakuYear(viewY, viewM, viewD));
+  const yearBranch = getZodiac(kigakuYear);
   const monthBranch = BRANCH_NAME[getMonthBranch(viewY, viewM, viewD)];
   const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];
@@ -2624,7 +2625,7 @@ function calcAndShowDir() {
       <div style="background:rgba(160,30,30,.08);border:2px solid rgba(160,30,30,.4);border-radius:10px;padding:12px 14px;margin-top:10px;">
         <div style="font-size:.75rem;font-weight:700;color:#8b2020;margin-bottom:6px;">🚫 年盤 — 引越し要注意の方角です</div>
         <div style="font-size:.65rem;color:var(--mist);line-height:1.85;">
-          ${viewY}年の年盤で<strong style="color:#8b2020;">${gState.yearKyoNames}</strong>に当たります。<br>
+          ${kigakuYear}年の年盤で<strong style="color:#8b2020;">${gState.yearKyoNames}</strong>に当たります。<br>
           引越しは年盤が最優先のため、この方角への引越しは避けるか、年盤が変わる来年以降を検討してください。<br><br>
           <strong style="color:var(--goldlt);">✦ 仮吉方という選択肢</strong><br>
           どうしてもこの方角に引越す必要がある場合は、まず吉方位で75日間の仮吉方を実行してから新居へ入ることで、
@@ -2659,7 +2660,7 @@ function calcAndShowDir() {
 
       <!-- 方位盤タブ -->
       <div class="ban-tabs">
-        <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${viewY}年）</div>
+        <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${kigakuYear}年）</div>
         <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${monthSekkiInfo.short}）</div>
         <div class="ban-tab" id="banTabDay" style="display:none;" onclick="switchBan('day')">日盤（今日）</div>
       </div>
@@ -2676,7 +2677,7 @@ function calcAndShowDir() {
       <!-- 吉凶サマリー -->
       <div class="dir-panels" style="margin-top:10px;">
         <div class="dir-panel">
-          <div class="dir-panel-label">年盤（${viewY}年）</div>
+          <div class="dir-panel-label">年盤（${kigakuYear}年）</div>
           <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank, yearRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(yearRank.rank, yearRank.badges)}</div>
         </div>
@@ -3896,7 +3897,7 @@ function searchKariPlaces(){
   }
 
   const distRangeLabel = distRange==='near'?'近距離（2〜20km）':distRange==='mid'?'中距離（20〜150km）':'遠距離（150〜500km）';
-  const banLabel = banType==='year'?`${y}年盤（中宮${center}）`:`${y}年${m}月盤`;
+  const banLabel = banType==='year'?`${getKigakuYear(y,m,d)}年盤（中宮${center}）`:`${y}年${m}月盤`;
   results.innerHTML=`
     <div style="font-size:.6rem;color:var(--goldlt);margin-bottom:4px;">
       ✦ ${banLabel}の吉方位：${kichiDirs.map(d=>DIR_LABEL[d]).join('・')}

@@ -1472,7 +1472,7 @@ function renderBoard(){
   const wrap=document.getElementById('compassWrap');
   const breakLabel=`${getBreakNameForBan()}（${getBreakBranchForDate().name}）`;
   const monthSekkiInfo=state.banType==='month'?getSekkiRangeInfo(y,m):null;
-  const banDateTitle=state.banType==='year'?`${y}年`:state.banType==='month'?`${y}年${m}月（${monthSekkiInfo.short}）`:`${y}年 ${m}月 ${d}日`;
+  const banDateTitle=state.banType==='year'?`${getKigakuYear(y,m,d)}年`:state.banType==='month'?`${y}年${m}月（${monthSekkiInfo.short}）`:`${y}年 ${m}月 ${d}日`;
   const banDateSub=state.banType==='month'
     ? (monthSekkiInfo.warning || `月盤 — 節入り基準（${monthSekkiInfo.full}）`)+' / 中宮 '+(STARS[center]?.j||'')+' / '+breakLabel
     : (state.banType==='day'?'日盤':'年盤')+' — 中宮 '+(STARS[center]?.j||'')+' / '+breakLabel;

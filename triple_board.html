@@ -656,8 +656,10 @@ function renderBoard(type){
   const {honmei,tsukimei}=gState;
   let y,m,d,center,breakDir,lbl,sub;
   if(type==='year'){
-    ({y,m,d}=gState.yearNav);center=yearCenter(getKigakuYear(y,m,d));breakDir=OPP[getZodiac(getKigakuYear(y,m,d)).d];
-    lbl=`${y}年`;sub=`${y}年2月4日〜${y+1}年2月3日`;
+    ({y,m,d}=gState.yearNav);
+    const kigakuY=getKigakuYear(y,m,d);
+    center=yearCenter(kigakuY);breakDir=OPP[getZodiac(kigakuY).d];
+    lbl=`${kigakuY}年`;sub=`${kigakuY}年2月${getSekkiDay(kigakuY,2)}日〜${kigakuY+1}年2月${getSekkiDay(kigakuY+1,2)-1}日`;
   }else if(type==='month'){
     ({y,m,d}=gState.monthNav);center=getMonthCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
     const p=getMonthPeriod(y,m);

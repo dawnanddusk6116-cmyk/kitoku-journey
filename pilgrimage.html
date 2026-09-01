@@ -2527,12 +2527,13 @@ function calcAndShowDir() {
   const viewY = gState.calYear || todayY;
   const viewM = gState.calMonth || todayM;
   const viewD = getMonthBoardDay(viewY, viewM);
+  const kigakuYear = getKigakuYear(viewY, viewM, viewD);
   const monthSekkiInfo = getSekkiRangeInfo(viewY, viewM);
 
   // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
   const monthCenter = getMonthCenter(viewY, viewM, viewD);
   const dayCenter = getDayCenter(todayY, todayM, todayD);
-  const yearCenterN = yearCenter(getKigakuYear(viewY, viewM, viewD));
+  const yearCenterN = yearCenter(kigakuYear);
 
   const monthBoard = buildBoardFromCenter(monthCenter);
   const dayBoard = buildBoardFromCenter(dayCenter);
@@ -2543,7 +2544,7 @@ function calcAndShowDir() {
   const yearStarN = yearBoard[dir] || 5;
 
   // 三合
-  const yearBranch = getZodiac(getKigakuYear(viewY, viewM, viewD));
+  const yearBranch = getZodiac(kigakuYear);
   const monthBranch = BRANCH_NAME[getMonthBranch(viewY, viewM, viewD)];
   const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];
@@ -2628,7 +2629,7 @@ function calcAndShowDir() {
 
       <!-- 方位盤タブ -->
       <div class="ban-tabs">
-        <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${viewY}年）</div>
+        <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${kigakuYear}年）</div>
         <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${monthSekkiInfo.short}）</div>
         <div class="ban-tab"        id="banTabDay"   onclick="switchBan('day')" >日盤（今日）</div>
       </div>
@@ -2645,7 +2646,7 @@ function calcAndShowDir() {
       <!-- 吉凶サマリー -->
       <div class="dir-panels" style="margin-top:10px;">
         <div class="dir-panel">
-          <div class="dir-panel-label">年盤（${viewY}年）</div>
+          <div class="dir-panel-label">年盤（${kigakuYear}年）</div>
           <div class="dir-panel-rank rank-${yearRank.rank}">${rankLabel(yearRank.rank, yearRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(yearRank.rank, yearRank.badges)}</div>
         </div>
