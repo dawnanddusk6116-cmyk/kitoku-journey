@@ -510,6 +510,40 @@ body{
   display:block;
   margin-top:4px;
 }
+.ban-compare-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  margin-top:8px;
+  align-items:start;
+}
+.ban-compare-card{
+  background:rgba(255,255,255,.48);
+  border:1px solid var(--rim);
+  border-radius:9px;
+  padding:7px 4px 6px;
+  text-align:center;
+}
+.ban-compare-card.active{
+  border-color:rgba(138,104,32,.48);
+  box-shadow:0 0 0 1px rgba(138,104,32,.08) inset;
+}
+.ban-compare-title{
+  font-size:.58rem;
+  color:var(--goldlt);
+  font-weight:700;
+  line-height:1.45;
+  min-height:2.4em;
+  margin-bottom:2px;
+}
+.ban-compare-card svg{
+  max-width:128px !important;
+}
+@media(max-width:390px){
+  .ban-compare-grid{gap:5px;}
+  .ban-compare-card{padding:6px 2px 5px;}
+  .ban-compare-title{font-size:.52rem;}
+}
 .ban-cell{
   aspect-ratio:1;border-radius:8px;
   background:rgba(100,80,40,.04);
@@ -2637,9 +2671,20 @@ function calcAndShowDir() {
       <div style="font-size:.6rem;color:var(--goldlt);line-height:1.65;text-align:center;margin:0 0 10px;padding:7px 9px;border:1px solid rgba(138,104,32,.18);border-radius:8px;background:rgba(138,104,32,.06);font-weight:600;">
         ※ KITOKUは気学式の「正方位30度・斜方位60度」で判定します。Googleマップ等の45度均等表示とは境界が異なる場合があります。
       </div>
-      <div class="ban-grid" id="banGridYear" >${yearBoardHtml}</div>
-      <div class="ban-grid" id="banGridMonth" style="display:none;">${monthBoardHtml}</div>
-      <div class="ban-grid" id="banGridDay"   style="display:none;">${dayBoardHtml}</div>
+      <div class="ban-compare-grid">
+        <div class="ban-compare-card active" id="banCompareYear">
+          <div class="ban-compare-title">年盤<br>(${kigakuYear}年)</div>
+          <div class="ban-grid" id="banGridYear">${yearBoardHtml}</div>
+        </div>
+        <div class="ban-compare-card" id="banCompareMonth">
+          <div class="ban-compare-title">月盤<br>(${monthSekkiInfo.short})</div>
+          <div class="ban-grid" id="banGridMonth">${monthBoardHtml}</div>
+        </div>
+        <div class="ban-compare-card" id="banCompareDay">
+          <div class="ban-compare-title">日盤<br>(今日)</div>
+          <div class="ban-grid" id="banGridDay">${dayBoardHtml}</div>
+        </div>
+      </div>
 
       <!-- 吉凶サマリー -->
       <div class="dir-panels" style="margin-top:10px;">
@@ -2725,9 +2770,9 @@ function switchBan(type) {
   gState.activeBanTab = type; // 選択状態を保存
   ['year','month','day'].forEach(t => {
     const tab  = document.getElementById('banTab'  + t.charAt(0).toUpperCase() + t.slice(1));
-    const grid = document.getElementById('banGrid' + t.charAt(0).toUpperCase() + t.slice(1));
+    const card = document.getElementById('banCompare' + t.charAt(0).toUpperCase() + t.slice(1));
     if (tab)  tab.classList.toggle('active', t === type);
-    if (grid) grid.style.display = (t === type) ? 'block' : 'none';
+    if (card) card.classList.toggle('active', t === type);
   });
 }
 
