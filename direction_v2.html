@@ -1637,7 +1637,6 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div id="daily-kaori-text"></div>
     <div id="disclaimerDetailPanel"></div>
     <div id="disclaimerPanel"></div>
-    <div id="expert-settings"></div>
     <div id="feedbackPanel"></div>
     <div id="feedbackSent"></div>
     <div id="gallery-concept"></div>
@@ -1740,6 +1739,7 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
       <button class="ban-tab" id="tab-month" onclick="switchBan('month')">月盤</button>
       <button class="ban-tab" id="tab-year" onclick="switchBan('year')">年盤</button>
     </div>
+    <a href="triple_board.html" style="display:block;text-align:center;margin:0 0 12px;padding:9px;border:1px solid rgba(196,160,67,.3);border-radius:8px;background:rgba(196,160,67,.06);color:var(--goldlt);font-size:.65rem;font-weight:700;text-decoration:none;font-family:'Noto Serif JP',serif;">🔍 日盤・月盤・年盤を並べて比較する</a>
     <div class="ban-nav" id="banNav">
       <button class="ban-nav-btn" onclick="navBan(-1)">◀</button>
       <div>
@@ -1795,6 +1795,37 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
     <div style="font-size:.7rem;letter-spacing:.16em;color:var(--gold);font-weight:800;margin-bottom:10px;">✦ 吉方スポットを探す</div>
     <div style="background:var(--card);border:1px solid var(--rim);border-radius:14px;padding:16px;">
       <div style="font-size:.72rem;color:var(--snow);margin-bottom:10px;" id="mapDirLabel">—</div>
+
+      <!-- 地図の表示（恵方ライン） -->
+      <div style="font-size:.68rem;letter-spacing:.14em;color:rgba(196,160,67,.7);margin-bottom:6px;font-weight:600;">地図の表示</div>
+      <div style="background:var(--bg);border:1px solid var(--rim);border-radius:10px;overflow:hidden;margin-bottom:14px;">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--rim);">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="flex:1;">
+              <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">恵方ラインを地図に表示</div>
+              <div id="ehouInfoLabel" style="font-size:.65rem;color:var(--mist);">今年の恵方を金色のラインで表示</div>
+            </div>
+            <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
+              <input type="checkbox" id="sw-ehou" onchange="setEhouShow(this.checked)" style="opacity:0;width:0;height:0;position:absolute;">
+              <span id="sw-ehou-track" style="position:absolute;inset:0;background:#555;border-radius:13px;transition:background .2s;"></span>
+              <span id="sw-ehou-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
+            </label>
+          </div>
+        </div>
+        <div style="padding:12px 14px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="flex:1;">
+              <div style="font-size:.82rem;color:var(--snow);margin-bottom:2px;">来年の恵方も薄く表示</div>
+              <div id="ehouNextInfoLabel" style="font-size:.65rem;color:var(--mist);">来年の恵方を薄い金色（破線）で表示</div>
+            </div>
+            <label style="position:relative;width:44px;height:26px;flex-shrink:0;cursor:pointer;">
+              <input type="checkbox" id="sw-ehou-next" onchange="setEhouNextShow(this.checked)" style="opacity:0;width:0;height:0;position:absolute;">
+              <span id="sw-ehou-next-track" style="position:absolute;inset:0;background:#555;border-radius:13px;transition:background .2s;"></span>
+              <span id="sw-ehou-next-thumb" style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform .2s;"></span>
+            </label>
+          </div>
+        </div>
+      </div>
 
       <!-- 方位線マップ -->
       <div style="margin-bottom:12px;">
@@ -2087,6 +2118,7 @@ function drawFullscreenContent(lat, lng) {
   drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei);
   dirMapInstance = savedInstance;
   dirMapLines = savedLines;
+  if(isEhouShowOn() || isEhouNextShowOn()) drawEhouLine(fsMapInstance, fsEhouLines);
 }
 </script>
 
@@ -2305,6 +2337,100 @@ function drawDirectionLines(lat, lng) {
 
   // 方位盤オーバーレイを地図中心に重ねる
   drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoSet, honmei, tsukimei);
+
+  // 恵方ラインを重ねて描画
+  drawEhouLine(dirMapInstance, dirEhouLines);
+}
+
+// ══ 恵方ライン ══
+// 恵方の計算（premium.htmlと同一ロジック・純粋な計算関数）
+function getEhouForYear(year, month, day){
+  const adjYear = (month===1 || (month===2 && day<4)) ? year-1 : year;
+  const k = ((adjYear % 10) + 10) % 10;
+  const EHOU_TABLE = {
+    4:{deg:75, kan:'甲', label:'東微北（およそ東北東）'},
+    9:{deg:75, kan:'甲', label:'東微北（およそ東北東）'},
+    5:{deg:255,kan:'庚', label:'西微南（およそ西南西）'},
+    0:{deg:255,kan:'庚', label:'西微南（およそ西南西）'},
+    6:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},
+    1:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},
+    8:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},
+    3:{deg:165,kan:'丙', label:'南微東（およそ南南東）'},
+    7:{deg:345,kan:'壬', label:'北微西（およそ北北西）'},
+    2:{deg:345,kan:'壬', label:'北微西（およそ北北西）'}
+  };
+  return Object.assign({year:adjYear}, EHOU_TABLE[k]);
+}
+function isEhouShowOn(){
+  const el = document.getElementById('sw-ehou');
+  return el ? el.checked : localStorage.getItem('kitoku-ehou-show')==='1';
+}
+function isEhouNextShowOn(){
+  const el = document.getElementById('sw-ehou-next');
+  return el ? el.checked : localStorage.getItem('kitoku-ehou-next-show')==='1';
+}
+function setEhouShow(checked){
+  try{ localStorage.setItem('kitoku-ehou-show', checked?'1':'0'); }catch(e){}
+  _updateToggleUI('sw-ehou',checked);
+  updateEhouLabels();
+  drawEhouLine(dirMapInstance, dirEhouLines);
+}
+function setEhouNextShow(checked){
+  try{ localStorage.setItem('kitoku-ehou-next-show', checked?'1':'0'); }catch(e){}
+  _updateToggleUI('sw-ehou-next',checked);
+  updateEhouLabels();
+  drawEhouLine(dirMapInstance, dirEhouLines);
+}
+function updateEhouLabels(){
+  const label1 = document.getElementById('ehouInfoLabel');
+  const label2 = document.getElementById('ehouNextInfoLabel');
+  const mvY = gState.mapViewY || gState.ty, mvM = gState.mapViewM || gState.tm, mvD = gState.mapViewD || gState.td;
+  if(label1){
+    const ehou = getEhouForYear(mvY, mvM, mvD);
+    label1.innerHTML = isEhouShowOn()
+      ? '<strong style="color:#c4a043;">' + ehou.year + '年の恵方＝' + ehou.kan + '（' + ehou.label + '）</strong>'
+      : '今年の恵方を金色のラインで表示';
+  }
+  if(label2){
+    const adjYear = (mvM===1 || (mvM===2 && mvD<4)) ? mvY-1 : mvY;
+    const nextEhou = getEhouForYear(adjYear+1, 6, 15);
+    label2.innerHTML = isEhouNextShowOn()
+      ? '<strong style="color:#b8900a;">' + nextEhou.year + '年の恵方＝' + nextEhou.kan + '（' + nextEhou.label + '）</strong>'
+      : '来年の恵方を薄い金色（破線）で表示';
+  }
+}
+// 恵方ラインの描画（direction_v2の単純三角関数近似スタイルに合わせる。通常表示距離では十分な精度）
+let dirEhouLines = [];
+let fsEhouLines = [];
+function drawEhouLine(mapInst, lineArrayRef){
+  if(!mapInst || !lineArrayRef) return;
+  lineArrayRef.forEach(l => mapInst.removeLayer(l));
+  lineArrayRef.length = 0;
+  if(!dirMapCenter) return;
+  const {lat, lng} = dirMapCenter;
+  const mvY = gState.mapViewY || gState.ty, mvM = gState.mapViewM || gState.tm, mvD = gState.mapViewD || gState.td;
+
+  const drawOneLine = (deg, color, weight, opacity, dashArray, distKm) => {
+    const rad = deg * Math.PI / 180;
+    const dlat = Math.cos(rad) * (distKm / 111);
+    const dlng = Math.sin(rad) * (distKm / (111 * Math.cos(lat * Math.PI / 180)));
+    const opts = { color, weight, opacity, interactive: false };
+    if(dashArray) opts.dashArray = dashArray;
+    const line = L.polyline([[lat, lng], [lat + dlat, lng + dlng]], opts);
+    line.addTo(mapInst);
+    lineArrayRef.push(line);
+  };
+
+  if(isEhouShowOn()){
+    const ehou = getEhouForYear(mvY, mvM, mvD);
+    drawOneLine(ehou.deg, '#d4a028', 3.5, 0.9, null, 80);
+  }
+  if(isEhouNextShowOn()){
+    const adjYear = (mvM===1 || (mvM===2 && mvD<4)) ? mvY-1 : mvY;
+    const nextEhou = getEhouForYear(adjYear+1, 6, 15);
+    drawOneLine(nextEhou.deg, '#b8900a', 2.5, 0.6, '8,6', 80);
+  }
+  updateEhouLabels();
 }
 
 // ══ 地図用 方位盤オーバーレイ ══
@@ -2570,7 +2696,31 @@ function handleDirectionMapTap(e){
 function buildDirectionTapHtml(dir, bearing, dist, lat, lng){
   const hasPoint = Number.isFinite(Number(lat)) && Number.isFinite(Number(lng));
   const action = hasPoint ? 'setTappedPointAsDirectionCenter(' + Number(lat).toFixed(7) + ',' + Number(lng).toFixed(7) + ')' : 'setTappedPointAsDirectionCenter()';
-  return '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span><br><button type="button" onclick="' + action + '" style="margin-top:7px;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.36);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:6px 10px;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;font-weight:700;">この地点を中心にする</button>';
+  const saveAction = hasPoint ? 'saveTappedPointAsPlace(' + Number(lat).toFixed(7) + ',' + Number(lng).toFixed(7) + ')' : 'saveTappedPointAsPlace()';
+  return '<strong style="color:var(--goldlt);font-size:.78rem;">' + DIRECTION_JP[dir] + '方位</strong><br>中心地点から約 ' + formatDistance(dist) + ' / 方位角 ' + Math.round(bearing) + '°<br><span style="color:var(--mist);">ここでは吉凶判定はせず、方位と距離だけを表示します。</span><br><button type="button" onclick="' + action + '" style="margin-top:7px;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.36);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:6px 10px;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;font-weight:700;">この地点を中心にする</button> <button type="button" onclick="' + saveAction + '" style="margin-top:7px;background:rgba(196,160,67,.14);border:1px solid rgba(196,160,67,.36);border-radius:7px;color:var(--goldlt);font-size:.62rem;padding:6px 10px;cursor:pointer;font-family:&quot;Noto Serif JP&quot;,serif;font-weight:700;">⭐ 保存1〜3に追加</button>';
+}
+function saveTappedPointAsPlace(lat, lng){
+  let p = null;
+  if(Number.isFinite(Number(lat)) && Number.isFinite(Number(lng))){
+    p = {lat:Number(lat), lng:Number(lng)};
+  } else {
+    p = directionLastTappedPoint;
+  }
+  if(!p){ alert('先に地図上の地点をタップしてください。'); return; }
+  loadDirectionPlaces();
+  const name = prompt('場所の名前を入力してください', '');
+  if(!name) return;
+  let slot = directionPlaces.length < DIRECTION_PLACE_LIMIT ? directionPlaces.length : -1;
+  if(slot < 0){
+    const input = prompt('保存1〜3のどこに上書きしますか？（1, 2, 3）', '1');
+    slot = parseInt(input, 10) - 1;
+    if(slot < 0 || slot >= DIRECTION_PLACE_LIMIT) return;
+  }
+  const entry = {name:String(name).slice(0,24), lat:p.lat, lng:p.lng};
+  if(slot < directionPlaces.length) directionPlaces.splice(slot, 1, entry);
+  else directionPlaces.splice(slot, 0, entry);
+  saveDirectionPlaces();
+  alert('「' + name + '」を保存' + (slot+1) + 'に保存しました。');
 }
 function setTappedPointAsDirectionCenter(lat, lng){
   let p = null;
@@ -3225,6 +3375,14 @@ function getActiveKitokuBirth(){
     gState.seasonAlert=seasonAlert;
     const swSeason=document.getElementById('sw-season');
     if(swSeason){swSeason.checked=seasonAlert;_updateToggleUI('sw-season',seasonAlert);}
+    // 恵方ライン表示設定を復元
+    const ehouShow=localStorage.getItem('kitoku-ehou-show')==='1';
+    const swEhou=document.getElementById('sw-ehou');
+    if(swEhou){swEhou.checked=ehouShow;_updateToggleUI('sw-ehou',ehouShow);}
+    const ehouNextShow=localStorage.getItem('kitoku-ehou-next-show')==='1';
+    const swEhouNext=document.getElementById('sw-ehou-next');
+    if(swEhouNext){swEhouNext.checked=ehouNextShow;_updateToggleUI('sw-ehou-next',ehouNextShow);}
+    updateEhouLabels();
   }catch(e){gState.soukouOff=false;gState.teiiAsKyo=false;gState.kichakuWarn=false;gState.seasonAlert=true;}
   // 設定モード（かんたん/くわしい）の復元
   try{
@@ -5984,6 +6142,15 @@ function copyAIPrompt(){
   const BRANCH_NAME=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
   const WEEK=['日','月','火','水','木','金','土'];
 
+  function updateSenroBlurState(){
+    var blurEl = document.getElementById('senroBlur');
+    if(!blurEl) return;
+    var isPremiumUser = true; /* 2026-08-31 一時解放。今後の課金方針見直しに伴う措置。
+                                 move.html等を参考にした暫定値。元の式（move.html等参考）:
+                                 !!(kitokuPlan && (kitokuPlan.base || kitokuPlan.business)) */
+    blurEl.style.display = isPremiumUser ? 'none' : 'flex';
+  }
+
   function renderSenro(){
     // kitoku-railway-branchesから読み込む（pilgrimage.htmlと共通のキー）
     let indices = [1,4,7,10]; // デフォルト：丑・辰・未・戌
@@ -6023,7 +6190,9 @@ function copyAIPrompt(){
   }
 
   document.addEventListener('DOMContentLoaded', renderSenro);
+  document.addEventListener('DOMContentLoaded', updateSenroBlurState);
   window.addEventListener('pageshow', renderSenro);
+  window.addEventListener('pageshow', updateSenroBlurState);
 })();
 
 </script>
