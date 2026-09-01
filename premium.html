@@ -1327,7 +1327,7 @@ function centerForDate(){
 }
 function getBreakDirForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
-  if(state.banType==='year')return OPP[getZodiac(y).d];
+  if(state.banType==='year')return OPP[getZodiac(getKigakuYear(y,m,d)).d];
   if(state.banType==='month')return OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
   return OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
 }
@@ -1337,7 +1337,8 @@ function getBreakNameForBan(type=state.banType){
 function getBreakBranchForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
   if(state.banType==='year'){
-    const idx=((y-2020)%12+12)%12;
+    const ky=getKigakuYear(y,m,d);
+    const idx=((ky-2020)%12+12)%12;
     return {idx,name:BRANCH_NAME_P[idx]};
   }
   if(state.banType==='month'){
@@ -1377,7 +1378,7 @@ function kitokuHasStrictKyoLabel(name){
 
 function getSangoSetForPremiumDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
-  let branchName=getZodiac(y).k;
+  let branchName=getZodiac(getKigakuYear(y,m,d)).k;
   if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(y,m,d)];
   if(state.banType==='day')branchName=BRANCH_NAME_P[getDayBranch(y,m,d)];
   return new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
@@ -1485,7 +1486,8 @@ function renderBoard(){
   const breakDir=getBreakDirForDate();
   let branchName;
   if(state.banType==='year'){
-    const yb=((_y-2020)%12+12)%12;
+    const ky=getKigakuYear(_y,_m,_d);
+    const yb=((ky-2020)%12+12)%12;
     branchName=BRANCH_NAME_P[(yb+6)%12];
   }else if(state.banType==='month'){
     branchName=BRANCH_NAME_P[(getMonthBranch(_y,_m,_d)+6)%12];
@@ -4012,7 +4014,7 @@ const MAP_KITOKU_SPANS= [
 // 通称「南南東やや右」等は丙方向（165°）を指す
 function getEhouForYear(year, month, day){
   // 立春（2/4頃）前は前年の十干で判定
-  const adjYear = (month===1 || (month===2 && day<4)) ? year-1 : year;
+  const adjYear = getKigakuYear(year, month, day);
   const k = ((adjYear % 10) + 10) % 10; // 西暦下一桁
   // 0=庚,1=辛,2=壬,3=癸,4=甲,5=乙,6=丙,7=丁,8=戊,9=己
   // 恵方の方角（度・北0時計回り）と通称
@@ -5129,8 +5131,9 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
 
   // 破の支
   const _y=state.date.getFullYear(),_m=state.date.getMonth()+1,_d=state.date.getDate();
-  const z2=getZodiac(_y);
-  const yb2=((_y-2020)%12+12)%12;
+  const ky2=getKigakuYear(_y,_m,_d);
+  const z2=getZodiac(ky2);
+  const yb2=((ky2-2020)%12+12)%12;
   let breakBranch=MAP_SHI[(yb2+6)%12]||'',breakDir2=OPP[z2.d]||'';
   if(state.banType==='month'){const mb=getMonthBranch(_y,_m,_d);breakBranch=MAP_SHI[(mb+6)%12]||'';breakDir2=OPP[BRANCH_DIR[mb]]||'';}
   else if(state.banType==='day'){const db=getDayBranch(_y,_m,_d);breakBranch=MAP_SHI[(db+6)%12]||'';breakDir2=OPP[BRANCH_DIR[db]]||'';}
@@ -6131,7 +6134,7 @@ function openDirPopupPremium(dir,center,dirData,extra){
   let sangoHTML='';
   if(isSango){
     const y=state.date.getFullYear(),m=state.date.getMonth()+1,d2=state.date.getDate();
-    let bn=getZodiac(y).k;
+    let bn=getZodiac(getKigakuYear(y,m,d2)).k;
     if(state.banType==='month') bn=BRANCH_NAME_P[getMonthBranch(y,m,d2)];
     if(state.banType==='day') bn=BRANCH_NAME_P[getDayBranch(y,m,d2)];
     const sg=SANGO_MAP[bn]||{group:''};

@@ -2516,7 +2516,7 @@ function calcAndShowDir() {
   const yearStarN = yearBoard[dir] || 5;
 
   // 三合
-  const yearBranch = getZodiac(viewY);
+  const yearBranch = getZodiac(getKigakuYear(viewY, viewM, viewD));
   const monthBranch = BRANCH_NAME[getMonthBranch(viewY, viewM, viewD)];
   const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];

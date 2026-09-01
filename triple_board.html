@@ -656,7 +656,7 @@ function renderBoard(type){
   const {honmei,tsukimei}=gState;
   let y,m,d,center,breakDir,lbl,sub;
   if(type==='year'){
-    ({y,m,d}=gState.yearNav);center=yearCenter(getKigakuYear(y,m,d));breakDir=OPP[getZodiac(y).d];
+    ({y,m,d}=gState.yearNav);center=yearCenter(getKigakuYear(y,m,d));breakDir=OPP[getZodiac(getKigakuYear(y,m,d)).d];
     lbl=`${y}年`;sub=`${y}年2月4日〜${y+1}年2月3日`;
   }else if(type==='month'){
     ({y,m,d}=gState.monthNav);center=getMonthCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
@@ -681,7 +681,7 @@ function renderBoard(type){
   document.getElementById(`sub-${type}`).textContent=sub;
 
   const {items:kyouItems,kyouSet,cautionSet=new Set()}=getKyouDirs(center,honmei,breakDir,tsukimei,type);
-  let branchName=getZodiac(y).k;
+  let branchName=getZodiac(getKigakuYear(y,m,d)).k;
   if(type==='month')branchName=SHI[getMonthBranch(y,m,d)];
   if(type==='day')branchName=SHI[getDayBranch(y,m,d)];
   const breakName=type==='year'?'歳破':type==='month'?'月破':'日破';
@@ -865,7 +865,7 @@ function redrawBoardOnly(type){
   else{const{y,m,d}=gState.dayNav;center=getDayCenter(y,m,d);}
   // kyouItems再取得
   let y,m,d,breakDir;
-  if(type==='year'){({y,m,d}=gState.yearNav);breakDir=OPP[getZodiac(y).d];}
+  if(type==='year'){({y,m,d}=gState.yearNav);breakDir=OPP[getZodiac(getKigakuYear(y,m,d)).d];}
   else if(type==='month'){({y,m,d}=gState.monthNav);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];}
   else{({y,m,d}=gState.dayNav);breakDir=OPP[BRANCH_DIR[getDayBranch(y,m,d)]];}
   const {items:kyouItems}=getKyouDirs(center,gState.honmei,breakDir,gState.tsukimei,type);

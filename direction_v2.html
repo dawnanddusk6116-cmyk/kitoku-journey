@@ -2053,7 +2053,7 @@ function drawFullscreenContent(lat, lng) {
   if (!center) return;
 
   const p2s = buildBoardFromCenter(center);
-  const z = getZodiac(mvY);
+  const z = getZodiac(getKigakuYear(mvY, mvM, mvD));
   const sangoBranchName = getSangoBranchName(gState.currentBan || 'day', mvY, mvM, mvD);
   const sangoSet = new Set((SANGO_MAP[sangoBranchName] || { dirs: [] }).dirs);
   let mapBreakDir = OPP[z.d];
@@ -2228,7 +2228,7 @@ function drawDirectionLines(lat, lng) {
   if (!center) return;
 
   const p2s = buildBoardFromCenter(center);
-  const z = getZodiac(mvY);
+  const z = getZodiac(getKigakuYear(mvY, mvM, mvD));
   const sangoBranchName = getSangoBranchName(gState.currentBan || 'day', mvY, mvM, mvD);
   const sangoSet = new Set((SANGO_MAP[sangoBranchName] || { dirs: [] }).dirs);
   // 盤の種類に応じた破方位（日盤=日破、月盤=月破、年盤=歳破）
@@ -2345,7 +2345,7 @@ function drawDirectionLines(lat, lng) {
 // ══ 恵方ライン ══
 // 恵方の計算（premium.htmlと同一ロジック・純粋な計算関数）
 function getEhouForYear(year, month, day){
-  const adjYear = (month===1 || (month===2 && day<4)) ? year-1 : year;
+  const adjYear = getKigakuYear(year, month, day);
   const k = ((adjYear % 10) + 10) % 10;
   const EHOU_TABLE = {
     4:{deg:75, kan:'甲', label:'東微北（およそ東北東）'},
@@ -2392,7 +2392,7 @@ function updateEhouLabels(){
       : '今年の恵方を金色のラインで表示';
   }
   if(label2){
-    const adjYear = (mvM===1 || (mvM===2 && mvD<4)) ? mvY-1 : mvY;
+    const adjYear = getKigakuYear(mvY, mvM, mvD);
     const nextEhou = getEhouForYear(adjYear+1, 6, 15);
     label2.innerHTML = isEhouNextShowOn()
       ? '<strong style="color:#b8900a;">' + nextEhou.year + '年の恵方＝' + nextEhou.kan + '（' + nextEhou.label + '）</strong>'
@@ -2426,7 +2426,7 @@ function drawEhouLine(mapInst, lineArrayRef){
     drawOneLine(ehou.deg, '#d4a028', 3.5, 0.9, null, 80);
   }
   if(isEhouNextShowOn()){
-    const adjYear = (mvM===1 || (mvM===2 && mvD<4)) ? mvY-1 : mvY;
+    const adjYear = getKigakuYear(mvY, mvM, mvD);
     const nextEhou = getEhouForYear(adjYear+1, 6, 15);
     drawOneLine(nextEhou.deg, '#b8900a', 2.5, 0.6, '8,6', 80);
   }
@@ -2458,8 +2458,9 @@ function drawMapCompassOverlay(lat, lng, p2s, center, kyouItems, kyouSet, sangoS
 
   // 破の支を特定（地図表示用の日付）
   const _mvY = gState.mapViewY || gState.ty, _mvM = gState.mapViewM || gState.tm, _mvD = gState.mapViewD || gState.td;
-  const z = getZodiac(_mvY);
-  const yb = ((_mvY-2020)%12+12)%12;
+  const _kigakuY = getKigakuYear(_mvY, _mvM, _mvD);
+  const z = getZodiac(_kigakuY);
+  const yb = ((_kigakuY-2020)%12+12)%12;
   let breakBranch = SHI[(yb+6)%12], breakDir = OPP[z.d];
   if (gState.currentBan === 'month') { const mb=getMonthBranch(_mvY, _mvM, _mvD); breakBranch = SHI[(mb+6)%12]; breakDir = OPP[BRANCH_DIR[mb]]; }
   else if (gState.currentBan === 'day' || !gState.currentBan) { const db=getDayBranch(_mvY, _mvM, _mvD); breakBranch = SHI[(db+6)%12]; breakDir = OPP[BRANCH_DIR[db]]; }
@@ -2913,7 +2914,7 @@ const TSUKI_MATRIX={A:[8,7,6,5,4,3,2,1,9,8,7,6],B:[5,4,3,2,1,9,8,7,6,5,4,3],C:[2
 const KAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const SHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 function getSangoBranchName(banType, ty, tm, td){
-  if(banType==='year')return getZodiac(ty).k;
+  if(banType==='year')return getZodiac(getKigakuYear(ty,tm,td)).k;
   if(banType==='month')return SHI[getMonthBranch(ty,tm,td)];
   return SHI[getDayBranch(ty,tm,td)];
 }
@@ -4272,13 +4273,14 @@ function renderBan(type){
   else center=yearCent;
 
   const p2s=buildBoardFromCenter(center);
-  const z=getZodiac(ty);
+  const kigakuY=getKigakuYear(ty,tm,td);
+  const z=getZodiac(kigakuY);
   const sangoBranchName=getSangoBranchName(type,ty,tm,td);
   const sangoSet=new Set((SANGO_MAP[sangoBranchName]||{dirs:[]}).dirs);
 
   let breakDir='C';
   let breakZodiacBranch=''; // 破にあたる支（その日の支の対冲）
-  if(type==='year'){const yb=((ty-2020)%12+12)%12;breakDir=OPP[z.d];breakZodiacBranch=SHI[(yb+6)%12];}
+  if(type==='year'){const yb=((kigakuY-2020)%12+12)%12;breakDir=OPP[z.d];breakZodiacBranch=SHI[(yb+6)%12];}
   else if(type==='month'){const mb=getMonthBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[mb]];breakZodiacBranch=SHI[(mb+6)%12];}
   else{const db=getDayBranch(ty,tm,td);breakDir=OPP[BRANCH_DIR[db]];breakZodiacBranch=SHI[(db+6)%12];}
 
@@ -4378,7 +4380,8 @@ function renderKichiList(dirData,p2s){
       // 現在の盤データを再取得
       const {honmei,tsukimei,ty,tm,td,currentBan}=gState;
       const center=currentBan==='day'?gState.dayCenter:currentBan==='month'?gState.monthCenter:gState.yearCent;
-      const z=getZodiac(ty);
+      const kigakuY=getKigakuYear(ty,tm,td);
+      const z=getZodiac(kigakuY);
       const sangoBranchName=getSangoBranchName(currentBan,ty,tm,td);
       const sangoSet=new Set((SANGO_MAP[sangoBranchName]||{dirs:[]}).dirs);
       let breakDir='C';
