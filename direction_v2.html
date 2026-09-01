@@ -4046,8 +4046,18 @@ function updateBanNavLabel(){
   }else if(type==='month'){
     // 月盤の有効期間：節入り日を計算
     const {start,end}=getMonthPeriod(y,m);
-    lbl.textContent=`${y}年 ${m}月`;
-    sub.textContent=`月盤 — ${start}〜${end}`;
+    const sekkiStartDay=getSekkiDay(y,m);
+    let nextY=y,nextM=m+1; if(nextM>12){nextM=1;nextY++;}
+    const sekkiEndDay=getSekkiDay(nextY,nextM)-1;
+    lbl.textContent=`${y}年${m}月（${m}/${sekkiStartDay}〜${nextM}/${sekkiEndDay}）`;
+    const todayForCheck=new Date();
+    const startDate=new Date(y,m-1,sekkiStartDay);
+    const daysToSekkiStart=Math.round((startDate-todayForCheck)/86400000);
+    if(daysToSekkiStart>=0 && daysToSekkiStart<=3){
+      sub.textContent=`⚠ ${m}/${sekkiStartDay}から月盤が切り替わります`;
+    }else{
+      sub.textContent=`月盤 — 節入り基準（${start}〜${end}）`;
+    }
   }else{
     lbl.textContent=`${y}年 ${m}月 ${d}日`;
     sub.textContent='日盤 — 今日の方位（翌日の節入り時刻まで有効）';

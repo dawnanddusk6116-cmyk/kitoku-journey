@@ -654,7 +654,19 @@ function renderBoard(type){
     lbl=`${y}年`;sub=`${y}年2月4日〜${y+1}年2月3日`;
   }else if(type==='month'){
     ({y,m,d}=gState.monthNav);center=getMonthCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
-    const p=getMonthPeriod(y,m);lbl=`${y}年 ${m}月`;sub=`${p.start}〜${p.end}`;
+    const p=getMonthPeriod(y,m);
+    const sekkiStartDay=getSekkiDay(y,m);
+    let nextY=y,nextM=m+1; if(nextM>12){nextM=1;nextY++;}
+    const sekkiEndDay=getSekkiDay(nextY,nextM)-1;
+    lbl=`${y}年${m}月（${m}/${sekkiStartDay}〜${nextM}/${sekkiEndDay}）`;
+    const todayForCheck=new Date();
+    const startDate=new Date(y,m-1,sekkiStartDay);
+    const daysToSekkiStart=Math.round((startDate-todayForCheck)/86400000);
+    if(daysToSekkiStart>=0 && daysToSekkiStart<=3){
+      sub=`⚠ ${m}/${sekkiStartDay}から月盤が切り替わります`;
+    }else{
+      sub=`月盤 — 節入り基準（${p.start}〜${p.end}）`;
+    }
   }else{
     ({y,m,d}=gState.dayNav);center=getDayCenter(y,m,d);breakDir=OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
     lbl=`${y}年${m}月${d}日`;sub=`${KAN[getDayStem(y,m,d)]}${SHI[getDayBranch(y,m,d)]}の日`;
