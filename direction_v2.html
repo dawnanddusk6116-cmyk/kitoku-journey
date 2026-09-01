@@ -3125,8 +3125,6 @@ function getNodeMonthIdx(year,month,day){const sd=getSekkiDay(year,month);let m=
 function getMonthCenter(year,month,day){const ni=getNodeMonthIdx(year,month,day);const cycleYear=(ni===11&&month<=2)?year-1:year;const c=yearCenter(cycleYear);const grp=[1,4,7].includes(c)?'A':[3,6,9].includes(c)?'B':'C';return TSUKI_MATRIX[grp][ni];}
 function getMonthBranch(year,month,day){return(getNodeMonthIdx(year,month,day)+2)%12;}
 function getMonthBoardDay(y, m) {
-  const now = new Date();
-  if (y === now.getFullYear() && m === now.getMonth() + 1) return now.getDate();
   return 15;
 }
 
@@ -3857,11 +3855,12 @@ function switchBan(type){
   // オフセットをリセット
   gState.navYear=gState.ty;
   gState.navMonth=gState.tm;
-  gState.navDay=gState.td;
+  gState.navDay=type==='month'?getMonthBoardDay(gState.navYear,gState.navMonth):gState.td;
   ['day','month','year'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===type);
   });
-  renderBan(type);
+  if(type==='month')renderBanNav();
+  else renderBan(type);
   updateBanNavLabel();
 }
 

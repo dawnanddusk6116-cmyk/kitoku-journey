@@ -1909,8 +1909,6 @@ function getSharedKyouDirs(boardCenter, honmei, breakDir, tsukimei, banType) {
 }
 
 function getMonthBoardDay(y, m) {
-  const now = new Date();
-  if (y === now.getFullYear() && m === now.getMonth() + 1) return now.getDate();
   return 15;
 }
 

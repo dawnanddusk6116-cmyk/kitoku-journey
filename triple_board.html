@@ -637,7 +637,7 @@ function compute(){
   const {kY,kM}=getKD(by,bm,bd);
   const honmei=calcHonmei(kY),tsukimei=calcTsukimei(honmei,kM);
   gState.honmei=honmei;gState.tsukimei=tsukimei;gState.by=by;gState.bm=bm;gState.bd=bd;
-  gState.yearNav={y:ty,m:tm,d:td};gState.monthNav={y:ty,m:tm,d:td};gState.dayNav={y:ty,m:tm,d:td};
+  gState.yearNav={y:ty,m:tm,d:td};gState.monthNav={y:ty,m:tm,d:getSekkiDay(ty,tm)};gState.dayNav={y:ty,m:tm,d:td};
   document.getElementById('sb-honmei').textContent=STARS[honmei].j;
   document.getElementById('sb-tsukimei').textContent=STARS[tsukimei].j;
   const doukiTB=getDoukiTB(honmei);

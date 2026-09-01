@@ -1321,14 +1321,16 @@ function setCompassMode(mode,save=true){
 }
 function centerForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const boardD=state.banType==='month'?getMonthBoardDay(y,m):d;
   if(state.banType==='year')return yearCenter(getKigakuYear(y,m,d));
-  if(state.banType==='month')return getMonthCenter(y,m,d);
+  if(state.banType==='month')return getMonthCenter(y,m,boardD);
   return getDayCenter(y,m,d);
 }
 function getBreakDirForDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const boardD=state.banType==='month'?getMonthBoardDay(y,m):d;
   if(state.banType==='year')return OPP[getZodiac(getKigakuYear(y,m,d)).d];
-  if(state.banType==='month')return OPP[BRANCH_DIR[getMonthBranch(y,m,d)]];
+  if(state.banType==='month')return OPP[BRANCH_DIR[getMonthBranch(y,m,boardD)]];
   return OPP[BRANCH_DIR[getDayBranch(y,m,d)]];
 }
 function getBreakNameForBan(type=state.banType){
@@ -1342,7 +1344,8 @@ function getBreakBranchForDate(){
     return {idx,name:BRANCH_NAME_P[idx]};
   }
   if(state.banType==='month'){
-    const idx=getMonthBranch(y,m,d);
+    const boardD=getMonthBoardDay(y,m);
+    const idx=getMonthBranch(y,m,boardD);
     return {idx,name:BRANCH_NAME_P[idx]};
   }
   const idx=getDayBranch(y,m,d);
@@ -1378,16 +1381,18 @@ function kitokuHasStrictKyoLabel(name){
 
 function getSangoSetForPremiumDate(){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const boardD=state.banType==='month'?getMonthBoardDay(y,m):d;
   let branchName=getZodiac(getKigakuYear(y,m,d)).k;
-  if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(y,m,d)];
+  if(state.banType==='month')branchName=BRANCH_NAME_P[getMonthBranch(y,m,boardD)];
   if(state.banType==='day')branchName=BRANCH_NAME_P[getDayBranch(y,m,d)];
   return new Set((SANGO_MAP[branchName]||{dirs:[]}).dirs);
 }
 function buildDirData(center){
   const y=state.date.getFullYear(),m=state.date.getMonth()+1,d=state.date.getDate();
+  const boardD=state.banType==='month'?getMonthBoardDay(y,m):d;
   const p2s=buildBoardFromCenter(center);
   const sangoSet=getSangoSetForPremiumDate();
-  const tendoDir=state.banType==='year'?null:getTendoDir(y,m,d);
+  const tendoDir=state.banType==='year'?null:getTendoDir(y,m,boardD);
   // direction_v2.htmlと設定を共有
   const _teiiKyo=localStorage.getItem('kitoku-teii-kyo')==='1';
   const _tmSatsu=localStorage.getItem('kitoku-tsukimei-satsu')||'on';
@@ -1451,6 +1456,10 @@ function updatePremiumSangoHelp(dirData){
   box.style.display=hasSango?'block':'none';
 }
 
+function getMonthBoardDay(y,m){
+  return 15;
+}
+
 function getSekkiRangeInfo(y,m){
   const startDay=getSekkiDay(y,m);
   let nextY=y,nextM=m+1; if(nextM>12){nextM=1;nextY++;}
@@ -1490,7 +1499,8 @@ function renderBoard(){
     const yb=((ky-2020)%12+12)%12;
     branchName=BRANCH_NAME_P[(yb+6)%12];
   }else if(state.banType==='month'){
-    branchName=BRANCH_NAME_P[(getMonthBranch(_y,_m,_d)+6)%12];
+    const _boardD=getMonthBoardDay(_y,_m);
+    branchName=BRANCH_NAME_P[(getMonthBranch(_y,_m,_boardD)+6)%12];
   }else{
     branchName=BRANCH_NAME_P[(getDayBranch(_y,_m,_d)+6)%12];
   }
@@ -5139,7 +5149,7 @@ function drawKitokuMapCompassOverlay(lat,lng,p2s,center,kyouItems,kyouSet,sangoS
   const z2=getZodiac(ky2);
   const yb2=((ky2-2020)%12+12)%12;
   let breakBranch=MAP_SHI[(yb2+6)%12]||'',breakDir2=OPP[z2.d]||'';
-  if(state.banType==='month'){const mb=getMonthBranch(_y,_m,_d);breakBranch=MAP_SHI[(mb+6)%12]||'';breakDir2=OPP[BRANCH_DIR[mb]]||'';}
+  if(state.banType==='month'){const _boardD=getMonthBoardDay(_y,_m);const mb=getMonthBranch(_y,_m,_boardD);breakBranch=MAP_SHI[(mb+6)%12]||'';breakDir2=OPP[BRANCH_DIR[mb]]||'';}
   else if(state.banType==='day'){const db=getDayBranch(_y,_m,_d);breakBranch=MAP_SHI[(db+6)%12]||'';breakDir2=OPP[BRANCH_DIR[db]]||'';}
 
   let cells='';
@@ -6140,7 +6150,7 @@ function openDirPopupPremium(dir,center,dirData,extra){
   if(isSango){
     const y=state.date.getFullYear(),m=state.date.getMonth()+1,d2=state.date.getDate();
     let bn=getZodiac(getKigakuYear(y,m,d2)).k;
-    if(state.banType==='month') bn=BRANCH_NAME_P[getMonthBranch(y,m,d2)];
+    if(state.banType==='month') bn=BRANCH_NAME_P[getMonthBranch(y,m,getMonthBoardDay(y,m))];
     if(state.banType==='day') bn=BRANCH_NAME_P[getDayBranch(y,m,d2)];
     const sg=SANGO_MAP[bn]||{group:''};
     const purpose=SANGO_PURPOSE[sg.group]||'';
