@@ -544,6 +544,28 @@ body{
   .ban-compare-card{padding:6px 2px 5px;}
   .ban-compare-title{font-size:.52rem;}
 }
+@media(min-width:900px){
+  #dirResultSection{
+    width:min(860px,calc(100vw - 80px));
+    margin-left:50%;
+    transform:translateX(-50%);
+  }
+  #dirResultSection .dir-result{
+    padding:18px;
+  }
+  #dirResultSection .ban-compare-grid{
+    gap:12px;
+  }
+  #dirResultSection .ban-compare-card{
+    padding:10px 8px 9px;
+  }
+  #dirResultSection .ban-compare-title{
+    font-size:.68rem;
+  }
+  #dirResultSection .ban-compare-card svg{
+    max-width:220px !important;
+  }
+}
 .ban-cell{
   aspect-ratio:1;border-radius:8px;
   background:rgba(100,80,40,.04);
