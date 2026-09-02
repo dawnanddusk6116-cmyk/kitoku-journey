@@ -570,11 +570,17 @@ body{
   #dirResultSection,
   #howToSection,
   #calSection,
-  #nichibanSection,
-  .disclaimer{
+  #nichibanSection{
     width:min(860px,calc(100vw - 80px));
     margin-left:50%;
     transform:translateX(-50%);
+  }
+  .disclaimer,
+  .footer{
+    width:min(860px,calc(100vw - 80px));
+    margin-left:calc((480px - min(860px,calc(100vw - 80px))) / 2) !important;
+    margin-right:0 !important;
+    transform:none;
   }
   #dirResultSection .dir-result{
     padding:18px;
@@ -2899,7 +2905,7 @@ function calcAndShowDir() {
   renderCalendar();
 
   // タブ選択状態を復元（月を変えても選択中のタブを維持）
-  setTimeout(() => switchBan(gState.activeBanTab || 'year'), 0);
+  switchBan(gState.activeBanTab || 'year');
 }
 
 function switchBan(type) {
@@ -2924,8 +2930,15 @@ function moveStep3Ban(type, delta) {
     let m = gState.banMonthM + delta;
     if (m > 12) { m = 1; y++; }
     if (m < 1) { m = 12; y--; }
+    const d = getSekkiDay(y, m);
     gState.banMonthY = y;
     gState.banMonthM = m;
+    gState.banYearY = y;
+    gState.banYearM = m;
+    gState.banYearD = getMonthBoardDay(y, m);
+    gState.banDayY = y;
+    gState.banDayM = m;
+    gState.banDayD = d;
     gState.calYear = y;
     gState.calMonth = m;
   } else if (type === 'day') {
@@ -3083,6 +3096,7 @@ function renderCalendar() {
     let html = '';
     let bestDays = [];
     let railwayDays = [];
+    let recommendableDays = new Set();
     const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
 
     for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
@@ -3126,6 +3140,7 @@ function renderCalendar() {
       const isToday = (y + '-' + m + '-' + d) === todayStr;
 
       if (isRailway) railwayDays.push({ d: d, branch: branch });
+      if (!isKyoDay) recommendableDays.add(d);
 
       // おすすめ計算：日盤凶は完全除外
       if (!isKyoDay && (isKichi || isRailway)) {
@@ -3181,6 +3196,7 @@ function renderCalendar() {
 
     // 線路の日を登録・スコア加算
     railwayDays.forEach(function(item) {
+      if (!recommendableDays.has(item.d)) return;
       if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
       allDays[item.d].isRailway = true;
       allDays[item.d].branch = item.branch;
