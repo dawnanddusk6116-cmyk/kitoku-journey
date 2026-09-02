@@ -489,6 +489,15 @@ function getKigakuYear(y, m, d){
   if(m === 2 && d < risshunDay) return y - 1;
   return y;
 }
+function getKigakuMonth(y, m, d){
+  const sekkiDay = getSekkiDay(y, m);
+  if(d < sekkiDay){
+    let prevM = m - 1, prevY = y;
+    if(prevM < 1){ prevM = 12; prevY = y - 1; }
+    return { y: prevY, m: prevM };
+  }
+  return { y, m };
+}
 function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
 function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
@@ -637,7 +646,10 @@ function compute(){
   const {kY,kM}=getKD(by,bm,bd);
   const honmei=calcHonmei(kY),tsukimei=calcTsukimei(honmei,kM);
   gState.honmei=honmei;gState.tsukimei=tsukimei;gState.by=by;gState.bm=bm;gState.bd=bd;
-  gState.yearNav={y:ty,m:tm,d:td};gState.monthNav={y:ty,m:tm,d:getSekkiDay(ty,tm)};gState.dayNav={y:ty,m:tm,d:td};
+  gState.yearNav={y:ty,m:tm,d:td};
+  const kMonth=getKigakuMonth(ty,tm,td);
+  gState.monthNav={y:kMonth.y,m:kMonth.m,d:getSekkiDay(kMonth.y,kMonth.m)};
+  gState.dayNav={y:ty,m:tm,d:td};
   document.getElementById('sb-honmei').textContent=STARS[honmei].j;
   document.getElementById('sb-tsukimei').textContent=STARS[tsukimei].j;
   const doukiTB=getDoukiTB(honmei);
