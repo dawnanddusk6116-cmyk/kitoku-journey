@@ -397,6 +397,94 @@ body{
   display:block;
   margin-top:4px;
 }
+.ban-compare-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  margin-top:8px;
+  align-items:start;
+}
+.ban-compare-grid.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+.ban-compare-card{
+  background:rgba(255,255,255,.48);
+  border:1px solid var(--rim);
+  border-radius:9px;
+  padding:7px 4px 6px;
+  text-align:center;
+}
+.ban-compare-card.active{
+  border-color:rgba(138,104,32,.48);
+  box-shadow:0 0 0 1px rgba(138,104,32,.08) inset;
+}
+.ban-compare-title{
+  font-size:.58rem;
+  color:var(--goldlt);
+  font-weight:700;
+  line-height:1.45;
+  min-height:2.4em;
+  margin-bottom:2px;
+}
+.ban-compare-nav{
+  display:grid;
+  grid-template-columns:24px 1fr 24px;
+  gap:4px;
+  align-items:center;
+  margin-bottom:3px;
+}
+.ban-shift-btn{
+  width:24px;
+  height:24px;
+  border-radius:999px;
+  border:1px solid rgba(138,104,32,.24);
+  background:rgba(138,104,32,.07);
+  color:var(--goldlt);
+  font-size:.72rem;
+  line-height:1;
+  cursor:pointer;
+  font-family:'Noto Serif JP',serif;
+}
+.ban-shift-btn:active{transform:scale(.94);}
+.ban-compare-card svg{
+  max-width:128px !important;
+}
+@media(max-width:390px){
+  .ban-compare-grid{gap:5px;}
+  .ban-compare-card{padding:6px 2px 5px;}
+  .ban-compare-title{font-size:.52rem;}
+  .ban-compare-nav{grid-template-columns:20px 1fr 20px;gap:2px;}
+  .ban-shift-btn{width:20px;height:20px;font-size:.62rem;}
+}
+@media(min-width:900px){
+  #dirResultSection,
+  #howToSection,
+  #calSection,
+  #nichibanSection{
+    width:min(860px,calc(100vw - 80px));
+    margin-left:50%;
+    transform:translateX(-50%);
+  }
+  .disclaimer,
+  .footer{
+    width:min(860px,calc(100vw - 80px));
+    margin-left:calc((480px - min(860px,calc(100vw - 80px))) / 2) !important;
+    margin-right:0 !important;
+    transform:none;
+  }
+  #dirResultSection .dir-result{padding:18px;}
+  #dirResultSection .ban-compare-grid{gap:12px;}
+  #dirResultSection .ban-compare-card{padding:10px 8px 9px;}
+  #dirResultSection .ban-compare-title{font-size:.68rem;}
+  #dirResultSection .ban-compare-nav{grid-template-columns:30px 1fr 30px;gap:6px;}
+  #dirResultSection .ban-shift-btn{width:30px;height:30px;font-size:.82rem;}
+  #dirResultSection .ban-compare-card svg{max-width:220px !important;}
+  #calSection .cal-header{justify-content:center;gap:14px;}
+  #calSection .cal-nav{min-width:76px;}
+  #calSection .cal-month{min-width:150px;text-align:center;}
+  #calSection .cal-grid{gap:7px;}
+  #calSection .cal-cell{min-height:72px;aspect-ratio:auto;}
+  #calSection .best-list{grid-template-columns:repeat(2,minmax(0,1fr));}
+  #nichibanSection .nichiban-steps{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
 .ban-cell{
   aspect-ratio:1;border-radius:8px;
   background:rgba(100,80,40,.04);
@@ -1807,6 +1895,14 @@ let gState = {
   tsukimei: null,
   calYear: null,
   calMonth: null,
+  banYearY: null,
+  banYearM: null,
+  banYearD: null,
+  banMonthY: null,
+  banMonthM: null,
+  banDayY: null,
+  banDayM: null,
+  banDayD: null,
   railwayBranches: null,
   activeBanTab: 'year', // 現在選択中のタブ（year/month/day）
 };
@@ -1868,6 +1964,30 @@ function getSekkiRangeInfo(y, m) {
     full: `${y}年${m}月${startDay}日〜${nextY}年${nextM}月${endDay}日`,
     warning: (daysToSekkiStart >= 0 && daysToSekkiStart <= 3) ? `⚠ ${m}/${startDay}から月盤が切り替わります` : ''
   };
+}
+
+function ensureBanNavState(baseY, baseM, baseD) {
+  if (!gState.banYearY || !gState.banYearM || !gState.banYearD) {
+    gState.banYearY = baseY;
+    gState.banYearM = baseM;
+    gState.banYearD = baseD;
+  }
+  if (!gState.banMonthY || !gState.banMonthM) {
+    gState.banMonthY = baseY;
+    gState.banMonthM = baseM;
+  }
+  if (!gState.banDayY || !gState.banDayM || !gState.banDayD) {
+    const now = new Date();
+    gState.banDayY = now.getFullYear();
+    gState.banDayM = now.getMonth() + 1;
+    gState.banDayD = now.getDate();
+  }
+}
+
+function formatDayLabel(y, m, d) {
+  const now = new Date();
+  if (y === now.getFullYear() && m === now.getMonth() + 1 && d === now.getDate()) return '今日';
+  return `${m}/${d}`;
 }
 
 // ============================================================
@@ -2498,12 +2618,23 @@ function calcAndShowDir() {
   const viewY = gState.calYear || todayY;
   const viewM = gState.calMonth || todayM;
   const viewD = getMonthBoardDay(viewY, viewM);
-  const kigakuYear = getKigakuYear(viewY, viewM, viewD);
-  const monthSekkiInfo = getSekkiRangeInfo(viewY, viewM);
+  ensureBanNavState(viewY, viewM, viewD);
+  const yearY = gState.banYearY;
+  const yearM = gState.banYearM;
+  const yearD = gState.banYearD;
+  const monthY = gState.banMonthY;
+  const monthM = gState.banMonthM;
+  const monthD = getMonthBoardDay(monthY, monthM);
+  const dayY = gState.banDayY;
+  const dayM = gState.banDayM;
+  const dayD = gState.banDayD;
+  const kigakuYear = getKigakuYear(yearY, yearM, yearD);
+  const monthSekkiInfo = getSekkiRangeInfo(monthY, monthM);
+  const dayLabel = formatDayLabel(dayY, dayM, dayD);
 
-  // 年盤・月盤はカレンダーで表示している年月、日盤は今日で判定します。
-  const monthCenter = getMonthCenter(viewY, viewM, viewD);
-  const dayCenter = getDayCenter(todayY, todayM, todayD);
+  // 年盤・月盤・日盤はSTEP3内でそれぞれ送れる。月送り時は旅程月に揃える。
+  const monthCenter = getMonthCenter(monthY, monthM, monthD);
+  const dayCenter = getDayCenter(dayY, dayM, dayD);
   const yearCenterN = yearCenter(kigakuYear);
 
   const monthBoard = buildBoardFromCenter(monthCenter);
@@ -2516,8 +2647,8 @@ function calcAndShowDir() {
 
   // 三合
   const yearBranch = getZodiac(kigakuYear);
-  const monthBranch = BRANCH_NAME[getMonthBranch(viewY, viewM, viewD)];
-  const dayBranchIdx = getDayBranch(todayY, todayM, todayD);
+  const monthBranch = BRANCH_NAME[getMonthBranch(monthY, monthM, monthD)];
+  const dayBranchIdx = getDayBranch(dayY, dayM, dayD);
   const dayBranchName = BRANCH_NAME[dayBranchIdx];
 
   const yearBranchKey = (yearBranch && yearBranch.k) || yearBranch;
@@ -2529,7 +2660,7 @@ function calcAndShowDir() {
   const mSangoSet = new Set(mSangoInfo.dirs || []);
   const dSangoSet = new Set(dSangoInfo.dirs || []);
 
-  const tendo = getTendoDir(viewY, viewM, viewD);
+  const tendo = getTendoDir(monthY, monthM, monthD);
 
   // 年盤の破れ方位
   const yearBreakDir = BRANCH_DIR[((yearBranch.k ? BRANCH_NAME.indexOf(yearBranch.k) : 0) + 6) % 12];
@@ -2602,7 +2733,7 @@ function calcAndShowDir() {
       <div class="ban-tabs">
         <div class="ban-tab active" id="banTabYear"  onclick="switchBan('year')" >年盤（${kigakuYear}年）</div>
         <div class="ban-tab"        id="banTabMonth" onclick="switchBan('month')">月盤（${monthSekkiInfo.short}）</div>
-        <div class="ban-tab"        id="banTabDay"   onclick="switchBan('day')" >日盤（今日）</div>
+        <div class="ban-tab"        id="banTabDay"   onclick="switchBan('day')" >日盤（${dayLabel}）</div>
       </div>
       <div style="font-size:.6rem;color:var(--mist);margin-bottom:6px;text-align:center;">
         📍 = 目的地の方向　南上（気学式）表示
@@ -2610,9 +2741,32 @@ function calcAndShowDir() {
       <div style="font-size:.6rem;color:var(--goldlt);line-height:1.65;text-align:center;margin:0 0 10px;padding:7px 9px;border:1px solid rgba(138,104,32,.18);border-radius:8px;background:rgba(138,104,32,.06);font-weight:600;">
         ※ KITOKUは気学式の「正方位30度・斜方位60度」で判定します。Googleマップ等の45度均等表示とは境界が異なる場合があります。
       </div>
-      <div class="ban-grid" id="banGridYear" >${yearBoardHtml}</div>
-      <div class="ban-grid" id="banGridMonth" style="display:none;">${monthBoardHtml}</div>
-      <div class="ban-grid" id="banGridDay"   style="display:none;">${dayBoardHtml}</div>
+      <div class="ban-compare-grid">
+        <div class="ban-compare-card active" id="banCompareYear">
+          <div class="ban-compare-nav">
+            <button class="ban-shift-btn" type="button" onclick="moveStep3Ban('year',-1);event.stopPropagation();" aria-label="前年">‹</button>
+            <div class="ban-compare-title">年盤<br>(${kigakuYear}年)</div>
+            <button class="ban-shift-btn" type="button" onclick="moveStep3Ban('year',1);event.stopPropagation();" aria-label="次年">›</button>
+          </div>
+          <div class="ban-grid" id="banGridYear">${yearBoardHtml}</div>
+        </div>
+        <div class="ban-compare-card" id="banCompareMonth">
+          <div class="ban-compare-nav">
+            <button class="ban-shift-btn" type="button" onclick="moveStep3Ban('month',-1);event.stopPropagation();" aria-label="前月">‹</button>
+            <div class="ban-compare-title">月盤<br>(${monthSekkiInfo.short})</div>
+            <button class="ban-shift-btn" type="button" onclick="moveStep3Ban('month',1);event.stopPropagation();" aria-label="次月">›</button>
+          </div>
+          <div class="ban-grid" id="banGridMonth">${monthBoardHtml}</div>
+        </div>
+        <div class="ban-compare-card" id="banCompareDay">
+          <div class="ban-compare-nav">
+            <button class="ban-shift-btn" type="button" onclick="moveStep3Ban('day',-1);event.stopPropagation();" aria-label="前日">‹</button>
+            <div class="ban-compare-title">日盤<br>(${dayLabel})</div>
+            <button class="ban-shift-btn" type="button" onclick="moveStep3Ban('day',1);event.stopPropagation();" aria-label="翌日">›</button>
+          </div>
+          <div class="ban-grid" id="banGridDay">${dayBoardHtml}</div>
+        </div>
+      </div>
 
       <!-- 吉凶サマリー -->
       <div class="dir-panels" style="margin-top:10px;">
@@ -2628,7 +2782,7 @@ function calcAndShowDir() {
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
         <div class="dir-panel" id="dayRankPanel">
-          <div class="dir-panel-label" id="dayRankLabel">日盤（今日）</div>
+          <div class="dir-panel-label" id="dayRankLabel">日盤（${dayLabel}）</div>
           <div class="dir-panel-rank rank-${dayRank.rank}" id="dayRankValue">${rankLabel(dayRank.rank, dayRank.badges)}</div>
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;" id="dayRankDesc">${rankDesc(dayRank.rank, dayRank.badges)}</div>
         </div>
@@ -2641,7 +2795,7 @@ function calcAndShowDir() {
       </div>
       ${isKyo ? `
       <div class="kyo-warn">
-        ⚠ 表示中の月盤（${viewY}年${viewM}月）では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
+        ⚠ 表示中の月盤（${monthY}年${monthM}月）では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
         他の月・日程を確認するか、日盤取りをご検討ください。
       </div>` : ''}
       ${generateKyoPrescription(monthRank.badges, monthRank.rank)}
@@ -2691,17 +2845,51 @@ function calcAndShowDir() {
   renderCalendar();
 
   // タブ選択状態を復元（月を変えても選択中のタブを維持）
-  setTimeout(() => switchBan(gState.activeBanTab || 'year'), 0);
+  switchBan(gState.activeBanTab || 'year');
 }
 
 function switchBan(type) {
   gState.activeBanTab = type; // 選択状態を保存
   ['year','month','day'].forEach(t => {
     const tab  = document.getElementById('banTab'  + t.charAt(0).toUpperCase() + t.slice(1));
-    const grid = document.getElementById('banGrid' + t.charAt(0).toUpperCase() + t.slice(1));
+    const card = document.getElementById('banCompare' + t.charAt(0).toUpperCase() + t.slice(1));
     if (tab)  tab.classList.toggle('active', t === type);
-    if (grid) grid.style.display = (t === type) ? 'block' : 'none';
+    if (card) card.classList.toggle('active', t === type);
   });
+}
+
+function moveStep3Ban(type, delta) {
+  const now = new Date();
+  ensureBanNavState(gState.calYear || now.getFullYear(), gState.calMonth || now.getMonth() + 1, getMonthBoardDay(gState.calYear || now.getFullYear(), gState.calMonth || now.getMonth() + 1));
+  gState.activeBanTab = type;
+
+  if (type === 'year') {
+    gState.banYearY += delta;
+  } else if (type === 'month') {
+    let y = gState.banMonthY;
+    let m = gState.banMonthM + delta;
+    if (m > 12) { m = 1; y++; }
+    if (m < 1) { m = 12; y--; }
+    const d = getSekkiDay(y, m);
+    gState.banMonthY = y;
+    gState.banMonthM = m;
+    gState.banYearY = y;
+    gState.banYearM = m;
+    gState.banYearD = getMonthBoardDay(y, m);
+    gState.banDayY = y;
+    gState.banDayM = m;
+    gState.banDayD = d;
+    gState.calYear = y;
+    gState.calMonth = m;
+  } else if (type === 'day') {
+    const d = new Date(gState.banDayY, gState.banDayM - 1, gState.banDayD);
+    d.setDate(d.getDate() + delta);
+    gState.banDayY = d.getFullYear();
+    gState.banDayM = d.getMonth() + 1;
+    gState.banDayD = d.getDate();
+  }
+
+  calcAndShowDir();
 }
 
 function cleanRankBadgeText(text) {
@@ -2752,6 +2940,14 @@ function calcDistance(lat1, lon1, lat2, lon2) {
 // ============================================================
 function changeYear(dir) {
   gState.calYear += dir;
+  gState.banYearY = gState.calYear;
+  gState.banYearM = gState.calMonth;
+  gState.banYearD = getMonthBoardDay(gState.calYear, gState.calMonth);
+  gState.banMonthY = gState.calYear;
+  gState.banMonthM = gState.calMonth;
+  gState.banDayY = gState.calYear;
+  gState.banDayM = gState.calMonth;
+  gState.banDayD = getSekkiDay(gState.calYear, gState.calMonth);
   if (gState.homeLat && gState.destLat && gState.honmei) {
     calcAndShowDir();
   } else {
@@ -2763,6 +2959,14 @@ function changeMonth(dir) {
   gState.calMonth += dir;
   if (gState.calMonth > 12) { gState.calMonth = 1; gState.calYear++; }
   if (gState.calMonth < 1) { gState.calMonth = 12; gState.calYear--; }
+  gState.banYearY = gState.calYear;
+  gState.banYearM = gState.calMonth;
+  gState.banYearD = getMonthBoardDay(gState.calYear, gState.calMonth);
+  gState.banMonthY = gState.calYear;
+  gState.banMonthM = gState.calMonth;
+  gState.banDayY = gState.calYear;
+  gState.banDayM = gState.calMonth;
+  gState.banDayD = getSekkiDay(gState.calYear, gState.calMonth);
   if (gState.homeLat && gState.destLat && gState.honmei) {
     calcAndShowDir();
   } else {
@@ -2838,18 +3042,8 @@ function renderCalendar() {
     let html = '';
     let bestDays = [];
     let railwayDays = [];
+    let recommendableDays = new Set();
     const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
-
-    // 月盤の凶方位を事前計算（カレンダー全日に適用）
-    let mKyouSet = new Set();
-    try {
-      const viewD = getMonthBoardDay(y, m);
-      const mc = getMonthCenter(y, m, viewD);
-      const mb = BRANCH_NAME[getMonthBranch(y, m, viewD)];
-      const mbDir = BRANCH_DIR[((BRANCH_NAME.indexOf(mb) + 6) % 12)];
-      const { kyouSet } = getSharedKyouDirs(mc, gState.honmei, mbDir, gState.tsukimei, 'month');
-      mKyouSet = kyouSet;
-    } catch(e) {}
 
     for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
 
@@ -2876,8 +3070,12 @@ function renderCalendar() {
           isKyoDay = true;
           dayRank.rank = 0;
         }
-        // 月盤の凶方位も反映
-        if (mKyouSet && mKyouSet.has(gState.destDir)) {
+        // 月盤の凶方位も、節入りをまたぐ月では日ごとに判定する。
+        const monthCenterForDay = getMonthCenter(y, m, d);
+        const monthBranchForDay = BRANCH_NAME[getMonthBranch(y, m, d)];
+        const monthBreakDirForDay = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranchForDay) + 6) % 12)];
+        const { kyouSet: mKyouSetForDay } = getSharedKyouDirs(monthCenterForDay, gState.honmei, monthBreakDirForDay, gState.tsukimei, 'month');
+        if (mKyouSetForDay && mKyouSetForDay.has(gState.destDir)) {
           isKyoDay = true;
           dayRank.rank = 0;
         }
@@ -2888,6 +3086,7 @@ function renderCalendar() {
       const isToday = (y + '-' + m + '-' + d) === todayStr;
 
       if (isRailway) railwayDays.push({ d: d, branch: branch });
+      if (!isKyoDay) recommendableDays.add(d);
 
       // おすすめ計算：日盤凶は完全除外
       if (!isKyoDay && (isKichi || isRailway)) {
@@ -2943,6 +3142,7 @@ function renderCalendar() {
 
     // 線路の日を登録・スコア加算
     railwayDays.forEach(function(item) {
+      if (!recommendableDays.has(item.d)) return;
       if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
       allDays[item.d].isRailway = true;
       allDays[item.d].branch = item.branch;
@@ -2950,7 +3150,9 @@ function renderCalendar() {
       allDays[item.d].score += allDays[item.d].isKichi ? 20 : 5;
     });
 
+    const sekkiStartDay = getSekkiDay(y, m);
     const top6 = Object.values(allDays)
+      .filter(function(item){ return item.d >= sekkiStartDay; })
       .sort(function(a, b) { return b.score - a.score || a.d - b.d; })
       .slice(0, 6);
 
@@ -3012,6 +3214,9 @@ function renderCalendar() {
 }
 function showDayDetail(y, m, d) {
   try {
+    gState.banDayY = y;
+    gState.banDayM = m;
+    gState.banDayD = d;
     const branch = getDayBranch(y, m, d);
     const dayCenter = getDayCenter(y, m, d);
     const dir = gState.destDir;
@@ -3047,23 +3252,26 @@ function showDayDetail(y, m, d) {
     }
     if (descEl) descEl.textContent = rankDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
 
-    // ── グリッドを直接更新（getElementById不要）
-    const allGrids = document.querySelectorAll('.ban-grid');
-    allGrids.forEach(g => { g.style.display = 'none'; });
-
     // banGridDayを更新
     let dayGrid = document.getElementById('banGridDay');
     if (dayGrid) {
       dayGrid.innerHTML = html;
-      dayGrid.style.display = 'grid';
+      dayGrid.style.display = 'block';
     }
 
     // タブのactive状態を更新
     document.querySelectorAll('.ban-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.ban-compare-card').forEach(t => t.classList.remove('active'));
     const dayTab = document.getElementById('banTabDay');
     if (dayTab) {
       dayTab.classList.add('active');
       dayTab.textContent = `日盤（${m}/${d}）`;
+    }
+    const dayCard = document.getElementById('banCompareDay');
+    if (dayCard) {
+      dayCard.classList.add('active');
+      const title = dayCard.querySelector('.ban-compare-title');
+      if (title) title.innerHTML = `日盤<br>(${m}/${d})`;
     }
 
     // STEP3へスクロール
