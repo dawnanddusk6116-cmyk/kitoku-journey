@@ -735,7 +735,6 @@ function octa_svgText(text,attrs){const el=octa_svgEl('text',attrs);el.textConte
 
 function octa_getColors(dd){
   // ライトモードのみ（triple_boardはライト固定）
-  if(dd.rincho)return{fill:'rgba(120,70,0,.2)',stroke:'rgba(120,70,0,.65)',num:'#7a4000',name:'rgba(120,70,0,.6)'};
   if(dd.isKyo)return{fill:'rgba(155,160,170,.4)',stroke:'rgba(120,125,135,.5)',num:'rgba(70,75,85,.9)',name:'rgba(90,95,105,.65)'};
   if(dd.isCaution&&dd.rank<1)return{fill:'rgba(190,135,35,.14)',stroke:'rgba(190,135,35,.45)',num:'#9a6810',name:'rgba(154,104,16,.6)'};
   if(dd.rank>=5)return{fill:'rgba(245,200,212,.6)',stroke:'rgba(208,120,145,.65)',num:'#9a3050',name:'rgba(154,48,80,.7)'};
@@ -777,16 +776,14 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
     const isHoriz=(dir==='E'||dir==='W');
     const lp=octa_polarToXY(CX,CY,R_LABEL+(isHoriz?5:0),c);
     let lColor='rgba(40,28,10,.62)';
-    if(dd.rincho)lColor='#7a4000';
-    else if(dd.isKyo)lColor='rgba(90,95,105,.9)';
+    if(dd.isKyo)lColor='rgba(90,95,105,.9)';
     else if(dd.rank>=2)lColor='#a04060';
     else if(dd.isCaution)lColor='#9a6810';
     svg.appendChild(octa_svgText(JP[dir],{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle',fill:lColor,'font-size':'12','font-family':"'Noto Serif JP',serif",'font-weight':'700'}));
 
     // バッジ
     let subText='';
-    if(dd.rincho)subText=dd.isKyo?'3盤凶':'3盤吉 ✦';
-    else if(dd.isKyo){const kns=kyouItems.filter(k=>k.dir===dir);if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');}
+    if(dd.isKyo){const kns=kyouItems.filter(k=>k.dir===dir);if(kns.length)subText=kns.map(k=>k.name.split('/')[0]).join('・');}
     else if(dd.isCaution){const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));subText=dd.rank>=2?(hasTendo?'吉方・天道・定位注意':'吉方・定位注意'):(dd.rank>=1?'天道・定位注意':'定位注意');}
     else{
       const hasTendo=dd.badges&&dd.badges.some(b=>String(b).includes('天道'));
@@ -805,8 +802,7 @@ function drawOctagonBoard(wrap,type,center,dirData,kyouItems){
       const badgeY=isHorizontal?(bpLabel.y+12):octa_polarToXY(CX,CY,R_BADGE,c).y;
       const bw=Math.min(subText.length*8.7+10,90),bh=14;
       let bColor,bBg;
-      if(dd.rincho){bColor='#7a4000';bBg='rgba(120,70,0,.14)';}
-      else if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
+      if(dd.isKyo){bColor='#5a5f69';bBg='rgba(155,160,170,.25)';}
       else if(dd.isCaution&&dd.rank<1){bColor='#9a6810';bBg='rgba(190,135,35,.14)';}
       else if(subText==='天道'||subText==='天道・定位注意'){bColor='#8a6820';bBg='rgba(255,255,255,.88)';}
       else{bColor='#a04060';bBg='rgba(245,205,215,.4)';}
@@ -845,19 +841,11 @@ function checkRincho(){
     const tag=document.createElement('div');tag.className='rincho-dir-tag'+(r.allKyo?' kyo':'');
     tag.textContent=JP[r.dir]+(r.allKichi?' ✦ 3盤吉':' ⚠ 3盤凶');dirsEl.appendChild(tag);
   });
-  // 吉一致をrinchoフラグでハイライト→再描画
-  const kichiResults=results.filter(r=>r.allKichi);
-  if(kichiResults.length){
-    kichiResults.forEach(r=>{
-      ['year','month','day'].forEach(t=>{const dd=gState.dirData[t];if(dd&&dd[r.dir])dd[r.dir].rincho=true;});
-    });
-    // 3盤を再描画（rinchoフラグ反映）
-    ['year','month','day'].forEach(t=>redrawBoardOnly(t));
-  }
+  // 輪重は上部バナー・タグで知らせ、セル側の色や表示は通常ランク色のままにする。
   banner.classList.add('show');
 }
 
-// 盤面だけ再描画（rinchoフラグ反映用・計算はしない）
+// 盤面だけ再描画（計算はしない）
 function redrawBoardOnly(type){
   const dirData=gState.dirData[type];
   if(!dirData)return;
