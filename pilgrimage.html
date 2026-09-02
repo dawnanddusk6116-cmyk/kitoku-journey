@@ -545,7 +545,11 @@ body{
   .ban-compare-title{font-size:.52rem;}
 }
 @media(min-width:900px){
-  #dirResultSection{
+  #dirResultSection,
+  #howToSection,
+  #calSection,
+  #nichibanSection,
+  .disclaimer{
     width:min(860px,calc(100vw - 80px));
     margin-left:50%;
     transform:translateX(-50%);
@@ -564,6 +568,30 @@ body{
   }
   #dirResultSection .ban-compare-card svg{
     max-width:220px !important;
+  }
+  #calSection .cal-header{
+    justify-content:center;
+    gap:14px;
+  }
+  #calSection .cal-nav{
+    min-width:76px;
+  }
+  #calSection .cal-month{
+    min-width:150px;
+    text-align:center;
+  }
+  #calSection .cal-grid{
+    gap:7px;
+  }
+  #calSection .cal-cell{
+    min-height:72px;
+    aspect-ratio:auto;
+  }
+  #calSection .best-list{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  #nichibanSection .nichiban-steps{
+    grid-template-columns:repeat(3,minmax(0,1fr));
   }
 }
 .ban-cell{
@@ -2934,17 +2962,6 @@ function renderCalendar() {
     let railwayDays = [];
     const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
 
-    // 月盤の凶方位を事前計算（カレンダー全日に適用）
-    let mKyouSet = new Set();
-    try {
-      const viewD = getMonthBoardDay(y, m);
-      const mc = getMonthCenter(y, m, viewD);
-      const mb = BRANCH_NAME[getMonthBranch(y, m, viewD)];
-      const mbDir = BRANCH_DIR[((BRANCH_NAME.indexOf(mb) + 6) % 12)];
-      const { kyouSet } = getSharedKyouDirs(mc, gState.honmei, mbDir, gState.tsukimei, 'month');
-      mKyouSet = kyouSet;
-    } catch(e) {}
-
     for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
 
     for (let d = 1; d <= lastDate; d++) {
@@ -2970,8 +2987,12 @@ function renderCalendar() {
           isKyoDay = true;
           dayRank.rank = 0;
         }
-        // 月盤の凶方位も反映
-        if (mKyouSet && mKyouSet.has(gState.destDir)) {
+        // 月盤の凶方位も、節入りをまたぐ月では日ごとに判定する。
+        const monthCenterForDay = getMonthCenter(y, m, d);
+        const monthBranchForDay = BRANCH_NAME[getMonthBranch(y, m, d)];
+        const monthBreakDirForDay = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranchForDay) + 6) % 12)];
+        const { kyouSet: mKyouSetForDay } = getSharedKyouDirs(monthCenterForDay, gState.honmei, monthBreakDirForDay, gState.tsukimei, 'month');
+        if (mKyouSetForDay && mKyouSetForDay.has(gState.destDir)) {
           isKyoDay = true;
           dayRank.rank = 0;
         }
@@ -3141,24 +3162,23 @@ function showDayDetail(y, m, d) {
     }
     if (descEl) descEl.textContent = rankDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
 
-    // ── グリッドを直接更新（getElementById不要）
-    const allGrids = document.querySelectorAll('.ban-grid');
-    allGrids.forEach(g => { g.style.display = 'none'; });
-
-    // banGridDayを更新
+    // banGridDayだけ中身を更新し、三盤同時表示は維持する。
     let dayGrid = document.getElementById('banGridDay');
     if (dayGrid) {
       dayGrid.innerHTML = html;
-      dayGrid.style.display = 'grid';
+      dayGrid.style.display = 'block';
     }
 
     // タブのactive状態を更新
     document.querySelectorAll('.ban-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.ban-compare-card').forEach(t => t.classList.remove('active'));
     const dayTab = document.getElementById('banTabDay');
     if (dayTab) {
       dayTab.classList.add('active');
       dayTab.textContent = `日盤（${m}/${d}）`;
     }
+    const dayCard = document.getElementById('banCompareDay');
+    if (dayCard) dayCard.classList.add('active');
 
     // STEP3へスクロール
     const step3 = document.getElementById('dirResultSection');
