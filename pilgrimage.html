@@ -3188,7 +3188,9 @@ function renderCalendar() {
       allDays[item.d].score += allDays[item.d].isKichi ? 20 : 5;
     });
 
+    const sekkiStartDay = getSekkiDay(y, m);
     const top6 = Object.values(allDays)
+      .filter(function(item) { return item.d >= sekkiStartDay; })
       .sort(function(a, b) { return b.score - a.score || a.d - b.d; })
       .slice(0, 6);
 
