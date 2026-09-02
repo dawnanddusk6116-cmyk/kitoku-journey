@@ -4080,8 +4080,12 @@ function updateBanNavLabel(){
     const todayForCheck=new Date();
     const startDate=new Date(y,m-1,sekkiStartDay);
     const daysToSekkiStart=Math.round((startDate-todayForCheck)/86400000);
+    const sourceY=gState.ty,sourceM=gState.tm,sourceD=gState.td;
+    const isDifferentFromCalendarMonth=sourceY&&sourceM&&sourceD&&(sourceY!==y||sourceM!==m);
     if(daysToSekkiStart>=0 && daysToSekkiStart<=3){
       sub.textContent=`⚠ ${m}/${sekkiStartDay}から月盤が切り替わります`;
+    }else if(isDifferentFromCalendarMonth){
+      sub.textContent=`本日${sourceM}月${sourceD}日は、気学ではまだ${m}月です`;
     }else{
       sub.textContent=`月盤 — 節入り基準（${start}〜${end}）`;
     }

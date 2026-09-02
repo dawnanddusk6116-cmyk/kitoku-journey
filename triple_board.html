@@ -682,8 +682,12 @@ function renderBoard(type){
     const todayForCheck=new Date();
     const startDate=new Date(y,m-1,sekkiStartDay);
     const daysToSekkiStart=Math.round((startDate-todayForCheck)/86400000);
+    const sourceY=gState.dayNav&&gState.dayNav.y,sourceM=gState.dayNav&&gState.dayNav.m,sourceD=gState.dayNav&&gState.dayNav.d;
+    const isDifferentFromCalendarMonth=sourceY&&sourceM&&sourceD&&(sourceY!==y||sourceM!==m);
     if(daysToSekkiStart>=0 && daysToSekkiStart<=3){
       sub=`⚠ ${m}/${sekkiStartDay}から月盤が切り替わります`;
+    }else if(isDifferentFromCalendarMonth){
+      sub=`本日${sourceM}月${sourceD}日は、気学ではまだ${m}月です`;
     }else{
       sub=`月盤 — 節入り基準（${p.start}〜${p.end}）`;
     }
