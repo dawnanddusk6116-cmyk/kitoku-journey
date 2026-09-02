@@ -3113,6 +3113,15 @@ function getKigakuYear(y, m, d){
   if(m === 2 && d < risshunDay) return y - 1;
   return y;
 }
+function getKigakuMonth(y, m, d){
+  const sekkiDay = getSekkiDay(y, m);
+  if(d < sekkiDay){
+    let prevM = m - 1, prevY = y;
+    if(prevM < 1){ prevM = 12; prevY = y - 1; }
+    return { y: prevY, m: prevM };
+  }
+  return { y, m };
+}
 function getKD(y,mo,d){const sd=getSekkiDay(y,mo);if(d<sd){const pm=mo===1?12:mo-1;return{kY:mo<=2?y-1:y,kM:SEKKI_KM[pm]};}return{kY:mo===1?y-1:y,kM:SEKKI_KM[mo]};}
 function calcHonmei(kY){return m9(11-ds9(kY));}
 function calcTsukimei(h,kM){const b=[1,4,7].includes(h)?10:[2,5,8].includes(h)?13:16;return red(b-(kM+1));}
@@ -3852,10 +3861,16 @@ function computeAndRender(by,bm,bd,ty,tm,td,birthTimeStr){
 
 function switchBan(type){
   gState.currentBan=type;
-  // オフセットをリセット
-  gState.navYear=gState.ty;
-  gState.navMonth=gState.tm;
-  gState.navDay=type==='month'?getMonthBoardDay(gState.navYear,gState.navMonth):gState.td;
+  if(type==='month'){
+    const kMonth=getKigakuMonth(gState.ty,gState.tm,gState.td);
+    gState.navYear=kMonth.y;
+    gState.navMonth=kMonth.m;
+    gState.navDay=getSekkiDay(kMonth.y,kMonth.m);
+  }else{
+    gState.navYear=gState.ty;
+    gState.navMonth=gState.tm;
+    gState.navDay=gState.td;
+  }
   ['day','month','year'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===type);
   });
