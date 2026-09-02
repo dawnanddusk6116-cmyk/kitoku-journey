@@ -607,6 +607,7 @@ function buildTimeline(h){
   const _today=new Date();
   const thisYear=getKigakuYear(_today.getFullYear(), _today.getMonth()+1, _today.getDate());
   const startYear=thisYear-1;
+  window.kitokuRoadmapTimelineStartYear=startYear;
   const douki=getDouki(h);
   let html='';
   let bandHtml='';
@@ -819,9 +820,8 @@ function buildRyuunen(by){
   const kannyuSet=new Set(kannyuAges);
   const ryunenSet=new Set(ages);
 
-  // 数え年で、昨年から9年先までに該当する流年があるか（中心年と周辺年を区別）
-  const thisYear=new Date().getFullYear();
-  const startYear=thisYear-1;
+  // 数え年で、タイムラインの詳細カードと同じ10年分に該当する流年があるか（中心年と周辺年を区別）
+  const startYear=window.kitokuRoadmapTimelineStartYear;
   const hits=[];
   for(let i=0;i<10;i++){
     const yr=startYear+i;
