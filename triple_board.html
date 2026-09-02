@@ -843,7 +843,7 @@ function checkRincho(){
   const results=[];
   ALL8.forEach(dir=>{
     const y=yD[dir],m=mD[dir],d=dD[dir];if(!y||!m||!d)return;
-    const allKichi=!y.isKyo&&!m.isKyo&&!d.isKyo&&(y.rank>=2||m.rank>=2||d.rank>=2);
+    const allKichi=!y.isKyo&&!m.isKyo&&!d.isKyo&&y.rank>=2&&m.rank>=2&&d.rank>=2;
     const allKyo=y.isKyo&&m.isKyo&&d.isKyo;
     if(allKichi||allKyo)results.push({dir,allKichi,allKyo,rankSum:(y.rank||0)+(m.rank||0)+(d.rank||0)});
   });
