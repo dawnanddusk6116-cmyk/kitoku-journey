@@ -90,6 +90,17 @@
       ],
       placeholder: '相談したい場面（仕事・会食・休息・勝負どころなど）：\nなりたい印象・整えたい気分：\n手持ちの香水・お香・ボディケア：\n苦手な香り・予算・試したいブランド：'
     },
+    naming: {
+      label: '姓名鑑定・改名相談',
+      note: '画数・五格を踏まえて',
+      prompt: '姓名鑑定・改名について相談したいです。',
+      guide: [
+        '姓名鑑定の結果（画数・五格・該当する指摘事項）が渡されている場合は、その内容を根拠として使ってください。',
+        '結果が渡されていない場合は、一般論での断定を避け、まずKITOKUの姓名鑑定（life.html）で計算することを勧めてください。',
+        '大凶画数や注意配列があっても、「この名前はダメ」と言い切らず、活かし方・補い方を一緒に提案してください。'
+      ],
+      placeholder: '検討中の名前（複数可）：\n迷っている理由：\n重視したいこと（響き・意味・画数など）：'
+    },
     free: {
       label: '自由相談',
       note: 'そのまま聞く',
@@ -140,6 +151,7 @@
       section('相手の情報', input.targetInfo),
       section('色・香りの材料', input.scentInfo),
       section('64象意・自己理解の材料', input.astroInfo),
+      section('姓名鑑定の計算結果', input.lifeReadingInfo),
       section('私が今書いたこと', input.userNote),
       section('見てほしいこと', meta.guide.map((g, i) => `${i + 1}. ${g}`).join('\n'))
     ].filter(Boolean);

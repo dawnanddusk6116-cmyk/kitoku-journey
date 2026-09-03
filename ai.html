@@ -156,6 +156,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .material-subbox{margin-top:12px;padding:11px;border-radius:10px;border:1px dashed rgba(138,104,32,.28);background:rgba(100,80,40,.035);}
 .material-subtitle{font-size:.66rem;color:var(--goldlt);font-weight:900;margin-bottom:5px;}
 .material-subtext{font-size:.6rem;color:var(--mist);line-height:1.75;margin-bottom:8px;}
+.life-reading-notice{display:none;margin-top:10px;padding:10px 11px;border-radius:10px;border:1px solid rgba(138,104,32,.24);background:rgba(255,253,248,.74);font-size:.64rem;color:var(--mist);line-height:1.8;}
+.life-reading-notice strong{color:var(--goldlt);}
+.life-reading-notice a{color:var(--goldlt);font-weight:900;text-decoration:none;border-bottom:1px solid rgba(138,104,32,.28);}
 @media(max-width:390px){.material-theme-grid{grid-template-columns:1fr;}}
 [data-theme="dark"] .material-builder{background:linear-gradient(135deg,rgba(196,160,67,.11),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
 [data-theme="dark"] .material-theme-btn,[data-theme="dark"] .material-field textarea,[data-theme="dark"] .material-subbox{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.2);color:var(--snow);}
@@ -296,6 +299,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <label for="aiBoardInfo">方位盤メモ・日付メモ（任意）</label>
     <textarea id="aiBoardInfo" placeholder="direction_v2.htmlや旅行・巡礼・引越しナビの方位盤メモを、必要な時だけ貼ってください。"></textarea>
   </div>
+  <div class="life-reading-notice" id="lifeReadingNotice"></div>
   <div class="material-actions">
     <button class="material-build-btn" type="button" onclick="generateAiMaterial()">相談材料を作る</button>
   </div>
@@ -530,7 +534,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 <div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
 
-<script src="kitoku-ai-material.js?v=20260903phase1"></script>
+<script src="kitoku-ai-material.js?v=20260903phase15"></script>
 <script>
 // ============================================================
 // データ・計算
@@ -667,7 +671,7 @@ function updateTargetInfo(){
 // UI操作
 // ============================================================
 function getAiThemeKeys(){
-  return ['today','date','travel','pilgrimage','compat','money','color','scent','free','blank'];
+  return ['today','date','travel','pilgrimage','compat','money','color','scent','naming','free','blank'];
 }
 
 function getInitialAiTheme(){
@@ -701,11 +705,79 @@ function selectAiTheme(theme){
     const meta=getAiThemeMeta(safe);
     if(note&&!note.value.trim())note.value=meta.placeholder||'';
   }
+  updateLifeReadingNotice();
   try{
     const url=new URL(location.href);
     url.searchParams.set('theme',safe);
     history.replaceState(null,'',url.pathname+url.search+url.hash);
   }catch(e){}
+}
+
+function getLifeReadingForAi(){
+  try{
+    const lr=JSON.parse(localStorage.getItem('kitoku-life-reading')||'{}');
+    if(lr&&lr.name&&lr.ts)return lr;
+  }catch(e){}
+  return null;
+}
+
+function getLifeModeLabelForAi(mode){
+  return {self:'自分',rename:'改名',baby:'命名',other:'他の人',ai:'相性'}[String(mode||'')] || (mode||'未設定');
+}
+
+function isExternalLifeReadingForAi(lr){
+  return !!(lr&&['other','baby'].includes(String(lr.mode||'')));
+}
+
+function formatLifeReadingForAi(lr){
+  if(!lr)return '姓名鑑定結果はまだ読み込まれていません。先にKITOKUの姓名鑑定（life.html）で計算してください。AIには画数計算を任せず、計算済みの結果を渡してから相談してください。';
+  const strokes=lr.strokes||{};
+  const seiStrokes=Array.isArray(strokes.sei)?strokes.sei.map(x=>`${x.ch}${x.n||''}画`).join('・'):'';
+  const meiStrokes=Array.isArray(strokes.mei)?strokes.mei.map(x=>`${x.ch}${x.n||''}画`).join('・'):'';
+  const strokeLine=`姓 ${seiStrokes||'未取得'}（計${strokes.seiTotal||'未取得'}画） / 名 ${meiStrokes||'未取得'}（計${strokes.meiTotal||'未取得'}画）`;
+  const gk=lr.gk;
+  const gkLine=gk?`天格${gk.ten}画・人格${gk.jin}画・地格${gk.chi}画・外格${gk.gai}画・総格${gk.so}画`:'未取得';
+  const bp=lr.blueprint;
+  const blueprintLine=bp
+    ? (isExternalLifeReadingForAi(lr)
+      ? `名前の五行：${(bp.nameGyos||[]).join('・')||'未取得'}\n※鑑定対象者の星の五行・納音は未入力のため、この相談では名前の構造を中心に読んでください。`
+      : `星の五行：${(bp.starGyos||[]).join('・')||'未取得'} / 名前の五行：${(bp.nameGyos||[]).join('・')||'未取得'}\n名前が補完する五行：${(bp.complement||[]).join('・')||'なし'} / 星と名前が共鳴する五行：${(bp.resonance||[]).join('・')||'なし'} / 未配置の五行：${(bp.missing||[]).join('・')||'なし'}`)
+    : '未取得';
+  const issues=Array.isArray(lr.items)&&lr.items.length
+    ? lr.items.map(i=>`・${i.title||i.cat||'指摘事項'}：${i.text||''}${i.kitoku?`（${i.kitoku}）`:''}`).join('\n')
+    : '特記なし';
+  const scopeLine=isExternalLifeReadingForAi(lr)
+    ? `この鑑定はユーザー本人ではなく、対象者の姓名鑑定です。ユーザー本人の星情報と混同しないでください。`
+    : `この鑑定はユーザー本人の姓名鑑定です。必要に応じて本人の星情報と合わせて読んでください。`;
+  return [
+    `鑑定対象：${lr.name}`,
+    `相談区分：${getLifeModeLabelForAi(lr.mode)}`,
+    lr.birth?`対象者の生年月日：${lr.birth}`:'',
+    typeof lr.score!=='undefined'?`KITOKUスコア：${lr.score}点`:'',
+    scopeLine,
+    `画数：${strokeLine}`,
+    `五格：${gkLine}`,
+    `命の設計図：\n${blueprintLine}`,
+    `判定結果の指摘事項：\n${issues}`
+  ].filter(Boolean).join('\n');
+}
+
+function updateLifeReadingNotice(){
+  const notice=document.getElementById('lifeReadingNotice');
+  if(!notice)return;
+  if(gAiTheme!=='naming'){
+    notice.style.display='none';
+    notice.innerHTML='';
+    return;
+  }
+  const lr=getLifeReadingForAi();
+  notice.style.display='block';
+  if(lr){
+    const scope=isExternalLifeReadingForAi(lr)?'本人以外の鑑定として読み込みます':'本人の鑑定として読み込みます';
+    notice.innerHTML=`<strong>${lr.name}</strong>さんの姓名鑑定結果を読み込みました。${scope}。`;
+  }else{
+    notice.innerHTML='まだ姓名鑑定をしていません。先に<a href="life.html">life.htmlで診断してください</a>。画数情報なしで相談する場合も、AIに画数計算を任せないよう注意してください。';
+  }
 }
 
 function collectAiStarInfo(){
@@ -733,7 +805,8 @@ function generateAiMaterial(){
     boardInfo:document.getElementById('aiBoardInfo')?.value||'',
     targetInfo:collectAiTargetInfo(),
     scentInfo:collectAiScentInfo(),
-    astroInfo:''
+    astroInfo:'',
+    lifeReadingInfo:gAiTheme==='naming'?formatLifeReadingForAi(getLifeReadingForAi()):''
   });
   output.value=text;
   output.focus();
