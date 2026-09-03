@@ -13,6 +13,7 @@
 <script src="kitoku-engine.js?v=20260803h"></script>
 <script src="kitoku-teachings.js"></script>
 <script src="kitoku-self-manual.js"></script>
+<script src="kitoku-ai-material.js?v=20260903phase2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -546,7 +547,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   <section class="hero">
     <div class="eyebrow">PREMIUM BASE</div>
     <div class="title">Premium Compass</div>
-    <div class="subtitle">方位盤・日程・相手の星を見ながら、コピーせず気学先生にそのまま相談できます。</div>
+    <div class="subtitle">方位盤・日程・相手の星を見ながら、いつものAIに貼れる相談材料を作れます。</div>
   </section>
 
   <section id="authPanel" style="display:none;">
@@ -603,7 +604,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </div>
         <div class="inspiration-actions">
           <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="generateTodayInspiration()">今日の一言を生成</button>
-          <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">気学先生に相談</button>
+          <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">相談材料を作る</button>
         </div>
         <div class="inspiration-note">
           1日1回生成し、同じ日は保存して再表示します。接続済みの156本の教えから参照します。
@@ -627,13 +628,13 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           <strong>① 最初に一度だけ</strong><br>
           旅行モードで「現在地を登録」を押し、位置情報を許可します。登録済みになれば、次回から自動で読み込みます。<br><br>
           <strong>② 旅行</strong><br>
-          旅行タブで日付を合わせ、国内・海外の目的地を選びます。基本の星情報は気学先生に自動で入ります。目的地や候補日をさらに見たい時だけ、方位盤メモを補足として送ります。<br><br>
+          旅行タブで日付を合わせ、国内・海外の目的地を選びます。基本の星情報は相談材料に自動で入ります。目的地や候補日をさらに見たい時だけ、方位盤メモを補足として使います。<br><br>
           <strong>③ 聖地巡礼</strong><br>
           聖地巡礼タブで出発日を確認し、線路の日と照合します。行き先や方位盤メモを補足すると、巡礼の意味や日程を相談しやすくなります。<br><br>
           <strong>④ 引越し</strong><br>
           引越しタブでは年盤・月盤を優先します。吉方位を確認し、線路の日を実行日の候補にします。<br><br>
           <strong>⑤ 相談の流れ</strong><br>
-          気学先生にそのまま話す → 必要なら方位盤メモや相手の星情報を補足する → 送信、の順で使います。
+          相談材料を作る → 必要なら方位盤メモや相手の星情報を補足する → いつものAIに貼る、の順で使います。
         </div>
       </details>
       <div class="mode-switch" aria-label="方位盤の使い方">
@@ -895,28 +896,28 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
     </details>
 
     <div class="panel" id="aiChatPanel">
-      <div class="panel-title">⑥ 気学先生に相談する</div>
+      <div class="panel-title">⑥ 相談材料を作る</div>
       <div class="premium-simple-flow">
         <div><strong>1</strong><span>テーマを選ぶ</span></div>
         <div><strong>2</strong><span>短く書く</span></div>
-        <div><strong>3</strong><span>✦で送信</span></div>
+        <div><strong>3</strong><span>コピーして使う</span></div>
       </div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
-        コピーや貼り付けは不要です。聞きたいことを書いて、右の✦を押すだけで相談できます。<br>
+        ここではAIに送信せず、いつものAIに貼れる相談材料を作ります。<br>
         迷ったら「自由相談」を押して、いつもの言葉で入力してください。日付・移動・相手が関わる時だけ、方位盤メモや相手の星情報を補足します。
       </div>
 
       <details class="compact-consult" id="consultOptions" open>
         <summary>
           <span>
-            <span class="compact-consult-title">ここに相談を書く</span>
+            <span class="compact-consult-title">相談材料のもとを書く</span>
             <span class="compact-consult-note">テーマを選ぶか、そのまま入力できます</span>
           </span>
         </summary>
         <div class="compact-consult-body">
 
       <details class="mini-accordion">
-        <summary>気学先生に自動で入る情報</summary>
+        <summary>相談材料に自動で入る情報</summary>
         <div class="mini-accordion-body" id="aiContextSummary">
           読み込み中...
         </div>
@@ -944,7 +945,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('pilgrimage')">聖地巡礼<span>出発日と線路の日</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('pilgrimageRoute')">巡礼ルート相談<span>回る順番と移動手段</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('person')">人との関わり<span>相手の星も使う</span></button>
+        <button class="topic-btn" onclick="insertConsultTemplate('compat')">人との関わり<span>相手の星も使う</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('photo')">写真で相談<span>香水・服・持ち物</span></button>
         <button class="topic-btn" onclick="insertConsultTemplate('scent')">香りで整える<span>香水・花・色</span></button>
@@ -968,39 +969,28 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
         </div>
       </details>
 
-      <div style="margin-bottom:12px;">
-        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">話し方</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="pill active" id="tone-simple" onclick="setTone('simple')">🎯 シンプル</button>
-          <button class="pill" id="tone-amber" onclick="setTone('amber')">✨ 琥珀色</button>
-          <button class="pill" id="tone-night" onclick="setTone('night')">🌙 夜モード</button>
-        </div>
+      <div style="margin-bottom:12px;padding:10px 11px;border:1px dashed rgba(138,104,32,.28);border-radius:10px;background:rgba(100,80,40,.035);">
+        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;font-weight:800;">読み方の好みを足したい場合</div>
+        <div style="font-size:.58rem;color:var(--mist);line-height:1.75;margin-bottom:8px;">KITOKUの語り口は、本体の相談材料には入れていません。必要な時だけ、下の一文を別でコピーして足してください。</div>
+        <textarea id="premiumStylePreference" readonly style="width:100%;min-height:72px;border:1px solid var(--rim);border-radius:9px;background:rgba(255,255,255,.64);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.66rem;line-height:1.75;padding:9px;"></textarea>
+        <button class="copy-btn" id="copyPremiumStyleBtn" onclick="copyPremiumStylePreference()">📋 読み方の好みだけをコピー</button>
       </div>
-
-      <div id="chatMessages" style="min-height:120px;max-height:400px;overflow-y:auto;background:rgba(100,80,40,.03);border:1px solid var(--rim);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:.65rem;color:var(--mist);text-align:center;line-height:1.8;">
-          今日の過ごし方、仕事、お金、人間関係、旅や移動の判断などを相談できます。
-        </div>
-      </div>
-
-      <!-- 画像添付 -->
-      <div id="imagePreviewArea" style="display:none;margin-bottom:8px;position:relative;">
-        <img id="imagePreview" style="max-height:120px;border-radius:8px;border:1px solid var(--rim);">
-        <button onclick="removeImage()" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.5);border:none;border-radius:50%;color:#fff;font-size:.6rem;cursor:pointer;">✕</button>
-        <div style="font-size:.55rem;color:var(--mist);line-height:1.6;margin-top:5px;">写真から見える色・質感・用途を五行に置き換えて、今日の気に合う使い方を相談できます。</div>
-      </div>
-      <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
 
       <div class="chat-composer">
         <textarea id="chatInput" placeholder="例：今日は何を優先すると良いですか？ / この日程で動いて大丈夫ですか？"
           oninput="autoResizeChatInput()"
           rows="5"></textarea>
         <div class="chat-actions">
-          <button class="chat-action-btn photo" onclick="document.getElementById('imageInput').click()" title="写真を添付" aria-label="写真を添付">📷</button>
-          <button class="chat-action-btn send" onclick="sendChat()" aria-label="送信">✦</button>
+          <button class="chat-action-btn send" onclick="sendChat()" aria-label="相談材料を作る" title="相談材料を作る">作る</button>
         </div>
       </div>
-      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.7;">短い文章で大丈夫です。スマホのマイク入力も使えます。送信は右の ✦ ボタンです。</div>
+      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.78;line-height:1.7;">短い文章で大丈夫です。写真相談の場合は、作った材料をコピーしたあと、使うAI側に写真も一緒に添付してください。</div>
+
+      <div style="margin-top:10px;">
+        <label for="premiumAiMaterialOutput" style="display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;font-weight:800;">コピーして使う相談材料</label>
+        <textarea id="premiumAiMaterialOutput" readonly style="width:100%;min-height:180px;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.68rem;line-height:1.8;padding:11px;">テーマを選んで「作る」を押すと、ここに相談材料が表示されます。</textarea>
+        <button class="copy-btn" id="copyPremiumAiMaterialBtn" onclick="copyPremiumAiMaterial()">📋 相談材料をコピー</button>
+      </div>
         </div>
       </details>
     </div>
@@ -1224,7 +1214,7 @@ function init(){
     state.gender=localStorage.getItem('kitoku-gender')||'male';
     state.orient=localStorage.getItem('kitoku-premium-orient')||'south';
     state.mode=localStorage.getItem('kitoku-premium-mode')||'travel';
-    state.consultType=localStorage.getItem('kitoku-premium-consult-type')||'free';
+    state.consultType=normalizeConsultTypeForMaterial(localStorage.getItem('kitoku-premium-consult-type')||'free');
     ['south','north'].forEach(k=>{
       const btn=document.getElementById('orient-'+k);
       if(btn)btn.classList.toggle('active',k===state.orient);
@@ -1311,7 +1301,7 @@ function setCompassMode(mode,save=true){
   const guide=document.getElementById('modeGuide');
   if(guide){
     const html={
-      travel:'<strong>旅行モード</strong><br>年盤・月盤・日盤を見て、目的地の方位と出発候補日を整えます。候補日がある時は、その日の方位盤メモを気学先生に補足すると相談しやすくなります。',
+      travel:'<strong>旅行モード</strong><br>年盤・月盤・日盤を見て、目的地の方位と出発候補日を整えます。候補日がある時は、その日の方位盤メモを相談材料に補足すると相談しやすくなります。',
       pilgrimage:'<strong>聖地巡礼モード</strong><br>目的地への方位、出発日、線路の日を重ねて見ます。魂の旅として、年盤・月盤・日盤の順に確認します。',
       move:'<strong>引越しモード</strong><br>年盤と月盤を最優先で見ます。日盤は基本的に重視しません。引越し月が決まったら、線路の日を実行日の候補にします。'
     }[state.mode];
@@ -1896,22 +1886,28 @@ function getModeMeta(){
     move:{label:'引越しモード',template:'引越しについて相談したいです。',purpose:'引越し',nav:'引越しナビ'}
   }[state.mode]||{label:'旅行モード',template:'旅行について相談したいです。',purpose:'旅行',nav:'旅行ナビ'};
 }
+function normalizeConsultTypeForMaterial(type){
+  if(type==='person') return 'compat';
+  return type || 'free';
+}
 function getConsultMeta(type=state.consultType){
+  const key=normalizeConsultTypeForMaterial(type);
   return {
     today:{label:'今日の動き方',note:'今日どう過ごすか'},
     date:{label:'未来の日付',note:'契約・開始・出発日'},
     travel:{label:'旅・引越し',note:'目的地と候補日'},
     pilgrimage:{label:'聖地巡礼',note:'出発日と線路の日'},
     pilgrimageRoute:{label:'巡礼ルート相談',note:'回る順番と移動手段'},
-    person:{label:'人との関わり',note:'相手の星も使う'},
+    compat:{label:'人との関わり',note:'相手の星も使う'},
     money:{label:'お金・仕事',note:'判断を整える'},
     photo:{label:'写真で相談',note:'香水・服・持ち物'},
     scent:{label:'香りで整える',note:'香水・花・色'},
     free:{label:'自由相談',note:'そのまま聞く'},
     blank:{label:'白紙で話す',note:'音声入力・フリートーク'}
-  }[type]||{label:'自由相談',note:'そのまま聞く'};
+  }[key]||{label:'自由相談',note:'そのまま聞く'};
 }
 function setConsultType(type){
+  type=normalizeConsultTypeForMaterial(type);
   state.consultType = getConsultMeta(type) ? type : 'free';
   try{ localStorage.setItem('kitoku-premium-consult-type', state.consultType); }catch(e){}
   renderAiContextSummary();
@@ -1940,7 +1936,7 @@ function renderAiContextSummary(){
     const lr=getLifeReading();
     if(isExternalLifeReading(lr)){
       el.innerHTML=`
-        <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">気学先生に自動で入る情報</div>
+        <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">相談材料に自動で入る情報</div>
         <div><strong style="color:var(--goldlt);">用途</strong>：姓名鑑定（${getLifeModeLabel(lr.mode)}）</div>
         <div><strong style="color:var(--goldlt);">鑑定対象</strong>：${lr.name}さん</div>
         <div><strong style="color:var(--goldlt);">読み込み</strong>：姓名鑑定結果 ${lr.score}点</div>
@@ -1951,7 +1947,7 @@ function renderAiContextSummary(){
     }
     const board=getCurrentBoardContext();
     el.innerHTML=`
-      <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">気学先生に自動で入る情報</div>
+      <div style="font-size:.56rem;letter-spacing:.12em;color:var(--gold);font-weight:800;margin-bottom:5px;">相談材料に自動で入る情報</div>
       <div><strong style="color:var(--goldlt);">相談テーマ</strong>：${getConsultMeta().label}</div>
       <div><strong style="color:var(--goldlt);">方位盤</strong>：${getModeMeta().label}</div>
       <div><strong style="color:var(--goldlt);">九星</strong>：${starLine(state.info).replace(/^私は/,'')}</div>
@@ -2047,7 +2043,7 @@ function maybePrefillLifeConsult(){
 }
 document.addEventListener('DOMContentLoaded',init);
 
-// ── 気学先生との会話 ──
+// ── 相談材料の生成 ──
 let chatHistory = [];
 let currentTone = 'simple';
 let isThinking = false;
@@ -2068,9 +2064,10 @@ function setTone(tone) {
 }
 
 function insertConsultTemplate(type){
+  type=normalizeConsultTypeForMaterial(type||'free');
   const input=document.getElementById('chatInput');
   if(!input) return;
-  setConsultType(type||'free');
+  setConsultType(type);
   if(type==='blank'){
     input.value='';
     autoResizeChatInput();
@@ -2133,7 +2130,7 @@ function insertConsultTemplate(type){
 
 下の方位盤メモや相手の星情報も必要に応じて貼ります。
 方位・線路の日・移動手段・体力面を踏まえて、無理のない回る順番を提案してください。`,
-    person:`第三者との関わりについて相談したいです。
+    compat:`第三者との関わりについて相談したいです。
 
 相手との関係：【ここに入力】
 相談したい場面（家族・恋愛・仕事・商談・面談など）：【ここに入力】
@@ -2675,51 +2672,91 @@ ${selfSteeringGuide || '※今回の相談では自己操縦ヒントを渡し�
 ${userData}${lifeReadingSummary}`;
 }
 
-async function sendChatBase() {
-  if(isThinking) return;
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim();
-  if(!msg) return;
+function formatPremiumLifeReadingForMaterial(lr){
+  if(!lr) return '';
+  const strokes=lr.strokes||{};
+  const seiStrokes=Array.isArray(strokes.sei)?strokes.sei.map(x=>`${x.ch}${x.n||''}画`).join('・'):'';
+  const meiStrokes=Array.isArray(strokes.mei)?strokes.mei.map(x=>`${x.ch}${x.n||''}画`).join('・'):'';
+  const strokeLine=`姓 ${seiStrokes||'未取得'}（計${strokes.seiTotal||'未取得'}画） / 名 ${meiStrokes||'未取得'}（計${strokes.meiTotal||'未取得'}画）`;
+  const gk=lr.gk;
+  const gkLine=gk?`天格${gk.ten}画・人格${gk.jin}画・地格${gk.chi}画・外格${gk.gai}画・総格${gk.so}画`:'未取得';
+  const bp=lr.blueprint;
+  const blueprintLine=bp
+    ? (isExternalLifeReading(lr)
+      ? `名前の五行：${(bp.nameGyos||[]).join('・')||'未取得'}\n※鑑定対象者の星の五行・納音は未入力のため、この相談では名前の構造を中心に読む。`
+      : `星の五行：${(bp.starGyos||[]).join('・')||'未取得'} / 名前の五行：${(bp.nameGyos||[]).join('・')||'未取得'}\n名前が補完する五行：${(bp.complement||[]).join('・')||'なし'} / 星と名前が共鳴する五行：${(bp.resonance||[]).join('・')||'なし'} / 未配置の五行：${(bp.missing||[]).join('・')||'なし'}`)
+    : '未取得';
+  const issues=Array.isArray(lr.items)&&lr.items.length
+    ? lr.items.map(i=>`・${i.title||i.cat||'指摘事項'}：${i.text||''}${i.kitoku?`（${i.kitoku}）`:''}`).join('\n')
+    : '特記なし';
+  const scopeLine=isExternalLifeReading(lr)
+    ? 'この鑑定はユーザー本人ではなく、対象者の姓名鑑定です。ユーザー本人の九星・納音・方位盤・線路の日を対象者の情報として使わないでください。'
+    : 'この鑑定はユーザー本人の姓名鑑定です。必要に応じて本人の九星情報と合わせて読んでください。';
+  return [
+    `鑑定対象：${lr.name}`,
+    `相談区分：${getLifeModeLabel(lr.mode)}`,
+    lr.birth?`対象者の生年月日：${lr.birth}`:'',
+    typeof lr.score!=='undefined'?`KITOKUスコア：${lr.score}点`:'',
+    scopeLine,
+    `画数：${strokeLine}`,
+    `五格：${gkLine}`,
+    `命の設計図：\n${blueprintLine}`,
+    `判定結果の指摘事項：\n${issues}`
+  ].filter(Boolean).join('\n');
+}
 
-  input.value = '';
-  addMessage('user', msg);
-  chatHistory.push({role:'user', content:msg});
+function buildPremiumAiMaterialContext(){
+  const info=state.info||{};
+  const today=new Date();
+  const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
+  const lr=getLifeReading();
+  let boardSummary='';
+  try{
+    const board=getCurrentBoardContext();
+    boardSummary=`表示盤面：${board.title} ${board.banLabel} / 中宮 ${STARS[board.center]?.j||''} / ${board.orient}\n吉方位：${board.kichi}\n注意方位：${board.kyo}`;
+  }catch(e){}
+  let senroSummary='';
+  try{
+    const rb=JSON.parse(localStorage.getItem('kitoku-railway-branches')||'[1,4,7,10]');
+    const BN=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+    const branches=rb.map(i=>BN[i]).join('・');
+    const nm=m===12?1:m+1,ny=m===12?y+1:y;
+    const d1=calcSenroDaysForMonth(y,m,rb).map(x=>`${m}/${x.d}(${x.w})`).join('・');
+    const d2=calcSenroDaysForMonth(ny,nm,rb).map(x=>`${nm}/${x.d}(${x.w})`).join('・');
+    senroSummary=`線路の日支：${branches}\n今月の線路の日：${d1||'なし'}\n来月の線路の日：${d2||'なし'}`;
+  }catch(e){}
+  const starInfo=state.info&&!isExternalLifeReading(lr)?starLine(info):'';
+  const boardInfo=[
+    `相談テーマ：${getConsultMeta().label}`,
+    `方位盤モード：${getModeMeta().label}`,
+    `出発地登録：${getHomePrem()?'登録済み（AIには地名・座標は自動送信しません）':'未登録'}`,
+    boardSummary,
+    senroSummary,
+    `今日：${y}年${m}月${d}日`
+  ].filter(Boolean).join('\n');
+  const targetText=document.getElementById('targetPreview')?.textContent||'';
+  const targetInfo=/相手の生年月日を入れると/.test(targetText)?'':targetText;
+  const scentInfo=['scent','photo'].includes(state.consultType)
+    ? '香り・色・写真の詳しい材料がある場合は、商品名、色、質感、用途、今日の予定を追記してください。写真相談では、この相談材料をコピーしたあと、使うAI側に写真も一緒に添付してください。'
+    : '';
+  return {
+    theme:state.consultType,
+    starInfo,
+    boardInfo,
+    targetInfo,
+    scentInfo,
+    astroInfo:'',
+    lifeReadingInfo:formatPremiumLifeReadingForMaterial(lr)
+  };
+}
 
-  isThinking = true;
-  const thinkingEl = addMessage('assistant', '…', true);
-
-  try {
-    if(location.protocol==='file:'){
-      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
-    }
-    const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+m.content).join('\n\n');
-    const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n上記を踏まえて、最後の相談者の発言に答えてください。';
-    const res = await kitokuFetchClaude({prompt:prompt}, 'kigaku_chat');
-    const raw = await res.text();
-    if(res.status===402){
-      throw new Error(KITOKU_PREMIUM_MSG);
-    }
-    if(!res.ok){
-      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
-    }
-    let data;
-    try{
-      data=JSON.parse(raw);
-    }catch(parseError){
-      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
-    }
-    const reply = data.content?.[0]?.text || '申し訳ありません、もう一度お試しください。';
-    thinkingEl.textContent = reply;
-    thinkingEl.style.fontStyle = 'normal';
-    chatHistory.push({role:'assistant', content:reply});
-  } catch(e) {
-    thinkingEl.textContent = '通信エラーが発生しました。\n' + (e && e.message ? e.message : String(e));
-  }
-  isThinking = false;
+function sendChatBase() {
+  generatePremiumAiMaterial();
 }
 
 function addMessage(role, text, isThinking=false, imgSrc=null) {
   const wrap = document.getElementById('chatMessages');
+  if(!wrap) return document.createElement('div');
   // 最初のヒントテキストを消す
   if(wrap.children.length===1 && wrap.children[0].tagName!=='DIV'.toLowerCase()) {}
   const el = document.createElement('div');
@@ -2741,8 +2778,8 @@ function addMessage(role, text, isThinking=false, imgSrc=null) {
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function(){
-  const saved = localStorage.getItem('kitoku-ai-tone');
-  if(saved) setTone(saved);
+  const styleBox=document.getElementById('premiumStylePreference');
+  if(styleBox&&typeof buildKitokuStylePreference==='function')styleBox.value=buildKitokuStylePreference();
 });
 
 
@@ -2944,11 +2981,11 @@ function scrollToAiChat(){
 const TOOL_HELP = {
   rename: {
     title: '簡易姓名採点はこんな時に使えます',
-    body: '気学先生に出してもらった改名・通称・SNS名の候補を、すぐに並べて確認したい時に使います。ここでは候補を絞るための簡易チェックを行い、最終的な深掘りは気学先生に相談します。'
+    body: '改名・通称・SNS名の候補を、すぐに並べて確認したい時に使います。ここでは候補を絞るための簡易チェックを行い、最終的な深掘りは相談材料を作ってAIに渡します。'
   },
   target: {
     title: '相手の星はこんな時に使えます',
-    body: '家族・恋愛・仕事・商談・面談など、相手がいる相談で使います。相手の生年月日を入れて星情報をコピーし、気学先生に貼ると、関係性や伝え方をより具体的に相談できます。'
+    body: '家族・恋愛・仕事・商談・面談など、相手がいる相談で使います。相手の生年月日を入れて星情報を確認し、相談材料に含めると、関係性や伝え方をより具体的に相談できます。'
   },
   senro: {
     title: '線路の日はこんな時に使えます',
@@ -2956,7 +2993,7 @@ const TOOL_HELP = {
   },
   self: {
     title: '自分の情報はこんな時に使えます',
-    body: '相談材料、日程判断、方位判断、姓名鑑定の土台になる情報です。普段は気学先生に自動で入りますが、別のAIやメモで使いたい時はここからコピーできます。'
+    body: '相談材料、日程判断、方位判断、姓名鑑定の土台になる情報です。AIやメモで使いたい時はここからコピーできます。'
   },
   inspiration: {
     title: '今日のインスピレーションはこんな時に使えます',
@@ -3073,7 +3110,7 @@ function showInspirationPreparing(){
     quote:'今日の一言は準備中です。',
     source:'KITOKUより',
     message:'正式接続後、東洋の先人の教えから今日の一言を選びます。',
-    action:'いまは気学先生に相談できます'
+    action:'いまは相談材料を作れます'
   });
 }
 
@@ -3657,7 +3694,7 @@ function runRenameScore(){
       </div>
     `).join('')}
     <button onclick="sendRsToAi('${sei}','${seiFuri}')" style="width:100%;padding:10px;background:rgba(138,104,32,.1);border:1px solid rgba(138,104,32,.25);border-radius:10px;font-size:.65rem;color:var(--goldlt);cursor:pointer;margin-top:4px;font-family:'Noto Serif JP',serif;">
-      ✦ 結果を気学先生に送って改善案を相談する →
+      ✦ 結果を相談材料に入れて改善案を相談する →
     </button>
   `;
 }
@@ -3781,7 +3818,7 @@ function scoreNameRS(sei, seiFuri, mei, meiFuri){
   return { score, issues, ten, jin, chi, gai, sou };
 }
 
-// 結果を気学先生に送る
+// 結果を相談材料に入れる
 function sendRsToAi(sei, seiFuri){
   const rsResults = document.getElementById('rsResults');
   const items = rsResults.querySelectorAll('div[style*="border-radius:10px"]');
@@ -3834,59 +3871,44 @@ function removeImage(){
   document.getElementById('imagePreview').src = '';
 }
 
-// sendChatを画像対応の入口として一本化
-async function sendChat(){
-  if(!attachedImageData){
-    await sendChatBase();
+// 相談材料生成の入口。サーバーAIには送信しない。
+function generatePremiumAiMaterial(){
+  const input=document.getElementById('chatInput');
+  const output=document.getElementById('premiumAiMaterialOutput');
+  if(!output)return;
+  if(typeof buildAiMaterial!=='function'){
+    output.value='相談材料の共通ファイル（kitoku-ai-material.js）を読み込めませんでした。';
     return;
   }
-  if(isThinking) return;
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim() || '添付した写真を見てください';
-  const imageData = attachedImageData;
-  const imageType = attachedImageType;
-  const previewSrc = document.getElementById('imagePreview').src;
-  input.value = '';
+  const context=buildPremiumAiMaterialContext();
+  output.value=buildAiMaterial(Object.assign({},context,{userNote:input?input.value:''}));
+  output.focus();
+}
 
-  addMessage('user', msg, false, previewSrc);
-  chatHistory.push({role:'user', content: msg + '\n\n※写真を添付しています。'});
+function copyPremiumAiMaterial(){
+  const text=document.getElementById('premiumAiMaterialOutput')?.value||'';
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById('copyPremiumAiMaterialBtn');
+    if(!btn)return;
+    const orig=btn.textContent;
+    btn.textContent='コピーしました';
+    setTimeout(()=>btn.textContent=orig,1600);
+  });
+}
 
-  removeImage();
+function copyPremiumStylePreference(){
+  const text=document.getElementById('premiumStylePreference')?.value||'';
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById('copyPremiumStyleBtn');
+    if(!btn)return;
+    const orig=btn.textContent;
+    btn.textContent='コピーしました';
+    setTimeout(()=>btn.textContent=orig,1600);
+  });
+}
 
-  isThinking = true;
-  const thinkingEl = addMessage('assistant','…',true);
-
-  try{
-    if(location.protocol==='file:'){
-      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
-    }
-    const historyText=chatHistory.slice(-8).map(m=>(m.role==='user'?'相談者':'気学先生')+'：'+String(m.content||'')).join('\n\n');
-    const prompt=buildSystemPrompt()+'\n\n【これまでの会話】\n'+historyText+'\n\n最後の相談者は写真も添付しています。写真から見える色・質感・用途・場面を五行に置き換え、相談内容に答えてください。';
-    const res = await kitokuFetchClaude({
-      prompt:prompt,
-      image:{media_type:imageType,data:imageData}
-    }, 'kigaku_chat');
-    const raw = await res.text();
-    if(res.status===402){
-      throw new Error(KITOKU_PREMIUM_MSG);
-    }
-    if(!res.ok){
-      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
-    }
-    let data;
-    try{
-      data=JSON.parse(raw);
-    }catch(parseError){
-      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
-    }
-    const reply = data.content?.[0]?.text||'申し訳ありません、もう一度お試しください。';
-    thinkingEl.textContent = reply;
-    thinkingEl.style.fontStyle='normal';
-    chatHistory.push({role:'assistant',content:reply});
-  }catch(e){
-    thinkingEl.textContent='通信エラーが発生しました。\n' + (e && e.message ? e.message : String(e));
-  }
-  isThinking = false;
+function sendChat(){
+  generatePremiumAiMaterial();
 }
 
 </script>
@@ -6281,7 +6303,7 @@ function kitokuRenderAuth(){
     if(payRow) payRow.style.display = isPremium ? 'none' : 'block';
     if(manageRow) manageRow.style.display = isPremium ? 'block' : 'none';
   } else {
-    state.textContent = 'KIGAKU先生AIをご利用いただくには、ログインが必要です。';
+    state.textContent = '相談材料の作成は、ログインなしでご利用いただけます。';
     if(formRow) formRow.style.display = 'flex';
     if(outRow) outRow.style.display = 'none';
     if(payRow) payRow.style.display = 'none';
