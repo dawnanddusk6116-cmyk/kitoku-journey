@@ -697,7 +697,67 @@ body{
 .tag-month{background:rgba(94,200,138,.1);border-color:rgba(94,200,138,.3);color:var(--green);}
 .tag-railway{background:rgba(138,104,32,.1);border-color:rgba(138,104,32,.35);color:var(--goldlt);}
 .tag-best{background:rgba(177,107,120,.18);border-color:rgba(177,107,120,.5);color:#8a2840;font-weight:700;}
+.tag-caution{background:rgba(200,140,0,.11);border-color:rgba(200,140,0,.34);color:#7a4800;}
+.tag-help{background:rgba(23,139,120,.1);border-color:rgba(23,139,120,.34);color:#0f766e;font-weight:700;}
 .best-item-star{background:rgba(177,107,120,.05);border-color:rgba(177,107,120,.35);}
+.best-item-caution{background:rgba(200,140,0,.045);border-color:rgba(200,140,0,.24);}
+.best-section-head{margin-top:12px;padding-top:10px;border-top:1px dashed rgba(138,104,32,.24);}
+.best-section-title{font-size:.68rem;color:#7a4800;font-weight:800;margin-bottom:3px;}
+.best-section-note{font-size:.58rem;color:var(--mist);line-height:1.7;margin-bottom:8px;}
+.cal-cell.month-caution-day{
+  background:rgba(200,140,0,.06);
+  border-color:rgba(200,140,0,.28);
+  opacity:1;
+}
+.cal-cell.month-caution-day.kichi-day{
+  background:linear-gradient(180deg,rgba(23,139,120,.08),rgba(200,140,0,.055));
+  border-color:rgba(23,139,120,.28);
+}
+.trip-length-card{
+  margin:0 0 14px;
+  background:rgba(138,104,32,.06);
+  border:1px solid rgba(138,104,32,.18);
+  border-radius:10px;
+  padding:10px 12px;
+}
+.trip-length-row{display:flex;align-items:center;gap:10px;}
+.trip-length-label{font-size:.64rem;color:var(--goldlt);font-weight:800;white-space:nowrap;}
+.trip-length-select{
+  flex:1;min-width:0;
+  border:1px solid rgba(138,104,32,.3);
+  border-radius:8px;
+  background:#fff;
+  color:var(--snow);
+  font-family:'Noto Serif JP',serif;
+  font-size:.68rem;
+  padding:8px 9px;
+}
+.trip-length-hint{font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:6px;}
+.step3-summary{
+  margin-top:10px;
+  background:rgba(255,255,255,.72);
+  border:1.5px solid rgba(138,104,32,.22);
+  border-radius:10px;
+  padding:11px 12px;
+}
+.step3-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.step3-summary-item{
+  background:rgba(100,80,40,.035);
+  border:1px solid rgba(100,80,40,.1);
+  border-radius:8px;
+  padding:8px;
+}
+.step3-summary-label{font-size:.58rem;color:var(--mist);font-weight:800;margin-bottom:3px;}
+.step3-summary-value{font-size:.66rem;color:var(--snow);font-weight:800;line-height:1.55;}
+.step3-summary-value.good{color:#0f766e;}
+.step3-summary-value.caution{color:#7a4800;}
+.step3-summary-value.kyo{color:#8a2840;}
+.step3-summary-comment{margin-top:8px;font-size:.63rem;color:var(--mist);line-height:1.85;}
+@media(max-width:560px){
+  .step3-summary-grid{grid-template-columns:1fr;}
+  .trip-length-row{align-items:flex-start;flex-direction:column;gap:6px;}
+  .trip-length-select{width:100%;}
+}
 
 /* ── 日盤取りガイド ── */
 .nichiban-section{
@@ -1169,6 +1229,19 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="sec-label">STEP 2 — 目的地</div>
   <div class="sec-title">行きたい旅先を選ぶ</div>
 
+  <div class="trip-length-card">
+    <div class="trip-length-row">
+      <label class="trip-length-label" for="travelLengthSelect">旅行の長さ</label>
+      <select class="trip-length-select" id="travelLengthSelect" onchange="setTravelLength(this.value)">
+        <option value="daytrip">日帰り</option>
+        <option value="short">1〜2泊</option>
+        <option value="middle">3〜6泊</option>
+        <option value="long">7泊以上</option>
+      </select>
+    </div>
+    <div class="trip-length-hint" id="travelLengthHint"></div>
+  </div>
+
   <!-- 国内/海外タブ -->
   <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button id="tabDomestic" onclick="switchTravelTab('domestic')" style="flex:1;padding:9px 0;border-radius:999px;font-size:.75rem;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;cursor:pointer;background:var(--goldlt);color:#fff;border:none;">🗾 国内</button>
@@ -1422,7 +1495,7 @@ html.font-large .font-btn{font-size:.8rem;}
       ✦ おすすめ日程（最大6日）
     </div>
     <div style="font-size:.6rem;color:var(--mist);margin-bottom:10px;line-height:1.7;">
-      スコア順に表示：<span style="color:#8a2840;font-weight:700;">★線路×日盤吉方</span>（最優先）→ <span style="color:var(--goldlt);font-weight:600;">◆線路×日盤凶なし</span> → <span style="color:#2a6038;font-weight:600;">○日盤吉方のみ</span>。月盤・日盤が凶の日は除外します。
+      スコア順に表示：<span style="color:#8a2840;font-weight:700;">★線路×日盤吉方</span>（最優先）→ <span style="color:var(--goldlt);font-weight:600;">◆線路×日盤凶なし</span> → <span style="color:#2a6038;font-weight:600;">○日盤吉方のみ</span>。月盤注意の日は別枠で表示し、日盤が凶の日は除外します。
     </div>
     <div class="best-list" id="bestList"></div>
   </div>
@@ -1905,6 +1978,7 @@ let gState = {
   banDayD: null,
   railwayBranches: null,
   activeBanTab: 'year', // 現在選択中のタブ（year/month/day）
+  travelLength: 'short',
 };
 
 function getTeiiKyoSetting(){
@@ -1995,6 +2069,8 @@ function formatDayLabel(y, m, d) {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   applyPilgrimageFontSize(localStorage.getItem(PILGRIMAGE_FONT_KEY) || 'medium');
+  gState.travelLength = getTravelLengthMode();
+  updateTravelLengthUI();
 
   // 自宅情報の復元
   const savedHome = localStorage.getItem('kitoku-home');
@@ -2481,26 +2557,127 @@ function openExternalMap(url) {
 const DIR_JP = { N:'北', NE:'北東', E:'東', SE:'南東', S:'南', SW:'南西', W:'西', NW:'北西' };
 const DIR_EMOJI = { N:'↑', NE:'↗', E:'→', SE:'↘', S:'↓', SW:'↙', W:'←', NW:'↖' };
 
-function generateStep3ThreeStageNotice(yearRank, monthRank, dayRank, isDayKyo, isMonthKyo, y, m, d) {
-  const dr = dayRank && typeof dayRank.rank === 'number' ? dayRank.rank : 0;
-  const mr = monthRank && typeof monthRank.rank === 'number' ? monthRank.rank : 0;
-  if (isMonthKyo) {
-    return `<div style="margin-top:10px;background:rgba(200,140,0,.07);border:1.5px solid rgba(200,140,0,.28);border-radius:10px;padding:10px 12px;">
-      <div style="font-size:.7rem;font-weight:700;color:#7a4800;margin-bottom:4px;">△ 月盤に凶の要素があります</div>
-      <div style="font-size:.63rem;color:var(--mist);line-height:1.75;">無理に動く時期ではないかもしれません。予定を動かせる場合は、月盤が整う時期も見てください。</div>
-    </div>`;
+function getTravelLengthMode() {
+  const allowed = ['daytrip', 'short', 'middle', 'long'];
+  let saved = '';
+  try { saved = localStorage.getItem('kitoku-travel-length') || ''; } catch(e) {}
+  return allowed.includes(saved) ? saved : (allowed.includes(gState.travelLength) ? gState.travelLength : 'short');
+}
+
+function getTravelLengthInfo() {
+  const mode = getTravelLengthMode();
+  const map = {
+    daytrip: {
+      label: '日帰り',
+      hint: '日盤を強めに見ます。月盤注意の月でも、日盤が整う日は別枠で確認できます。',
+      cautionTitle: '日帰りなら日盤の助けを使いやすい日',
+      cautionNote: '月盤に凶の要素があります。大きな移動は慎重に見つつ、日盤が整う日を候補として分けて表示します。',
+      cautionPenalty: 0,
+      dayBoost: 10
+    },
+    short: {
+      label: '1〜2泊',
+      hint: '日盤をやや強めに見ます。月盤注意の月は、候補を通常枠と別枠に分けます。',
+      cautionTitle: '月盤注意の中で、日盤が整う日',
+      cautionNote: '月盤に凶の要素があります。短い旅行なら、日盤の良い日を選んで整える余地があります。',
+      cautionPenalty: 8,
+      dayBoost: 7
+    },
+    middle: {
+      label: '3〜6泊',
+      hint: '月盤も日盤も見ます。月盤注意の候補は、通常おすすめとは分けて扱います。',
+      cautionTitle: '月盤注意の中で、日盤が整う日',
+      cautionNote: '滞在が数日にわたるため、月盤の影響も見ます。日盤が整う日は、補助的な候補として表示します。',
+      cautionPenalty: 20,
+      dayBoost: 3
+    },
+    long: {
+      label: '7泊以上',
+      hint: '月盤を強めに見ます。月盤注意の候補は、参考枠として慎重に表示します。',
+      cautionTitle: '長期滞在では慎重に見たい日盤の助け',
+      cautionNote: '長めの滞在では月盤の流れを強く見ます。日盤が整う日も、通常おすすめとは分けて参考として表示します。',
+      cautionPenalty: 40,
+      dayBoost: 0
+    }
+  };
+  return { ...(map[mode] || map.short), mode: mode };
+}
+
+function setTravelLength(value) {
+  const allowed = ['daytrip', 'short', 'middle', 'long'];
+  gState.travelLength = allowed.includes(value) ? value : 'short';
+  try { localStorage.setItem('kitoku-travel-length', gState.travelLength); } catch(e) {}
+  updateTravelLengthUI();
+  if (gState.homeLat && gState.destLat && gState.honmei) calcAndShowDir();
+  else renderCalendar();
+}
+
+function updateTravelLengthUI() {
+  const info = getTravelLengthInfo();
+  const select = document.getElementById('travelLengthSelect');
+  const hint = document.getElementById('travelLengthHint');
+  if (select) select.value = getTravelLengthMode();
+  if (hint) hint.textContent = info.hint;
+}
+
+function summarizeBoardForStep3(rankObj, isKyo) {
+  const rank = rankObj && typeof rankObj.rank === 'number' ? rankObj.rank : 0;
+  const badges = rankObj && Array.isArray(rankObj.badges) ? rankObj.badges : [];
+  if (isKyo) {
+    const desc = rankDesc(0, badges);
+    return { tone: 'kyo', text: desc && desc !== '吉方位ではありません' ? desc + 'あり' : '凶方位あり' };
   }
-  if (isDayKyo) {
-    return `<div style="margin-top:10px;background:rgba(200,140,0,.07);border:1.5px solid rgba(200,140,0,.28);border-radius:10px;padding:10px 12px;">
-      <div style="font-size:.7rem;font-weight:700;color:#7a4800;margin-bottom:4px;">△ 日盤に凶の要素があります</div>
-      <div style="font-size:.63rem;color:var(--mist);line-height:1.75;">この日で決まっている場合は、日盤取りなどで整えてから動く選択肢があります。</div>
-    </div>`;
+  if (rank >= 2) return { tone: 'good', text: rankLabel(rank, badges).replace(/^[◎○✦★]\s*/, '') };
+  if (rank === 1) return { tone: 'caution', text: '天道のみ' };
+  return { tone: 'neutral', text: '凶なし' };
+}
+
+function generateStep3BoardSummary(yearRank, monthRank, dayRank, isYearKyo, isMonthKyo, isDayKyo, y, m, d) {
+  const yr = summarizeBoardForStep3(yearRank, isYearKyo);
+  const mr = summarizeBoardForStep3(monthRank, isMonthKyo);
+  const dr = summarizeBoardForStep3(dayRank, isDayKyo);
+  const travelInfo = getTravelLengthInfo();
+  const dayGood = !isDayKyo && dayRank && dayRank.rank >= 2;
+  const yearGood = !isYearKyo && yearRank && yearRank.rank >= 2;
+  const monthGood = !isMonthKyo && monthRank && monthRank.rank >= 2;
+  let comment = '';
+
+  if (isMonthKyo && dayGood && yearGood) {
+    comment = travelInfo.mode === 'long'
+      ? '月盤に凶の要素があります。7泊以上の滞在では月盤の流れを強めに見ます。日盤の良さは参考にしつつ、時期の再確認もおすすめです。'
+      : '月盤に凶の要素があります。長めの滞在や大きな移動は慎重に。短い旅行なら、日盤の良い日を選んで整える余地があります。';
+  } else if (isMonthKyo && dayGood) {
+    comment = '月盤に凶の要素があります。無理に動く時期ではないかもしれません。ただし日盤には助けがあるため、短い旅行なら整える余地があります。';
+  } else if (isMonthKyo) {
+    comment = '月盤に凶の要素があります。無理に動く時期ではないかもしれません。予定を動かせる場合は、月盤が整う時期も見てください。';
+  } else if (isDayKyo) {
+    comment = '日盤に凶の要素があります。この日で決まっている場合は、日盤取りなどで整えてから動く選択肢があります。';
+  } else if (yearGood && monthGood && dayGood) {
+    comment = '年盤・月盤・日盤がそろって整っています。旅行日として前向きに検討しやすい状態です。';
+  } else if (dayGood && monthGood) {
+    comment = '月盤と日盤が整っています。年盤は大きな流れとして参考にしながら、現実の予定と合わせて判断できます。';
+  } else if (dayGood) {
+    comment = '日盤に助けがあります。短い旅行ほど、この日の整いを使いやすくなります。';
+  } else {
+    comment = `${m}/${d}の日盤は吉方ではありませんが、凶もありません。現実の予定と合わせて判断できます。`;
   }
-  if (dr >= 2) return '';
-  const monthText = mr >= 2 ? '月盤は整っています。' : '月盤にも凶の要素はありません。';
-  return `<div style="margin-top:10px;background:rgba(40,130,60,.05);border:1.5px solid rgba(40,130,60,.22);border-radius:10px;padding:10px 12px;">
-    <div style="font-size:.7rem;font-weight:700;color:#2a6e3a;margin-bottom:4px;">◇ 日盤は凶なしです</div>
-    <div style="font-size:.63rem;color:var(--mist);line-height:1.75;">${m}/${d}の日盤は吉方ではありませんが、凶もありません。${monthText}現実の予定と合わせて判断できます。</div>
+
+  return `<div class="step3-summary">
+    <div class="step3-summary-grid">
+      <div class="step3-summary-item">
+        <div class="step3-summary-label">年盤</div>
+        <div class="step3-summary-value ${yr.tone}">${yr.text}</div>
+      </div>
+      <div class="step3-summary-item">
+        <div class="step3-summary-label">月盤</div>
+        <div class="step3-summary-value ${mr.tone}">${mr.text}</div>
+      </div>
+      <div class="step3-summary-item">
+        <div class="step3-summary-label">日盤</div>
+        <div class="step3-summary-value ${dr.tone}">${dr.text}</div>
+      </div>
+    </div>
+    <div class="step3-summary-comment">${comment}</div>
   </div>`;
 }
 
@@ -2744,9 +2921,7 @@ function calcAndShowDir() {
           <div class="dir-dest-area">${gState.destArea} ／ 自宅から${DIR_JP[dir] || dir}方向 約${dist}km</div>
         </div>
       </div>
-      ${generateTravelKyoAlert(yearRank.badges, monthRank.badges, false)}
-      ${generateTravelYoshiAlert(yearRank, monthRank, false, ySangoInfo.group, mSangoInfo.group)}
-      ${generateStep3ThreeStageNotice(yearRank, monthRank, dayRank, isDayKyo, isKyo, dayY, dayM, dayD)}
+      ${generateStep3BoardSummary(yearRank, monthRank, dayRank, isYearKyo, isKyo, isDayKyo, dayY, dayM, dayD)}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px;">
         <a href="${mapSearchUrl(gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a56a8;font-family:'Noto Serif JP',serif;font-weight:600;">📍 Googleマップ</a>
         <a href="${mapRouteUrl(gState.homeLat, gState.homeLon, gState.destLat, gState.destLon)}" onclick="openExternalMap(this.href); return false;" style="display:flex;align-items:center;justify-content:center;background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.35);border-radius:8px;padding:9px 6px;text-decoration:none;font-size:.62rem;color:#1a6e30;font-family:'Noto Serif JP',serif;font-weight:600;">🚗 ルート</a>
@@ -2819,8 +2994,8 @@ function calcAndShowDir() {
       </div>
       ${isKyo ? `
       <div class="kyo-warn">
-        ⚠ 表示中の月盤（${monthY}年${monthM}月）では、この方向に${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}があります。
-        他の月・日程を確認するか、日盤取りをご検討ください。
+        月盤に凶の要素があります（${mKyoItems.filter(i=>i.dir===dir).map(i=>i.name).join('・')}）。
+        長めの滞在や大きな移動は慎重に見つつ、短い旅行では日盤の整う日も参考にできます。
       </div>` : ''}
       ${generateKyoPrescription(monthRank.badges, monthRank.rank)}
       ${!isKyo && monthRank.rank >= 2 ? `
@@ -3044,6 +3219,63 @@ function renderCalendar() {
     return '';
   }
 
+  function travelScoreAdjustments() {
+    const info = getTravelLengthInfo();
+    return { cautionPenalty: info.cautionPenalty || 0, dayBoost: info.dayBoost || 0 };
+  }
+
+  function renderBestItems(items, isCautionSection) {
+    return items.map(function(item, idx) {
+      const date = new Date(y, m - 1, item.d);
+      const dow = dowLabels[date.getDay()];
+      const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
+      const tags = [];
+
+      if (isCautionSection) {
+        tags.push('<span class="best-tag tag-caution">△ 月盤注意</span>');
+        if (item.isRailway && item.isKichi) tags.push('<span class="best-tag tag-best">★ 線路×日盤吉方</span>');
+        else if (item.isRailway) tags.push('<span class="best-tag tag-railway">◆ 線路×日盤凶なし（' + branchLabel + '）</span>');
+        if (item.isKichi) tags.push('<span class="best-tag tag-help">○ 日盤の助けあり</span>');
+        else tags.push('<span class="best-tag tag-railway">◇ 日盤凶なし</span>');
+      } else {
+        if (item.isRailway && item.isKichi) {
+          tags.push('<span class="best-tag tag-best">★ 線路×日盤吉方</span>');
+        } else if (item.isRailway) {
+          tags.push('<span class="best-tag tag-railway">◆ 線路×日盤凶なし（' + branchLabel + '）</span>');
+        }
+
+        if (item.isKichi) {
+          if (item.rank >= 4) tags.push('<span class="best-tag tag-kichi">✦ 日盤 本命・月命吉</span>');
+          else tags.push('<span class="best-tag tag-kichi">○ 日盤吉方</span>');
+        } else {
+          tags.push('<span class="best-tag tag-railway">◇ 日盤凶なし</span>');
+        }
+        tags.push('<span class="best-tag tag-month">月盤OK</span>');
+      }
+
+      try {
+        const monthCenter = getMonthCenter(y, m, item.d);
+        if (STARS[monthCenter]) tags.push('<span class="best-tag tag-month">月盤 ' + monthCenter + '（' + STARS[monthCenter].j + '）</span>');
+      } catch(e) {}
+
+      const isBestBoth = item.isRailway && item.isKichi;
+      const isKichiOnly = item.isKichi && !item.isRailway;
+      const prevItem = idx > 0 ? items[idx - 1] : null;
+      const prevIsKichiOnly = prevItem && prevItem.isKichi && !prevItem.isRailway;
+      const divider = (!isCautionSection && !prevIsKichiOnly && isKichiOnly)
+        ? '<div style="font-size:.6rem;color:var(--mist);padding:6px 0 2px;letter-spacing:.08em;">── 吉方位おすすめ ──</div>'
+        : '';
+
+      return divider + '<div class="best-item' + (isBestBoth ? ' best-item-star' : '') + (isCautionSection ? ' best-item-caution' : '') + '">' +
+        '<div class="best-rank ' + (idx === 0 ? 'r1' : '') + '">' + (idx + 1) + '</div>' +
+        '<div class="best-info">' +
+          '<div class="best-date">' + y + '年 ' + m + '月 ' + item.d + '日（' + dow + '）</div>' +
+          '<div class="best-tags">' + tags.join('') + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
   // 先に最低限の日付だけ描画する。後続の吉方計算が止まっても空白にしないため。
   let baseHtml = '';
   for (let i = 0; i < firstDay; i++) baseHtml += '<div class="cal-cell empty"></div>';
@@ -3065,16 +3297,18 @@ function renderCalendar() {
     const todayStr = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     let html = '';
     let bestDays = [];
+    let monthCautionDays = [];
     let railwayDays = [];
-    let recommendableDays = new Set();
     const railwayBranches = Array.isArray(gState.railwayBranches) ? gState.railwayBranches : [];
+    const scoreAdjust = travelScoreAdjustments();
 
     for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
 
     for (let d = 1; d <= lastDate; d++) {
       let branch = null;
       let dayRank = { rank: 0, badges: [] };
-      let isKyoDay = false;
+      let isDayBoardKyo = false;
+      let isMonthKyoDay = false;
 
       try { branch = getDayBranch(y, m, d); } catch(e) {}
 
@@ -3088,46 +3322,56 @@ function renderCalendar() {
         const tnd = getTendoDir(y, m, d);
         dayRank = rankDir(gState.destDir, dStar, gState.honmei, gState.tsukimei, dSango, tnd);
 
-        // 日盤の凶方位チェック → 凶なら rank=0
+        // 日盤の凶方位チェック。日盤凶は候補から外す。
         const { kyouSet: dKyouSetD } = getSharedKyouDirs(dc, gState.honmei, dayBreakDirD, gState.tsukimei, 'day');
         if (dKyouSetD.has(gState.destDir)) {
-          isKyoDay = true;
+          isDayBoardKyo = true;
           dayRank.rank = 0;
         }
-        // 月盤の凶方位も、節入りをまたぐ月では日ごとに判定する。
+        // 月盤の凶方位は日盤とは別に保持する。日盤の助けを消さないため。
         const monthCenterForDay = getMonthCenter(y, m, d);
         const monthBranchForDay = BRANCH_NAME[getMonthBranch(y, m, d)];
         const monthBreakDirForDay = BRANCH_DIR[((BRANCH_NAME.indexOf(monthBranchForDay) + 6) % 12)];
         const { kyouSet: mKyouSetForDay } = getSharedKyouDirs(monthCenterForDay, gState.honmei, monthBreakDirForDay, gState.tsukimei, 'month');
         if (mKyouSetForDay && mKyouSetForDay.has(gState.destDir)) {
-          isKyoDay = true;
-          dayRank.rank = 0;
+          isMonthKyoDay = true;
         }
       } catch(e) { console.warn('day calc failed:', e); }
 
       const isRailway = branch !== null && railwayBranches.includes(branch);
-      const isKichi = !isKyoDay && dayRank.rank >= 2;
+      const isKichi = !isDayBoardKyo && dayRank.rank >= 2;
       const isToday = (y + '-' + m + '-' + d) === todayStr;
 
       if (isRailway) railwayDays.push({ d: d, branch: branch });
-      if (!isKyoDay) recommendableDays.add(d);
 
-      // おすすめ計算：日盤凶は完全除外
-      if (!isKyoDay && (isKichi || isRailway)) {
+      // おすすめ計算：日盤凶は完全除外。月盤注意は通常枠に混ぜず、別枠へ送る。
+      if (!isDayBoardKyo && (isKichi || isRailway)) {
         let score = dayRank.rank;
-        if (isRailway && isKichi) score += 30; // 線路×日盤吉方：最優先
-        else if (isRailway) score += 20;        // 線路×日盤凶なし：次点
-        bestDays.push({ d: d, branch: branch, rank: dayRank.rank, score: score, isRailway: isRailway, isKichi: isKichi, badges: dayRank.badges || [] });
+        if (isRailway && isKichi) score += 30;
+        else if (isRailway) score += 20;
+        if (isKichi) score += scoreAdjust.dayBoost;
+        const item = { d: d, branch: branch, rank: dayRank.rank, score: score, isRailway: isRailway, isKichi: isKichi, badges: dayRank.badges || [], isMonthKyo: isMonthKyoDay };
+        if (isMonthKyoDay) {
+          item.score -= scoreAdjust.cautionPenalty;
+          monthCautionDays.push(item);
+        } else {
+          bestDays.push(item);
+        }
       }
 
       let classes = 'cal-cell';
       if (isToday) classes += ' today';
       if (isKichi) classes += ' kichi-day';
-      if (isKyoDay) classes += ' kyo-day';
+      if (isDayBoardKyo) classes += ' kyo-day';
+      if (isMonthKyoDay) classes += ' month-caution-day';
 
       const cellLabels = [];
-      if (isKichi) cellLabels.push('○吉方');
-      if (isKyoDay) cellLabels.push('△要注意');
+      if (isDayBoardKyo) {
+        cellLabels.push('△日盤注意');
+      } else {
+        if (isMonthKyoDay) cellLabels.push('△月盤注意');
+        if (isKichi) cellLabels.push(isMonthKyoDay ? '○日盤吉方' : '○吉方');
+      }
       const cellLabel = cellLabels.join('<br>');
 
       html += '<div class="' + classes + '" onclick="showDayDetail(' + y + ',' + m + ',' + d + ')">' +
@@ -3151,87 +3395,34 @@ function renderCalendar() {
       }
     }
 
-    // ── おすすめ日程 最大6件 ──
-    // 線路×日盤吉方を最優先、次に線路×日盤凶なし、次に日盤吉方のみ
-    const allDays = {};
-
-    // 日盤吉方・線路×日盤凶なしの日を登録
-    bestDays.forEach(function(item) {
-      if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: false, rank: 0, badges: [], score: 0 };
-      allDays[item.d].isKichi = item.isKichi;
-      allDays[item.d].isRailway = item.isRailway;
-      allDays[item.d].branch = item.branch;
-      allDays[item.d].rank = item.rank;
-      allDays[item.d].badges = item.badges;
-      allDays[item.d].score += item.score;
-    });
-
-    // 念のため、線路の日だけで残る候補を補完する
-    railwayDays.forEach(function(item) {
-      if (!recommendableDays.has(item.d)) return;
-      if (!allDays[item.d]) allDays[item.d] = { d: item.d, branch: item.branch, isKichi: false, isRailway: true, rank: 0, badges: [], score: 20 };
-      allDays[item.d].isRailway = true;
-      allDays[item.d].branch = item.branch;
-    });
-
     const sekkiStartDay = getSekkiDay(y, m);
-    const top6 = Object.values(allDays)
+    const top6 = bestDays
+      .filter(function(item){ return item.d >= sekkiStartDay; })
+      .sort(function(a, b) { return b.score - a.score || a.d - b.d; })
+      .slice(0, 6);
+    const cautionTop6 = monthCautionDays
       .filter(function(item){ return item.d >= sekkiStartDay; })
       .sort(function(a, b) { return b.score - a.score || a.d - b.d; })
       .slice(0, 6);
 
     if (!bestList) return;
 
-    if (!top6.length) {
-      bestList.innerHTML = '<div class="muted-box" style="text-align:center;">この月はおすすめ候補が少なめです。<br>カレンダーの日付ごとの表示も確認してください。</div>';
-      return;
+    let listHtml = '';
+    if (top6.length) {
+      listHtml += renderBestItems(top6, false);
+    } else {
+      listHtml += '<div class="muted-box" style="text-align:center;">通常のおすすめ候補は少なめです。<br>月盤注意中の候補も分けて確認できます。</div>';
     }
 
-    bestList.innerHTML = top6.map(function(item, idx) {
-      const date = new Date(y, m - 1, item.d);
-      const dow = dowLabels[date.getDay()];
-      const branchLabel = (typeof BRANCH_NAME !== 'undefined' && BRANCH_NAME[item.branch]) ? BRANCH_NAME[item.branch] : '';
-      const tags = [];
+    if (cautionTop6.length) {
+      const info = getTravelLengthInfo();
+      listHtml += '<div class="best-section-head">' +
+        '<div class="best-section-title">' + info.cautionTitle + '</div>' +
+        '<div class="best-section-note">' + info.cautionNote + '</div>' +
+      '</div>' + renderBestItems(cautionTop6, true);
+    }
 
-      // 線路×日盤吉方 or 線路×日盤凶なし
-      if (item.isRailway && item.isKichi) {
-        tags.push('<span class="best-tag tag-best">★ 線路×日盤吉方</span>');
-      } else if (item.isRailway) {
-        tags.push('<span class="best-tag tag-railway">◆ 線路×日盤凶なし（' + branchLabel + '）</span>');
-      }
-
-      // 日盤の3段階タグ
-      if (item.isKichi) {
-        if (item.rank >= 4) tags.push('<span class="best-tag tag-kichi">✦ 日盤 本命・月命吉</span>');
-        else tags.push('<span class="best-tag tag-kichi">○ 日盤吉方</span>');
-      } else {
-        tags.push('<span class="best-tag tag-railway">◇ 日盤凶なし</span>');
-      }
-
-      tags.push('<span class="best-tag tag-month">月盤OK</span>');
-      try {
-        const monthCenter = getMonthCenter(y, m, item.d);
-        if (STARS[monthCenter]) tags.push('<span class="best-tag tag-month">月盤 ' + monthCenter + '（' + STARS[monthCenter].j + '）</span>');
-      } catch(e) {}
-
-      // 区切り線（吉方のみが始まる前）
-      const isBestBoth = item.isRailway && item.isKichi;
-      const isRailwayOnly = item.isRailway && !item.isKichi;
-      const isKichiOnly = item.isKichi && !item.isRailway;
-      const prevItem = idx > 0 ? top6[idx - 1] : null;
-      const prevIsKichiOnly = prevItem && prevItem.isKichi && !prevItem.isRailway;
-      const divider = (!prevIsKichiOnly && isKichiOnly)
-        ? '<div style="font-size:.6rem;color:var(--mist);padding:6px 0 2px;letter-spacing:.08em;">── 吉方位おすすめ ──</div>'
-        : '';
-
-      return divider + '<div class="best-item' + (isBestBoth ? ' best-item-star' : '') + '">' +
-        '<div class="best-rank ' + (idx === 0 ? 'r1' : '') + '">' + (idx + 1) + '</div>' +
-        '<div class="best-info">' +
-          '<div class="best-date">' + y + '年 ' + m + '月 ' + item.d + '日（' + dow + '）</div>' +
-          '<div class="best-tags">' + tags.join('') + '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('');
+    bestList.innerHTML = listHtml;
   } catch (e) {
     console.warn('renderCalendar rich calculation failed:', e);
     if (bestList) {
