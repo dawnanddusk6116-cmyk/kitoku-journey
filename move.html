@@ -1510,11 +1510,11 @@ html.font-large .font-btn{font-size:.8rem;}
         </div>
         <div style="display:flex;gap:8px;align-items:baseline;">
           <span style="color:var(--goldlt);font-weight:700;min-width:44px;flex-shrink:0;">Step 4</span>
-          <span>気になる日をタップ → <strong style="color:var(--snow);">日盤タブで確認</strong>してから決める</span>
+          <span>気になる日をタップ → <strong style="color:var(--snow);">当日の日盤を参考確認</strong>してから決める</span>
         </div>
       </div>
       <div style="margin-top:9px;padding:7px 10px;background:rgba(100,80,40,.06);border-radius:6px;font-size:.6rem;color:var(--mist);line-height:1.8;">
-        年盤・月盤が揃った月に、線路の日を引越し実行日として設定。日盤の凶は完全無視で大丈夫です。
+        年盤・月盤が揃った月に、線路の日を引越し実行日として設定します。日盤は作業日を整える参考として見ます。
       </div>
     </div>
   </div>
@@ -1603,7 +1603,7 @@ html.font-large .font-btn{font-size:.8rem;}
   <div class="sec-label">引越し月が確定したら</div>
   <div class="sec-title">線路の日に引越しを実行する</div>
   <div style="font-size:.72rem;color:var(--mist);line-height:1.9;margin-bottom:4px;">
-    年盤・月盤が揃ったら、引越し実行日は「線路の日」を選ぶことで、吉方位で得た幸運が長く続きます。日盤の凶は引越しに関係しません。
+    年盤・月盤が揃ったら、引越し実行日は「線路の日」を選ぶことで、吉方位で得た幸運が長く続きます。日盤は当日の作業を整える参考として見ます。
   </div>
   <div class="nichiban-steps">
     <div class="nichiban-step">
@@ -2851,16 +2851,18 @@ function calcAndShowDir() {
           <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;">${rankDesc(monthRank.rank, monthRank.badges)}</div>
         </div>
         <div class="dir-panel" id="dayRankPanel" style="background:rgba(100,80,40,.04);border-style:dashed;">
-          <div class="dir-panel-label" style="color:var(--mist);">日盤</div>
-          <div style="font-size:.65rem;font-weight:700;color:var(--mist);margin:4px 0;">参照しない</div>
-          <div style="font-size:.58rem;color:var(--mist);line-height:1.6;">引越しに日盤は<br>関係しません</div>
+          <div class="dir-panel-label" id="dayRankLabel" style="color:var(--mist);">参考：今日の日盤</div>
+          <div class="dir-panel-rank rank-${dayRank.rank}" id="dayRankValue">${moveDayReferenceLabel(dayRank.rank, isDayKyo)}</div>
+          <div class="dir-panel-badges" style="color:var(--mist);font-size:.58rem;line-height:1.6;" id="dayRankDesc">${moveDayReferenceDesc(dayRank.rank, dayRank.badges, isDayKyo)}</div>
         </div>
       </div>
       <div style="margin-top:8px;padding:8px 10px;background:rgba(100,80,40,.05);border-radius:8px;font-size:.6rem;color:var(--mist);line-height:1.8;">
         <strong style="color:var(--goldlt);">見方：</strong>
         本命星（${STARS[gState.honmei]?.k||''}）・月命星（${STARS[gState.tsukimei]?.k||''}）の吉方位かどうかを判定しています。
         「✦ 本命・月命 吉」が最も取りやすい方位です。
-        年盤は人生の根幹（最優先）、月盤は実行月の状態を示します。<strong style="color:var(--goldlt);">引越しに日盤は関係しません。</strong>
+        年盤は人生の根幹（最優先）、月盤は実行月の状態を示します。<br>
+        <strong style="color:var(--goldlt);">引越し先の方位は、日盤の影響を受けません。</strong><br>
+        （実際の作業日を選ぶ際の参考として、日盤の状態は別途表示します）
       </div>
       ${isKyo ? `
       <div class="kyo-warn">
@@ -2992,6 +2994,18 @@ function rankDesc(rank, badges) {
     });
   }
   return parts.length ? parts.join('・') : '吉方位です';
+}
+
+function moveDayReferenceLabel(rank, isDayKyo) {
+  if (isDayKyo) return '参考：凶の要素あり';
+  if (rank >= 2) return '参考：吉方です';
+  return '参考：凶なし';
+}
+
+function moveDayReferenceDesc(rank, badges, isDayKyo) {
+  if (isDayKyo) return '引越し先の方位判定には含めません。作業日を選ぶ際の注意材料として見ます。';
+  if (rank >= 2) return '引越し先の方位判定には含めません。作業日を選べる場合の参考情報です。';
+  return '引越し先の方位判定には含めません。作業日は現実条件と線路の日を優先して見ます。';
 }
 
 function calcDistance(lat1, lon1, lat2, lon2) {
@@ -3273,34 +3287,22 @@ function showDayDetail(y, m, d) {
     const { items: dKyoItemsDD } = getSharedKyouDirs(dayCenter, gState.honmei, dayBreakDir, gState.tsukimei, 'day');
     const html = makeBanGrid(dayBoardD, dir, dKyoItemsDD, dKyouSetDD, dayRankMapD);
 
-    // 日盤サマリーパネルも更新
+    // 当日の日盤参考パネルだけを更新。年盤・月盤の方位判定表示は維持する。
     const labelEl = document.getElementById('dayRankLabel');
     const valueEl = document.getElementById('dayRankValue');
     const descEl  = document.getElementById('dayRankDesc');
-    if (labelEl) labelEl.textContent = `日盤（${m}/${d}）`;
+    if (labelEl) labelEl.textContent = `参考：${m}/${d}の日盤`;
     if (valueEl) {
-      valueEl.textContent = rankLabel(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
+      valueEl.textContent = moveDayReferenceLabel(finalRank, isDayKyo);
       valueEl.className = `dir-panel-rank rank-${finalRank}`;
     }
-    if (descEl) descEl.textContent = rankDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges);
+    if (descEl) descEl.textContent = moveDayReferenceDesc(finalRank, isDayKyo ? ['⚠凶方位'] : dayRank.badges, isDayKyo);
 
-    // ── グリッドを直接更新（getElementById不要）
-    const allGrids = document.querySelectorAll('.ban-grid');
-    allGrids.forEach(g => { g.style.display = 'none'; });
-
-    // banGridDayを更新
+    // 日盤グリッドは控えめな参考情報として保持し、STEP3の年盤・月盤カードは隠さない。
     let dayGrid = document.getElementById('banGridDay');
     if (dayGrid) {
       dayGrid.innerHTML = html;
-      dayGrid.style.display = 'grid';
-    }
-
-    // タブのactive状態を更新
-    document.querySelectorAll('.ban-tab').forEach(t => t.classList.remove('active'));
-    const dayTab = document.getElementById('banTabDay');
-    if (dayTab) {
-      dayTab.classList.add('active');
-      dayTab.textContent = `日盤（${m}/${d}）`;
+      dayGrid.style.display = 'none';
     }
 
     // STEP3へスクロール
@@ -3312,10 +3314,9 @@ function showDayDetail(y, m, d) {
 
     // フィードバック表示（大きく・明確に）
     const rankColor = finalRank >= 4 ? '#8a2840' : finalRank >= 2 ? '#2a6038' : isDayKyo ? '#b04060' : 'var(--mist)';
-    const rankStr  = finalRank >= 4 ? '✦ 本命・月命 吉'
-                   : finalRank >= 2 ? '○ 吉方'
-                   : isDayKyo      ? '⚠ 凶方位'
-                   : '— 吉凶なし';
+    const rankStr  = finalRank >= 2 ? '参考：当日の日盤は吉方です'
+                   : isDayKyo      ? '参考：当日の日盤に凶の要素があります'
+                   : '参考：当日の日盤は凶なしです';
     const fb = document.getElementById('dayDetailFeedback');
     if (fb) {
       const dayStarData = (typeof STARS !== 'undefined') ? STARS[dayStarN] : null;
@@ -3323,7 +3324,7 @@ function showDayDetail(y, m, d) {
       const shintaiHint = dayStarData?.shintai ? `<div style="font-size:.6rem;color:var(--mist);">🫀 身体：${dayStarData.shintai}　注意：${dayStarData.byoki||''}</div>` : '';
       fb.innerHTML = `
         <div style="font-size:.72rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">
-          ${y}/${m}/${d}（${dow}）の日盤
+          ${y}/${m}/${d}（${dow}）の引越し当日参考
         </div>
         <div style="font-size:1rem;font-weight:800;color:${rankColor};margin-bottom:3px;">
           ${rankStr}
@@ -3331,7 +3332,7 @@ function showDayDetail(y, m, d) {
         ${finalRank >= 2 && dayStarData ? `<div style="font-size:.65rem;color:var(--mist);line-height:1.8;margin-top:4px;">🎨 ${dayStarData.color||''}　🍽 ${dayStarData.food||''}</div>` : ''}
         ${bashoHint}${shintaiHint}
         <div style="font-size:.6rem;color:var(--mist);margin-top:4px;">
-          ↑ 上のSTEP3「日盤タブ」で方位盤を確認できます
+          方位判定は年盤・月盤で行い、この日盤は作業日を選ぶための参考として表示しています。
         </div>`;
       fb.style.display = 'block';
     }
@@ -3848,7 +3849,7 @@ function confirmDestAddr() {
       <div class="nav-modal-sec-title">🧭 引越し方位選びの絶対ルール</div>
       <div class="nav-modal-sec-body">
         <div class="rule-item"><div class="rule-num">①</div><div><strong>年盤と月盤の両方が吉であること</strong><br>引越しは人生の根幹を変える行為のため、最も重い「年盤」と実行月の「月盤」が両方吉の方位・月を選ぶのが大原則です。</div></div>
-        <div class="rule-item"><div class="rule-num">②</div><div><strong>日盤の凶は完全スルーでOK</strong><br>年盤・月盤が揃っていれば、引越し当日の日盤に凶がついていても全く影響しません。日盤はただのノイズです。安心して日程を決めてください。</div></div>
+        <div class="rule-item"><div class="rule-num">②</div><div><strong>方位判定は年盤・月盤が主軸</strong><br>引越し先の方位は日盤で決めません。引越し当日の日盤は、契約日・荷入れ日・作業日を整えるための参考情報として見ます。</div></div>
         <div class="rule-item"><div class="rule-num">③</div><div><strong>土用殺は引越しに関係なし</strong><br>旅行では凶となる土用殺ですが、引越し（定住）では完全に無害です。土用期間中でも吉方位への引越しは問題ありません。</div></div>
         <div class="rule-item"><div class="rule-num">④</div><div><strong>吉のエネルギーは「距離×住んだ時間」</strong><br>遠くへ引越すほど、長く住むほど吉の力は大きくなります。大吉・小吉のランク付けはありません。</div></div>
         <div class="rule-item"><div class="rule-num">⑤</div><div><strong>引越し日は「線路の日」を選ぶ</strong><br>年盤・月盤が揃ったら、日盤で「線路の日」に引越しを実行すると吉が長く続きます。カレンダーで確認できます。</div></div>
