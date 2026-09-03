@@ -140,6 +140,25 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .star-mini-note{font-size:.62rem;color:var(--mist);line-height:1.8;margin-top:7px;}
 .copy-btn{width:100%;background:rgba(100,80,40,.08);border:1px solid rgba(100,80,40,.25);border-radius:8px;padding:11px;font-size:.75rem;color:var(--goldlt);cursor:pointer;font-family:'Noto Serif JP',serif;display:flex;align-items:center;justify-content:center;gap:6px;}
 .copy-btn:active{background:rgba(100,80,40,.16);}
+.material-builder{margin:14px 16px 0;background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,250,240,.82));border:1px solid rgba(196,160,67,.34);border-radius:var(--r);padding:15px;box-shadow:0 10px 26px rgba(100,80,40,.045);}
+.material-theme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:11px 0 12px;}
+.material-theme-btn{appearance:none;border:1px solid rgba(100,80,40,.16);background:rgba(255,255,255,.62);border-radius:10px;padding:9px 10px;text-align:left;font-family:'Noto Serif JP',serif;color:var(--snow);cursor:pointer;min-height:54px;}
+.material-theme-btn.active{background:rgba(196,160,67,.13);border-color:rgba(138,104,32,.46);box-shadow:inset 0 0 0 1px rgba(138,104,32,.1);}
+.material-theme-label{display:block;font-size:.7rem;color:var(--goldlt);font-weight:900;line-height:1.45;}
+.material-theme-note{display:block;font-size:.55rem;color:var(--mist);line-height:1.5;margin-top:2px;}
+.material-field{margin-top:10px;}
+.material-field label{display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:5px;font-weight:900;}
+.material-field textarea{width:100%;min-height:96px;resize:vertical;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.68);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.72rem;line-height:1.8;padding:10px;}
+.material-field textarea[readonly]{background:rgba(100,80,40,.035);}
+.material-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
+.material-build-btn{width:100%;background:linear-gradient(135deg,rgba(138,104,32,.96),rgba(196,160,67,.82));border:1px solid rgba(138,104,32,.4);border-radius:10px;padding:12px;color:#fff;font-family:'Noto Serif JP',serif;font-size:.76rem;font-weight:900;cursor:pointer;}
+.material-output{min-height:180px!important;}
+.material-subbox{margin-top:12px;padding:11px;border-radius:10px;border:1px dashed rgba(138,104,32,.28);background:rgba(100,80,40,.035);}
+.material-subtitle{font-size:.66rem;color:var(--goldlt);font-weight:900;margin-bottom:5px;}
+.material-subtext{font-size:.6rem;color:var(--mist);line-height:1.75;margin-bottom:8px;}
+@media(max-width:390px){.material-theme-grid{grid-template-columns:1fr;}}
+[data-theme="dark"] .material-builder{background:linear-gradient(135deg,rgba(196,160,67,.11),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
+[data-theme="dark"] .material-theme-btn,[data-theme="dark"] .material-field textarea,[data-theme="dark"] .material-subbox{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.2);color:var(--snow);}
 .target-box{background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.58));border:1px solid rgba(196,160,67,.25);border-radius:var(--r);padding:13px;margin-top:10px;}
 .target-title{font-size:.72rem;color:var(--goldlt);font-weight:800;margin-bottom:5px;}
 .target-desc{font-size:.62rem;color:var(--mist);line-height:1.8;margin-bottom:10px;}
@@ -263,6 +282,37 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 </div>
+
+<section class="material-builder" id="aiMaterialBuilder">
+  <div class="ai-section-label">02 / AI MATERIAL</div>
+  <div class="ai-section-title">相談材料を作る</div>
+  <div class="ai-section-text">テーマを選び、今聞きたいことを短く書くと、いつものAIに貼れる相談材料を作れます。</div>
+  <div class="material-theme-grid" id="aiThemeGrid"></div>
+  <div class="material-field">
+    <label for="aiUserNote">今聞きたいこと</label>
+    <textarea id="aiUserNote" placeholder="テーマを選ぶと、書き出しのひな形が入ります。"></textarea>
+  </div>
+  <div class="material-field">
+    <label for="aiBoardInfo">方位盤メモ・日付メモ（任意）</label>
+    <textarea id="aiBoardInfo" placeholder="direction_v2.htmlや旅行・巡礼・引越しナビの方位盤メモを、必要な時だけ貼ってください。"></textarea>
+  </div>
+  <div class="material-actions">
+    <button class="material-build-btn" type="button" onclick="generateAiMaterial()">相談材料を作る</button>
+  </div>
+  <div class="material-field">
+    <label for="aiMaterialOutput">コピーして使う相談材料</label>
+    <textarea class="material-output" id="aiMaterialOutput" readonly>テーマを選んで「相談材料を作る」を押すと、ここに表示されます。</textarea>
+  </div>
+  <button class="copy-btn" id="copyAiMaterialBtn" onclick="copyAiMaterial()"><span>COPY</span> 相談材料をコピー</button>
+  <div class="material-subbox">
+    <div class="material-subtitle">読み方の好みを足したい場合</div>
+    <div class="material-subtext">KITOKUの語り口は、本体の相談材料には入れていません。必要な時だけ、下の一文を別でコピーして足してください。</div>
+    <div class="material-field" style="margin-top:0;">
+      <textarea id="kitokuStylePreference" readonly></textarea>
+    </div>
+    <button class="copy-btn" id="copyKitokuStyleBtn" onclick="copyKitokuStylePreference()"><span>COPY</span> 読み方の好みだけをコピー</button>
+  </div>
+</section>
 
 <section class="ai-section kicker-section" id="dailyExamples">
   <div class="ai-section-label">02 / HOW TO USE</div>
@@ -480,6 +530,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 <div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
 
+<script src="kitoku-ai-material.js?v=20260903phase1"></script>
 <script>
 // ============================================================
 // データ・計算
@@ -556,6 +607,7 @@ function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
 // ============================================================
 let gInfo={};
 let gTargetInfo=null;
+let gAiTheme='today';
 
 function buildStarText(info){
   const seriesKey=[3,6,9].includes(info.h)?'ten':[2,5,8].includes(info.h)?'chi':'jin';
@@ -614,6 +666,103 @@ function updateTargetInfo(){
 // ============================================================
 // UI操作
 // ============================================================
+function getAiThemeKeys(){
+  return ['today','date','travel','pilgrimage','compat','money','color','scent','free','blank'];
+}
+
+function getInitialAiTheme(){
+  try{
+    const params=new URLSearchParams(location.search);
+    const theme=params.get('theme')||'today';
+    return getAiThemeKeys().includes(theme) ? theme : 'today';
+  }catch(e){
+    return 'today';
+  }
+}
+
+function renderAiThemeButtons(){
+  const grid=document.getElementById('aiThemeGrid');
+  if(!grid||typeof getAiThemeMeta!=='function')return;
+  grid.innerHTML=getAiThemeKeys().map(key=>{
+    const meta=getAiThemeMeta(key);
+    return `<button class="material-theme-btn" type="button" data-ai-theme="${key}" onclick="selectAiTheme('${key}')">
+      <span class="material-theme-label">${meta.label}</span>
+      <span class="material-theme-note">${meta.note}</span>
+    </button>`;
+  }).join('');
+}
+
+function selectAiTheme(theme){
+  const safe=getAiThemeKeys().includes(theme)?theme:'today';
+  gAiTheme=safe;
+  document.querySelectorAll('[data-ai-theme]').forEach(btn=>btn.classList.toggle('active',btn.dataset.aiTheme===safe));
+  if(typeof getAiThemeMeta==='function'){
+    const note=document.getElementById('aiUserNote');
+    const meta=getAiThemeMeta(safe);
+    if(note&&!note.value.trim())note.value=meta.placeholder||'';
+  }
+  try{
+    const url=new URL(location.href);
+    url.searchParams.set('theme',safe);
+    history.replaceState(null,'',url.pathname+url.search+url.hash);
+  }catch(e){}
+}
+
+function collectAiStarInfo(){
+  return (gInfo&&gInfo.starText)||document.getElementById('starInfoText')?.textContent||'';
+}
+
+function collectAiTargetInfo(){
+  const targetText=document.getElementById('targetPreview')?.textContent||'';
+  if(!gTargetInfo||/相手の生年月日を入れると/.test(targetText))return '';
+  return targetText;
+}
+
+function collectAiScentInfo(){
+  if(!['color','scent'].includes(gAiTheme))return '';
+  return '色・香りの詳しい処方がある場合は、today.html・scent.htmlの結果や、手持ちの香水・服・小物をここに追加してください。';
+}
+
+function generateAiMaterial(){
+  const output=document.getElementById('aiMaterialOutput');
+  if(!output||typeof buildAiMaterial!=='function')return;
+  const text=buildAiMaterial({
+    theme:gAiTheme,
+    userNote:document.getElementById('aiUserNote')?.value||'',
+    starInfo:collectAiStarInfo(),
+    boardInfo:document.getElementById('aiBoardInfo')?.value||'',
+    targetInfo:collectAiTargetInfo(),
+    scentInfo:collectAiScentInfo(),
+    astroInfo:''
+  });
+  output.value=text;
+  output.focus();
+}
+
+function copyAiMaterial(){
+  const text=document.getElementById('aiMaterialOutput')?.value||'';
+  navigator.clipboard.writeText(text).then(()=>flashButtonById('copyAiMaterialBtn','コピーしました','<span>COPY</span> 相談材料をコピー'));
+}
+
+function copyKitokuStylePreference(){
+  const text=document.getElementById('kitokuStylePreference')?.value||'';
+  navigator.clipboard.writeText(text).then(()=>flashButtonById('copyKitokuStyleBtn','コピーしました','<span>COPY</span> 読み方の好みだけをコピー'));
+}
+
+function flashButtonById(id,msg,origHtml){
+  const btn=document.getElementById(id);
+  if(!btn)return;
+  btn.innerHTML=`<span>OK</span> ${msg}`;
+  setTimeout(()=>{btn.innerHTML=origHtml;},2000);
+}
+
+function initAiMaterialBuilder(){
+  renderAiThemeButtons();
+  const styleBox=document.getElementById('kitokuStylePreference');
+  if(styleBox&&typeof buildKitokuStylePreference==='function')styleBox.value=buildKitokuStylePreference();
+  selectAiTheme(getInitialAiTheme());
+}
+
 function copyStarInfo(){
   const text=gInfo.starText||document.getElementById('starInfoText').textContent;
   navigator.clipboard.writeText(text).then(()=>flashBtn('copy-btn','コピーしました','COPY 星情報だけをコピー（単体使用）'));
@@ -735,6 +884,7 @@ function initAiTreeFocusLinks(){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+  initAiMaterialBuilder();
   initAiTreeLevels();
   initAiAccordions();
   initAiTreeFocusLinks();

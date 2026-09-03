@@ -1,0 +1,158 @@
+(function(global){
+  'use strict';
+
+  const THEMES = {
+    today: {
+      label: '今日の動き方',
+      note: '今日どう過ごすか',
+      prompt: '今日の動き方について相談したいです。',
+      guide: [
+        '今日やること、迷っていること、気をつけたいことを整理してください。',
+        '九星情報と、貼り付けた盤面情報があれば、それを判断材料として使ってください。',
+        '最後に、今日できる小さな一手を具体的に提案してください。'
+      ],
+      placeholder: '今日やること：\n迷っていること：\n気をつけたいこと：'
+    },
+    date: {
+      label: '未来の日付',
+      note: '契約・開始・出発日',
+      prompt: '未来の日付について相談したいです。',
+      guide: [
+        '見たい日付、目的、その日に始めたいことを整理してください。',
+        '盤面メモがある場合は、日盤・月盤・年盤のどれを重視すべきか確認してください。',
+        '日付を変えられる場合と、変えられない場合の両方で見方を提案してください。'
+      ],
+      placeholder: '見たい日付：\n目的（契約・開始・出発・商談など）：\nその日に始めたいこと：\n気になっていること：'
+    },
+    travel: {
+      label: '旅・引越し',
+      note: '目的地と候補日',
+      prompt: '旅・引越しについて相談したいです。',
+      guide: [
+        '目的地、出発地、候補日、移動の目的を整理してください。',
+        '方位盤メモがある場合は、年盤・月盤・日盤の状態を分けて読んでください。',
+        '旅行と引越しでは重視する盤が違うため、相談内容に合わせて確認してください。'
+      ],
+      placeholder: '目的地：\n出発地・現在地：\n候補日：\n目的（旅行・引越し・仮吉方など）：\n気になっていること：'
+    },
+    pilgrimage: {
+      label: '聖地巡礼',
+      note: '出発日と線路の日',
+      prompt: '聖地巡礼について相談したいです。',
+      guide: [
+        '行きたい聖地、出発地、候補日、巡礼の目的を整理してください。',
+        '方位盤メモがある場合は、年盤・月盤・日盤、線路の日の重なりを分けて見てください。',
+        '移動手段や体力面も含めて、無理のない順路を考えてください。'
+      ],
+      placeholder: '行きたい聖地：\n出発地・現在地：\n出発日・候補日：\n巡礼の目的：\n移動手段・使える時間：\n気になっていること：'
+    },
+    compat: {
+      label: '人との関わり',
+      note: '相手の星も使う',
+      prompt: '第三者との関わりについて相談したいです。',
+      guide: [
+        '相手との関係、相談したい場面、困っていること、望む状態を整理してください。',
+        '相手の星情報がある場合は、本人の星情報と混同せず、関係性を見る材料として使ってください。',
+        '言葉の選び方、距離感、タイミングを具体的に提案してください。'
+      ],
+      placeholder: '相手との関係：\n相談したい場面（家族・恋愛・仕事・商談・面談など）：\n困っていること：\nどうなりたいか：'
+    },
+    money: {
+      label: 'お金・仕事',
+      note: '判断を整える',
+      prompt: 'お金・仕事の判断について相談したいです。',
+      guide: [
+        '相談内容、迷っている選択肢、急ぎ具合、不安や焦りを整理してください。',
+        '売買や正解を断定せず、判断を整えるための観点を出してください。',
+        '今日できる確認、待つべきこと、人に相談すべきことを分けてください。'
+      ],
+      placeholder: '相談したいこと：\n今迷っている選択肢：\n急いでいるか：\n怖さ・焦り・欲が出ている点：'
+    },
+    color: {
+      label: '色で整える',
+      note: '服・持ち物・印象',
+      prompt: '色で整える方法について相談したいです。',
+      guide: [
+        '今日の予定、なりたい印象、手持ちの服や小物を整理してください。',
+        '九星情報と今日の盤面情報があれば、色の役割を判断材料として使ってください。',
+        '押し付けではなく、選びやすい候補を複数出してください。'
+      ],
+      placeholder: '今日の予定：\nなりたい印象：\n手持ちの服・小物：\n避けたい色・迷っている色：'
+    },
+    scent: {
+      label: '香りで整える',
+      note: '香水・花・空間',
+      prompt: '香りで整える方法について相談したいです。',
+      guide: [
+        '相談したい場面、なりたい印象、手持ちの香り、苦手な香りを整理してください。',
+        'High（香水・勝負）、Mid（ボディケア・日常）、Low（空間・浄化）の使い分けも提案してください。',
+        '商品名を出す場合は、購入前に公式情報を確認する前提で提案してください。'
+      ],
+      placeholder: '相談したい場面（仕事・会食・休息・勝負どころなど）：\nなりたい印象・整えたい気分：\n手持ちの香水・お香・ボディケア：\n苦手な香り・予算・試したいブランド：'
+    },
+    free: {
+      label: '自由相談',
+      note: 'そのまま聞く',
+      prompt: '自由に相談したいです。',
+      guide: [
+        '相談内容、今の状況、迷っていることを整理してください。',
+        '九星情報や盤面情報があれば、必要な範囲で判断材料として使ってください。',
+        '結論を急がず、次の一手を具体的に提案してください。'
+      ],
+      placeholder: '相談内容：\n今の状況：\n迷っていること：'
+    },
+    blank: {
+      label: '白紙で話す',
+      note: '音声入力・フリートーク',
+      prompt: '白紙で話したいです。',
+      guide: [
+        '書かれている内容を急いで整理しすぎず、まず受け止めてください。',
+        '必要であれば、何を決めたいのか、何がつらいのか、どこから話すと楽かを質問してください。',
+        '九星情報は背景として扱い、本人の言葉を優先してください。'
+      ],
+      placeholder: ''
+    }
+  };
+
+  function normalizeText(value){
+    return String(value || '').trim();
+  }
+
+  function section(title, body){
+    const text = normalizeText(body);
+    return text ? `【${title}】\n${text}` : '';
+  }
+
+  function getAiThemeMeta(theme){
+    return THEMES[theme] || THEMES.free;
+  }
+
+  function buildAiMaterial(options){
+    const input = options || {};
+    const theme = THEMES[input.theme] ? input.theme : 'free';
+    const meta = THEMES[theme];
+    const lines = [
+      meta.prompt,
+      '',
+      section('相談テーマ', `${meta.label}（${meta.note}）`),
+      section('私の星情報', input.starInfo),
+      section('盤面・日付・方位のメモ', input.boardInfo),
+      section('相手の情報', input.targetInfo),
+      section('色・香りの材料', input.scentInfo),
+      section('64象意・自己理解の材料', input.astroInfo),
+      section('私が今書いたこと', input.userNote),
+      section('見てほしいこと', meta.guide.map((g, i) => `${i + 1}. ${g}`).join('\n'))
+    ].filter(Boolean);
+
+    return lines.join('\n\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  function buildKitokuStylePreference(){
+    return '断定しすぎず、吉凶で縛らず、私が自分で選べるように材料を整理してください。凶方位や不安な要素は、罰ではなく調整のヒントとして扱ってください。';
+  }
+
+  global.KITOKU_AI_THEMES = THEMES;
+  global.getAiThemeMeta = getAiThemeMeta;
+  global.buildAiMaterial = buildAiMaterial;
+  global.buildKitokuStylePreference = buildKitokuStylePreference;
+})(window);
