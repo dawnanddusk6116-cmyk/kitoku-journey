@@ -4504,13 +4504,44 @@ function renderEhouOkiNav(){
 //   ② KITOKU_GMAP_CONFIG.apiKey の 'YOUR_GOOGLE_MAPS_API_KEY' を本物のキーに変更
 //   （マップIDは設定済み。Leafletに戻すときは①を 'leaflet' に戻すだけ）
 // ══════════════════════════════════════════════════════
-const KITOKU_MAP_PROVIDER = 'google'; // ← 'google' に変えるとGoogle Maps稼働
+let KITOKU_MAP_PROVIDER = 'google'; // デフォルト値。Supabase取得失敗時は従来通りGoogle Mapsで動作
 const KITOKU_GMAP_CONFIG = {
   // Google Maps用設定。APIキーだけ将軍が手元で差し替える（YOUR_... を本物のキーに）
   apiKey: 'AIzaSyBtIQR65LBqDb5m0epD7o14N_yg-DDsCq0',
   mapId: '158e22aedaec303714816f1b',          // 通常地図用のマップID（ベクター）
   mapIdFullscreen: '158e22aedaec3037bccbcbc0' // フルスクリーン用のマップID（ベクター）
 };
+
+function kitokuCreateSupabaseClient(){
+  if(!window.supabase || !window.supabase.createClient) return null;
+  if(typeof KITOKU_SUPABASE_URL==='undefined' || typeof KITOKU_SUPABASE_KEY==='undefined') return null;
+  return window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY, {
+    auth: {
+      detectSessionInUrl: true,
+      persistSession: true,
+      autoRefreshToken: true,
+      flowType: 'pkce'
+    }
+  });
+}
+
+async function loadRemoteMapProvider(){
+  try{
+    if(!kitokuSB) kitokuSB = kitokuCreateSupabaseClient();
+    if(!kitokuSB) return;
+    const { data, error } = await kitokuSB
+      .from('app_config')
+      .select('value')
+      .eq('key', 'map_provider')
+      .maybeSingle();
+    if(!error && data && (data.value === 'google' || data.value === 'leaflet')){
+      KITOKU_MAP_PROVIDER = data.value;
+      KitokuMap.provider = KITOKU_MAP_PROVIDER;
+    }
+  }catch(e){
+    // 取得失敗時は、デフォルト値（'google'）のまま処理を続ける
+  }
+}
 
 // Google Maps JS を動的に読み込む（providerがgoogleのときのみ・1回だけ）
 let _gmapsLoadPromise = null;
@@ -6052,7 +6083,7 @@ function onFsMapTap(e){
 
 // ── 起動（state._initDone を待って位置復元） ──────────
 document.addEventListener('DOMContentLoaded',()=>{
-  initMapSection();
+  loadRemoteMapProvider().then(()=>initMapSection()).finally(()=>{
   function restoreMapWhenReady(){
     if(!state._initDone){setTimeout(restoreMapWhenReady,50);return;}
     try{
@@ -6064,6 +6095,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }catch(e){}
   }
   restoreMapWhenReady();
+  });
 });
 </script>
 <!-- ── 方位詳細ポップアップ (premium) ── -->
@@ -6514,14 +6546,12 @@ async function kitokuInitAuth(){
     if(p) p.style.display = 'none';
     return;
   }
-  kitokuSB = window.supabase.createClient(KITOKU_SUPABASE_URL, KITOKU_SUPABASE_KEY, {
-    auth: {
-      detectSessionInUrl: true,   // URL中のトークンを自動でセッション化
-      persistSession: true,        // ログイン状態をブラウザに保持
-      autoRefreshToken: true,
-      flowType: 'pkce'             // ?code= 形式にも対応
-    }
-  });
+  if(!kitokuSB) kitokuSB = kitokuCreateSupabaseClient();
+  if(!kitokuSB){
+    var p2 = document.getElementById('authPanel');
+    if(p2) p2.style.display = 'none';
+    return;
+  }
 
   // ?token=...&type=magiclink 形式（verify型リンク）で戻ってきた場合の明示処理
   try{
