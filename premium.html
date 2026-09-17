@@ -531,31 +531,6 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
   </div>
 
   <section id="premiumContent" style="display:none;">
-    <details class="inspiration-card">
-      <summary>
-        <div class="inspiration-kicker">
-          <span>TODAY'S INSPIRATION</span>
-          <span class="premium-badge">Premium</span>
-        </div>
-        <div class="inspiration-line inspiration-summary">
-          今日の気に、ひとつだけ<br>言葉を灯す。
-        </div>
-      </summary>
-      <div class="inspiration-detail">
-        <div class="inspiration-body">
-          東洋の先人の教えから、今日の九星・日支・あなたの星情報に合う一言を選びます。<br>
-          見出し・教えの要点・出典を、琥珀色の言葉で届けます。
-        </div>
-        <div class="inspiration-actions">
-          <button class="inspiration-btn" type="button" id="genInspirationBtn" onclick="generateTodayInspiration()">今日の一言を生成</button>
-          <button class="inspiration-btn" type="button" onclick="scrollToAiChat()">相談材料を作る</button>
-        </div>
-        <div class="inspiration-note">
-          1日1回生成し、同じ日は保存して再表示します。接続済みの156本の教えから参照します。
-        </div>
-      </div>
-    </details>
-
     <div style="font-size:.58rem;color:var(--gold);letter-spacing:.12em;margin:16px 4px 8px;">方位で動く</div>
 
     <details class="panel panel-details" id="compassPanel">
@@ -2797,10 +2772,6 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 
-// ── TODAY'S INSPIRATION ──
-function scrollToAiChat(){
-  handoffToAiPage();
-}
 
 const TOOL_HELP = {
   rename: {
@@ -2818,10 +2789,6 @@ const TOOL_HELP = {
   self: {
     title: '自分の情報はこんな時に使えます',
     body: '相談材料、日程判断、方位判断、姓名鑑定の土台になる情報です。AIやメモで使いたい時はここからコピーできます。'
-  },
-  inspiration: {
-    title: '今日のインスピレーションはこんな時に使えます',
-    body: '毎朝のひとこと、今日の問い、小さな行動を受け取りたい時の入口です。正式接続後は、今日の九星・日支・あなたの星情報から1日1回生成する予定です。'
   }
 };
 
@@ -2836,128 +2803,6 @@ function closeToolHelp(){
   const modal=document.getElementById('toolHelpModal');
   if(modal) modal.style.display='none';
 }
-
-async function generateTodayInspiration(){
-  const btn=document.getElementById('genInspirationBtn');
-  const today=new Date();
-  const dateKey='kitoku-insp-'+today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-
-  // キャッシュ確認
-  const cached=localStorage.getItem(dateKey);
-  if(cached){
-    showInspiration(JSON.parse(cached));
-    return;
-  }
-
-  if(btn){ btn.disabled=true; btn.textContent='生成中…'; }
-
-  // 今日のデータ取得
-  const info=state.info||{};
-  const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
-  let boardInfo='';
-  try{
-    const dc=typeof centerForDate==='function'?centerForDate():null;
-    if(dc&&typeof buildDirData==='function'){
-      const dd=buildDirData(dc,['N','NE','E','SE','S','SW','W','NW']);
-      const kichi=Object.entries(dd).filter(([k,v])=>v.rank>=2).map(([k])=>k).join('・');
-      boardInfo=`今日の中宮：${dc}星　吉方位：${kichi}`;
-    }
-  }catch(e){}
-
-  const honmeiName=typeof STARS!=='undefined'?STARS[info.honmei]?.j||'':info.honmeiName||'';
-  const teachingCorpus = (window.KITOKU_ORIENTAL_TEACHINGS || '').trim();
-  const prompt=`あなたはKITOKUの気学先生です。
-今日（${y}年${m}月${d}日）の気と、ユーザーの星情報をもとに、今日の格言を選んでください。
-
-【ユーザーの星情報】
-本命星：${honmeiName}
-${boardInfo}
-
-【今日の格言の選び方】
-・今日の格言は、東洋の先人の教え156本から、今日の九星・方位・運気に最もふさわしい1本を選んで引用する
-・教え本文が渡されている場合は、必ずその中から選ぶ
-・教え本文が未接続の場合は、創作した出典を断定せず、一般的な東洋思想・禅語・実語教・童子教の範囲で、出典を「東洋の教えより」と控えめにする
-・引用形式は「見出し」「教えの要点」「出典」の3点を含める
-・琥珀色の言葉で、短く、静かに、押しつけずに届ける
-・脅しや断定ではなく、今日を整える一言にする
-
-【東洋の先人の教え156本】
-${teachingCorpus || '※ 現在、156本の本文データは未接続です。接続後はここにVol.01〜Vol.156の全文が入ります。'}
-
-【期待する出力例】
-✦ 今日の一言
-Vol.53「啐啄同時」
-卵が内から叩く前に
-外から割ってはならない。
-待つことが深い愛です。
-─ 禅語より
-
-【生成ルール】
-・JSONのみ返す（前後に余分なテキスト不要）
-・以下の形式で：
-{"title":"Vol番号と見出し","quote":"教えの要点（2〜4行）","source":"出典","message":"今日のあなたへの短い受け取り方（60字以内）","action":"今日の小さな一歩（30字以内）"}
-・Y理論（全肯定）で。吉凶で脅さない。
-・「特定の先生名」「気学」は使わない`;
-
-  try{
-    if(location.protocol==='file:'){
-      throw new Error('ローカルファイルではAI送信できません。premium.html を正式サイトにアップロードして、https://journey6112.jp/premium.html から開いてください。');
-    }
-    const res=await kitokuFetchClaude({prompt:prompt}, 'kigaku_quote');
-    const raw=await res.text();
-    if(res.status===402){
-      throw new Error(KITOKU_PREMIUM_MSG);
-    }
-    if(!res.ok){
-      throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
-    }
-    let data;
-    try{
-      data=JSON.parse(raw);
-    }catch(parseError){
-      throw new Error('APIの返答がJSONではありません: '+raw.slice(0,120));
-    }
-    const text=data.reply||data.text||data.content?.[0]?.text||'{}';
-    const clean=text.replace(/```json|```/g,'').trim();
-    const obj=JSON.parse(clean);
-    localStorage.setItem(dateKey,JSON.stringify(obj));
-    showInspiration(obj);
-  }catch(e){
-    showInspiration({quote:'今日の気に、ひとつだけ言葉を灯す。',message:'データの取得に失敗しました。もう一度お試しください。',action:''});
-  }
-  if(btn){ btn.disabled=false; btn.textContent='今日の一言を生成'; }
-}
-
-function showInspirationPreparing(){
-  showInspiration({
-    title:'準備中',
-    quote:'今日の一言は準備中です。',
-    source:'KITOKUより',
-    message:'正式接続後、東洋の先人の教えから今日の一言を選びます。',
-    action:'いまは相談材料を作れます'
-  });
-}
-
-function showInspiration(obj){
-  const body=document.querySelector('.inspiration-body');
-  if(!body) return;
-  body.innerHTML=`
-    ${obj.title?`<div style="font-size:.64rem;letter-spacing:.12em;font-weight:700;line-height:1.5;margin-bottom:8px;color:rgba(92,116,79,.9);">${obj.title}</div>`:''}
-    <div style="font-size:.9rem;font-weight:700;line-height:1.75;margin-bottom:10px;color:var(--goldlt);white-space:pre-line;">${obj.quote||''}</div>
-    ${obj.source?`<div style="font-size:.62rem;line-height:1.6;margin:-2px 0 10px;color:var(--mist);">─ ${obj.source}</div>`:''}
-    <div style="font-size:.68rem;line-height:1.85;color:var(--snow);margin-bottom:8px;">${obj.message||''}</div>
-    ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(93,128,96,.08);border:1px solid rgba(93,128,96,.14);border-radius:8px;color:var(--goldlt);">✦ 今日の一歩：${obj.action}</div>`:''}
-  `;
-}
-
-// ページロード時にキャッシュ確認
-document.addEventListener('DOMContentLoaded',function(){
-  const today=new Date();
-  const dateKey='kitoku-insp-'+today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-  const cached=localStorage.getItem(dateKey);
-  if(cached) try{ showInspiration(JSON.parse(cached)); }catch(e){}
-});
-
 
 // ── 改名・命名 一括採点機能 ──
 const STROKE={

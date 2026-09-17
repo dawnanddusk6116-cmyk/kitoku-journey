@@ -12,6 +12,7 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="kitoku-teachings.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -643,6 +644,15 @@ body{
   font-weight:900;
 }
 .daily-compass-quick:active{transform:scale(.99);}
+.top-inspiration-card{display:block;margin:14px 0 18px;padding:16px;border:1px solid rgba(93,128,96,.22);border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(246,250,244,.9));box-shadow:0 8px 22px rgba(60,45,20,.05);}
+.top-inspiration-kicker{font-family:'Cormorant Garamond',serif;font-size:.66rem;letter-spacing:.16em;color:rgba(92,116,79,.95);font-weight:600;text-transform:uppercase;margin-bottom:10px;}
+.top-inspiration-title{font-size:1.05rem;line-height:1.75;font-weight:700;color:var(--snow);margin-bottom:9px;}
+.top-inspiration-body{font-size:.68rem;line-height:1.85;color:var(--mist);}
+.top-inspiration-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.top-inspiration-btn{border:1px solid rgba(138,104,32,.3);background:rgba(255,255,255,.88);border-radius:999px;color:var(--goldlt);font-size:.64rem;font-weight:700;padding:8px 13px;font-family:inherit;cursor:pointer;}
+.top-inspiration-btn:disabled{opacity:.58;cursor:wait;}
+.top-inspiration-link{display:inline-flex;align-items:center;text-decoration:none;}
+.top-inspiration-result{margin-top:12px;padding:12px;border:1px solid rgba(93,128,96,.16);border-radius:10px;background:rgba(255,255,255,.65);}
 .home-order-wrap{
   margin:0 0 12px;
   border:1px solid rgba(138,104,32,.18);
@@ -1164,6 +1174,18 @@ body{
   <span class="daily-compass-arrow">›</span>
 </a>
 
+<section class="top-inspiration-card" aria-label="今日の一言">
+  <div class="top-inspiration-kicker">TODAY'S INSPIRATION</div>
+  <div class="top-inspiration-title">今日の気に、ひとつだけ<br>言葉を灯す。</div>
+  <div class="top-inspiration-body" id="topInspirationBody">
+    東洋の先人の教えから、今日のあなたに添える一言を選びます。
+  </div>
+  <div class="top-inspiration-actions">
+    <button class="top-inspiration-btn" type="button" id="topGenInspirationBtn" onclick="generateTopInspiration()">今日の一言を生成</button>
+    <a class="top-inspiration-btn top-inspiration-link" href="ai.html?theme=today">AIで整える</a>
+  </div>
+</section>
+
 <div class="home-order-wrap" id="homeOrderWrap">
   <button class="home-order-toggle" type="button" onclick="toggleHomeOrderEditor()"><span id="homeOrderToggleText">ホーム画面を並び替える</span><span id="homeOrderToggleIcon">▾</span></button>
   <div class="home-order-editor" id="homeOrderEditor">
@@ -1548,6 +1570,110 @@ function renderBirthBar(){
   }catch(e){}
 }
 renderBirthBar();
+
+function getTopInspirationProfile(){
+  let saved='';
+  try{
+    const keys=['kitoku-ai-star-info','kitoku-star-info','kitoku-star-text','kitoku-self-star-text'];
+    for(const key of keys){
+      const v=localStorage.getItem(key);
+      if(v&&/本命|月命|傾斜|九星/.test(v)){saved=v;break;}
+    }
+  }catch(e){}
+  if(saved)return saved;
+  let birth='',gender='';
+  try{
+    birth=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'';
+    gender=localStorage.getItem('kitoku-gender')||'';
+  }catch(e){}
+  const genderText=gender==='female'?'女性':(gender==='male'?'男性':gender);
+  if(birth)return '登録済み情報：生年月日 '+birth+(genderText?' / 性別 '+genderText:'');
+  return '星情報は未登録です。';
+}
+
+async function topFetchClaude(payload,feature){
+  const body={};
+  for(const k in payload){if(Object.prototype.hasOwnProperty.call(payload,k))body[k]=payload[k];}
+  body.feature=feature;
+  return await fetch('/api/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+}
+
+async function generateTopInspiration(){
+  const btn=document.getElementById('topGenInspirationBtn');
+  const today=new Date();
+  const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
+  const dateKey='kitoku-insp-'+y+'-'+m+'-'+d;
+  try{
+    const cached=localStorage.getItem(dateKey);
+    if(cached){showTopInspiration(JSON.parse(cached));return;}
+  }catch(e){}
+  if(btn){btn.disabled=true;btn.textContent='生成中…';}
+  const profile=getTopInspirationProfile();
+  const teachingCorpus=(window.KITOKU_ORIENTAL_TEACHINGS||'').trim();
+  const prompt=`あなたはKITOKUの気学先生です。
+今日（${y}年${m}月${d}日）に、ユーザーへ短い一言を届けてください。
+
+【ユーザーの登録済み情報】
+${profile}
+
+【今日の格言の選び方】
+・今日の格言は、東洋の先人の教え156本から、今日のユーザーにふさわしい1本を選んで引用する
+・教え本文が渡されている場合は、必ずその中から選ぶ
+・教え本文が未接続の場合は、創作した出典を断定せず、出典を「東洋の教えより」と控えめにする
+・引用形式は「見出し」「教えの要点」「出典」の3点を含める
+・短く、静かに、押しつけずに届ける
+・脅しや断定ではなく、今日を整える一言にする
+
+【東洋の先人の教え156本】
+${teachingCorpus||'※ 現在、156本の本文データは未接続です。'}
+
+【生成ルール】
+・JSONのみ返す（前後に余分なテキスト不要）
+・以下の形式で：
+{"title":"Vol番号と見出し","quote":"教えの要点（2〜4行）","source":"出典","message":"今日のあなたへの短い受け取り方（60字以内）","action":"今日の小さな一歩（30字以内）"}
+・Y理論（全肯定）で。吉凶で脅さない。
+・特定の先生名は使わない`;
+  try{
+    if(location.protocol==='file:')throw new Error('ローカルファイルではAI送信できません。');
+    const res=await topFetchClaude({prompt:prompt},'kigaku_quote');
+    const raw=await res.text();
+    if(!res.ok)throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
+    const data=JSON.parse(raw);
+    const text=data.reply||data.text||(data.content&&data.content[0]&&data.content[0].text)||'{}';
+    const obj=JSON.parse(String(text).replace(/```json|```/g,'').trim());
+    try{localStorage.setItem(dateKey,JSON.stringify(obj));}catch(e){}
+    showTopInspiration(obj);
+  }catch(e){
+    showTopInspiration({title:'今日の一言',quote:'今日の気に、ひとつだけ言葉を灯す。',source:'KITOKUより',message:'生成に失敗しました。接続環境を確認して、もう一度お試しください。',action:''});
+  }
+  if(btn){btn.disabled=false;btn.textContent='今日の一言を生成';}
+}
+
+function showTopInspiration(obj){
+  const body=document.getElementById('topInspirationBody');
+  if(!body)return;
+  body.innerHTML=`
+    <div class="top-inspiration-result">
+      ${obj.title?`<div style="font-size:.62rem;letter-spacing:.12em;font-weight:700;line-height:1.5;margin-bottom:8px;color:rgba(92,116,79,.95);">${obj.title}</div>`:''}
+      <div style="font-size:.9rem;font-weight:700;line-height:1.8;margin-bottom:9px;color:var(--goldlt);white-space:pre-line;">${obj.quote||''}</div>
+      ${obj.source?`<div style="font-size:.62rem;line-height:1.6;margin:-2px 0 9px;color:var(--mist);">─ ${obj.source}</div>`:''}
+      <div style="font-size:.68rem;line-height:1.85;color:var(--mist);margin-bottom:8px;">${obj.message||''}</div>
+      ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(93,128,96,.08);border:1px solid rgba(93,128,96,.14);border-radius:8px;color:var(--goldlt);">✦ 今日の一歩：${obj.action}</div>`:''}
+    </div>`;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const today=new Date();
+  const dateKey='kitoku-insp-'+today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  try{
+    const cached=localStorage.getItem(dateKey);
+    if(cached)showTopInspiration(JSON.parse(cached));
+  }catch(e){}
+});
 
 const HOME_ORDER_KEY='kitoku-top-home-order-v1';
 const HOME_ORDER_DEFAULT=['start','purpose','main','my','academy','tools'];
