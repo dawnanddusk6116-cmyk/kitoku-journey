@@ -839,104 +839,14 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
       </div>
     </details>
 
-    <div class="panel" id="aiChatPanel">
-      <div class="panel-title">⑥ 相談材料を作る</div>
-      <div class="premium-simple-flow">
-        <div><strong>1</strong><span>テーマを選ぶ</span></div>
-        <div><strong>2</strong><span>短く書く</span></div>
-        <div><strong>3</strong><span>コピーして使う</span></div>
-      </div>
+    <div class="panel" id="aiHandoffPanel">
+      <div class="panel-title">⑥ AIに相談する</div>
       <div style="font-size:.62rem;color:var(--mist);margin-bottom:10px;line-height:1.8;">
-        ここではAIに送信せず、いつものAIに貼れる相談材料を作ります。<br>
-        迷ったら「自由相談」を押して、いつもの言葉で入力してください。日付・移動・相手が関わる時だけ、方位盤メモや相手の星情報を補足します。
+        今の方位盤・星情報を引き継いで、いつものAIに貼れる相談材料を作ります。
       </div>
-
-      <details class="compact-consult" id="consultOptions" open>
-        <summary>
-          <span>
-            <span class="compact-consult-title">相談材料のもとを書く</span>
-            <span class="compact-consult-note">テーマを選ぶか、そのまま入力できます</span>
-          </span>
-        </summary>
-        <div class="compact-consult-body">
-
-      <details class="mini-accordion">
-        <summary>相談材料に自動で入る情報</summary>
-        <div class="mini-accordion-body" id="aiContextSummary">
-          読み込み中...
-        </div>
-      </details>
-      <div id="lifeReadingBanner" style="display:none;margin-bottom:10px;padding:10px 12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.25);border-radius:10px;">
-        <div style="font-size:.6rem;color:var(--goldlt);font-weight:700;margin-bottom:4px;">✦ 姓名鑑定の結果を読み込みました</div>
-        <div id="lifeReadingName" style="font-size:.65rem;color:var(--mist);line-height:1.7;"></div>
-        <button type="button" onclick="clearLifeReadingContext()" style="margin-top:8px;width:100%;border:1px solid rgba(138,104,32,.28);background:rgba(255,255,255,.72);border-radius:999px;padding:8px 12px;color:var(--goldlt);font-size:.62rem;font-weight:800;">自分の相談に戻す</button>
-        <div style="margin-top:5px;font-size:.54rem;color:var(--mist);line-height:1.6;">読み込んだ姓名鑑定だけを解除して、あなた本人の九星情報モードに戻します。</div>
-      </div>
-
-      <details class="mini-accordion">
-        <summary>うまく使うコツ</summary>
-        <div class="mini-accordion-body">
-          迷ったら「自由相談」を押して、一文だけ書けば大丈夫です。<br>
-          日付・契約・移動を聞く時だけ、下の方位盤でその日を出して「方位盤メモ」を補足します。<br>
-          相手がいる相談だけ、下の「相手の星を確認する」で調べて補足します。
-        </div>
-      </details>
-
-      <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;">相談テーマ（迷ったら自由相談）</div>
-      <div class="topic-grid">
-        <button class="topic-btn" onclick="insertConsultTemplate('today')">今日の動き方<span>今日どう過ごすか</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('date')">未来の日付<span>契約・開始・出発日</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('travel')">旅・引越し<span>目的地と候補日</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimage')">聖地巡礼<span>出発日と線路の日</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('pilgrimageRoute')">巡礼ルート相談<span>回る順番と移動手段</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('compat')">人との関わり<span>相手の星も使う</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('money')">お金・仕事<span>判断を整える</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('photo')">写真で相談<span>香水・服・持ち物</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('scent')">香りで整える<span>香水・花・色</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('free')">自由相談<span>そのまま聞く</span></button>
-        <button class="topic-btn" onclick="insertConsultTemplate('blank')">白紙で話す<span>音声入力・フリートーク</span></button>
-      </div>
-
-      <details class="mini-accordion">
-        <summary>香りの参考リンク</summary>
-        <div class="mini-accordion-body">
-          香り・色・場面を相談したあと、試す場所を探すための入口です。商品名・価格・在庫は変わるため、購入前に公式ページで確認してください。
-          <div class="scent-link-grid">
-            <a class="scent-link main" href="https://px.a8.net/svt/ejp?a8mat=4B3MEQ+49LUUQ+4K74+5YRHE" target="_blank" rel="nofollow sponsored noopener">カラリアで探す<span>香りを試す</span></a>
-            <a class="scent-link" href="https://www.celes-perfume.com/" target="_blank" rel="noopener">Celesで少量を探す<span>参考リンク</span></a>
-            <a class="scent-link wide" href="https://coen-fragrance.com/" target="_blank" rel="nofollow sponsored noopener">Coenで王道ブランドを少量から探す<span>参考リンク</span></a>
-            <a class="scent-link" href="https://www.aoyamaflowermarket.com/" target="_blank" rel="noopener">青山フラワー<span>花の香り</span></a>
-            <a class="scent-link" href="https://www.fromcocoro.com/kaori/" target="_blank" rel="noopener">From COCORO<span>和の香り</span></a>
-            <a class="scent-link" href="https://noseshop.jp/" target="_blank" rel="noopener">NOSE SHOP<span>個性派</span></a>
-          </div>
-          <div class="scent-note">リンクは参考入口です。最終的な購入判断は、公式ページで確認してください。</div>
-        </div>
-      </details>
-
-      <div style="margin-bottom:12px;padding:10px 11px;border:1px dashed rgba(138,104,32,.28);border-radius:10px;background:rgba(100,80,40,.035);">
-        <div style="font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;font-weight:800;">読み方の好みを足したい場合</div>
-        <div style="font-size:.58rem;color:var(--mist);line-height:1.75;margin-bottom:8px;">KITOKUの語り口は、本体の相談材料には入れていません。必要な時だけ、下の一文を別でコピーして足してください。</div>
-        <textarea id="premiumStylePreference" readonly style="width:100%;min-height:72px;border:1px solid var(--rim);border-radius:9px;background:rgba(255,255,255,.64);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.66rem;line-height:1.75;padding:9px;"></textarea>
-        <button class="copy-btn" id="copyPremiumStyleBtn" onclick="copyPremiumStylePreference()">📋 読み方の好みだけをコピー</button>
-      </div>
-
-      <div class="chat-composer">
-        <textarea id="chatInput" placeholder="例：今日は何を優先すると良いですか？ / この日程で動いて大丈夫ですか？"
-          oninput="autoResizeChatInput()"
-          rows="5"></textarea>
-        <div class="chat-actions">
-          <button class="chat-action-btn send" onclick="sendChat()" aria-label="相談材料を作る" title="相談材料を作る">作る</button>
-        </div>
-      </div>
-      <div style="font-size:.55rem;color:var(--mist);margin-top:6px;opacity:.78;line-height:1.7;">短い文章で大丈夫です。写真相談の場合は、作った材料をコピーしたあと、使うAI側に写真も一緒に添付してください。</div>
-
-      <div style="margin-top:10px;">
-        <label for="premiumAiMaterialOutput" style="display:block;font-size:.58rem;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;font-weight:800;">コピーして使う相談材料</label>
-        <textarea id="premiumAiMaterialOutput" readonly style="width:100%;min-height:180px;border:1px solid var(--rim);border-radius:10px;background:rgba(255,255,255,.72);color:var(--snow);font-family:'Noto Serif JP',serif;font-size:.68rem;line-height:1.8;padding:11px;">テーマを選んで「作る」を押すと、ここに相談材料が表示されます。</textarea>
-        <button class="copy-btn" id="copyPremiumAiMaterialBtn" onclick="copyPremiumAiMaterial()">📋 相談材料をコピー</button>
-      </div>
-        </div>
-      </details>
+      <button class="chat-action-btn send" type="button" onclick="handoffToAiPage()" style="width:100%;min-height:44px;border-radius:10px;">
+        AIで相談材料を作る
+      </button>
     </div>
 
 
@@ -2642,6 +2552,35 @@ function buildPremiumAiMaterialContext(){
   };
 }
 
+function mapPremiumThemeToAiTheme(type){
+  const key=normalizeConsultTypeForMaterial(type||state.consultType||'free');
+  const map={
+    today:'today',
+    date:'date',
+    travel:'travel',
+    pilgrimage:'pilgrimage',
+    pilgrimageRoute:'pilgrimageRoute',
+    person:'compat',
+    compat:'compat',
+    money:'money',
+    scent:'scent',
+    photo:'photo',
+    free:'free',
+    blank:'blank'
+  };
+  return map[key]||'free';
+}
+
+function handoffToAiPage(){
+  let theme=mapPremiumThemeToAiTheme(state.consultType);
+  try{
+    const ctx=buildPremiumAiMaterialContext();
+    theme=mapPremiumThemeToAiTheme(ctx.theme||state.consultType);
+    localStorage.setItem('kitoku-ai-board-draft',JSON.stringify(Object.assign({},ctx,{theme,savedAt:Date.now()})));
+  }catch(e){}
+  window.location.href=theme?`ai.html?theme=${encodeURIComponent(theme)}`:'ai.html';
+}
+
 function sendChatBase() {
   generatePremiumAiMaterial();
 }
@@ -2860,14 +2799,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // ── TODAY'S INSPIRATION ──
 function scrollToAiChat(){
-  const el=document.getElementById('aiChatPanel');
-  const details=document.getElementById('consultOptions');
-  if(details) details.open=true;
-  if(el) el.scrollIntoView({behavior:'smooth'});
-  setTimeout(()=>{
-    const input=document.getElementById('chatInput');
-    if(input) input.focus({preventScroll:true});
-  },260);
+  handoffToAiPage();
 }
 
 const TOOL_HELP = {

@@ -612,6 +612,7 @@ function calcDokai(h,t){const Q=pal(t,h);return sat(10-Q,h);}
 let gInfo={};
 let gTargetInfo=null;
 let gAiTheme='today';
+let gAiHandoff=null;
 
 function buildStarText(info){
   const seriesKey=[3,6,9].includes(info.h)?'ten':[2,5,8].includes(info.h)?'chi':'jin';
@@ -671,7 +672,7 @@ function updateTargetInfo(){
 // UI操作
 // ============================================================
 function getAiThemeKeys(){
-  return ['today','date','travel','pilgrimage','compat','money','color','scent','naming','free','blank'];
+  return ['today','date','travel','pilgrimage','pilgrimageRoute','compat','money','color','scent','photo','naming','free','blank'];
 }
 
 function getInitialAiTheme(){
@@ -781,18 +782,45 @@ function updateLifeReadingNotice(){
 }
 
 function collectAiStarInfo(){
-  return (gInfo&&gInfo.starText)||document.getElementById('starInfoText')?.textContent||'';
+  return (gAiHandoff&&gAiHandoff.starInfo)||(gInfo&&gInfo.starText)||document.getElementById('starInfoText')?.textContent||'';
 }
 
 function collectAiTargetInfo(){
+  if(gAiHandoff&&gAiHandoff.targetInfo)return gAiHandoff.targetInfo;
   const targetText=document.getElementById('targetPreview')?.textContent||'';
   if(!gTargetInfo||/相手の生年月日を入れると/.test(targetText))return '';
   return targetText;
 }
 
 function collectAiScentInfo(){
-  if(!['color','scent'].includes(gAiTheme))return '';
+  if(gAiHandoff&&gAiHandoff.scentInfo)return gAiHandoff.scentInfo;
+  if(!['color','scent','photo'].includes(gAiTheme))return '';
   return '色・香りの詳しい処方がある場合は、today.html・scent.htmlの結果や、手持ちの香水・服・小物をここに追加してください。';
+}
+
+function loadHandoffFromPremium(){
+  try{
+    const raw=localStorage.getItem('kitoku-ai-board-draft');
+    if(!raw)return;
+    const data=JSON.parse(raw);
+    if(!data.savedAt||Date.now()-data.savedAt>10*60*1000){
+      localStorage.removeItem('kitoku-ai-board-draft');
+      return;
+    }
+    localStorage.removeItem('kitoku-ai-board-draft');
+    gAiHandoff=data;
+    const theme=getAiThemeKeys().includes(data.theme)?data.theme:'free';
+    selectAiTheme(theme);
+    const board=document.getElementById('aiBoardInfo');
+    if(board)board.value=data.boardInfo||'';
+    const note=document.getElementById('aiUserNote');
+    if(note&&!note.value.trim()&&data.userNote)note.value=data.userNote;
+    generateAiMaterial();
+    const builder=document.getElementById('aiMaterialBuilder');
+    if(builder)builder.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){
+    try{localStorage.removeItem('kitoku-ai-board-draft');}catch(_e){}
+  }
 }
 
 function generateAiMaterial(){
@@ -806,7 +834,7 @@ function generateAiMaterial(){
     targetInfo:collectAiTargetInfo(),
     scentInfo:collectAiScentInfo(),
     astroInfo:'',
-    lifeReadingInfo:gAiTheme==='naming'?formatLifeReadingForAi(getLifeReadingForAi()):''
+    lifeReadingInfo:(gAiHandoff&&gAiHandoff.lifeReadingInfo)?gAiHandoff.lifeReadingInfo:(gAiTheme==='naming'?formatLifeReadingForAi(getLifeReadingForAi()):'')
   });
   output.value=text;
   output.focus();
@@ -958,6 +986,7 @@ function initAiTreeFocusLinks(){
 
 document.addEventListener('DOMContentLoaded', function(){
   initAiMaterialBuilder();
+  loadHandoffFromPremium();
   initAiTreeLevels();
   initAiAccordions();
   initAiTreeFocusLinks();
