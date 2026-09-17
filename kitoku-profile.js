@@ -1,4 +1,26 @@
 // KITOKU profile storage helpers (Phase 1)
+// -- 旧キーの扱いについて（2026年9月時点） --
+// kitoku-profile が本人プロフィールの正式な保存先。ただし、以下の旧キーへの
+// 書き込みは、互換のためまだ継続している（saveKitokuProfile内）:
+//   kitoku-birth, kitoku-gender, kitoku-birth-time
+//
+// 以下の現行ファイルは、まだ生年月日・性別系の旧キーを直接参照しており、
+// getKitokuProfile() / saveKitokuProfile() へ完全移行していない:
+//   ai.html, astro64.html, business.html, direction_v2.html, index.html,
+//   index_new.html, kaso.html, kitoku-badge.js, kitoku-engine.js, kyusei_v2.html,
+//   life.html, mindmap.html, move.html, my_kitoku.html, pilgrimage.html,
+//   premium.html, relations.html, roadmap.html, scent.html, today.html,
+//   top.html, travel.html, triple_board.html
+//
+// 星の計算値（kitoku_honmei / kitoku_tsukimei / kitoku_keisha /
+// kitoku_dokai / kitoku_nain）は、life.html が引き続き保存する。
+// business.html / journal.html は getKitokuStarProfile() 経由に移行済み。
+// life.html自体は未移行（意図的。保存処理を壊さないため）。
+// なお、現行ファイルでは index.html も計算済み星キーを参照しているため、
+// 削除前に別途移行確認が必要。
+//
+// 旧キーの削除は、上記の未移行ファイルすべてが移行してから、
+// 別途判断すること。このコメントは削除しないこと。
 (function(global){
   function normalizeKitokuProfileBirth(v){
     var raw=String(v||'').trim().replace(/\//g,'-');
