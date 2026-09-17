@@ -1123,7 +1123,6 @@ body{
 .prem-feat-icon{font-size:1.1rem;flex-shrink:0;}
 .prem-feat-name{font-weight:700;color:var(--snow);font-size:.68rem;}
 .prem-open-link{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:11px;padding:11px 12px;border:1px solid rgba(138,104,32,.35);border-radius:10px;background:rgba(255,255,255,.6);color:var(--goldlt);font-size:.7rem;font-weight:700;letter-spacing:.04em;text-decoration:none;}
-.prem-open-disabled{opacity:.58;cursor:not-allowed;background:#f5efe4;color:#9a8a75;}
 .prem-open-note{font-size:.58rem;color:var(--mist);line-height:1.75;margin-top:8px;text-align:center;}
 </style>
 </head>
@@ -1328,10 +1327,10 @@ body{
           <span class="tool-info"><span class="tool-name">自分専用のAIを育てる <span class="tool-badge free">無料</span></span><span class="tool-desc">星情報・方位盤を、いつものAIチャットで使える形に整理</span></span>
           <span class="tool-arrow">›</span>
         </a>
-        <a class="tool-item locked" href="javascript:void(0)" onclick="event.preventDefault();alert('この機能はプレミアム機能です。課金開始後に使えるようになります。');">
-          <span class="tool-icon">✨</span>
-          <span class="tool-info"><span class="tool-name">KIGAKU先生AI <span class="tool-badge">有料</span></span><span class="tool-desc">画面内でそのまま相談</span></span>
-          <span class="tool-arrow">準備中</span>
+        <a class="tool-item" href="ai.html">
+          <span class="tool-icon">✦</span>
+          <span class="tool-info"><span class="tool-name">相談材料を作る</span><span class="tool-desc">テーマを選んで、いつものAIに貼れる相談材料を作る</span></span>
+          <span class="tool-arrow">›</span>
         </a>
       </div>
     </div>
@@ -1481,10 +1480,10 @@ body{
         <span class="tool-emoji">💬</span>
         <span class="tool-info"><span class="tool-name">自分専用のAIを育てる <em>無料</em></span><span class="tool-desc">星情報・方位盤を、いつものAIチャットで使える形に整理</span></span><span class="tool-arrow">›</span>
       </a>
-      <div class="tool-item locked-tool">
-        <span class="tool-emoji">✨</span>
-        <span class="tool-info"><span class="tool-name">KIGAKU先生AI <em>有料</em></span><span class="tool-desc">画面内でそのまま相談</span></span><span>準備中</span>
-      </div>
+      <a class="tool-item" href="ai.html">
+        <span class="tool-emoji">✦</span>
+        <span class="tool-info"><span class="tool-name">相談材料を作る</span><span class="tool-desc">テーマを選んで、いつものAIに貼れる相談材料を作る</span></span><span class="tool-arrow">›</span>
+      </a>
 
       <div class="tools-section-label">② ビジネス・人間関係を整える</div>
       <a class="tool-item" href="business.html">
@@ -1515,14 +1514,14 @@ body{
         <span class="tool-arrow">›</span>
       </a>
 
-      <div class="tools-section-label">✨ プレミアム機能</div>
+      <div class="tools-section-label">✦ 方位を深く見る</div>
       <div class="premium-plan-wrap" id="topPremCard">
         <div class="premium-plan-wrap-header" onclick="toggleTopPrem()">
-          <div class="premium-plan-wrap-icon">✨</div>
+          <div class="premium-plan-wrap-icon">🧭</div>
           <div class="premium-plan-wrap-info">
-            <div class="premium-plan-wrap-name">プレミアムプラン</div>
-            <div class="premium-plan-wrap-price">¥500 / 月（準備中）</div>
-            <div class="premium-plan-wrap-desc">地図×方位盤・三盤比較・線路の日・気学先生AIがすべて使えます</div>
+            <div class="premium-plan-wrap-name">Premium Compass</div>
+            <div class="premium-plan-wrap-price">方位盤・地図・三盤比較をまとめて使う</div>
+            <div class="premium-plan-wrap-desc">旅行・聖地巡礼・引越しの方位と日程を、ひとつの道具で確認できます</div>
           </div>
           <div class="premium-plan-wrap-arrow">›</div>
         </div>
@@ -1530,11 +1529,9 @@ body{
           <div class="prem-feat-item"><span class="prem-feat-icon">🗺️</span><span><span class="prem-feat-name">地図×方位盤</span><br>日盤・旅行・聖地巡礼・引越しを地図で確認。</span></div>
           <div class="prem-feat-item"><span class="prem-feat-icon">📊</span><span><span class="prem-feat-name">三盤比較</span><br>年盤・月盤・日盤を同時に見て、輪重・重なりを発見。</span></div>
           <div class="prem-feat-item"><span class="prem-feat-icon">🚃</span><span><span class="prem-feat-name">線路の日</span><br>吉日×吉方の組み合わせで、最適な出発日を探す。</span></div>
-          <div class="prem-feat-item"><span class="prem-feat-icon">✨</span><span><span class="prem-feat-name">KIGAKU先生AI</span><br>画面内でそのまま相談する。</span></div>
-          <div class="prem-open-link prem-open-disabled" aria-disabled="true">✦ プレミアムページは準備中です</div>
+          <a class="prem-open-link" href="premium.html">✦ Premium Compassを開く</a>
           <div class="prem-open-note">
-            現在は準備中のため、プレミアムページへの導線は停止しています。<br>
-            公開準備が整い次第、こちらからご案内します。
+            方位で動く前に、地図・三盤比較・特別なタイミングをまとめて確認できます。
           </div>
         </div>
       </div>
@@ -1614,8 +1611,7 @@ async function generateTopInspiration(){
   if(btn){btn.disabled=true;btn.textContent='生成中…';}
   const profile=getTopInspirationProfile();
   const teachingCorpus=(window.KITOKU_ORIENTAL_TEACHINGS||'').trim();
-  const prompt=`あなたはKITOKUの気学先生です。
-今日（${y}年${m}月${d}日）に、ユーザーへ短い一言を届けてください。
+  const prompt=`今日（${y}年${m}月${d}日）の、東洋の先人の教え156本の中から、ユーザーへ届ける短い一言を選んでください。
 
 【ユーザーの登録済み情報】
 ${profile}
