@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="kitoku-teachings.js"></script>
+<script src="kitoku-profile.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -1796,8 +1797,12 @@ function changeBirth(){
     if(!isValidBirthDate(y,m,d)){alertInvalidBirthDate();return;}
     const gInput=prompt('性別を入力してください。\n「male」または「female」',g);
     if(!gInput)return;
-    localStorage.setItem('kitoku-birth',y+'-'+m+'-'+d);
-    localStorage.setItem('kitoku-gender',gInput);
+    if(typeof saveKitokuProfile==='function'){
+      saveKitokuProfile({birth:y+'-'+m+'-'+d,gender:gInput});
+    }else{
+      localStorage.setItem('kitoku-birth',y+'-'+m+'-'+d);
+      localStorage.setItem('kitoku-gender',gInput);
+    }
     try{localStorage.removeItem('kitoku-self-birth');}catch(e){} // 旧キーの残骸を除去（このキーが残っていると生年月日変更が反映されないバグの原因になる）
     // 表示を更新
     renderBirthBar();

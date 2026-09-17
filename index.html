@@ -45,6 +45,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="kitoku-engine.js"></script>
+<script src="kitoku-profile.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -2225,7 +2226,11 @@ function openTravel(event) {
   if (birth) {
     try {
       sessionStorage.setItem('kitoku-birth', birth);
-      localStorage.setItem('kitoku-birth', birth);
+      if(typeof saveKitokuProfile==='function'){
+        saveKitokuProfile({birth:birth,gender:localStorage.getItem('kitoku-gender')||''});
+      }else{
+        localStorage.setItem('kitoku-birth', birth);
+      }
     } catch(e) {}
   }
   window.location.href = 'travel.html';
@@ -2377,10 +2382,14 @@ function startKITOKU() {
   const val = document.getElementById('birthInput').value;
   if (!val) { alert('生年月日を入力してください。'); return; }
   clearDerivedStarCache();
-  localStorage.setItem('kitoku-birth', val);
+  if(typeof saveKitokuProfile==='function'){
+    saveKitokuProfile({birth:val,gender:gGender});
+  }else{
+    localStorage.setItem('kitoku-birth', val);
+    localStorage.setItem('kitoku-gender', gGender);
+  }
   localStorage.setItem('kitoku_birth', val);
   localStorage.setItem('kitoku-self-birth', val);
-  localStorage.setItem('kitoku-gender', gGender);
   localStorage.setItem('kitoku-self-gender', gGender);
 
   const firstKyuseiKey = 'kitoku-start-first-kyusei-v2-done';

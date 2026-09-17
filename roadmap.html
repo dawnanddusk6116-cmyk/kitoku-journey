@@ -6,6 +6,7 @@
 <title>九年サイクルで今の自分を知る - KITOKU @ JOURNEY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="kitoku-profile.js"></script>
 <style>
 :root{
   --bg:#f7f4ef;--card:#fff;--rim:rgba(100,80,40,.15);
@@ -460,7 +461,10 @@ function getCurrentBirthString(){
   try{
     const saved=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth')||'';
     const normalized=normalizeRoadmapBirthValue(saved);
-    if(normalized && saved!==normalized) localStorage.setItem('kitoku-birth', normalized);
+    if(normalized && saved!==normalized){
+      if(typeof saveKitokuProfile==='function') saveKitokuProfile({birth:normalized,gender:localStorage.getItem('kitoku-gender')||''});
+      else localStorage.setItem('kitoku-birth', normalized);
+    }
     return normalized;
   }catch(e){
     return '';
@@ -572,8 +576,12 @@ function generate(){
 
   // localStorageに保存（他ページと共有）
   try{
-    localStorage.setItem('kitoku-birth',normalizeRoadmapBirthValue(by+'-'+bm+'-'+bd));
-    localStorage.setItem('kitoku-gender',gGender);
+    const profileBirth=normalizeRoadmapBirthValue(by+'-'+bm+'-'+bd);
+    if(typeof saveKitokuProfile==='function') saveKitokuProfile({birth:profileBirth,gender:gGender});
+    else{
+      localStorage.setItem('kitoku-birth',profileBirth);
+      localStorage.setItem('kitoku-gender',gGender);
+    }
   }catch(e){}
 
   // 星情報バー
@@ -877,7 +885,10 @@ window.addEventListener('DOMContentLoaded',()=>{
   try{
     const bRaw=localStorage.getItem('kitoku-birth')||localStorage.getItem('kitoku_birth');
     const b=normalizeRoadmapBirthValue(bRaw);
-    if(b && bRaw!==b) localStorage.setItem('kitoku-birth', b);
+    if(b && bRaw!==b){
+      if(typeof saveKitokuProfile==='function') saveKitokuProfile({birth:b,gender:localStorage.getItem('kitoku-gender')||''});
+      else localStorage.setItem('kitoku-birth', b);
+    }
     const g=localStorage.getItem('kitoku-gender');
     if(g)setGender(g);
     if(b){
