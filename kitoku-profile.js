@@ -42,6 +42,48 @@
     return profile;
   }
 
+  function getKitokuStarProfile(profile){
+    profile=profile||getKitokuProfile();
+    if(!profile||!profile.birth)return null;
+    var birth=normalizeKitokuProfileBirth(profile.birth);
+    var parts=birth.split('-').map(Number);
+    if(parts.length!==3||!parts[0]||!parts[1]||!parts[2])return null;
+    if(typeof global.getKD!=='function'||typeof global.calcHonmei!=='function'||
+       typeof global.calcTsukimei!=='function'||typeof global.calcNayin!=='function'||
+       typeof global.calcKeisha!=='function'||typeof global.calcDokai!=='function'){
+      return null;
+    }
+    var by=parts[0],bm=parts[1],bd=parts[2];
+    var gender=profile.gender||'';
+    var kd=global.getKD(by,bm,bd);
+    var honmei=global.calcHonmei(kd.kY);
+    var tsukimei=global.calcTsukimei(honmei,kd.kM);
+    var tFK=tsukimei;
+    if(honmei===tsukimei){
+      var taichuu={1:9,2:8,3:4,4:3,6:2,7:1,8:7,9:1};
+      tFK=(honmei===5)?(gender==='female'?6:7):(taichuu[honmei]||tsukimei);
+    }
+    var keisha=global.calcKeisha(honmei,tFK);
+    var dokai=global.calcDokai(honmei,tFK);
+    var yearNayin=global.calcNayin(kd.kY);
+    var monthNayin=(typeof global.calcMonthNayin==='function')?global.calcMonthNayin(by,bm,bd):null;
+    return {
+      birth:birth,
+      gender:gender,
+      kY:kd.kY,
+      kM:kd.kM,
+      honmei:honmei,
+      tsukimei:tsukimei,
+      keisha:keisha,
+      dokai:dokai,
+      nain:yearNayin&&yearNayin.n?yearNayin.n:'',
+      yearNayin:yearNayin,
+      monthNayin:monthNayin,
+      tFK:tFK
+    };
+  }
+
   global.getKitokuProfile=getKitokuProfile;
   global.saveKitokuProfile=saveKitokuProfile;
+  global.getKitokuStarProfile=getKitokuStarProfile;
 })(window);
