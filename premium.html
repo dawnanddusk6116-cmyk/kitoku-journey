@@ -1117,7 +1117,8 @@ function init(){
     }
     state.info=buildInfo(state.birth,state.gender);
     document.getElementById('premiumContent').style.display='block';
-    document.getElementById('starInfoText').textContent=starLine(state.info);
+    const starInfoText=document.getElementById('starInfoText');
+    if(starInfoText) starInfoText.textContent=starLine(state.info);
     renderBoard();
     renderSenro();
     renderSpecialTiming();
