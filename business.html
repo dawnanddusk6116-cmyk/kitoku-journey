@@ -12,6 +12,7 @@
 <link rel="manifest" href="kitoku-manifest.json">
 <link rel="apple-touch-icon" href="kitoku-icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="kitoku-profile.js"></script>
 <style>
 :root{--bg:#f7f4ef;--card:#ffffff;--rim:rgba(100,80,40,.15);--gold:#8a6820;--goldlt:#5c4010;--snow:#1c1208;--mist:#4a3820;--radius:14px;--biz:#2a3c64;--hire:#2a6ab0;--boss:#4a7a3a;--founder:#8a4a10;--money:#9a6a12;--deal:#7a3f7f;--balance:#2f7658;}
 /* カテゴリカード */
@@ -1009,9 +1010,10 @@ function runMoneyFree(){
 
 function loadMoneyStarBar(){
   try{
-    var h=parseInt(localStorage.getItem('kitoku_honmei'))||0;
-    var t=parseInt(localStorage.getItem('kitoku_tsukimei'))||0;
-    var nain=localStorage.getItem('kitoku_nain')||'';
+    var profile=(typeof getKitokuStarProfile==='function')?getKitokuStarProfile():null;
+    var h=(profile&&profile.honmei)?profile.honmei:(parseInt(localStorage.getItem('kitoku_honmei'))||0);
+    var t=(profile&&profile.tsukimei)?profile.tsukimei:(parseInt(localStorage.getItem('kitoku_tsukimei'))||0);
+    var nain=(profile&&profile.nain)?profile.nain:(localStorage.getItem('kitoku_nain')||'');
     var bar=document.getElementById('moneyStarBar');
     var row=document.getElementById('moneyInputRow');
     if(!h||!bar)return;

@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="kitoku-engine.js"></script>
+<script src="kitoku-profile.js"></script>
 <style>
 :root {
   --bg:#f7f4ef;--snow:#1c1208;--goldlt:#5c4010;--gold:#8a6820;
@@ -332,35 +333,22 @@ function getStoredBirth() {
 }
 
 function getJournalProfile() {
-  const birth = getStoredBirth();
-  const parts = birth.split('-').map(Number);
-  if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return null;
-
   try {
-    const [by, bm, bd] = parts;
-    const { kY, kM } = getKD(by, bm, bd);
-    const honmei = calcHonmei(kY);
-    const tsukimei = calcTsukimei(honmei, kM);
-    const tFK = getTsukimeiForKeisha(honmei, tsukimei);
-    const keisha = calcKeisha(honmei, tFK);
-    const dokai = calcDokai(honmei, tFK);
-    const yearNayin = calcNayin(kY);
-    const monthNayin = calcMonthNayin(by, bm, bd);
-    return { birth, honmei, tsukimei, keisha, dokai, yearNayin, monthNayin };
+    return (typeof getKitokuStarProfile === 'function') ? getKitokuStarProfile() : null;
   } catch(e) {
     return null;
   }
 }
 
 function getStoredHonmei() {
-  const saved = parseInt(localStorage.getItem(STAR_KEY), 10);
-  if (saved >= 1 && saved <= 9) return saved;
-
   const profile = getJournalProfile();
   if (profile && profile.honmei >= 1 && profile.honmei <= 9) {
-    localStorage.setItem(STAR_KEY, String(profile.honmei));
+    try { localStorage.setItem(STAR_KEY, String(profile.honmei)); } catch(e) {}
     return profile.honmei;
   }
+
+  const saved = parseInt(localStorage.getItem(STAR_KEY), 10);
+  if (saved >= 1 && saved <= 9) return saved;
   return 0;
 }
 

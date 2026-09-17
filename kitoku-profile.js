@@ -48,13 +48,33 @@
     var birth=normalizeKitokuProfileBirth(profile.birth);
     var parts=birth.split('-').map(Number);
     if(parts.length!==3||!parts[0]||!parts[1]||!parts[2])return null;
+    var by=parts[0],bm=parts[1],bd=parts[2];
+    var gender=profile.gender||'';
     if(typeof global.getKD!=='function'||typeof global.calcHonmei!=='function'||
        typeof global.calcTsukimei!=='function'||typeof global.calcNayin!=='function'||
        typeof global.calcKeisha!=='function'||typeof global.calcDokai!=='function'){
+      if(typeof global.calcH==='function'&&typeof global.calcT==='function'){
+        var honmeiFallback=global.calcH(by,bm,bd);
+        var tsukimeiFallback=global.calcT(by,bm,bd);
+        var nainFallback='';
+        try{nainFallback=localStorage.getItem('kitoku_nain')||'';}catch(e){}
+        return {
+          birth:birth,
+          gender:gender,
+          kY:null,
+          kM:null,
+          honmei:honmeiFallback,
+          tsukimei:tsukimeiFallback,
+          keisha:null,
+          dokai:null,
+          nain:nainFallback,
+          yearNayin:nainFallback?{n:nainFallback}:null,
+          monthNayin:null,
+          tFK:null
+        };
+      }
       return null;
     }
-    var by=parts[0],bm=parts[1],bd=parts[2];
-    var gender=profile.gender||'';
     var kd=global.getKD(by,bm,bd);
     var honmei=global.calcHonmei(kd.kY);
     var tsukimei=global.calcTsukimei(honmei,kd.kM);
