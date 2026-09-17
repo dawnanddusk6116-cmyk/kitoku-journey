@@ -158,17 +158,6 @@ body{
 }
 .feature-group-title:first-child{margin-top:0;}
 .feature-group-title::after{content:'';flex:1;height:1px;background:var(--rim);}
-.feature-card.locked{
-  border-color:rgba(138,104,32,.22);
-  background:linear-gradient(135deg,rgba(138,104,32,.045),var(--card));
-}
-.feature-card.locked .feature-name::after{
-  content:'準備中';
-  display:inline-flex;margin-left:8px;vertical-align:middle;
-  font-size:.48rem;line-height:1;padding:3px 7px;border-radius:999px;
-  background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);color:var(--goldlt);
-}
-
 .setup-done-btn{
   display:block;width:calc(100% - 32px);margin:0 16px 20px;
   background:linear-gradient(135deg,rgba(42,106,176,.18),rgba(42,106,176,.1));
@@ -341,7 +330,7 @@ const FEATURE_GROUPS={
   self:'🌟 自分を知る・整える',
   biz:'💼 ビジネス・人間関係',
   direction:'🧭 旅行・移動・聖地巡礼',
-  premium:'✨ プレミアム機能',
+  premium:'✦ 方位を深く見る',
   ai:'AI・海外向け'
 };
 const FEATURE_GROUP_ORDER=['self','biz','direction','ai'];
@@ -349,18 +338,17 @@ const PREMIUM_PLAN_ID='premium_plan';
 const PREMIUM_PLAN_FEATURE={
   id:PREMIUM_PLAN_ID,
   group:'premium',
-  icon:'✨',
-  name:'プレミアムプラン',
-  desc:'地図×方位盤・三盤比較・線路の日・KIGAKU先生AIをまとめて使う入口です。現在は準備中です。',
+  icon:'🧭',
+  name:'Premium Compass',
+  desc:'方位盤・地図・三盤比較・線路の日をまとめて使う入口です。',
   href:'premium.html',
-  locked:true,
-  badge:'準備中'
+  locked:false,
+  badge:null
 };
 const PREMIUM_FEATURES=[
   {icon:'🗺️',name:'地図×方位盤',desc:'日盤・旅行・聖地巡礼・引越しを地図で確認。吉方ラインをGoogleマップ上で確認できます。'},
   {icon:'📊',name:'三盤比較',desc:'年盤・月盤・日盤を同時に見て、輪重・重なりを発見。'},
   {icon:'🚃',name:'線路の日',desc:'吉日×吉方の組み合わせで、最適な出発日・契約日を探す。'},
-  {icon:'✨',name:'KIGAKU先生AI',desc:'星読みの結果を相談文にして、AIが深掘りします。'},
 ];
 let premiumPlanSelected=false;
 const FEATURES=[
@@ -380,7 +368,7 @@ const FEATURES=[
   {id:'pilgrimage',group:'direction',icon:'⛩️',name:'聖地巡礼ナビ',desc:'吉方位×線路の日で巡礼日程を選ぶ。',href:'pilgrimage.html',badge:null},
   {id:'move',group:'direction',icon:'🏡',name:'引越しナビ',desc:'年盤・月盤で引越し先を選ぶ。',href:'move.html',badge:null},
 
-  // プレミアム機能は下のPREMIUM_FEATURESで管理
+  // Premium Compassは下のPREMIUM_FEATURESで管理
 
   {id:'free_ai',group:'ai',icon:'💬',name:'AIで悩みを整理する',desc:'星情報をコピーして、悩み・問い・次の一手を整理できます。',href:'ai.html',badge:'無料'},
   {id:'english',group:'ai',icon:'EN',name:'JAPAN OS — English Preview',desc:'英語でKITOKUを体験する入口。',href:'en/index.html',badge:null},
@@ -514,10 +502,10 @@ function renderFeatureGrid(){
     card.onclick=()=>toggleFeature(card,f.id);
     grid.appendChild(card);
   });
-  // プレミアムまとめカードを末尾に追加
+  // Premium Compassまとめカードを末尾に追加
   const premGroup=document.createElement('div');
   premGroup.className='feature-group-title';
-  premGroup.textContent='✨ プレミアム機能';
+  premGroup.textContent='✦ 方位を深く見る';
   grid.appendChild(premGroup);
   grid.appendChild(buildPremiumCard());
 }
@@ -534,11 +522,11 @@ function buildPremiumCard(){
   card.innerHTML=`
     <div class="premium-plan-header" onclick="togglePremiumPlan()">
       <div class="premium-plan-check" id="premiumCheck">${premiumPlanSelected?'✓':''}</div>
-      <div class="premium-plan-icon">✨</div>
+      <div class="premium-plan-icon">🧭</div>
       <div class="premium-plan-info">
-        <div class="premium-plan-name">プレミアムプラン</div>
-        <div class="premium-plan-price">¥500 / 月（準備中）</div>
-        <div class="premium-plan-desc">地図×方位盤・三盤比較・線路の日・KIGAKU先生AIがすべて使えます</div>
+        <div class="premium-plan-name">Premium Compass</div>
+        <div class="premium-plan-price">方位盤・地図・三盤比較をまとめて使う</div>
+        <div class="premium-plan-desc">旅行・聖地巡礼・引越しの方位と日程を、ひとつの道具で確認できます</div>
       </div>
       <div class="premium-plan-arrow">›</div>
     </div>
@@ -658,19 +646,13 @@ function renderMyPage(){
     const item=document.createElement('a');
     item.className='my-feature-item'+(f.locked?' locked':'');
     item.href=f.locked?'javascript:void(0)':f.href;
-    if(f.locked){
-      item.onclick=(e)=>{
-        e.preventDefault();
-        alert('プレミアムプランは準備中です。現在は自分専用KITOKUの入口として表示できます。');
-      };
-    }
     item.innerHTML=`
       <div class="mf-icon">${f.icon}</div>
       <div class="mf-info">
         <div class="mf-name">${f.name}${f.badge?` <span style="font-size:.48rem;padding:1px 6px;border-radius:6px;background:${f.badge==='有料'?'rgba(138,104,32,.1)':'rgba(58,122,78,.1)'};border:1px solid ${f.badge==='有料'?'rgba(138,104,32,.3)':'rgba(58,122,78,.3)'};color:${f.badge==='有料'?'var(--goldlt)':'#2a6b3d'};font-weight:700;vertical-align:middle;">${f.badge}</span>`:''}</div>
         <div class="mf-desc">${f.desc}</div>
       </div>
-      <div class="mf-arrow">${f.locked?'準備中':'›'}</div>
+      <div class="mf-arrow">›</div>
     `;
     list.appendChild(item);
   });
