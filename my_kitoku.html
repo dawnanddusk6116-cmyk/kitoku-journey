@@ -481,6 +481,13 @@ function renderFeatureGrid(){
   let currentGroup='';
   FEATURES.forEach(f=>{
     if(f.group!==currentGroup){
+      if(currentGroup==='direction'&&f.group==='ai'){
+        const premGroup=document.createElement('div');
+        premGroup.className='feature-group-title';
+        premGroup.textContent='── さらに深く比べる';
+        grid.appendChild(premGroup);
+        grid.appendChild(buildPremiumCard());
+      }
       currentGroup=f.group;
       const group=document.createElement('div');
       group.className='feature-group-title';
@@ -502,12 +509,6 @@ function renderFeatureGrid(){
     card.onclick=()=>toggleFeature(card,f.id);
     grid.appendChild(card);
   });
-  // Premium Compassまとめカードを末尾に追加
-  const premGroup=document.createElement('div');
-  premGroup.className='feature-group-title';
-  premGroup.textContent='✦ 方位を深く見る';
-  grid.appendChild(premGroup);
-  grid.appendChild(buildPremiumCard());
 }
 
 function buildPremiumCard(){
