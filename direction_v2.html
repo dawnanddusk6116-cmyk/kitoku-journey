@@ -1924,13 +1924,13 @@ html[data-fontsize="l"],html[data-fontsize="l"] body{font-size:21px;}
 <div id="nextStepBar" style="display:none;padding:14px 16px 10px;background:var(--bg,#1a1a2e);">
   <div style="font-size:.58rem;letter-spacing:.15em;color:var(--gold,#c4a050);margin-bottom:10px;font-weight:700;">── 次のステップへ</div>
   <div style="display:flex;flex-direction:column;gap:8px;">
-    <a href="premium.html" style="display:flex;align-items:center;gap:12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);border-radius:12px;padding:12px 14px;text-decoration:none;">
+    <a href="premium.html" style="display:flex;align-items:center;gap:12px;background:rgba(26,115,232,.08);border:1px solid rgba(26,115,232,.28);border-radius:12px;padding:12px 14px;text-decoration:none;">
       <span style="font-size:1.3rem;">🗺️</span>
       <span>
-        <span style="display:block;font-size:.72rem;font-weight:700;color:var(--goldlt,#c4a050);">方位をもっと深く見る</span>
-        <span style="display:block;font-size:.58rem;color:var(--mist,#bcaa88);margin-top:2px;">地図×方位盤・三盤比較・線路の日をまとめて確認する</span>
+        <span style="display:block;font-size:.72rem;font-weight:700;color:#1a73e8;">来年・再来年の恵方も地図で見る</span>
+        <span style="display:block;font-size:.58rem;color:var(--mist,#bcaa88);margin-top:2px;">日盤・月盤・年盤を切り替えながら、複数年の恵方ラインを重ねて確認できます</span>
       </span>
-      <span style="margin-left:auto;color:var(--goldlt,#c4a050);font-size:1rem;">›</span>
+      <span style="margin-left:auto;color:#1a73e8;font-size:1rem;">›</span>
     </a>
     <a href="today.html" style="display:flex;align-items:center;gap:12px;background:rgba(138,104,32,.08);border:1px solid rgba(138,104,32,.22);border-radius:12px;padding:12px 14px;text-decoration:none;">
       <span style="font-size:1.3rem;">🌸</span>
@@ -2396,6 +2396,7 @@ function updateEhouLabels(){
   const label1 = document.getElementById('ehouInfoLabel');
   const label2 = document.getElementById('ehouNextInfoLabel');
   const mvY = gState.mapViewY || gState.ty, mvM = gState.mapViewM || gState.tm, mvD = gState.mapViewD || gState.td;
+  if(!mvY || !mvM || !mvD) return;
   if(label1){
     const ehou = getEhouForYear(mvY, mvM, mvD);
     label1.innerHTML = isEhouShowOn()
