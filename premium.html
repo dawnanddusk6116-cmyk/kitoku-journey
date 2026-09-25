@@ -793,6 +793,7 @@ input,select{width:100%;border:1px solid var(--rim);border-radius:8px;background
           輪重吉方の定義には諸説があります。<br><br>
           方位の力は、年ごと・月ごとに姿を変えながら巡っています。ごくまれに、年の流れと月の流れがぴったり重なる瞬間があり、そこにあなたの吉方位が乗ると、後押しの力が普段より強くなります。<br><br>
           「特別」レベルは、そこにさらに三合（十二支の結びつき）という後押しが重なった、条件の揃ったタイミングだけを選んでいます。「しっかり」は三合までは求めず、本命・月命の両方が揃った状態まで。「ゆるやか」は、年と月の巡りが重なっているだけの、より広い候補です。<br><br>
+          さらに、その月の中で日盤まで同じ方位を後押しする日がある場合は、「特に力の強い日」として表示しています。月全体の流れに、当日の小さな追い風が重なる日として見てください。<br><br>
           条件が多く重なるほど頻度は下がりますが、どれを選んでも悪い方向に転ぶことはありません。目的に合わせて選んでください。
         </div>
         <div class="note" id="rinjuLevelNote"></div>
@@ -1389,12 +1390,24 @@ function toggleTimingExplain(){
   if(!body)return;
   body.style.display=body.style.display==='none'||!body.style.display?'block':'none';
 }
+function getNichibanAnchorMaxYear(){
+  try{
+    if(typeof NICHIBAN_ANCHORS==='undefined')return null;
+    const years=Object.keys(NICHIBAN_ANCHORS).map(Number).filter(Number.isFinite);
+    return years.length?Math.max(...years):null;
+  }catch(e){
+    return null;
+  }
+}
 function listUpcomingRinjuKippo(honmei,tsukimei,level='special',yearsAhead=10){
   const now=new Date();
   const startY=now.getFullYear();
   const startM=now.getMonth()+1;
+  const maxY=getNichibanAnchorMaxYear();
+  const endY=maxY?Math.min(startY+yearsAhead-1,maxY):startY+yearsAhead-1;
   const results=[];
-  for(let y=startY;y<startY+yearsAhead;y++){
+  if(endY<startY)return results;
+  for(let y=startY;y<=endY;y++){
     for(let m=1;m<=12;m++){
       if(y===startY&&m<startM)continue;
       const dirs=detectRinjuKippo(y,m,15,honmei,tsukimei,level);
@@ -1422,8 +1435,14 @@ function renderSpecialTiming(){
   if(!RINJU_LEVELS[rinjuLevel])rinjuLevel='special';
   document.querySelectorAll('#rinjuLevelTabs .timing-level-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.level===rinjuLevel));
   const cfg=RINJU_LEVELS[rinjuLevel];
-  if(note)note.textContent=cfg.note;
+  const maxY=getNichibanAnchorMaxYear();
+  const rangeNote='日盤まで重なる日の表示は、確定済みの暦データ範囲内で表示しています。';
+  if(note)note.textContent=cfg.note+' '+rangeNote;
   const rows=listUpcomingRinjuKippo(state.info.honmei,state.info.tsukimei,rinjuLevel,10);
+  const rangeEnded=maxY&&new Date().getFullYear()>maxY;
+  const emptyHtml=rangeEnded
+    ? '<div class="note">確定済みの暦データ範囲を超えているため、日盤まで含む特別なタイミングは現在準備中です。新しい暦データを追加後に表示します。</div>'
+    : '<div class="note">今後10年では、この条件に該当する年月は見つかりませんでした。判定を「しっかり」または「ゆるやか」にすると候補が広がります。</div>';
   list.innerHTML=rows.slice(0,18).map(row=>{
     const chips=row.dirs.map(dir=>`<span class="timing-chip rinju" title="${TIMING_REASON_TEXT[rinjuLevel]||''}">${JP[dir]}方位</span>`).join('');
     const support=(row.timings||[]).filter(x=>!row.dirs.includes(x.dir)).slice(0,4).map(x=>`<span class="timing-chip">${JP[x.dir]} ${x.tier==='sango'?'三合':'基本'}</span>`).join('');
@@ -1433,7 +1452,7 @@ function renderSpecialTiming(){
       <div class="timing-reason">${TIMING_REASON_TEXT[rinjuLevel]||''}</div>
       <div class="timing-peak">${buildPeakText(row)}</div>
     </div>`;
-  }).join('')||'<div class="note">今後10年では、この条件に該当する年月は見つかりませんでした。判定を「しっかり」または「ゆるやか」にすると候補が広がります。</div>';
+  }).join('')||emptyHtml;
   if(actions){
     actions.innerHTML=RINJU_ACTION_LEVELS.map((x,i)=>`<div class="timing-action">
       <div class="timing-action-title">${i+1}. ${x.action}${x.requirement?`（${x.requirement}）`:''}</div>
