@@ -1606,7 +1606,7 @@ async function topFetchClaude(payload,feature){
 }
 
 function parseTeachingsCorpus(raw){
-  return raw.split(/(?=Vol\.\d{2,3}【見出し】)/).map(s=>s.trim()).filter(Boolean);
+  return raw.split(/(?=Vol\.\d{2,3}\s*【見出し】)/).map(s=>s.trim()).filter(Boolean);
 }
 function getHonmeiseiFromProfileText(text){
   const stars=['一白','二黒','三碧','四緑','五黄','六白','七赤','八白','九紫'];
