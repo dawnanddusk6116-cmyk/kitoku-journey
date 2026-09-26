@@ -1605,6 +1605,22 @@ async function topFetchClaude(payload,feature){
   });
 }
 
+function parseTeachingsCorpus(raw){
+  return raw.split(/(?=Vol\.\d{2,3}【見出し】)/).map(s=>s.trim()).filter(Boolean);
+}
+function getHonmeiseiFromProfileText(text){
+  const stars=['一白','二黒','三碧','四緑','五黄','六白','七赤','八白','九紫'];
+  const m=String(text||'').match(/本命星[^\d一二三四五六七八九]{0,6}(一白|二黒|三碧|四緑|五黄|六白|七赤|八白|九紫)/);
+  if(!m)return null;
+  const idx=stars.indexOf(m[1]);
+  return idx>=0?idx+1:null;
+}
+function pickTodayTeachingIndex(y,m,d,honmei,total){
+  const dayOfYear=Math.floor((Date.UTC(y,m-1,d)-Date.UTC(y,0,0))/86400000);
+  const base=(honmei||0)*17+dayOfYear;
+  return ((base%total)+total)%total;
+}
+
 async function generateTopInspiration(){
   const btn=document.getElementById('topGenInspirationBtn');
   const today=new Date();
@@ -1616,24 +1632,22 @@ async function generateTopInspiration(){
   }catch(e){}
   if(btn){btn.disabled=true;btn.textContent='生成中…';}
   const profile=getTopInspirationProfile();
-  const teachingCorpus=(window.KITOKU_ORIENTAL_TEACHINGS||'').trim();
-  const prompt=`今日（${y}年${m}月${d}日）の、東洋の先人の教え156本の中から、ユーザーへ届ける短い一言を選んでください。
+  const teachingCorpusRaw=(window.KITOKU_ORIENTAL_TEACHINGS||'').trim();
+  const teachingsArr=parseTeachingsCorpus(teachingCorpusRaw);
+  const honmei=getHonmeiseiFromProfileText(profile);
+  const todayTeaching=teachingsArr.length?teachingsArr[pickTodayTeachingIndex(y,m,d,honmei,teachingsArr.length)]:'';
+  const prompt=`今日（${y}年${m}月${d}日）の、以下の「本日あなたに割り当てられた教え」をもとに、ユーザーへ届ける短い一言を作ってください。
 
 【ユーザーの登録済み情報】
 ${profile}
 
-【今日の格言の選び方】
-・今日の格言は、東洋の先人の教え156本から、今日のユーザーにふさわしい1本を選んで引用する
-・教え本文が渡されている場合は、必ずその中から選ぶ
-・教え本文が未接続の場合は、創作した出典を断定せず、出典を「東洋の教えより」と控えめにする
-・引用形式は「見出し」「教えの要点」「出典」の3点を含める
-・短く、静かに、押しつけずに届ける
-・脅しや断定ではなく、今日を整える一言にする
-
-【東洋の先人の教え156本】
-${teachingCorpus||'※ 現在、156本の本文データは未接続です。'}
+【本日あなたに割り当てられた教え（必ずこの1本だけを使う。他のVolを創作しない）】
+${todayTeaching||'※ 現在、教え本文データは未接続です。この場合は出典を「東洋の教えより」と控えめにしてください。'}
 
 【生成ルール】
+・上記の教えの「見出し」「教え・哲学」「出典」を元に、見出し・教えの要点・出典の3点を含める形にまとめる
+・短く、静かに、押しつけずに届ける
+・脅しや断定ではなく、今日を整える一言にする
 ・JSONのみ返す（前後に余分なテキスト不要）
 ・以下の形式で：
 {"title":"Vol番号と見出し","quote":"教えの要点（2〜4行）","source":"出典","message":"今日のあなたへの短い受け取り方（60字以内）","action":"今日の小さな一歩（30字以内）"}
