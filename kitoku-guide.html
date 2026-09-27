@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KITOKU — 気学まとめ</title>
+<meta name="theme-color" content="#0a0c18">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0a0c18;--card:#12152a;--rim:rgba(212,175,55,.18);--gold:#c4a043;--goldlt:#e8c96a;--snow:rgba(220,232,255,.84);--mist:rgba(220,232,255,.58);--deep:#070915;--radius:14px;}
+html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var(--snow);font-family:'Noto Serif JP',serif;max-width:480px;margin:0 auto;min-height:100dvh;font-size:16px;line-height:1.8;}
+a{color:inherit;}.app-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:env(safe-area-inset-top,14px) 16px 12px;border-bottom:1px solid var(--rim);background:rgba(10,12,24,.94);position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);}.brand{font-family:'Cormorant Garamond',serif;font-size:1.08rem;letter-spacing:.22em;color:var(--gold);white-space:nowrap;}.back{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(196,160,67,.4);background:rgba(196,160,67,.1);color:var(--goldlt);border-radius:999px;padding:7px 12px;font-size:.68rem;text-decoration:none;font-weight:700;}.hero{padding:34px 22px 24px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(196,160,67,.12),transparent 70%);}.eyebrow{font-size:.62rem;letter-spacing:.22em;color:var(--gold);font-weight:800;margin-bottom:8px;}.hero h1{font-family:'Cormorant Garamond','Noto Serif JP',serif;font-size:1.78rem;letter-spacing:.12em;color:var(--goldlt);font-weight:400;line-height:1.35;}.lead{font-size:.72rem;color:var(--mist);line-height:1.9;margin-top:12px;}.wrap{padding:0 16px 42px;}.section{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));border:1px solid var(--rim);border-radius:var(--radius);padding:16px 14px;margin:14px 0;}.section-title{display:flex;align-items:center;gap:9px;font-size:.92rem;color:var(--goldlt);font-weight:800;letter-spacing:.04em;margin-bottom:6px;}.section-title span:first-child{font-size:1.16rem;}.section-desc{font-size:.64rem;color:var(--mist);line-height:1.85;margin-bottom:12px;}.link-grid{display:grid;grid-template-columns:1fr;gap:8px;}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.internal-link,.external-link{display:block;border-radius:10px;padding:11px 12px;text-decoration:none;line-height:1.55;font-weight:800;font-size:.7rem;}.internal-link{background:rgba(196,160,67,.13);border:1px solid rgba(196,160,67,.42);color:var(--goldlt);}.external-link{background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.24);color:var(--goldlt);}.link-sub{display:block;font-size:.56rem;color:var(--mist);font-weight:400;margin-top:2px;}.label{font-size:.55rem;letter-spacing:.15em;color:var(--gold);font-weight:900;margin:12px 0 7px;}.notice{font-size:.58rem;color:var(--mist);line-height:1.75;background:rgba(255,255,255,.03);border:1px solid rgba(196,160,67,.15);border-radius:9px;padding:9px 10px;margin-top:9px;}.footer{font-size:.55rem;color:rgba(220,232,255,.42);text-align:center;line-height:1.7;margin-top:22px;padding-bottom:env(safe-area-inset-bottom,12px);letter-spacing:.08em;}@media(max-width:360px){.mini-grid{grid-template-columns:1fr}.hero h1{font-size:1.55rem}.app-header{padding-left:12px;padding-right:12px}.brand{font-size:.96rem;letter-spacing:.16em}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="brand">KITOKU</div>
+  <a class="back" href="index.html">← もどる</a>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">KITOKU GUIDE</div>
+    <h1>気学まとめ</h1>
+    <p class="lead">KITOKUの道具と、検証済みの外部サイトを並べた案内ページです。流派や計算方法の違いを見比べながら、自分の判断材料として使ってください。</p>
+  </section>
+  <div class="wrap">
+    <section class="section">
+      <div class="section-title"><span>⭐</span><span>九星・本命星</span></div>
+      <p class="section-desc">まず自分の本命星・月命・傾斜・同会・納音を確認する入口です。</p>
+      <a class="internal-link" href="kyusei_v2.html">KITOKUで自分の星を見る<span class="link-sub">本命星・月命星・傾斜・同会・納音</span></a>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><span>🧭</span><span>方位・引っ越しの吉方位</span></div>
+      <p class="section-desc">今日の方位盤を見ながら、外部の地図・吉方位サービスとも照らし合わせられます。</p>
+      <a class="internal-link" href="direction_v2.html">KITOKUで今日の方位盤を見る<span class="link-sub">日盤・月盤・年盤・恵方ライン</span></a>
+      <div class="label">外部アプリ・サイト</div>
+      <div class="mini-grid">
+        <a class="external-link" href="https://apps.apple.com/jp/app/%E9%96%8B%E9%81%8Bmaps/id1540479853" target="_blank" rel="noopener noreferrer">開運MAPS<span class="link-sub">iPhone</span></a>
+        <a class="external-link" href="https://play.google.com/store/apps/details?id=jp.or.safe.kaiun_maps&hl=ja" target="_blank" rel="noopener noreferrer">開運MAPS<span class="link-sub">Android</span></a>
+        <a class="external-link" href="https://apps.apple.com/jp/app/%E4%B9%9D%E6%98%9F%E6%96%B9%E4%BD%8D%E3%83%8A%E3%83%93/id1380010519" target="_blank" rel="noopener noreferrer">九星方位ナビ<span class="link-sub">iPhone</span></a>
+        <a class="external-link" href="https://play.google.com/store/apps/details?id=com.studio_faust.ninestarki2&hl=ja" target="_blank" rel="noopener noreferrer">九星方位ナビ<span class="link-sub">Android</span></a>
+        <a class="external-link" href="https://kaiun.graceful-life.jp/" target="_blank" rel="noopener noreferrer">あなたの吉方位検索<span class="link-sub">Web・地図＋旅行日検索</span></a>
+        <a class="external-link" href="https://yakumoin.info/support/how_to_use_map" target="_blank" rel="noopener noreferrer">九星気学 八雲院<span class="link-sub">Web・開運マップ（無料）</span></a>
+        <a class="external-link" href="https://www.kichihug.com/info/" target="_blank" rel="noopener noreferrer">吉ハグ。<span class="link-sub">Web・吉ナビ＋処方箋</span></a>
+      </div>
+      <div class="notice">外部アプリ・サイトはKITOKUとは別のサービスです。流派や設定により方位線・吉凶判定が異なる場合があります。複数の情報を照らし合わせ、ご自身の判断材料としてご利用ください。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><span>📝</span><span>姓名判断</span></div>
+      <p class="section-desc">KITOKUでは、姓名の五行・画数・陰陽と、九星の情報を重ねて見ます。</p>
+      <a class="internal-link" href="life.html">KITOKUで姓名鑑定を見る<span class="link-sub">五格・五行・陰陽・流年</span></a>
+      <div class="label">外部サイト</div>
+      <a class="external-link" href="https://www.stellica.jp/readings/name-analysis" target="_blank" rel="noopener noreferrer">Stellica 姓名判断<span class="link-sub">Web・無料・五格＋AI鑑定</span></a>
+      <div class="notice">外部サイトはKITOKUとは別のサービスです。画数の数え方や流派が異なる場合があります。複数の情報を照らし合わせ、ご自身の判断材料としてご利用ください。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><span>🔗</span><span>人間関係</span></div>
+      <p class="section-desc">家族・恋人・友人・仕事相手との違いを、決めつけではなく活かし方として見ます。</p>
+      <a class="internal-link" href="relations.html">KITOKUで相性・人間関係を見る<span class="link-sub">2人比較・家族/友人グループ</span></a>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><span>💼</span><span>ビジネス</span></div>
+      <p class="section-desc">採用・面談・チーム・契約の判断材料を、星の性質と関係性から整理します。</p>
+      <a class="internal-link" href="business.html">KITOKUで仕事の判断を整える<span class="link-sub">採用・面談・チーム相性</span></a>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><span>✈️</span><span>移動・旅行</span></div>
+      <p class="section-desc">旅行・引っ越し・聖地巡礼など、具体的な予定に方位の判断材料を重ねます。</p>
+      <div class="link-grid">
+        <a class="internal-link" href="travel.html">旅行 吉方位ナビ<span class="link-sub">目的地への方位と日程を見る</span></a>
+        <a class="internal-link" href="move.html">引越し・仮吉方ナビ<span class="link-sub">年盤・月盤で引越し先を選ぶ</span></a>
+        <a class="internal-link" href="pilgrimage.html">聖地巡礼 吉方位ナビ<span class="link-sub">お遍路・伊勢・出雲・熊野</span></a>
+      </div>
+    </section>
+    <div class="footer">KITOKU — 気学まとめ<br>必要な道具を、必要な深さで。</div>
+  </div>
+</main>
+</body>
+</html>
