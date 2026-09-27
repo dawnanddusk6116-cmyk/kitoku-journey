@@ -257,7 +257,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="menu-desc">
         指導する側・支える側の関係を読み解く<br>
         摩擦の原因と活かし方を知る<br>
-        育成・配置・任せ方の判断材料にする
+        育成・配置・任せ方の判断材料にする<br>
+        <strong style="color:var(--boss);">✦ 最大5人まで一緒に診断できます</strong>
       </div>
       <div class="free-badge">🎁 1日1回無料</div>
     </div>
@@ -270,7 +271,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="menu-desc">
         中心人物と支える人の相性を読む<br>
         死角ゼロのチームが作れるか<br>
-        共同創業者・補佐役・外部パートナー選定に
+        共同創業者・補佐役・外部パートナー選定に<br>
+        <strong style="color:var(--founder);">✦ 最大5人まで一緒に診断できます</strong>
       </div>
       <div class="free-badge">🎁 1日1回無料</div>
     </div>
@@ -373,6 +375,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
+  <div id="bizBanner" class="free-help" style="display:none;">
+    このカテゴリでは、3〜5人まで登録して、全員の組み合わせをまとめて確認できます。
+  </div>
+
   <!-- あなた（採用担当・経営者）-->
   <div class="form-card">
     <div class="form-label" id="myLabel">✦ あなたの生年月日</div>
@@ -394,6 +400,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div><input class="form-input" type="number" id="cDay" placeholder="1" min="1" max="31"><div class="date-unit">日</div></div>
     </div>
     <div class="form-note">※ 生年月日はこの端末内にのみ保存されます</div>
+  </div>
+
+  <div id="bizExtraBlock" class="form-card" style="display:none;">
+    <label id="bizExtraLabel">✦ さらに追加（最大5人まで）</label>
+    <div id="bizExtraList"></div>
+    <button id="bizAddBtn" class="mini-btn" type="button" onclick="addBizExtraPerson()">＋ 追加</button>
+    <div id="bizCountHint" class="form-note">3人以上で、全員の総当たり相性を表示します。</div>
   </div>
 
   <!-- 賢者選択 -->
@@ -703,6 +716,18 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <button class="main-btn" onclick="showPreparingMessage()">✦ 詳細機能を準備中</button>
   <button class="back-btn" onclick="showScreen('s0')">← ビジネス入口へ戻る</button>
+</div>
+
+<!-- グループ相性結果 s4（3人以上） -->
+<div class="screen" id="s4">
+  <div class="result-header">
+    <span class="cat-badge" id="groupBadge2" style="margin-bottom:8px;display:inline-block;">👥 リーダー×メンバー</span>
+    <div class="result-name" id="groupTitle2">相性まとめ</div>
+    <div class="result-star" id="groupCount2">—</div>
+  </div>
+  <div id="groupNames2" style="margin-bottom:14px;"></div>
+  <div id="groupCards2"></div>
+  <button class="back-btn" onclick="showScreen('s1')">← 入力に戻る</button>
 </div>
 
 <!-- 設定パネル -->
@@ -1566,6 +1591,13 @@ function selCat(cat){
   document.getElementById('partnerNameLabel').textContent=cl.partnerName;
   document.getElementById('partnerBirthLabel').textContent=cl.partnerBirth;
   document.getElementById('candidateName').placeholder=cat==='hire'?'例：田中太郎':cat==='boss'?'例：鈴木一郎（メンバー）':'例：山田花子（協力者）';
+  var isGroupCat=(cat==='boss'||cat==='founder');
+  var banner=document.getElementById('bizBanner');
+  if(banner)banner.style.display=isGroupCat?'block':'none';
+  var extraBlock=document.getElementById('bizExtraBlock');
+  if(extraBlock)extraBlock.style.display=isGroupCat?'block':'none';
+  bizExtra=[];
+  renderBizExtraRows();
   // 場面グリッド更新
   renderScenes(cat);
   curT='basic';
@@ -1805,7 +1837,7 @@ var FREE_LIMIT=1;
 function todayKey(){var d=new Date();return 'kitoku_biz_count_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
 function getCount(){return parseInt(localStorage.getItem(todayKey())||'0');}
 function addCount(){localStorage.setItem(todayKey(),getCount()+1);}
-function updateCount(){var r=Math.max(0,FREE_LIMIT-getCount());var el=document.getElementById('aiCount');if(!el)return;el.textContent=r>0?'本日あと'+r+'回無料（1日'+FREE_LIMIT+'回）':'本日の無料回数を使い切りました';}
+function updateCount(){var r=Math.max(0,FREE_LIMIT-getCount());var el=document.getElementById('aiCount');if(!el)return;el.textContent=r>0?'本日あと'+r+'回（1日'+FREE_LIMIT+'回まで）':'本日の回数を使い切りました';}
 
 /* ===== UI ===== */
 var rData={};
@@ -1819,7 +1851,7 @@ function showScreen(id){
 }
 function headerGoBack(){
   if(document.getElementById('s0').classList.contains('on')){goPreviousOrTop();}
-  else if(document.getElementById('s2').classList.contains('on')){showScreen('s1');}
+  else if(document.getElementById('s2').classList.contains('on')||document.getElementById('s4').classList.contains('on')){showScreen('s1');}
   else{showScreen('s0');}
 }
 function goPreviousOrTop(){
@@ -1886,6 +1918,76 @@ function getSettai(e1,e2){
 }
 
 
+var bizExtra=[]; // boss/founder の3〜5人目 {name,y,m,d}
+function bizMaxReached(){return bizExtra.length>=3;} // 中核2人 + 最大3人 = 5人まで
+function escapeHtmlBiz(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function renderBizExtraRows(){
+  var box=document.getElementById('bizExtraList');
+  if(!box)return;
+  box.innerHTML=bizExtra.map(function(p,i){
+    return '<div style="border-top:1px solid rgba(100,80,40,.12);padding-top:12px;margin-top:12px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'+
+      '<span style="font-size:.68rem;color:var(--mist);">追加'+(i+3)+'人目</span>'+
+      '<button type="button" class="mini-btn" onclick="removeBizExtraPerson('+i+')" style="width:auto;padding:4px 9px;">✕</button></div>'+
+      '<input class="form-input" type="text" placeholder="お名前" value="'+escapeHtmlBiz(p.name)+'" oninput="bizExtra['+i+'].name=this.value" style="margin-bottom:8px;">'+
+      '<div class="date-row">'+
+      '<div><input class="form-input" type="number" placeholder="1990" value="'+escapeHtmlBiz(p.y)+'" oninput="bizExtra['+i+'].y=this.value"><div class="date-unit">年</div></div>'+
+      '<div><input class="form-input" type="number" placeholder="4" min="1" max="12" value="'+escapeHtmlBiz(p.m)+'" oninput="bizExtra['+i+'].m=this.value"><div class="date-unit">月</div></div>'+
+      '<div><input class="form-input" type="number" placeholder="10" min="1" max="31" value="'+escapeHtmlBiz(p.d)+'" oninput="bizExtra['+i+'].d=this.value"><div class="date-unit">日</div></div>'+
+      '</div></div>';
+  }).join('');
+  var btn=document.getElementById('bizAddBtn');
+  if(btn)btn.style.display=bizMaxReached()?'none':'block';
+  var hint=document.getElementById('bizCountHint');
+  if(hint)hint.textContent='現在 '+(2+bizExtra.length)+' 人 / 最大5人まで';
+}
+function addBizExtraPerson(){
+  if(bizMaxReached())return;
+  bizExtra.push({name:'',y:'',m:'',d:''});
+  renderBizExtraRows();
+}
+function removeBizExtraPerson(i){
+  bizExtra.splice(i,1);
+  renderBizExtraRows();
+}
+function startGroupReadingBiz(people){
+  var withStars=people.map(function(p){
+    var h=calcH(p.y,p.m,p.d),t=calcT(p.y,p.m,p.d);
+    return {name:p.name,h:h,t:t,hS:STARS[h],tS:STARS[t]||STARS[1]};
+  });
+  var pairs=[];
+  for(var i=0;i<withStars.length;i++){
+    for(var j=i+1;j<withStars.length;j++){
+      var a=withStars[i],b=withStars[j];
+      var hCompat=compatByElements(a.hS.e,b.hS.e);
+      var tCompat=compatByElements(a.tS.e,b.tS.e);
+      var bridge=calcBridgeStar(a.h,b.h);
+      pairs.push({a:a,b:b,hCompat:hCompat,tCompat:tCompat,bridge:bridge});
+    }
+  }
+  renderGroupResultBiz(withStars,pairs);
+}
+function renderGroupResultBiz(withStars,pairs){
+  var cl=CAT_LABELS[curCat]||CAT_LABELS.boss;
+  var badge=document.getElementById('groupBadge2'),title=document.getElementById('groupTitle2');
+  if(badge){badge.textContent=cl.badge;badge.className='cat-badge '+curCat;}
+  if(title)title.textContent=cl.title+' まとめ';
+  var namesHtml=withStars.map(function(p){return '<span class="cat-badge '+curCat+'" style="margin-right:6px;margin-bottom:6px;display:inline-block;">'+escapeHtmlBiz(p.name)+'・'+p.hS.k+'</span>';}).join('');
+  document.getElementById('groupNames2').innerHTML=namesHtml;
+  document.getElementById('groupCount2').textContent=withStars.length+'人・'+pairs.length+'組の相性';
+  var cardsHtml=pairs.map(function(pr){
+    var bridgeText=pr.bridge&&pr.bridge.desc?pr.bridge.desc:'';
+    return '<div class="result-card" style="margin-bottom:12px;">'+
+      '<div class="card-title">'+escapeHtmlBiz(pr.a.name)+' ⟷ '+escapeHtmlBiz(pr.b.name)+'</div>'+
+      '<div style="font-size:.68rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">'+pr.a.hS.k+'（'+pr.a.hS.e+'）× '+pr.b.hS.k+'（'+pr.b.hS.e+'）</div>'+
+      '<div class="compat '+pr.hCompat.t+'" style="margin-bottom:8px;">本命星：'+pr.hCompat.l+'</div>'+
+      '<div class="compat '+pr.tCompat.t+'" style="margin-bottom:8px;">月命星：'+pr.tCompat.l+'</div>'+
+      (bridgeText?'<div style="font-size:.72rem;color:var(--gold);line-height:1.8;margin-top:8px;border-top:1px solid var(--rim);padding-top:8px;">✦ '+bridgeText+'</div>':'')+
+      '</div>';
+  }).join('');
+  document.getElementById('groupCards2').innerHTML=cardsHtml;
+}
+
 function analyze(){
   var mY=parseInt(document.getElementById('myYear').value)||0;
   var mM=parseInt(document.getElementById('myMonth').value)||0;
@@ -1899,6 +2001,26 @@ function analyze(){
   if(!nm){alert('候補者のお名前を入力してください');return;}
   if(!cY||!cM||!cD){alert('候補者の生年月日を入力してください');return;}
   if(!isValidBirthDate(mY,mM,mD)||!isValidBirthDate(cY,cM,cD)){alertInvalidBirthDate();return;}
+
+  var extraPeople=[];
+  if((curCat==='boss'||curCat==='founder')&&bizExtra.length>0){
+    for(var i=0;i<bizExtra.length;i++){
+      var ex=bizExtra[i];
+      var exNm=(ex.name||'').trim();
+      var exY=parseInt(ex.y),exM=parseInt(ex.m),exD=parseInt(ex.d);
+      var anyFilled=exNm||ex.y||ex.m||ex.d;
+      var allFilled=exNm&&exY&&exM&&exD;
+      if(!anyFilled)continue;
+      if(!allFilled){alert((i+3)+'人目の名前・生年月日をすべて入力してください');return;}
+      if(!isValidBirthDate(exY,exM,exD)){alertInvalidBirthDate();return;}
+      extraPeople.push({name:exNm,y:exY,m:exM,d:exD});
+    }
+  }
+  if(extraPeople.length>0){
+    startGroupReadingBiz([{name:'中心人物',y:mY,m:mM,d:mD},{name:nm,y:cY,m:cM,d:cD}].concat(extraPeople));
+    showScreen('s4');
+    return;
+  }
 
   var myN=calcH(mY,mM,mD);var cN=calcH(cY,cM,cD);
   var myS=STARS[myN];var cS=STARS[cN];
@@ -1996,7 +2118,7 @@ function genReport(){
   if(!rData.nm){alert('先に候補者を読み解いてください');return;}
   if(getCount()>=FREE_LIMIT){
     document.getElementById('aiArea').style.display='block';
-    document.getElementById('aiReport').textContent='本日の無料回数（1日'+FREE_LIMIT+'回）を使い切りました。\n\n明日またご利用いただけます。\n\n※有料プランでは無制限でご利用いただけます。';
+    document.getElementById('aiReport').textContent='本日の回数（1日'+FREE_LIMIT+'回まで）を使い切りました。\n\n明日またご利用いただけます。';
     document.getElementById('aiReport').style.display='block';
     return;
   }
