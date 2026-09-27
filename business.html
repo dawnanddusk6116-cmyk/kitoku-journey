@@ -375,8 +375,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
 
-  <div id="bizBanner" class="free-help" style="display:none;">
-    このカテゴリでは、3〜5人まで登録して、全員の組み合わせをまとめて確認できます。
+  <div id="bizBanner" class="form-card" style="display:none;background:rgba(58,138,74,.08);border:1px solid rgba(58,138,74,.3);">
+    <div style="font-size:.72rem;color:var(--boss);font-weight:800;line-height:1.85;">✦ このカテゴリでは、3〜5人まで登録して、全員の組み合わせをまとめて確認できます。</div>
   </div>
 
   <!-- あなた（採用担当・経営者）-->
@@ -403,9 +403,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 
   <div id="bizExtraBlock" class="form-card" style="display:none;">
-    <label id="bizExtraLabel">✦ さらに追加（最大5人まで）</label>
+    <div class="form-label" id="bizExtraLabel">✦ さらに追加（最大5人まで）</div>
     <div id="bizExtraList"></div>
-    <button id="bizAddBtn" class="mini-btn" type="button" onclick="addBizExtraPerson()">＋ 追加</button>
+    <button id="bizAddBtn" class="back-btn" type="button" onclick="addBizExtraPerson()" style="width:100%;padding:10px;margin-top:4px;">＋ 追加</button>
     <div id="bizCountHint" class="form-note">3人以上で、全員の総当たり相性を表示します。</div>
   </div>
 
@@ -508,7 +508,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
         出た結果は、そのまま結論にするのではなく、AIに相談するための材料として使えます。
         <ul style="margin-top:8px;">
           <li>まず結果の「星・五行・注意点・今日の問い」を確認する</li>
-          <li>プレミアムの気学先生には、そのまま貼って深掘りする</li>
+          <li>AI軍師セッション（ai.html）に、そのまま貼って深掘りする</li>
           <li>通常のAIにも貼れますが、回答は参考として使う</li>
           <li>最後は自分で、現実の数字・契約・相手の状況と照らして決める</li>
         </ul>
@@ -624,7 +624,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <details class="preview-card" style="margin-bottom:12px;background:rgba(255,255,255,.82);">
       <summary class="preview-card-title" style="cursor:pointer;">判断に迷った時</summary>
       <div class="preview-card-body" style="margin-top:8px;">
-        商品五行が分かりにくい場合は、素材・用途・味・香り・価格帯・売り場を整理して、気学先生に確認しながら判断できます。KITOKUは決定ではなく、商品を整えるための根拠を出す補助資料として使います。
+        商品五行が分かりにくい場合は、素材・用途・味・香り・価格帯・売り場を整理して、AI軍師セッションに確認しながら判断できます。KITOKUは決定ではなく、商品を整えるための根拠を出す補助資料として使います。
       </div>
     </details>
 
@@ -783,7 +783,7 @@ var BUSINESS_PREVIEWS={
     badge:'📦 商品開発・パッケージ',
     title:'商品開発・パッケージ',
     lead:'商品そのものの五行を見て、商品名・パッケージ色・形・素材・売り場の見せ方を整えるための入口です。気学を「売れると断定する道具」ではなく、買う人に伝わる設計軸として使います。',
-    free:['商品開発での気学の使い方を見る','商品五行と色の考え方を知る','形・素材・売り場の見方を確認する','気学先生に聞く前の整理軸を作る'],
+    free:['商品開発での気学の使い方を見る','商品五行と色の考え方を知る','形・素材・売り場の見方を確認する','AIに相談する前の整理軸を作る'],
     paid:['商品五行の詳細レポート','商品名とパッケージ色の相性','形・素材・売り場の調整案','競合商品との見せ方比較'],
     policy:'販売成果を保証するものではありません。商品そのものの五行、名前、色、形、売り場の根拠を整理し、ユーザー自身が商品設計を判断するための補助資料として使ってください。'
   }
@@ -1016,13 +1016,13 @@ function runMoneyFree(){
       <!-- AI軍師 -->
       <div style="padding:12px 16px;border-top:1px solid rgba(138,104,32,.12);background:rgba(255,255,255,.74);">
         <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🧩 AI軍師セッション用コピー</div>
-        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">下のボタンで、AI軍師セッションの型まで入った相談文をコピーできます。コピーしたら、プレミアムの気学先生、または普段使っているAIの入力欄にそのまま貼り付けてください。</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">下のボタンで、AI軍師セッションの型まで入った相談文をコピーできます。コピーしたら、AI軍師セッション、または普段使っているAIの入力欄にそのまま貼り付けてください。</div>
         <div style="font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.12);border-radius:8px;padding:9px 10px;margin-bottom:8px;">
           <strong style="color:var(--goldlt);">コピーされる内容：</strong><br>
           KITOKU結果、本命星・月命星、お金の判断タイプ、今日の問い、AI軍師セッションの「問い → 現状 → 理想 → 次の一手」まで含めます。
         </div>
         <button type="button" onclick="copyBusinessText(this.dataset.prompt,this)" data-prompt="${gunshiPromptHtml}" style="width:100%;border:1px solid rgba(138,104,32,.34);background:var(--goldlt);color:#fff;border-radius:9px;padding:10px 12px;font-size:.68rem;font-weight:800;font-family:inherit;cursor:pointer;">✦ AIに貼る相談文をコピー</button>
-        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;">プレミアムの気学先生なら、KITOKUの星情報を踏まえてより正確に相談できます。通常のAIでも貼り付ければ方向性の整理はできますが、回答は参考として使ってください。</div>
+        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;">AI軍師セッションなら、KITOKUの星情報を踏まえてより正確に相談できます。通常のAIでも貼り付ければ方向性の整理はできますが、回答は参考として使ってください。</div>
         <a href="ai.html" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:8px 14px;background:rgba(138,104,32,.09);border:1px solid rgba(138,104,32,.22);color:var(--goldlt);border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">AI軍師セッション画面も見る</a>
       </div>
 
@@ -1928,7 +1928,7 @@ function renderBizExtraRows(){
     return '<div style="border-top:1px solid rgba(100,80,40,.12);padding-top:12px;margin-top:12px;">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'+
       '<span style="font-size:.68rem;color:var(--mist);">追加'+(i+3)+'人目</span>'+
-      '<button type="button" class="mini-btn" onclick="removeBizExtraPerson('+i+')" style="width:auto;padding:4px 9px;">✕</button></div>'+
+      '<button type="button" onclick="removeBizExtraPerson('+i+')" style="background:none;border:none;color:var(--mist);font-size:1.1rem;cursor:pointer;padding:4px 8px;">✕</button></div>'+
       '<input class="form-input" type="text" placeholder="お名前" value="'+escapeHtmlBiz(p.name)+'" oninput="bizExtra['+i+'].name=this.value" style="margin-bottom:8px;">'+
       '<div class="date-row">'+
       '<div><input class="form-input" type="number" placeholder="1990" value="'+escapeHtmlBiz(p.y)+'" oninput="bizExtra['+i+'].y=this.value"><div class="date-unit">年</div></div>'+
@@ -1977,11 +1977,11 @@ function renderGroupResultBiz(withStars,pairs){
   document.getElementById('groupCount2').textContent=withStars.length+'人・'+pairs.length+'組の相性';
   var cardsHtml=pairs.map(function(pr){
     var bridgeText=pr.bridge&&pr.bridge.desc?pr.bridge.desc:'';
-    return '<div class="result-card" style="margin-bottom:12px;">'+
-      '<div class="card-title">'+escapeHtmlBiz(pr.a.name)+' ⟷ '+escapeHtmlBiz(pr.b.name)+'</div>'+
+    return '<div class="form-card" style="margin-bottom:12px;">'+
+      '<div style="font-size:.84rem;color:var(--goldlt);font-weight:700;margin-bottom:6px;">'+escapeHtmlBiz(pr.a.name)+' ⟷ '+escapeHtmlBiz(pr.b.name)+'</div>'+
       '<div style="font-size:.68rem;color:var(--mist);line-height:1.8;margin-bottom:8px;">'+pr.a.hS.k+'（'+pr.a.hS.e+'）× '+pr.b.hS.k+'（'+pr.b.hS.e+'）</div>'+
-      '<div class="compat '+pr.hCompat.t+'" style="margin-bottom:8px;">本命星：'+pr.hCompat.l+'</div>'+
-      '<div class="compat '+pr.tCompat.t+'" style="margin-bottom:8px;">月命星：'+pr.tCompat.l+'</div>'+
+      '<div class="compat-badge '+pr.hCompat.t+'" style="margin-bottom:8px;">本命星：'+pr.hCompat.l+'</div>'+
+      '<div class="compat-badge '+pr.tCompat.t+'" style="margin-bottom:8px;">月命星：'+pr.tCompat.l+'</div>'+
       (bridgeText?'<div style="font-size:.72rem;color:var(--gold);line-height:1.8;margin-top:8px;border-top:1px solid var(--rim);padding-top:8px;">✦ '+bridgeText+'</div>':'')+
       '</div>';
   }).join('');
