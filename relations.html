@@ -205,7 +205,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
   <div style="font-size:.68rem;color:var(--mist);margin-bottom:12px;">何のための鑑定ですか？</div>
   <div class="pc love" onclick="selP('love')"><div class="pi">💕</div><div><div class="pn">恋愛・パートナー</div><div class="pd">大切な人との深い縁を知る<br>二人の相性・今日伝えるべき一言</div></div></div>
-  <div class="pc friend" onclick="selP('friend')"><div class="pi">🤝</div><div><div class="pn">友人・知人</div><div class="pd">友人関係を整える<br>距離感・摩擦の活かし方</div></div></div>
+  <div class="pc friend" onclick="selP('friend')"><div class="pi">🤝</div><div><div class="pn">友人・知人</div><div class="pd">友人関係を整える<br>距離感・摩擦の活かし方<br><strong style="color:var(--friend);">✦ 最大5人まで一緒に診断できます</strong></div></div></div>
   <div class="pc fam" onclick="selP('fam')"><div class="pi">👨‍👩‍👧</div><div><div class="pn">家族</div><div class="pd">家族との関係を整える<br>親の介護・カルマの修復・二生の縁<br><strong style="color:var(--fam);">✦ 最大5人まで一緒に診断できます</strong></div></div></div>
 </div>
 
@@ -225,8 +225,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div>
   <div class="usage-guide" id="famBanner" style="display:none;background:rgba(58,138,74,.08);border:1px solid rgba(58,138,74,.3);">
-    <div class="usage-title" style="color:var(--fam);">✦ 家族は5人まで、まとめて診断できます</div>
-    <div class="usage-text">あなたを含めて最大5人まで生年月日を入力すると、家族全員の組み合わせをカードでまとめて確認できます。まずは二人からでも大丈夫です。</div>
+    <div class="usage-title" id="famBannerTitle" style="color:var(--fam);">✦ 家族は5人まで、まとめて診断できます</div>
+    <div class="usage-text" id="famBannerText">あなたを含めて最大5人まで生年月日を入力すると、家族全員の組み合わせをカードでまとめて確認できます。まずは二人からでも大丈夫です。</div>
   </div>
   <div class="fc">
     <div class="fl">✦ あなたの生年月日</div>
@@ -250,9 +250,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="next-note">まず二人の縁を、総合・本命星・月命星・傾斜・納音・今日の関わり方から表示します。その後の画面で「誰の言葉で語るか」と「どんな場面で使うか」を選ぶと、その人とのAI深掘りレポートを作れます。</div>
   </div>
   <div class="fc" id="famExtraBlock" style="display:none;">
-    <div class="fl">✦ さらに家族を追加（最大5人まで）</div>
+    <div class="fl" id="famExtraLabel">✦ さらに追加（最大5人まで）</div>
     <div id="famExtraList"></div>
-    <button type="button" class="tb-btn" id="famAddBtn" onclick="addFamilyMember()" style="width:100%;padding:10px;margin-top:4px;">＋ 家族を追加</button>
+    <button type="button" class="tb-btn" id="famAddBtn" onclick="addFamilyMember()" style="width:100%;padding:10px;margin-top:4px;">＋ 追加</button>
     <div class="fn" id="famCountHint"></div>
   </div>
   <div class="sl" id="svList" style="display:none;">
@@ -413,8 +413,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <!-- 家族グループ結果 s3（3人以上） -->
 <div class="scr" id="s3">
   <div class="rh">
-    <span class="badge fam">👨‍👩‍👧 家族</span>
-    <div class="rn">家族の相性まとめ</div>
+    <span class="badge fam" id="groupBadge">👨‍👩‍👧 家族</span>
+    <div class="rn" id="groupTitle">家族の相性まとめ</div>
     <div class="rs" id="groupCount">—</div>
   </div>
   <div class="report-guide">
@@ -594,7 +594,7 @@ var FREE=3;
 function todayKey(){var d=new Date();return'krc_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
 function getCount(){return parseInt(localStorage.getItem(todayKey())||'0');}
 function addCount(){var k=todayKey();localStorage.setItem(k,getCount()+1);}
-function updateHint(){var el=document.getElementById('cntHint');if(!el)return;var r=Math.max(0,FREE-getCount());if(r>0){el.textContent='本日あと'+r+'回（無料：1日'+FREE+'回）';el.style.color='var(--gold)';}else{el.textContent='本日の無料回数（'+FREE+'回）を使い切りました';el.style.color='#b04040';}}
+function updateHint(){var el=document.getElementById('cntHint');if(!el)return;var r=Math.max(0,FREE-getCount());if(r>0){el.textContent='本日あと'+r+'回（1日'+FREE+'回まで）';el.style.color='var(--gold)';}else{el.textContent='本日の回数（1日'+FREE+'回まで）を使い切りました';el.style.color='#b04040';}}
 
 var curP='love',curC='kitoku',curT='basic';
 var PL={love:'💕 恋愛・パートナー',friend:'🤝 友人・知人',fam:'👨‍👩‍👧 家族'};
@@ -615,7 +615,7 @@ function ckKey(e1,e2){var ss={木:'水',火:'木',土:'火',金:'土',水:'金'}
 function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function sc(id,c){var e=document.getElementById(id);if(e)e.className=c;}
 function showScr(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');document.getElementById('backBtn').style.display='block';window.scrollTo(0,0);}
-function goBack(){if(document.getElementById('s0').classList.contains('on')){goPreviousOrTop();}else if(document.getElementById('s2').classList.contains('on')||document.getElementById('s3').classList.contains('on')){showScr('s1');}else{if(document.getElementById('s1').classList.contains('on')&&curP==='fam'){famExtra=[];renderFamExtraRows();}showScr('s0');}}
+function goBack(){if(document.getElementById('s0').classList.contains('on')){goPreviousOrTop();}else if(document.getElementById('s2').classList.contains('on')||document.getElementById('s3').classList.contains('on')){showScr('s1');}else{if(document.getElementById('s1').classList.contains('on')&&(curP==='fam'||curP==='friend')){famExtra=[];renderFamExtraRows();}showScr('s0');}}
 function goPreviousOrTop(){if(window.history.length>1){window.history.back();}else{window.location.href='top.html';}}
 function swTab(id,btn){document.querySelectorAll('.tp').forEach(function(t){t.classList.remove('on');});document.querySelectorAll('.tbb').forEach(function(b){b.classList.remove('on');});document.getElementById('tab-'+id).classList.add('on');if(btn)btn.classList.add('on');}
 function tog(h){var b=h.nextElementSibling;var a=h.querySelector('.aa');b.classList.toggle('o');a.classList.toggle('o');}
@@ -623,15 +623,22 @@ function resetRpt(){document.getElementById('rptArea').style.display='none';docu
 
 function selC(id,el){curC=id;document.querySelectorAll('#c-kitoku,#c-confucius,#c-sunzi,#c-musashi,#c-saikon,#c-shibusawa,#c-jitsugokyo,#c-dojikyo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
 function selT(id,el){curT=id;document.querySelectorAll('#t-basic,#t-heart,#t-distance,#t-repair,#t-kaigo').forEach(function(c){c.classList.remove('on');});el.classList.add('on');resetRpt();}
+function groupCatNoun(){return curP==='fam'?'家族':'友人・知人';}
 function selP(p){
   curP=p;
   document.getElementById('pBadge').textContent=PL[p];
   document.getElementById('pBadge').className='badge '+p;
-  var isFam=(p==='fam');
+  var isGroup=(p==='fam'||p==='friend');
   var banner=document.getElementById('famBanner'),block=document.getElementById('famExtraBlock');
-  if(banner) banner.style.display=isFam?'block':'none';
-  if(block) block.style.display=isFam?'block':'none';
-  if(!isFam){famExtra=[];}
+  if(banner) banner.style.display=isGroup?'block':'none';
+  if(block) block.style.display=isGroup?'block':'none';
+  if(isGroup){
+    var noun=groupCatNoun();
+    var bt=document.getElementById('famBannerTitle'),btx=document.getElementById('famBannerText');
+    if(bt) bt.textContent='✦ '+noun+'は5人まで、まとめて診断できます';
+    if(btx) btx.textContent='あなたを含めて最大5人まで生年月日を入力すると、'+noun+'全員の組み合わせをカードでまとめて確認できます。まずは二人からでも大丈夫です。';
+  }
+  if(!isGroup){famExtra=[];}
   renderFamExtraRows();
   loadSaved();
   showScr('s1');
@@ -672,7 +679,7 @@ function renderFamExtraRows(){
   box.innerHTML=famExtra.map(function(p,i){
     return '<div style="border-top:1px solid rgba(100,80,40,.12);padding-top:12px;margin-top:12px;">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'+
-      '<span style="font-size:.68rem;color:var(--mist);">家族'+(i+3)+'人目</span>'+
+      '<span style="font-size:.68rem;color:var(--mist);">追加'+(i+3)+'人目</span>'+
       '<button type="button" class="del-btn" onclick="removeFamilyMember('+i+')">✕</button></div>'+
       '<input class="fi" type="text" placeholder="お名前" value="'+(p.name||'').replace(/"/g,'&quot;')+'" oninput="famExtra['+i+'].name=this.value" style="margin-bottom:8px;">'+
       '<div class="dr">'+
@@ -714,7 +721,10 @@ function startGroupReading(people){
   renderGroupResult(withStars,pairs);
 }
 function renderGroupResult(withStars,pairs){
-  var namesHtml=withStars.map(function(p){return '<span class="badge fam" style="margin-right:6px;">'+p.name+'・'+p.hS.k+'</span>';}).join('');
+  var badge=document.getElementById('groupBadge'),title=document.getElementById('groupTitle');
+  if(badge){badge.textContent=PL[curP];badge.className='badge '+curP;}
+  if(title){title.textContent=groupCatNoun()+'の相性まとめ';}
+  var namesHtml=withStars.map(function(p){return '<span class="badge '+curP+'" style="margin-right:6px;">'+p.name+'・'+p.hS.k+'</span>';}).join('');
   document.getElementById('groupNames').innerHTML=namesHtml;
   document.getElementById('groupCount').textContent=withStars.length+'人・'+pairs.length+'組の相性';
   var cardsHtml=pairs.map(function(pr){
@@ -738,7 +748,7 @@ function startReading(){
   if(!isValidBirthDate(mYv,mMv,mDv)||!isValidBirthDate(pYv,pMv,pDv)){alertInvalidBirthDate();return;}
 
   var extraPeople=[];
-  if(curP==='fam'&&famExtra.length>0){
+  if((curP==='fam'||curP==='friend')&&famExtra.length>0){
     for(var i=0;i<famExtra.length;i++){
       var ex=famExtra[i];
       var exNm=(ex.name||'').trim();
@@ -746,7 +756,7 @@ function startReading(){
       var anyFilled=exNm||ex.y||ex.m||ex.d;
       var allFilled=exNm&&exY&&exM&&exD;
       if(!anyFilled)continue;
-      if(!allFilled){alert((i+3)+'人目の家族の名前・生年月日をすべて入力してください');return;}
+      if(!allFilled){alert((i+3)+'人目の名前・生年月日をすべて入力してください');return;}
       if(!isValidBirthDate(exY,exM,exD)){alertInvalidBirthDate();return;}
       extraPeople.push({name:exNm,y:exY,m:exM,d:exD});
     }
@@ -868,7 +878,7 @@ function genReport(){
   if(getCount()>=FREE){
     var area=document.getElementById('rptArea'),txt=document.getElementById('rptText');
     area.style.display='block';
-    txt.textContent='本日の無料回数（1日'+FREE+'回）を使い切りました。\n\n明日またご利用いただけます。\n\n※有料プランでは無制限でご利用いただけます。';
+    txt.textContent='本日の回数（1日'+FREE+'回まで）を使い切りました。\n\n明日またご利用いただけます。';
     txt.style.display='block';
     return;
   }
