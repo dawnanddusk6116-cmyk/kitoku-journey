@@ -268,23 +268,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <button class="tb-btn" id="tb-l" onclick="setFontSize('l')">大</button>
 </div>
 
-<!-- リード -->
-<div class="lead">
-  <div class="lead-box">
-    <div class="ai-section-label">01 / PHILOSOPHY</div>
-    <div class="lead-title">自分専用のAIを育てる</div>
-    <div class="lead-text">
-      第2の脳としてAIを育てる、という使い方が広がっています。<br>
-      その多くは、仕事の効率化や成果を目的にしたものです。<br><br>
-      KITOKUがまず提案したいのは、もう一つの使い方。日々の生活の中で、自分自身と向き合うための右腕です。気学は、今日の服、香り、食べるもの、大事な人との距離感を決める時の要素になります。<br><br>
-      答えを出してくれるのではなく、選ぶための材料を増やしてくれるものです。KITOKUは、その材料をAIに渡しやすい形に整える場所です。
-    </div>
-    <div class="lead-point">
-      <div class="lead-point-title">まずは身近な生活から</div>
-      <div class="lead-point-text">ここで育てた右腕は、仕事の場面にもそのまま応用できます。AIに答えを丸投げするのではなく、あなたの判断を助ける右腕として、少しずつ育てていってください。</div>
-    </div>
-  </div>
-</div>
+
 
 <section class="material-builder" id="aiMaterialBuilder">
   <div class="ai-section-label">02 / AI MATERIAL</div>
@@ -317,6 +301,42 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <button class="copy-btn" id="copyKitokuStyleBtn" onclick="copyKitokuStylePreference()"><span>COPY</span> 読み方の好みだけをコピー</button>
   </div>
 </section>
+
+<!-- 星情報ブロック -->
+<div class="star-block" id="starMaterial">
+  <div class="star-info-box">
+    <div class="star-info-label">① あなたの星情報（自動生成）</div>
+    <div class="star-info-text" id="starInfoText">生年月日を登録すると自動で表示されます</div>
+    <div class="star-mini-note">まずはこの星情報を、いつものAIチャットに貼ってください。同じチャット内では、あなたの基本情報として相談の土台になります。</div>
+  </div>
+  <button class="copy-btn" onclick="copyStarInfo()">
+    <span>COPY</span> 星情報だけをコピー（単体使用）
+  </button>
+</div>
+
+  <div class="target-box" id="targetMaterial">
+    <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
+    <div class="target-desc">商談相手・家族・上司・パートナーなどの生年月日を入れると、相手の星情報を一時的に相談材料へ加えられます。相手に合わせた言葉・色・香り・距離感を相談したい時に使ってください。保存はしません。</div>
+    <div class="target-grid">
+      <div>
+        <label>相手の名前・メモ</label>
+        <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
+      </div>
+      <div>
+        <label>性別</label>
+        <select id="targetGender" onchange="updateTargetInfo()">
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label>相手の生年月日</label>
+      <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+    </div>
+    <div class="target-preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
+  </div>
+
 
 <section class="ai-section kicker-section" id="dailyExamples">
   <div class="ai-section-label">03 / HOW TO USE</div>
@@ -392,11 +412,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       <div class="ai-mini-item"><strong>ChatGPT</strong>設定 → パーソナライズ → メモリ</div>
       <div class="ai-mini-item"><strong>Gemini</strong>設定 → パーソナルインテリジェンス → カスタム指示</div>
     </div>
-    <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、以降のやり取りはすべて「あなたの本命星・月命星はこれです」という前提の上で進みます。改めて説明し直す必要がなくなり、②の香水の例のように、聞きたいことだけを聞けば具体的な答えが返ってくるようになります。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
+    <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、以降のやり取りはすべて「あなたの本命星・月命星はこれです」という前提の上で進みます。改めて説明し直す必要がなくなり、「こんな時、こう使う」の香水の例のように、聞きたいことだけを聞けば具体的な答えが返ってくるようになります。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
   </div></div>
 </section>
 
-<div class="ai-tree-intro">②で気になった例は、下の図で確認できます。「今日を整えたい」「人に合わせたい」「自分を深掘りしたい」「育てていきたい」のどこに対応するか、確認してみてください。</div>
+<div class="ai-tree-intro">「こんな時、こう使う」で気になった例は、下の図で確認できます。「今日を整えたい」「人に合わせたい」「自分を深掘りしたい」「育てていきたい」のどこに対応するか、確認してみてください。</div>
 
 <div class="ai-tree-panel">
   <div class="ai-tree-kicker">05 / AI USE TREE</div>
@@ -491,41 +511,23 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </section>
 
-<!-- 星情報ブロック -->
-<div class="star-block" id="starMaterial">
-  <div class="star-info-box">
-    <div class="star-info-label">① あなたの星情報（自動生成）</div>
-    <div class="star-info-text" id="starInfoText">生年月日を登録すると自動で表示されます</div>
-    <div class="star-mini-note">まずはこの星情報を、いつものAIチャットに貼ってください。同じチャット内では、あなたの基本情報として相談の土台になります。</div>
-  </div>
-  <button class="copy-btn" onclick="copyStarInfo()">
-    <span>COPY</span> 星情報だけをコピー（単体使用）
-  </button>
-  <div class="target-box" id="targetMaterial">
-    <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
-    <div class="target-desc">商談相手・家族・上司・パートナーなどの生年月日を入れると、相手の星情報を一時的に相談材料へ加えられます。相手に合わせた言葉・色・香り・距離感を相談したい時に使ってください。保存はしません。</div>
-    <div class="target-grid">
-      <div>
-        <label>相手の名前・メモ</label>
-        <input id="targetName" type="text" placeholder="例：上司 / パートナー / 候補者" oninput="updateTargetInfo()">
-      </div>
-      <div>
-        <label>性別</label>
-        <select id="targetGender" onchange="updateTargetInfo()">
-          <option value="male">男性</option>
-          <option value="female">女性</option>
-        </select>
-      </div>
+<!-- リード -->
+<div class="lead">
+  <div class="lead-box">
+    <div class="ai-section-label">01 / PHILOSOPHY</div>
+    <div class="lead-title">自分専用のAIを育てる</div>
+    <div class="lead-text">
+      第2の脳としてAIを育てる、という使い方が広がっています。<br>
+      その多くは、仕事の効率化や成果を目的にしたものです。<br><br>
+      KITOKUがまず提案したいのは、もう一つの使い方。日々の生活の中で、自分自身と向き合うための右腕です。気学は、今日の服、香り、食べるもの、大事な人との距離感を決める時の要素になります。<br><br>
+      答えを出してくれるのではなく、選ぶための材料を増やしてくれるものです。KITOKUは、その材料をAIに渡しやすい形に整える場所です。
     </div>
-    <div>
-      <label>相手の生年月日</label>
-      <input id="targetBirth" type="date" onchange="updateTargetInfo()">
+    <div class="lead-point">
+      <div class="lead-point-title">まずは身近な生活から</div>
+      <div class="lead-point-text">ここで育てた右腕は、仕事の場面にもそのまま応用できます。AIに答えを丸投げするのではなく、あなたの判断を助ける右腕として、少しずつ育てていってください。</div>
     </div>
-    <div class="target-preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
   </div>
 </div>
-
-
 
 <div class="footer-note">
   ⚠ AIの回答はあくまで参考です。最終的な判断はご自身でお願いします。<br>
