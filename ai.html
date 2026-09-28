@@ -72,6 +72,16 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-section-text{font-size:.7rem;color:var(--mist);line-height:2;}
 .ai-section-text p{margin:0 0 10px;}
 .ai-section-text p:last-child{margin-bottom:0;}
+.ai-group-label{
+  font-size:.6rem;letter-spacing:.2em;color:var(--gold);
+  font-weight:700;margin:26px 16px 12px;
+  display:flex;align-items:center;gap:8px;
+}
+.ai-group-label::after{content:"";flex:1;height:1px;background:var(--rim);}
+.ai-group-note{
+  font-size:.62rem;color:var(--mist);line-height:1.8;
+  margin:-4px 16px 14px;
+}
 .ai-example-grid{display:grid;gap:10px;margin-top:10px;}
 .ai-example-card{background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:12px;overflow:hidden;}
 .ai-example-card.primary{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.68));border-color:rgba(196,160,67,.36);}
@@ -94,6 +104,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-section-accordion{padding:0;overflow:hidden;}
 .ai-section-toggle{appearance:none;width:100%;border:0;background:transparent;color:inherit;font-family:'Noto Serif JP',serif;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;text-align:left;padding:15px;cursor:pointer;}
 .ai-section-toggle .ai-section-title{margin-bottom:2px;}
+.ai-section-toggle .ai-section-label,
+.ai-section-toggle .ai-section-title,
+.ai-section-toggle .ai-section-summary{display:block;}
 .ai-section-summary{font-size:.62rem;color:var(--mist);line-height:1.65;}
 .ai-section-accordion-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease;border-top:1px solid transparent;}
 .ai-section-accordion-inner{min-height:0;overflow:hidden;padding:0 15px;}
@@ -270,6 +283,8 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 
 
+<div class="ai-group-label">今日、AIに相談する</div>
+
 <section class="material-builder" id="aiMaterialBuilder">
   <div class="ai-section-label">01 / MATERIAL</div>
   <div class="ai-section-title">相談材料を作る</div>
@@ -374,6 +389,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     </div>
   </div></div>
 </section>
+
+<div class="ai-group-label">自分専用のAIに育てる</div>
+<div class="ai-group-note">一度きりで終わらせず、続けて使うほど、AIはあなたのことを踏まえて答えられるようになります。ここから先は、そのための話です。</div>
 
 <section class="ai-section kicker-section" id="dailyExamples">
   <div class="ai-section-label">04 / EXAMPLES</div>
@@ -545,7 +563,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <button class="ai-section-toggle" type="button" aria-expanded="false">
     <span>
       <span class="ai-section-label">06 / WHY</span>
-      <span class="ai-section-title">自分専用のAIを育てる</span>
+      <span class="ai-section-title">なぜ、自分専用のAIなのか</span>
       <span class="ai-section-summary">答えではなく、選ぶための材料を増やすために。</span>
     </span>
     <span class="ai-accordion-icon">⌄</span>
