@@ -173,13 +173,18 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .material-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
 .material-build-btn{width:100%;background:linear-gradient(135deg,rgba(138,104,32,.96),rgba(196,160,67,.82));border:1px solid rgba(138,104,32,.4);border-radius:10px;padding:12px;color:#fff;font-family:'Noto Serif JP',serif;font-size:.76rem;font-weight:900;cursor:pointer;}
 .material-output{min-height:180px!important;}
+.ai-fold{margin:14px 16px 0;border:1px dashed rgba(138,104,32,.28);background:rgba(100,80,40,.035);border-radius:10px;overflow:hidden;}
+.ai-fold.ai-fold-inset{margin:12px 0 0;}
+.ai-fold .ai-accordion-inner{padding:0 11px;}
+.ai-fold.open .ai-accordion-inner{padding:0 11px 11px;}
+[data-theme="dark"] .ai-fold{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.2);}
 .material-subbox{margin-top:12px;padding:11px;border-radius:10px;border:1px dashed rgba(138,104,32,.28);background:rgba(100,80,40,.035);}
 .material-subtitle{font-size:.66rem;color:var(--goldlt);font-weight:900;margin-bottom:5px;}
 .material-subtext{font-size:.6rem;color:var(--mist);line-height:1.75;margin-bottom:8px;}
 .life-reading-notice{display:none;margin-top:10px;padding:10px 11px;border-radius:10px;border:1px solid rgba(138,104,32,.24);background:rgba(255,253,248,.74);font-size:.64rem;color:var(--mist);line-height:1.8;}
 .life-reading-notice strong{color:var(--goldlt);}
 .life-reading-notice a{color:var(--goldlt);font-weight:900;text-decoration:none;border-bottom:1px solid rgba(138,104,32,.28);}
-@media(max-width:390px){.material-theme-grid{grid-template-columns:1fr;}}
+@media(max-width:359px){.material-theme-grid{grid-template-columns:1fr;}}
 [data-theme="dark"] .material-builder{background:linear-gradient(135deg,rgba(196,160,67,.11),rgba(18,21,42,.96));border-color:rgba(196,160,67,.3);}
 [data-theme="dark"] .material-theme-btn,[data-theme="dark"] .material-field textarea,[data-theme="dark"] .material-subbox{background:rgba(255,255,255,.055);border-color:rgba(196,160,67,.2);color:var(--snow);}
 .target-box{background:linear-gradient(135deg,rgba(196,160,67,.08),rgba(255,255,255,.58));border:1px solid rgba(196,160,67,.25);border-radius:var(--r);padding:13px;margin-top:10px;}
@@ -297,12 +302,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </div>
 
 <div class="ai-group-label use-now">
-  <span class="ai-group-title">今日つかう</span>
+  <span class="ai-group-title">① 今日、AIに相談する</span>
   <span class="ai-group-sub">今聞きたいことを整理して、いつものAIに貼る</span>
 </div>
 
 <section class="material-builder" id="aiMaterialBuilder">
-  <div class="ai-section-label">01 / MATERIAL</div>
+  <div class="ai-section-label">MATERIAL</div>
   <div class="ai-section-title">相談材料を作る</div>
   <div class="ai-section-text">テーマを選び、今聞きたいことを短く書くと、いつものAIに貼れる相談材料を作れます。</div>
   <div class="material-theme-grid" id="aiThemeGrid"></div>
@@ -327,20 +332,31 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     上の欄は編集できます。不要な部分は消してから貼ってください。
   </div>
   <button class="copy-btn" id="copyAiMaterialBtn" onclick="copyAiMaterial()"><span>COPY</span> 相談材料をコピー</button>
-  <div class="material-subbox">
-    <div class="material-subtitle">読み方の好みを足したい場合</div>
+  <div class="material-subbox ai-fold ai-fold-inset ai-accordion" data-ai-accordion style="padding:0;">
+    <button class="ai-accordion-toggle" type="button" aria-expanded="false">
+      <span><span class="ai-accordion-title">読み方の好みを足したい場合</span><span class="ai-accordion-summary">KITOKUらしい語り口を、別でコピーして足せます</span></span>
+      <span class="ai-accordion-icon">⌄</span>
+    </button>
+    <div class="ai-accordion-content"><div class="ai-accordion-inner">
     <div class="material-subtext">KITOKUの語り口は、本体の相談材料には入れていません。必要な時だけ、下の一文を別でコピーして足してください。</div>
     <div class="material-field" style="margin-top:0;">
       <textarea id="kitokuStylePreference" readonly></textarea>
     </div>
     <button class="copy-btn" id="copyKitokuStyleBtn" onclick="copyKitokuStylePreference()"><span>COPY</span> 読み方の好みだけをコピー</button>
+    </div></div>
   </div>
 </section>
 
 <!-- 星情報ブロック -->
-<div class="star-block" id="starMaterial">
+<div class="ai-fold ai-accordion" id="starFold" data-ai-accordion>
+  <button class="ai-accordion-toggle" type="button" aria-expanded="false">
+    <span><span class="ai-accordion-title">星情報を単体で使う・相手の星を入れる</span><span class="ai-accordion-summary">星情報は相談材料に自動で入ります。単体でコピーしたい時、相手の星を足したい時だけ開いてください。</span></span>
+    <span class="ai-accordion-icon">⌄</span>
+  </button>
+  <div class="ai-accordion-content"><div class="ai-accordion-inner">
+<div class="star-block" id="starMaterial" style="margin:0;">
   <div class="star-info-box">
-    <div class="star-info-label">① あなたの星情報（自動生成）</div>
+    <div class="star-info-label">あなたの星情報（自動生成）</div>
     <div class="star-info-text" id="starInfoText">生年月日を登録すると自動で表示されます</div>
     <div class="star-mini-note">まずはこの星情報を、いつものAIチャットに貼ってください。同じチャット内では、あなたの基本情報として相談の土台になります。</div>
   </div>
@@ -348,7 +364,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <span>COPY</span> 星情報だけをコピー（単体使用）
   </button>
   <div class="target-box" id="targetMaterial">
-    <div class="target-title">② 相手の星も入れる（この画面だけ）</div>
+    <div class="target-title">相手の星も入れる（この画面だけ）</div>
     <div class="target-desc">商談相手・家族・上司・パートナーなどの生年月日を入れると、相手の星情報を一時的に相談材料へ加えられます。相手に合わせた言葉・色・香り・距離感を相談したい時に使ってください。保存はしません。</div>
     <div class="target-grid">
       <div>
@@ -370,9 +386,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="target-preview" id="targetPreview">相手の生年月日を入れると、ここに星情報が表示されます。</div>
   </div>
 </div>
+  </div></div>
+</div>
 
 <section class="ai-section" id="careNotes">
-  <div class="ai-section-label">02 / CARE</div>
+  <div class="ai-section-label">CARE</div>
   <div class="ai-section-title">AIに渡す前に3点だけ</div>
   <div class="ai-mini-list">
     <div class="ai-mini-item"><strong>1. AIはもっともらしい間違いを出すことがあります</strong><br>数字・日付・吉凶の判定は、KITOKUの画面に戻って確かめてください。</div>
@@ -387,7 +405,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <section class="ai-section ai-section-accordion" id="aiRoles" data-ai-section-accordion>
   <button class="ai-section-toggle" type="button" aria-expanded="false">
     <span>
-      <span class="ai-section-label">03 / ROLES</span>
+      <span class="ai-section-label">ROLES</span>
       <span class="ai-section-title">AIに任せること、KITOKUに戻すこと</span>
       <span class="ai-section-summary">得意なところに使うと、AIは頼りになります。</span>
     </span>
@@ -407,12 +425,12 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 </section>
 
 <div class="ai-group-label grow-ai">
-  <span class="ai-group-title">自分専用のAIに育てる</span>
+  <span class="ai-group-title">② 自分専用のAIを育てる</span>
   <span class="ai-group-sub">星情報や日々の記録を重ねて、あなたの右腕として育てる</span>
 </div>
 
 <section class="ai-section kicker-section" id="dailyExamples">
-  <div class="ai-section-label">04 / EXAMPLES</div>
+  <div class="ai-section-label">EXAMPLES</div>
   <div class="ai-section-title">こんな時、こう使う</div>
   <div class="ai-section-text">毎日必ず訪れる場面ほど、AIも育ちやすくなります。</div>
   <div class="ai-example-grid">
@@ -470,7 +488,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <section class="ai-section ai-section-accordion" id="growHabit" data-ai-section-accordion>
   <button class="ai-section-toggle" type="button" aria-expanded="false">
     <span>
-      <span class="ai-section-label">05 / HABIT</span>
+      <span class="ai-section-label">HABIT</span>
       <span class="ai-section-title">続けて使うために</span>
       <span class="ai-section-summary">はじめの一歩から、知恵の蔵として育てるところまで。</span>
     </span>
@@ -514,13 +532,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
       </div>
     </div>
     <div class="ai-tree-branch">
-      <a class="ai-tree-branch-head" href="#targetMaterial">
+      <a class="ai-tree-branch-head" href="#targetMaterial" data-focus-target="targetMaterial">
         <span class="ai-tree-mark">人</span>
         <span><span class="ai-tree-name">人に合わせたい</span><span class="ai-tree-desc">相手の星を一時的に足し、言葉・距離感・印象を相談する</span></span>
         <span class="ai-tree-arrow">›</span>
       </a>
       <div class="ai-tree-sub">
-        <a class="ai-tree-chip" href="#targetMaterial">相手の星を入れる</a>
+        <a class="ai-tree-chip" href="#targetMaterial" data-focus-target="targetMaterial">相手の星を入れる</a>
         <a class="ai-tree-chip" href="relations.html">相性を見る</a>
         <a class="ai-tree-chip" href="business.html">商談・仕事</a>
       </div>
@@ -580,7 +598,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 <section class="ai-section ai-section-accordion" id="whyAi" data-ai-section-accordion>
   <button class="ai-section-toggle" type="button" aria-expanded="false">
     <span>
-      <span class="ai-section-label">06 / WHY</span>
+      <span class="ai-section-label">WHY</span>
       <span class="ai-section-title">なぜ、自分専用のAIなのか</span>
       <span class="ai-section-summary">答えではなく、選ぶための材料を増やすために。</span>
     </span>
@@ -1032,9 +1050,22 @@ function initAiTreeLevels(){
   });
 }
 
+function openEnclosingAiFold(el){
+  let node = el;
+  while(node && node !== document.body){
+    if(node.classList && node.classList.contains('ai-accordion') && !node.classList.contains('open')){
+      node.classList.add('open');
+      const b = node.querySelector('.ai-accordion-toggle');
+      if(b) b.setAttribute('aria-expanded','true');
+    }
+    node = node.parentElement;
+  }
+}
+
 function focusAiMaterial(id){
   const target = document.getElementById(id);
   if(!target) return;
+  openEnclosingAiFold(target);
   target.scrollIntoView({behavior:'smooth', block:'center'});
   target.classList.remove('star-focus');
   void target.offsetWidth;
