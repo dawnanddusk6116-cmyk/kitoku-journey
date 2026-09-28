@@ -73,15 +73,21 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-section-text p{margin:0 0 10px;}
 .ai-section-text p:last-child{margin-bottom:0;}
 .ai-group-label{
-  font-size:.78rem;letter-spacing:.14em;color:var(--goldlt);
-  font-weight:900;margin:34px 16px 12px;
-  display:flex;align-items:center;gap:10px;
+  margin:30px 16px 14px;padding:13px 14px;border-radius:12px;
+  display:block;border:1px solid rgba(196,160,67,.34);
+  background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.72));
+  box-shadow:0 8px 22px rgba(100,80,40,.04);
 }
-.ai-group-label::after{content:"";flex:1;height:1px;background:rgba(138,104,32,.25);}
-.ai-group-note{
-  font-size:.62rem;color:var(--mist);line-height:1.8;
-  margin:-4px 16px 14px;
+.ai-group-label::after{content:none;}
+.ai-group-label.grow-ai{
+  border-color:rgba(72,142,94,.28);
+  background:linear-gradient(135deg,rgba(72,142,94,.14),rgba(255,255,255,.72));
 }
+.ai-group-title{display:block;font-size:.82rem;letter-spacing:.1em;color:var(--goldlt);font-weight:900;line-height:1.55;}
+.ai-group-label.grow-ai .ai-group-title{color:#2f7d4c;}
+.ai-group-sub{display:block;font-size:.62rem;letter-spacing:0;color:var(--mist);font-weight:600;line-height:1.75;margin-top:3px;}
+[data-theme="dark"] .ai-group-label{background:rgba(196,160,67,.12);border-color:rgba(196,160,67,.32);}
+[data-theme="dark"] .ai-group-label.grow-ai{background:rgba(72,142,94,.12);border-color:rgba(120,190,140,.28);}
 .ai-example-grid{display:grid;gap:10px;margin-top:10px;}
 .ai-example-card{background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:12px;overflow:hidden;}
 .ai-example-card.primary{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.68));border-color:rgba(196,160,67,.36);}
@@ -289,7 +295,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="lead-text" style="margin-top:10px;">ここで作った文章を、ChatGPT・Gemini・Claudeなど、いつも使っているAIに貼って相談してください。使い方と気をつけることも、このページにまとめています。</div>
 </div>
 
-<div class="ai-group-label">今日つかう</div>
+<div class="ai-group-label use-now">
+  <span class="ai-group-title">今日つかう</span>
+  <span class="ai-group-sub">今聞きたいことを整理して、いつものAIに貼る</span>
+</div>
 
 <section class="material-builder" id="aiMaterialBuilder">
   <div class="ai-section-label">01 / MATERIAL</div>
@@ -396,8 +405,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div></div>
 </section>
 
-<div class="ai-group-label">自分専用のAIに育てる</div>
-<div class="ai-group-note">一度きりで終わらせず、続けて使うほど、AIはあなたのことを踏まえて答えられるようになります。ここから先は、そのための話です。</div>
+<div class="ai-group-label grow-ai">
+  <span class="ai-group-title">自分専用のAIに育てる</span>
+  <span class="ai-group-sub">星情報や日々の記録を重ねて、あなたの右腕として育てる</span>
+</div>
 
 <section class="ai-section kicker-section" id="dailyExamples">
   <div class="ai-section-label">04 / EXAMPLES</div>
