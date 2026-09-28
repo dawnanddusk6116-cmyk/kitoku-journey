@@ -850,6 +850,7 @@ footer{
     <!-- 五大真理スコア -->
     <div id="scoreCard" style="display:none;margin-bottom:14px;"></div>
     <div id="aiDeepDiveArea" style="display:none;"></div>
+    <div id="nameCandidatesArea" style="display:none;"></div>
 
     <div class="reading-card" id="jinCard" style="display:none"></div>
 
@@ -3791,6 +3792,150 @@ function renderAiDeepDiveBtn(sei, mei, scoreResult, jinGG, gk, seiKs, meiKs){
       <div style="font-size:.56rem;color:var(--mist);line-height:1.7;margin-top:8px;">外部サイトはKITOKUとは別のサービスです。画数の数え方や流派が異なる場合があります。複数の情報を照らし合わせ、ご自身の判断材料としてご利用ください。</div>
     </div>
   `;
+  renderNameCandidates(sei, seiKs);
+}
+
+// ── 候補名の一括確認 ──
+const NAME_CAND_MAX = 8;
+function escNameCand(s){
+  return String(s||'').replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+let gNameCandSei = '';
+let gNameCandSeiKs = [];
+let gNameCandFuriSei = '';
+let gNameCandRows = [];
+
+function renderNameCandidates(sei, seiKs){
+  const area = document.getElementById('nameCandidatesArea');
+  if(!area) return;
+  gNameCandSei = sei || '';
+  gNameCandSeiKs = (seiKs || []).map(v=>Number(v)||0);
+  gNameCandFuriSei = ((document.getElementById('furiSei')||{}).value||'').trim();
+  if(!gNameCandSei || !gNameCandSeiKs.length) return;
+  area.style.display = 'block';
+  area.innerHTML = `
+    <div style="margin:0 0 14px;border:1px solid rgba(138,104,32,.18);border-radius:12px;background:rgba(255,253,248,.72);overflow:hidden;">
+      <button type="button" id="nameCandToggle" onclick="toggleNameCandidates()" aria-expanded="false" style="width:100%;padding:12px 14px;background:none;border:none;text-align:left;cursor:pointer;">
+        <span style="display:block;font-size:.55rem;color:var(--gold);letter-spacing:.13em;margin-bottom:5px;">✦ 候補がある方へ</span>
+        <span style="display:block;font-size:.67rem;color:var(--goldlt);font-weight:700;">候補の名前を、まとめて確かめる</span>
+        <span style="display:block;font-size:.56rem;color:var(--mist);line-height:1.7;margin-top:3px;">通称名・仕事名・SNS名・お子さまの名づけ候補など、迷っている候補を一度に確認できます。</span>
+      </button>
+      <div id="nameCandBody" style="display:none;padding:0 14px 14px;">
+        <div style="font-size:.56rem;color:var(--mist);line-height:1.75;margin-bottom:8px;">姓は「${escNameCand(gNameCandSei)}」で固定して確認します。1行に1つ、<b>名前と読みを続けて</b>書いてください（例：貴徳 たかのり）。読みがないと、同じ漢字でも判定が変わってしまうため必須です。最大${NAME_CAND_MAX}件まで。</div>
+        <div style="font-size:.55rem;color:#8a5a20;line-height:1.75;margin-bottom:8px;background:rgba(196,160,67,.06);border:1px solid rgba(196,160,67,.18);border-radius:8px;padding:8px 9px;">候補名と読みは個人情報です。この画面ではKITOKU内で確認し、外部AIへ貼る場合は必要な候補だけに絞ってください。</div>
+        <textarea id="nameCandInput" rows="5" placeholder="貴徳 たかのり&#10;誠 まこと&#10;真澄 ますみ" style="width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid rgba(138,104,32,.22);border-radius:8px;background:#fff;font-size:.66rem;line-height:1.9;color:var(--snow);"></textarea>
+        <div style="text-align:center;margin-top:10px;">
+          <button type="button" onclick="checkNameCandidates()" style="padding:8px 20px;background:rgba(196,160,67,.08);border:1px solid rgba(196,160,67,.28);border-radius:999px;color:var(--goldlt);font-size:.64rem;font-weight:700;cursor:pointer;">候補をまとめて確かめる</button>
+        </div>
+        <div id="nameCandResult" style="margin-top:12px;"></div>
+        <div style="font-size:.55rem;color:var(--mist);line-height:1.75;margin-top:12px;padding-top:10px;border-top:1px solid rgba(138,104,32,.12);">この結果はKITOKUの基準によるものです。姓名判断は流派によって結果が変わります。候補を広げるのはAI、確かめるのはKITOKU、決めるのはご本人です。</div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleNameCandidates(){
+  const body = document.getElementById('nameCandBody');
+  const btn = document.getElementById('nameCandToggle');
+  if(!body || !btn) return;
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+}
+
+function parseNameCandidateLine(line){
+  const t = String(line||'').replace(/[\u3000,、\/／]+/g,' ').trim();
+  if(!t) return null;
+  const parts = t.split(/\s+/);
+  const mei = parts.shift() || '';
+  const yomi = parts.join('');
+  if(!mei) return null;
+  if(!yomi) return {mei, yomi:'', err:'読みを書いてください（例：貴徳 たかのり）'};
+  if(!/^[ぁ-んァ-ンー]+$/.test(yomi)) return {mei, yomi, err:'読みはひらがな・カタカナで書いてください'};
+  return {mei, yomi, err:''};
+}
+
+function scoreNameCandidate(mei, yomi){
+  const meiKs = [...mei].map(c=>getStroke(c));
+  if(meiKs.some(v=>v===null||v===undefined)) return {err:'画数が取得できない文字が含まれています'};
+  const seiKs = gNameCandSeiKs;
+  const seiK = seiKs.reduce((a,b)=>a+b,0);
+  const meiK = meiKs.reduce((a,b)=>a+b,0);
+  const ten = seiK, chi = meiK;
+  const jin = (seiKs[seiKs.length-1]||0) + (meiKs[0]||0);
+  const so = ten + chi, gai = so - jin;
+  const gk = {ten,jin,chi,gai,so};
+  const r = calcNameScore(gNameCandSei, mei, gNameCandFuriSei, yomi, gk, seiKs, meiKs);
+  return {score:r.score, items:(r.items||[]), gk};
+}
+
+function nameCandTier(score){
+  if(score>=70) return {label:'使いやすい', color:'#2a6e3a', bg:'rgba(42,110,58,.07)', bd:'rgba(42,110,58,.24)'};
+  if(score>=40) return {label:'確認しながら使う', color:'#c07020', bg:'rgba(192,112,32,.07)', bd:'rgba(192,112,32,.24)'};
+  return {label:'慎重に検討', color:'#a04040', bg:'rgba(160,64,64,.07)', bd:'rgba(160,64,64,.24)'};
+}
+
+function checkNameCandidates(){
+  const box = document.getElementById('nameCandResult');
+  const input = document.getElementById('nameCandInput');
+  if(!box || !input) return;
+  const lines = input.value.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){
+    box.innerHTML = '<div style="font-size:.58rem;color:var(--mist);text-align:center;padding:8px;">候補を1行に1つずつ入力してください。</div>';
+    return;
+  }
+  const over = lines.length > NAME_CAND_MAX;
+  const use = lines.slice(0, NAME_CAND_MAX);
+  gNameCandRows = use.map(line=>{
+    const parsed = parseNameCandidateLine(line);
+    if(!parsed) return null;
+    if(parsed.err) return {mei:parsed.mei, yomi:parsed.yomi, err:parsed.err};
+    const sc = scoreNameCandidate(parsed.mei, parsed.yomi);
+    if(sc.err) return {mei:parsed.mei, yomi:parsed.yomi, err:sc.err};
+    return {mei:parsed.mei, yomi:parsed.yomi, err:'', score:sc.score, items:sc.items};
+  }).filter(Boolean);
+
+  const html = gNameCandRows.map((row,i)=>{
+    if(row.err){
+      return '<div style="border:1px solid rgba(138,104,32,.18);border-radius:10px;padding:9px 11px;margin-bottom:8px;background:rgba(255,255,255,.6);">'
+        +'<div style="font-size:.66rem;font-weight:700;color:var(--snow);">'+escNameCand(gNameCandSei)+' '+escNameCand(row.mei)+'</div>'
+        +'<div style="font-size:.56rem;color:#a04040;margin-top:3px;">'+escNameCand(row.err)+'</div></div>';
+    }
+    const t = nameCandTier(row.score);
+    const notes = (row.items||[]).filter(it=>it.title);
+    const warns = notes.filter(it=>it.icon!=='ℹ');
+    const sub = warns.length ? ('・気になる点 '+warns.length+'件')
+      : (notes.length ? '・気になる点なし（補足 '+notes.length+'件）' : '・気になる点なし');
+    return '<div style="border:1px solid '+t.bd+';border-radius:10px;margin-bottom:8px;background:'+t.bg+';overflow:hidden;">'
+      +'<button type="button" onclick="toggleNameCandDetail('+i+')" aria-expanded="false" id="nameCandBtn'+i+'" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 11px;background:none;border:none;text-align:left;cursor:pointer;">'
+      +'<span style="min-width:0;"><span style="display:block;font-size:.68rem;font-weight:700;color:var(--snow);">'+escNameCand(gNameCandSei)+' '+escNameCand(row.mei)+'</span>'
+      +'<span style="display:block;font-size:.54rem;color:var(--mist);margin-top:2px;">'+escNameCand(row.yomi)+sub+'</span></span>'
+      +'<span style="flex:none;font-size:.58rem;font-weight:800;color:'+t.color+';">'+t.label+'</span>'
+      +'</button>'
+      +'<div id="nameCandDetail'+i+'" style="display:none;padding:0 11px 11px;">'
+      +(notes.length?notes.map(it=>'<div style="border-top:1px solid rgba(138,104,32,.12);padding-top:8px;margin-top:8px;">'
+        +'<div style="font-size:.6rem;font-weight:700;color:var(--goldlt);">'+escNameCand(it.icon||'')+' '+escNameCand(it.title)+'</div>'
+        +'<div style="font-size:.56rem;color:var(--mist);line-height:1.75;margin-top:3px;">'+escNameCand(it.text||'')+'</div>'
+        +(it.kitoku?'<div style="font-size:.56rem;color:var(--gold);line-height:1.75;margin-top:3px;">→ '+escNameCand(it.kitoku)+'</div>':'')
+        +'</div>').join('')
+        :'<div style="border-top:1px solid rgba(138,104,32,.12);padding-top:8px;margin-top:8px;font-size:.56rem;color:var(--mist);line-height:1.75;">この候補では、特に気になる点は出ていません。</div>')
+      +'</div></div>';
+  }).join('');
+
+  box.innerHTML = (over?'<div style="font-size:.55rem;color:#a04040;margin-bottom:8px;">一度に確認できるのは'+NAME_CAND_MAX+'件までです。はじめの'+NAME_CAND_MAX+'件だけ確認しました。</div>':'')
+    + html
+    + '<div style="font-size:.55rem;color:var(--mist);line-height:1.75;margin-top:8px;">名前をタップすると、その候補で気になる点と補い方が開きます。</div>';
+}
+
+function toggleNameCandDetail(i){
+  const d = document.getElementById('nameCandDetail'+i);
+  const b = document.getElementById('nameCandBtn'+i);
+  if(!d||!b) return;
+  const open = d.style.display === 'block';
+  d.style.display = open ? 'none' : 'block';
+  b.setAttribute('aria-expanded', open ? 'false' : 'true');
 }
 
 function openBasisModal(title, basis){
