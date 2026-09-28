@@ -88,6 +88,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-group-sub{display:block;font-size:.62rem;letter-spacing:0;color:var(--mist);font-weight:600;line-height:1.75;margin-top:3px;}
 [data-theme="dark"] .ai-group-label{background:rgba(196,160,67,.12);border-color:rgba(196,160,67,.32);}
 [data-theme="dark"] .ai-group-label.grow-ai{background:rgba(72,142,94,.12);border-color:rgba(120,190,140,.28);}
+[data-theme="dark"] .ai-group-label.grow-ai .ai-group-title{color:#7fd6a0;}
 .ai-example-grid{display:grid;gap:10px;margin-top:10px;}
 .ai-example-card{background:rgba(255,255,255,.58);border:1px solid rgba(100,80,40,.14);border-radius:12px;overflow:hidden;}
 .ai-example-card.primary{background:linear-gradient(135deg,rgba(196,160,67,.13),rgba(255,255,255,.68));border-color:rgba(196,160,67,.36);}
@@ -772,6 +773,17 @@ function renderAiThemeButtons(){
   }).join('');
 }
 
+function isAiNoteUntouched(note){
+  if(!note)return false;
+  const cur=note.value.trim();
+  if(!cur)return true;
+  if(typeof KITOKU_AI_THEMES!=='object'||!KITOKU_AI_THEMES)return false;
+  return Object.keys(KITOKU_AI_THEMES).some(function(k){
+    const ph=String((KITOKU_AI_THEMES[k]&&KITOKU_AI_THEMES[k].placeholder)||'').trim();
+    return !!ph&&ph===cur;
+  });
+}
+
 function selectAiTheme(theme){
   const safe=getAiThemeKeys().includes(theme)?theme:'today';
   gAiTheme=safe;
@@ -779,7 +791,7 @@ function selectAiTheme(theme){
   if(typeof getAiThemeMeta==='function'){
     const note=document.getElementById('aiUserNote');
     const meta=getAiThemeMeta(safe);
-    if(note&&!note.value.trim())note.value=meta.placeholder||'';
+    if(note&&isAiNoteUntouched(note))note.value=meta.placeholder||'';
   }
   updateLifeReadingNotice();
   try{
@@ -895,7 +907,7 @@ function loadHandoffFromPremium(){
     const board=document.getElementById('aiBoardInfo');
     if(board)board.value=data.boardInfo||'';
     const note=document.getElementById('aiUserNote');
-    if(note&&!note.value.trim()&&data.userNote)note.value=data.userNote;
+    if(note&&data.userNote&&isAiNoteUntouched(note))note.value=data.userNote;
     generateAiMaterial();
     const builder=document.getElementById('aiMaterialBuilder');
     if(builder)builder.scrollIntoView({behavior:'smooth',block:'start'});
