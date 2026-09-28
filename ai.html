@@ -73,11 +73,11 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-section-text p{margin:0 0 10px;}
 .ai-section-text p:last-child{margin-bottom:0;}
 .ai-group-label{
-  font-size:.6rem;letter-spacing:.2em;color:var(--gold);
-  font-weight:700;margin:26px 16px 12px;
-  display:flex;align-items:center;gap:8px;
+  font-size:.78rem;letter-spacing:.14em;color:var(--goldlt);
+  font-weight:900;margin:34px 16px 12px;
+  display:flex;align-items:center;gap:10px;
 }
-.ai-group-label::after{content:"";flex:1;height:1px;background:var(--rim);}
+.ai-group-label::after{content:"";flex:1;height:1px;background:rgba(138,104,32,.25);}
 .ai-group-note{
   font-size:.62rem;color:var(--mist);line-height:1.8;
   margin:-4px 16px 14px;
@@ -283,7 +283,13 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 
 
-<div class="ai-group-label">今日、AIに相談する</div>
+<div class="lead">
+  <div class="lead-title">AIに相談する</div>
+  <div class="lead-text">AIは答えを出す道具ではなく、選ぶための材料を増やしてくれるものです。KITOKUは、その材料を、AIに渡しやすい形に整える場所です。</div>
+  <div class="lead-text" style="margin-top:10px;">ここで作った文章を、ChatGPT・Gemini・Claudeなど、いつも使っているAIに貼って相談してください。使い方と気をつけることも、このページにまとめています。</div>
+</div>
+
+<div class="ai-group-label">今日つかう</div>
 
 <section class="material-builder" id="aiMaterialBuilder">
   <div class="ai-section-label">01 / MATERIAL</div>
