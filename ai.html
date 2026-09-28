@@ -271,7 +271,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
 
 <section class="material-builder" id="aiMaterialBuilder">
-  <div class="ai-section-label">02 / AI MATERIAL</div>
+  <div class="ai-section-label">01 / MATERIAL</div>
   <div class="ai-section-title">相談材料を作る</div>
   <div class="ai-section-text">テーマを選び、今聞きたいことを短く書くと、いつものAIに貼れる相談材料を作れます。</div>
   <div class="material-theme-grid" id="aiThemeGrid"></div>
@@ -290,6 +290,10 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   <div class="material-field">
     <label for="aiMaterialOutput">コピーして使う相談材料</label>
     <textarea class="material-output" id="aiMaterialOutput" readonly>テーマを選んで「相談材料を作る」を押すと、ここに表示されます。</textarea>
+  </div>
+  <div class="ai-section-text" style="font-size:.6rem;color:var(--mist);line-height:1.8;margin:8px 0 10px;padding:9px 11px;background:rgba(138,104,32,.05);border:1px solid rgba(196,160,67,.2);border-radius:8px;">
+    この文章には、あなたの名前・生年月日・鑑定結果が含まれることがあります。<br>
+    上の欄は編集できます。不要な部分は消してから貼ってください。
   </div>
   <button class="copy-btn" id="copyAiMaterialBtn" onclick="copyAiMaterial()"><span>COPY</span> 相談材料をコピー</button>
   <div class="material-subbox">
@@ -336,8 +340,43 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </div>
 
+<section class="ai-section" id="careNotes">
+  <div class="ai-section-label">02 / CARE</div>
+  <div class="ai-section-title">AIに渡す前に3点だけ</div>
+  <div class="ai-mini-list">
+    <div class="ai-mini-item"><strong>1. AIはもっともらしい間違いを出すことがあります</strong><br>数字・日付・吉凶の判定は、KITOKUの画面に戻って確かめてください。</div>
+    <div class="ai-mini-item"><strong>2. 個人情報は、必要な分だけにしてください</strong><br>相談材料には、あなたの名前・生年月日・鑑定結果が含まれることがあります。貼る前に消すこともできます。住所・金融情報・職場の機密・相手の個人情報は入れないでください。</div>
+    <div class="ai-mini-item"><strong>3. 決めるのは、いつもあなたです</strong><br>AIの答えも、KITOKUの結果も、判断するための材料のひとつです。</div>
+  </div>
+  <div class="ai-section-text" style="margin-top:10px;">
+    <p>使っているAIサービスに、チャット履歴や学習利用、メモリの設定がある場合があります。気になる方は、各サービスの設定をご確認ください。設定名や場所は変わることがあります。</p>
+  </div>
+</section>
+
+<section class="ai-section ai-section-accordion" id="aiRoles" data-ai-section-accordion>
+  <button class="ai-section-toggle" type="button" aria-expanded="false">
+    <span>
+      <span class="ai-section-label">03 / ROLES</span>
+      <span class="ai-section-title">AIに任せること、KITOKUに戻すこと</span>
+      <span class="ai-section-summary">得意なところに使うと、AIは頼りになります。</span>
+    </span>
+    <span class="ai-accordion-icon">⌄</span>
+  </button>
+  <div class="ai-section-accordion-content"><div class="ai-section-accordion-inner">
+    <div class="ai-section-text">
+      <p><strong>AIが得意なこと</strong><br>候補を広げる。考えを言葉にする。長い話や数字を整理して、流れとして説明する。</p>
+      <p><strong>AIが苦手なこと</strong><br>特定の流派や基準に沿った吉凶の判定。もっともらしい言い方で、違う答えを出すことがあります。</p>
+      <p><strong>だから、こう使います</strong><br>発想はAIに。判定はKITOKUに。決めるのは自分。<br>これは姓名鑑定でも方位でも相性でも同じです。使うAIが変わっても、この型は変わりません。</p>
+    </div>
+    <div class="ai-mini-list">
+      <div class="ai-mini-item"><strong>はじめに貼る一言</strong><br>「これは私の気学の基本データです。今日から、私の日常のアドバイザーとして相談に乗ってください。」</div>
+      <div class="ai-mini-item"><strong>判定させたくない時の一言</strong><br>「吉凶の判定はしないでください。◯◯について、一緒に整理してください。」</div>
+    </div>
+  </div></div>
+</section>
+
 <section class="ai-section kicker-section" id="dailyExamples">
-  <div class="ai-section-label">03 / HOW TO USE</div>
+  <div class="ai-section-label">04 / EXAMPLES</div>
   <div class="ai-section-title">こんな時、こう使う</div>
   <div class="ai-section-text">毎日必ず訪れる場面ほど、AIも育ちやすくなります。</div>
   <div class="ai-example-grid">
@@ -392,32 +431,26 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </section>
 
-<section class="ai-section ai-section-accordion" id="memorySetup" data-ai-section-accordion>
+<section class="ai-section ai-section-accordion" id="growHabit" data-ai-section-accordion>
   <button class="ai-section-toggle" type="button" aria-expanded="false">
     <span>
-      <span class="ai-section-label">04 / PRACTICAL TIP</span>
-      <span class="ai-section-title">便利な活用方法</span>
-      <span class="ai-section-summary">毎回貼る手間を減らしたい時に。</span>
+      <span class="ai-section-label">05 / HABIT</span>
+      <span class="ai-section-title">続けて使うために</span>
+      <span class="ai-section-summary">はじめの一歩から、知恵の蔵として育てるところまで。</span>
     </span>
     <span class="ai-accordion-icon">⌄</span>
   </button>
   <div class="ai-section-accordion-content"><div class="ai-section-accordion-inner">
-    <div class="ai-section-text">
-      <p>同じチャットを固定して使う方法だけでも、日々の相談には十分です。ただ、テーマごとにチャットを分けると、新しいチャットを開くたびに基本情報を貼り直す必要が出てきます。</p>
-      <p>これを避けたい場合、多くのAIには基本情報を一度登録すれば、どのチャットを新しく開いても、最初から覚えていてくれる設定があります。</p>
-    </div>
-    <div class="ai-mini-list">
-      <div class="ai-mini-item"><strong>ChatGPT</strong>設定 → パーソナライズ → メモリ</div>
-      <div class="ai-mini-item"><strong>Gemini</strong>設定 → パーソナルインテリジェンス → カスタム指示</div>
-    </div>
-    <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、以降のやり取りはすべて「あなたの本命星・月命星はこれです」という前提の上で進みます。改めて説明し直す必要がなくなり、「こんな時、こう使う」の香水の例のように、聞きたいことだけを聞けば具体的な答えが返ってくるようになります。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
-  </div></div>
-</section>
+  <div class="ai-section-title">はじめの一歩</div>
+  <div class="ai-steps-list">
+    <div class="ai-step-item"><div class="ai-step-copy"><strong>基本情報をコピーする</strong>あなたの基本情報（本命星・月命星・傾斜・同会・納音）をコピーして、いつも使っているAIチャットに貼ってください。</div></div>
+    <div class="ai-step-item"><div class="ai-step-copy"><strong>最初の一言を添える</strong>「これは私の気学の基本データです。今日から、私の日常のアドバイザーとして相談に乗ってください。」</div></div>
+    <div class="ai-step-item"><div class="ai-step-copy"><strong>今日困っていることを聞く</strong>あとは、今日困っていることを、そのまま聞いてみてください。</div></div>
+  </div>
 
 <div class="ai-tree-intro">「こんな時、こう使う」で気になった例は、下の図で確認できます。「今日を整えたい」「人に合わせたい」「自分を深掘りしたい」「育てていきたい」のどこに対応するか、確認してみてください。</div>
 
 <div class="ai-tree-panel">
-  <div class="ai-tree-kicker">05 / AI USE TREE</div>
   <div class="ai-tree-title">AI活用ツリー</div>
   <div class="ai-tree-text">
     どの相談でも、まずは自分の星情報から。慣れてきたら、目的に合わせて材料を足していきます。
@@ -427,9 +460,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <button class="ai-tree-level" type="button" data-ai-level="middle">中級：テーマ別</button>
     <button class="ai-tree-level" type="button" data-ai-level="advanced">上級：知恵の蔵</button>
   </div>
-  <div class="ai-tree-level-detail active" data-ai-level-detail="basic"><strong>まずは1つのチャットで十分です</strong>星情報と今日の方位盤を同じチャットに貼り、「今日どう整える？」と聞くだけで始められます。</div>
-  <div class="ai-tree-level-detail" data-ai-level-detail="middle"><strong>慣れたらテーマごとに分けます</strong>服・体調と食事・仕事と商談・人間関係など、相談内容ごとにチャットを分けると答えが具体的になります。</div>
-  <div class="ai-tree-level-detail" data-ai-level-detail="advanced"><strong>上級者は知恵の蔵として蓄積します</strong>Project、Gem、NotebookLM、Obsidianなどに、星情報・診断結果・日々の記録を少しずつ貯めていきます。</div>
   <a class="ai-tree-root" href="#starMaterial" data-focus-target="starMaterial">
     <span class="ai-tree-root-mark">星</span>
     <span><span class="ai-tree-root-title">共通の土台：自分の星情報</span><span class="ai-tree-root-desc">最初に一度貼る、すべての相談の出発点です</span></span>
@@ -488,8 +518,6 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
 </div>
 
-<section class="ai-section" id="growthSteps">
-  <div class="ai-section-label">06 / GROW</div>
   <div class="ai-section-title">育て方の3段階</div>
   <div class="ai-section-text">一気に全部を使いこなす必要はありません。今の自分に合う段階から、少しずつ進めてください。</div>
   <div class="ai-mini-list">
@@ -497,39 +525,51 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <div class="ai-mini-item"><strong>中級：テーマごとにチャットを分ける</strong>仕事用・人間関係用・体調や美容用、と分けると、AIが混乱せず、より的確な答えを返しやすくなります。</div>
     <div class="ai-mini-item"><strong>上級：知恵の蔵として育てる</strong>香水の例のように、基本情報を伝えておけばAIはそこから汲み取って答えてくれます。NotebookLMは、その関係をもっと長く、もっと深く続けていく場所です。日々の気づきや相談の記録を積み重ねるほど、あなた専属の相談相手として精度が上がっていきます。慣れてきたら試してみてください。</div>
   </div>
-</section>
 
-<section class="ai-section" id="firstStep">
-  <div class="ai-section-label">07 / FIRST STEP</div>
-  <div class="ai-section-title">はじめの一歩</div>
-  <div class="ai-steps-list">
-    <div class="ai-step-item"><div class="ai-step-copy"><strong>基本情報をコピーする</strong>あなたの基本情報（本命星・月命星・傾斜・同会・納音）をコピーして、いつも使っているAIチャットに貼ってください。</div></div>
-    <div class="ai-step-item"><div class="ai-step-copy"><strong>最初の一言を添える</strong>「これは私の気学の基本データです。今日から、私の日常のアドバイザーとして相談に乗ってください。」</div></div>
-    <div class="ai-step-item"><div class="ai-step-copy"><strong>今日困っていることを聞く</strong>あとは、今日困っていることを、そのまま聞いてみてください。</div></div>
-  </div>
+    <div class="ai-section-title">便利な活用方法</div>
+    <div class="ai-section-text">毎回貼る手間を減らしたい時に。</div>
+    <div class="ai-section-text">
+      <p>同じチャットを固定して使う方法だけでも、日々の相談には十分です。ただ、テーマごとにチャットを分けると、新しいチャットを開くたびに基本情報を貼り直す必要が出てきます。</p>
+      <p>これを避けたい場合、多くのAIには基本情報を一度登録すれば、どのチャットを新しく開いても、最初から覚えていてくれる設定があります。</p>
+    </div>
+    <div class="ai-mini-list">
+      <div class="ai-mini-item"><strong>ChatGPT</strong>設定 → パーソナライズ → メモリ</div>
+      <div class="ai-mini-item"><strong>Gemini</strong>設定 → パーソナルインテリジェンス → カスタム指示</div>
+    </div>
+    <div class="ai-section-text" style="margin-top:10px;"><p>ここに基本情報を一度だけ登録しておくと、以降のやり取りはすべて「あなたの本命星・月命星はこれです」という前提の上で進みます。改めて説明し直す必要がなくなり、「こんな時、こう使う」の香水の例のように、聞きたいことだけを聞けば具体的な答えが返ってくるようになります。設定名は変わる場合がありますが、テーマ別にチャットを分けたい時に便利です。</p></div>
+  </div></div>
 </section>
 
 <!-- リード -->
-<div class="lead">
-  <div class="lead-box">
-    <div class="ai-section-label">01 / PHILOSOPHY</div>
-    <div class="lead-title">自分専用のAIを育てる</div>
+<section class="ai-section ai-section-accordion" id="whyAi" data-ai-section-accordion>
+  <button class="ai-section-toggle" type="button" aria-expanded="false">
+    <span>
+      <span class="ai-section-label">06 / WHY</span>
+      <span class="ai-section-title">自分専用のAIを育てる</span>
+      <span class="ai-section-summary">答えではなく、選ぶための材料を増やすために。</span>
+    </span>
+    <span class="ai-accordion-icon">⌄</span>
+  </button>
+  <div class="ai-section-accordion-content"><div class="ai-section-accordion-inner">
     <div class="lead-text">
       第2の脳としてAIを育てる、という使い方が広がっています。<br>
       その多くは、仕事の効率化や成果を目的にしたものです。<br><br>
       KITOKUがまず提案したいのは、もう一つの使い方。日々の生活の中で、自分自身と向き合うための右腕です。気学は、今日の服、香り、食べるもの、大事な人との距離感を決める時の要素になります。<br><br>
       答えを出してくれるのではなく、選ぶための材料を増やしてくれるものです。KITOKUは、その材料をAIに渡しやすい形に整える場所です。
     </div>
+
     <div class="lead-point">
       <div class="lead-point-title">まずは身近な生活から</div>
       <div class="lead-point-text">ここで育てた右腕は、仕事の場面にもそのまま応用できます。AIに答えを丸投げするのではなく、あなたの判断を助ける右腕として、少しずつ育てていってください。</div>
     </div>
-  </div>
-</div>
+    <div class="lead-point" style="margin-top:12px;">
+      <div class="lead-point-title">AIは変わり続けます</div>
+      <div class="lead-point-text">どのAIを使うか、どのボタンがどこにあるか、設定の名前は変わり続けます。けれど、渡して、任せて、戻して、自分で決める、という型は変わりません。KITOKUがお伝えしたいのは、操作の手順ではなく、この型です。</div>
+    </div>
+  </div></div>
+</section>
 
 <div class="footer-note">
-  ⚠ AIの回答はあくまで参考です。最終的な判断はご自身でお願いします。<br>
-  服や持ち物の写真は相談に役立ちますが、住所・金融情報・職場の機密・相手の個人情報などは、必要がない限りAIに渡さないようにしてください。<br>
   ChatGPT・Gemini・Claudeなど、普段使っているAIや音声入力で使えます。
 </div>
 <div class="footer">KITOKU ENGINE — 天地統合コンシェルジュ<br>Inspired by 5000 Years of Eastern Celestial Wisdom</div>
