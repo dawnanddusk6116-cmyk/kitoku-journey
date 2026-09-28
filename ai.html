@@ -321,7 +321,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
   </div>
   <div class="material-field">
     <label for="aiBoardInfo">方位盤メモ・日付メモ（任意）</label>
-    <textarea id="aiBoardInfo" placeholder="direction_v2.htmlや旅行・巡礼・引越しナビの方位盤メモを、必要な時だけ貼ってください。"></textarea>
+    <textarea id="aiBoardInfo" placeholder="今日の方位盤や、旅行・巡礼・引越しナビの方位盤メモを、必要な時だけ貼ってください。"></textarea>
   </div>
   <div class="life-reading-notice" id="lifeReadingNotice"></div>
   <div class="material-actions">
@@ -846,7 +846,7 @@ function isExternalLifeReadingForAi(lr){
 }
 
 function formatLifeReadingForAi(lr){
-  if(!lr)return '姓名鑑定結果はまだ読み込まれていません。先にKITOKUの姓名鑑定（life.html）で計算してください。AIには画数計算を任せず、計算済みの結果を渡してから相談してください。';
+  if(!lr)return '姓名鑑定結果はまだ読み込まれていません。先にKITOKUの姓名鑑定で計算してください。AIには画数計算を任せず、計算済みの結果を渡してから相談してください。';
   const strokes=lr.strokes||{};
   const seiStrokes=Array.isArray(strokes.sei)?strokes.sei.map(x=>`${x.ch}${x.n||''}画`).join('・'):'';
   const meiStrokes=Array.isArray(strokes.mei)?strokes.mei.map(x=>`${x.ch}${x.n||''}画`).join('・'):'';
@@ -892,12 +892,16 @@ function updateLifeReadingNotice(){
     const scope=isExternalLifeReadingForAi(lr)?'本人以外の鑑定として読み込みます':'本人の鑑定として読み込みます';
     notice.innerHTML=`<strong>${lr.name}</strong>さんの姓名鑑定結果を読み込みました。${scope}。<br><a href="#" onclick="clearLifeReadingForAi();return false;" style="color:var(--goldlt);font-size:.9em;">この結果を使わない（読み込みを解除）</a>`;
   }else{
-    notice.innerHTML='まだ姓名鑑定をしていません。先に<a href="life.html">life.htmlで診断してください</a>。画数情報なしで相談する場合も、AIに画数計算を任せないよう注意してください。';
+    notice.innerHTML='まだ姓名鑑定をしていません。先に<a href="life.html">KITOKUの姓名鑑定で診断してください</a>。画数情報なしで相談する場合も、AIに画数計算を任せないよう注意してください。';
   }
 }
 
 function collectAiStarInfo(){
-  return (gAiHandoff&&gAiHandoff.starInfo)||(gInfo&&gInfo.starText)||document.getElementById('starInfoText')?.textContent||'';
+  if(gAiHandoff&&gAiHandoff.starInfo)return gAiHandoff.starInfo;
+  if(gInfo&&gInfo.starText)return gInfo.starText;
+  const text=document.getElementById('starInfoText')?.textContent||'';
+  if(/生年月日を登録すると/.test(text))return '';
+  return text;
 }
 
 function collectAiTargetInfo(){
@@ -908,9 +912,7 @@ function collectAiTargetInfo(){
 }
 
 function collectAiScentInfo(){
-  if(gAiHandoff&&gAiHandoff.scentInfo)return gAiHandoff.scentInfo;
-  if(!['color','scent','photo'].includes(gAiTheme))return '';
-  return '色・香りの詳しい処方がある場合は、today.html・scent.htmlの結果や、手持ちの香水・服・小物をここに追加してください。';
+  return (gAiHandoff&&gAiHandoff.scentInfo)||'';
 }
 
 function loadHandoffFromPremium(){
@@ -948,7 +950,6 @@ function generateAiMaterial(){
     boardInfo:document.getElementById('aiBoardInfo')?.value||'',
     targetInfo:collectAiTargetInfo(),
     scentInfo:collectAiScentInfo(),
-    astroInfo:'',
     lifeReadingInfo:(gAiHandoff&&gAiHandoff.lifeReadingInfo)?gAiHandoff.lifeReadingInfo:(gAiTheme==='naming'&&getLifeReadingForAi()?formatLifeReadingForAi(getLifeReadingForAi()):'')
   });
   output.value=text;
