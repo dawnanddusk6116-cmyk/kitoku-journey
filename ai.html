@@ -97,7 +97,9 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .ai-accordion-toggle:focus-visible,.ai-section-toggle:focus-visible{outline:2px solid rgba(196,160,67,.55);outline-offset:-3px;}
 .ai-accordion-title{display:block;font-size:.78rem;color:var(--goldlt);font-weight:900;line-height:1.55;}
 .ai-accordion-summary{display:block;font-size:.58rem;color:var(--mist);line-height:1.6;margin-top:2px;}
-.ai-accordion-icon{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(196,160,67,.12);border:1px solid rgba(196,160,67,.28);color:var(--goldlt);font-size:.76rem;font-weight:900;transition:transform .25s ease;}
+.ai-accordion-icon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(138,104,32,.95),rgba(196,160,67,.85));border:1px solid rgba(138,104,32,.45);color:#fff;font-size:.82rem;font-weight:900;box-shadow:0 1px 3px rgba(100,80,40,.22);transition:transform .25s ease;}
+.ai-accordion,.ai-section-accordion{border-left:4px solid rgba(196,160,67,.75);}
+.ai-section-accordion{background:rgba(196,160,67,.05);}
 .ai-accordion-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;border-top:1px solid transparent;}
 .ai-accordion-inner{min-height:0;overflow:hidden;padding:0 12px;}
 .ai-accordion.open .ai-accordion-content{grid-template-rows:1fr;border-top-color:rgba(100,80,40,.1);}
@@ -173,7 +175,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 .material-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
 .material-build-btn{width:100%;background:linear-gradient(135deg,rgba(138,104,32,.96),rgba(196,160,67,.82));border:1px solid rgba(138,104,32,.4);border-radius:10px;padding:12px;color:#fff;font-family:'Noto Serif JP',serif;font-size:.76rem;font-weight:900;cursor:pointer;}
 .material-output{min-height:180px!important;}
-.ai-fold{margin:14px 16px 0;border:1px dashed rgba(138,104,32,.28);background:rgba(100,80,40,.035);border-radius:10px;overflow:hidden;}
+.ai-fold{margin:14px 16px 0;border:1px dashed rgba(138,104,32,.28);border-left:4px solid rgba(196,160,67,.75);background:rgba(100,80,40,.035);border-radius:10px;overflow:hidden;}
 .ai-fold.ai-fold-inset{margin:12px 0 0;}
 .ai-fold .ai-accordion-inner{padding:0 11px;}
 .ai-fold.open .ai-accordion-inner{padding:0 11px 11px;}
