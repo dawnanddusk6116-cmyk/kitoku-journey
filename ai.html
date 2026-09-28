@@ -797,6 +797,12 @@ function getLifeReadingForAi(){
   return null;
 }
 
+function clearLifeReadingForAi(){
+  try{ localStorage.removeItem('kitoku-life-reading'); }catch(e){}
+  updateLifeReadingNotice();
+  if(typeof generateAiMaterial==='function') generateAiMaterial();
+}
+
 function getLifeModeLabelForAi(mode){
   return {self:'自分',rename:'改名',baby:'命名',other:'他の人',ai:'相性'}[String(mode||'')] || (mode||'未設定');
 }
@@ -850,7 +856,7 @@ function updateLifeReadingNotice(){
   notice.style.display='block';
   if(lr){
     const scope=isExternalLifeReadingForAi(lr)?'本人以外の鑑定として読み込みます':'本人の鑑定として読み込みます';
-    notice.innerHTML=`<strong>${lr.name}</strong>さんの姓名鑑定結果を読み込みました。${scope}。`;
+    notice.innerHTML=`<strong>${lr.name}</strong>さんの姓名鑑定結果を読み込みました。${scope}。<br><a href="#" onclick="clearLifeReadingForAi();return false;" style="color:var(--goldlt);font-size:.9em;">この結果を使わない（読み込みを解除）</a>`;
   }else{
     notice.innerHTML='まだ姓名鑑定をしていません。先に<a href="life.html">life.htmlで診断してください</a>。画数情報なしで相談する場合も、AIに画数計算を任せないよう注意してください。';
   }
@@ -909,7 +915,7 @@ function generateAiMaterial(){
     targetInfo:collectAiTargetInfo(),
     scentInfo:collectAiScentInfo(),
     astroInfo:'',
-    lifeReadingInfo:(gAiHandoff&&gAiHandoff.lifeReadingInfo)?gAiHandoff.lifeReadingInfo:(gAiTheme==='naming'?formatLifeReadingForAi(getLifeReadingForAi()):'')
+    lifeReadingInfo:(gAiHandoff&&gAiHandoff.lifeReadingInfo)?gAiHandoff.lifeReadingInfo:(gAiTheme==='naming'&&getLifeReadingForAi()?formatLifeReadingForAi(getLifeReadingForAi()):'')
   });
   output.value=text;
   output.focus();
