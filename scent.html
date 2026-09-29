@@ -574,7 +574,6 @@ function buildPrompt(){
   const elemKey=info?([3,4].indexOf(info.h)>=0?'木':info.h===9?'火':[2,5,8].indexOf(info.h)>=0?'土':[6,7].indexOf(info.h)>=0?'金':'水'):'';
   const gogyoInfo=elemKey?GOGYO_SCENT[elemKey]:null;
   const seriesInfo=info?([3,6,9].indexOf(info.h)>=0?SERIES_SCENT.ten:[2,5,8].indexOf(info.h)>=0?SERIES_SCENT.chi:SERIES_SCENT.jin):null;
-  const teacherName=consultFocus==='color'?'色の相談AI':'香りの相談AI';
   const modeTitle={
     self:consultFocus==='color'?'自分の色を選ぶ':'自分の香りを選ぶ',
     wardrobe:'手持ち香水を使い分ける',
@@ -586,7 +585,7 @@ function buildPrompt(){
 
   let body=`${base}
 
-あなたはKITOKUの「${teacherName}」です。
+${consultFocus==='color'?'色':'香り'}について相談したいです。
 九星気学を主役に、${consultFocus==='color'?'色・シーン・相手との関係':'香り・シーン・相手との関係'}を統合して、押し付けではなく「自分で選ぶための${consultFocus==='color'?'色の処方箋':'香りの処方箋'}」を作ってください。
 
 【今回の相談モード】

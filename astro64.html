@@ -282,7 +282,7 @@ footer{text-align:center;color:var(--mist);font-size:.6rem;opacity:.75;margin-to
     <div style="background:rgba(196,160,67,.07);border:1px solid rgba(196,160,67,.25);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
       <div style="font-size:.58rem;font-weight:700;color:var(--goldlt);letter-spacing:.06em;margin-bottom:6px;">相談材料 ── 必要な時だけコピーします</div>
       <button class="copy ai-main-copy" onclick="copyPrompt()" style="margin-bottom:0;">AIに渡す相談材料をコピー</button>
-      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Gemini・Claude、または気学先生に渡して使えます。<br>64象意の結果を、自分の星情報と重ねながら、恋愛・仕事・行動プランなどに広げるための材料です。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
+      <div style="font-size:.6rem;color:var(--mist);line-height:1.8;margin-top:7px;">ChatGPT・Gemini・Claudeなど、いつも使っているAIに渡して使えます。<br>64象意の結果を、自分の星情報と重ねながら、恋愛・仕事・行動プランなどに広げるための材料です。返ってきた内容に対して、自由に質問を重ねても構いません。</div>
     </div>
     <button class="copy" onclick="printAstro()" style="margin-top:0;margin-bottom:10px;">🖨 印刷・PDF保存</button>
     <div style="background:rgba(196,160,67,.04);border:1px solid rgba(196,160,67,.18);border-radius:10px;padding:11px 13px;">
@@ -668,7 +668,7 @@ function openFold(id){
 
 function copyPrompt(){
   const text=document.getElementById('prompt').value;
-  navigator.clipboard.writeText(text).then(()=>alert('相談材料をコピーしました\nChatGPT・Gemini・Claude、または気学先生に渡して使ってください。'));
+  navigator.clipboard.writeText(text).then(()=>alert('相談材料をコピーしました\nChatGPT・Gemini・Claudeなど、いつも使っているAIに渡して使ってください。'));
 }
 function printAstro(){
   const t=document.getElementById('prompt').value;
