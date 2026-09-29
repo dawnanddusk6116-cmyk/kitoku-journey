@@ -466,7 +466,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
 
   <!-- AIレポート -->
   <div class="ai-section">
-    <div class="ai-sec-label">✦ AI軍師 候補者理解レポート</div>
+    <div class="ai-sec-label">✦ AI 候補者理解レポート</div>
     <button class="ai-btn" id="aiBtn" onclick="genReport()">✦ 候補者理解レポートを生成する</button>
     <div class="ai-hint">候補者を理解し、面談の質を上げ、育成の視点を持つ</div>
     <div class="ai-count" id="aiCount"></div>
@@ -624,7 +624,7 @@ html{background:var(--bg);min-height:100dvh;}body{background:var(--bg);color:var
     <details class="preview-card" style="margin-bottom:12px;background:rgba(255,255,255,.82);">
       <summary class="preview-card-title" style="cursor:pointer;">判断に迷った時</summary>
       <div class="preview-card-body" style="margin-top:8px;">
-        商品五行が分かりにくい場合は、素材・用途・味・香り・価格帯・売り場を整理して、AI軍師セッションに確認しながら判断できます。KITOKUは決定ではなく、商品を整えるための根拠を出す補助資料として使います。
+        商品五行が分かりにくい場合は、素材・用途・味・香り・価格帯・売り場を整理して、KITOKUの「AIに相談する」で相談材料を作り、確認しながら判断できます。KITOKUは決定ではなく、商品を整えるための根拠を出す補助資料として使います。
       </div>
     </details>
 
@@ -760,7 +760,7 @@ var BUSINESS_PREVIEWS={
     title:'あなたのお金の特性',
     lead:'投資判断そのものではなく、自分がどんなお金の扱い方に向きやすいかを整理する入口です。九星と名前の音から、事業家型、金融投資家型、短期判断、長期育成などの傾向を見ます。',
     free:['お金の判断タイプを知る','事業家型か投資家型かを見る','短期判断と長期育成の傾向を見る','名前の音から判断癖を深掘りする'],
-    paid:['AI軍師によるお金の適性レポート','事業・投資・副業の向き不向き整理','姓名判断と九星を重ねた判断癖分析','問い→現状→理想→次の一手の整理'],
+    paid:['お金の適性レポート','事業・投資・副業の向き不向き整理','姓名判断と九星を重ねた判断癖分析','問い→現状→理想→次の一手の整理'],
     policy:'銘柄名や売買指示ではなく、意思決定の偏りとお金の扱い方を整える機能として設計します。金融助言ではなく、自己点検と事業判断の補助資料です。'
   },
   deal:{
@@ -768,7 +768,7 @@ var BUSINESS_PREVIEWS={
     title:'商談・契約日',
     lead:'商談、契約、開業、登記、設備購入など、大きな意思決定の日を整えるための入口です。まずは今日の姿勢を見て、深い日程比較は詳細機能として準備します。',
     free:['今日が攻める日か、整える日かを見る','商談前の姿勢を整える','契約前に確認する問いを出す','大きな決断を急ぎすぎていないか点検する'],
-    paid:['候補日の比較','線路の日込みの最適日検索','月間カレンダー表示','商談・契約日のAI軍師レポート'],
+    paid:['候補日の比較','線路の日込みの最適日検索','月間カレンダー表示','商談・契約日のレポート'],
     policy:'日付を絶対視せず、事業判断の補助線として使います。契約内容、法務、資金繰り、相手先の信用確認を優先した上で、タイミングを整えるための機能です。'
   },
   balance:{
@@ -848,7 +848,7 @@ function copyBusinessText(text,btn){
 }
 function buildMoneyGunshiPrompt(hs,ts,type,timingLabel,timingMsg){
   return [
-    'あなたはKITOKUのAI軍師です。',
+    'お金・仕事の判断について相談したいです。',
     '以下のKITOKU結果をもとに、投資の売買判断ではなく、事業・副業・お金の扱い方を自分で決めるための判断材料を整理してください。',
     '',
     '【KITOKU結果】',
@@ -1013,16 +1013,16 @@ function runMoneyFree(){
         <div style="font-size:.7rem;font-weight:700;color:var(--goldlt);line-height:1.9;">${type.q}</div>
       </div>
 
-      <!-- AI軍師 -->
+      <!-- AIに貼る相談文 -->
       <div style="padding:12px 16px;border-top:1px solid rgba(138,104,32,.12);background:rgba(255,255,255,.74);">
-        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🧩 AI軍師セッション用コピー</div>
-        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">下のボタンで、AI軍師セッションの型まで入った相談文をコピーできます。コピーしたら、AI軍師セッション、または普段使っているAIの入力欄にそのまま貼り付けてください。</div>
+        <div style="font-size:.6rem;color:var(--gold);margin-bottom:5px;font-weight:700;">🧩 AIに貼る相談文</div>
+        <div style="font-size:.63rem;color:var(--mist);line-height:1.85;margin-bottom:8px;">下のボタンで、整理の型まで入った相談文をコピーできます。コピーしたら、普段使っているAIの入力欄にそのまま貼り付けてください。</div>
         <div style="font-size:.62rem;color:var(--mist);line-height:1.8;background:rgba(138,104,32,.055);border:1px solid rgba(138,104,32,.12);border-radius:8px;padding:9px 10px;margin-bottom:8px;">
           <strong style="color:var(--goldlt);">コピーされる内容：</strong><br>
-          KITOKU結果、本命星・月命星、お金の判断タイプ、今日の問い、AI軍師セッションの「問い → 現状 → 理想 → 次の一手」まで含めます。
+          KITOKU結果、本命星・月命星、お金の判断タイプ、今日の問い、そして「問い → 現状 → 理想 → 次の一手」の整理の型まで含めます。
         </div>
         <button type="button" onclick="copyBusinessText(this.dataset.prompt,this)" data-prompt="${gunshiPromptHtml}" style="width:100%;border:1px solid rgba(138,104,32,.34);background:var(--goldlt);color:#fff;border-radius:9px;padding:10px 12px;font-size:.68rem;font-weight:800;font-family:inherit;cursor:pointer;">✦ AIに貼る相談文をコピー</button>
-        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;">AI軍師セッションなら、KITOKUの星情報を踏まえてより正確に相談できます。通常のAIでも貼り付ければ方向性の整理はできますが、回答は参考として使ってください。</div>
+        <div style="font-size:.58rem;color:var(--mist);line-height:1.7;margin-top:8px;">貼り付けるだけで、方向性の整理ができます。回答は参考として使い、最後は自分で決めてください。</div>
         <a href="ai.html?theme=money#aiMaterialBuilder" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:8px 14px;background:rgba(138,104,32,.09);border:1px solid rgba(138,104,32,.22);color:var(--goldlt);border-radius:8px;font-size:.65rem;font-weight:700;text-decoration:none;font-family:inherit;">AIに相談する材料を作る</a>
       </div>
 
@@ -2164,7 +2164,7 @@ function genReport(){
   var sageName=SAGE_LABEL[d.sage||'kitoku'];
   var catLabel=CAT_LABELS[d.cat||'hire'];
 
-  var prompt='あなたはKITOKU for BUSINESSのAI軍師です。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n傾斜（潜在能力）：'+d.myK+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n傾斜（潜在能力）：'+d.cK+'\n裏の性格（つまずきと強み）：'+d.cUra+'\n動かし方（最適な関わり方）：'+d.cSouju+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\n【KITOKUの絶対哲学】\n・相剋は「死角ゼロの最強チーム」として全肯定する\n・「合わないがゆえに全部できるようになる」\n・弱点は必ず「活かし方」とセットで伝える\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。動かし方（'+d.cSouju+'）を踏まえ、具体的な関わり方を示す。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
+  var prompt='KITOKU for BUSINESSの相談レポートを作成してください。\n'+sageName+'の言葉と思想を借りながら、東洋の気の学問（5000年の知恵）を、人を決めつけるためではなく、その人を理解し、ビジネスの判断材料にするための補助資料に翻訳してください。\n\n【カテゴリ】'+catLabel.title+'\n【場面の焦点】'+sceneGuide+'\n【賢者の視点】'+sageName+'\n\n【あなた（'+catLabel.myLabel.replace('✦ ','').replace('の生年月日','')+'）】\n本命星：'+d.myH+'（'+d.myE+'）\n月命星：'+d.myT+'\n傾斜（潜在能力）：'+d.myK+'\n\n【'+d.nm+'さん】\n本命星：'+d.cH+'（'+d.cE+'）\n月命星：'+d.cT+'\n傾斜（潜在能力）：'+d.cK+'\n裏の性格（つまずきと強み）：'+d.cUra+'\n動かし方（最適な関わり方）：'+d.cSouju+'\n\n【相性】'+d.compat+'\n【関係の見立て】'+relationGuide+'\n【視点】'+catGuide+'\n\n【KITOKUの絶対哲学】\n・相剋は「死角ゼロの最強チーム」として全肯定する\n・「合わないがゆえに全部できるようになる」\n・弱点は必ず「活かし方」とセットで伝える\n\nレポートタイトルは「KITOKU for BUSINESS｜'+catLabel.title+'レポート」としてください。\n以下の3段構成で作成してください。\n\n【現状の構造（理）】\n星盤から見た二人のエネルギー状態、関係性、職場で起きやすい強みと注意点を整理する。\n\n【魂の性質（響き）】\n'+d.nm+'さんの本命星・月命星から見た本質、才能、内側の動機、力を発揮しやすい環境を'+sageName+'の言葉で伝える。動かし方（'+d.cSouju+'）を踏まえ、具体的な関わり方を示す。\n\n【軍略的助言（指揮）】\n'+sceneGuide+'\n明日から使える具体的な関わり方・問いかけ・対応方針を示す。\n\n必ず最後に「確認すべき3つの問い」を入れてください。\n'+qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n')+'\n\n最後に次の一文を自然に添えてください。\nこのレポートは人を決めつけるものではなく、理解を深め、可能性を引き出すための補助資料です。\n\n【制約】\n・占い・当たる・凶・悪い・最悪・絶対無理という言葉を一切使わない\n・採否・配属可否を断定せず、判断材料として提示する\n・弱点は必ず「活かし方」とセットで伝える\n・相性が難しい場合も、補完関係・育成ポイントとして表現する\n・担当者がそのまま使える具体的な内容にする\n・当事者への敬意を失わない\n・900〜1200文字程度';
 
   fetch('/api/claude',{
     method:'POST',
