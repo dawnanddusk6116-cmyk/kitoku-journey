@@ -1501,6 +1501,16 @@ html.font-large .font-btn{font-size:.8rem;}
   </div>
 </div>
 
+<!-- AIに相談する導線 -->
+<div class="section" id="aiConsultSection" style="display:none;">
+  <a href="ai.html?theme=travel#aiMaterialBuilder" style="display:block;padding:13px 14px;border:1px solid rgba(196,160,67,.3);border-radius:10px;background:rgba(196,160,67,.07);text-decoration:none;">
+    <span style="display:block;font-size:.56rem;letter-spacing:.13em;font-weight:800;color:var(--gold,#8a6820);margin-bottom:5px;">✦ AIに相談する</span>
+    <span style="display:block;font-size:.74rem;font-weight:800;line-height:1.55;color:var(--goldlt,#5c4010);">旅・引越しの相談材料を作る</span>
+    <span style="display:block;font-size:.6rem;line-height:1.8;color:var(--mist,#5e503d);margin-top:4px;">目的地・候補日・方位の結果をふまえて、いつも使っているAIに貼れる文章にします。</span>
+    <span style="display:block;font-size:.6rem;line-height:1.8;color:var(--mist,#5e503d);">方位や日付の判定はKITOKUの結果を使い、AIには考えを広げてもらう使い方です。</span>
+  </a>
+</div>
+
 <!-- 日盤取りガイド -->
 <div class="section nichiban-section" id="nichibanSection" style="display:none;">
   <div class="sec-label">どうしても行く日が決まっている場合</div>
@@ -3040,6 +3050,7 @@ function calcAndShowDir() {
   // カレンダーと日盤取りガイドを表示
   document.getElementById('calSection').style.display = 'block';
   document.getElementById('nichibanSection').style.display = 'block';
+  document.getElementById('aiConsultSection').style.display = 'block';
   document.getElementById('howToSection').style.display = 'block';
   renderCalendar();
 
