@@ -903,6 +903,13 @@ function formatLifeReadingForAi(lr){
 function updateLifeReadingNotice(){
   const notice=document.getElementById('lifeReadingNotice');
   if(!notice)return;
+  if(gAiTheme==='color'||gAiTheme==='scent'){
+    notice.style.display='block';
+    notice.innerHTML=gAiTheme==='color'
+      ?'色をくわしく相談したい時は、<a href="scent.html?focus=color">KITOKUの色彩AI</a>もあります。ここで作る相談材料でも、そのまま相談できます。'
+      :'香りをくわしく相談したい時は、<a href="scent.html">KITOKUの香り・色彩AI</a>もあります。ここで作る相談材料でも、そのまま相談できます。';
+    return;
+  }
   if(gAiTheme!=='naming'){
     notice.style.display='none';
     notice.innerHTML='';
