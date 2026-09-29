@@ -1609,17 +1609,6 @@ function getTopInspirationProfile(){
   return '星情報は未登録です。';
 }
 
-async function topFetchClaude(payload,feature){
-  const body={};
-  for(const k in payload){if(Object.prototype.hasOwnProperty.call(payload,k))body[k]=payload[k];}
-  body.feature=feature;
-  return await fetch('/api/claude',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body)
-  });
-}
-
 function parseTeachingsCorpus(raw){
   return raw.split(/(?=Vol\.\d{2,3}\s*【見出し】)/).map(s=>s.trim()).filter(Boolean);
 }
@@ -1636,7 +1625,22 @@ function pickTodayTeachingIndex(y,m,d,honmei,total){
   return ((base%total)+total)%total;
 }
 
-async function generateTopInspiration(){
+function parseOneTeaching(text){
+  const src=String(text||'').trim();
+  if(!src)return null;
+  const vol=(src.match(/^Vol\.(\d{1,3})/)||[])[1]||'';
+  const mTitle=src.match(/【見出し】\s*([\s\S]*?)\s*【教え・哲学】/);
+  const mBody=src.match(/【教え・哲学】\s*([\s\S]*?)\s*【出典】/);
+  const mSrc=src.match(/【出典】\s*([\s\S]*)$/);
+  const clean=t=>String(t||'').replace(/[\s,、]+$/,'').trim();
+  const title=clean(mTitle&&mTitle[1]);
+  const quote=clean(mBody&&mBody[1]);
+  const source=clean(mSrc&&mSrc[1]);
+  if(!title||!quote)return null;
+  return {vol:vol?('Vol.'+vol):'', title:title, quote:quote, source:source};
+}
+
+function generateTopInspiration(){
   const btn=document.getElementById('topGenInspirationBtn');
   const today=new Date();
   const y=today.getFullYear(),m=today.getMonth()+1,d=today.getDate();
@@ -1645,43 +1649,19 @@ async function generateTopInspiration(){
     const cached=localStorage.getItem(dateKey);
     if(cached){showTopInspiration(JSON.parse(cached));return;}
   }catch(e){}
-  if(btn){btn.disabled=true;btn.textContent='生成中…';}
   const profile=getTopInspirationProfile();
   const teachingCorpusRaw=(window.KITOKU_ORIENTAL_TEACHINGS||'').trim();
   const teachingsArr=parseTeachingsCorpus(teachingCorpusRaw);
   const honmei=getHonmeiseiFromProfileText(profile);
   const todayTeaching=teachingsArr.length?teachingsArr[pickTodayTeachingIndex(y,m,d,honmei,teachingsArr.length)]:'';
-  const prompt=`今日（${y}年${m}月${d}日）の、以下の「本日あなたに割り当てられた教え」をもとに、ユーザーへ届ける短い一言を作ってください。
-
-【ユーザーの登録済み情報】
-${profile}
-
-【本日あなたに割り当てられた教え（必ずこの1本だけを使う。他のVolを創作しない）】
-${todayTeaching||'※ 現在、教え本文データは未接続です。この場合は出典を「東洋の教えより」と控えめにしてください。'}
-
-【生成ルール】
-・上記の教えの「見出し」「教え・哲学」「出典」を元に、見出し・教えの要点・出典の3点を含める形にまとめる
-・短く、静かに、押しつけずに届ける
-・脅しや断定ではなく、今日を整える一言にする
-・JSONのみ返す（前後に余分なテキスト不要）
-・以下の形式で：
-{"title":"Vol番号と見出し","quote":"教えの要点（2〜4行）","source":"出典","message":"今日のあなたへの短い受け取り方（60字以内）","action":"今日の小さな一歩（30字以内）"}
-・Y理論（全肯定）で。吉凶で脅さない。
-・特定の先生名は使わない`;
-  try{
-    if(location.protocol==='file:')throw new Error('ローカルファイルではAI送信できません。');
-    const res=await topFetchClaude({prompt:prompt},'kigaku_quote');
-    const raw=await res.text();
-    if(!res.ok)throw new Error('API応答エラー HTTP '+res.status+' '+raw.slice(0,120));
-    const data=JSON.parse(raw);
-    const text=data.reply||data.text||(data.content&&data.content[0]&&data.content[0].text)||'{}';
-    const obj=JSON.parse(String(text).replace(/```json|```/g,'').trim());
-    try{localStorage.setItem(dateKey,JSON.stringify(obj));}catch(e){}
-    showTopInspiration(obj);
-  }catch(e){
-    showTopInspiration({title:'今日の一言',quote:'今日の気に、ひとつだけ言葉を灯す。',source:'KITOKUより',message:'生成に失敗しました。接続環境を確認して、もう一度お試しください。',action:''});
+  const parsed=parseOneTeaching(todayTeaching);
+  if(!parsed){
+    showTopInspiration({title:'今日の一言',quote:'今日の気に、ひとつだけ言葉を灯す。',source:'KITOKUより',message:'',action:''});
+    return;
   }
-  if(btn){btn.disabled=false;btn.textContent='今日の一言を生成';}
+  const obj={title:parsed.vol,quote:parsed.title,source:parsed.source,message:parsed.quote,action:''};
+  try{localStorage.setItem(dateKey,JSON.stringify(obj));}catch(e){}
+  showTopInspiration(obj);
 }
 
 function showTopInspiration(obj){
@@ -1692,7 +1672,7 @@ function showTopInspiration(obj){
       ${obj.title?`<div style="font-size:.62rem;letter-spacing:.12em;font-weight:700;line-height:1.5;margin-bottom:8px;color:rgba(92,116,79,.95);">${obj.title}</div>`:''}
       <div style="font-size:.9rem;font-weight:700;line-height:1.8;margin-bottom:9px;color:var(--goldlt);white-space:pre-line;">${obj.quote||''}</div>
       ${obj.source?`<div style="font-size:.62rem;line-height:1.6;margin:-2px 0 9px;color:var(--mist);">─ ${obj.source}</div>`:''}
-      <div style="font-size:.68rem;line-height:1.85;color:var(--mist);margin-bottom:8px;">${obj.message||''}</div>
+      ${obj.message?`<div style="font-size:.68rem;line-height:1.85;color:var(--mist);margin-bottom:8px;">${obj.message}</div>`:''}
       ${obj.action?`<div style="font-size:.62rem;padding:6px 10px;background:rgba(93,128,96,.08);border:1px solid rgba(93,128,96,.14);border-radius:8px;color:var(--goldlt);">✦ 今日の一歩：${obj.action}</div>`:''}
     </div>`;
 }
