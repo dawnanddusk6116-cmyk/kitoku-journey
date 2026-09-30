@@ -906,8 +906,8 @@ function updateLifeReadingNotice(){
   if(gAiTheme==='color'||gAiTheme==='scent'){
     notice.style.display='block';
     notice.innerHTML=gAiTheme==='color'
-      ?'色をくわしく相談したい時は、<a href="scent.html?focus=color">KITOKUの色彩AI</a>もあります。ここで作る相談材料でも、そのまま相談できます。'
-      :'香りをくわしく相談したい時は、<a href="scent.html">KITOKUの香り・色彩AI</a>もあります。ここで作る相談材料でも、そのまま相談できます。';
+      ?'色をくわしく相談したい時は、<a href="scent.html?focus=color">KITOKUの色彩AI</a>もあります。ここで作る相談材料でも、そのまま相談できます。<br><strong>今日の予定・なりたい印象・手持ちの服や小物・避けたい色を書くほど、あなたに合う答えになります。</strong>'
+      :'香りをくわしく相談したい時は、<a href="scent.html">KITOKUの香り・色彩AI</a>もあります。ここで作る相談材料でも、そのまま相談できます。<br><strong>場面・なりたい印象・手持ちの香り・苦手な香り・予算を書くほど、あなたに合う答えになります。</strong>';
     return;
   }
   if(gAiTheme!=='naming'){
