@@ -2157,14 +2157,15 @@ function mapPremiumThemeToAiTheme(type){
     compat:'compat',
     money:'money',
     scent:'scent',
-    photo:'photo',
+    photo:'free',
     free:'free',
-    blank:'blank'
+    blank:'free'
   };
   return map[key]||'free';
 }
 
 function handoffToAiPage(){
+  state.consultType=state.mode==='pilgrimage'?'pilgrimage':'travel';
   let theme=mapPremiumThemeToAiTheme(state.consultType);
   try{
     const ctx=buildPremiumAiMaterialContext();
